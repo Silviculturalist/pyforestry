@@ -1,6 +1,6 @@
 from shapely.geometry import Point
 import geopandas as gpd
-from proj import Transformer
+from pyproj import Transformer
 from importlib.resources import files
 
 class RetrieveGeoCode:
