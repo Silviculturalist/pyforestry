@@ -292,16 +292,16 @@ def Marklund_1988(species, component, *args, **kwargs):
             continue
     raise ValueError("No function matched the provided arguments.")
 
-# Example usage
-dbh = 30  # Diameter at breast height in cm
-height_m = 15  # Height in meters
-crown_base_height_m = 5  # Crown base height in meters
+## Example usage
+#dbh = 30  # Diameter at breast height in cm
+#height_m = 15  # Height in meters
+#crown_base_height_m = 5  # Crown base height in meters#
 
-# Calculate stem biomass for pine
-pine_stem_biomass = Marklund_1988('pine', 'stem', dbh, height_m)
-print(f"Pine stem biomass: {pine_stem_biomass}")
+## Calculate stem biomass for pine
+#pine_stem_biomass = Marklund_1988('pine', 'stem', dbh, height_m)
+#print(f"Pine stem biomass: {pine_stem_biomass}")#
 
-# Calculate living branches biomass for spruce
-spruce_living_branches_biomass = Marklund_1988('spruce', 'living_branches', dbh, height_m, crown_base_height_m)
-print(f"Spruce living branches biomass: {spruce_living_branches_biomass}")
+## Calculate living branches biomass for spruce
+#spruce_living_branches_biomass = Marklund_1988('spruce', 'living_branches', dbh, height_m, crown_base_height_m)
+#print(f"Spruce living branches biomass: {spruce_living_branches_biomass}")
 
