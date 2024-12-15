@@ -1,11 +1,12 @@
 from shapely.geometry import Point
 import geopandas as gpd
 from proj import Transformer
+from importlib.resources import files
 
 class RetrieveGeoCode:
 
     @staticmethod
-    def getDistanceToCoast(lon, lat, coast_path=r"C:\Users\csvi0001\Desktop\SwedishCoastLine_NE_medium_clipped.shp"): 
+    def getDistanceToCoast(lon, lat): 
         """
         Calculate the distance from a given point (lon, lat) to the nearest point on a coastline.
 
@@ -18,7 +19,7 @@ class RetrieveGeoCode:
         float: Distance in meters from the point to the nearest point on the coastline.
         """
         # Load the coastline shapefile
-        coast_gdf = gpd.read_file(coast_path)
+        coast_gdf = gpd.read_file(files("Munin.Geo.Coastline").joinpath("SwedishCoastLine_NE_medium_clipped.shp"))
 
         # Ensure the CRS is WGS 84
         if coast_gdf.crs is None or coast_gdf.crs.to_string() != 'EPSG:4326':
@@ -43,8 +44,8 @@ class RetrieveGeoCode:
 
 
     @staticmethod
-    def getClimateCode(lon,lat,climate_path=r"C:\Users\csvi0001\Desktop\HeurekaSource\heureka\geofiles\KlimatSweref\Klimat.shp"):
-        klimat_gdf = gpd.read_file(climate_path).to_crs("EPSG:3006")
+    def getClimateCode(lon,lat):
+        klimat_gdf = gpd.read_file(files('Munin.Geo.Climate').joinpath("Klimat.shp")).to_crs("EPSG:3006")
 
         #Transformer
         transformer = Transformer.from_crs('EPSG:4326','EPSG:3006',always_xy=True)
@@ -70,9 +71,9 @@ class RetrieveGeoCode:
             return klimzon_mapping.get(klimat_polygon.iloc[0]['KLIMZON_'],0)
 
                                       
-    def getCountyCode(lon,lat,county_path=r"C:\Users\csvi0001\Desktop\HeurekaSource\heureka\geofiles\RT_Dlanskod_Sweref99_shapefile\RT_Dlanskod\RT_Dlanskod.shp"):
+    def getCountyCode(lon,lat):
         # Load shapefiles
-        dlanskod_gdf = gpd.read_file(county_path).to_crs("EPSG:3006")
+        dlanskod_gdf = gpd.read_file(files('Munin.Geo.Counties').joinpath('RT_Dlanskod.shp')).to_crs("EPSG:3006")
 
         #Transformer
         transformer = Transformer.from_crs('EPSG:4326','EPSG:3006',always_xy=True)
