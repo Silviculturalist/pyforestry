@@ -1,5 +1,5 @@
 import math 
-from Munin.Volume import Timber
+from Munin.Volume.Timber import Timber
 
 class BrandelVolume:
     @staticmethod
@@ -74,6 +74,3 @@ class BrandelVolume:
             return BrandelVolume.volume_spruce(timber)/1000
         else:
             raise ValueError(f"Species '{timber.species}' not supported.")
-
-#Test
-BrandelVolume.calculate_volume(timber_birch)
