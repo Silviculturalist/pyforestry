@@ -138,43 +138,43 @@ class PeterssonStahl2006:
 
         raise ValueError("No suitable function matched the provided arguments.")
 
-## Inputs
-#diameter_cm = 30
-#height_m = 15
-#crown_base_height_m = 5
-#age_at_breast_height = 50
-#height_basal_area_weighted = 12
-#age_basal_area_weighted = 60
-#basal_area = 25
-#altitude = 200
-#dry_soil = 1
-#root_detail = 5
-#
-## Birch example
-#birch_biomass = PeterssonStahl2006.below_ground_biomass(
-#    species="birch", root_detail=5, diameter_cm=diameter_cm
-#)
-#print(f"Birch below-ground biomass: {birch_biomass:.2f} g")
-#
-## Pine example
-#pine_biomass = PeterssonStahl2006.below_ground_biomass(
-#    species="pine",
-#    root_detail=5,
-#    diameter_cm=diameter_cm,
-#    age_at_breast_height=age_at_breast_height,
-#    age_basal_area_weighted=age_basal_area_weighted,
-#    dry_soil=dry_soil,
-#)
-#print(f"Pine below-ground biomass: {pine_biomass:.2f} g")
-#
-## Spruce example
-#spruce_biomass = PeterssonStahl2006.below_ground_biomass(
-#    species="spruce",
-#    root_detail=5,
-#    diameter_cm=diameter_cm,
-#    age_at_breast_height=age_at_breast_height,
-#    basal_area=basal_area,
-#    crown_length=(height_m * 10 - crown_base_height_m * 10),
-#    dry_soil=dry_soil,
-#)
-#print(f"Spruce below-ground biomass: {spruce_biomass:.2f} kg")
+# Inputs
+diameter_cm = 30
+height_m = 15
+crown_base_height_m = 5
+age_at_breast_height = 50
+height_basal_area_weighted = 12
+age_basal_area_weighted = 60
+basal_area = 25
+altitude = 200
+dry_soil = 1
+root_detail = 5
+
+# Birch example
+birch_biomass = PeterssonStahl2006.below_ground_biomass(
+    species="birch", root_detail=5, diameter_cm=diameter_cm
+)
+print(f"Birch below-ground biomass: {birch_biomass:.2f} g")
+
+# Pine example
+pine_biomass = PeterssonStahl2006.below_ground_biomass(
+    species="pine",
+    root_detail=5,
+    diameter_cm=diameter_cm,
+    age_at_breast_height=age_at_breast_height,
+    age_basal_area_weighted=age_basal_area_weighted,
+    dry_soil=dry_soil,
+)
+print(f"Pine below-ground biomass: {pine_biomass:.2f} g")
+
+# Spruce example
+spruce_biomass = PeterssonStahl2006.below_ground_biomass(
+    species="spruce",
+    root_detail=5,
+    diameter_cm=diameter_cm,
+    age_at_breast_height=age_at_breast_height,
+    basal_area=basal_area,
+    crown_length=(height_m * 10 - crown_base_height_m * 10),
+    dry_soil=dry_soil,
+)
+print(f"Spruce below-ground biomass: {spruce_biomass:.2f} kg")

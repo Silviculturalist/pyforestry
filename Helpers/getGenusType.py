@@ -44,7 +44,7 @@ def get_tree_type(species):
         return None
 
 # Examples
-#print(get_tree_type("Picea abies"))  # Outputs: "Coniferous"
-#print(get_tree_type("Pisum sativum"))  # Warns and outputs: None
-#print(get_tree_type("Betula pendula"))  # Outputs: "Deciduous"
-#print(get_tree_type("UnknownSpecies"))  # Warns and outputs: None
+print(get_tree_type("Picea abies"))  # Outputs: "Coniferous"
+print(get_tree_type("Pisum sativum"))  # Warns and outputs: None
+print(get_tree_type("Betula pendula"))  # Outputs: "Deciduous"
+print(get_tree_type("UnknownSpecies"))  # Warns and outputs: None
