@@ -14,7 +14,7 @@ class Timber:
     ):
         if diameter_cm < 5:
             raise ValueError("Diameter must be larger than 5 cm.")
-        self.species = species
+        self.species = species.lower()
         self.diameter_cm = diameter_cm
         self.height_m = height_m
         self.double_bark_mm = double_bark_mm
@@ -33,7 +33,7 @@ class Timber:
     def validate(self):
         if self.region not in ["northern", "southern"]:
             raise ValueError("Region must be 'northern' or 'southern'.")
-        if self.species not in [
+        if self.species.lower() not in [
             "pinus sylvestris",
             "picea abies",
             "betula",
