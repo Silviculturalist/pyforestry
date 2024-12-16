@@ -13,6 +13,7 @@ def get_tree_type(species:str):
     Returns:
     str: "Deciduous", "Coniferous", or None (with a warning).
     """
+    species = species.lower() #ensure all characters lower-case 
 
         # Static lists of known genera
     DECIDUOUS_LIST = [
@@ -28,21 +29,21 @@ def get_tree_type(species:str):
     ]
 
     # Extract the genus name (assumes the first part of the name)
-    genus_match = re.match(r"^[A-Z][a-z]*", species.lower())
+    genus_match = re.match(r"^[a-z]+", species)
     if not genus_match:
         return None
 
     genus = genus_match.group(0)
 
     # Check against coniferous and deciduous lists
-    if genus in CONIFEROUS_LIST.lower():
+    if genus in CONIFEROUS_LIST:
         return "Coniferous"
-    elif genus in DECIDUOUS_LIST.lower():
+    elif genus in DECIDUOUS_LIST:
         return "Deciduous"
     else:
         warnings.warn("Unknown species.")
         return None
-
+    
 # Examples
 #print(get_tree_type("Picea abies"))  # Outputs: "Coniferous"
 #print(get_tree_type("Pisum sativum"))  # Warns and outputs: None
