@@ -6,7 +6,7 @@ setup(
     author="Carl Vigren",
     author_email="carl.vigren@slu.se",
     url = "https://github.com/Silviculturalist/Munin",
-    packages=find_packages(),
+    packages=['Munin']+find_packages(),
     include_package_data=True,
     package_data={
         "Munin.Geo.Humidity": ["humidity.shp"],
