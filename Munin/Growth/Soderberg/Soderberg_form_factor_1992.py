@@ -1,12 +1,42 @@
 import math
 
 class Soderberg1992FormFactor:
-    """Class containing static methods for calculating the form factor of individual trees in southern Sweden (Söderberg 1992)."""
+    """
+    Class containing static methods for calculating the form factor of individual trees in Sweden 
+    (Söderberg 1992). These methods calculate tree form factors for different species and regions 
+    using species-specific models.
 
+    Source: 
+        Söderberg, U. (1992) Funktioner för skogsindelning: Höjd,
+        formhöjd och barktjocklek för enskilda träd. / Functions for forest
+        management: Height, form height and bark thickness of individual trees. 
+        Report 52. Dept. of Forest Survey. Swedish University of Agricultural Sciences. 
+        ISSN 0348-0496.
+
+    """
     @staticmethod
     def southern_spruce(SI100_Pine, distance_to_coast_km, DBH_cm, DBH_largest_tree_on_plot_cm, total_age, BA_Pine_m2, 
                         BA_Spruce_m2, BA_Birch_m2, BA_m2, latitude, altitude, divided_plot=0):
-        """Calculates the form factor for Norway Spruce in Southern Sweden using Söderberg's method."""
+        """
+        Calculates the form factor for Norway Spruce in Southern Sweden.
+
+        Args:
+            SI100_Pine (float): Site index for Scots Pine (SI100) in dm.
+            distance_to_coast_km (float): Distance to the nearest coast in kilometers.
+            DBH_cm (float): Diameter at breast height (DBH) over bark in cm.
+            DBH_largest_tree_on_plot_cm (float): DBH of the largest tree on the plot in cm.
+            total_age (int): Total age of the stand.
+            BA_Pine_m2 (float): Basal area of Scots Pine on the plot in m².
+            BA_Spruce_m2 (float): Basal area of Norway Spruce on the plot in m².
+            BA_Birch_m2 (float): Basal area of Birch on the plot in m².
+            BA_m2 (float): Total basal area on the plot in m².
+            latitude (float): Latitude of the stand in decimal degrees.
+            altitude (float): Altitude of the stand in meters.
+            divided_plot (int, optional): 1 if the plot is divided, 0 otherwise. Defaults to 0.
+
+        Returns:
+            float: The calculated form factor.
+        """
         BA_quotient_Pine = BA_Pine_m2 / BA_m2
         BA_quotient_Spruce = BA_Spruce_m2 / BA_m2
         BA_quotient_Birch = BA_Birch_m2 / BA_m2
@@ -34,7 +64,27 @@ class Soderberg1992FormFactor:
     @staticmethod
     def southern_pine(SI100_Pine, distance_to_coast_km, DBH_cm, DBH_largest_tree_on_plot_cm, total_age, BA_Pine_m2, 
                        BA_Spruce_m2, BA_Birch_m2, BA_m2, latitude, altitude, divided_plot=0, county=None):
-        """Calculates the form factor for Scots Pine in Southern Sweden using Söderberg's method."""
+        """
+        Calculates the form factor for Scots Pine in Southern Sweden.
+
+        Args:
+            SI100_Pine (float): Site index for Scots Pine (SI100) in dm.
+            distance_to_coast_km (float): Distance to the nearest coast in kilometers.
+            DBH_cm (float): Diameter at breast height (DBH) over bark in cm.
+            DBH_largest_tree_on_plot_cm (float): DBH of the largest tree on the plot in cm.
+            total_age (int): Total age of the stand.
+            BA_Pine_m2 (float): Basal area of Scots Pine on the plot in m².
+            BA_Spruce_m2 (float): Basal area of Norway Spruce on the plot in m².
+            BA_Birch_m2 (float): Basal area of Birch on the plot in m².
+            BA_m2 (float): Total basal area on the plot in m².
+            latitude (float): Latitude of the stand in decimal degrees.
+            altitude (float): Altitude of the stand in meters.
+            divided_plot (int, optional): 1 if the plot is divided, 0 otherwise. Defaults to 0.
+            county (str, optional): County name for the stand.
+
+        Returns:
+            float: The calculated form factor.
+        """
         BA_quotient_Pine = BA_Pine_m2 / BA_m2
         BA_quotient_Spruce = BA_Spruce_m2 / BA_m2
         BA_quotient_Birch = BA_Birch_m2 / BA_m2
@@ -65,7 +115,24 @@ class Soderberg1992FormFactor:
     @staticmethod
     def southern_oak(SI100_Pine, DBH_cm, DBH_largest_tree_on_plot_cm, total_age, BA_Spruce_m2, BA_m2, latitude, altitude, 
                      divided_plot=0, county=None):
-        """Calculates the form factor for Oak in Southern Sweden using Söderberg's method."""
+        """
+        Calculates the form factor for Oak in Southern Sweden using Söderberg's method.
+
+        Args:
+            SI100_Pine (float): Site index for Scots Pine (SI100) in dm.
+            DBH_cm (float): Diameter at breast height (DBH) over bark in cm.
+            DBH_largest_tree_on_plot_cm (float): DBH of the largest tree on the plot in cm.
+            total_age (int): Total age of the stand.
+            BA_Spruce_m2 (float): Basal area of Norway Spruce on the plot in m².
+            BA_m2 (float): Total basal area on the plot in m².
+            latitude (float): Latitude of the stand in decimal degrees.
+            altitude (float): Altitude of the stand in meters.
+            divided_plot (int, optional): 1 if the plot is divided, 0 otherwise. Defaults to 0.
+            county (str, optional): County name for the stand.
+
+        Returns:
+            float: The calculated form factor for Oak in Southern Sweden.
+        """
         BA_quotient_Spruce = BA_Spruce_m2 / BA_m2
         diameter_quotient = DBH_cm / DBH_largest_tree_on_plot_cm
         south_eastern_county = 1 if county in ["Stockholm", "Södermanland", "Uppsala", "Östergötland", "Kalmar", "Västmanland"] else 0
@@ -90,7 +157,25 @@ class Soderberg1992FormFactor:
     @staticmethod
     def southern_broadleaves(SI100_Pine, DBH_cm, DBH_largest_tree_on_plot_cm, total_age, BA_Pine_m2, BA_Spruce_m2, BA_Birch_m2, 
                              BA_m2, latitude, altitude, divided_plot=0):
-        """Calculates the form factor for Broadleaves in Southern Sweden using Söderberg's method."""
+        """
+        Calculates the form factor for Broadleaves in Southern Sweden using Söderberg's method. 
+
+        Args:
+            SI100_Pine (float): Site index for Scots Pine (SI100) in dm.
+            DBH_cm (float): Diameter at breast height (DBH) over bark in cm.
+            DBH_largest_tree_on_plot_cm (float): DBH of the largest tree on the plot in cm.
+            total_age (int): Total age of the stand.
+            BA_Pine_m2 (float): Basal area of Scots Pine on the plot in m².
+            BA_Spruce_m2 (float): Basal area of Norway Spruce on the plot in m².
+            BA_Birch_m2 (float): Basal area of Birch on the plot in m².
+            BA_m2 (float): Total basal area on the plot in m².
+            latitude (float): Latitude of the stand in decimal degrees.
+            altitude (float): Altitude of the stand in meters.
+            divided_plot (int, optional): 1 if the plot is divided, 0 otherwise. Defaults to 0. 
+
+        Returns:
+            float: The calculated form factor for Broadleaves in Southern Sweden.
+        """
         BA_quotient_Pine = BA_Pine_m2 / BA_m2
         BA_quotient_Spruce = BA_Spruce_m2 / BA_m2
         BA_quotient_Birch = BA_Birch_m2 / BA_m2
@@ -116,7 +201,26 @@ class Soderberg1992FormFactor:
     @staticmethod
     def southern_birch(SI100_Pine, DBH_cm, DBH_largest_tree_on_plot_cm, total_age, BA_Pine_m2, BA_Spruce_m2, BA_Birch_m2, 
                         BA_m2, latitude, altitude, divided_plot=0, county=None):
-        """Calculates the form factor for Birch in Southern Sweden using Söderberg's method."""
+        """
+        Calculates the form factor for Birch in Southern Sweden using Söderberg's method.
+
+        Args:
+            SI100_Pine (float): Site index for Scots Pine (SI100) in dm.
+            DBH_cm (float): Diameter at breast height (DBH) over bark in cm.
+            DBH_largest_tree_on_plot_cm (float): DBH of the largest tree on the plot in cm.
+            total_age (int): Total age of the stand.
+            BA_Pine_m2 (float): Basal area of Scots Pine on the plot in m².
+            BA_Spruce_m2 (float): Basal area of Norway Spruce on the plot in m².
+            BA_Birch_m2 (float): Basal area of Birch on the plot in m².
+            BA_m2 (float): Total basal area on the plot in m².
+            latitude (float): Latitude of the stand in decimal degrees.
+            altitude (float): Altitude of the stand in meters.
+            divided_plot (int, optional): 1 if the plot is divided, 0 otherwise. Defaults to 0.
+            county (str, optional): County name for the stand.
+
+        Returns:
+            float: The calculated form factor for Birch in Southern Sweden.
+        """
         BA_quotient_Pine = BA_Pine_m2 / BA_m2
         BA_quotient_Spruce = BA_Spruce_m2 / BA_m2
         BA_quotient_Birch = BA_Birch_m2 / BA_m2
@@ -145,7 +249,24 @@ class Soderberg1992FormFactor:
     @staticmethod
     def southern_beech(SI100_Pine, DBH_cm, DBH_largest_tree_on_plot_cm, total_age, BA_Spruce_m2, BA_m2, latitude, altitude, 
                         divided_plot=0, county=None):
-        """Calculates the form factor for Beech in Southern Sweden using Söderberg's method."""
+        """
+        Calculates the form factor for Beech in Southern Sweden using Söderberg's method.
+
+        Args:
+            SI100_Pine (float): Site index for Scots Pine (SI100) in dm.
+            DBH_cm (float): Diameter at breast height (DBH) over bark in cm.
+            DBH_largest_tree_on_plot_cm (float): DBH of the largest tree on the plot in cm.
+            total_age (int): Total age of the stand.
+            BA_Spruce_m2 (float): Basal area of Norway Spruce on the plot in m².
+            BA_m2 (float): Total basal area on the plot in m².
+            latitude (float): Latitude of the stand in decimal degrees.
+            altitude (float): Altitude of the stand in meters.
+            divided_plot (int, optional): 1 if the plot is divided, 0 otherwise. Defaults to 0.
+            county (str, optional): County name for the stand.
+
+        Returns:
+            float: The calculated form factor for Beech in Southern Sweden.
+        """
         BA_quotient_Spruce = BA_Spruce_m2 / BA_m2
         diameter_quotient = DBH_cm / DBH_largest_tree_on_plot_cm
         south_eastern_county = 1 if county in ["Stockholm", "Södermanland", "Uppsala", "Östergötland", "Kalmar", "Västmanland"] else 0
@@ -169,7 +290,24 @@ class Soderberg1992FormFactor:
     @staticmethod
     def northern_pine(SI100_Pine, distance_to_coast_km, DBH_cm, DBH_largest_tree_on_plot_cm, total_age, BA_Pine_m2, BA_m2, 
                        latitude, altitude, divided_plot=0):
-        """Calculates the form factor for Scots Pine in Northern Sweden using Söderberg's method."""
+        """
+        Calculates the form factor for Scots Pine in Northern Sweden using Söderberg's method.
+
+        Args:
+            SI100_Pine (float): Site index for Scots Pine (SI100) in dm.
+            distance_to_coast_km (float): Distance to the nearest coast in kilometers.
+            DBH_cm (float): Diameter at breast height (DBH) over bark in cm.
+            DBH_largest_tree_on_plot_cm (float): DBH of the largest tree on the plot in cm.
+            total_age (int): Total age of the stand.
+            BA_Pine_m2 (float): Basal area of Scots Pine on the plot in m².
+            BA_m2 (float): Total basal area on the plot in m².
+            latitude (float): Latitude of the stand in decimal degrees.
+            altitude (float): Altitude of the stand in meters.
+            divided_plot (int, optional): 1 if the plot is divided, 0 otherwise. Defaults to 0.
+
+        Returns:
+            float: The calculated form factor for Scots Pine in Northern Sweden.
+        """
         BA_quotient_Pine = BA_Pine_m2 / BA_m2
         diameter_quotient = DBH_cm / DBH_largest_tree_on_plot_cm
         close_to_coast = 1 if distance_to_coast_km < 50 else 0
@@ -194,7 +332,25 @@ class Soderberg1992FormFactor:
     @staticmethod
     def northern_central_spruce(SI100_Pine, distance_to_coast_km, DBH_cm, DBH_largest_tree_on_plot_cm, total_age, BA_Pine_m2, 
                                 BA_Spruce_m2, BA_m2, latitude, altitude, divided_plot=0):
-        """Calculates the form factor for Norway Spruce in Northern/Central Sweden using Söderberg's method."""
+        """
+        Calculates the form factor for Norway Spruce in Northern and Central Sweden using Söderberg's method.
+
+        Args:
+            SI100_Pine (float): Site index for Scots Pine (SI100) in dm.
+            distance_to_coast_km (float): Distance to the nearest coast in kilometers.
+            DBH_cm (float): Diameter at breast height (DBH) over bark in cm.
+            DBH_largest_tree_on_plot_cm (float): DBH of the largest tree on the plot in cm.
+            total_age (int): Total age of the stand.
+            BA_Pine_m2 (float): Basal area of Scots Pine on the plot in m².
+            BA_Spruce_m2 (float): Basal area of Norway Spruce on the plot in m².
+            BA_m2 (float): Total basal area on the plot in m².
+            latitude (float): Latitude of the stand in decimal degrees.
+            altitude (float): Altitude of the stand in meters.
+            divided_plot (int, optional): 1 if the plot is divided, 0 otherwise. Defaults to 0.
+
+        Returns:
+            float: The calculated form factor for Norway Spruce in Northern and Central Sweden.
+        """
         BA_quotient_Pine = BA_Pine_m2 / BA_m2
         BA_quotient_Spruce = BA_Spruce_m2 / BA_m2
         diameter_quotient = DBH_cm / DBH_largest_tree_on_plot_cm
@@ -221,7 +377,25 @@ class Soderberg1992FormFactor:
     @staticmethod
     def northern_central_broadleaves(SI100_Pine, distance_to_coast_km, DBH_cm, DBH_largest_tree_on_plot_cm, total_age, BA_Spruce_m2, 
                                      BA_Birch_m2, BA_m2, latitude, altitude, divided_plot=0):
-        """Calculates the form factor for Broadleaves in Northern/Central Sweden using Söderberg's method."""
+        """
+        Calculates the form factor for Broadleaves in Northern and Central Sweden using Söderberg's method.
+
+        Args:
+            SI100_Pine (float): Site index for Scots Pine (SI100) in dm.
+            distance_to_coast_km (float): Distance to the nearest coast in kilometers.
+            DBH_cm (float): Diameter at breast height (DBH) over bark in cm.
+            DBH_largest_tree_on_plot_cm (float): DBH of the largest tree on the plot in cm.
+            total_age (int): Total age of the stand.
+            BA_Spruce_m2 (float): Basal area of Norway Spruce on the plot in m².
+            BA_Birch_m2 (float): Basal area of Birch on the plot in m².
+            BA_m2 (float): Total basal area on the plot in m².
+            latitude (float): Latitude of the stand in decimal degrees.
+            altitude (float): Altitude of the stand in meters.
+            divided_plot (int, optional): 1 if the plot is divided, 0 otherwise. Defaults to 0.
+
+        Returns:
+            float: The calculated form factor for Broadleaves in Northern and Central Sweden.
+        """
         BA_quotient_Birch = BA_Birch_m2 / BA_m2
         BA_quotient_Spruce = BA_Spruce_m2 / BA_m2
         diameter_quotient = DBH_cm / DBH_largest_tree_on_plot_cm
@@ -246,7 +420,24 @@ class Soderberg1992FormFactor:
     @staticmethod
     def northern_central_birch(SI100_Pine, DBH_cm, DBH_largest_tree_on_plot_cm, total_age, BA_Pine_m2, BA_Spruce_m2, BA_m2, 
                                 latitude, altitude, divided_plot=0):
-        """Calculates the form factor for Birch in Northern/Central Sweden using Söderberg's method."""
+        """
+        Calculates the form factor for Birch in Northern and Central Sweden using Söderberg's method.
+
+        Args:
+            SI100_Pine (float): Site index for Scots Pine (SI100) in dm.
+            DBH_cm (float): Diameter at breast height (DBH) over bark in cm.
+            DBH_largest_tree_on_plot_cm (float): DBH of the largest tree on the plot in cm.
+            total_age (int): Total age of the stand.
+            BA_Pine_m2 (float): Basal area of Scots Pine on the plot in m².
+            BA_Spruce_m2 (float): Basal area of Norway Spruce on the plot in m².
+            BA_m2 (float): Total basal area on the plot in m².
+            latitude (float): Latitude of the stand in decimal degrees.
+            altitude (float): Altitude of the stand in meters.
+            divided_plot (int, optional): 1 if the plot is divided, 0 otherwise. Defaults to 0.
+
+        Returns:
+            float: The calculated form factor for Birch in Northern and Central Sweden.
+        """
         BA_quotient_Pine = BA_Pine_m2 / BA_m2
         BA_quotient_Spruce = BA_Spruce_m2 / BA_m2
         diameter_quotient = DBH_cm / DBH_largest_tree_on_plot_cm
@@ -271,7 +462,26 @@ class Soderberg1992FormFactor:
     @staticmethod
     def central_pine(SI100_Pine, distance_to_coast_km, DBH_cm, DBH_largest_tree_on_plot_cm, total_age, BA_Pine_m2, BA_Spruce_m2, 
                      BA_Birch_m2, BA_m2, latitude, altitude, divided_plot=0):
-        """Calculates the form factor for Scots Pine in Central Sweden using Söderberg's method."""
+        """
+        Calculates the form factor for Scots Pine in Central Sweden using Söderberg's method.
+
+        Args:
+            SI100_Pine (float): Site index for Scots Pine (SI100) in dm.
+            distance_to_coast_km (float): Distance to the nearest coast in kilometers.
+            DBH_cm (float): Diameter at breast height (DBH) over bark in cm.
+            DBH_largest_tree_on_plot_cm (float): DBH of the largest tree on the plot in cm.
+            total_age (int): Total age of the stand.
+            BA_Pine_m2 (float): Basal area of Scots Pine on the plot in m².
+            BA_Spruce_m2 (float): Basal area of Norway Spruce on the plot in m².
+            BA_Birch_m2 (float): Basal area of Birch on the plot in m².
+            BA_m2 (float): Total basal area on the plot in m².
+            latitude (float): Latitude of the stand in decimal degrees.
+            altitude (float): Altitude of the stand in meters.
+            divided_plot (int, optional): 1 if the plot is divided, 0 otherwise. Defaults to 0.
+
+        Returns:
+            float: The calculated form factor for Scots Pine in Central Sweden.
+        """
         BA_quotient_Pine = BA_Pine_m2 / BA_m2
         BA_quotient_Spruce = BA_Spruce_m2 / BA_m2
         BA_quotient_Birch = BA_Birch_m2 / BA_m2
