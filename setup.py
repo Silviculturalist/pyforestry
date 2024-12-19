@@ -16,6 +16,7 @@ setup(
     },
     python_requires = ">3.10",
     install_requires = [
+        "scipy>=1.5.0",
         "geopandas",
         "numpy",
         "shapely",
