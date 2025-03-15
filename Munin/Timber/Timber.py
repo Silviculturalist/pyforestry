@@ -11,6 +11,7 @@ class Timber:
         over_bark: bool = True,
         region: str = "southern",  # Default to "southern", can be "northern"
         latitude: Optional[float] = None,
+        stump_height_m: Optional[float] = 0.3
     ):
         if diameter_cm < 5:
             raise ValueError("Diameter must be larger than 5 cm.")
@@ -21,6 +22,7 @@ class Timber:
         self.crown_base_height_m = crown_base_height_m
         self.over_bark = over_bark
         self.region = region.lower()
+        self.stump_height_m = stump_height_m
 
         if latitude is None:
             if self.region == 'northern':
