@@ -1,4 +1,4 @@
-from .Timber import Timber
+from ..Timber.Timber import Timber
 from .Andersson_1954 import andersson_1954_volume_small_trees_birch_height_above_4_m, andersson_1954_volume_small_trees_birch_under_diameter_5_cm, andersson_1954_volume_small_trees_pine, andersson_1954_volume_small_trees_spruce
 from .Brandel1990 import BrandelVolume
 from .carbonnier_1954 import carbonnier_1954_volume_larch

@@ -1,5 +1,5 @@
 import math 
-from Munin.Volume.Timber import Timber
+from Munin.Timber.Timber import Timber
 
 class BrandelVolume:
     @staticmethod
