@@ -1,10 +1,11 @@
 from Munin.Timber.Timber import Timber
 from Munin.Volume.Naslund1947 import NaslundFormFactor
+from Munin.Taper.Taper import Taper
 from typing import Optional
 import numpy as np
 from scipy.optimize import minimize_scalar
 
-class EdgrenNylinder1949:
+class EdgrenNylinder1949Consts:
     @staticmethod
     def get_constants(species: str, north: bool, form_factor: float):
         const_spruce_north = np.array([
@@ -93,7 +94,7 @@ class EdgrenNylinder1949:
         #raise ValueError(f"Unsupported species: {species}")
 
 
-class Pettersson1949:
+class Pettersson1949_consts:
     @staticmethod
     def form_quotient(
         species: str, north: bool, height: float, dbh_ub: float, form_factor_ub: float
@@ -110,7 +111,68 @@ class Pettersson1949:
                 return 0.372 + 0.008742 * height - 0.003263 * dbh_ub + 0.4929 * form_factor_ub
 
 
-class TimberEdgrenDiameter:
+class EdgrenNylinder1949(Taper):
+
+    @staticmethod
+    def validate(timber: Timber):
+        """
+        Validate that the Timber object is compatible with the taper implementation.
+
+        Requirements:
+            - timber must be an instance of Timber.
+            - timber.height_m must be positive.
+            - timber.diameter_cm must be positive.
+            - timber.stump_height_m must be non-negative.
+            - timber.crown_base_height_m must be non-negative and less than timber.height_m.
+            - timber.double_bark_mm must be non-negative.
+            - timber.over_bark must be a boolean.
+            - timber.region must be either "northern" or "southern".
+            - timber.species must be a non-empty string.
+
+        Raises:
+            ValueError: If any of the requirements are not met.
+        """
+        # Check instance type
+        if not isinstance(timber, Timber):
+            raise ValueError("Provided object is not an instance of Timber.")
+
+        # Check height (total tree height must be > 0)
+        if timber.height_m is None or timber.height_m <= 0:
+            raise ValueError("Timber height_m must be a positive number.")
+
+        # Check diameter at breast height (or base diameter) must be > 0
+        if timber.diameter_cm is None or timber.diameter_cm <= 0:
+            raise ValueError("Timber diameter_cm must be a positive number.")
+
+        # Stump height should be non-negative (it could be zero)
+        if timber.stump_height_m is None or timber.stump_height_m < 0:
+            raise ValueError("Timber stump_height_m cannot be negative.")
+
+        # Crown base height should be non-negative and less than total height
+        if timber.crown_base_height_m is not None and timber.crown_base_height_m < 0:
+            raise ValueError("Timber crown_base_height_m cannot be negative.")
+        
+        if timber.crown_base_height_m is not None and timber.height_m is not None:
+            if timber.crown_base_height_m >= timber.height_m:
+                raise ValueError("Timber crown_base_height_m must be less than timber.height_m.")
+
+        # Double bark thickness should be non-negative
+        if timber.double_bark_mm is None and timber.double_bark_mm < 0:
+            raise ValueError("Timber double_bark_mm cannot be negative.")
+
+        # Check that over_bark is a boolean
+        if not isinstance(timber.over_bark, bool):
+            raise ValueError("Timber over_bark must be a boolean value.")
+
+        # Ensure region is one of the accepted values
+        if timber.region not in ("northern", "southern"):
+            raise ValueError("Timber region must be either 'northern' or 'southern'.")
+
+        # Ensure species is a non-empty string
+        if not timber.species or not isinstance(timber.species, str):
+            raise ValueError("Timber species must be provided as a non-empty string.")
+
+
     @staticmethod
     def get_base_diameter(timber: Timber) -> float:
         """
@@ -120,7 +182,7 @@ class TimberEdgrenDiameter:
         :return: The base diameter (DBAS) in cm.
         """
         # Calculate relative diameter at breast height (1.3m)
-        dbh_relative = TimberEdgrenDiameter.get_relative_diameter(
+        dbh_relative = EdgrenNylinder1949.get_relative_diameter(
             rel_height=1.3 / timber.height_m, timber=timber
         )
     
@@ -158,7 +220,7 @@ class TimberEdgrenDiameter:
             region=timber.region,
         )
 
-        form_quotient = Pettersson1949.form_quotient(
+        form_quotient = Pettersson1949_consts.form_quotient(
             species=timber.species,
             north=(timber.region == "northern"),
             height=timber.height_m,
@@ -189,7 +251,7 @@ class TimberEdgrenDiameter:
             return None
 
     @staticmethod
-    def get_diameter_at_height(timber: Timber, height: float) -> float:
+    def get_diameter(timber: Timber, height: float) -> float:
         """
         Calculate the diameter at a specific height using the taper function.
 
@@ -205,7 +267,7 @@ class TimberEdgrenDiameter:
             return None
 
         # Get base diameter
-        base_diameter = TimberEdgrenDiameter.get_base_diameter(timber)
+        base_diameter = EdgrenNylinder1949.get_base_diameter(timber)
         if base_diameter is None:
             return None
 
@@ -213,7 +275,7 @@ class TimberEdgrenDiameter:
         rel_height = height / timber.height_m
 
         # Get relative diameter at the specified height
-        relative_diameter = TimberEdgrenDiameter.get_relative_diameter(rel_height, timber)
+        relative_diameter = EdgrenNylinder1949.get_relative_diameter(rel_height, timber)
         if relative_diameter is None or relative_diameter <= 0:
             print(f"Warning: Invalid relative diameter at requested height: {relative_diameter}")
             return None
@@ -224,7 +286,7 @@ class TimberEdgrenDiameter:
     
 
     @staticmethod
-    def get_height(timber: Timber, minDiameter: float) -> float:
+    def get_diameter(timber: Timber, minDiameter: float) -> float:
         """
         Find the height corresponding to the specified diameter.
 
@@ -233,13 +295,13 @@ class TimberEdgrenDiameter:
         :return: Height (m) corresponding to the target diameter.
         """
         # Validate inputs
-        if minDiameter <= 0 or minDiameter > TimberEdgrenDiameter.get_base_diameter(timber):
-            print(f"Invalid minDiameter: {minDiameter}. Must be between 0 and {TimberEdgrenDiameter.get_base_diameter(timber)}.")
+        if minDiameter <= 0 or minDiameter > EdgrenNylinder1949.get_base_diameter(timber):
+            print(f"Invalid minDiameter: {minDiameter}. Must be between 0 and {EdgrenNylinder1949.get_base_diameter(timber)}.")
             return None
 
         # Objective function: Minimize |calculated_diameter - minDiameter|
         def objective(height):
-            diameter_at_height = TimberEdgrenDiameter.get_diameter_at_height(timber, height)
+            diameter_at_height = EdgrenNylinder1949.get_diameter_at_height(timber, height)
             return abs(diameter_at_height - minDiameter)
 
         # Use Newton's method or a bounded scalar minimizer

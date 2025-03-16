@@ -8,40 +8,26 @@ class Timber:
         height_m: float,
         double_bark_mm: Optional[float] = None,
         crown_base_height_m: Optional[float] = None,
-        over_bark: bool = True,
-        region: str = "southern",  # Default to "southern", can be "northern"
-        latitude: Optional[float] = None,
+        over_bark: Optional[bool] = None,
         stump_height_m: Optional[float] = 0.3
     ):
-        if diameter_cm < 5:
-            raise ValueError("Diameter must be larger than 5 cm.")
         self.species = species.lower()
         self.diameter_cm = diameter_cm
         self.height_m = height_m
         self.double_bark_mm = double_bark_mm
         self.crown_base_height_m = crown_base_height_m
         self.over_bark = over_bark
-        self.region = region.lower()
         self.stump_height_m = stump_height_m
 
-        if latitude is None:
-            if self.region == 'northern':
-                self.latitude=64
-            if self.region == 'southern':
-                self.latitude=58
-        else: 
-            self.latitude = latitude
+        self.validate()
 
     def validate(self):
-        if self.region not in ["northern", "southern"]:
-            raise ValueError("Region must be 'northern' or 'southern'.")
-        if self.species.lower() not in [
-            "pinus sylvestris",
-            "picea abies",
-            "betula",
-            "betula pendula",
-            "betula pubescens",
-        ]:
-            raise ValueError(
-                "Species must be one of: pinus sylvestris, picea abies, betula, betula pendula, betula pubescens."
-            )
+
+        if self.diameter_cm < 0:
+            raise ValueError("Diameter must be larger or equal to than 0 cm: {self.diameter_cm}")
+
+        if self.crown_base_height_m is not None and self.height_m is not None and self.crown_base_height_m >= self.height_m:
+            raise ValueError(f'Crown base height ({self.crown_base_height_m} m) cannot be higher than tree height: {self.height_m} m')
+        
+        if self.stump_height_m < 0:
+            raise ValueError(f'Stump height must be larger or equal to 0 m: {self.stump_height_m}')
