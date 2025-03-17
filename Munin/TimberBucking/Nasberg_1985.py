@@ -1,9 +1,10 @@
 # Näsberg (1985) branch-and-bound algorithm.
-from Munin.Taper.EdgrenNylinder1949 import EdgrenNylinder1949
+from Munin.Taper.Taper import Taper
+from Munin.Timber.Timber import Timber
 from Munin.TimberPriceList.PriceList import *
 from enum import IntEnum
 from dataclasses import dataclass
-from typing import List, Optional, Dict, Tuple
+from typing import List, Optional, Dict, Tuple, Type
 import math
 
 class QualityType(IntEnum):
@@ -67,16 +68,17 @@ class Nasberg_1985_BranchBound:
         QualityType.Undefined: -1
     }
 
-    def __init__(self, species: str, region: str, pricelist: Pricelist):
+    def __init__(self, timber: Timber, pricelist: Pricelist, taper_class: Optional[Type[Taper]] = None):
         if pricelist is None:
             raise ValueError("Pricelist must be set")
 
         self._pricelist = pricelist
-        self._species   = species
-        self._region    = region
 
         # If species is not in self._pricelist.Timber, skip or handle
-        self._timber_prices = self._pricelist.Timber.get(species, None)
+        self._timber_prices = self._pricelist.Timber.get(timber.species, None)
+        if not self._timber_prices:
+            raise ValueError(f"Pricelist does not contain values for species '{timber.species}'. Available species: {list(pricelist.Timber.keys())}")
+
 
         # Ranges
         self._minLengthTimberLog   = self._pricelist.TimberLogLength.Min
@@ -172,7 +174,7 @@ class Nasberg_1985_BranchBound:
     def calculate_tree_value(
         self,
         diameter_cm: float,
-        height_dm: float,
+        height_m: float,
         min_diam_dead_wood: float,
         use_downgrading: bool = False,
         timber_price_factor: float = 1.0,
@@ -185,13 +187,8 @@ class Nasberg_1985_BranchBound:
         `height_dm` is total tree height in decimeters.
         """
 
-        # Build the taper object
-        taper = TaperEdgrenNylinder(
-            region=self._region,
-            species=self._species,
-            total_height_m=height_dm / 10.0,
-            dbh_cm=diameter_cm
-        )
+        # --- Instantiate the taper using the provided taper class.
+        taper = self._taper_class(self._timber)
 
         # 1) Precompute some stump heights, top heights, etc.
         (maxHeightButtLog, 
@@ -247,8 +244,8 @@ class Nasberg_1985_BranchBound:
         vol_fub_5cm = taper.volume_under_bark(HSTUB, h[min(vol_fub_endpoint, total_length_dm)])
         vol_fub     = taper.volume_under_bark(HSTUB, h[vol_fub_endpoint])
         vol_sk_ub   = vol_fub
-        if (height_dm/10.0) > h[vol_fub_endpoint]:
-            vol_sk_ub += taper.volume_under_bark(h[vol_fub_endpoint], height_dm/10.0)
+        if height_m > h[vol_fub_endpoint]:
+            vol_sk_ub += taper.volume_under_bark(h[vol_fub_endpoint], height_m)
 
         vol_dead_wood = taper.volume_under_bark(h[0], h[dead_wood_endpoint])
         p_dead_wood   = (vol_dead_wood / vol_sk_ub) if vol_sk_ub > 0 else 0.0
@@ -432,9 +429,9 @@ class Nasberg_1985_BranchBound:
         total_value_ore = best_val
         total_value     = total_value_ore / 100.0  # öre->SEK
         # proportion of top left uncut
-        vol_top = taper.volume_under_bark(h[end_point], height_dm/10.0)
+        vol_top = taper.volume_section(h[end_point], height_m)
         p_top = (vol_top / vol_sk_ub) if vol_sk_ub>0 else 0.0
-        last_cut_rel_height = (10.0 * h[end_point] / height_dm) if height_dm>0 else 1.0
+        last_cut_rel_height = (10.0 * h[end_point] / height_m) if height_m>0 else 1.0
 
         # proportion of value in high stump
         high_stump_value_proportion = 0.0

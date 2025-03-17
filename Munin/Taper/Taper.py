@@ -26,7 +26,7 @@ class Taper:
         This calls your subclass taper.get_diameter_at_height function. 
         """
         # Make sure we don't go below stump or above the actual tree:
-        h = height_m + self.stump_height_m
+        h = height_m + self.timber.stump_height_m
         if h < 0:
             return 0.0
         if h > self.timber.height_m:
@@ -36,7 +36,7 @@ class Taper:
             return 0.0
         return diam_cm
 
-    def volume_under_bark(self, h1_m: float, h2_m: float) -> float:
+    def volume_section(self, h1_m: float, h2_m: float) -> float:
         """
         Integrate volume (m^3) from h1_m to h2_m above stump.
         """

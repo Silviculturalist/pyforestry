@@ -23,6 +23,9 @@ class Timber:
 
     def validate(self):
 
+        if self.height_m <= 0:
+            raise ValueError('Height must be larger than 0 m: {self.height_m}')
+
         if self.diameter_cm < 0:
             raise ValueError("Diameter must be larger or equal to than 0 cm: {self.diameter_cm}")
 

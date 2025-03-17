@@ -77,7 +77,7 @@ class TimberPricelist:
     def maxDiameter(self):
         return self.max_diameter
 
-    def getTimberWeight(self, log_part: 'TimberPricelist.LogParts'):
+    def getTimberWeight(self, log_part: LogParts):
         """
         If you're applying downgrading or certain proportions for pulp/fuel/cull,
         return an object that has .PulpwoodPercentage, .FuelWoodPercentage, .LogCullPercentage, etc.
