@@ -1,5 +1,4 @@
 import numpy as np
-from Munin.Timber.Timber import Timber
 from typing import Optional
 def Marklund_1988_T1(diameter_cm):
     return np.exp(-2.3388 + 11.3264 * (diameter_cm / (diameter_cm + 13)))
@@ -285,9 +284,10 @@ species_map = {
         }
     }
 
-
+from Munin.Timber.Timber import Timber
 # Wrapper function
 def Marklund_1988(species: Optional[str] = None, component: Optional[str] = None, *args, timber: Optional[Timber] = None, **kwargs):
+    
     # Handle Timber object as the first argument if provided
     if isinstance(species, Timber):
         timber = species

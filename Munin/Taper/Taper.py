@@ -1,6 +1,5 @@
 # Taper superclass
 from Munin.Timber.Timber import Timber
-from Munin.Timber.TimberVolumeIntegrator import TimberVolumeIntegrator
 from typing import Optional
 import numpy as np
 
@@ -40,6 +39,7 @@ class Taper:
         """
         Integrate volume (m^3) from h1_m to h2_m above stump.
         """
+        from Munin.Timber.TimberVolumeIntegrator import TimberVolumeIntegrator  # local import to break circular dependency
         if h2_m <= h1_m:
             return 0.0
         # Adjust to absolute heights if you're adding a stump offset:

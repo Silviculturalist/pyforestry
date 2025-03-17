@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="Munin",
-    version="0.1",
+    version="0.2",
     author="Carl Vigren",
     author_email="carl.vigren@slu.se",
     url = "https://github.com/Silviculturalist/Munin",

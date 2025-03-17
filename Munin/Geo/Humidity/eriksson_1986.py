@@ -2,7 +2,7 @@ import geopandas as gpd
 from shapely.geometry import Point
 from importlib.resources import files
 
-def eriksson_1986_humidity(latitude, longitude, epsg=4326):
+def eriksson_1986_humidity(longitude,latitude, epsg=4326):
     """
     Estimate humidity during the vegetation period for Swedish sites.
 

@@ -16,7 +16,7 @@ class RetrieveGeoCode:
         coast_path (str): Path to the shapefile containing the coastline.
 
         Returns:
-        float: Distance in meters from the point to the nearest point on the coastline.
+        float: Distance in kilometers from the point to the nearest point on the coastline.
         """
         # Load the coastline shapefile
         coast_gdf = gpd.read_file(files("Munin.Geo.Coastline").joinpath("SwedishCoastLine_NE_medium_clipped.shp"))
@@ -37,7 +37,7 @@ class RetrieveGeoCode:
         distances = coast_gdf_metric.geometry.apply(lambda line: line.distance(point_metric))
         nearest_distance = distances.min()
 
-        return nearest_distance
+        return nearest_distance/1000
 
 
 

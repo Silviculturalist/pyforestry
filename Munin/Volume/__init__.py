@@ -1,7 +1,16 @@
-from ..Timber.Timber import Timber
-from .Andersson_1954 import andersson_1954_volume_small_trees_birch_height_above_4_m, andersson_1954_volume_small_trees_birch_under_diameter_5_cm, andersson_1954_volume_small_trees_pine, andersson_1954_volume_small_trees_spruce
+from .Andersson_1954 import *
 from .Brandel1990 import BrandelVolume
 from .carbonnier_1954 import carbonnier_1954_volume_larch
 from .Johnsson_1953 import johnsson_1953_volume_hybrid_aspen
-from .Matern_1975 import matern_1975_volume_sweden_oak, matern_1975_volume_sweden_beech
+from .Matern_1975 import *
 from .Naslund1947 import NaslundVolume, NaslundFormFactor
+
+__all__ = [
+    'Andersson_1954',
+    'BrandelVolume',
+    'carbonnier_1954_volume_larch',
+    'johnsson_1953_volume_hybrid_aspen',
+    'Matern_1975'
+    'NaslundVolume',
+    'NaslundFormFactor'
+]

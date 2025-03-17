@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
-@dataclass
+@dataclass(frozen=True)
 class SiteBase(ABC):
     latitude: float
     longitude: float
