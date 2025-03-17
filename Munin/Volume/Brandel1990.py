@@ -155,7 +155,7 @@ class BrandelVolume:
 
     @staticmethod
     def get_volume(species: str, diameter_cm: float, height_m: float, latitude: float,
-                   altitude: Optional[float], fieldlayer: Optional[Union[int, object]], 
+                   altitude: Optional[float], field_layer: Optional[Union[int, object]], 
                    over_bark: bool = True) -> float:
         """
         Main entry point.
@@ -176,31 +176,5 @@ class BrandelVolume:
         else:
             part_of_sweden = "north"
         
-        coeffs: Dict[str, List[float]] = BrandelVolume.get_coefficients(part_of_sweden, latitude, altitude, fieldlayer, over_bark)
+        coeffs: Dict[str, List[float]] = BrandelVolume.get_coefficients(part_of_sweden, latitude, altitude, field_layer, over_bark)
         return BrandelVolume._internal_get_tree_volume(height_m, diameter_cm, species, coeffs)
-
-
-# --- Example Usage ---
-#if __name__ == "__main__":
-#    # Example site data:
-#    latitude: float = 56.5
-#    altitude: float = 150
-#    # Example fieldlayer object with a "code" attribute:
-#    class fieldlayer:
-#        def __init__(self, code: int) -> None:
-#            self.code = code
-#
-#    fieldlayer = fieldlayer(2)  # For example, fieldlayer code 2
-#
-#    # Tree parameters:
-#    diameter_cm: float = 35
-#    height_m: float = 12.0  # 12.0 m
-#    species: str = "Pinus sylvestris"  # Example species name
-#
-#    # Calculate volume (in dm³)
-#    volume_dm3: float = BrandelVolume.get_volume(species, diameter_cm, height_m,
-#                                                 latitude, altitude, fieldlayer,
-#                                                 over_bark=True)
-#    # Convert dm³ to m³ (1 m³ = 1000 dm³)
-#    volume_m3: float = volume_dm3 / 1000
-#    print(f"Calculated volume: {volume_m3:.3f} m³")

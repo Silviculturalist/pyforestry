@@ -66,54 +66,26 @@ class SweTimber(Timber):
         ]:
             raise ValueError("Species must be one of: pinus sylvestris, picea abies, betula, betula pendula, betula pubescens.")
 
-def getvolume(self):
-    # Return 0 if diameter is negative (as in C# code)
-    if self.diameter_cm < 0:
-        return 0
+    def getvolume(self):
+        # Return 0 if diameter is negative (as in C# code)
+        if self.diameter_cm < 0:
+            return 0
 
-    # Define smallTree condition: a small tree is one with diameter < 4.5 cm or height < 7 m.
-    small_tree = (self.diameter_cm < 4.5 or self.height_m < 7)
-    
-    sp = self.species  # species is already lower-case
+        # Define smallTree condition: a small tree is one with diameter < 4.5 cm or height < 7 m.
+        small_tree = (self.diameter_cm < 4.5 or self.height_m < 7)
 
-    # Larch
-    if sp.startswith('larix'):
-        # In the C# code, for Larch we always call the Larch volume function.
-        # Here we mimic that by using one volume function for larix.
-        # We assume that if the diameter is large (>50 cm) we use the Brandel model,
-        # otherwise we use a larch-specific model (here represented by carbonnier_1954).
-        if self.diameter_cm > 50:
-            if self.swedish_site is not None:
-                vol = BrandelVolume.get_volume(
-                    species='pinus sylvestris',  # For larix, the model uses southern pine parameters.
-                    diameter_cm=self.diameter_cm,
-                    height_m=self.height_m,
-                    latitude=self.swedish_site.latitude,
-                    altitude=self.swedish_site.altitude,
-                    field_layer=self.swedish_site.field_layer.code,
-                    over_bark=self.over_bark
-                )
-            else:
-                vol = BrandelVolume.get_volume(
-                    species='pinus sylvestris',
-                    diameter_cm=self.diameter_cm,
-                    height_m=self.height_m,
-                    latitude=self.latitude,
-                    altitude=getattr(self, 'altitude', None),
-                    field_layer=getattr(self, 'field_layer', None),
-                    over_bark=self.over_bark
-                )
-        else:
-            vol = carbonnier_1954.carbonnier_1954_volume_larch(self.diameter_cm, self.height_m)
+        sp = self.species  # species is already lower-case
 
-    # Pine (excluding larix sibirica)
-    elif sp == 'pinus sylvestris':
-            if small_tree:
-                vol = Andersson_1954.andersson_1954_volume_small_trees_pine(self.diameter_cm, self.height_m)
-            else:
+        # Larch
+        if sp.startswith('larix'):
+            # In the C# code, for Larch we always call the Larch volume function.
+            # Here we mimic that by using one volume function for larix.
+            # We assume that if the diameter is large (>50 cm) we use the Brandel model,
+            # otherwise we use a larch-specific model (here represented by carbonnier_1954).
+            if self.diameter_cm > 50:
                 if self.swedish_site is not None:
                     vol = BrandelVolume.get_volume(
-                        species='pinus sylvestris',
+                        species='pinus sylvestris',  # For larix, the model uses southern pine parameters.
                         diameter_cm=self.diameter_cm,
                         height_m=self.height_m,
                         latitude=self.swedish_site.latitude,
@@ -131,108 +103,136 @@ def getvolume(self):
                         field_layer=getattr(self, 'field_layer', None),
                         over_bark=self.over_bark
                     )
+            else:
+                vol = carbonnier_1954.carbonnier_1954_volume_larch(self.diameter_cm, self.height_m)
 
-    # Spruce
-    elif sp == 'picea abies':
-        if small_tree:
-            vol = Andersson_1954.andersson_1954_volume_small_trees_spruce(self.diameter_cm, self.height_m)
+        # Pine (excluding larix sibirica)
+        elif sp == 'pinus sylvestris':
+                if small_tree:
+                    vol = Andersson_1954.andersson_1954_volume_small_trees_pine(self.diameter_cm, self.height_m)
+                else:
+                    if self.swedish_site is not None:
+                        vol = BrandelVolume.get_volume(
+                            species='pinus sylvestris',
+                            diameter_cm=self.diameter_cm,
+                            height_m=self.height_m,
+                            latitude=self.swedish_site.latitude,
+                            altitude=self.swedish_site.altitude,
+                            field_layer=self.swedish_site.field_layer.code,
+                            over_bark=self.over_bark
+                        )
+                    else:
+                        vol = BrandelVolume.get_volume(
+                            species='pinus sylvestris',
+                            diameter_cm=self.diameter_cm,
+                            height_m=self.height_m,
+                            latitude=self.latitude,
+                            altitude=getattr(self, 'altitude', None),
+                            field_layer=getattr(self, 'field_layer', None),
+                            over_bark=self.over_bark
+                        )
+
+        # Spruce
+        elif sp == 'picea abies':
+            if small_tree:
+                vol = Andersson_1954.andersson_1954_volume_small_trees_spruce(self.diameter_cm, self.height_m)
+            else:
+                if self.swedish_site is not None:
+                    vol = BrandelVolume.get_volume(
+                        species='picea abies',
+                        diameter_cm=self.diameter_cm,
+                        height_m=self.height_m,
+                        latitude=self.swedish_site.latitude,
+                        altitude=self.swedish_site.altitude,
+                        field_layer=self.swedish_site.field_layer.code,
+                        over_bark=self.over_bark
+                    )
+                else:
+                    vol = BrandelVolume.get_volume(
+                        species='picea abies',
+                        diameter_cm=self.diameter_cm,
+                        height_m=self.height_m,
+                        latitude=self.latitude,
+                        altitude=getattr(self, 'altitude', None),
+                        field_layer=getattr(self, 'field_layer', None),
+                        over_bark=self.over_bark
+                    )
+
+        # Birch
+        elif sp.startswith('betula'):
+            if small_tree:
+                # Use different Andersson_1954 functions based on tree height.
+                if self.height_m > 4:
+                    vol = Andersson_1954.andersson_1954_volume_small_trees_birch_height_above_4_m(self.diameter_cm, self.height_m)
+                else:
+                    vol = Andersson_1954.andersson_1954_volume_small_trees_birch_under_diameter_5_cm(self.diameter_cm, self.height_m)
+            else:
+                if self.swedish_site is not None:
+                    vol = BrandelVolume.get_volume(
+                        species='betula',
+                        diameter_cm=self.diameter_cm,
+                        height_m=self.height_m,
+                        latitude=self.swedish_site.latitude,
+                        altitude=self.swedish_site.altitude,
+                        field_layer=self.swedish_site.field_layer.code,
+                        over_bark=self.over_bark
+                    )
+                else:
+                    vol = BrandelVolume.get_volume(
+                        species='betula',
+                        diameter_cm=self.diameter_cm,
+                        height_m=self.height_m,
+                        latitude=self.latitude,
+                        altitude=getattr(self, 'altitude', None),
+                        field_layer=getattr(self, 'field_layer', None),
+                        over_bark=self.over_bark
+                    )
+
+        # Aspen (and related species)
+        elif sp in ['fraxinus excelsior', 'populus tremula'] or sp.startswith('alnus'):
+            vol = Eriksson_1973.Eriksson_1973_volume_aspen_Sweden(self.diameter_cm, self.height_m)
+
+        # Lodgepole pine (Contorta)
+        elif sp == 'pinus contorta':
+            if small_tree:
+                vol = Andersson_1954.andersson_1954_volume_small_trees_pine(self.diameter_cm, self.height_m)
+            else:
+                vol = Eriksson_1973.Eriksson_1973_volume_lodgepole_pine_Sweden(self.diameter_cm, self.height_m)
+
+        # Beech
+        elif sp in ['fagus sylvatica', 'carpinus betulus']:
+            vol = Matern_1975.matern_1975_volume_sweden_beech(self.diameter_cm, self.height_m)
+
+        # Oak
+        elif sp.startswith('quercus'):
+            vol = Matern_1975.matern_1975_volume_sweden_oak(self.diameter_cm, self.height_m)
+
+        # Default fallback: use Birch model
         else:
-            if self.swedish_site is not None:
-                vol = BrandelVolume.get_volume(
-                    species='picea abies',
-                    diameter_cm=self.diameter_cm,
-                    height_m=self.height_m,
-                    latitude=self.swedish_site.latitude,
-                    altitude=self.swedish_site.altitude,
-                    field_layer=self.swedish_site.field_layer.code,
-                    over_bark=self.over_bark
-                )
+            if small_tree:
+                if self.height_m > 4:
+                    vol = Andersson_1954.andersson_1954_volume_small_trees_birch_height_above_4_m(self.diameter_cm, self.height_m)
+                else:
+                    vol = Andersson_1954.andersson_1954_volume_small_trees_birch_under_diameter_5_cm(self.diameter_cm, self.height_m)
             else:
-                vol = BrandelVolume.get_volume(
-                    species='picea abies',
-                    diameter_cm=self.diameter_cm,
-                    height_m=self.height_m,
-                    latitude=self.latitude,
-                    altitude=getattr(self, 'altitude', None),
-                    field_layer=getattr(self, 'field_layer', None),
-                    over_bark=self.over_bark
-                )
-
-    # Birch
-    elif sp.startswith('betula'):
-        if small_tree:
-            # Use different Andersson_1954 functions based on tree height.
-            if self.height_m > 4:
-                vol = Andersson_1954.andersson_1954_volume_small_trees_birch_height_above_4_m(self.diameter_cm, self.height_m)
-            else:
-                vol = Andersson_1954.andersson_1954_volume_small_trees_birch_under_diameter_5_cm(self.diameter_cm, self.height_m)
-        else:
-            if self.swedish_site is not None:
-                vol = BrandelVolume.get_volume(
-                    species='betula',
-                    diameter_cm=self.diameter_cm,
-                    height_m=self.height_m,
-                    latitude=self.swedish_site.latitude,
-                    altitude=self.swedish_site.altitude,
-                    field_layer=self.swedish_site.field_layer.code,
-                    over_bark=self.over_bark
-                )
-            else:
-                vol = BrandelVolume.get_volume(
-                    species='betula',
-                    diameter_cm=self.diameter_cm,
-                    height_m=self.height_m,
-                    latitude=self.latitude,
-                    altitude=getattr(self, 'altitude', None),
-                    field_layer=getattr(self, 'field_layer', None),
-                    over_bark=self.over_bark
-                )
-
-    # Aspen (and related species)
-    elif sp in ['fraxinus excelsior', 'populus tremula'] or sp.startswith('alnus'):
-        vol = Eriksson_1973.Eriksson_1973_volume_aspen_Sweden(self.diameter_cm, self.height_m)
-
-    # Lodgepole pine (Contorta)
-    elif sp == 'pinus contorta':
-        if small_tree:
-            vol = Andersson_1954.andersson_1954_volume_small_trees_pine(self.diameter_cm, self.height_m)
-        else:
-            vol = Eriksson_1973.Eriksson_1973_volume_lodgepole_pine_Sweden(self.diameter_cm, self.height_m)
-
-    # Beech
-    elif sp in ['fagus sylvatica', 'carpinus betulus']:
-        vol = Matern_1975.matern_1975_volume_sweden_beech(self.diameter_cm, self.height_m)
-
-    # Oak
-    elif sp.startswith('quercus'):
-        vol = Matern_1975.matern_1975_volume_sweden_oak(self.diameter_cm, self.height_m)
-
-    # Default fallback: use Birch model
-    else:
-        if small_tree:
-            if self.height_m > 4:
-                vol = Andersson_1954.andersson_1954_volume_small_trees_birch_height_above_4_m(self.diameter_cm, self.height_m)
-            else:
-                vol = Andersson_1954.andersson_1954_volume_small_trees_birch_under_diameter_5_cm(self.diameter_cm, self.height_m)
-        else:
-            if self.swedish_site is not None:
-                vol = BrandelVolume.get_volume(
-                    species='betula',
-                    diameter_cm=self.diameter_cm,
-                    height_m=self.height_m,
-                    latitude=self.swedish_site.latitude,
-                    altitude=self.swedish_site.altitude,
-                    field_layer=self.swedish_site.field_layer.code,
-                    over_bark=self.over_bark
-                )
-            else:
-                vol = BrandelVolume.get_volume(
-                    species='betula',
-                    diameter_cm=self.diameter_cm,
-                    height_m=self.height_m,
-                    latitude=self.latitude,
-                    altitude=getattr(self, 'altitude', None),
-                    field_layer=getattr(self, 'field_layer', None),
-                    over_bark=self.over_bark
-                )
-    return vol
+                if self.swedish_site is not None:
+                    vol = BrandelVolume.get_volume(
+                        species='betula',
+                        diameter_cm=self.diameter_cm,
+                        height_m=self.height_m,
+                        latitude=self.swedish_site.latitude,
+                        altitude=self.swedish_site.altitude,
+                        field_layer=self.swedish_site.field_layer.code,
+                        over_bark=self.over_bark
+                    )
+                else:
+                    vol = BrandelVolume.get_volume(
+                        species='betula',
+                        diameter_cm=self.diameter_cm,
+                        height_m=self.height_m,
+                        latitude=self.latitude,
+                        altitude=getattr(self, 'altitude', None),
+                        field_layer=getattr(self, 'field_layer', None),
+                        over_bark=self.over_bark
+                    )
+        return vol
