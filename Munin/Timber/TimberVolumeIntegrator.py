@@ -17,7 +17,7 @@ class TimberVolumeIntegrator:
         :param taper_class: The Taper class (e.g., TimberEdgrenDiameter).
         :return: Cross-sectional area at the given height.
         """
-        diameter = taper_class.get_diameter_at_height(timber, requested_height=height)
+        diameter = taper_class.get_diameter_at_height(timber, height_m=height)
         radius = diameter / 200 #cm to m
         return np.pi * (radius ** 2)
 

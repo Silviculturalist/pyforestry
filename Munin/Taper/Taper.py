@@ -19,7 +19,7 @@ class Taper:
         self.taper.validate(timber) #Ensure compatibility of taper and timber class.
 
 
-    def get_diameter(self, height_m: float) -> float:
+    def get_diameter_at_height(self, height_m: float) -> float:
         """
         Returns diameter under bark (cm) at a given height (m) from stump.
         This calls your subclass taper.get_diameter_at_height function. 
@@ -34,6 +34,14 @@ class Taper:
         if diam_cm is None:
             return 0.0
         return diam_cm
+    
+    def get_height_at_diameter(self, diameter: float) -> float:
+        """
+        Returns the height (m above stump) at which the tree reaches the specified diameter (cm).
+        Delegates to the subclass implementation of taper.get_height_at_diameter.
+        """
+        return self.taper.get_height_at_diameter(self.timber, diameter)
+
 
     def volume_section(self, h1_m: float, h2_m: float) -> float:
         """
@@ -43,8 +51,8 @@ class Taper:
         if h2_m <= h1_m:
             return 0.0
         # Adjust to absolute heights if you're adding a stump offset:
-        abs_h1 = h1_m + self.stump_height_m
-        abs_h2 = h2_m + self.stump_height_m
+        abs_h1 = h1_m + self.timber.stump_height_m
+        abs_h2 = h2_m + self.timber.stump_height_m
 
         # clamp to 0..treeHeight
         abs_h1 = max(0.0, abs_h1)

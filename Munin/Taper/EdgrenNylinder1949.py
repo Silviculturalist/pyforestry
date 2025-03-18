@@ -1,4 +1,4 @@
-from Munin.Timber.Timber import Timber
+from Munin.Timber.SweTimber import SweTimber
 from Munin.Volume.Naslund1947 import NaslundFormFactor
 from Munin.Taper.Taper import Taper
 from typing import Optional
@@ -112,9 +112,14 @@ class Pettersson1949_consts:
 
 
 class EdgrenNylinder1949(Taper):
+    def __init__(self, timber: SweTimber):
+        # Pass the timber and the instance (self) as the taper argument.
+        super().__init__(timber, self)
+
+        self.validate(timber)
 
     @staticmethod
-    def validate(timber: Timber):
+    def validate(timber: SweTimber):
         """
         Validate that the Timber object is compatible with the taper implementation.
 
@@ -133,7 +138,7 @@ class EdgrenNylinder1949(Taper):
             ValueError: If any of the requirements are not met.
         """
         # Check instance type
-        if not isinstance(timber, Timber):
+        if not isinstance(timber, SweTimber):
             raise ValueError("Provided object is not an instance of Timber.")
 
         # Check height (total tree height must be > 0)
@@ -174,7 +179,7 @@ class EdgrenNylinder1949(Taper):
 
 
     @staticmethod
-    def get_base_diameter(timber: Timber) -> float:
+    def get_base_diameter(timber: SweTimber) -> float:
         """
         Calculate the base diameter (DBAS) of the tree using the diameter at breast height (DBH).
         
@@ -201,7 +206,7 @@ class EdgrenNylinder1949(Taper):
 
     
     @staticmethod
-    def get_relative_diameter(rel_height: float, timber: Timber) -> float:
+    def get_relative_diameter(rel_height: float, timber: SweTimber) -> float:
         """
         Calculate the relative diameter at a given relative height using the taper function.
 
@@ -228,11 +233,11 @@ class EdgrenNylinder1949(Taper):
             form_factor_ub=form_factor,
         )
 
-        inflexion_point = EdgrenNylinder1949.get_inflexion_point(
+        inflexion_point = EdgrenNylinder1949Consts.get_inflexion_point(
             species=timber.species, north=(timber.region == "northern"), form_quotient=form_quotient
         )
 
-        constants = EdgrenNylinder1949.get_constants(
+        constants = EdgrenNylinder1949Consts.get_constants(
             species=timber.species, north=(timber.region == "northern"), form_factor=form_quotient
         )
 
@@ -251,7 +256,7 @@ class EdgrenNylinder1949(Taper):
             return None
 
     @staticmethod
-    def get_diameter(timber: Timber, height: float) -> float:
+    def get_diameter_at_height(timber: SweTimber, height_m: float) -> float:
         """
         Calculate the diameter at a specific height using the taper function.
 
@@ -262,8 +267,8 @@ class EdgrenNylinder1949(Taper):
         timber.validate()
 
         # Validate height range
-        if height < 0 or height > timber.height_m:
-            print(f"Warning: Invalid requested height: {height}")
+        if height_m < 0 or height_m > timber.height_m:
+            print(f"Warning: Invalid requested height: {height_m}")
             return None
 
         # Get base diameter
@@ -272,7 +277,7 @@ class EdgrenNylinder1949(Taper):
             return None
 
         # Calculate relative height
-        rel_height = height / timber.height_m
+        rel_height = height_m / timber.height_m
 
         # Get relative diameter at the specified height
         relative_diameter = EdgrenNylinder1949.get_relative_diameter(rel_height, timber)
@@ -286,7 +291,7 @@ class EdgrenNylinder1949(Taper):
     
 
     @staticmethod
-    def get_diameter(timber: Timber, minDiameter: float) -> float:
+    def get_height_at_diameter(timber: SweTimber, minDiameter: float) -> float:
         """
         Find the height corresponding to the specified diameter.
 

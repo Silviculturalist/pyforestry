@@ -11,8 +11,7 @@ def test_timber_valid_instance():
         height_m=20,
         double_bark_mm=1,
         crown_base_height_m=10,
-        over_bark=True,
-        stump_height_m=0.3
+        over_bark=True
     )
     # Check that properties are set correctly.
     assert timber.species == "pinus sylvestris"
