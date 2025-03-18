@@ -248,7 +248,14 @@ class EdgrenNylinder1949(Taper):
         if rel_height <= inflexion_point:
             return 100 - const_q * np.log10(1 + 10000 * rel_height)
         elif inflexion_point < rel_height <= 0.6:
-            return const_Q * np.log10(1 + (1 - rel_height) * const_beta)
+            #For form quotient 0.500, this equation is replaced by a direct linear interpolation cf. Edgren Nylinder p. 14.
+            if (np.isnan(const_Q)):
+                Diameter_inflexion_point = 100 - const_q * np.log10(1 + 10000 * inflexion_point)
+                Diameter_60p_height = const_R * np.log10(1 + (1 - 0.6) * const_Gamma)
+                slope = (Diameter_60p_height-Diameter_inflexion_point)/(0.6-inflexion_point)
+                return Diameter_inflexion_point+slope*(rel_height-inflexion_point)
+            else:
+                return const_Q * np.log10(1 + (1 - rel_height) * const_beta)
         elif 0.6 < rel_height < 1:
             return const_R * np.log10(1 + (1 - rel_height) * const_Gamma)
         else:
