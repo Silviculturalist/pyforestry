@@ -17,7 +17,7 @@ def andersson_1954_volume_small_trees_birch_height_above_4_m(diameter_cm, height
         height_m (float): Height in m.
     
     Returns:
-        float: Volume in dm³.
+        float: Volume in m³.
     """
     return math.exp(
         -4.49213 
@@ -25,7 +25,7 @@ def andersson_1954_volume_small_trees_birch_height_above_4_m(diameter_cm, height
         + 3.98519 * math.log(height_m) 
         - 2.65900 * math.log(height_m - 1.3) 
         - 0.0140970 * diameter_cm
-    )
+    )/1000
 
 def andersson_1954_volume_small_trees_birch_under_diameter_5_cm(diameter_cm, height_m):
     """
@@ -44,14 +44,14 @@ def andersson_1954_volume_small_trees_birch_under_diameter_5_cm(diameter_cm, hei
         height_m (float): Height in m.
     
     Returns:
-        float: Volume in dm³.
+        float: Volume in m³.
     """
     return (
         0.11 
         + 0.1302 * (diameter_cm ** 2) 
         + 0.01063 * (diameter_cm ** 2) * height_m 
         + 0.007981 * diameter_cm * (height_m ** 2)
-    )
+    )/1000
 
 def andersson_1954_volume_small_trees_pine(diameter_cm, height_m):
     """
@@ -70,14 +70,14 @@ def andersson_1954_volume_small_trees_pine(diameter_cm, height_m):
         height_m (float): Height in m.
     
     Returns:
-        float: Volume in dm³.
+        float: Volume in m³.
     """
     return (
         0.22 
         + 0.1066 * (diameter_cm ** 2) 
         + 0.02085 * (diameter_cm ** 2) * height_m 
         + 0.008427 * diameter_cm * (height_m ** 2)
-    )
+    )/1000
 
 def andersson_1954_volume_small_trees_spruce(diameter_cm, height_m):
     """
@@ -96,11 +96,11 @@ def andersson_1954_volume_small_trees_spruce(diameter_cm, height_m):
         height_m (float): Height in m.
     
     Returns:
-        float: Volume in dm³.
+        float: Volume in m³.
     """
     return (
         0.22 
         + 0.1086 * (diameter_cm ** 2) 
         + 0.01712 * (diameter_cm ** 2) * height_m 
         + 0.008905 * diameter_cm * (height_m ** 2)
-    )
+    )/1000

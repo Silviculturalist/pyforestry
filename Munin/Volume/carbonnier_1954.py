@@ -12,7 +12,7 @@ def carbonnier_1954_volume_larch(diameter_cm, height_m):
         height_m (float): Height of the tree in meters.
 
     Returns:
-        float: Volume of the tree in dm³.
+        float: Volume of the tree in m³.
     """
     return (
         0.04801 * (diameter_cm ** 2) * height_m
@@ -20,4 +20,4 @@ def carbonnier_1954_volume_larch(diameter_cm, height_m):
         - 0.01012 * (diameter_cm ** 3)
         - 0.08406 * diameter_cm * height_m
         + 0.1972 * height_m
-    )
+    )/1000

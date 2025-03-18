@@ -10,7 +10,7 @@ def matern_1975_volume_sweden_oak(diameter_cm, height_m):
         height_m (float): Height of the tree (meters).
 
     Returns:
-        float: Volume of the tree (dm³).
+        float: Volume of the tree (m³).
 
     References:
         Matérn, B. (1975). "Volymfunktioner för stående träd av ek och bok." 
@@ -34,7 +34,7 @@ def matern_1975_volume_sweden_oak(diameter_cm, height_m):
                 0.04905 * (diameter_cm**2)
             )
         )
-    return volume
+    return volume/1000
 
 
 def matern_1975_volume_sweden_beech(diameter_cm, height_m):
@@ -49,7 +49,7 @@ def matern_1975_volume_sweden_beech(diameter_cm, height_m):
         height_m (float): Height of the tree (meters).
 
     Returns:
-        float: Volume of the tree (dm³).
+        float: Volume of the tree (m³).
 
     References:
         Matérn, B. (1975). "Volymfunktioner för stående träd av ek och bok." 
@@ -63,4 +63,4 @@ def matern_1975_volume_sweden_beech(diameter_cm, height_m):
         0.0004701 * (diameter_cm**2) * (height_m**2) +
         0.00622 * diameter_cm * (height_m**2)
     )
-    return volume
+    return volume/1000

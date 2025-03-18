@@ -145,11 +145,11 @@ class BrandelVolume:
         sp: str = species.lower()
         # Here we check for keywords in species to select the appropriate coefficient group.
         if "pinus sylvestris" in sp or "pine" in sp:
-            return BrandelVolume.get_volume_log(coeff_dict["Pine"], diameter_cm, height_m)
+            return BrandelVolume.get_volume_log(coeff_dict["Pine"], diameter_cm, height_m)/1000 #dm3 to m3
         elif "picea abies" in sp or "spruce" in sp:
-            return BrandelVolume.get_volume_log(coeff_dict["Spruce"], diameter_cm, height_m)
+            return BrandelVolume.get_volume_log(coeff_dict["Spruce"], diameter_cm, height_m)/1000 #dm3 to m3
         elif sp.startswith("betula") or "birch" in sp:
-            return BrandelVolume.get_volume_log(coeff_dict["Birch"], diameter_cm, height_m)
+            return BrandelVolume.get_volume_log(coeff_dict["Birch"], diameter_cm, height_m)/1000 #dm3 to m3
         else:
             raise ValueError(f"Species '{species}' not supported.")
 
