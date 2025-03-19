@@ -162,7 +162,7 @@ class EdgrenNylinder1949(Taper):
                 raise ValueError("Timber crown_base_height_m must be less than timber.height_m.")
 
         # Double bark thickness should be non-negative
-        if timber.double_bark_mm is None and timber.double_bark_mm < 0:
+        if timber.double_bark_mm is not None and timber.double_bark_mm < 0:
             raise ValueError("Timber double_bark_mm cannot be negative.")
 
         # Check that over_bark is a boolean
@@ -298,7 +298,7 @@ class EdgrenNylinder1949(Taper):
     
 
     @staticmethod
-    def get_height_at_diameter(timber: SweTimber, minDiameter: float) -> float:
+    def get_height_at_diameter(timber: SweTimber, diameter: float) -> float:
         """
         Find the height corresponding to the specified diameter.
 
@@ -307,14 +307,14 @@ class EdgrenNylinder1949(Taper):
         :return: Height (m) corresponding to the target diameter.
         """
         # Validate inputs
-        if minDiameter <= 0 or minDiameter > EdgrenNylinder1949.get_base_diameter(timber):
-            print(f"Invalid minDiameter: {minDiameter}. Must be between 0 and {EdgrenNylinder1949.get_base_diameter(timber)}.")
+        if diameter <= 0 or diameter > EdgrenNylinder1949.get_base_diameter(timber):
+            print(f"Invalid minDiameter: {diameter}. Must be between 0 and {EdgrenNylinder1949.get_base_diameter(timber)}.")
             return None
 
         # Objective function: Minimize |calculated_diameter - minDiameter|
         def objective(height):
             diameter_at_height = EdgrenNylinder1949.get_diameter_at_height(timber, height)
-            return abs(diameter_at_height - minDiameter)
+            return abs(diameter_at_height - diameter)
 
         # Use Newton's method or a bounded scalar minimizer
         result = minimize_scalar(
@@ -327,5 +327,5 @@ class EdgrenNylinder1949(Taper):
         if result.success:
             return result.x  # The height where minDiameter is matched
         else:
-            print(f"Optimization failed for minDiameter: {minDiameter}")
+            print(f"Optimization failed for minDiameter: {diameter}")
             return None    

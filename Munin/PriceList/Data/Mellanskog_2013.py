@@ -2,9 +2,9 @@
 Mellanskog_2013_price_data = {
     "Common": {
         "MaximumTreeHeight": 450,
-        "SawlogLengthRange": (34, 55),
-        "PulpwoodLengthRange": (27, 55),
-        "PulpLogDiameterRange": (5, 60),
+        "SawlogLengthRange": (3.4, 5.5),
+        "PulpwoodLengthRange": (2.7, 5.5),
+        "PulpLogDiameterRange": (5, 6.0),
         "TopDiameter": 5,
         "PulpwoodPrices": {
             "Pine": 250,
@@ -20,7 +20,7 @@ Mellanskog_2013_price_data = {
         "HighStumpHeight": 4
     },
 
-    "PineTimber": {
+    "pinus sylvestris": {
         "VolumeType": "m3to",
         "DiameterPrices": {
             # Diameter: [Butt, Middle, Top]
@@ -52,7 +52,7 @@ Mellanskog_2013_price_data = {
         "MaxHeight": {"Butt": 5.5, "Middle": 11.0, "Top": 99.0}
     },
 
-    "SpruceTimber": {
+    "picea abies": {
         "VolumeType": "m3to",
         "DiameterPrices": {
             # Diameter: [Butt, Middle, Top] (only two qualities, replicate middle price)

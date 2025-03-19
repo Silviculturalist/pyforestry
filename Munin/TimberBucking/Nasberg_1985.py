@@ -6,6 +6,8 @@ from enum import IntEnum
 from dataclasses import dataclass
 from typing import List, Optional, Dict, Tuple, Type
 import math
+import matplotlib.pyplot as plt
+import numpy as np
 
 class QualityType(IntEnum):
     Undefined = 0
@@ -34,6 +36,7 @@ class CrossCutSection:
 @dataclass
 class BuckingResult:
     """Encapsulates the output of the cross-cutting process."""
+    species_group: str                    # The species group.
     total_value: float                    # The total value in e.g. SEK
     top_proportion: float                 # Proportion of volume above final cut
     dead_wood_proportion: float           # Proportion of volume considered dead wood
@@ -44,7 +47,114 @@ class BuckingResult:
     timber_price_by_quality: List[float]  # Per-cubic-meter average timber price by quality
     vol_fub_5cm: float                    # Volume under bark, 5 cm top
     vol_sk_ub: float                      # Total volume under bark for entire stem
+    DBH_cm:float                          # Diameter at breast height 1.3 m
+    height_m:float                        # Total tree height.
+    stump_height_m:float                  # Tree stump height.
+    diameter_stump_cm:float               # Diameter at stump (cm).
+    taperDiams_cm:List[float]             # Taper Diameters for plotting.
+    taperHeights_m:List[float]            # Taper Heights for plotting.
     sections: Optional[List[CrossCutSection]] = None
+
+    def plot(self):
+        if self.sections:
+            fig, ax = plt.subplots(figsize=(10, 6))
+
+            # Prepare points for taper line plot (subtract stump height to align axis)
+            taper_x = (self.taperHeights_m - self.stump_height_m) * 10
+            taper_y = self.taperDiams_cm
+
+            # Plot taper line
+            ax.plot(taper_x, taper_y, linestyle='-', color='black', label='Taper')
+
+            # Plot filled sections under taper curve
+            for section in self.sections:
+                # Mask taper points within each section range
+                mask = (taper_x >= section.start_point) & (taper_x <= section.end_point)
+                section_x = taper_x[mask]
+                section_y = taper_y[mask]
+
+                # If there are no points within the range, interpolate
+                if len(section_x) == 0:
+                    section_x = np.array([section.start_point, section.end_point])
+                    section_y = np.interp(section_x, taper_x, taper_y)
+
+                # Add start and end points explicitly for a smooth fill
+                if section_x[0] > section.start_point:
+                    start_y = np.interp(section.start_point, taper_x, taper_y)
+                    section_x = np.insert(section_x, 0, section.start_point)
+                    section_y = np.insert(section_y, 0, start_diameter := start_diameter if (start_diameter := np.interp(section.start_point, taper_x, taper_y)) > 0 else 0)
+                if section_x[-1] < section.end_point:
+                    section_x = np.append(section_x, section.end_point)
+                    section_y = np.append(section_y, end_diameter := end_diameter if (end_diameter := np.interp(section.end_point, taper_x, taper_y)) > 0 else 0)
+
+                # Fill area under taper curve for this section
+                ax.fill_between(section_x, 0, section_y, alpha=0.3)
+
+                # Add text info (length)
+                length = (section.end_point - section.start_point) / 10
+                midpoint = (section.start_point + section.end_point) / 2
+
+                ax.text(midpoint, section.top_diameter / 2,
+                        f"{section.top_diameter:.1f} cm\n{length:.2f} m\n Vol {section.volume*1000:.0f} $dm^3$\n {section.value:.0f} :-",
+                        ha='center', va='center', fontsize=8)
+
+            # Plot taper line (superfluous or hinder overflow of colored areas?)
+            ax.plot(taper_x, taper_y, linestyle='-', color='black')
+
+            # Vertical lines at section boundaries
+            for section in self.sections:
+                p = section.end_point
+                ax.axvline(x=p, color='grey', linestyle='--', alpha=0.7)
+                # Interpolate to get the y-value of the taper curve at x = p
+                y_value = np.interp(p, taper_x, taper_y)
+
+                # Add the label rotated 90 degrees
+                ax.text(p-2, y_value + 0.5, f"{p}", ha='center', va='bottom', rotation=90, fontsize=9)
+
+
+            # DBH marker
+            ax.scatter((1.3 - self.stump_height_m) * 10, self.DBH_cm, color='red', label='Diameter @ 1.3 m')
+
+            ax.set_xlabel('Distance from stump (dm)')
+            ax.set_ylabel('Diameter (cm)')
+            ax.set_title('Bucking Result Log Profile')
+            ax.set_xlim(left=0) #Prevent automatic axis expansion
+            ax.set_ylim(bottom=0) #Prevent automatic axis expansion
+
+            
+            leg = ax.legend(loc='upper right')
+            leg.get_frame().set_alpha(1)  # Set the background transparency
+
+
+            textstr = '\n'.join((
+                f"Species Group: {self.species_group}",
+                f"DBH: {self.DBH_cm:.1f} cm",
+                f"Height: {self.height_m:.1f} m",
+                f"Stump Height: {self.stump_height_m:.1f} m",
+                f"Stump Diameter: {self.diameter_stump_cm:.1f} cm",
+                f"Vol fub 5cm: {self.vol_fub_5cm:.3f} m³"
+            ))
+
+            # Get legend bounding box
+            fig.canvas.draw()
+
+            # Set your textbox position slightly offset from the legend to avoid overlap
+            legend_x0, legend_y0, _ , _  = ax.get_legend().get_window_extent().transformed(ax.transAxes.inverted()).bounds
+
+            # Set textbox slightly below legend
+            textbox_x = legend_x0  # Slightly left of legend
+            textbox_y = legend_y0 - 0.02  # Slightly below legend
+
+
+            # Positioning text box in upper-right, slightly offset from legend
+            ax.text(textbox_x, textbox_y, textstr, transform=ax.transAxes,
+                    fontsize=9, verticalalignment='top', horizontalalignment='left',
+                    bbox=dict(boxstyle='round', facecolor='white', alpha=1))
+
+            plt.tight_layout()
+            plt.show()
+        else:
+            raise ValueError("No sections available for plotting.")
 
 
 # ------------------------------------------------------------------------------
@@ -73,6 +183,9 @@ class Nasberg_1985_BranchBound:
             raise ValueError("Pricelist must be set")
 
         self._pricelist = pricelist
+        self._timber = timber
+
+        self._taper_class = taper_class
 
         # If species is not in self._pricelist.Timber, skip or handle
         self._timber_prices = self._pricelist.Timber.get(timber.species, None)
@@ -96,7 +209,7 @@ class Nasberg_1985_BranchBound:
             self._maxDiameterTimberLog = 999
 
         # For pulp:
-        self._mvarde = self._pricelist.Pulp.getPulpwoodPrice(self._species) * 100  # SEK -> öre
+        self._mvarde = self._pricelist.Pulp.getPulpwoodPrice(timber.species) * 100  # SEK -> öre
 
         # Build the 'modules' array (possible log lengths) 
         self._moduler = self._build_modules()
@@ -109,11 +222,12 @@ class Nasberg_1985_BranchBound:
         Build the array of possible log lengths (the 'moduler') from the smallest pulp
         or timber length up to the max timber length, plus a sentinel large value.
         """
-        min_log_length = min(self._minLengthPulpwoodLog, self._minLengthTimberLog)
-        max_log_length = self._maxLengthTimberLog
+        min_log_length = min(self._minLengthPulpwoodLog*10, self._minLengthTimberLog*10)
+        max_log_length = self._maxLengthTimberLog*10
         modules = []
         # Fill from min_log_length up to max_log_length
-        for length_dm in range(min_log_length, max_log_length + 1):
+
+        for length_dm in range(int(min_log_length), int(max_log_length) + 1):
             modules.append(length_dm)
         # Some Fortran code had a sentinel 999 at the end
         modules.append(999)
@@ -144,7 +258,7 @@ class Nasberg_1985_BranchBound:
 
         for diam in range(self._minDiameterTimberLog, self._maxDiameterTimberLog + 1):
             for mod_i, length_dm in enumerate(self._moduler):
-                if length_dm > self._maxLengthTimberLog or length_dm < self._minLengthTimberLog:
+                if length_dm > self._maxLengthTimberLog*10 or length_dm < self._minLengthTimberLog*10:
                     continue
                 # volumeFactor depends on the volume measure. 
                 volume_factor = 1.0
@@ -191,6 +305,12 @@ class Nasberg_1985_BranchBound:
         # Use the tree's inherent stump height
         HSTUB = self._timber.stump_height_m
 
+        #get diameter at stump. used only for plotting.
+        DSTUB = taper.get_diameter_at_height(timber=self._timber,height_m=self._timber.stump_height_m)
+        
+        taperheights = np.linspace(0.01 * self._timber.height_m, self._timber.height_m - 0.01, 500)
+        taperdiameters = np.array([taper.get_diameter_at_height(timber=self._timber,height_m=h) for h in taperheights])
+
         # --- Compute key diameters for inversion ---
 
         # Get the target diameter for the top cut: the larger of the TopDiameter and the minimum pulp log diameter
@@ -198,13 +318,13 @@ class Nasberg_1985_BranchBound:
 
         # --- Use inversion to determine key heights ---
         # Height at which the stem reaches the top diameter
-        HTOP = taper.get_height_at_diameter(top_diam)
+        HTOP = taper.get_height_at_diameter(timber=self._timber,diameter=top_diam)
 
         # For quality logs, the minimum allowed diameter is the same for all qualities here
         # (you could change these if needed)
-        heightQuality1 = taper.get_height_at_diameter(self._minDiameterTimberLog)
-        heightQuality2 = taper.get_height_at_diameter(self._minDiameterTimberLog)
-        heightQuality3 = taper.get_height_at_diameter(self._minDiameterTimberLog)
+        heightQuality1 = taper.get_height_at_diameter(timber=self._timber,diameter=self._minDiameterTimberLog)
+        heightQuality2 = taper.get_height_at_diameter(timber=self._timber,diameter=self._minDiameterTimberLog)
+        heightQuality3 = taper.get_height_at_diameter(timber=self._timber,diameter=self._minDiameterTimberLog)
 
         # Cap these quality heights by the maximum allowed heights (from the pricelist)
         max_height_quality1 = self._timber_prices.max_height_quality1 if self._timber_prices else 0.0
@@ -227,6 +347,12 @@ class Nasberg_1985_BranchBound:
                 last_cut_relative_height=0.0, volume_per_quality=[0]*7,
                 timber_price_by_quality=[0]*7,
                 vol_fub_5cm=0.0, vol_sk_ub=0.0,
+                DBH_cm=self._timber.diameter_cm,
+                height_m=self._timber.height_m,
+                stump_height_m=self._timber.stump_height_m,
+                diameter_stump_cm=DSTUB, #plotting only
+                taperDiams_cm=taperdiameters, #plotting only
+                taperHeights_m=taperheights #plotting only
             )
 
         # Build arrays for height (h) and diameter (dh) along the stem.
@@ -240,7 +366,7 @@ class Nasberg_1985_BranchBound:
             # Height above stump in meters
             h[i] = HSTUB + i / 10.0
             # Diameter at that height (cm)
-            dh[i] = taper.get_diameter(h[i])
+            dh[i] = taper.get_diameter_at_height(timber=self._timber,height_m=h[i])
             if dh[i] >= min_diam_dead_wood:
                 dead_wood_endpoint = i
             if dh[i] >= 5:
@@ -259,9 +385,9 @@ class Nasberg_1985_BranchBound:
 
         # Determine high stump endpoint, if applicable.
         high_stump_endpoint = 0
-        if self._pricelist.HighStumpHeight > 0:
+        if self._pricelist.HighStumpHeight*10 > 0:
             for i in range(total_length_dm + 1):
-                if h[i] >= self._pricelist.HighStumpHeight:
+                if h[i] >= self._pricelist.HighStumpHeight*10:
                     high_stump_endpoint = i
                     break
         vol_high_stump = taper.volume_section(h[0], h[high_stump_endpoint]) if high_stump_endpoint > 0 else 0.0
@@ -277,6 +403,12 @@ class Nasberg_1985_BranchBound:
                 last_cut_relative_height=0.0, volume_per_quality=[0]*7,
                 timber_price_by_quality=[0]*7,
                 vol_fub_5cm=vol_fub_5cm, vol_sk_ub=vol_sk_ub,
+                DBH_cm=self._timber.diameter_cm,
+                height_m=self._timber.height_m,
+                stump_height_m=self._timber.stump_height_m,
+                diameter_stump_cm=DSTUB,
+                taperHeights_m=taperheights,
+                taperDiams_cm=taperdiameters
             )
 
         # Map discrete boundaries for quality assignments using the computed quality heights.
@@ -319,8 +451,8 @@ class Nasberg_1985_BranchBound:
             # Determine the maximum module length possible from this cut.
             lmax = 0
             if IKAP <= i_top:
-                lmax = max(lmax, min(i_top - IKAP, self._maxLengthTimberLog))
-            lmax = max(lmax, min(total_length_dm - IKAP, self._maxLengthPulpwoodLog))
+                lmax = max(lmax, min(i_top - IKAP, self._maxLengthTimberLog*10))
+            lmax = max(lmax, min(total_length_dm - IKAP, self._maxLengthPulpwoodLog*10))
 
             for length_dm in self._moduler:
                 if length_dm > lmax:
@@ -342,10 +474,10 @@ class Nasberg_1985_BranchBound:
                 current_quality = QualityType.Undefined
 
                 diam_lj = int(dh[lj])
-                if (length_dm >= self._minLengthTimberLog and 
+                if (length_dm >= self._minLengthTimberLog*10 and 
                     get_quality(lj) != QualityType.Pulp and 
-                    diam_lj >= self._minDiameterTimberLog and 
-                    diam_lj <= self._maxDiameterTimberLog + 1 and
+                    diam_lj >= self._minDiameterTimberLog*10 and 
+                    diam_lj <= self._maxDiameterTimberLog*10 + 1 and
                     lj <= i_top):
                     # Timber log branch.
                     current_quality = get_quality(lj)
@@ -379,7 +511,7 @@ class Nasberg_1985_BranchBound:
                     new_value = v[IKAP] + timber_only + pulp_value_ore + cull_value_ore + fuelwood_value_ore
                     new_value_timber = vtimber[IKAP] + base_timber_price_ore
 
-                elif (length_dm >= self._minLengthPulpwoodLog and length_dm <= self._maxLengthPulpwoodLog and
+                elif (length_dm >= self._minLengthPulpwoodLog*10 and length_dm <= self._maxLengthPulpwoodLog*10 and
                       diam_lj >= self._pricelist.PulpLogDiameter.Min and 
                       diam_lj <= self._pricelist.PulpLogDiameter.Max):
                     # Pulp log branch.
@@ -398,7 +530,7 @@ class Nasberg_1985_BranchBound:
                     new_value = v[IKAP] + pulp_value_ore + cull_value_ore + fuelwood_value_ore
                     new_value_timber = vtimber[IKAP]
 
-                elif length_dm >= 0.5 * self._minLengthPulpwoodLog:
+                elif length_dm >= 0.5 * self._minLengthPulpwoodLog*10:
                     # Log is too short for pulp: classify as cull.
                     current_quality = QualityType.LogCull
                     cull_value_ore = cull_price * vol_log
@@ -508,6 +640,7 @@ class Nasberg_1985_BranchBound:
                 timber_price_by_quality[iv] /= vol_for_price_calc[iv]
 
         return BuckingResult(
+            species_group=species,
             total_value=total_value,
             top_proportion=p_top,
             dead_wood_proportion=p_dead_wood,
@@ -518,5 +651,11 @@ class Nasberg_1985_BranchBound:
             timber_price_by_quality=timber_price_by_quality,
             vol_fub_5cm=vol_fub_5cm,
             vol_sk_ub=vol_sk_ub,
+            DBH_cm=self._timber.diameter_cm,
+            height_m=self._timber.height_m,
+            stump_height_m=self._timber.stump_height_m,
+            diameter_stump_cm=DSTUB,#plotting only
+            taperDiams_cm=taperdiameters,#plotting only
+            taperHeights_m=taperheights, #plotting only
             sections=sections if save_sections else None
         )

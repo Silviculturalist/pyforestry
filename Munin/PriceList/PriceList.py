@@ -128,9 +128,10 @@ class PulpPricelist:
     """Placeholder for pulp prices per species."""
     def __init__(self):
         self._prices = {
-            "Pine": 300,   # SEK/m3
-            "Spruce": 280,
-            "Birch": 250
+            "pinus sylvestris": 300,   # SEK/m3
+            "picea abies": 280,
+            "betula pendula": 250,
+            "betula pubescens":250
         }
 
     def getPulpwoodPrice(self, species: str) -> int:
@@ -220,7 +221,7 @@ def create_pricelist(price_data: dict) -> Pricelist:
     pricelist.Pulp._prices = pulp_prices  # Overwrite directly for simplicity
 
     # Timber pricelists
-    for species_key in ["PineTimber", "SpruceTimber"]:
+    for species_key in [key for key in price_data.keys() if key != 'Common']:
         timber_data = price_data[species_key]
         timber_pricelist = TimberPricelist(
             min_diameter=min(timber_data["DiameterPrices"].keys()),
