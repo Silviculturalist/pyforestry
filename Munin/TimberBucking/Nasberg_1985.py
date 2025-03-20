@@ -1,6 +1,7 @@
 # Näsberg (1985) branch-and-bound algorithm.
 from Munin.Taper.Taper import Taper
 from Munin.Timber.Timber import Timber
+from Munin.TimberBucking.Bucker import Bucker
 from Munin.PriceList.PriceList import *
 from enum import IntEnum
 from dataclasses import dataclass
@@ -161,7 +162,7 @@ class BuckingResult:
 # Here's the main branch and bound bucking logic
 # ------------------------------------------------------------------------------
 
-class Nasberg_1985_BranchBound:
+class Nasberg_1985_BranchBound(Bucker):
     """
     Python version of the DP cross-cut logic from the C# code. 
     """

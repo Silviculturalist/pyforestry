@@ -1,15 +1,19 @@
 # Example structured data for easy readability and maintenance
+# Use of TreeSpecies shorthand to avoid typos and situations e.g. Betula != Betula pendula.
+
+from Munin.Helpers.TreeSpecies import TreeSpecies
+
 Mellanskog_2013_price_data = {
     "Common": {
         "MaximumTreeHeight": 450,
         "SawlogLengthRange": (3.4, 5.5),
         "PulpwoodLengthRange": (2.7, 5.5),
-        "PulpLogDiameterRange": (5, 6.0),
+        "PulpLogDiameterRange": (5, 60),
         "TopDiameter": 5,
         "PulpwoodPrices": {
-            "Pine": 250,
-            "Spruce": 265,
-            "Birch": 250
+            TreeSpecies.Sweden.pinus_sylvestris.full_name: 250,
+            TreeSpecies.Sweden.picea_abies.full_name: 265,
+            TreeSpecies.Sweden.betula.full_name: 250
         },
         "PulpwoodCullProportion": 0.05,
         "FuelwoodProportion": 0.0,
@@ -20,7 +24,7 @@ Mellanskog_2013_price_data = {
         "HighStumpHeight": 4
     },
 
-    "pinus sylvestris": {
+    TreeSpecies.Sweden.pinus_sylvestris.full_name: {
         "VolumeType": "m3to",
         "DiameterPrices": {
             # Diameter: [Butt, Middle, Top]
@@ -47,12 +51,12 @@ Mellanskog_2013_price_data = {
             "Top":    [0.00, 0.31, 0.57, 0.12],
         },
         "DowngradeProportions": {
-            "Massaved": 0.10, "Energived": 0.0, "Vrak": 0.02
+            "Pulpwood": 0.10, "Fuelwood": 0.0, "HarvestResidue": 0.02
         },
         "MaxHeight": {"Butt": 5.5, "Middle": 11.0, "Top": 99.0}
     },
 
-    "picea abies": {
+    TreeSpecies.Sweden.picea_abies.full_name: {
         "VolumeType": "m3to",
         "DiameterPrices": {
             # Diameter: [Butt, Middle, Top] (only two qualities, replicate middle price)
@@ -79,7 +83,7 @@ Mellanskog_2013_price_data = {
             "Top":    [0.86, 0.14],
         },
         "DowngradeProportions": {
-            "Massaved": 0.10, "Energived": 0.0, "Vrak": 0.02
+            "Pulpwood": 0.10, "Fuelwood": 0.0, "HarvestResidue": 0.02
         },
         "MaxHeight": {"Butt": 5.5, "Middle": 11.0, "Top": 99.0}
     }
