@@ -1,5 +1,6 @@
-#These classes are not mandatory, but provide optional type-safety to avoid mixing e.g.
-#Site-index at DBH-age = 100 and Site-index at total age = 100.
+# These classes are development-mandatory. 
+# They are not user-mandatory!
+# Anticipate users passing other structures and handle these appropriately.
 from Munin.Site.SiteBase import SiteBase
 from Munin.Helpers.TreeSpecies import *
 from dataclasses import dataclass
@@ -9,30 +10,62 @@ import statistics
 from typing import List, Any, Dict, Optional, Union
 
 #E.g. d= Diameter_cm(20,over_bark=True)
-@dataclass(frozen=True)
-class Diameter_cm:
-    value: float
-    over_bark: bool
-    measurement_height_m: float = 1.3  # Default: diameter measured at breast height
-    
-    def __post_init__(self):
-        if self.value < 0:
+class Diameter_cm(float):
+    def __new__(cls, value: float, over_bark: bool, measurement_height_m: float = 1.3):
+        if value < 0:
             raise ValueError("Diameter must be non-negative.")
+        # Create the float instance
+        obj = super().__new__(cls, value)
+        # Attach extra attributes
+        obj.over_bark = over_bark
+        obj.measurement_height_m = measurement_height_m
+        return obj
 
-@dataclass(frozen=True)
-class AgeMeasurement:
-    value: float
-    code: int
+    def __repr__(self):
+        return (f"Diameter_cm({float(self)}, over_bark={self.over_bark}, "
+                f"measurement_height_m={self.measurement_height_m})")
 
-#E.g. a = Age.DBH(45)
+
+class AgeMeasurement(float):
+    def __new__(cls, value: float, code: int):
+        if value < 0:
+            raise ValueError("Age must be non-negative.")
+        # Create the float instance
+        obj = super().__new__(cls, value)
+        # Attach the age code
+        obj.code = code
+        return obj
+
+    def __repr__(self):
+        return f"AgeMeasurement({float(self)}, code={self.code})"
+
 class Age(Enum):
     TOTAL = 1
     DBH = 2
 
     def __call__(self, value: float) -> AgeMeasurement:
-        if value < 0:
-            raise ValueError("Age must be non-negative.")
-        return AgeMeasurement(value=value, code=self.value)
+        # Use our new AgeMeasurement which behaves like a float.
+        return AgeMeasurement(value, self.value)
+
+
+
+#SiteIndexValue is a property that's held by the results from site index functions.
+#This avoids unintentional mix-ups between species, reference ages and functions.
+class SiteIndexValue(float):
+    def __new__(cls, value: float, reference_age: float, species: TreeName, fn: callable):
+        # Create the float instance
+        obj = super().__new__(cls, value)
+        # Attach extra attributes
+        obj.reference_age = reference_age
+        obj.species = species
+        obj.fn = fn
+        return obj
+
+    def __repr__(self):
+        return (f"SiteIndexValue({float(self)}, reference_age={self.reference_age}, "
+                f"species={self.species}, fn={self.fn.__name__ if hasattr(self.fn, '__name__') else self.fn})")
+
+
 
 @dataclass(frozen=True)
 class Position:
