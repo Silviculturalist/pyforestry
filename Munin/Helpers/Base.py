@@ -67,6 +67,126 @@ class SiteIndexValue(float):
 
 
 
+#VolumeValue will avoid mix-ups between different volume units and types.
+# Here, unit is e.g. m3, m3sk, m3_to, m3_fub5, (different measurement types)
+# Whereas unit is dm3, m3..
+
+class Volume(float):
+    UNIT_CONVERSION = {
+        'mm3': 1e-9, 'cm3': 1e-6, 'dm3': 1e-3, 'm3': 1,
+        'dam3': 1e3, 'hm3': 1e6, 'km3': 1e9, 'Mm3': 1e18,
+        'Gm3': 1e27, 'Tm3': 1e36, 'Pm3': 1e45
+    }
+    ORDERED_UNITS = ['mm3', 'cm3', 'dm3', 'm3', 'dam3', 'hm3', 'km3', 'Mm3', 'Gm3', 'Tm3', 'Pm3']
+    TYPE_REGIONS = {
+        'm3sk': ['Sweden', 'Finland', 'Norway'],
+        'm3to': ['Sweden'],
+        'm3fub': ['Sweden']
+    }
+
+    def __new__(cls, value, region='Sweden', species='unknown', unit='m3', type='m3sk'):
+        obj = super().__new__(cls, cls.UNIT_CONVERSION[unit] * value)
+        obj.region = region
+        obj.species = species
+        obj.type = type
+        obj.unit = unit
+        obj._validate_region()
+        return obj
+
+    def __repr__(self):
+        value_m3 = float(self)
+        best_unit = None
+        best_value = None
+        # First pass: strict 1-10 range
+        for unit in reversed(self.ORDERED_UNITS):
+            converted_value = value_m3 / self.UNIT_CONVERSION[unit]
+            if 1 <= abs(converted_value) < 10:
+                return f"Volume({converted_value:.4f} {unit}, region='{self.region}', species='{self.species}', type='{self.type}')"
+            # Track the unit with the smallest value ≥ 1
+            if abs(converted_value) >= 1 and (best_value is None or abs(converted_value) < abs(best_value)):
+                best_unit = unit
+                best_value = converted_value
+        # If no 1-10 match, use the best unit found (smallest value ≥ 1)
+        if best_unit is not None:
+            return f"Volume({best_value:.4f} {best_unit}, region='{self.region}', species='{self.species}', type='{self.type}')"
+        # Extreme cases: smaller than 1 mm3 or zero
+        extreme_unit = 'mm3' if value_m3 < 1 else 'Pm3'
+        extreme_value = value_m3 / self.UNIT_CONVERSION[extreme_unit]
+        return f"Volume({extreme_value:.4f} {extreme_unit}, region='{self.region}', species='{self.species}', type='{self.type}')"
+
+    def to(self, unit):
+        return float(self) / self.UNIT_CONVERSION[unit]
+
+    def m3(self):
+        return self.to('m3')
+
+    def __eq__(self, other):
+        if not isinstance(other, Volume):
+            return NotImplemented
+        return (
+            abs(float(self) - float(other)) < 1e-9 and
+            self.type == other.type and
+            self.region in self.TYPE_REGIONS[self.type] and
+            other.region in self.TYPE_REGIONS[other.type]
+        )
+
+    def __add__(self, other):
+        self._validate_compatibility(other)
+        return Volume(float(self) + float(other), self.region, self.species, 'm3', self.type)
+
+    def __sub__(self, other):
+        self._validate_compatibility(other)
+        return Volume(float(self) - float(other), self.region, self.species, 'm3', self.type)
+
+    def __mul__(self, scalar):
+        if isinstance(scalar, Volume):
+            raise TypeError("Multiplication between Volume instances is not allowed.")
+        return Volume(float(self) * scalar, self.region, self.species, 'm3', self.type)
+
+    def __truediv__(self, scalar):
+        if isinstance(scalar, Volume):
+            raise TypeError("Division between Volume instances is not allowed.")
+        return Volume(float(self) / scalar, self.region, self.species, 'm3', self.type)
+
+    def _validate_compatibility(self, other):
+        if not isinstance(other, Volume):
+            raise TypeError("Can only operate between Volume instances.")
+        if self.type != other.type:
+            raise ValueError(f"Incompatible types: {self.type} vs {other.type}")
+        if self.region not in self.TYPE_REGIONS[self.type] or other.region not in self.TYPE_REGIONS[self.type]:
+            raise ValueError(f"Regions '{self.region}' and '{other.region}' must both be valid for type '{self.type}'")
+
+    def _validate_region(self):
+        base_type = self.type
+        allowed_regions = self.TYPE_REGIONS.get(base_type, [])
+        if self.region not in allowed_regions:
+            raise ValueError(f"Region '{self.region}' not allowed for type '{self.type}'. Allowed regions: {allowed_regions}")
+
+    class Region:
+        def __init__(self, region):
+            self.region = region
+
+        def __getattr__(self, type_unit):
+            def creator(value, species='unknown'):
+                for unit in Volume.UNIT_CONVERSION:
+                    if type_unit.startswith(unit):
+                        type_suffix = type_unit[len(unit):]
+                        if type_suffix in Volume.TYPE_REGIONS:
+                            return Volume(value, region=self.region, species=species, unit=unit, type=type_suffix)
+                        if type_suffix == 'sk':
+                            return Volume(value, region=self.region, species=species, unit=unit, type='m3sk')
+                if type_unit in Volume.TYPE_REGIONS:
+                    return Volume(value, region=self.region, species=species, unit='m3', type=type_unit)
+                if type_unit == 'sk':
+                    return Volume(value, region=self.region, species=species, unit='m3', type='m3sk')
+                raise ValueError(f"Invalid type/unit combination: '{type_unit}'")
+            return creator
+
+    Sweden = Region('Sweden')
+    Norway = Region('Norway')
+    Finland = Region('Finland')
+
+
 @dataclass(frozen=True)
 class Position:
     X: float
