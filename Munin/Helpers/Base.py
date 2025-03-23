@@ -1,11 +1,15 @@
 # These classes are development-mandatory. 
 # They are not user-mandatory!
 # Anticipate users passing other structures and handle these appropriately.
+from pyproj import CRS
+from shapely import Polygon
+import geopandas as gpd
 from Munin.Site.SiteBase import SiteBase
 from Munin.Helpers.TreeSpecies import *
 from dataclasses import dataclass
 from enum import Enum
 import math
+import numpy as np
 import statistics
 from typing import List, Any, Dict, Optional, Union
 
@@ -24,7 +28,7 @@ class Diameter_cm(float):
     def __repr__(self):
         return (f"Diameter_cm({float(self)}, over_bark={self.over_bark}, "
                 f"measurement_height_m={self.measurement_height_m})")
-
+    
 
 class AgeMeasurement(float):
     def __new__(cls, value: float, code: int):
@@ -192,6 +196,7 @@ class Position:
     X: float
     Y: float
     Z: Optional[float] = 0
+    CRS: Optional[CRS]
 
 #Internal helper to set position in tree creation.
 def _set_position(position: Union[Position, tuple[float, float], tuple[float, float, float]] = None) -> None:
@@ -243,6 +248,7 @@ class RepresentationTree(Tree):
     age: Optional[Union[Age, float]] = None
     diameter_cm: Optional[Union[Diameter_cm, float]] = None
     height_m: Optional[float] = None
+    weight: Optional[float] = 1 # Number of trees it represents.
 
     def __post_init__(self):
         # Process the position input and assign a Position instance (or None)
@@ -255,17 +261,199 @@ class RepresentationTree(Tree):
 
 class Plot:
     '''
-    Contains information from a plot on a stand
+    Contains information from a circular plot on a stand
     '''
-    def __init__(self,radius: Optional[float],area_m2: Optional[float]):
-        pass
-    # TODO
+    def __init__(self,id:int|str, position: Optional[Position] = None, radius_m: Optional[float] = None, 
+                 area_m2: Optional[float] = None, site: Optional[SiteBase] = None, 
+                 trees: Optional[List[RepresentationTree]] = None):
+        
+        if id is None:
+            raise ValueError('Plot must be given an ID (integer or string)!')
+        else:
+            self.id = id
+        
+        if radius_m is None and area_m2 is None:
+            raise ValueError('Plot class cannot be instanced without either a valid radius_m or area_m2!')
+        
+        if radius_m:
+            self.radius_m = radius_m
+        if radius_m and not area_m2:
+            self.area_m2 = math.pi * self.radius_m ** 2
+        if area_m2:
+            self.area_m2 = area_m2
+        if area_m2 and not radius_m:
+            self.radius_m = math.sqrt(self.area_m2 / math.pi)
+        if radius_m and area_m2 and abs(math.pi * radius_m ** 2 - area_m2) > 1e-6:
+            raise ValueError(f'Plot radius of {self.radius_m} m does not have an area of {self.area_m2} m²!')
 
+        self.position = position
+        self.site = site
+        self.trees = trees if trees is not None else []
+    
+    @property
+    def area_ha(self):
+        return self.area_m2 / 10000
+    
+@dataclass
+class TopHeightDefinition:
+    nominal_n:100
+    nominal_area_ha:1
+    
 
 class Stand:
-    def __init__(self, site: Optional[SiteBase],area_ha: Optional[float],plots: Optional[List[Plot]]):
-        pass
-    # TODO
+    def __init__(self, 
+                 site: Optional['SiteBase'] = None,
+                 area_ha: Optional[float] = None,
+                 plots: Optional[List['Plot']] = None,
+                 polygon: Optional[Polygon] = None,
+                 crs: str = "EPSG:4326",# default assumes lat/lon
+                 top_height_definition: Optional[TopHeightDefinition] = TopHeightDefinition()
+                 ):  
+        self.site = site
+        self.area_ha = area_ha
+        self.plots = plots
+        self.polygon = polygon
+        self.top_height_definition = top_height_definition
+        self.attrs = {}
+
+        if polygon:
+            gdf = gpd.GeoDataFrame({'geometry': [self.polygon]}, crs=crs)
+
+            # Check if the polygon CRS is geographic (degrees)
+            if gdf.crs.is_geographic:
+                # Reproject to UTM
+                utm_crs = gdf.estimate_utm_crs()
+                gdf = gdf.to_crs(utm_crs)
+            
+            # Otherwise, assume projected CRS is already suitable (area in meters²)
+            self.projected_polygon = gdf.geometry.iloc[0]
+            
+            # Calculate area in hectares
+            self.area_ha = self.projected_polygon.area / 10_000
+        
+        if plots:
+            self.attrs['QMD']
+
+    def get_dominant_height(self):
+        if self.plots is None:
+            self.dominant_height = (None, None)
+            return 
+        else:
+            # Step 1. Get plot size.
+            mode_area = statistics.mode([x.area_m2 for x in self.plots])
+            # Step 1a. Filter for plots with an area equal to the area mode.
+            subplots = [x for x in self.plots if math.isclose(x.area_m2,mode_area)]
+            
+            # Step 2. Get the number of top_m heights measured on the thickest diameters per plot available.
+            mplot = []
+            for plot in self.plots:
+                if any(np.isnan([x.diameter_cm for x in plot.trees])):
+                    raise ValueError(f'One or more trees have missing diameters on plot with id: {plot.id}!')
+                sorted_trees = sorted(plot.trees,
+                                      key=lambda t: t.diameter_cm if t.diameter_cm is not None else -np.inf,
+                                      reverse=True)
+                
+                if sorted_trees[0].height_m is None:
+                    warnings.warn(f'Tree with the largest diameter on plot {plot.id} does not have an associated height. Skipping plot.')
+                    continue
+                
+                isOK = True
+                m=0
+
+                while isOK and m<10:
+                    for tree in sorted_trees:
+                        if tree.height_m:
+                            m+=1
+                        else:
+                            isOK=False
+                
+                mplot.append(m)
+
+            # Step 3. Calculate estimate
+
+
+            # Step 4. Calculate eventual bias incurred by TopHeightDefinition and chosen plot size and top_m measured heights from thickest diameters. 
+
+            # Step 5. Correct estimate
+
+            # Step 6. Calculate precision
+
+            self.dominant_height = (estimate,precision)
+            return
+
+
+    @staticmethod
+    def calculate_top_height_bias(r, m, n_trees=1_000, n_simulations=10_000, 
+                       nominal_top_n=100,nominal_area =10_000, sigma=3.0):
+        """
+        Calculate the bias of the estimator h_hat for top height in a forest stand.
+        Based on lecture by Bertil Matérn, e.g. Matérn, B. 1984. Four lectures on forest biometry. Section of Forest Biometry, Swedish University of Agricultural Sciences. Report 23. ISBN 91-576-2001-6. p. 139 pp. 100-103. 
+
+        Parameters:
+        - r: Radius of the circular plot (meters)
+        - m: Number of largest trees to average in the plot
+        - nominal_area: Nominal area (m², default 10000 = 1 ha)
+        - n_trees: Total number of trees in the stand (default 1000)
+        - n_simulations: Number of simulation runs (default 10000)
+        - nominal_top_n: Number of top trees defining H_bar per nominal_area (default 100)
+        - sigma: Percent error in height measurements (default 3.0)
+
+        Returns:
+        - bias: Average h_hat - H_bar (meters)
+        - bias_percentage: Bias as a percentage of H_bar
+        """
+        h_hat_list = []
+        H_bar_list = []
+
+        for _ in range(n_simulations):
+            # Generate tree positions uniformly in the stand
+            x_pos = np.random.uniform(0, np.sqrt(nominal_area), n_trees)
+            y_pos = np.random.uniform(0, np.sqrt(nominal_area), n_trees)
+
+            # Generate diameters (exponential distribution, mean 20 cm)
+            diameters = np.random.exponential(scale=20.0, size=n_trees)
+
+            # Compute true heights using the height-diameter function
+            heights_true = 1.3 + (diameters**2) / ((1.1138 + 0.2075 * diameters)**2)
+
+            # Add 3% measurement error to heights
+            noise = np.random.normal(0, (sigma/100) * heights_true, n_trees)
+            heights_measured = heights_true + noise
+
+            # Compute H_bar: mean height of top nominal_top_n trees by diameter
+            top_indices = np.argsort(diameters)[-nominal_top_n:][::-1]
+            H_bar = np.mean(heights_true[top_indices])  # True heights for true parameter
+            H_bar_list.append(H_bar)
+
+            # Sample a circular plot with radius r
+            center_x = np.random.uniform(r, np.sqrt(nominal_area) - r)
+            center_y = np.random.uniform(r, np.sqrt(nominal_area) - r)
+            distances = np.sqrt((x_pos - center_x)**2 + (y_pos - center_y)**2)
+            in_plot = distances <= r
+
+            # Compute h_hat if enough trees are in the plot
+            if np.sum(in_plot) >= m:
+                plot_diameters = diameters[in_plot]
+                plot_heights = heights_measured[in_plot]
+                plot_top_indices = np.argsort(plot_diameters)[-m:][::-1]
+                h_hat = np.mean(plot_heights[plot_top_indices])
+            else:
+                h_hat = np.nan  # Insufficient trees
+            h_hat_list.append(h_hat)
+
+        # Calculate averages and bias
+        h_hat_avg = np.nanmean(h_hat_list)
+        H_bar_avg = np.mean(H_bar_list)
+        bias = h_hat_avg - H_bar_avg
+        bias_percentage = (bias / H_bar_avg) * 100
+
+        return bias, bias_percentage
+
+
+            
+        
+    
+
     
 
 
