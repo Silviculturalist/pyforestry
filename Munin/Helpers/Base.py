@@ -38,6 +38,10 @@ class Diameter_cm(float):
         obj.over_bark = over_bark
         obj.measurement_height_m = measurement_height_m
         return obj
+    
+    @property
+    def value(self) -> float:
+        return float(self)
 
     def __repr__(self):
         return (f"Diameter_cm({float(self)}, over_bark={self.over_bark}, "
@@ -55,6 +59,10 @@ class AgeMeasurement(float):
         obj = super().__new__(cls, value)
         obj.code = code
         return obj
+    
+    @property
+    def value(self) -> float:
+        return float(self)
 
     def __repr__(self):
         return f"AgeMeasurement({float(self)}, code={self.code})"
@@ -91,7 +99,7 @@ class StandBasalArea(float):
     """
     def __new__(cls,
                 value: float,
-                species: Optional[Union[TreeName, List[TreeName]]] = None,
+                species: Optional[TreeName] = None,
                 precision: float = 0.0,
                 over_bark: bool = True,
                 direct_estimate: bool = True):
@@ -103,6 +111,10 @@ class StandBasalArea(float):
         obj.over_bark = over_bark
         obj.direct_estimate = direct_estimate
         return obj
+    
+    @property
+    def value(self) -> float:
+        return float(self)
 
     def __repr__(self):
         return (f"StandBasalArea({float(self):.3f} m^2/ha, species={self.species}, "
@@ -128,7 +140,7 @@ class StandVolume(float):
     """
     def __new__(cls,
                 value: float,
-                species: Optional[Union[TreeName, List[TreeName]]] = None,
+                species: Optional[TreeName] = None,
                 precision: float = 0.0,
                 over_bark: bool = True,
                 fn=None):
@@ -140,6 +152,10 @@ class StandVolume(float):
         obj.over_bark = over_bark
         obj.fn = fn
         return obj
+    
+    @property
+    def value(self) -> float:
+        return float(self)
 
     def __repr__(self):
         f_str = self.fn.__name__ if callable(self.fn) else self.fn
@@ -160,7 +176,7 @@ class Stems(float):
     """
     def __new__(cls,
                 value: float,
-                species: Optional[Union[TreeName, List[TreeName]]] = None,
+                species: Optional[TreeName] = None,
                 precision: float = 0.0):
         if value < 0:
             raise ValueError("Stems must be non-negative.")
@@ -169,6 +185,10 @@ class Stems(float):
         obj.precision = precision
         return obj
 
+    @property
+    def value(self) -> float:
+        return float(self)
+    
     def __repr__(self):
         return (f"Stems({float(self):.1f} stems/ha, species={self.species}, "
                 f"precision={self.precision})")
@@ -217,10 +237,36 @@ class TopHeightMeasurement(float):
         obj.precision = precision
         obj.est_bias = est_bias
         return obj
+    
+    @property
+    def value(self) -> float:
+        return float(self)
 
     def __repr__(self):
         return (f"TopHeightMeasurement({float(self):.2f} m, definition={self.definition}, "
                 f"species={self.species}, precision={self.precision}, est_bias={self.est_bias})")
+
+class QuadraticMeanDiameter(float):
+    """
+    Represents the quadratic mean diameter (in centimeters) with an associated precision.
+    
+    The value is computed as:
+        QMD = sqrt((40000 * BasalArea) / (pi * Stems))
+    where BasalArea is in m²/ha and Stems is in stems/ha.
+    """
+    def __new__(cls, value: float, precision: float = 0.0):
+        if value < 0:
+            raise ValueError("QuadraticMeanDiameter must be non-negative.")
+        obj = float.__new__(cls, value)
+        obj.precision = precision
+        return obj
+
+    @property
+    def value(self) -> float:
+        return float(self)
+
+    def __repr__(self):
+        return f"QuadraticMeanDiameter({float(self):.2f} cm, precision={self.precision:.2f} cm)"
 
 
 # ------------------------------------------------------------------------------
@@ -656,6 +702,9 @@ class Volume(float):
 class Position:
     """
     Represents an (X, Y, Z) coordinate with an optional CRS.
+    
+    If crs is None, the coordinate system is assumed to be non‐geographic.
+        
     """
     def __init__(self,
                  X: float,
@@ -666,6 +715,24 @@ class Position:
         self.Y = Y
         self.Z = Z
         self.crs = crs
+        self.coordinate_system = 'cartesian'
+
+    @classmethod
+    def from_polar(cls, r: float, theta: float, z: Optional[float] = 0.0):
+        """
+        Create a Position using polar coordinates.
+
+        Theta is assumed to be in radians.
+        The resulting Position has no CRS.
+        """
+        x = r * math.cos(theta)
+        y = r * math.sin(theta)
+        obj = cls(x, y, z, crs=None)
+        obj.coordinate_system = 'polar'
+        # Optionally store the original polar parameters:
+        obj.r = r
+        obj.theta = theta
+        return obj
 
     def __repr__(self):
         return f"Position(X={self.X}, Y={self.Y}, Z={self.Z}, crs={self.crs})"
@@ -814,6 +881,8 @@ class CircularPlot:
         The location of the plot center (if known).
     radius_m : float | None
         The radius of the circular plot in meters (if known).
+    occlusion : float
+        Portion [0-1] of the stand to be adjusted for being outside of the stand. Adjustment is 
     area_m2 : float | None
         The area of the plot in m² (if known). Must supply either radius_m or area_m2.
     site : SiteBase | None
@@ -827,6 +896,7 @@ class CircularPlot:
                  radius_m: Optional[float] = None,
                  area_m2: Optional[float] = None,
                  site: Optional[SiteBase] = None,
+                 occlusion: Optional[float] = 0,
                  AngleCount: Optional[List[AngleCount]] = None,
                  trees: Optional[List[RepresentationTree]] = None):
         if id is None:
@@ -835,6 +905,10 @@ class CircularPlot:
         self.id = id
         self.position = position
         self.site = site
+
+        if not 0<=occlusion<1:
+            raise ValueError('Plot must have [0,0.99] occlusion!')
+        self.occlusion = occlusion
 
         self.AngleCount = AngleCount if AngleCount is not None else []
 
@@ -893,7 +967,8 @@ class StandMetricAccessor:
     def _ensure_estimates(self):
         """Compute or refresh HT estimates if not done."""
         if self._metric_name not in self._stand._metric_estimates:
-             self._stand._compute_ht_estimates()
+             if not self._stand.use_angle_count:
+                self._stand._compute_ht_estimates()
 
 
     def __getattr__(self, item):
@@ -968,7 +1043,7 @@ class Stand:
                  area_ha: Optional[float] = None,
                  plots: Optional[List[CircularPlot]] = None,
                  polygon: Optional[Polygon] = None,
-                 crs: str = "EPSG:4326",
+                 crs: str = None,
                  top_height_definition: Optional[TopHeightDefinition] = None):
         self.site = site
         self.polygon = polygon
@@ -1009,11 +1084,16 @@ class Stand:
         self._metric_estimates: Dict[str, Dict[Any, Union[Stems, StandBasalArea]]] = {}
 
         #Get angle-counting estimates for stand (should be stored in self._metric_estimates)
-        # NB Total should also be returned
-        if self.plots:
-            if any(plot.AngleCount is not None and plot.AngleCount for plot in self.plots):
-                self.Stems, self.BasalArea = AngleCountAggregator(self.plots).aggregate_stand_metrics
-
+        # Determine if any plots supply AngleCount objects.
+        all_angle_counts = [(ac, plot.occlusion) for plot in self.plots for ac in plot.AngleCount]
+        if all_angle_counts:
+            # Use AngleCount-based estimates.
+            ba_dict, stems_dict = AngleCountAggregator(all_angle_counts).aggregate_stand_metrics()
+            self._metric_estimates["BasalArea"] = ba_dict
+            self._metric_estimates["Stems"] = stems_dict
+            self.use_angle_count = True
+        else:
+            self.use_angle_count = False
     
     # Two key properties for your requested usage:
     @property
@@ -1037,6 +1117,63 @@ class Stand:
             float(stand.Stems)         -> numeric total
         """
         return StandMetricAccessor(self, "Stems")
+    
+    @property
+    def QMD(self) -> StandMetricAccessor:
+        """
+        Access the stand's quadratic mean diameter (QMD) aggregator.
+        Usage:
+          Stand.QMD.TOTAL               -> Total QMD (QuadraticMeanDiameter)
+          Stand.QMD(TreeSpecies(...))   -> Species-level QMD estimate
+          float(Stand.QMD)              -> Numeric total QMD value (in cm)
+        """
+        self._ensure_qmd_estimates()
+        return StandMetricAccessor(self, "QMD")
+
+    def _ensure_qmd_estimates(self):
+        """
+        Ensure that QMD estimates are computed.
+        QMD is computed from the existing BasalArea and Stems estimates.
+        """
+        if "QMD" not in self._metric_estimates:
+            # Ensure BA and Stems are available (compute if needed)
+            if "BasalArea" not in self._metric_estimates or "Stems" not in self._metric_estimates:
+                self._compute_ht_estimates()
+            self._compute_qmd_estimates()
+
+    def _compute_qmd_estimates(self):
+        """
+        Compute Quadratic Mean Diameter (QMD) estimates for each species (and total)
+        from the existing basal area and stems estimates.
+        """
+        qmd_dict = {}
+        ba_dict = self._metric_estimates["BasalArea"]
+        stems_dict = self._metric_estimates["Stems"]
+
+        for key in ba_dict:
+            ba_obj = ba_dict[key]
+            stems_obj = stems_dict[key]
+            if stems_obj.value > 0:
+                # QMD in cm computed from BA (m²/ha) and stems (stems/ha)
+                qmd_value = math.sqrt((40000.0 * ba_obj.value) / (math.pi * stems_obj.value))
+                # Propagate errors:
+                # dQ/dBA = 20000 / (pi * stems * QMD)
+                # dQ/dStems = - QMD / (2 * stems)
+                if qmd_value > 0:
+                    dQ_dBA = 20000.0 / (math.pi * stems_obj.value * qmd_value)
+                else:
+                    dQ_dBA = 0.0
+                dQ_dStems = qmd_value / (2 * stems_obj.value)
+                qmd_precision = math.sqrt((dQ_dBA * ba_obj.precision)**2 +
+                                          (dQ_dStems * stems_obj.precision)**2)
+            else:
+                qmd_value = 0.0
+                qmd_precision = 0.0
+
+            qmd_dict[key] = QuadraticMeanDiameter(qmd_value, precision=qmd_precision)
+
+        self._metric_estimates["QMD"] = qmd_dict
+
 
     def _compute_ht_estimates(self):
         """
@@ -1051,44 +1188,43 @@ class Stand:
             }
         """
         species_data: Dict[TreeName, Dict[str, List[float]]] = {}
-
-        # 1. Gather data from each plot
+            # 1. Gather data from each plot
         for plot in self.plots:
             area_ha = plot.area_ha or 1.0
+            # effective area is the visible portion of the plot
+            effective_area_ha = area_ha * (1 - plot.occlusion) if (1 - plot.occlusion) > 0 else area_ha
 
-            # Group by TreeName
+            # Group trees by species
             trees_by_sp: Dict[TreeName, List[RepresentationTree]] = {}
             for tr in plot.trees:
                 sp = getattr(tr, 'species', None)
                 if sp is None:
                     continue
                 if isinstance(sp, str):
-                    sp = parse_tree_species(sp)  # convert
+                    sp = parse_tree_species(sp)
                 trees_by_sp.setdefault(sp, []).append(tr)
 
-            # For each species in this plot, compute stems/ha & BA/ha
+            # For each species in this plot, compute the adjusted stems/ha and BA/ha
             for sp, trlist in trees_by_sp.items():
-                stems_count = sum(t.weight for t in trlist)  # sum of weights
-                stems_ha = stems_count / area_ha
+                stems_count = sum(t.weight for t in trlist)
+                # Adjusted stems/ha: divide by the effective area
+                stems_ha = stems_count / effective_area_ha
 
-                # Basal area: sum of pi * (d/2)^2 * weight, with d in meters
+                # Compute basal area (m²) for trees in the plot.
                 ba_sum = 0.0
                 for t in trlist:
                     d_cm = float(t.diameter_cm) if t.diameter_cm is not None else 0.0
-                    r_m = (d_cm / 100.0) / 2.0  # radius in meters
-                    ba_sum += math.pi * (r_m**2) * t.weight
-                ba_ha = ba_sum / area_ha
+                    r_m = (d_cm / 100.0) / 2.0
+                    ba_sum += math.pi * (r_m ** 2) * t.weight
+                # Adjusted BA/ha: divide by effective area.
+                ba_ha = ba_sum / effective_area_ha
 
-                # Store
                 if sp not in species_data:
-                    species_data[sp] = {
-                        "stems_per_ha": [],
-                        "basal_area_per_ha": []
-                    }
+                    species_data[sp] = {"stems_per_ha": [], "basal_area_per_ha": []}
                 species_data[sp]["stems_per_ha"].append(stems_ha)
                 species_data[sp]["basal_area_per_ha"].append(ba_ha)
 
-        # 2. Compute means + (population) variance across plots
+        # 2. Compute means and variances across plots (as before)
         stems_dict: Dict[Union[TreeName, str], Stems] = {}
         ba_dict: Dict[Union[TreeName, str], StandBasalArea] = {}
 
@@ -1115,16 +1251,17 @@ class Stand:
             total_ba_val += ba_mean
             total_ba_var += ba_var
 
-        # "TOTAL" aggregator
+            # "TOTAL" aggregator
         stems_dict["TOTAL"] = Stems(value=total_stems_val,
-                                    species=None,  # or "TOTAL"
-                                    precision=math.sqrt(total_stems_var))
+                                        species=None,
+                                        precision=math.sqrt(total_stems_var))
         ba_dict["TOTAL"] = StandBasalArea(value=total_ba_val,
-                                          species=None,
-                                          precision=math.sqrt(total_ba_var))
+                                        species=None,
+                                        precision=math.sqrt(total_ba_var))
 
         self._metric_estimates["Stems"] = stems_dict
         self._metric_estimates["BasalArea"] = ba_dict
+
 
     def __repr__(self):
         return f"Stand(area_ha={self.area_ha}, n_plots={len(self.plots)})"
@@ -1320,4 +1457,26 @@ class Stand:
         bias_percentage = (bias / H_bar_avg) * 100.0 if H_bar_avg != 0 else 0.0
 
         return bias, bias_percentage
+    
+    def append_plot(self, plot: CircularPlot) -> None:
+        """
+        Append a new plot to the stand and recalculate the stand-level metrics.
+        If any plot in the updated stand has AngleCount data, those estimates take precedence.
+        """
+        self.plots.append(plot)
+
+        # Gather all AngleCount records from all plots.
+        all_angle_counts = [ac for p in self.plots for ac in p.AngleCount]
+
+        if all_angle_counts:
+            # Use the AngleCount aggregator.
+            ba_dict, stems_dict = AngleCountAggregator(all_angle_counts).aggregate_stand_metrics()
+            self._metric_estimates["BasalArea"] = ba_dict
+            self._metric_estimates["Stems"] = stems_dict
+            self.use_angle_count = True
+        else:
+            # Otherwise, recompute using the tree-based estimates.
+            self._compute_ht_estimates()
+            self.use_angle_count = False
+
 
