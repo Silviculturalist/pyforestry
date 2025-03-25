@@ -6,7 +6,7 @@ from enum import Enum
 import math
 import numpy as np
 import statistics
-from typing import List, Any, Dict, Optional, Union
+from typing import List, Any, Dict, Optional, Union, Tuple
 import warnings
 
 # -------------
@@ -91,7 +91,7 @@ class StandBasalArea(float):
     """
     def __new__(cls,
                 value: float,
-                species: Union[TreeName, List[TreeName]],
+                species: Optional[Union[TreeName, List[TreeName]]] = None,
                 precision: float = 0.0,
                 over_bark: bool = True,
                 direct_estimate: bool = True):
@@ -128,7 +128,7 @@ class StandVolume(float):
     """
     def __new__(cls,
                 value: float,
-                species: Union[TreeName, List[TreeName]],
+                species: Optional[Union[TreeName, List[TreeName]]] = None,
                 precision: float = 0.0,
                 over_bark: bool = True,
                 fn=None):
@@ -160,7 +160,7 @@ class Stems(float):
     """
     def __new__(cls,
                 value: float,
-                species: Union[TreeName, List[TreeName]],
+                species: Optional[Union[TreeName, List[TreeName]]] = None,
                 precision: float = 0.0):
         if value < 0:
             raise ValueError("Stems must be non-negative.")
@@ -227,7 +227,7 @@ class TopHeightMeasurement(float):
 # Bitterlich (Angle count) Sampling
 # ------------------------------------------------------------------------------
 
-class BitterlichSampling:
+class AngleCount:
     """
     Holds parameters for angle-count (relascope) sampling,
     along with species-specific tally counts.
@@ -277,47 +277,133 @@ class BitterlichSampling:
             self.species.append(sp)
             self.value.append(count)
 
-    def get_basal_area_by_species(self) -> Dict[TreeSpecies, float]:
-        """
-        For each species, returns the basal area per hectare (m²/ha)
-        computed as (count * ba_factor).
-        """
-        results = {}
-        for sp, cnt in zip(self.species, self.value):
-            ba_ha = cnt * self.ba_factor
-            results[sp] = ba_ha
-        return results
+class AngleCountAggregator:
+    """
+    Aggregates multiple AngleCountRecord objects. 
+    Handles merging records with the same point_id and computes stand-level metrics.
+    """
+    def __init__(self, records: List[AngleCount]):
+        self.records = records
 
-    def get_stems_by_species(self) -> Dict[TreeSpecies, float]:
+    def merge_by_point_id(self) -> List[AngleCount]:
         """
-        Simplistic approach that treats each tally as 1 stem * ba_factor stems/ha.
-        i.e. stems/ha = (# tally) * ba_factor
+        Merge records that have the same point_id by averaging their counts.
+        If point_id is None, they are treated as separate.
         """
-        results = {}
-        for sp, cnt in zip(self.species, self.value):
-            stems_ha = cnt * self.ba_factor
-            results[sp] = stems_ha
-        return results
+        merged = {}
+        for rec in self.records:
+            key = rec.point_id if rec.point_id is not None else id(rec)
+            if key in merged:
+                merged[key] = self._merge_records(merged[key], rec)
+            else:
+                merged[key] = rec
+        return list(merged.values())
 
-    def get_stand_basal_area_objects(self) -> List[StandBasalArea]:
+    def _merge_records(self, rec1: AngleCount, rec2: AngleCount) -> AngleCount:
         """
-        Return a list of `StandBasalArea` objects, one for each species tallied.
-        Example usage:
-            sba_list = your_bitterlich_sampling.get_stand_basal_area_objects()
+        Merge two records with the same point_id.
+        This example assumes both records have the same species order and ba_factor.
         """
-        sba_list = []
-        for sp, cnt in zip(self.species, self.value):
-            ba_ha = cnt * self.ba_factor
-            sba = StandBasalArea(
-                value=ba_ha,
+        if rec1.ba_factor != rec2.ba_factor:
+            raise ValueError("Cannot merge records with different ba_factor values.")
+        if rec1.species != rec2.species:
+            raise ValueError("Cannot merge records with different species lists.")
+
+        # Average the counts; you could also sum them depending on your intended semantics.
+        new_values = [(a + b) / 2 for a, b in zip(rec1.value, rec2.value)]
+        return AngleCount(
+            ba_factor=rec1.ba_factor,
+            value=new_values,
+            species=rec1.species,
+            point_id=rec1.point_id,
+            slope=rec1.slope  # or combine slopes as needed
+        )
+    
+    def aggregate_stand_metrics(self) -> Tuple[Dict[TreeName, StandBasalArea],
+                                              Dict[TreeName, Stems]]:
+        """
+        Aggregate the merged records to compute stand-level metrics.
+        Returns two dictionaries keyed by species (TreeName) with their
+        corresponding StandBasalArea and Stems objects.
+
+        For StandBasalArea, the value and precision are computed as:
+          value = mean(counts) * ba_factor
+          precision = sqrt(pvariance(counts)) * ba_factor
+
+        For Stems, the value and precision are computed from the raw counts.
+        """
+        merged_records = self.merge_by_point_id()
+        species_counts: Dict[TreeName, list[float]] = {}
+        total_counts: list[float] = []
+
+        # Assume all records use the same ba_factor for simplicity.
+        ba_factor = merged_records[0].ba_factor if merged_records else 0
+
+        # Collect counts per species and overall totals for each merged record.
+        for rec in merged_records:
+            record_total = 0.0
+            for sp, cnt in zip(rec.species, rec.value):
+                record_total += cnt
+                if sp not in species_counts:
+                    species_counts[sp] = []
+                species_counts[sp].append(cnt)
+            total_counts.append(record_total)
+
+        basal_area_by_species: Dict[TreeName, StandBasalArea] = {}
+        stems_by_species: Dict[TreeName, Stems] = {}
+
+        # Create metric objects for each species.
+        for sp, counts in species_counts.items():
+            # For basal area: apply the ba_factor conversion.
+            count_mean = statistics.mean(counts)
+            count_var = statistics.pvariance(counts) if len(counts) > 1 else 0.0
+            ba_value = count_mean * ba_factor
+            ba_precision = math.sqrt(count_var) * ba_factor
+
+            basal_area_by_species[sp] = StandBasalArea(
+                value=ba_value,
                 species=sp,
-                precision=0.0,
+                precision=ba_precision,
                 over_bark=True,
                 direct_estimate=True
             )
-            sba_list.append(sba)
-        return sba_list
 
+            # For stems: use the raw counts.
+            stems_value = count_mean
+            stems_precision = math.sqrt(count_var)
+
+            stems_by_species[sp] = Stems(
+                value=stems_value,
+                species=sp,
+                precision=stems_precision
+            )
+
+        # Compute overall (TOTAL) metrics.
+        if total_counts:
+            total_mean = statistics.mean(total_counts)
+            total_var = statistics.pvariance(total_counts) if len(total_counts) > 1 else 0.0
+            total_ba_value = total_mean * ba_factor
+            total_ba_precision = math.sqrt(total_var) * ba_factor
+            total_stems_value = total_mean
+            total_stems_precision = math.sqrt(total_var)
+        else:
+            total_ba_value = total_ba_precision = total_stems_value = total_stems_precision = 0.0
+
+        # You might use a special key for total; here we use the string "TOTAL".
+        basal_area_by_species["TOTAL"] = StandBasalArea(
+            value=total_ba_value,
+            species="TOTAL",
+            precision=total_ba_precision,
+            over_bark=True,
+            direct_estimate=True
+        )
+        stems_by_species["TOTAL"] = Stems(
+            value=total_stems_value,
+            species="TOTAL",
+            precision=total_stems_precision
+        )
+
+        return basal_area_by_species, stems_by_species
 
 # ------------------------------------------------------------------------------
 # SiteIndexValue: float with metadata
@@ -741,6 +827,7 @@ class CircularPlot:
                  radius_m: Optional[float] = None,
                  area_m2: Optional[float] = None,
                  site: Optional[SiteBase] = None,
+                 AngleCount: Optional[List[AngleCount]] = None,
                  trees: Optional[List[RepresentationTree]] = None):
         if id is None:
             raise ValueError('Plot must be given an ID (integer or string).')
@@ -748,6 +835,9 @@ class CircularPlot:
         self.id = id
         self.position = position
         self.site = site
+
+        self.AngleCount = AngleCount if AngleCount is not None else []
+
         self.trees = trees if trees is not None else []
 
         # Must have either radius or area
@@ -802,8 +892,9 @@ class StandMetricAccessor:
 
     def _ensure_estimates(self):
         """Compute or refresh HT estimates if not done."""
-        if not hasattr(self._stand, '_metric_estimates'):
-            self._stand._compute_ht_estimates()
+        if self._metric_name not in self._stand._metric_estimates:
+             self._stand._compute_ht_estimates()
+
 
     def __getattr__(self, item):
         """
@@ -885,7 +976,7 @@ class Stand:
 
         self.top_height_definition = top_height_definition if top_height_definition else TopHeightDefinition()
 
-        self.plots: List[CircularPlot] = plots if plots else []
+        self.plots = plots if plots else []
 
         # If user gave an explicit area
         self.area_ha = area_ha
@@ -917,8 +1008,11 @@ class Stand:
         # Where we store final "Stems", "BasalArea", etc. after computing
         self._metric_estimates: Dict[str, Dict[Any, Union[Stems, StandBasalArea]]] = {}
 
-        #Get angle-counting estimates for stand
-        self.Stems = Stems(BitterlichSampling())
+        #Get angle-counting estimates for stand (should be stored in self._metric_estimates)
+        # NB Total should also be returned
+        if self.plots:
+            if any(plot.AngleCount is not None and plot.AngleCount for plot in self.plots):
+                self.Stems, self.BasalArea = AngleCountAggregator(self.plots).aggregate_stand_metrics
 
     
     # Two key properties for your requested usage:

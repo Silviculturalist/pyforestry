@@ -77,7 +77,7 @@ def test_stand_metric_calculations():
 
 def test_stand_metric_accessor_keyerror():
     """If we request a species that doesn't exist, we get a KeyError."""
-    st = Stand(CircularPlots=[])
+    st = Stand(plots=[])
     with pytest.raises(KeyError):
         st.BasalArea("picea abies")
 

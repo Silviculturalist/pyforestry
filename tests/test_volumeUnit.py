@@ -24,7 +24,7 @@ def test_volume_incompatible_types():
     v3 = Volume.Sweden.m3to(1)
     with pytest.raises(ValueError) as exc_info:
         v1 + v3
-    assert str(exc_info.value) == "Incompatible types: m3sk vs m3to"
+    assert str(exc_info.value) == "Incompatible volume types: m3sk vs m3to"
 
 # Test string representation of volumes
 def test_volume_repr():
