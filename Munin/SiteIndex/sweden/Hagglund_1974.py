@@ -1,4 +1,4 @@
-import math
+from math import log, exp
 
 def hagglund_1974_sweden_height_trajectories_pine(dominant_height, age, age2, regeneration="culture"):
     """
@@ -52,14 +52,14 @@ def hagglund_1974_sweden_height_trajectories_pine(dominant_height, age, age2, re
             RK = max(RK, 0.0001)
 
             A2 = 1.0075 * AI3
-            DIF = top_height - A2 * (1 - pow(-age * RK, RM2))
+            DIF = top_height-A2*(1-exp(-age*RK))**RM2
 
             if DIF <= 0:
                 AI2 = AI3
             else:
                 AI1 = AI3
 
-        T26 = (-1 / RK) * math.log(1 - pow(13 / A2, 1 / RM2))
+        T26 = (-1 / RK) * log(1 - pow(13 / A2, 1 / RM2))
         T262 = T26**2
 
         if regeneration == "natural":
@@ -83,4 +83,4 @@ def hagglund_1974_sweden_height_trajectories_pine(dominant_height, age, age2, re
         print("Warning: Too old stand, outside of material.")
 
     # Return Height at age2
-    return (13 + params["A2"] * (1 - math.exp(-age2 * params["RK"]))**params["RM2"]) / 10, params['T13']
+    return (13 + params["A2"] * (1 - exp(-age2 * params["RK"]))**params["RM2"]) / 10, params['T13']

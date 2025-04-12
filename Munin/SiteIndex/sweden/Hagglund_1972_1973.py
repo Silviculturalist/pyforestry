@@ -232,7 +232,7 @@ def Hagglund_1973_southern_Sweden_Height_trajectories_Spruce(dominantHeight,age,
   if(A2<250):
     warnings.warn("Too low productivity, outside of the material.")
 
-  if(A2>375 & top_height_dm>267):
+  if(A2>375 and top_height_dm>267):
     warnings.warn("Too old stand, outside of the material.")
 
   if(age>90):
@@ -302,7 +302,7 @@ def getSIH100_Hagglund1973SpruceSouthernSweden(dominantHeight, age):
   if(A2<250):
     warnings.warn("Too low productivity, outside of the material.")
 
-  if(A2>375 & top_height_dm>267):
+  if(A2>375 and top_height_dm>267):
     warnings.warn("Too old stand, outside of the material.")
 
   if(age>90):
