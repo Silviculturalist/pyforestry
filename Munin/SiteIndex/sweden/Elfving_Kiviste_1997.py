@@ -1,7 +1,12 @@
 import warnings
 import math
+from typing import Union
+from Munin.Helpers.Base import Age, AgeMeasurement, SiteIndexValue
+from Munin.Helpers.TreeSpecies import TreeSpecies
 
-def elfving_kiviste_1997_height_trajectory_sweden_pine(dominant_height, age, age2):
+def elfving_kiviste_1997_height_trajectory_sweden_pine(dominant_height : float,
+                                                       age : Union[float,AgeMeasurement], 
+                                                       age2 :Union[float, AgeMeasurement]) -> SiteIndexValue:
     """
     Height trajectory for Scots Pine in Sweden based on Elfving & Kiviste (1997).
 
@@ -29,6 +34,26 @@ def elfving_kiviste_1997_height_trajectory_sweden_pine(dominant_height, age, age
         - RMSE: 0.401.
     """
 
+    #Age Validation
+    # Check for age (should be a float/int or AgeMeasurement with TOTAL code)
+    if isinstance(age, AgeMeasurement):
+        # It's an AgeMeasurement, check the code
+        if age.code != Age.TOTAL.value:
+            raise TypeError("Parameter 'age' must be a float/int or an instance of Age.TOTAL.")
+    elif not isinstance(age, (float, int)):
+        # It's not an AgeMeasurement and not a float/int
+        raise TypeError("Parameter 'age' must be a float/int or an instance of Age.TOTAL.")
+    # If we reach here, it's either a valid Age.TOTAL or a float/int - proceed
+    if isinstance(age2, AgeMeasurement):
+        # It's an AgeMeasurement, check the code
+        if age2.code != Age.TOTAL.value:
+            raise TypeError("Parameter 'age2' must be a float/int or an instance of Age.TOTAL.")
+    elif not isinstance(age2, (float, int)):
+        # It's not an AgeMeasurement and not a float/int
+        raise TypeError("Parameter 'age2' must be a float/int or an instance of Age.TOTAL.")
+    # If we reach here, it's either a valid Age.TOTAL or a float/int - proceed
+
+
     # Check for suitability of input ages
     if age < 10 or age2 < 10:
         warnings.warn("Suitable for cultivated stands of Scots Pine between total ages of 10 and 80.")
@@ -48,4 +73,9 @@ def elfving_kiviste_1997_height_trajectory_sweden_pine(dominant_height, age, age
     height_at_age2 = ((dominant_height + d + r) /
                       (2 + (4 * param_beta * (age2**param_b2)) / (dominant_height - d + r)))
 
-    return height_at_age2
+    return SiteIndexValue(
+        value=height_at_age2,
+        reference_age=age2,
+        species=TreeSpecies.Sweden.pinus_sylvestris,
+        fn=elfving_kiviste_1997_height_trajectory_sweden_pine
+    )

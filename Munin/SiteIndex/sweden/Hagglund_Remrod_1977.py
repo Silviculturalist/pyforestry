@@ -1,7 +1,13 @@
 import warnings
 from math import exp
+from typing import Union
+from Munin.Helpers.Base import Age, AgeMeasurement, SiteIndexValue
+from Munin.Helpers.TreeSpecies import TreeSpecies
 
-def hagglund_remrod_1977_height_trajectories_lodgepole_pine(dominant_height_m, age, age2):
+def hagglund_remrod_1977_height_trajectories_lodgepole_pine(
+        dominant_height_m : float,
+        age : Union[float, AgeMeasurement],
+        age2 : Union[float, AgeMeasurement]) -> SiteIndexValue:
     """
     Hägglund and Remröd (1977): Height growth of Lodgepole Pine (Pinus contorta) in Northern Sweden.
     
@@ -11,7 +17,7 @@ def hagglund_remrod_1977_height_trajectories_lodgepole_pine(dominant_height_m, a
     Parameters:
         dominant_height_m (float): Dominant height of the stand or tree (meters).
         age (float): Age of the stand or tree at breast height (1.3 m).
-        age2 (float): Age for which the height is to be computed.
+        age2 (float): Age (DBH) for which the height is to be computed.
 
     Returns:
         float: Height at age2 in meters.
@@ -28,6 +34,26 @@ def hagglund_remrod_1977_height_trajectories_lodgepole_pine(dominant_height_m, a
         warnings.warn("Too old stand, outside of the material.")
     if age < 15:
         warnings.warn("Too young stand, outside of the material.")
+
+    #Age Validation
+    # Check for age (should be a float/int or AgeMeasurement with DBH code)
+    if isinstance(age, AgeMeasurement):
+        # It's an AgeMeasurement, check the code
+        if age.code != Age.DBH.value:
+            raise TypeError("Parameter 'age' must be a float/int or an instance of Age.DBH.")
+    elif not isinstance(age, (float, int)):
+        # It's not an AgeMeasurement and not a float/int
+        raise TypeError("Parameter 'age' must be a float/int or an instance of Age.DBH.")
+    # If we reach here, it's either a valid Age.DBH or a float/int - proceed
+    if isinstance(age2, AgeMeasurement):
+        # It's an AgeMeasurement, check the code
+        if age2.code != Age.DBH.value:
+            raise TypeError("Parameter 'age2' must be a float/int or an instance of Age.DBH.")
+    elif not isinstance(age2, (float, int)):
+        # It's not an AgeMeasurement and not a float/int
+        raise TypeError("Parameter 'age2' must be a float/int or an instance of Age.DBH.")
+    # If we reach here, it's either a valid Age.TOTAL or a float/int - proceed
+
 
     # Convert dominant height to decimeters and adjust
     dominant_height_dm = dominant_height_m * 10 - 13
@@ -65,13 +91,13 @@ def hagglund_remrod_1977_height_trajectories_lodgepole_pine(dominant_height_m, a
             else:
                 AI1 = AI3
 
-        return {"A": A, "RK": RK, "RM2": RM2}
+        return A, RK, RM2
 
     # Compute parameters using subroutine
-    params = subroutine_bonitering(dominant_height_dm, age)
+    A, RK, RM2 = subroutine_bonitering(dominant_height_dm, age)
 
     # Compute H50 (height at age 50)
-    H50 = params["A"] * (1 - exp(-50 * params["RK"]))**params["RM2"] + 13
+    H50 = A * (1 - exp(-50 * RK))**RM2 + 13
 
     if H50 > 270:
         warnings.warn("Too high productivity, outside of the material.")
@@ -79,6 +105,11 @@ def hagglund_remrod_1977_height_trajectories_lodgepole_pine(dominant_height_m, a
         warnings.warn("Too low productivity, outside of the material.")
 
     # Compute height at age2
-    height_at_age2 = (13 + params["A"] * (1 - exp(-age2 * params["RK"]))**params["RM2"]) / 10
+    height_at_age2 = (13 + A * (1 - exp(-age2 * RK))**RM2) / 10
 
-    return height_at_age2
+    return SiteIndexValue(
+        value=height_at_age2,
+        reference_age=age2,
+        species=TreeSpecies.Sweden.pinus_contorta,
+        fn=hagglund_remrod_1977_height_trajectories_lodgepole_pine
+    )
