@@ -49,6 +49,18 @@ class SoilMoistureData:
     swedish_description: str
     english_description: str
 
+@dataclass(frozen=True)
+class CountyData:
+    code: int
+    label: str #Descriptive string label
+
+
+@dataclass(frozen=True)
+class ClimateZoneData:
+    code: int
+    label: str # e.g., "M1", "K2"
+    description: str # Descriptive name
+
 # -------------------------------------------------------------------
 # Region-specific enums defined for the Sweden model
 # -------------------------------------------------------------------
@@ -121,6 +133,62 @@ class SwedenSoilMoisture(Enum):
     MOIST = SoilMoistureData(4, "fuktig", "Moist (subsoil water depth <1 m, and pools visible in hollows)")
     WET = SoilMoistureData(5, "blöt", "Wet (subsoil water pools visible)")
 
+class SwedenCounty(Enum):
+    NORRBOTTENS_LAPPMARK = CountyData(1, "Norrbottens lappmark (BD lappm)")
+    NORRBOTTENS_KUSTLAND = CountyData(2, "Norrbottens kustland (BD kust)")
+    VASTERBOTTENS_LAPPMARK = CountyData(3, "Västerbottens lappmark (AC lappm)")
+    VASTERBOTTENS_KUSTLAND = CountyData(4, "Västerbottens kustland (AC kust)")
+    JAMTLAND_JAMTLANDS = CountyData(5, "Jämtland - Jämtlands landskap (Z)")
+    JAMTLAND_HARJEDALENS = CountyData(6, "Jämtland - Härjedalens landskap (Z Härjed)")
+    VASTERNORRLAND_ANGERMANLANDS = CountyData(7, "Västernorrland - Ångermanlands landskap (Y Ångerm)")
+    VASTERNORRLAND_MEDELPADS = CountyData(8, "Västernorrland - Medelpads landskap (Y Medelp)")
+    GAVLEBORG_HALSINGLANDS = CountyData(9, "Gävleborg - Hälsinglands landskap (X Hälsingl)")
+    GAVLEBORG_OVRIGA = CountyData(10, "Gävleborg, övriga (X övr)")
+    KOPPARBERG_SALEN_IDRE = CountyData(11, "Kopparberg (Dalarna), Sälen - Idre (W)")
+    KOPPARBERG_OVRIGA = CountyData(12, "Kopparberg (Dalarna), övriga (W övr)")
+    VARMLAND = CountyData(13, "Värmland (S)")
+    OREBRO = CountyData(14, "Örebro (T)")
+    VASTMANLAND = CountyData(15, "Västmanland (U)")
+    UPPSALA = CountyData(16, "Uppsala (C)")
+    STOCKHOLM = CountyData(17, "Stockholm (AB)")
+    SODERMANLAND = CountyData(18, "Södermanland (D)")
+    OSTERGOTLAND = CountyData(19, "Östergötland (E)")
+    SKARABORG = CountyData(20, "Skaraborg (R)")
+    ALVSBORG_DALSLANDS = CountyData(21, "Älvsborg, Dalslands landskap (P)")
+    ALVSBORG_VASTERGOTLANDS = CountyData(22, "Älvsborg, Västergötlands landskap (P)")
+    JONKOPING = CountyData(23, "Jönköping (F)")
+    KRONOBERG = CountyData(24, "Kronoberg (G)")
+    KALMAR = CountyData(25, "Kalmar (H)")
+    VASTRA_GOTALANDS = CountyData(26, "Västra Götalands (Göteborg - Bohuslän) (O)")
+    HALLAND = CountyData(27, "Halland (N)")
+    KRISTIANSTAD = CountyData(28, "Kristianstad (L)")
+    MALMOHUS = CountyData(29, "Malmöhus (M)")
+    BLEKINGE = CountyData(30, "Blekinge (K)")
+    GOTLAND = CountyData(31, "Gotland (I)")
+
+    @classmethod
+    def from_code(cls, code: int) -> Optional['SwedenCounty']:
+        """Lookup enum member by code."""
+        for member in cls:
+            if member.value.code == code:
+                return member
+        return None # Return None if code not found
+    
+class SwedenClimateZone(Enum):
+    M1 = ClimateZoneData(1, "M1", "Maritime, West coast")
+    M2 = ClimateZoneData(2, "M2", "Maritime, East coast")
+    M3 = ClimateZoneData(3, "M3", "Maritime, Mountain range")
+    K1 = ClimateZoneData(4, "K1", "Continental, Middle Sweden")
+    K2 = ClimateZoneData(5, "K2", "Continental, Northern Sweden")
+    K3 = ClimateZoneData(6, "K3", "Continental, Southern Sweden")
+
+    @classmethod
+    def from_code(cls, code: int) -> Optional['SwedenClimateZone']:
+        """Lookup enum member by code."""
+        for member in cls:
+            if member.value.code == code:
+                return member
+        return None # Return None if code not found
 # -------------------------------------------------------------------
 # Define the Sweden namespace for this model.
 # -------------------------------------------------------------------
@@ -133,6 +201,8 @@ class Sweden:
     SoilTextureTill = SwedenSoilTextureTill
     SoilTextureSediment = SwedenSoilTextureSediment
     SoilMoistureEnum = SwedenSoilMoisture
+    County = SwedenCounty
+    ClimateZone = SwedenClimateZone
 
 # -------------------------------------------------------------------
 # SwedishSite using the Sweden namespace
@@ -149,7 +219,6 @@ class SwedishSite(SiteBase):
     altitude: Optional[float] = None
     field_layer: Optional[Sweden.FieldLayer] = None
     bottom_layer: Optional[Sweden.BottomLayer] = None
-    # Accept either a SoilTextureTill or SoilTextureSediment enum member.
     soil_texture: Optional[Union[Sweden.SoilTextureTill, Sweden.SoilTextureSediment]] = None
     soil_moisture: Optional[Sweden.SoilMoistureEnum] = None
     soil_depth: Optional[Sweden.SoilDepth] = None
@@ -157,26 +226,40 @@ class SwedishSite(SiteBase):
     aspect: Optional[float] = None
     incline_percent: Optional[float] = None
     ditched: Optional[bool] = None
-    n_of_limes_norrlandicus: Optional[bool] = None
 
     # Computed attributes are optional and default to None.
     temperature_sum_odin1983: Optional[float] = field(init=False, default=None)
-    county_code: Optional[str] = field(init=False, default=None)
+    county: Optional[Sweden.County] = field(init=False, default=None)
     humidity: Optional[float] = field(init=False, default=None)
     distance_to_coast: Optional[float] = field(init=False, default=None)
-    climate_code: Optional[str] = field(init=False, default=None)
+    climate_zone: Optional[Sweden.ClimateZone] = field(init=False, default=None) # Changed type hint
     sis_spruce_100: Optional[float] = field(init=False, default=None)
     sis_pine_100: Optional[float] = field(init=False, default=None)
     sis_birch_50: Optional[float] = field(init=False, default=None)
+    n_of_limes_norrlandicus: Optional[bool] = field(init=False, default=None)
 
     def __post_init__(self) -> None:
-        # Compute n_of_limes_norrlandicus from latitude.
+        # Compute county first
+        try:
+            county_enum = RetrieveGeoCode.getCountyCode(lon=self.longitude, lat=self.latitude)
+            object.__setattr__(self, 'county', county_enum)
+        except Exception:
+            object.__setattr__(self, 'county', None)
+
+        # Compute climate zone
+        try:
+            climate_enum = RetrieveGeoCode.getClimateCode(lon=self.longitude, lat=self.latitude)
+            object.__setattr__(self, 'climate_zone', climate_enum)
+        except Exception:
+            object.__setattr__(self, 'climate_zone', None)
+
+        # Compute n_of_limes_norrlandicus
         try:
             object.__setattr__(self, 'n_of_limes_norrlandicus', self.latitude > 60)
         except Exception:
             object.__setattr__(self, 'n_of_limes_norrlandicus', None)
 
-        # Compute temperature sum if altitude is available.
+        # Compute temperature sum
         try:
             if self.altitude is not None:
                 ts = Odin_temperature_sum(latitude=self.latitude, altitude=self.altitude)
@@ -186,126 +269,101 @@ class SwedishSite(SiteBase):
         except Exception:
             object.__setattr__(self, 'temperature_sum_odin1983', None)
 
-        # Compute county code.
-        try:
-            cc = RetrieveGeoCode.getCountyCode(lon=self.longitude, lat=self.latitude)
-            object.__setattr__(self, 'county_code', cc)
-        except Exception:
-            object.__setattr__(self, 'county_code', None)
-
-        # Compute humidity.
+        # Compute humidity
         try:
             h = eriksson_1986_humidity(longitude=self.longitude, latitude=self.latitude)
             object.__setattr__(self, 'humidity', h)
         except Exception:
             object.__setattr__(self, 'humidity', None)
 
-        # Compute distance to coast.
+        # Compute distance to coast
         try:
             d = RetrieveGeoCode.getDistanceToCoast(lon=self.longitude, lat=self.latitude)
             object.__setattr__(self, 'distance_to_coast', d)
         except Exception:
             object.__setattr__(self, 'distance_to_coast', None)
 
-        # Compute climate code.
-        try:
-            cc2 = RetrieveGeoCode.getClimateCode(lon=self.longitude, lat=self.latitude)
-            object.__setattr__(self, 'climate_code', cc2)
-        except Exception:
-            object.__setattr__(self, 'climate_code', None)
+        # --- Site Index Calculations ---
 
-        # Attempt to compute sis_spruce_100 if all required parameters are available.
-        try:
-            if (self.altitude is not None and
-                self.field_layer is not None and
-                self.bottom_layer is not None and
-                self.soil_texture is not None and
-                self.soil_moisture is not None and
-                self.soil_depth is not None and
-                self.soil_water is not None and
-                self.aspect is not None and
-                self.incline_percent is not None and
-                self.ditched is not None and
-                self.climate_code is not None):
-                
-                spruce = Hagglund_Lundmark_1979_SIS(
-                    latitude=self.latitude,
-                    altitude=self.altitude,
-                    soil_moisture=self.soil_moisture.value.code,
-                    ground_layer=self.bottom_layer.value.code,
-                    vegetation=self.field_layer.value.code,
-                    soil_texture=self.soil_texture.value.code,
-                    climate_code=self.climate_code,
-                    lateral_water=self.soil_water.value.code,
-                    soil_depth=self.soil_depth.value.code,
-                    incline_percent=self.incline_percent,
-                    aspect=self.aspect,
-                    ditched=self.ditched,
-                    peat=self.soil_texture in (Sweden.SoilTextureSediment.PEAT, Sweden.SoilTextureTill.PEAT),
-                    gotland=(self.county_code == 31) if self.county_code is not None else False,
-                    coast=(self.distance_to_coast < 50) if self.distance_to_coast is not None else False,
-                    limes_norrlandicus=self.n_of_limes_norrlandicus,
-                    nfi_adjustments=False,
-                    species='Picea abies',
-                    dlan=self.county_code if self.county_code is not None else ""
+        # Check if all required inputs for SIS are present (including computed ones)
+        sis_inputs_ok = (
+            self.altitude is not None and
+            self.field_layer is not None and
+            self.bottom_layer is not None and
+            self.soil_texture is not None and
+            self.soil_moisture is not None and
+            self.soil_depth is not None and
+            self.soil_water is not None and
+            self.aspect is not None and
+            self.incline_percent is not None and
+            self.ditched is not None and
+            self.climate_zone is not None and # Check climate_zone (enum)
+            self.county is not None and
+            self.n_of_limes_norrlandicus is not None
+        )
+
+        if sis_inputs_ok:
+            # Common inputs derived from site state
+            is_peat = self.soil_texture in (Sweden.SoilTextureSediment.PEAT, Sweden.SoilTextureTill.PEAT)
+            is_gotland = (self.county == Sweden.County.GOTLAND)
+            is_coast = (self.distance_to_coast < 50) if self.distance_to_coast is not None else False
+            county_label = self.county.value.label
+            climate_label = self.climate_zone.value.label # Use the label string ("M1", "K2", etc.)
+
+            # Attempt Spruce SI
+            try:
+                spruce_si = Hagglund_Lundmark_1979_SIS(
+                    latitude=self.latitude, altitude=self.altitude,
+                    soil_moisture=self.soil_moisture.value.code, ground_layer=self.bottom_layer.value.code,
+                    vegetation=self.field_layer.value.code, soil_texture=self.soil_texture.value.code,
+                    climate_code=climate_label, # Pass the label
+                    lateral_water=self.soil_water.value.code, soil_depth=self.soil_depth.value.code,
+                    incline_percent=self.incline_percent, aspect=self.aspect, ditched=self.ditched,
+                    peat=is_peat, gotland=is_gotland, coast=is_coast,
+                    limes_norrlandicus=self.n_of_limes_norrlandicus, nfi_adjustments=False,
+                    species='Picea abies', dlan=county_label
                 )
-                object.__setattr__(self, 'sis_spruce_100', spruce)
-            else:
+                object.__setattr__(self, 'sis_spruce_100', spruce_si)
+            except Exception:
                 object.__setattr__(self, 'sis_spruce_100', None)
-        except Exception:
-            object.__setattr__(self, 'sis_spruce_100', None)
 
-        # Attempt to compute sis_pine_100 in a similar manner.
-        try:
-            if (self.altitude is not None and
-                self.field_layer is not None and
-                self.bottom_layer is not None and
-                self.soil_texture is not None and
-                self.soil_moisture is not None and
-                self.soil_depth is not None and
-                self.soil_water is not None and
-                self.aspect is not None and
-                self.incline_percent is not None and
-                self.ditched is not None and
-                self.climate_code is not None):
-                
-                pine = Hagglund_Lundmark_1979_SIS(
-                    latitude=self.latitude,
-                    altitude=self.altitude,
-                    soil_moisture=self.soil_moisture.value.code,
-                    ground_layer=self.bottom_layer.value.code,
-                    vegetation=self.field_layer.value.code,
-                    soil_texture=self.soil_texture.value.code,
-                    climate_code=self.climate_code,
-                    lateral_water=self.soil_water.value.code,
-                    soil_depth=self.soil_depth.value.code,
-                    incline_percent=self.incline_percent,
-                    aspect=self.aspect,
-                    ditched=self.ditched,
-                    peat=self.soil_texture in (Sweden.SoilTextureSediment.PEAT, Sweden.SoilTextureTill.PEAT),
-                    gotland=(self.county_code == 31) if self.county_code is not None else False,
-                    coast=(self.distance_to_coast < 50) if self.distance_to_coast is not None else False,
-                    limes_norrlandicus=self.n_of_limes_norrlandicus,
-                    nfi_adjustments=False,
-                    species='Pinus sylvestris',
-                    dlan=self.county_code if self.county_code is not None else ""
+            # Attempt Pine SI
+            try:
+                pine_si = Hagglund_Lundmark_1979_SIS(
+                    latitude=self.latitude, altitude=self.altitude,
+                    soil_moisture=self.soil_moisture.value.code, ground_layer=self.bottom_layer.value.code,
+                    vegetation=self.field_layer.value.code, soil_texture=self.soil_texture.value.code,
+                    climate_code=climate_label, # Pass the label
+                    lateral_water=self.soil_water.value.code, soil_depth=self.soil_depth.value.code,
+                    incline_percent=self.incline_percent, aspect=self.aspect, ditched=self.ditched,
+                    peat=is_peat, gotland=is_gotland, coast=is_coast,
+                    limes_norrlandicus=self.n_of_limes_norrlandicus, nfi_adjustments=False,
+                    species='Pinus sylvestris', dlan=county_label
                 )
-                object.__setattr__(self, 'sis_pine_100', pine)
-            else:
+                object.__setattr__(self, 'sis_pine_100', pine_si)
+            except Exception:
                 object.__setattr__(self, 'sis_pine_100', None)
-        except Exception:
+        else:
+            # Set SI to None if inputs weren't complete
+            object.__setattr__(self, 'sis_spruce_100', None)
             object.__setattr__(self, 'sis_pine_100', None)
 
+
         # Compute sis_birch_50 if possible.
-        try:
-            birch = eko_pm_2008_estimate_si_birch(
-                altitude=self.altitude if self.altitude is not None else 0,
-                latitude=self.latitude,
-                vegetation=self.field_layer.value.code if self.field_layer is not None else 0,
-                ground_layer=self.bottom_layer.value.code if self.bottom_layer is not None else 0,
-                lateral_water=self.soil_water.value.code if self.soil_water is not None else 0,
-                soil_moisture=self.soil_moisture.value.code if self.soil_moisture is not None else 0
-            )
-            object.__setattr__(self, 'sis_birch_50', birch)
-        except Exception:
+        birch_inputs_ok = (
+            self.altitude is not None and self.latitude is not None and
+            self.field_layer is not None and self.bottom_layer is not None and
+            self.soil_water is not None and self.soil_moisture is not None
+        )
+        if birch_inputs_ok:
+            try:
+                birch_si = eko_pm_2008_estimate_si_birch(
+                    altitude=self.altitude, latitude=self.latitude,
+                    vegetation=self.field_layer.value.code, ground_layer=self.bottom_layer.value.code,
+                    lateral_water=self.soil_water.value.code, soil_moisture=self.soil_moisture.value.code
+                )
+                object.__setattr__(self, 'sis_birch_50', birch_si)
+            except Exception:
+                object.__setattr__(self, 'sis_birch_50', None)
+        else:
             object.__setattr__(self, 'sis_birch_50', None)
