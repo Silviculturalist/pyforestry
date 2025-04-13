@@ -71,7 +71,7 @@ def johansson_1996_height_trajectory_sweden_aspen(
         return SiteIndexValue(
             value=height_at_age2,
             reference_age=age2_val,
-            species=TreeSpecies.Sweden.populus_tremula,
+            species={TreeSpecies.Sweden.populus_tremula},
             fn=johansson_1996_height_trajectory_sweden_aspen
         )
 
@@ -93,6 +93,6 @@ def johansson_1996_height_trajectory_sweden_aspen(
     return SiteIndexValue(
         value=height_at_age2,
         reference_age=age2_val,
-        species=TreeSpecies.Sweden.populus_tremula,
+        species={TreeSpecies.Sweden.populus_tremula},
         fn=johansson_1996_height_trajectory_sweden_aspen
     )

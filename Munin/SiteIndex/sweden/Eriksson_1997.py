@@ -92,6 +92,6 @@ def eriksson_1997_height_trajectory_sweden_birch(
     return SiteIndexValue(
         value=height_at_age2,
         reference_age=age2_val,
-        species=TreeSpecies.Sweden.betula, # This represents the genus group Betula
+        species={TreeSpecies.Sweden.betula_pendula, TreeSpecies.Sweden.betula_pubescens}, # This represents the genus group Betula
         fn=eriksson_1997_height_trajectory_sweden_birch
     )

@@ -6,7 +6,7 @@ from enum import Enum
 import math
 import numpy as np
 import statistics
-from typing import List, Any, Dict, Optional, Union, Tuple
+from typing import List, Any, Dict, Optional, Union, Tuple, Callable
 import warnings
 
 # -------------
@@ -48,38 +48,52 @@ class Diameter_cm(float):
                 f"measurement_height_m={self.measurement_height_m})")
 
 
+# --- Age Enum ---
+class Age(Enum):
+    TOTAL = 1
+    DBH = 2
+
+    def __call__(self, value: float) -> 'AgeMeasurement': # Use forward reference string
+        return AgeMeasurement(value, self.value)
+
+# --- AgeMeasurement Class ---
 class AgeMeasurement(float):
-    """
-    Tree age, stored as a float with an 'age code' attribute indicating what type
-    of age is measured (e.g., total age vs. breast-height age).
-    """
     def __new__(cls, value: float, code: int):
         if value < 0:
             raise ValueError("Age must be non-negative.")
+        # Ensure code is valid using the Age enum definition
+        if code not in [m.value for m in Age]: # Check against Age enum values
+             raise ValueError(f"Invalid age code: {code}. Must be one of {[m.value for m in Age]}.")
         obj = super().__new__(cls, value)
         obj.code = code
         return obj
-    
+
     @property
     def value(self) -> float:
         return float(self)
 
     def __repr__(self):
-        return f"AgeMeasurement({float(self)}, code={self.code})"
+        # Ensure Age enum lookup is safe
+        age_type = 'UNKNOWN'
+        try:
+            age_type = Age(self.code).name
+        except ValueError:
+            pass # Keep 'UNKNOWN' if code not in enum
+        return f"AgeMeasurement({float(self)}, code={self.code} [{age_type}])"
 
+    def __eq__(self, other):
+         if isinstance(other, AgeMeasurement):
+             # *** Crucial: Compare both value and code ***
+             return float(self) == float(other) and self.code == other.code
+         elif isinstance(other, (float, int)):
+             # Comparison with plain number only checks value
+             return float(self) == float(other)
+         return NotImplemented
 
-class Age(Enum):
-    """
-    An enum to specify which type of age is being used (total or DBH).
-    """
-    TOTAL = 1
-    DBH = 2
+    def __ne__(self, other):
+        equal = self.__eq__(other)
+        return NotImplemented if equal is NotImplemented else not equal
 
-    def __call__(self, value: float) -> AgeMeasurement:
-        """
-        Creates an AgeMeasurement object from this Age type and a numeric value.
-        """
-        return AgeMeasurement(value, self.value)
 
 
 class StandBasalArea(float):
@@ -456,28 +470,40 @@ class AngleCountAggregator:
 # ------------------------------------------------------------------------------
 
 class SiteIndexValue(float):
-    """
-    A float that represents a site index value (e.g. SI=30) for a specified species
-    and reference age, returned by some site-function (fn).
+    def __new__(cls,
+                value: float,
+                reference_age: AgeMeasurement, # Expects AgeMeasurement
+                species: set[TreeName], #Potentially more than one, e.g. Betula pendula, Betula pubescens.
+                fn: Callable):
 
-    Example usage:
-        siv = SiteIndexValue(30.0, reference_age=100, species=TreeName("Picea_abies"), fn=my_site_index_fn)
-    """
-    def __new__(cls, value: float, reference_age: float, species: TreeName, fn: callable):
+        # Check type of reference_age
+        if not isinstance(reference_age, AgeMeasurement):
+            raise TypeError(f"reference_age must be an AgeMeasurement object, not {type(reference_age)}")
+        
+        # --- Validate the species set ---
+        if not isinstance(species, set):
+            raise TypeError(f"species must be a set, not {type(species)}")
+        if not species: # Check if the set is empty
+             raise ValueError("species set cannot be empty.")
+        for item in species:
+            if not isinstance(item, TreeName):
+                raise TypeError(f"All items in the species set must be TreeName objects, found {type(item)}")
+
         if value < 0:
             raise ValueError("Site index value must be non-negative.")
+
         obj = super().__new__(cls, value)
-        obj.reference_age = reference_age
+        obj.reference_age = reference_age # Store the object
         obj.species = species
         obj.fn = fn
         return obj
 
     def __repr__(self):
         fn_name = self.fn.__name__ if hasattr(self.fn, '__name__') else str(self.fn)
+        # Represent the set of species clearly
+        species_repr = "{" + ", ".join(sorted(repr(s) for s in self.species)) + "}" # Sort for consistent repr
         return (f"SiteIndexValue({float(self)}, reference_age={self.reference_age}, "
-                f"species={self.species}, fn={fn_name})")
-
-
+                f"species={species_repr}, fn={fn_name})") # Use the set repr
 # ------------------------------------------------------------------------------
 # Volume: float with metadata (units, region, type, etc.)
 # ------------------------------------------------------------------------------

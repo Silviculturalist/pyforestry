@@ -120,7 +120,7 @@ class HagglundSpruceModel:
     return SiteIndexValue(
        (13+A2*(1-exp(-age2*RK))**RM2)/10,
        reference_age=Age.TOTAL(age2),
-       species=TreeSpecies.Sweden.picea_abies,
+       species={TreeSpecies.Sweden.picea_abies},
        fn=Hagglund_1970.height_trajectory.picea_abies.northern_sweden
     ), T13
    
@@ -219,7 +219,7 @@ class HagglundSpruceModel:
         return SiteIndexValue(
        (13+A2*(1-exp(-age2*RK))**RM2)/10,
        reference_age=Age.TOTAL(age2),
-       species=TreeSpecies.Sweden.picea_abies,
+       species={TreeSpecies.Sweden.picea_abies},
        fn=Hagglund_1970.height_trajectory.picea_abies.southern_sweden
     ), T13
 
@@ -340,7 +340,7 @@ class HagglundPineModel:
         return SiteIndexValue(
             (13 + A2 * (1 - math.exp(-age2 * RK))**RM2) / 10,
             reference_age=Age.TOTAL(age2),
-            species=TreeSpecies.Sweden.pinus_sylvestris,
+            species={TreeSpecies.Sweden.pinus_sylvestris},
             fn=Hagglund_1970.height_trajectory.pinus_sylvestris.sweden), T13
 
 # =============================================================================

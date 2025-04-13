@@ -1,56 +1,98 @@
-def si_to_bonitet(H100, main_species, vegetation, altitude, county):
+# codefolder/MaximumAnnualIncrement.py (Modification)
+from typing import Union
+from Munin.Helpers.Base import SiteIndexValue
+from Munin.Helpers.TreeSpecies import TreeSpecies, TreeName
+from Munin.Site.SwedishSite import Sweden # Now includes Sweden.County
+
+# Define sets of county codes for easier checking
+NORTHERN_COUNTY_CODES = {
+    Sweden.County.NORRBOTTENS_LAPPMARK,
+    Sweden.County.NORRBOTTENS_KUSTLAND,
+    Sweden.County.VASTERBOTTENS_LAPPMARK,
+    Sweden.County.VASTERBOTTENS_KUSTLAND,
+    Sweden.County.VASTERNORRLAND_ANGERMANLANDS,
+    Sweden.County.VASTERNORRLAND_MEDELPADS,
+    Sweden.County.JAMTLAND_JAMTLANDS,
+    Sweden.County.JAMTLAND_HARJEDALENS,
+    Sweden.County.KOPPARBERG_SALEN_IDRE
+}
+
+MIDDLE_COUNTY_CODES = {
+    Sweden.County.KOPPARBERG_OVRIGA,
+    Sweden.County.GAVLEBORG_HALSINGLANDS,
+    Sweden.County.GAVLEBORG_OVRIGA,
+    Sweden.County.VARMLAND    
+}
+
+def hagglund_1981_SI_to_productivity(
+    h100_input: SiteIndexValue,
+    main_species: TreeName,
+    vegetation: Sweden.FieldLayer,
+    altitude: float,
+    county: Sweden.County # Changed type hint to the Enum
+) -> float:
     """
     Calculate smoothed productivity estimates in m3sk (cu.m.) from Hägglund 1981.
-    
+
     Parameters:
-        H100 (float): Estimated stand top height at 100 years age.
-        main_species (str): Main species, one of: 'Picea abies' or 'Pinus sylvestris'.
-        vegetation (int): Vegetation class.
+        h100_input (SiteIndexValue): Estimated stand top height object (must be H100, i.e., reference_age value must be 100).
+        main_species (TreeName): Main species (e.g., TreeSpecies.Sweden.picea_abies).
+        vegetation (Sweden.FieldLayer): Vegetation enum member.
         altitude (float): Altitude in meters above sea level.
-        county (str): Swedish county.
-    
+        county (Sweden.County): Swedish county enum member.
+
     Returns:
-        float: Mean volume growth in m3sk / ha yr-1 at the time of culmination (or at 150 years for late culmination).
+        float: Mean volume growth in m3sk / ha yr-1 at the time of culmination.
+
+    Raises:
+        ValueError: If h100_input.reference_age value is not 100, or if H100 value is not positive.
+        TypeError: If input types are incorrect.
     """
     # Validate inputs
-    if not isinstance(H100, (int, float)) or H100 <= 0:
-        raise ValueError("H100 must be a positive numeric value.")
-    
+    # Check if the numeric value of the reference_age is 100
+    if h100_input.reference_age != 100:
+         # Raise ValueError instead of warning
+         raise ValueError(f"Input SiteIndexValue must have a reference_age value of 100 (H100). Received: {h100_input.reference_age}") #
+
+    H100 = float(h100_input) # Extract the float value for calculations
+    if H100 <= 0:
+        raise ValueError("H100 value must be positive.") #
+
+    if not isinstance(main_species, TreeName):
+         raise TypeError("main_species must be a TreeName object.") #
+
+    if not isinstance(vegetation, Sweden.FieldLayer):
+        raise TypeError("vegetation must be a Sweden.FieldLayer enum member.") #
+
+    if not isinstance(county, Sweden.County):
+        raise TypeError("county must be a Sweden.County enum member.") #
+
+    # --- rest of the function remains the same ---
+    veg_code = vegetation.value.code
+    county_code = county.value.code # Get the integer code from the enum
+
     F1 = 0.72 + (H100 / 130)
     F2 = 0.70 + (H100 / 100)
     fun = None
-    
-    # Updated county mappings for Northern Sweden
-    northern_counties = [
-        "Norrbottens lappmark (BD lappm)", "Norrbottens kustland (BD kust)", 
-        "Västerbottens lappmark (AC lappm)", "Västerbottens kustland (AC kust)", 
-        "Västernorrland - Ångermanlands landskap (Y Ångerm)", "Västernorrland - Medelpads landskap (Y Medelp)", 
-        "Jämtland - Jämtlands landskap (Z)", "Jämtland - Härjedalens landskap (Z Härjed)", 
-        "Kopparberg (Dalarna), Sälen - Idre (W)"
-    ]
-    
-    # Updated county mappings for Middle Sweden
-    middle_counties = [
-        "Kopparberg (Dalarna), övriga (W övr)", "Gävleborg - Hälsinglands landskap (X Hälsingl)", 
-        "Gävleborg, övriga (X övr)", "Kopparberg (Dalarna), övriga (W övr)", "Värmland (S)"
-    ]
-    
-    # Determine function based on species, county, vegetation, and altitude
-    if main_species == "Picea abies":
-        if county in northern_counties:
-            fun = "d" if vegetation <= 9 else "e"
-        elif county in middle_counties:
-            fun = "b" if vegetation <= 9 else "c"
-        else:
+
+    # Determine function based on species, county code, vegetation code, and altitude
+    if main_species == TreeSpecies.Sweden.picea_abies:
+        if county_code in NORTHERN_COUNTY_CODES:
+            fun = "d" if veg_code <= 9 else "e"
+        elif county_code in MIDDLE_COUNTY_CODES:
+            fun = "b" if veg_code <= 9 else "c"
+        else: # Southern Sweden assumed otherwise
             fun = "a"
-    elif main_species == "Pinus sylvestris":
+    elif main_species == TreeSpecies.Sweden.pinus_sylvestris:
         # For Pine: Northern Sweden with altitude >= 200 meters
-        fun = "g" if county in northern_counties and altitude >= 200 else "f"
-    
+        fun = "g" if county_code in NORTHERN_COUNTY_CODES and altitude >= 200 else "f"
+
     if fun is None:
-        raise ValueError(f"Unrecognized combination of inputs for main_species: {main_species}")
-    
-    # Calculate bonitet based on the function
+        # Use county label in error message for clarity
+        raise TypeError(f"Unrecognized combination for species {main_species.full_name}, county {county.value.label}, veg_code {veg_code}")
+
+    # Calculate bonitet (same logic as before)
+    bon = 0.0
     if fun == "a":
         bon = (0.57207 + 0.22166 * H100 + 0.0050164 * H100 ** 2) * F1
     elif fun == "b":
@@ -66,6 +108,6 @@ def si_to_bonitet(H100, main_species, vegetation, altitude, county):
     elif fun == "g":
         bon = (0.099227 + 0.067873 * H100 + 0.0066316 * H100 ** 2) * F2
     else:
-        raise ValueError(f"{fun} is an unrecognized function. Please use one between 'a' and 'g'.")
-    
+        raise TypeError(f"Internal error: function code '{fun}' not recognized.")
+
     return bon

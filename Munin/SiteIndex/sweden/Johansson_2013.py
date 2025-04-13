@@ -74,7 +74,7 @@ def johansson_2013_height_trajectory_sweden_beech(
     return SiteIndexValue(
         value=height_at_age2,
         reference_age=age2_val,
-        species=TreeSpecies.Sweden.fagus_sylvatica,
+        species={TreeSpecies.Sweden.fagus_sylvatica},
         fn=johansson_2013_height_trajectory_sweden_beech
     )
 
@@ -144,7 +144,7 @@ def johansson_2013_height_trajectory_sweden_hybrid_aspen(
     return SiteIndexValue(
         value=height_at_age2,
         reference_age=age2_val,
-        species=TreeSpecies.Sweden.populus_tremula_x_tremuloides,
+        species={TreeSpecies.Sweden.populus_tremula_x_tremuloides}, #TODO : Check if valid.
         fn=johansson_2013_height_trajectory_sweden_hybrid_aspen
     )
 
@@ -217,7 +217,7 @@ def johansson_2013_height_trajectory_sweden_larch(
     return SiteIndexValue(
         value=height_at_age2,
         reference_age=age2_val,
-        species=TreeSpecies.Sweden.larix_sibirica,
+        species={TreeSpecies.Sweden.larix_sibirica},
         fn=johansson_2013_height_trajectory_sweden_larch
     )
 
@@ -290,6 +290,6 @@ def johansson_2013_height_trajectory_sweden_oak(
     return SiteIndexValue(
         value=height_at_age2,
         reference_age=age2_val,
-        species=TreeSpecies.Sweden.quercus_robur,
+        species={TreeSpecies.Sweden.quercus_robur},
         fn=johansson_2013_height_trajectory_sweden_oak
     )

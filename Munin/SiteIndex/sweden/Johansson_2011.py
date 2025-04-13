@@ -83,6 +83,6 @@ def johansson_2011_height_trajectory_sweden_poplar(
     return SiteIndexValue(
         value=height_at_age2,
         reference_age=age2_val,
-        species=TreeSpecies.Sweden.populus_tremula, # Or potentially populus_tremula_x_tremuloides if specified
+        species={TreeSpecies.Sweden.populus_tremula}, 
         fn=johansson_2011_height_trajectory_sweden_poplar
     )
