@@ -274,6 +274,8 @@ class HagglundPineModel:
           - For 'age': if provided as Age.TOTAL, we solve using Newton–Raphson for the effective DBH age.
           - For 'age2': if Age.DBH is provided, T13 is added.
         """
+        if not isinstance(regeneration, HagglundPineRegeneration):
+            raise TypeError('regeneration argument must be of type HagglundPineRegeneration')
         if isinstance(age, AgeMeasurement):
             age_value = float(age)
             age_type = age.code
