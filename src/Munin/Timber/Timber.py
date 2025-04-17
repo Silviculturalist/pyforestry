@@ -1,18 +1,29 @@
 from typing import Optional
+from Munin.Helpers.TreeSpecies import TreeName, parse_tree_species
+from Munin.Helpers.Base import Diameter_cm
 
 class Timber:
     def __init__(
         self,
-        species: str,
-        diameter_cm: float,
+        species: TreeName|str,
+        diameter_cm: Diameter_cm|float,
         height_m: float,
         double_bark_mm: Optional[float] = None,
         crown_base_height_m: Optional[float] = None,
         over_bark: Optional[bool] = None,
         stump_height_m: Optional[float] = 0.3
     ):
-        self.species = species.lower()
+        if not isinstance(species, TreeName):
+            self.species = parse_tree_species(species)
+        else:
+            self.species = species
+        
         self.diameter_cm = diameter_cm
+
+        #What to do if Diameter_cm is over bark, but over_bark is False and double_bark is None? 
+        # E.g. If Diameter_cm is over bark and the timber is under bark, and we cannot remove bark thickness.
+
+
         self.height_m = height_m
         self.double_bark_mm = double_bark_mm
         self.crown_base_height_m = crown_base_height_m
