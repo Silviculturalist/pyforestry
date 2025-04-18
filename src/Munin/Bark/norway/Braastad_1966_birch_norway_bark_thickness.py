@@ -1,6 +1,6 @@
 import warnings
 from typing import Union
-from Munin.Helpers.Base import Diameter_cm 
+from Munin.Helpers.Primitives import Diameter_cm 
 
 def braastad_1966_birch_norway_bark_thickness(
     diameter_cm: Union[Diameter_cm, float],

@@ -1,8 +1,8 @@
 import math
 import warnings
 from typing import Union, Set, Optional
-from Munin.Helpers.Base import Volume, Diameter_cm #
-from Munin.Helpers.TreeSpecies import TreeName, TreeSpecies, parse_tree_species #
+from Munin.Helpers.Primitives import Volume, Diameter_cm 
+from Munin.Helpers.TreeSpecies import TreeName, parse_tree_species 
 
 # Define the species this function applies to
 BRAASTAD_1966_SPECIES: Set[TreeName] = {

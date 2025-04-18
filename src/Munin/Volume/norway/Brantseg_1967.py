@@ -1,6 +1,6 @@
 import warnings
 from typing import Union, Optional
-from Munin.Helpers.Base import Volume, Diameter_cm #
+from Munin.Helpers.Primitives import Volume, Diameter_cm 
 from Munin.Helpers.TreeSpecies import TreeName
 
 def brantseg_1967_volume_scots_pine_norway(

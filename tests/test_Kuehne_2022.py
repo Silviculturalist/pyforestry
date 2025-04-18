@@ -1,9 +1,12 @@
 import pytest
 import math
-from Munin.SiteIndex.norway.Kuehne_2022 import Kuehne2022 as KuehneSiteIndex
-from Munin.Models.norway.Kuehne_2022 import KuehnePineModel as KuehneStandModels
-from Munin.Helpers.Base import Age, AgeMeasurement, SiteIndexValue, StandBasalArea, Stems, StandVolume
 
+# Add these lines:
+from Munin.Models.norway import Kuehne_2022 as KuehneModels # Import the module
+from Munin.Helpers.TreeSpecies import PINUS_SYLVESTRIS # Import the species constant
+from Munin.Helpers.Primitives import Age, AgeMeasurement, SiteIndexValue, StandBasalArea, Stems, StandVolume # Keep existing primitive imports
+# Also import KuehneSiteIndex if needed for other tests
+from Munin.SiteIndex.norway.Kuehne_2022 import Kuehne2022 as KuehneSiteIndex
 # --- Site Index Tests ---
 
 def test_kuehne_height_trajectory_output_height():
@@ -80,7 +83,7 @@ def test_kuehne_height_trajectory_requires_total_age():
 def test_kuehne_volume_prediction():
     """ Placeholder test for volume prediction. """
     # Example values - replace with realistic ones if available
-    result = KuehneStandModels.volume.pinus_sylvestris(
+    result = KuehneModels._volume.PINUS_SYLVESTRIS(
         basal_area=25.0,
         dominant_height=22.0,
         age=Age.TOTAL(60)
@@ -89,11 +92,11 @@ def test_kuehne_volume_prediction():
     assert isinstance(result, StandVolume)
     assert not math.isnan(float(result))
     # Add approx check if expected value is known
-    assert result.fn is KuehneStandModels.volume.pinus_sylvestris
+    assert result.fn is KuehneModels._volume.PINUS_SYLVESTRIS
 
 def test_kuehne_stems_quotient():
     """ Test stems quotient calculation. """
-    result = KuehneStandModels.stems_quotient.pinus_sylvestris(
+    result = KuehneModels._stems_quotient.PINUS_SYLVESTRIS(
         ba_before=30.0,
         ba_after=20.0 # BA reduced by 1/3
     )
@@ -104,7 +107,7 @@ def test_kuehne_stems_quotient():
 
 def test_kuehne_ba_quotient():
     """ Test BA quotient calculation. """
-    result = KuehneStandModels.ba_quotient.pinus_sylvestris(
+    result = KuehneModels._ba_quotient.PINUS_SYLVESTRIS(
         stems_before=1000.0,
         stems_after=700.0 # Stems reduced to 70%
     )

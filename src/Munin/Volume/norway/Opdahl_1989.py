@@ -2,8 +2,8 @@
 import math
 import warnings
 from typing import Union, Set, Optional
-from Munin.Helpers.Base import Volume, Diameter_cm # Assuming these are in the path
-from Munin.Helpers.TreeSpecies import TreeName, TreeSpecies, parse_tree_species # Assuming these are in the path
+from Munin.Helpers.Primitives import Volume, Diameter_cm 
+from Munin.Helpers.TreeSpecies import TreeName, parse_tree_species # Assuming these are in the path
 
 # Define the species this function applies to
 OPDAHL_1989_SPECIES: Set[TreeName] = {

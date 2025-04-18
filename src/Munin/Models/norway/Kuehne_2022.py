@@ -6,7 +6,7 @@ WARNING WARNING WARNING
 
 
 import warnings
-from Munin.Helpers.Base import SiteIndexValue, AgeMeasurement, TopHeightMeasurement, Age, Stems, StandBasalArea, StandVolume
+from Munin.Helpers.Primitives import SiteIndexValue, AgeMeasurement, TopHeightMeasurement, Age, Stems, StandBasalArea, StandVolume
 from Munin.Helpers.TreeSpecies import TreeName, PINUS_SYLVESTRIS
 from typing import Optional, Set, Tuple, Union, Literal
 import math

@@ -3,7 +3,7 @@ import numpy as np
 from Munin.Taper import Taper
 from Munin.Timber import Timber
 from Munin.Helpers.TreeSpecies import TreeName
-from Munin.Helpers.Base import Diameter_cm, Volume
+from Munin.Helpers.Primitives import Diameter_cm, Volume
 import warnings
 from scipy.optimize import minimize_scalar
 

@@ -1,7 +1,7 @@
 import math
 import warnings
 from typing import Union, Tuple, Set
-from Munin.Helpers.Base import (SiteIndexValue, Age, AgeMeasurement,
+from Munin.Helpers.Primitives import (SiteIndexValue, Age, AgeMeasurement,
                       Stems, StandBasalArea, QuadraticMeanDiameter, Diameter_cm)
 from Munin.Helpers.TreeSpecies import TreeName, PICEA_ABIES, PINUS_SYLVESTRIS
 
@@ -146,7 +146,7 @@ class TveiteSpruceModel:
             value=predicted_height,
             reference_age=age2, # Keep the AgeMeasurement object (DBH)
             species=TveiteSpruceModel.SPECIES,
-            fn=Tveite1976.height_trajectory.picea_abies.norway_ht # Reference the public API endpoint
+            fn=Tveite1976.height_trajectory.picea_abies
         )
 
     @staticmethod
@@ -321,7 +321,7 @@ class TveitePineModel:
             value=predicted_height,
             reference_age=age2, # Keep the AgeMeasurement object (DBH)
             species=TveitePineModel.SPECIES,
-            fn=Tveite1976.height_trajectory.pinus_sylvestris.norway_ht # Reference the public API endpoint
+            fn=Tveite1976.height_trajectory.pinus_sylvestris
         )
 
     @staticmethod

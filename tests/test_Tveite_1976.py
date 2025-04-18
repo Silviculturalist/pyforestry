@@ -3,7 +3,7 @@
 import pytest
 import math
 from Munin.SiteIndex.norway.Tveite_1976 import Tveite1976
-from Munin.Helpers.Base import Age, AgeMeasurement, SiteIndexValue
+from Munin.Helpers.Primitives import Age, AgeMeasurement, SiteIndexValue
 from Munin.SiteIndex.norway.Tveite_1976 import TveiteSpruceModel, TveitePineModel
 
 # Define expected values from the R code examples (approximately)

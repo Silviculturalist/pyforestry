@@ -2,10 +2,10 @@
 
 import math
 import warnings
-from typing import Union, Tuple, Set
+from typing import Set
 
-from Munin.Helpers.Base import TreeSpecies, SiteIndexValue, Age, AgeMeasurement
-from Munin.Helpers.TreeSpecies import TreeSpecies, TreeName, PICEA_ABIES, PINUS_SYLVESTRIS
+from Munin.Helpers.Primitives import SiteIndexValue, Age, AgeMeasurement
+from Munin.Helpers.TreeSpecies import TreeName, PICEA_ABIES, PINUS_SYLVESTRIS
 
 
 # =============================================================================
@@ -126,7 +126,7 @@ class SharmaSpruceModel:
             value=predicted_height,
             reference_age=age2, # Keep the AgeMeasurement object (DBH)
             species=SharmaSpruceModel.SPECIES,
-            fn=Sharma2011.height_trajectory.picea_abies.norway_ht # Reference the public API endpoint
+            fn=Sharma2011.height_trajectory.picea_abies
         )
 
 
@@ -242,7 +242,7 @@ class SharmaPineModel:
             value=predicted_height,
             reference_age=age2, # Keep the AgeMeasurement object (DBH)
             species=SharmaPineModel.SPECIES,
-            fn=Sharma2011.height_trajectory.pinus_sylvestris.norway_ht # Reference the public API endpoint
+            fn=Sharma2011.height_trajectory.pinus_sylvestris
         )
 
 

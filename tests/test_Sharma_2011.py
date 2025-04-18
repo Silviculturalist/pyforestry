@@ -3,7 +3,7 @@
 import pytest
 import math
 from Munin.SiteIndex.norway.Sharma_2011 import Sharma2011, SharmaSpruceModel, SharmaPineModel
-from Munin.Helpers.Base import Age, AgeMeasurement, SiteIndexValue
+from Munin.Helpers.Primitives import Age, AgeMeasurement, SiteIndexValue
 
 # Expected values calculated manually based on the example input H=17@40 -> H@20
 EXPECTED_SPRUCE_H_AT_20_SHARMA = 8.790

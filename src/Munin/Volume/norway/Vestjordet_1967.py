@@ -1,7 +1,7 @@
 import math
 import warnings
 from typing import Union, Optional
-from Munin.Helpers.Base import Volume, Diameter_cm #
+from Munin.Helpers.Primitives import Volume, Diameter_cm 
 from Munin.Helpers.TreeSpecies import TreeName, TreeSpecies, parse_tree_species 
 
 def vestjordet_1967_volume_norway_spruce_norway(

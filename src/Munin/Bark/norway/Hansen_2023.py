@@ -14,7 +14,7 @@
 import warnings
 from typing import Union
 # Assuming Munin paths are correctly configured for import
-from Munin.Helpers.Base import Diameter_cm
+from Munin.Helpers.Primitives import Diameter_cm
 
 # --- Norway Spruce Function ---
 

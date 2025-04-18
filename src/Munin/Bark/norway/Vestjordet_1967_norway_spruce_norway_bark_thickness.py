@@ -1,6 +1,6 @@
 import warnings
 from typing import Union
-from Munin.Helpers.Base import Diameter_cm 
+from Munin.Helpers.Primitives import Diameter_cm 
 
 def vestjordet_1967_norway_spruce_norway_bark_thickness(
     diameter_cm: Union[Diameter_cm, float],
