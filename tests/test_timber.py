@@ -1,7 +1,7 @@
 import pytest
 from Munin.Timber.Timber import Timber
 from Munin.Timber.SweTimber import SweTimber
-from Munin.Volume import BrandelVolume
+from Munin.Volume.sweden import BrandelVolume
 
 def test_timber_valid_instance():
     # Create a basic Timber instance with valid parameters.

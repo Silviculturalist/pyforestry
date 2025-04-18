@@ -1,5 +1,5 @@
 import pytest
-from Munin.Volume import *
+from Munin.Volume.sweden import *
 
 def test_brandel_volume_log():
     # Example coefficients for southern pine (adjust based on your model)
