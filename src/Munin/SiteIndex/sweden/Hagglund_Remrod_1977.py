@@ -1,7 +1,7 @@
 import warnings
 from math import exp
 from typing import Union
-from Munin.Helpers.Base import Age, AgeMeasurement, SiteIndexValue
+from Munin.Helpers.Primitives import Age, AgeMeasurement, SiteIndexValue
 from Munin.Helpers.TreeSpecies import TreeSpecies
 
 def hagglund_remrod_1977_height_trajectories_lodgepole_pine(

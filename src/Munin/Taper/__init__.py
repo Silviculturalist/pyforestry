@@ -1,3 +1,4 @@
-from . import Taper, EdgrenNylinder1949
+from .Taper import Taper
+from .sweden import EdgrenNylinder1949
 
 __all__ = ['Taper','EdgrenNylinder1949']

@@ -1,4 +1,4 @@
-from Munin.Helpers.Base import *
+from Munin.Helpers.Primitives import *
 from Munin.Helpers.TreeSpecies import TreeSpecies, TreeName, parse_tree_species
 from Munin.SiteIndex.sweden.Eriksson_1997 import eriksson_1997_height_trajectory_sweden_birch
 import pytest

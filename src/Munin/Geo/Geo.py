@@ -3,7 +3,7 @@ import geopandas as gpd
 from pyproj import Transformer
 from importlib.resources import files
 # Removed top-level import causing cycle:
-# from Munin.Site.SwedishSite import SwedenCounty, SwedenClimateZone
+
 from typing import Optional
 
 class RetrieveGeoCode:
@@ -60,7 +60,7 @@ class RetrieveGeoCode:
             SwedenClimateZone | None: The climate zone enum member or None if not found.
         """
         # Import locally within the method for runtime use
-        from Munin.Site.SwedishSite import SwedenClimateZone
+        from Munin.Site.sweden.SwedishSite import SwedenClimateZone
 
         # Load the climate shapefile and reproject to EPSG:3006
         klimat_gdf = gpd.read_file(files('Munin.Geo.Climate').joinpath("Klimat.shp")).to_crs(epsg=3006)
@@ -95,7 +95,7 @@ class RetrieveGeoCode:
             SwedenCounty | None: The corresponding SwedenCounty enum member or None if not found.
         """
         # Import locally within the method for runtime use
-        from Munin.Site.SwedishSite import SwedenCounty
+        from Munin.Site.sweden.SwedishSite import SwedenCounty
 
         # Load the county shapefile and reproject to EPSG:3006
         dlanskod_gdf = gpd.read_file(files('Munin.Geo.Counties').joinpath('RT_Dlanskod.shp')).to_crs(epsg=3006)

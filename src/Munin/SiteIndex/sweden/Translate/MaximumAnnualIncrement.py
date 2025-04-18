@@ -1,8 +1,8 @@
 # codefolder/MaximumAnnualIncrement.py (Modification)
 from typing import Union
-from Munin.Helpers.Base import SiteIndexValue
+from Munin.Helpers.Primitives import SiteIndexValue
 from Munin.Helpers.TreeSpecies import TreeSpecies, TreeName
-from Munin.Site.SwedishSite import Sweden # Now includes Sweden.County
+from Munin.Site.sweden.SwedishSite import Sweden # Now includes Sweden.County
 
 # Define sets of county codes for easier checking
 NORTHERN_COUNTY_CODES = {

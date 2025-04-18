@@ -1,5 +1,5 @@
 from Munin.Timber.SweTimber import SweTimber
-from Munin.Volume.Naslund1947 import NaslundFormFactor
+from Munin.Volume.sweden.Naslund1947 import NaslundFormFactor
 from Munin.Taper.Taper import Taper
 from typing import Optional
 import numpy as np

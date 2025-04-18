@@ -1,6 +1,5 @@
 #Tegnhammar Site Index corrections for Hagglund Site Index for Swedish Spruce.
 from Munin.Geo.Geo import RetrieveGeoCode
-import numpy as np
 from math import exp
 
 def tegnhammar_1992_adjusted_spruce_si_by_stand_variables(

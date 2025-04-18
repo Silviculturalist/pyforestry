@@ -16,4 +16,4 @@ __all__ = [
     'NaslundFormFactor',
     'Eriksson_1973_volume_aspen_Sweden', 
     'Eriksson_1973_volume_lodgepole_pine_Sweden'
-]
+]from .sweden import *

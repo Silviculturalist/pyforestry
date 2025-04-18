@@ -4,7 +4,7 @@ import warnings
 import math
 from typing import Union
 # Imports added
-from Munin.Helpers.Base import Age, AgeMeasurement, SiteIndexValue
+from Munin.Helpers.Primitives import Age, AgeMeasurement, SiteIndexValue
 from Munin.Helpers.TreeSpecies import TreeSpecies
 
 def johansson_1996_height_trajectory_sweden_aspen(
