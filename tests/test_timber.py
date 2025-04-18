@@ -14,7 +14,7 @@ def test_timber_valid_instance():
         over_bark=True
     )
     # Check that properties are set correctly.
-    assert timber.species.full_name == "pinus sylvestris"
+    assert timber.species == "pinus sylvestris"
     assert timber.height_m > 0
 
 def test_timber_invalid_diameter():
