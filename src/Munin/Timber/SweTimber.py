@@ -1,8 +1,8 @@
 from typing import Optional
 from Munin.Timber.Timber import Timber
-from Munin.Volume import Andersson_1954, BrandelVolume, carbonnier_1954, Matern_1975, Eriksson_1973
+from Munin.Volume.sweden import *
 # Import SwedishSite and its region-specific namespace.
-from Munin.Site.SwedishSite import SwedishSite
+from Munin.Site.sweden.SwedishSite import SwedishSite
 
 class SweTimber(Timber):
     def __init__(
@@ -104,12 +104,12 @@ class SweTimber(Timber):
                         over_bark=self.over_bark
                     )
             else:
-                vol = carbonnier_1954.carbonnier_1954_volume_larch(self.diameter_cm, self.height_m)
+                vol = carbonnier_1954_volume_larch(self.diameter_cm, self.height_m)
 
         # Pine (excluding larix sibirica)
         elif sp == 'pinus sylvestris':
                 if small_tree:
-                    vol = Andersson_1954.andersson_1954_volume_small_trees_pine(self.diameter_cm, self.height_m)
+                    vol = andersson_1954_volume_small_trees_pine(self.diameter_cm, self.height_m)
                 else:
                     if self.swedish_site is not None:
                         vol = BrandelVolume.get_volume(
@@ -135,7 +135,7 @@ class SweTimber(Timber):
         # Spruce
         elif sp == 'picea abies':
             if small_tree:
-                vol = Andersson_1954.andersson_1954_volume_small_trees_spruce(self.diameter_cm, self.height_m)
+                vol = andersson_1954_volume_small_trees_spruce(self.diameter_cm, self.height_m)
             else:
                 if self.swedish_site is not None:
                     vol = BrandelVolume.get_volume(
@@ -163,9 +163,9 @@ class SweTimber(Timber):
             if small_tree:
                 # Use different Andersson_1954 functions based on tree height.
                 if self.height_m > 4:
-                    vol = Andersson_1954.andersson_1954_volume_small_trees_birch_height_above_4_m(self.diameter_cm, self.height_m)
+                    vol = andersson_1954_volume_small_trees_birch_height_above_4_m(self.diameter_cm, self.height_m)
                 else:
-                    vol = Andersson_1954.andersson_1954_volume_small_trees_birch_under_diameter_5_cm(self.diameter_cm, self.height_m)
+                    vol = andersson_1954_volume_small_trees_birch_under_diameter_5_cm(self.diameter_cm, self.height_m)
             else:
                 if self.swedish_site is not None:
                     vol = BrandelVolume.get_volume(
@@ -190,30 +190,30 @@ class SweTimber(Timber):
 
         # Aspen (and related species)
         elif sp in ['fraxinus excelsior', 'populus tremula'] or sp.startswith('alnus'):
-            vol = Eriksson_1973.Eriksson_1973_volume_aspen_Sweden(self.diameter_cm, self.height_m)
+            vol = Eriksson_1973_volume_aspen_Sweden(self.diameter_cm, self.height_m)
 
         # Lodgepole pine (Contorta)
         elif sp == 'pinus contorta':
             if small_tree:
-                vol = Andersson_1954.andersson_1954_volume_small_trees_pine(self.diameter_cm, self.height_m)
+                vol = andersson_1954_volume_small_trees_pine(self.diameter_cm, self.height_m)
             else:
-                vol = Eriksson_1973.Eriksson_1973_volume_lodgepole_pine_Sweden(self.diameter_cm, self.height_m)
+                vol = Eriksson_1973_volume_lodgepole_pine_Sweden(self.diameter_cm, self.height_m)
 
         # Beech
         elif sp in ['fagus sylvatica', 'carpinus betulus']:
-            vol = Matern_1975.matern_1975_volume_sweden_beech(self.diameter_cm, self.height_m)
+            vol = matern_1975_volume_sweden_beech(self.diameter_cm, self.height_m)
 
         # Oak
         elif sp.startswith('quercus'):
-            vol = Matern_1975.matern_1975_volume_sweden_oak(self.diameter_cm, self.height_m)
+            vol = matern_1975_volume_sweden_oak(self.diameter_cm, self.height_m)
 
         # Default fallback: use Birch model
         else:
             if small_tree:
                 if self.height_m > 4:
-                    vol = Andersson_1954.andersson_1954_volume_small_trees_birch_height_above_4_m(self.diameter_cm, self.height_m)
+                    vol = andersson_1954_volume_small_trees_birch_height_above_4_m(self.diameter_cm, self.height_m)
                 else:
-                    vol = Andersson_1954.andersson_1954_volume_small_trees_birch_under_diameter_5_cm(self.diameter_cm, self.height_m)
+                    vol = andersson_1954_volume_small_trees_birch_under_diameter_5_cm(self.diameter_cm, self.height_m)
             else:
                 if self.swedish_site is not None:
                     vol = BrandelVolume.get_volume(

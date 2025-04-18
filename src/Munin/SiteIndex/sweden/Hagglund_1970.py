@@ -1,4 +1,4 @@
-from Munin.Helpers.Base import TreeSpecies, SiteIndexValue, Age, AgeMeasurement
+from Munin.Helpers.Primitives import TreeSpecies, SiteIndexValue, Age, AgeMeasurement
 from Munin.Helpers.TreeSpecies import TreeSpecies
 import math
 import warnings

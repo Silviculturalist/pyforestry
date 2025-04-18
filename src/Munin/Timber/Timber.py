@@ -1,6 +1,6 @@
 from typing import Optional
 from Munin.Helpers.TreeSpecies import TreeName, parse_tree_species
-from Munin.Helpers.Base import Diameter_cm
+from Munin.Helpers.Primitives import Diameter_cm
 
 class Timber:
     def __init__(

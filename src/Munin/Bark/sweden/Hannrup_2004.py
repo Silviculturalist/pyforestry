@@ -1,7 +1,7 @@
 import math
 import warnings
 from typing import Union
-from Munin.Helpers.Base import Diameter_cm
+from Munin.Helpers.Primitives import Diameter_cm
 
 # --- Scots Pine Function ---
 

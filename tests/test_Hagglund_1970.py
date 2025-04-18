@@ -4,8 +4,8 @@ import pytest
 import math
 # Assuming the new V2 classes are now the primary imports
 from Munin.SiteIndex.sweden.Hagglund_1970 import Hagglund_1970, HagglundPineModel, HagglundSpruceModel
-from Munin.Helpers.Base import Age, AgeMeasurement, SiteIndexValue # Added AgeMeasurement for clarity
-from Munin.Helpers.TreeSpecies import TreeSpecies # Assuming TreeSpecies is needed for context if not directly used
+from Munin.Helpers.Primitives import Age
+
 
 # --- Test Data ---
 

@@ -1,5 +1,5 @@
 import pytest
-from Munin.Helpers.Base import Volume
+from Munin.Helpers.Primitives import Volume
 
 # Test equality of volumes with different units and regions
 def test_volume_equality():

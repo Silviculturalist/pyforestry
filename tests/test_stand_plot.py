@@ -2,7 +2,8 @@ import pytest
 from shapely.geometry import Point, Polygon
 import random
 
-from Munin.Helpers.Base import * 
+from Munin.Helpers.Primitives import * 
+from Munin.Helpers.Base import *
  
 def test_diameter_cm():
     """Test the Diameter_cm class for basic constraints."""

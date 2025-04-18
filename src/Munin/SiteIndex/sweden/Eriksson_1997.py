@@ -1,7 +1,7 @@
 import warnings
 import math
 from typing import Union
-from Munin.Helpers.Base import Age, AgeMeasurement, SiteIndexValue
+from Munin.Helpers.Primitives import Age, AgeMeasurement, SiteIndexValue
 from Munin.Helpers.TreeSpecies import TreeSpecies
 
 # Type hints added to signature, return type changed to SiteIndexValue
