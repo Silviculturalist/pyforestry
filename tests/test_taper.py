@@ -1,7 +1,7 @@
 import pytest
 import math
-from Munin.Timber.SweTimber import SweTimber, SwedishSite
-from Munin.Taper.EdgrenNylinder1949 import EdgrenNylinder1949
+from Munin.Timber.SweTimber import SweTimber
+from Munin.Taper.sweden.EdgrenNylinder1949 import EdgrenNylinder1949
 
 # Fixture: a valid Timber instance.
 @pytest.fixture

@@ -1,0 +1,3 @@
+from .Agestam1985 import agestam_1985_si_translation_pine_to_birch, agestam_1985_si_translation_spruce_to_birch
+from .Leijon1979 import Leijon_Pine_to_Spruce, Leijon_Spruce_to_Pine
+from .MaximumAnnualIncrement import hagglund_1981_SI_to_productivity

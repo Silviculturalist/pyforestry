@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name            = "Munin"
+version         = "0.2"
+description     = "Forest‑model toolkit"
+readme          = "README.md"
+requires-python = ">=3.10"
+authors         = [{name = "Carl Vigren", email = "carl.vigren@slu.se"}]
+urls            = {Homepage = "https://github.com/Silviculturalist/Munin"}
+dependencies    = [
+  "numpy",
+  "scipy>=1.5",
+  "geopandas",
+  "shapely",
+  "pyproj"
+]
+
+[project.optional-dependencies]
+dev   = ["pytest", "black", "ruff", "build", "twine"]
+
+# ----- setuptools‑specific bits -----
+[tool.setuptools]
+package-dir = {"" = "src"}   # tell setuptools where the code now lives
+
+[tool.setuptools.packages.find]
+where = ["src"]              # automatic discovery under src/
+
+# ship **all** shapefile components
+[tool.setuptools.package-data]
+"Munin.Geo.Humidity"  = ["humidity.*"]
+"Munin.Geo.Climate"   = ["Klimat.*"]
+"Munin.Geo.Coastline" = ["SwedishCoastLine_NE_medium_clipped.*"]
+"Munin.Geo.Counties"  = ["RT_Dlanskod.*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["--import-mode=importlib"]

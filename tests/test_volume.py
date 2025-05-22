@@ -12,7 +12,7 @@ def test_brandel_volume_log():
 
 def test_andersson_1954_volume_birch():
     # Use Andersson_1954 for a small birch tree; expected value range is illustrative.
-    vol = Andersson_1954.andersson_1954_volume_small_trees_birch_height_above_4_m(4.0, 10.0)
+    vol = andersson_1954_volume_small_trees_birch_height_above_4_m(4.0, 10.0)
     assert isinstance(vol, float)
     # Adjust the tolerance or expected range based on your model.
     assert 0.0 < vol < 10.0
@@ -23,7 +23,7 @@ def test_carbonnier_1954_volume_larch():
     assert vol > 0
 
 def test_matern_1975_volume_beech():
-    vol = Matern_1975.matern_1975_volume_sweden_beech(35, 25)
+    vol = matern_1975_volume_sweden_beech(35, 25)
     assert isinstance(vol, float)
     assert vol > 0
 
