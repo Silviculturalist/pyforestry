@@ -309,7 +309,7 @@ class Elfving2003SingleTreeAge:
 
         invgfp1 = 1 / (basal_area_relascope_m2_ha + 1)
         lngfp1 = log(basal_area_relascope_m2_ha+1)
-        lngrel = log((+0.1))/())
+        lngrel = log((basal_area_plot_m2_ha+0.1))/(basal_area_relascope_m2_ha+0.1))
         invsis = 1 / SIS
           
         temperature_sum = 0.001*(4835 - 5.76*latitude - 0.9*altitude_m)  # TODO: SIC! Should be 57.6*latitude but was erroneously input in SAS at regression time! Contact has been taken with B. Elfving for clarification.
