@@ -262,8 +262,14 @@ class Elfving2003SingleTreeAge:
         else:
             try: code = int(field_layer); actual_fl_veg = next((m.value for m in SwedenFieldLayer if m.value.code == code), SwedenFieldLayer.BILBERRY.value) # type: ignore
             except(ValueError,TypeError): pass
+
+        # Explicitly convert dominant_mean_diameter_override to float if not None
+        dm_override_val: Optional[float] = None
+        if dominant_mean_diameter_override is not None:
+            dm_override_val = float(dominant_mean_diameter_override)
+
         
-        return _ModelParams(d_cm=float(diameter),species_obj=species_obj,altitude_m=float(altitude_m),latitude=float(latitude),processed_total_stand_age=processed_tsa,sis=(float(SIS_spruce) if SIS_spruce is not None else None),field_layer_vegetation=actual_fl_veg,processed_basal_area_plot_m2_ha=processed_ba_plot,processed_basal_area_relascope_m2_ha=processed_ba_relascope,local_qmd_cm=local_qmd,stems_ha=stems_ha,is_uneven_aged_override=is_uneven_aged_override,dominant_mean_diameter_override=dominant_mean_diameter_override,is_standard_override=is_standard_override,is_undergrowth_override=is_undergrowth_override,is_gotland_override=is_gotland_override,is_ditched_override=is_ditched_override,is_peat_soil_override=is_peat_soil_override,is_shade_tolerant_broadleaf_override=is_shade_tolerant_broadleaf_override)
+        return _ModelParams(d_cm=float(diameter),species_obj=species_obj,altitude_m=float(altitude_m),latitude=float(latitude),processed_total_stand_age=processed_tsa,sis=(float(SIS_spruce) if SIS_spruce is not None else None),field_layer_vegetation=actual_fl_veg,processed_basal_area_plot_m2_ha=processed_ba_plot,processed_basal_area_relascope_m2_ha=processed_ba_relascope,local_qmd_cm=local_qmd,stems_ha=stems_ha,is_uneven_aged_override=is_uneven_aged_override,dominant_mean_diameter_override=dm_override_val,is_standard_override=is_standard_override,is_undergrowth_override=is_undergrowth_override,is_gotland_override=is_gotland_override,is_ditched_override=is_ditched_override,is_peat_soil_override=is_peat_soil_override,is_shade_tolerant_broadleaf_override=is_shade_tolerant_broadleaf_override)
 
     @staticmethod
     def _determine_calculation_group(params: _ModelParams) -> int:
