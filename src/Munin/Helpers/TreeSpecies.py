@@ -45,8 +45,7 @@ def get_tree_type_by_genus(genus: str) -> str:
     elif g in DECIDUOUS_LIST:
         return "Deciduous"
     else:
-        warnings.warn(f"Unknown tree type for genus '{genus}'.")
-        return None
+        raise ValueError(f"Unknown tree type for genus '{genus}'.")
 
 # --------------------------------------------------------------------
 # Global Genera
@@ -84,6 +83,7 @@ PINUS_SYLVESTRIS              = TreeName(genus=PINUS,       species_name="sylves
 PINUS_CONTORTA                = TreeName(genus=PINUS,       species_name="contorta",           code="PCON")
 PINUS_MUGO                    = TreeName(genus=PINUS,       species_name="mugo",               code="PMUG")
 LARIX_SIBIRICA                = TreeName(genus=LARIX,       species_name="sibirica",           code="LSIB")
+LARIX_DECIDUA                 = TreeName(genus=LARIX,       species_name='decidua',            code='LDEC')
 LARIX_EUROPEA_X_LEPTOLEPIS    = TreeName(genus=LARIX,       species_name="europaea x leptolepis", code="LEXL")
 LARIX_SUKACZEWII              = TreeName(genus=LARIX,       species_name="sukaczewii",         code="LSUK")
 PSEUDOTSUGA_MENZIESII         = TreeName(genus=PSEUDOTSUGA, species_name="menziesii",          code="PMEN")
@@ -124,6 +124,7 @@ GLOBAL_TREE_SPECIES: List[TreeName] = [
     PINUS_CONTORTA,
     PINUS_MUGO,
     LARIX_SIBIRICA,
+    LARIX_DECIDUA,
     LARIX_EUROPEA_X_LEPTOLEPIS,
     LARIX_SUKACZEWII,
     PSEUDOTSUGA_MENZIESII,
@@ -224,6 +225,7 @@ class TreeSpecies:
         PINUS_CONTORTA,
         PINUS_MUGO,
         LARIX_SIBIRICA,
+        LARIX_DECIDUA,
         LARIX_EUROPEA_X_LEPTOLEPIS,
         LARIX_SUKACZEWII,
         PSEUDOTSUGA_MENZIESII,
@@ -262,7 +264,7 @@ def parse_tree_species(species_str: Union[str,TreeName]) -> TreeName:
     """
     #Sometimes a TreeName object is passed by mistake. Return TreeName.full_name.lower()
     if isinstance(species_str,TreeName):
-        return species_str.full_name.lower()
+        return species_str
 
     normalized = species_str.strip().lower()
     for sp in GLOBAL_TREE_SPECIES:
