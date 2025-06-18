@@ -216,19 +216,21 @@ class Nasberg_1985_BranchBound:
             raise ValueError(f"No prices for {timber.species}")
 
         # length/diam ranges
-        self._minLengthTimberLog = pricelist.TimberLogLength.Min
-        self._maxLengthTimberLog = pricelist.TimberLogLength.Max
-        self._minLengthPulpwoodLog = pricelist.PulpLogLength.Min
-        self._maxLengthPulpwoodLog = pricelist.PulpLogLength.Max
+        # Convert length limits from metres to decimetres
+        self._minLengthTimberLog_dm    = int(round(pricelist.TimberLogLength.Min * 10))   # 34
+        self._maxLengthTimberLog_dm    = int(round(pricelist.TimberLogLength.Max * 10))   # 55
+        self._minLengthPulpwoodLog_dm  = int(round(pricelist.PulpLogLength.Min  * 10))    # 27
+        self._maxLengthPulpwoodLog_dm  = int(round(pricelist.PulpLogLength.Max  * 10))    # 55
+
         self._minDiameterTimberLog = self._timber_prices.minDiameter
         self._maxDiameterTimberLog = self._timber_prices.maxDiameter
         self._mvarde = pricelist.Pulp.getPulpwoodPrice(timber.species) * 100.0
 
         # modules list + O(1) reverse map
-        min_len = int(min(self._minLengthPulpwoodLog, self._minLengthTimberLog))
-        max_len = int(self._maxLengthTimberLog)
+        min_len = int(min(self._minLengthPulpwoodLog_dm, self._minLengthTimberLog_dm))
+        max_len = int(self._maxLengthTimberLog_dm)
         
-        if min_len < 1:
+        if min_len < 10:
             raise ValueError("Minimum log length must be at least 1 meter")
         
         self._moduler = list(range(min_len, max_len + 1)) + [999]
@@ -255,7 +257,7 @@ class Nasberg_1985_BranchBound:
         if tp is None: return tv
         for d in range(self._minDiameterTimberLog, max_diam+1):
             for idx,dm in enumerate(self._moduler[:-1]):   # skip sentinel
-                if dm < self._minLengthTimberLog or dm > self._maxLengthTimberLog: continue
+                if dm < self._minLengthTimberLog_dm or dm > self._maxLengthTimberLog_dm: continue
                 vf = 1.
                 if tp.volume_type=="m3to":
                     r=(d/100)*.5; vf=math.pi*r*r*(dm/10)
@@ -366,7 +368,7 @@ class Nasberg_1985_BranchBound:
             # --- timber candidate mask -----------------------------------
             timber_ok = (
                 (q_vec!=QualityType.Pulp.value) &
-                (mods>=self._minLengthTimberLog) &
+                (mods>=self._minLengthTimberLog_dm) &
                 (diam_vec>=self._minDiameterTimberLog) &
                 (diam_vec<=self._maxDiameterTimberLog) &
                 (right<=i_top)
@@ -374,12 +376,12 @@ class Nasberg_1985_BranchBound:
             # --- pulp candidate mask ------------------------------------
             pulp_ok = (
                 (~timber_ok) &
-                (mods>=self._minLengthPulpwoodLog) & (mods<=self._maxLengthPulpwoodLog) &
+                (mods>=self._minLengthPulpwoodLog_dm) & (mods<=self._maxLengthPulpwoodLog_dm) &
                 (diam_vec>=self._pricelist.PulpLogDiameter.Min) &
                 (diam_vec<=self._pricelist.PulpLogDiameter.Max)
             )
             # --- cull mask ----------------------------------------------
-            cull_ok = (~timber_ok) & (~pulp_ok) & (mods>=0.5*self._minLengthPulpwoodLog)
+            cull_ok = (~timber_ok) & (~pulp_ok) & (mods>=0.5*self._minLengthPulpwoodLog_dm)
 
             # ---------- compute values in vector form -------------------
             new_v = np.full_like(vol_vec,-np.inf)
