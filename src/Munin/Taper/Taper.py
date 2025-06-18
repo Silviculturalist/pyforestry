@@ -1,7 +1,8 @@
 # Taper superclass
 from Munin.Timber.Timber import Timber
-from typing import Optional
+from typing import Optional, Union
 import numpy as np
+import numpy.typing as npt
 
 class Taper:
     '''
@@ -34,6 +35,10 @@ class Taper:
         if diam_cm is None:
             return 0.0
         return diam_cm
+    
+    def get_diameter_vectorised(self, h_array: Union[npt.ArrayLike, np.ndarray]) -> np.ndarray:
+        f = np.vectorize(lambda h: self.taper.get_diameter_at_height(self.timber, h), otypes=[np.float32])
+        return f(h_array)
     
     def get_height_at_diameter(self, diameter: float) -> float:
         """
