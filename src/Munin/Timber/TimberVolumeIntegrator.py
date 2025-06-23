@@ -3,37 +3,34 @@ import numpy as np
 from scipy.integrate import quad
 
 class TimberVolumeIntegrator:
-    """
-    A utility class for calculating the integrated volume of a timber log between two heights using a taper function.
-    """
-
     @staticmethod
-    def cylinder_volume_integrand(height, timber, taper_class):
+    def cylinder_volume_integrand(height, taper_instance):
         """
-        Calculate the cross-sectional area (πr^2) at a given height.
-
-        :param height: Height at which to compute the diameter and area.
-        :param timber: The Timber object (e.g., timber_birch).
-        :param taper_class: The Taper class (e.g., TimberEdgrenDiameter).
-        :return: Cross-sectional area at the given height.
+        Calculate the cross-sectional area. Now takes a taper instance.
         """
-        diameter = taper_class.get_diameter_at_height(timber, height_m=height)
+        # timber object is no longer needed here
+        diameter = taper_instance.get_diameter_at_height(height_m=height)
+        if diameter is None:
+            return 0.0
         radius = diameter / 200 #cm to m
         return np.pi * (radius ** 2)
 
     @staticmethod
-    def integrate_volume(height1, height2, timber, taper_class):
+    def integrate_volume(height1, height2, taper_instance):
         """
         Integrate the volume of the cylinder between two heights.
-
-        :param height1: The lower bound of integration.
-        :param height2: The upper bound of integration.
-        :param timber: The Timber object (e.g., timber_birch).
-        :param taper_class: The Taper class (e.g., TimberEdgrenDiameter).
-        :return: The integrated volume (m3)
         """
+        if height2 <= height1:
+            return 0.0
+            
+        # The 'args' tuple now only contains the taper_instance
         volume, _ = quad(
-            TimberVolumeIntegrator.cylinder_volume_integrand, height1, height2,
-            args=(timber, taper_class)
+            TimberVolumeIntegrator.cylinder_volume_integrand,
+            height1,
+            height2,
+            args=(taper_instance),
+            # Other parameters remain the same
+            epsabs=1e-3, 
+            limit=50
         )
         return volume

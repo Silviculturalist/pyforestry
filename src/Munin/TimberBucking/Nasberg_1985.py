@@ -184,15 +184,23 @@ class BuckingConfig:
     use_downgrading:        bool  = False
     save_sections:          bool  = False
 
-class _TreeCache: #<- per-tree memory
+class _TreeCache:
+    """Internal cache to avoid recomputing diameters and heights."""
     def __init__(self):
-        self.h_of_d = {}
-    def height(self,taper,target):
-        h = self.h_of_d.get(target)
-        if h is None:
-            h = Taper.get_height_at_diameter(taper, target)
-            self.h_of_d[target] = h
-        return h
+        self._diameters = {}
+        self._heights = {}
+
+    def diameter(self, taper: Taper, height: int) -> float:
+        if height not in self._diameters:
+            # --- CORRECTED CALL: Now uses the taper instance directly ---
+            self._diameters[height] = taper.get_diameter_at_height(height)
+        return self._diameters[height]
+
+    def height(self, taper: Taper, target: float) -> int:
+        if target not in self._heights:
+             # --- CORRECTED CALL: Now uses the taper instance directly ---
+            self._heights[target] = taper.get_height_at_diameter(target)
+        return self._heights[target]
 
 # -------------------------------------------------------------------------
 class Nasberg_1985_BranchBound:
@@ -490,10 +498,9 @@ class Nasberg_1985_BranchBound:
                     last = secs[-1]
                     contiguous = (
                           (last.start_point == sec.end_point)   # bottom-to-top order
-                       or (last.end_point   == sec.start_point) # top-to-bottom order
                     )
                     if contiguous and last.quality == sec.quality:
-                        secs[-1] = self._merge_sections(last, sec)
+                        secs[-1] = self._merge_sections(sec,last)
                     else:
                         secs.append(sec)
                 else:
@@ -531,23 +538,28 @@ class Nasberg_1985_BranchBound:
     
     @staticmethod
     def _merge_sections(a: CrossCutSection, b: CrossCutSection) -> CrossCutSection:
-        """Return a new section that is the union of a and b (a touches b, same quality)."""
-        total_vol   = a.volume + b.volume
-        def w_avg(attr):      # weighted average for proportion fields
-            return ((getattr(a, attr) * a.volume) + (getattr(b, attr) * b.volume)) / total_vol
+        total_vol = a.volume + b.volume
+
+        new_start = min(a.start_point, b.start_point)
+        new_end   = max(a.end_point,   b.end_point)
+
+        def w_avg(attr):
+            return ((getattr(a, attr) * a.volume) +
+                    (getattr(b, attr) * b.volume)) / total_vol
 
         return CrossCutSection(
-            start_point      = a.start_point,
-            end_point        = b.end_point,
-            volume           = total_vol,
-            top_diameter     = b.top_diameter,        # diameter at new end
-            value            = a.value + b.value,
-            species_group    = a.species_group,
-            timber_proportion= w_avg("timber_proportion"),
-            pulp_proportion  = w_avg("pulp_proportion"),
-            cull_proportion  = w_avg("cull_proportion"),
+            start_point = new_start,
+            end_point   = new_end,
+            volume      = total_vol,
+            top_diameter= b.top_diameter if b.end_point > a.end_point else a.top_diameter,
+            value       = a.value + b.value,
+            species_group = a.species_group,
+            timber_proportion = w_avg("timber_proportion"),
+            pulp_proportion   = w_avg("pulp_proportion"),
+            cull_proportion   = w_avg("cull_proportion"),
             fuelwood_proportion = w_avg("fuelwood_proportion"),
-            quality          = a.quality,
+            quality = a.quality,
         )
+
 
 
