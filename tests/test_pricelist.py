@@ -1,11 +1,11 @@
 import pytest
-from Munin.PriceList import create_pricelist, Pricelist, TimberPricelist
+from Munin.PriceList import create_pricelist_from_data, Pricelist, TimberPricelist
 from Munin.PriceList.Data.Mellanskog_2013 import Mellanskog_2013_price_data
 from Munin.Helpers.TreeSpecies import TreeSpecies
 
 @pytest.fixture(scope="module")
 def pricelist() -> Pricelist:
-    return create_pricelist(Mellanskog_2013_price_data)
+    return create_pricelist_from_data(Mellanskog_2013_price_data)
 
 def test_pulpwood_prices(pricelist):
     # Check pulp prices for correctness

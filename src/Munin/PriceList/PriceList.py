@@ -1,6 +1,6 @@
 from enum import IntEnum
 from dataclasses import dataclass
-from typing import List, Optional, Dict, Tuple, Union
+from typing import List, Optional, Dict, Tuple, Union, Iterable, Sequence
 from Munin.Helpers.TreeSpecies import parse_tree_species, TreeName
 
 @dataclass
@@ -244,29 +244,69 @@ class Pricelist:
         self.Timber[species_key] = timber_pricelist
 
 
-# --- REFACTORED: This is the new, focused factory function ---
-def create_pricelist_from_data(price_data: dict, species_to_load: str) -> Pricelist:
+def create_pricelist_from_data(
+    price_data: dict,
+    species_to_load: Optional[Union[str, Sequence[str]]] = None
+) -> Pricelist:
     """
-    Creates a Pricelist object but only loads the data for the specified species.
-    This is more efficient for use in parallel workers.
+    Build a `Pricelist` from a dictionary.
+
+    Parameters
+    ----------
+    price_data : dict
+        The complete price dictionary (must contain the 'Common' block).
+    species_to_load : str | Sequence[str] | None, default None
+        * **None**  - load *all* species that have timber price tables.
+        * **str**   - load just that species.
+        * **iterable** - load every species in the iterable; it is *not*
+          an error if some of them have only pulp prices.
+
+    Returns
+    -------
+    Pricelist
+        A fully populated `Pricelist` instance.
     """
     pricelist = Pricelist()
 
-    # Load the common parameters
-    common = price_data["Common"]
-    pricelist.PulpLogDiameter = DiameterRange(*common["PulpLogDiameterRange"])
-    pricelist.TopDiameter = common["TopDiameter"]
-    pricelist.LogCullPrice = common["HarvestResiduePrice"]
-    pricelist.FuelWoodPrice = common["FuelwoodLogPrice"]
-    pricelist.HighStumpHeight = common["HighStumpHeight"]
-    pricelist.PulpLogLength = LengthRange(*common["PulpwoodLengthRange"])
-    pricelist.TimberLogLength = LengthRange(*common["SawlogLengthRange"])
-    pricelist.Pulp._prices = common["PulpwoodPrices"]
+    # ---- common block ---------------------------------------------------
+    try:
+        common = price_data["Common"]
+    except KeyError as exc:
+        raise ValueError("Price data is missing the mandatory 'Common' block") from exc
 
-    # Load data for ONLY the requested species
-    if species_to_load in price_data:
-        pricelist._load_species_specific_data(price_data, species_to_load)
+    pricelist.PulpLogDiameter = DiameterRange(*common["PulpLogDiameterRange"])
+    pricelist.TopDiameter     = common["TopDiameter"]
+    pricelist.LogCullPrice    = common["HarvestResiduePrice"]
+    pricelist.FuelWoodPrice   = common["FuelwoodLogPrice"]
+    pricelist.HighStumpHeight = common["HighStumpHeight"]
+    pricelist.PulpLogLength   = LengthRange(*common["PulpwoodLengthRange"])
+    pricelist.TimberLogLength = LengthRange(*common["SawlogLengthRange"])
+    pricelist.Pulp._prices    = common["PulpwoodPrices"]
+
+    # ---- normalise parameter -------------------------------------------
+    if species_to_load is None:
+        species_keys: List[str] = [
+            k for k in price_data.keys() if k != "Common"
+        ]
+    elif isinstance(species_to_load, str):
+        species_keys = [species_to_load]
+    elif isinstance(species_to_load, Iterable):
+        species_keys = list(species_to_load)
     else:
-        raise ValueError(f"Species '{species_to_load}' not found in the provided price data.")
+        raise TypeError(
+            "'species_to_load' must be None, a string, or an iterable of strings"
+        )
+
+    # ---- load timber price tables --------------------------------------
+    for sp in species_keys:
+        if sp in price_data:
+            pricelist._load_species_specific_data(price_data, sp)
+        else:
+            # It is OK if the species is missing in timber tables but present
+            # in the pulp‑price section – we already copied those above.
+            if sp not in common["PulpwoodPrices"]:
+                raise ValueError(
+                    f"Species '{sp}' not found in timber prices **or** pulp prices."
+                )
 
     return pricelist

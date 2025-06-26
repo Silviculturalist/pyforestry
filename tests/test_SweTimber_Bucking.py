@@ -1,7 +1,7 @@
 import pytest
 from Munin.Timber.SweTimber import SweTimber
 from Munin.Taper.sweden.EdgrenNylinder1949 import EdgrenNylinder1949
-from Munin.PriceList import create_pricelist
+from Munin.PriceList import create_pricelist_from_data
 from Munin.PriceList.Data.Mellanskog_2013 import Mellanskog_2013_price_data
 from Munin.TimberBucking.Nasberg_1985 import Nasberg_1985_BranchBound, BuckingConfig
 
@@ -11,7 +11,7 @@ def test_log():
 
 @pytest.fixture
 def test_pricelist():
-    return create_pricelist(Mellanskog_2013_price_data)
+    return create_pricelist_from_data(Mellanskog_2013_price_data, species_to_load='pinus sylvestris')
 
 def test_nasberg_1985_branch_bound(test_log, test_pricelist):
     taper_model = EdgrenNylinder1949
