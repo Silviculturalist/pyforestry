@@ -4,11 +4,13 @@ from Munin.Timber.Timber import Timber
 from Munin.TimberBucking.Bucker import Bucker
 from Munin.PriceList.PriceList import *
 from enum import IntEnum
-from dataclasses import dataclass
-from typing import List, Optional, Dict, Tuple, Type
+from dataclasses import dataclass, field
+from typing import List, Optional, Dict, Tuple, Type, Iterator, Any
 import math
 import matplotlib.pyplot as plt
 import numpy as np
+from collections.abc import Mapping
+
 
 class QualityType(IntEnum):
     Undefined = 0
@@ -32,10 +34,10 @@ class CrossCutSection:
     pulp_proportion: float = 0.0
     cull_proportion: float = 0.0
     fuelwood_proportion: float = 0.0
-    # Could add a `quality` field if you want to store the final quality.
+    quality: QualityType = QualityType.Undefined
 
 @dataclass
-class BuckingResult:
+class BuckingResult(Mapping):
     """Encapsulates the output of the cross-cutting process."""
     species_group: str                    # The species group.
     total_value: float                    # The total value in e.g. SEK
@@ -54,15 +56,31 @@ class BuckingResult:
     diameter_stump_cm:float               # Diameter at stump (cm).
     taperDiams_cm:List[float]             # Taper Diameters for plotting.
     taperHeights_m:List[float]            # Taper Heights for plotting.
-    sections: Optional[List[CrossCutSection]] = None
+    sections: List[CrossCutSection] = field(default_factory=list)
+
+        # -------- Mapping protocol so the object behaves like a dict ----------
+    def __getitem__(self, key: str) -> Any:
+        # raises KeyError exactly like a dict if attribute absent
+        if hasattr(self, key):
+            return getattr(self, key)
+        raise KeyError(key)
+
+    def __iter__(self) -> Iterator[str]:
+        # iterate over field names, same order as dataclass defines
+        return iter(self.__dict__)
+
+    def __len__(self) -> int:
+        return len(self.__dict__)
 
     def plot(self):
         if self.sections:
             fig, ax = plt.subplots(figsize=(10, 6))
 
             # Prepare points for taper line plot (subtract stump height to align axis)
-            taper_x = (self.taperHeights_m - self.stump_height_m) * 10
-            taper_y = self.taperDiams_cm
+            taper_heights = np.array(self.taperHeights_m, dtype=float)
+            taper_diams   = np.array(self.taperDiams_cm,   dtype=float)
+            taper_x = (taper_heights - self.stump_height_m) * 10
+            taper_y = taper_diams
 
             # Plot taper line
             ax.plot(taper_x, taper_y, linestyle='-', color='black', label='Taper')
@@ -156,507 +174,391 @@ class BuckingResult:
             plt.show()
         else:
             raise ValueError("No sections available for plotting.")
+        
 
+@dataclass(frozen=True)
+class BuckingConfig:
+    timber_price_factor :   float = 1.0
+    pulp_price_factor:      float = 1.0
+    use_downgrading:        bool  = False
+    save_sections:          bool  = False
 
-# ------------------------------------------------------------------------------
-# Here's the main branch and bound bucking logic
-# ------------------------------------------------------------------------------
+class _TreeCache:
+    """Internal cache to avoid recomputing diameters and heights."""
+    def __init__(self):
+        self._diameters = {}
+        self._heights = {}
 
-class Nasberg_1985_BranchBound(Bucker):
+    def diameter(self, taper: Taper, height: int) -> float:
+        if height not in self._diameters:
+            # --- CORRECTED CALL: Now uses the taper instance directly ---
+            self._diameters[height] = taper.get_diameter_at_height(height/10.0)
+        return self._diameters[height]
+
+    def height(self, taper: Taper, target: float) -> int:
+        if target not in self._heights:
+             # --- CORRECTED CALL: Now uses the taper instance directly ---
+            self._heights[target] = int(taper.get_height_at_diameter(target)*10)
+        return self._heights[target]
+
+# -------------------------------------------------------------------------
+class Nasberg_1985_BranchBound:
     """
-    Python version of the DP cross-cut logic from the C# code. 
+    Vectorised version – interface identical to the earlier class.
     """
 
-    # Mapping from our QualityType to the type index used in 'timberValue[diam][module][quality]'
-    # The original code used: { Butt=1, Middle=2, Top=3 }, so we shift them or keep an offset.
-    quality_log_part = {
-        QualityType.ButtLog:   TimberPricelist.LogParts.Butt,
-        QualityType.MiddleLog: TimberPricelist.LogParts.Middle,
-        QualityType.TopLog:    TimberPricelist.LogParts.Top,
-        QualityType.Pulp:      -1,
-        QualityType.LogCull:   -1,
-        QualityType.Fuelwood:  -1,
-        QualityType.Undefined: -1
-    }
+    # -------------------- ctor helpers (unchanged except float32 tv) -------
+    def __init__(self, timber: Timber, pricelist: Pricelist,
+                 taper_class: Optional[Type[Taper]] = None):
 
-    def __init__(self, timber: Timber, pricelist: Pricelist, taper_class: Optional[Type[Taper]] = None):
+        self._timber = timber
+        self._species = timber.species
+        self._taper_class = taper_class or Taper
         if pricelist is None:
             raise ValueError("Pricelist must be set")
-
         self._pricelist = pricelist
-        self._timber = timber
 
-        self._taper_class = taper_class
-
-        # If species is not in self._pricelist.Timber, skip or handle
-        self._timber_prices = self._pricelist.Timber.get(timber.species, None)
-        if not self._timber_prices:
-            raise ValueError(f"Pricelist does not contain values for species '{timber.species}'. Available species: {list(pricelist.Timber.keys())}")
-
-
-        # Ranges
-        self._minLengthTimberLog   = self._pricelist.TimberLogLength.Min
-        self._maxLengthTimberLog   = self._pricelist.TimberLogLength.Max
-        self._minLengthPulpwoodLog = self._pricelist.PulpLogLength.Min
-        self._maxLengthPulpwoodLog = self._pricelist.PulpLogLength.Max
-
-        # Diameters:
-        if self._timber_prices:
-            self._minDiameterTimberLog = self._timber_prices.minDiameter
-            self._maxDiameterTimberLog = self._timber_prices.maxDiameter
-        else:
-            # If no timber prices for this species, treat as giant or zero
-            self._minDiameterTimberLog = 999
-            self._maxDiameterTimberLog = 999
-
-        # For pulp:
-        self._mvarde = self._pricelist.Pulp.getPulpwoodPrice(timber.species) * 100  # SEK -> öre
-
-        # Build the 'modules' array (possible log lengths) 
-        self._moduler = self._build_modules()
-
-        # Build a big table for timberValue[diam][module_index][qualityIndex]
-        self._timberValue = self._build_timber_value_table()
-
-    def _build_modules(self) -> List[int]:
-        """
-        Build the array of possible log lengths (the 'moduler') from the smallest pulp
-        or timber length up to the max timber length, plus a sentinel large value.
-        """
-        min_log_length = min(self._minLengthPulpwoodLog*10, self._minLengthTimberLog*10)
-        max_log_length = self._maxLengthTimberLog*10
-        modules = []
-        # Fill from min_log_length up to max_log_length
-
-        for length_dm in range(int(min_log_length), int(max_log_length) + 1):
-            modules.append(length_dm)
-        # Some Fortran code had a sentinel 999 at the end
-        modules.append(999)
-        return modules
-
-    def _build_timber_value_table(self) -> List[List[List[float]]]:
-        """
-        Initialize the 3D table: timberValue[diam][moduleIndex][quality].
-        We'll index diam up to self._maxDiameterTimberLog.
-        We'll have len(self._moduler) modules, and 4 possible qualities
-        (Butt=1, Middle=2, Top=3 in the original code).
-        
-        Because the original code used an offset for indexing, we replicate that
-        with an easy direct approach: 
-            timberValue[diam][modIndex][q] = price in öre for that stock. 
-        """
-        max_diam = self._maxDiameterTimberLog
-        n_mod = len(self._moduler)
-        # We'll store 4 qualities: index 1=Butt, 2=Middle, 3=Top. We'll put them at [1..3].
-        # In python, we can store them at [0..3], ignoring index 0 or something similar.
-        # For clarity, we can do [4] so that we can do [1], [2], [3].
-        timber_value = [[[0.0 for _ in range(4)] 
-                         for _ in range(n_mod)] 
-                         for _ in range(max_diam + 1)]
-
+        self._timber_prices = pricelist.Timber.get(timber.species)
         if self._timber_prices is None:
-            return timber_value  # No data => all 0
+            raise ValueError(f"No prices for {timber.species}")
 
-        for diam in range(self._minDiameterTimberLog, self._maxDiameterTimberLog + 1):
-            for mod_i, length_dm in enumerate(self._moduler):
-                if length_dm > self._maxLengthTimberLog*10 or length_dm < self._minLengthTimberLog*10:
-                    continue
-                # volumeFactor depends on the volume measure. 
-                volume_factor = 1.0
-                # If volume type == "m3to", approximate a cylinder for that piece:
-                if self._timber_prices.volume_type == "m3to":
-                    radius_m = (diam / 100.0) * 0.5  # cm -> m
-                    length_m = length_dm / 10.0     # dm -> m
-                    cylinder_volume = math.pi * (radius_m ** 2) * length_m
-                    volume_factor = cylinder_volume
+        # length/diam ranges
+        # Convert length limits from metres to decimetres
+        self._minLengthTimberLog_dm    = int(round(pricelist.TimberLogLength.Min * 10))   # 34
+        self._maxLengthTimberLog_dm    = int(round(pricelist.TimberLogLength.Max * 10))   # 55
+        self._minLengthPulpwoodLog_dm  = int(round(pricelist.PulpLogLength.Min  * 10))    # 27
+        self._maxLengthPulpwoodLog_dm  = int(round(pricelist.PulpLogLength.Max  * 10))    # 55
 
-                # For each of the 3 logPart indices:
-                for part_type in (0, 1, 2):
-                    # For example, 0=Butt, 1=Middle, 2=Top
-                    base_price = self._timber_prices[diam].price_for_log_part(part_type)
-                    # Possibly do length correction:
-                    length_corr = self._timber_prices.length_corrections.get_length_correction(diam, part_type, length_dm)
-                    # If your length correction is absolute, add it:
-                    # or if it's percentage, multiply it. This is just an example:
-                    corrected_price = (base_price + length_corr) * 100.0  # SEK -> öre
-                    # Multiply by volume factor:
-                    price_ore = corrected_price * volume_factor
-                    # We store it in our table. part_type+1 => 1..3
-                    timber_value[diam][mod_i][part_type+1] = price_ore
+        self._minDiameterTimberLog = self._timber_prices.minDiameter
+        self._maxDiameterTimberLog = self._timber_prices.maxDiameter
+        self._mvarde = pricelist.Pulp.getPulpwoodPrice(timber.species) * 100.0
 
-        return timber_value
-
-    def calculate_tree_value(
-        self,
-        min_diam_dead_wood: float,
-        use_downgrading: bool = False,
-        timber_price_factor: float = 1.0,
-        pulp_wood_price_factor: float = 1.0,
-        save_sections: bool = False
-    ) -> BuckingResult:
-        """
-        Main dynamic programming logic to find the best set of cuts (modules)
-        from stump to top that maximize total log/pulp/fuelwood/cull value.
-        """
-        # --- Instantiate the taper using the provided taper class.
-        taper = self._taper_class(self._timber)
-
-        # Total tree height
-        HTOT = self._timber.height_m
-        # Use the tree's inherent stump height
-        HSTUB = self._timber.stump_height_m
-
-        #get diameter at stump. used only for plotting.
-        DSTUB = taper.get_diameter_at_height(timber=self._timber,height_m=self._timber.stump_height_m)
+        # modules list + O(1) reverse map
+        min_len = int(min(self._minLengthPulpwoodLog_dm, self._minLengthTimberLog_dm))
+        max_len = int(self._maxLengthTimberLog_dm)
         
-        taperheights = np.linspace(0.01 * self._timber.height_m, self._timber.height_m - 0.01, 500)
-        taperdiameters = np.array([taper.get_diameter_at_height(timber=self._timber,height_m=h) for h in taperheights])
+        if min_len < 10:
+            raise ValueError("Minimum log length must be at least 1 meter")
+        
+        self._moduler = list(range(min_len, max_len + 1)) + [999]
+                
+        self._mod_ix  = {dm:i for i,dm in enumerate(self._moduler)}
 
-        # --- Compute key diameters for inversion ---
+        self._timberValue = self._build_value_table().astype(np.float32)
 
-        # Get the target diameter for the top cut: the larger of the TopDiameter and the minimum pulp log diameter
-        top_diam = max(self._pricelist.TopDiameter, self._pricelist.PulpLogDiameter.Min)
+        # static map butt/middle/top
+        self.quality_log_part = {
+            QualityType.ButtLog:   TimberPricelist.LogParts.Butt,
+            QualityType.MiddleLog: TimberPricelist.LogParts.Middle,
+            QualityType.TopLog:    TimberPricelist.LogParts.Top,
+            QualityType.Pulp:      -1,
+            QualityType.LogCull:   -1,
+            QualityType.Fuelwood:  -1,
+            QualityType.Undefined: -1
+        }
 
-        # --- Use inversion to determine key heights ---
-        # Height at which the stem reaches the top diameter
-        HTOP = taper.get_height_at_diameter(timber=self._timber,diameter=top_diam)
+    def _build_value_table(self) -> np.ndarray:
+        max_diam = self._maxDiameterTimberLog
+        tv = np.zeros((max_diam+1, len(self._moduler), 4))
+        tp  = self._timber_prices
+        if tp is None: return tv
+        for d in range(self._minDiameterTimberLog, max_diam+1):
+            for idx,dm in enumerate(self._moduler[:-1]):   # skip sentinel
+                if dm < self._minLengthTimberLog_dm or dm > self._maxLengthTimberLog_dm: continue
+                vf = 1.
+                if tp.volume_type=="m3to":
+                    r=(d/100)*.5; vf=math.pi*r*r*(dm/10)
+                for p in (0,1,2):
+                    base=tp[d].price_for_log_part(p)
+                    corr=tp.length_corrections.get_length_correction(d,p,dm)
+                    tv[d,idx,p+1]=(base+corr)*100.*vf
+        return tv
+    # ---------------------------------------------------------------------
+    def calculate_tree_value(self, *, 
+                             min_diam_dead_wood: float,
+                             config: BuckingConfig = BuckingConfig()
+                             ) -> BuckingResult:
+        height_m  = self._timber.height_m
+        taper  = self._taper_class(self._timber)
+        cache  = _TreeCache()
 
-        # For quality logs, the minimum allowed diameter is the same for all qualities here
-        # (you could change these if needed)
-        heightQuality1 = taper.get_height_at_diameter(timber=self._timber,diameter=self._minDiameterTimberLog)
-        heightQuality2 = taper.get_height_at_diameter(timber=self._timber,diameter=self._minDiameterTimberLog)
-        heightQuality3 = taper.get_height_at_diameter(timber=self._timber,diameter=self._minDiameterTimberLog)
+        # ------------ heights with cached inversion ----------------------
+        HSTUB = self._timber.stump_height_m
+        top_diam = max(self._pricelist.TopDiameter,
+                       self._pricelist.PulpLogDiameter.Min)
+        HTOP  = cache.height(taper, top_diam)
 
-        # Cap these quality heights by the maximum allowed heights (from the pricelist)
-        max_height_quality1 = self._timber_prices.max_height_quality1 if self._timber_prices else 0.0
-        max_height_quality2 = self._timber_prices.max_height_quality2 if self._timber_prices else 0.0
-        max_height_quality3 = self._timber_prices.max_height_quality3 if self._timber_prices else 0.0
+        q_height = cache.height(taper, self._minDiameterTimberLog)
+        tp = self._timber_prices
+        h_butt = min(tp.max_height_quality1, q_height)
+        h_mid  = min(tp.max_height_quality2, q_height)
+        h_top  = min(tp.max_height_quality3, q_height)
 
-        maxHeightButtLog   = min(max_height_quality1, heightQuality1)
-        maxHeightMiddleLog = min(max_height_quality2, heightQuality2)
-        maxHeightTopLog    = min(max_height_quality3, heightQuality3)
+        # ------------ general --------------------------------------------
+        # Observe! This is *height above stump*
+        DBH_cm            = Taper.get_diameter_at_height(taper, 1.3 - HSTUB)       # cm
+        diameter_stump_cm = Taper.get_diameter_at_height(taper, 0.0)       # cm
 
-        # --- Discretize the tree stem ---
-        # We work in decimeters from the stump up to the computed top (HTOP)
-        NMAX = 400
-        total_length_dm = min(int((HTOP - HSTUB) * 10), NMAX)
-        if total_length_dm <= 0:
-            # Tree is too small to yield any viable logs.
-            return BuckingResult(
-                total_value=0.0, top_proportion=1.0, dead_wood_proportion=1.0,
-                high_stump_volume_proportion=1.0, high_stump_value_proportion=1.0,
-                last_cut_relative_height=0.0, volume_per_quality=[0]*7,
-                timber_price_by_quality=[0]*7,
-                vol_fub_5cm=0.0, vol_sk_ub=0.0,
-                DBH_cm=self._timber.diameter_cm,
-                height_m=self._timber.height_m,
-                stump_height_m=self._timber.stump_height_m,
-                diameter_stump_cm=DSTUB, #plotting only
-                taperDiams_cm=taperdiameters, #plotting only
-                taperHeights_m=taperheights #plotting only
+
+        # ------------ discretise (vector) --------------------------------
+
+        NMAX=400
+        total_dm=min(int((HTOP-HSTUB*10)),NMAX)
+        if total_dm<=0:
+            return BuckingResult(0,1,1,1,1,0,[0]*7,[0]*7,0,0)
+
+        dm=np.arange(total_dm+1,dtype=np.int32)
+        h = HSTUB + dm*0.1
+        dh= taper.get_diameter_vectorised(h)   # vectorised diameter
+
+        taperDiams_cm     = dh.tolist()        # NumPy → list[float]
+        taperHeights_m    = h.tolist()         # ditto
+
+        #  endpoints ------------------------------------------------------
+        dead_idx  = int(dm[dh>=min_diam_dead_wood].max(initial=0))
+        fub_idx   = int(dm[dh>=5].max(initial=0))
+        tp_idx    = int(dm[dh>=self._pricelist.TopDiameter].max(initial=0))
+
+        vol_fub5 = taper.volume_section(HSTUB,h[min(fub_idx,total_dm)])
+        vol_fub  = taper.volume_section(HSTUB,h[fub_idx])
+        vol_sk   = vol_fub + (taper.volume_section(h[fub_idx],height_m) if height_m>h[fub_idx] else 0)
+        vol_dead = taper.volume_section(h[0],h[dead_idx])
+        p_dead   = vol_dead/vol_sk if vol_sk else 0.
+
+        # high stump
+        hs_ep=0
+        HSheight=self._pricelist.HighStumpHeight
+        if HSheight>0:
+            hs_ep=int(dm[h>=HSheight].min(initial=0))
+        vol_hs=taper.volume_section(h[0],h[hs_ep]) if hs_ep else 0.
+        p_vol_hs=vol_hs/vol_sk if vol_sk else 0.
+
+        # ---------------- DP arrays (float32) ----------------------------
+        v       = np.full(total_dm+1,-np.inf,dtype=np.float32)
+        vtimber = np.full_like(v,-np.inf)
+        back    = np.zeros(total_dm+1,dtype=np.int16)
+        kval    = np.zeros(total_dm+1,dtype=np.uint8)
+        v[0]=vtimber[0]=1e-5
+
+        # quality dm limits
+        i_butt=int((h_butt-HSTUB)*10-1e-7)
+        i_mid =int((h_mid -HSTUB)*10-1e-7)
+        i_top =int((h_top -HSTUB)*10-1e-7)
+        def qual(i):
+            if i<=i_butt:return QualityType.ButtLog
+            if i<=i_mid :return QualityType.MiddleLog
+            if i<=i_top :return QualityType.TopLog
+            return QualityType.Pulp
+
+        cull_price   = self._pricelist.LogCullPrice*100.
+        fuel_price   = self._pricelist.FuelWoodPrice*100.
+
+        # ---- DP main loop (vector over modules) -------------------------
+        mod_arr = np.array(self._moduler[:-1],dtype=np.int32)        # skip 999 sentinel
+        mod_len = mod_arr.size
+        zero_f  = np.zeros(mod_len,dtype=np.float32)
+
+        for left in range(total_dm+1):
+
+            if left>tp_idx and v[left]<=0: continue
+            # vector of right indices for all modules
+            right = left + mod_arr
+            mask  = right<=total_dm
+            if not mask.any(): continue
+            right = right[mask]; mods = mod_arr[mask]
+            h1 = h[left]; h2 = h[right]
+            vol_vec = np.array([taper.volume_section(h1,hh) for hh in h2],dtype=np.float32)
+            diam_vec = dh[right].astype(np.int16)
+
+            q_vec=np.vectorize(qual,otypes=[np.uint8])(right)
+
+            # --- timber candidate mask -----------------------------------
+            timber_ok = (
+                (q_vec!=QualityType.Pulp.value) &
+                (mods>=self._minLengthTimberLog_dm) &
+                (diam_vec>=self._minDiameterTimberLog) &
+                (diam_vec<=self._maxDiameterTimberLog) &
+                (right<=i_top)
             )
-
-        # Build arrays for height (h) and diameter (dh) along the stem.
-        h  = [0.0] * (total_length_dm + 1)
-        dh = [0.0] * (total_length_dm + 1)
-        dead_wood_endpoint = 0
-        vol_fub_endpoint = 0
-        timber_and_pulp_endpoint = 0
-
-        for i in range(total_length_dm + 1):
-            # Height above stump in meters
-            h[i] = HSTUB + i / 10.0
-            # Diameter at that height (cm)
-            dh[i] = taper.get_diameter_at_height(timber=self._timber,height_m=h[i])
-            if dh[i] >= min_diam_dead_wood:
-                dead_wood_endpoint = i
-            if dh[i] >= 5:
-                vol_fub_endpoint = i
-            if dh[i] >= self._pricelist.TopDiameter:
-                timber_and_pulp_endpoint = i
-
-        # Compute volumes for reporting
-        vol_fub_5cm = taper.volume_section(HSTUB, h[min(vol_fub_endpoint, total_length_dm)])
-        vol_fub = taper.volume_section(HSTUB, h[vol_fub_endpoint])
-        vol_sk_ub = vol_fub
-        if HTOT > h[vol_fub_endpoint]:
-            vol_sk_ub += taper.volume_section(h[vol_fub_endpoint], HTOT)
-        vol_dead_wood = taper.volume_section(h[0], h[dead_wood_endpoint])
-        p_dead_wood = (vol_dead_wood / vol_sk_ub) if vol_sk_ub > 0 else 0.0
-
-        # Determine high stump endpoint, if applicable.
-        high_stump_endpoint = 0
-        if self._pricelist.HighStumpHeight*10 > 0:
-            for i in range(total_length_dm + 1):
-                if h[i] >= self._pricelist.HighStumpHeight*10:
-                    high_stump_endpoint = i
-                    break
-        vol_high_stump = taper.volume_section(h[0], h[high_stump_endpoint]) if high_stump_endpoint > 0 else 0.0
-        p_volume_high_stump = (vol_high_stump / vol_sk_ub) if vol_sk_ub > 0 else 0.0
-        if p_volume_high_stump > 1.0:
-            p_volume_high_stump = 1.0
-
-        # If the stem is too short for even the smallest module, no solution.
-        if total_length_dm < min(self._moduler):
-            return BuckingResult(
-                total_value=0.0, top_proportion=1.0, dead_wood_proportion=p_dead_wood,
-                high_stump_volume_proportion=p_volume_high_stump, high_stump_value_proportion=0.0,
-                last_cut_relative_height=0.0, volume_per_quality=[0]*7,
-                timber_price_by_quality=[0]*7,
-                vol_fub_5cm=vol_fub_5cm, vol_sk_ub=vol_sk_ub,
-                DBH_cm=self._timber.diameter_cm,
-                height_m=self._timber.height_m,
-                stump_height_m=self._timber.stump_height_m,
-                diameter_stump_cm=DSTUB,
-                taperHeights_m=taperheights,
-                taperDiams_cm=taperdiameters
+            # --- pulp candidate mask ------------------------------------
+            pulp_ok = (
+                (~timber_ok) &
+                (mods>=self._minLengthPulpwoodLog_dm) & (mods<=self._maxLengthPulpwoodLog_dm) &
+                (diam_vec>=self._pricelist.PulpLogDiameter.Min) &
+                (diam_vec<=self._pricelist.PulpLogDiameter.Max)
             )
+            # --- cull mask ----------------------------------------------
+            cull_ok = (~timber_ok) & (~pulp_ok) & (mods>=0.5*self._minLengthPulpwoodLog_dm)
 
-        # Map discrete boundaries for quality assignments using the computed quality heights.
-        # Convert quality height limits to decimeter indices.
-        i_butt = int((maxHeightButtLog - HSTUB) * 10 - 1e-7)
-        i_mid  = int((maxHeightMiddleLog - HSTUB) * 10 - 1e-7)
-        i_top  = int((maxHeightTopLog - HSTUB) * 10 - 1e-7)
-        def get_quality(i_dm):
-            if i_dm <= i_butt:
-                return QualityType.ButtLog
-            elif i_dm <= i_mid:
-                return QualityType.MiddleLog
-            elif i_dm <= i_top:
-                return QualityType.TopLog
-            else:
-                return QualityType.Pulp
+            # ---------- compute values in vector form -------------------
+            new_v = np.full_like(vol_vec,-np.inf)
+            new_vt= np.full_like(vol_vec,-np.inf)
+            # timber branch
+            if timber_ok.any():
+                idxs = np.where(timber_ok)[0]
+                parts = np.vectorize(lambda q: self.quality_log_part[QualityType(q)])
+                part_vec = parts(q_vec[idxs])
+                pulp_p=fuel_p=cull_p=zero_f[:idxs.size]
+                price  = self._timberValue[diam_vec[idxs],
+                                           [self._mod_ix[m] for m in mods[idxs]],
+                                           q_vec[idxs]]
+                price *= config.timber_price_factor
+                if self._timber_prices.volume_type=="m3fub":
+                    price *= vol_vec[idxs]
+                timber_val = price         # default (no downgrade)
 
-        # --- Dynamic Programming (DP) arrays initialization ---
-        # v[i] = best overall value (in öre) up to i dm.
-        # vtimber[i] = best timber-only value (in öre) up to i dm.
-        v       = [0.0] * (total_length_dm + 1)
-        vtimber = [0.0] * (total_length_dm + 1)
-        IP      = [0] * (total_length_dm + 1)    # Backpointer for reconstruction.
-        kval    = [QualityType.Undefined] * (total_length_dm + 1)
+                if config.use_downgrading:
+                    # loop small (<=3) – negligible
+                    for k,i in enumerate(idxs):
+                        w = self._timber_prices.getTimberWeight(part_vec[k])
+                        pp,fp,cp = w.pulpwoodPercentage/100., w.fuelWoodPercentage/100., w.logCullPercentage/100.
+                        s=pp+fp+cp; cp=cp if s<=1 else max(0.,1-pp-fp)
+                        pulp_p[k]=pp; fuel_p[k]=fp; cull_p[k]=cp
+                    timber_val = price*(1-pulp_p-fuel_p-cull_p)
 
-        # Use a small positive number at the start to break ties.
-        v[0] = 1e-5
-        vtimber[0] = 1e-5
-        IP[0] = 0
+                new_v[idxs] = (v[left] + timber_val +
+                               pulp_p*config.pulp_price_factor*self._mvarde*vol_vec[idxs] +
+                               cull_p*cull_price*vol_vec[idxs] +
+                               fuel_p*fuel_price*vol_vec[idxs])
+                new_vt[idxs]= vtimber[left] + price
 
-        cull_price = self._pricelist.LogCullPrice * 100.0   # SEK -> öre
-        fuelwood_price = self._pricelist.FuelWoodPrice * 100.0
+            # pulp branch
+            if pulp_ok.any():
+                idxs=np.where(pulp_ok)[0]
+                pulp_val = config.pulp_price_factor*self._mvarde*vol_vec[idxs]
+                if config.use_downgrading:
+                    waste = self._pricelist.getPulpWoodWasteProportion(self._species)
+                    fuel  = self._pricelist.getPulpwoodFuelwoodProportion(self._species)
+                    if waste+fuel>1.0: waste=max(0.,1-fuel)
+                    pulp_val *= (1-waste-fuel)
+                    pulp_val += fuel*fuel_price*vol_vec[idxs] + waste*cull_price*vol_vec[idxs]
+                new_v[idxs] = v[left] + pulp_val
+                new_vt[idxs]= vtimber[left]
 
-        # --- Main DP Loop ---
-        for IKAP in range(total_length_dm + 1):
-            # Optimization: if we have passed the timber/pulp endpoint and no value has been accumulated, skip.
-            if IKAP > timber_and_pulp_endpoint and v[IKAP] <= 0:
-                continue
+            # cull branch
+            if cull_ok.any():
+                idxs=np.where(cull_ok)[0]
+                new_v[idxs]= v[left] + cull_price*vol_vec[idxs]
+                new_vt[idxs]= vtimber[left]
+                q_vec[idxs]=QualityType.LogCull.value
 
-            # Determine the maximum module length possible from this cut.
-            lmax = 0
-            if IKAP <= i_top:
-                lmax = max(lmax, min(i_top - IKAP, self._maxLengthTimberLog*10))
-            lmax = max(lmax, min(total_length_dm - IKAP, self._maxLengthPulpwoodLog*10))
+            # -------- scatter update into global DP arrays ---------------
+            better = new_v > v[right]
+            if better.any():
+                v[right[better]]        = new_v[better]
+                vtimber[right[better]]  = new_vt[better]
+                back[right[better]]     = left
+                kval[right[better]]     = q_vec[better]
 
-            for length_dm in self._moduler:
-                if length_dm > lmax:
-                    break
-                lj = IKAP + length_dm
-                if lj > total_length_dm:
-                    break
+        # ---------------- pick best endpoint ----------------------------
+        end = int(np.argmax(v)); best=v[end]
+        if best<=0:
+            return BuckingResult(0,1,p_dead,p_vol_hs,0,0,[0]*7,[0]*7,vol_fub5,vol_sk)
 
-                # Compute the volume (under bark) for the piece from h[IKAP] to h[lj].
-                h1 = h[IKAP]
-                h2 = h[lj]
-                vol_log = taper.volume_section(h1, h2)
-                if vol_log <= 0:
-                    continue
+        total_SEK = best/100.
+        vol_top   = taper.volume_section(h[end],height_m)
+        p_top     = vol_top/vol_sk if vol_sk else 0.
+        last_rel  = h[end]/height_m if height_m else 1.
 
-                # Decide the product type (timber log, pulp log, or cull) for this section.
-                new_value = 0.0
-                new_value_timber = 0.0
-                current_quality = QualityType.Undefined
+        # ---------------- reconstruct (still small loop) ----------------
+        vol_q=[0.]*7; price_q=[0.]*7; vol_for_p=[0.]*7; secs=[]
+        cur=end
+        while cur>0:
+            prev=back[cur]; q=QualityType(kval[cur])
+            vol=taper.volume_section(h[prev],h[cur])
+            if q in (QualityType.ButtLog,QualityType.MiddleLog,QualityType.TopLog):
+                vol_q[q.value]+=vol; vol_for_p[q.value]+=vol
+                price_q[q.value]+= (vtimber[cur]-vtimber[prev])/100.
+            elif q==QualityType.Pulp: vol_q[QualityType.Pulp.value]+=vol
+            elif q==QualityType.LogCull: vol_q[QualityType.LogCull.value]+=vol
 
-                diam_lj = int(dh[lj])
-                if (length_dm >= self._minLengthTimberLog*10 and 
-                    get_quality(lj) != QualityType.Pulp and 
-                    diam_lj >= self._minDiameterTimberLog*10 and 
-                    diam_lj <= self._maxDiameterTimberLog*10 + 1 and
-                    lj <= i_top):
-                    # Timber log branch.
-                    current_quality = get_quality(lj)
-                    log_part_enum = self.quality_log_part[current_quality]
-                    prop_pulp = 0.0
-                    prop_fuel = 0.0
-                    prop_cull = 0.0
-                    if use_downgrading and self._timber_prices is not None:
-                        w = self._timber_prices.getTimberWeight(log_part_enum)
-                        prop_pulp = w.pulpwoodPercentage / 100.0
-                        prop_fuel = w.fuelWoodPercentage / 100.0
-                        prop_cull = w.logCullPercentage / 100.0
-                        s = prop_pulp + prop_fuel + prop_cull
-                        if s > 1.0:
-                            prop_cull = max(0.0, 1.0 - (prop_pulp + prop_fuel))
-                    dklass = min(diam_lj, self._maxDiameterTimberLog)
-                    base_timber_price_ore = self._timberValue[dklass][self._moduler.index(length_dm)][current_quality.value]
-                    base_timber_price_ore *= timber_price_factor
-                    if self._timber_prices and self._timber_prices.volume_type == "m3fub":
-                        base_timber_price_ore *= vol_log
 
-                    timber_only = (1.0 - prop_pulp - prop_cull - prop_fuel) * base_timber_price_ore
-                    if timber_only < 0:
-                        timber_only = 0
-                        base_timber_price_ore = 0
-
-                    pulp_value_ore     = prop_pulp * pulp_wood_price_factor * self._mvarde * vol_log
-                    cull_value_ore     = prop_cull * cull_price * vol_log
-                    fuelwood_value_ore = prop_fuel * fuelwood_price * vol_log
-
-                    new_value = v[IKAP] + timber_only + pulp_value_ore + cull_value_ore + fuelwood_value_ore
-                    new_value_timber = vtimber[IKAP] + base_timber_price_ore
-
-                elif (length_dm >= self._minLengthPulpwoodLog*10 and length_dm <= self._maxLengthPulpwoodLog*10 and
-                      diam_lj >= self._pricelist.PulpLogDiameter.Min and 
-                      diam_lj <= self._pricelist.PulpLogDiameter.Max):
-                    # Pulp log branch.
-                    current_quality = QualityType.Pulp
-                    prop_cull = 0.0
-                    prop_fuel = 0.0
-                    if use_downgrading:
-                        prop_cull = self._pricelist.getPulpWoodWasteProportion(self._timber.species)
-                        prop_fuel = self._pricelist.getPulpwoodFuelwoodProportion(self._timber.species)
-                        s = prop_cull + prop_fuel
-                        if s > 1.0:
-                            prop_cull = max(0.0, 1.0 - prop_fuel)
-                    pulp_value_ore     = (1.0 - prop_cull - prop_fuel) * pulp_wood_price_factor * self._mvarde * vol_log
-                    cull_value_ore     = prop_cull * cull_price * vol_log
-                    fuelwood_value_ore = prop_fuel * fuelwood_price * vol_log
-                    new_value = v[IKAP] + pulp_value_ore + cull_value_ore + fuelwood_value_ore
-                    new_value_timber = vtimber[IKAP]
-
-                elif length_dm >= 0.5 * self._minLengthPulpwoodLog*10:
-                    # Log is too short for pulp: classify as cull.
-                    current_quality = QualityType.LogCull
-                    cull_value_ore = cull_price * vol_log
-                    new_value = v[IKAP] + cull_value_ore
-                    new_value_timber = vtimber[IKAP]
-                else:
-                    continue
-
-                # Update DP if the new value is better.
-                if new_value > v[lj]:
-                    v[lj] = new_value
-                    vtimber[lj] = new_value_timber
-                    IP[lj] = IKAP
-                    kval[lj] = current_quality
-
-        # --- Find the best endpoint ---
-        end_point = total_length_dm
-        best_val = v[end_point]
-        for i in range(total_length_dm + 1):
-            if v[i] > best_val:
-                best_val = v[i]
-                end_point = i
-
-        total_value_ore = best_val
-        total_value = total_value_ore / 100.0  # Convert from öre to SEK
-        vol_top = taper.volume_section(h[end_point], HTOT)
-        p_top = (vol_top / vol_sk_ub) if vol_sk_ub > 0 else 0.0
-        last_cut_rel_height = (10.0 * h[end_point] / HTOT) if HTOT > 0 else 1.0
-
-        high_stump_value_proportion = 0.0
-        if total_value > 0 and high_stump_endpoint > 0:
-            high_stump_value_proportion = (v[high_stump_endpoint] / 100.0) / total_value
-
-        # --- Reconstruct the solution (cut sections, volume, quality breakdown, etc.) ---
-        volume_per_quality = [0.0] * 7  # Indices correspond to QualityType enum values.
-        timber_price_by_quality = [0.0] * 7
-        vol_for_price_calc = [0.0] * 7
-        sections: List[CrossCutSection] = []
-        cursor = end_point
-
-        while cursor > 0:
-            prev = IP[cursor]
-            q = kval[cursor]
-            h1 = h[prev]
-            h2 = h[cursor]
-            vol_log = taper.volume_section(h1, h2)
-            value_section_ore = v[cursor] - v[prev]
-            species = self._timber.species
-
-            prop_cull = 0.0
-            prop_fuel = 0.0
-            prop_pulp = 0.0
-            timber_prop = 0.0
-
-            if q in (QualityType.ButtLog, QualityType.MiddleLog, QualityType.TopLog):
-                part = self.quality_log_part[q]
-                if use_downgrading and self._timber_prices is not None:
-                    w = self._timber_prices.getTimberWeight(part)
-                    prop_pulp = w.pulpwoodPercentage / 100.0
-                    prop_fuel = w.fuelWoodPercentage / 100.0
-                    prop_cull = w.logCullPercentage / 100.0
-                    s = prop_pulp + prop_fuel + prop_cull
-                    if s > 1.0:
-                        prop_cull = max(0.0, 1.0 - (prop_pulp + prop_fuel))
-                timber_prop = max(0.0, 1.0 - (prop_pulp + prop_fuel + prop_cull))
-                volume_per_quality[q.value] += timber_prop * vol_log
-                volume_per_quality[QualityType.Pulp.value] += prop_pulp * vol_log
-                timber_price_increment = (vtimber[cursor] - vtimber[prev]) / 100.0
-                timber_price_by_quality[q.value] += timber_price_increment
-                vol_for_price_calc[q.value] += vol_log
-            elif q == QualityType.Pulp:
-                if use_downgrading:
-                    prop_cull = self._pricelist.getPulpWoodWasteProportion(species)
-                    prop_fuel = self._pricelist.getPulpwoodFuelwoodProportion(species)
-                    s = prop_cull + prop_fuel
-                    if s > 1.0:
-                        prop_cull = max(0.0, 1.0 - prop_fuel)
-                prop_pulp = max(0.0, 1.0 - (prop_cull + prop_fuel))
-                volume_per_quality[QualityType.Pulp.value] += prop_pulp * vol_log
-
-            if q == QualityType.LogCull:
-                prop_cull = 1.0
-            volume_per_quality[QualityType.LogCull.value] += prop_cull * vol_log
-            volume_per_quality[QualityType.Fuelwood.value] += prop_fuel * vol_log
-
-            if save_sections:
+            # Store reconstruction CrossCutSection ---------------------------
+            if config.save_sections:
+                # crude but safe proportions (can be refined later)
+                timber_prop = 1.0 if q in (QualityType.ButtLog,
+                                           QualityType.MiddleLog,
+                                           QualityType.TopLog) else 0.0
                 sec = CrossCutSection(
-                    start_point=prev,
-                    end_point=cursor,
-                    volume=vol_log,
-                    top_diameter=dh[cursor],
-                    value=value_section_ore / 100.0,
-                    species_group=species,
-                    timber_proportion=timber_prop,
-                    pulp_proportion=prop_pulp,
-                    cull_proportion=prop_cull,
-                    fuelwood_proportion=prop_fuel
+                    start_point      = prev,
+                    end_point        = cur,
+                    volume           = vol,
+                    top_diameter     = dh[cur],
+                    value            = (v[cur] - v[prev]) / 100.0,   # öre → SEK
+                    species_group    = self._species,
+                    timber_proportion= timber_prop,
+                    pulp_proportion  = 0.0,
+                    cull_proportion  = 0.0,
+                    fuelwood_proportion = 0.0,
+                    quality  = q
                 )
-                sections.append(sec)
+                # --- merge with previous if contiguous and same class ----
+                if secs:
+                    last = secs[-1]
+                    contiguous = (
+                          (last.start_point == sec.end_point)   # bottom-to-top order
+                    )
+                    if contiguous and last.quality == sec.quality:
+                        secs[-1] = self._merge_sections(sec,last)
+                    else:
+                        secs.append(sec)
+                else:
+                    secs.append(sec)
 
-            cursor = prev
 
-        # Convert average timber price to per cubic meter for each quality.
-        for i in [QualityType.ButtLog, QualityType.MiddleLog, QualityType.TopLog]:
-            iv = i.value
-            if vol_for_price_calc[iv] > 0:
-                timber_price_by_quality[iv] /= vol_for_price_calc[iv]
+
+            cur=prev
+
+        for q in (QualityType.ButtLog,QualityType.MiddleLog,QualityType.TopLog):
+            if vol_for_p[q.value]>0: price_q[q.value]/=vol_for_p[q.value]
 
         return BuckingResult(
-            species_group=species,
-            total_value=total_value,
-            top_proportion=p_top,
-            dead_wood_proportion=p_dead_wood,
-            high_stump_volume_proportion=p_volume_high_stump,
-            high_stump_value_proportion=high_stump_value_proportion,
-            last_cut_relative_height=last_cut_rel_height,
-            volume_per_quality=volume_per_quality,
-            timber_price_by_quality=timber_price_by_quality,
-            vol_fub_5cm=vol_fub_5cm,
-            vol_sk_ub=vol_sk_ub,
-            DBH_cm=self._timber.diameter_cm,
-            height_m=self._timber.height_m,
-            stump_height_m=self._timber.stump_height_m,
-            diameter_stump_cm=DSTUB,#plotting only
-            taperDiams_cm=taperdiameters,#plotting only
-            taperHeights_m=taperheights, #plotting only
-            sections=sections if save_sections else None
+            species_group              = self._species,
+            total_value                = total_SEK,
+            top_proportion             = p_top,
+            dead_wood_proportion       = p_dead,
+            high_stump_volume_proportion = p_vol_hs,
+            high_stump_value_proportion = (
+                (v[back[hs_ep]]/100.0) / total_SEK if hs_ep else 0.0
+            ),
+            last_cut_relative_height   = last_rel,
+            volume_per_quality         = vol_q,
+            timber_price_by_quality    = price_q,
+            vol_fub_5cm                = vol_fub5,
+            vol_sk_ub                  = vol_sk,
+            DBH_cm                     = DBH_cm,
+            height_m                   = height_m,
+            stump_height_m             = self._timber.stump_height_m,
+            diameter_stump_cm          = diameter_stump_cm,
+            taperDiams_cm              = taperDiams_cm,
+            taperHeights_m             = taperHeights_m,
+            sections                   = secs if config.save_sections else None
         )
+    
+    @staticmethod
+    def _merge_sections(a: CrossCutSection, b: CrossCutSection) -> CrossCutSection:
+        total_vol = a.volume + b.volume
+
+        new_start = min(a.start_point, b.start_point)
+        new_end   = max(a.end_point,   b.end_point)
+
+        def w_avg(attr):
+            return ((getattr(a, attr) * a.volume) +
+                    (getattr(b, attr) * b.volume)) / total_vol
+
+        return CrossCutSection(
+            start_point = new_start,
+            end_point   = new_end,
+            volume      = total_vol,
+            top_diameter= b.top_diameter if b.end_point > a.end_point else a.top_diameter,
+            value       = a.value + b.value,
+            species_group = a.species_group,
+            timber_proportion = w_avg("timber_proportion"),
+            pulp_proportion   = w_avg("pulp_proportion"),
+            cull_proportion   = w_avg("cull_proportion"),
+            fuelwood_proportion = w_avg("fuelwood_proportion"),
+            quality = a.quality,
+        )
+
+
+
