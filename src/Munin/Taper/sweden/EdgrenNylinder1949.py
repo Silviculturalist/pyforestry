@@ -231,14 +231,14 @@ class EdgrenNylinder1949(Taper):
             return const_R * np.log10(1 + (1 - rel_height) * const_Gamma)
         else:
             print(f"Warning: Unexpected value for relative height: {rel_height}")
-            return None
+            return 0
 
     def get_diameter_at_height(self, height_m: float) -> float:
         """
         Instance method using pre-calculated base diameter.
         """
-        if height_m < 0 or height_m > self.timber.height_m:
-            return None
+        if height_m < 0 or height_m >= self.timber.height_m:
+            return 0
 
         rel_height = height_m / self.timber.height_m
         relative_diameter = self.get_relative_diameter(rel_height)

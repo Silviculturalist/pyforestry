@@ -40,8 +40,15 @@ def _worker_buck_one_tree(tree_params: Tuple[str, int, int], pricelist_data: Dic
         # We need the full result to get the sections
         result = optimizer.calculate_tree_value(min_diam_dead_wood=99,config=BuckingConfig(save_sections=True))
 
-        # Serialize sections to JSON string for storage in xarray
-        sections_json = json.dumps([s.__dict__ for s in result.sections]) if result.sections else '[]'
+        if result.sections is None:
+            sections_data = []
+        else:
+            sections_data = [s.__dict__ for s in result.sections]
+
+        sections_json = json.dumps(
+            sections_data,
+            default=lambda o: o.item() if isinstance(o, np.generic) else str(o)
+        )
         
         return {
             "species": species,
@@ -101,6 +108,7 @@ class SolutionCube:
         tasks = [
             (sp, int(dbh), int(h*10)) for sp in species_list for dbh in dbh_coords for h in height_coords
         ]
+
 
         print(f"Total trees to process: {len(tasks)}")
 

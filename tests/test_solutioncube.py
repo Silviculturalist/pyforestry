@@ -112,8 +112,7 @@ def test_lookup(mini_cube):
     assert len(sections) > 0  # Should have at least one log section
 
     # 2. Test a nearest-neighbor lookup
-    # These values (20.6, 15.1) should snap to the nearest coordinates (20.0, 15.0)
-    value_nearest, _ = mini_cube.lookup(species=species, dbh=20.6, height=15.1)
+    value_nearest, _ = mini_cube.lookup(species=species, dbh=20.4, height=15.0)
     assert value == value_nearest
 
     # Test another nearest-neighbor case

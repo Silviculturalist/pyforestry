@@ -4,13 +4,12 @@ from Munin.Timber.Timber import Timber
 from Munin.TimberBucking.Bucker import Bucker
 from Munin.PriceList.PriceList import *
 from enum import IntEnum
-from dataclasses import dataclass
-from typing import List, Optional, Dict, Tuple, Type
+from dataclasses import dataclass, field
+from typing import List, Optional, Dict, Tuple, Type, Iterator, Any
 import math
 import matplotlib.pyplot as plt
 import numpy as np
 from collections.abc import Mapping
-from typing import Iterator, Any
 
 
 class QualityType(IntEnum):
@@ -57,7 +56,7 @@ class BuckingResult(Mapping):
     diameter_stump_cm:float               # Diameter at stump (cm).
     taperDiams_cm:List[float]             # Taper Diameters for plotting.
     taperHeights_m:List[float]            # Taper Heights for plotting.
-    sections: Optional[List[CrossCutSection]] = None
+    sections: List[CrossCutSection] = field(default_factory=list)
 
         # -------- Mapping protocol so the object behaves like a dict ----------
     def __getitem__(self, key: str) -> Any:
@@ -193,13 +192,13 @@ class _TreeCache:
     def diameter(self, taper: Taper, height: int) -> float:
         if height not in self._diameters:
             # --- CORRECTED CALL: Now uses the taper instance directly ---
-            self._diameters[height] = taper.get_diameter_at_height(height)
+            self._diameters[height] = taper.get_diameter_at_height(height/10.0)
         return self._diameters[height]
 
     def height(self, taper: Taper, target: float) -> int:
         if target not in self._heights:
              # --- CORRECTED CALL: Now uses the taper instance directly ---
-            self._heights[target] = taper.get_height_at_diameter(target)
+            self._heights[target] = int(taper.get_height_at_diameter(target)*10)
         return self._heights[target]
 
 # -------------------------------------------------------------------------
@@ -297,14 +296,14 @@ class Nasberg_1985_BranchBound:
 
         # ------------ general --------------------------------------------
         # Observe! This is *height above stump*
-        DBH_cm            = Taper.get_diameter_at_height(taper, 1.3- HSTUB)       # cm
+        DBH_cm            = Taper.get_diameter_at_height(taper, 1.3 - HSTUB)       # cm
         diameter_stump_cm = Taper.get_diameter_at_height(taper, 0.0)       # cm
 
 
         # ------------ discretise (vector) --------------------------------
 
         NMAX=400
-        total_dm=min(int((HTOP-HSTUB)*10),NMAX)
+        total_dm=min(int((HTOP-HSTUB*10)),NMAX)
         if total_dm<=0:
             return BuckingResult(0,1,1,1,1,0,[0]*7,[0]*7,0,0)
 
