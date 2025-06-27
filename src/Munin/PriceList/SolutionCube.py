@@ -138,7 +138,7 @@ class SolutionCube:
         # Add metadata as attributes
         ds.attrs['pricelist_hash'] = pricelist_hash
         ds.attrs['taper_model'] = taper_model.__name__
-        ds.attrs['creation_date_utc'] = datetime.now(UTC).isoformat()
+        ds.attrs['creation_date_utc'] = datetime.now(UTC.utc).isoformat()
         ds.attrs['dbh_range'] = f"{dbh_range[0]}-{dbh_range[1]} cm"
         ds.attrs['height_range'] = f"{height_range[0]}-{height_range[1]} m"
 
