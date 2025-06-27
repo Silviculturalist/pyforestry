@@ -1,6 +1,11 @@
 # .github/workflows/ci.yml
 name: CI
 
+# Grant write access for Pages deploy
+permissions:
+  contents: write      # allow pushing commits
+  pages: write         # allow updating GitHub Pages
+
 on:
   push:
     branches: [ main ]
