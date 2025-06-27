@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Munin.Taper.sweden.EdgrenNylinder1949 &#8212; Munin  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/alabaster.css?v=27fed22d" />
+    <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for Munin.Taper.sweden.EdgrenNylinder1949</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">Munin.Timber.SweTimber</span><span class="w"> </span><span class="kn">import</span> <span class="n">SweTimber</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Munin.Volume.sweden.Naslund1947</span><span class="w"> </span><span class="kn">import</span> <span class="n">NaslundFormFactor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Munin.Taper.Taper</span><span class="w"> </span><span class="kn">import</span> <span class="n">Taper</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">minimize_scalar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">lru_cache</span>  <span class="c1"># to cache results</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">EdgrenNylinder1949Consts</span><span class="p">:</span>
+    <span class="c1"># --- Define constants at the class level so they are only created ONCE ---</span>
+    <span class="n">_CONST_SPRUCE_NORTH</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+        <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mf">1.671</span><span class="p">,</span> <span class="mf">16.104</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mf">103.06</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">0.55</span><span class="p">,</span> <span class="mf">0.62</span><span class="p">,</span> <span class="mf">1.422</span><span class="p">,</span> <span class="mf">14.883</span><span class="p">,</span> <span class="mf">286.36</span><span class="p">,</span> <span class="mf">140.91</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">1.594</span><span class="p">,</span> <span class="mf">1.976</span><span class="p">,</span> <span class="mf">13.784</span><span class="p">,</span> <span class="mf">151.04</span><span class="p">,</span> <span class="mf">127.89</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">0.65</span><span class="p">,</span> <span class="mf">3.240</span><span class="p">,</span> <span class="mf">2.906</span><span class="p">,</span> <span class="mf">12.906</span><span class="p">,</span> <span class="mf">102.7</span><span class="p">,</span> <span class="mf">110.68</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">6.320</span><span class="p">,</span> <span class="mf">3.759</span><span class="p">,</span> <span class="mf">12.099</span><span class="p">,</span> <span class="mf">76.543</span><span class="p">,</span> <span class="mf">105.15</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">13.056</span><span class="p">,</span> <span class="mf">4.026</span><span class="p">,</span> <span class="mf">11.321</span><span class="p">,</span> <span class="mf">59.096</span><span class="p">,</span> <span class="mf">112.59</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">32.012</span><span class="p">,</span> <span class="mf">3.595</span><span class="p">,</span> <span class="mf">10.540</span><span class="p">,</span> <span class="mf">45.754</span><span class="p">,</span> <span class="mf">134.76</span><span class="p">],</span>
+    <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="n">_CONST_SPRUCE_SOUTH</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+        <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mf">0.892</span><span class="p">,</span> <span class="mf">15.765</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mf">176.40</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">0.55</span><span class="p">,</span> <span class="mf">0.620</span><span class="p">,</span> <span class="mf">0.923</span><span class="p">,</span> <span class="mf">14.818</span><span class="p">,</span> <span class="mf">287.44</span><span class="p">,</span> <span class="mf">202.65</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">1.594</span><span class="p">,</span> <span class="mf">1.093</span><span class="p">,</span> <span class="mf">14.032</span><span class="p">,</span> <span class="mf">148.97</span><span class="p">,</span> <span class="mf">202.51</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">0.65</span><span class="p">,</span> <span class="mf">3.240</span><span class="p">,</span> <span class="mf">2.164</span><span class="p">,</span> <span class="mf">13.479</span><span class="p">,</span> <span class="mf">99.532</span><span class="p">,</span> <span class="mf">132.69</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">6.320</span><span class="p">,</span> <span class="mf">3.324</span><span class="p">,</span> <span class="mf">13.040</span><span class="p">,</span> <span class="mf">72.736</span><span class="p">,</span> <span class="mf">108.43</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">13.059</span><span class="p">,</span> <span class="mf">4.463</span><span class="p">,</span> <span class="mf">12.775</span><span class="p">,</span> <span class="mf">54.618</span><span class="p">,</span> <span class="mf">97.49</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">33.208</span><span class="p">,</span> <span class="mf">5.586</span><span class="p">,</span> <span class="mf">12.578</span><span class="p">,</span> <span class="mf">40.509</span><span class="p">,</span> <span class="mf">91.77</span><span class="p">],</span>
+    <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="n">_CONST_PINE_NORTH</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+        <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mf">1.513</span><span class="p">,</span> <span class="mf">14.233</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mf">123.91</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">0.55</span><span class="p">,</span> <span class="mf">0.620</span><span class="p">,</span> <span class="mf">1.228</span><span class="p">,</span> <span class="mf">13.321</span><span class="p">,</span> <span class="mf">311.68</span><span class="p">,</span> <span class="mf">172.85</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">1.594</span><span class="p">,</span> <span class="mf">1.506</span><span class="p">,</span> <span class="mf">12.657</span><span class="p">,</span> <span class="mf">160.29</span><span class="p">,</span> <span class="mf">167.68</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">0.65</span><span class="p">,</span> <span class="mf">3.240</span><span class="p">,</span> <span class="mf">2.493</span><span class="p">,</span> <span class="mf">12.177</span><span class="p">,</span> <span class="mf">106.67</span><span class="p">,</span> <span class="mf">128.16</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">6.320</span><span class="p">,</span> <span class="mf">4.488</span><span class="p">,</span> <span class="mf">11.880</span><span class="p">,</span> <span class="mf">77.416</span><span class="p">,</span> <span class="mf">94.947</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">13.056</span><span class="p">,</span> <span class="mf">6.602</span><span class="p">,</span> <span class="mf">11.759</span><span class="p">,</span> <span class="mf">57.767</span><span class="p">,</span> <span class="mf">81.725</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">32.307</span><span class="p">,</span> <span class="mf">7.594</span><span class="p">,</span> <span class="mf">11.753</span><span class="p">,</span> <span class="mf">42.808</span><span class="p">,</span> <span class="mf">80.776</span><span class="p">],</span>
+    <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="n">_CONST_PINE_SOUTH</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+        <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mf">0.8409</span><span class="p">,</span> <span class="mf">15.970</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mf">183.44</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">0.55</span><span class="p">,</span> <span class="mf">0.620</span><span class="p">,</span> <span class="mf">0.3694</span><span class="p">,</span> <span class="mf">14.948</span><span class="p">,</span> <span class="mf">285.28</span><span class="p">,</span> <span class="mf">458.59</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">1.594</span><span class="p">,</span> <span class="mf">0.4251</span><span class="p">,</span> <span class="mf">14.214</span><span class="p">,</span> <span class="mf">147.44</span><span class="p">,</span> <span class="mf">463.07</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">0.65</span><span class="p">,</span> <span class="mf">3.240</span><span class="p">,</span> <span class="mf">1.529</span><span class="p">,</span> <span class="mf">13.646</span><span class="p">,</span> <span class="mf">98.601</span><span class="p">,</span> <span class="mf">171.70</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">6.320</span><span class="p">,</span> <span class="mf">3.974</span><span class="p">,</span> <span class="mf">13.240</span><span class="p">,</span> <span class="mf">71.915</span><span class="p">,</span> <span class="mf">95.286</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">13.070</span><span class="p">,</span> <span class="mf">5.510</span><span class="p">,</span> <span class="mf">12.951</span><span class="p">,</span> <span class="mf">54.050</span><span class="p">,</span> <span class="mf">84.904</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">33.502</span><span class="p">,</span> <span class="mf">6.445</span><span class="p">,</span> <span class="mf">12.755</span><span class="p">,</span> <span class="mf">39.982</span><span class="p">,</span> <span class="mf">83.659</span><span class="p">],</span>
+    <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="c1"># ----------------------------------------------------------------------</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>  <span class="c1"># &lt;-- ADD THIS DECORATOR TO CACHE RESULTS</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_constants</span><span class="p">(</span><span class="n">species</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">north</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">form_factor</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="c1"># Species and region logic now refers to the pre-defined constants</span>
+        <span class="k">if</span> <span class="n">north</span> <span class="ow">and</span> <span class="n">species</span> <span class="o">==</span> <span class="s1">&#39;picea abies&#39;</span><span class="p">:</span>
+            <span class="n">constants</span> <span class="o">=</span> <span class="n">EdgrenNylinder1949Consts</span><span class="o">.</span><span class="n">_CONST_SPRUCE_NORTH</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">north</span> <span class="ow">and</span> <span class="n">species</span> <span class="o">==</span> <span class="s1">&#39;picea abies&#39;</span><span class="p">:</span>
+            <span class="n">constants</span> <span class="o">=</span> <span class="n">EdgrenNylinder1949Consts</span><span class="o">.</span><span class="n">_CONST_SPRUCE_SOUTH</span>
+        <span class="k">elif</span> <span class="n">north</span><span class="p">:</span>  <span class="c1"># and species == &#39;pinus sylvestris&#39;: #Other species</span>
+            <span class="n">constants</span> <span class="o">=</span> <span class="n">EdgrenNylinder1949Consts</span><span class="o">.</span><span class="n">_CONST_PINE_NORTH</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">north</span><span class="p">:</span>  <span class="c1"># and species == &#39;pinus sylvestris&#39;: #Other species</span>
+            <span class="n">constants</span> <span class="o">=</span> <span class="n">EdgrenNylinder1949Consts</span><span class="o">.</span><span class="n">_CONST_PINE_SOUTH</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Should never occur.</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported species or region: </span><span class="si">{</span><span class="n">species</span><span class="si">}</span><span class="s2">, North=</span><span class="si">{</span><span class="n">north</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Step 1: Round form factor to the nearest 0.5</span>
+        <span class="n">rounded_form_factor</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">form_factor</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+
+        <span class="c1"># Step 2: Enforce limits between 0.5 and 0.8</span>
+        <span class="k">if</span> <span class="n">rounded_form_factor</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">:</span>
+            <span class="n">rounded_form_factor</span> <span class="o">=</span> <span class="mf">0.5</span>
+        <span class="k">elif</span> <span class="n">rounded_form_factor</span> <span class="o">&gt;</span> <span class="mf">0.8</span><span class="p">:</span>
+            <span class="n">rounded_form_factor</span> <span class="o">=</span> <span class="mf">0.8</span>
+
+        <span class="c1"># Step 3: Select the corresponding row</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="n">constants</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">constants</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">rounded_form_factor</span><span class="p">)]</span>
+
+        <span class="k">if</span> <span class="n">row</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No matching row for form factor: </span><span class="si">{</span><span class="n">rounded_form_factor</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">row</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_inflexion_point</span><span class="p">(</span><span class="n">species</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">north</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">form_quotient</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">north</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">species</span> <span class="o">==</span> <span class="s2">&quot;picea abies&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="mf">0.08631</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">form_quotient</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># species == &quot;pinus sylvestris&quot;:</span>
+                <span class="k">return</span> <span class="mf">0.05270</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">form_quotient</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.9</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">species</span> <span class="o">==</span> <span class="s2">&quot;picea abies&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="mf">0.06731</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">form_quotient</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.8</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># species == &quot;pinus sylvestris&quot;:</span>
+                <span class="k">return</span> <span class="mf">0.06873</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">form_quotient</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.8</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Pettersson1949_consts</span><span class="p">:</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">form_quotient</span><span class="p">(</span>
+        <span class="n">species</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">north</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dbh_ub</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">form_factor_ub</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">north</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">species</span> <span class="o">==</span> <span class="s2">&quot;picea abies&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="mf">0.239</span> <span class="o">+</span> <span class="mf">0.01046</span> <span class="o">*</span> <span class="n">height</span> <span class="o">-</span> <span class="mf">0.004407</span> <span class="o">*</span> <span class="n">dbh_ub</span> <span class="o">+</span> <span class="mf">0.6532</span> <span class="o">*</span> <span class="n">form_factor_ub</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># species == &quot;pinus sylvestris&quot;:</span>
+                <span class="k">return</span> <span class="mf">0.293</span> <span class="o">+</span> <span class="mf">0.00669</span> <span class="o">*</span> <span class="n">height</span> <span class="o">-</span> <span class="mf">0.001384</span> <span class="o">*</span> <span class="n">dbh_ub</span> <span class="o">+</span> <span class="mf">0.6348</span> <span class="o">*</span> <span class="n">form_factor_ub</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">species</span> <span class="o">==</span> <span class="s2">&quot;picea abies&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="mf">0.209</span> <span class="o">+</span> <span class="mf">0.00859</span> <span class="o">*</span> <span class="n">height</span> <span class="o">-</span> <span class="mf">0.003157</span> <span class="o">*</span> <span class="n">dbh_ub</span> <span class="o">+</span> <span class="mf">0.7385</span> <span class="o">*</span> <span class="n">form_factor_ub</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="mf">0.372</span> <span class="o">+</span> <span class="mf">0.008742</span> <span class="o">*</span> <span class="n">height</span> <span class="o">-</span> <span class="mf">0.003263</span> <span class="o">*</span> <span class="n">dbh_ub</span> <span class="o">+</span> <span class="mf">0.4929</span> <span class="o">*</span> <span class="n">form_factor_ub</span>
+
+
+<div class="viewcode-block" id="EdgrenNylinder1949">
+<a class="viewcode-back" href="../../../../api/taper.html#Munin.Taper.EdgrenNylinder1949">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">EdgrenNylinder1949</span><span class="p">(</span><span class="n">Taper</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timber</span><span class="p">:</span> <span class="n">SweTimber</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor is now stateful. It pre-calculates all taper parameters</span>
+<span class="sd">        for the given timber object once.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">timber</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timber</span> <span class="o">=</span> <span class="n">timber</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">timber</span><span class="p">)</span>
+
+        <span class="c1"># --- All expensive calculations are now done ONCE on initialization ---</span>
+        <span class="n">is_north</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">timber</span><span class="o">.</span><span class="n">region</span> <span class="o">==</span> <span class="s2">&quot;northern&quot;</span><span class="p">)</span>
+
+        <span class="n">form_factor</span> <span class="o">=</span> <span class="n">NaslundFormFactor</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span>
+            <span class="n">species</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">timber</span><span class="o">.</span><span class="n">species</span><span class="p">,</span>
+            <span class="n">height_m</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">timber</span><span class="o">.</span><span class="n">height_m</span><span class="p">,</span>
+            <span class="n">diameter_cm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">timber</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span>
+            <span class="n">double_bark_mm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">timber</span><span class="o">.</span><span class="n">double_bark_mm</span><span class="p">,</span>
+            <span class="n">crown_base_height_m</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">timber</span><span class="o">.</span><span class="n">crown_base_height_m</span><span class="p">,</span>
+            <span class="n">over_bark</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">timber</span><span class="o">.</span><span class="n">over_bark</span><span class="p">,</span>
+            <span class="n">region</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">timber</span><span class="o">.</span><span class="n">region</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">form_quotient</span> <span class="o">=</span> <span class="n">Pettersson1949_consts</span><span class="o">.</span><span class="n">form_quotient</span><span class="p">(</span>
+            <span class="n">species</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">timber</span><span class="o">.</span><span class="n">species</span><span class="p">,</span>
+            <span class="n">north</span><span class="o">=</span><span class="n">is_north</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">timber</span><span class="o">.</span><span class="n">height_m</span><span class="p">,</span>
+            <span class="n">dbh_ub</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">timber</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span>
+            <span class="n">form_factor_ub</span><span class="o">=</span><span class="n">form_factor</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">inflexion_point</span> <span class="o">=</span> <span class="n">EdgrenNylinder1949Consts</span><span class="o">.</span><span class="n">get_inflexion_point</span><span class="p">(</span>
+            <span class="n">species</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">timber</span><span class="o">.</span><span class="n">species</span><span class="p">,</span> <span class="n">north</span><span class="o">=</span><span class="n">is_north</span><span class="p">,</span> <span class="n">form_quotient</span><span class="o">=</span><span class="n">form_quotient</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">constants</span> <span class="o">=</span> <span class="n">EdgrenNylinder1949Consts</span><span class="o">.</span><span class="n">get_constants</span><span class="p">(</span>
+            <span class="n">species</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">timber</span><span class="o">.</span><span class="n">species</span><span class="p">,</span> <span class="n">north</span><span class="o">=</span><span class="n">is_north</span><span class="p">,</span> <span class="n">form_factor</span><span class="o">=</span><span class="n">form_quotient</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># Pre-calculate base diameter</span>
+        <span class="n">dbh_relative</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_relative_diameter</span><span class="p">(</span><span class="n">rel_height</span><span class="o">=</span><span class="mf">1.3</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">timber</span><span class="o">.</span><span class="n">height_m</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dbh_relative</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">dbh_relative</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid relative diameter at breast height: </span><span class="si">{</span><span class="n">dbh_relative</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_diameter</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">timber</span><span class="o">.</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="n">dbh_relative</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_diameter</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid base diameter: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base_diameter</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="EdgrenNylinder1949.validate">
+<a class="viewcode-back" href="../../../../api/taper.html#Munin.Taper.EdgrenNylinder1949.validate">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="n">timber</span><span class="p">:</span> <span class="n">SweTimber</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validate that the Timber object is compatible with the taper implementation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check instance type</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">timber</span><span class="p">,</span> <span class="n">SweTimber</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Provided object is not an instance of Timber.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Check height (total tree height must be &gt; 0)</span>
+        <span class="k">if</span> <span class="n">timber</span><span class="o">.</span><span class="n">height_m</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">timber</span><span class="o">.</span><span class="n">height_m</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Timber height_m must be a positive number.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Check diameter at breast height (or base diameter) must be &gt; 0</span>
+        <span class="k">if</span> <span class="n">timber</span><span class="o">.</span><span class="n">diameter_cm</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">timber</span><span class="o">.</span><span class="n">diameter_cm</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Timber diameter_cm must be a positive number.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Stump height should be non-negative (it could be zero)</span>
+        <span class="k">if</span> <span class="n">timber</span><span class="o">.</span><span class="n">stump_height_m</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">timber</span><span class="o">.</span><span class="n">stump_height_m</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Timber stump_height_m cannot be negative.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Crown base height should be non-negative and less than total height</span>
+        <span class="k">if</span> <span class="n">timber</span><span class="o">.</span><span class="n">crown_base_height_m</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">timber</span><span class="o">.</span><span class="n">crown_base_height_m</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Timber crown_base_height_m cannot be negative.&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">timber</span><span class="o">.</span><span class="n">crown_base_height_m</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">timber</span><span class="o">.</span><span class="n">height_m</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">timber</span><span class="o">.</span><span class="n">crown_base_height_m</span> <span class="o">&gt;=</span> <span class="n">timber</span><span class="o">.</span><span class="n">height_m</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Timber crown_base_height_m must be less than timber.height_m.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Double bark thickness should be non-negative</span>
+        <span class="k">if</span> <span class="n">timber</span><span class="o">.</span><span class="n">double_bark_mm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">timber</span><span class="o">.</span><span class="n">double_bark_mm</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Timber double_bark_mm cannot be negative.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Check that over_bark is a boolean</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">timber</span><span class="o">.</span><span class="n">over_bark</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Timber over_bark must be a boolean value.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Ensure region is one of the accepted values</span>
+        <span class="k">if</span> <span class="n">timber</span><span class="o">.</span><span class="n">region</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;northern&quot;</span><span class="p">,</span> <span class="s2">&quot;southern&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Timber region must be either &#39;northern&#39; or &#39;southern&#39;.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Ensure species is a non-empty string</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">timber</span><span class="o">.</span><span class="n">species</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">timber</span><span class="o">.</span><span class="n">species</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Timber species must be provided as a non-empty string.&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="EdgrenNylinder1949.get_relative_diameter">
+<a class="viewcode-back" href="../../../../api/taper.html#Munin.Taper.EdgrenNylinder1949.get_relative_diameter">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_relative_diameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rel_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Instance method using pre-calculated parameters from self.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Constants are now read directly from the instance</span>
+        <span class="n">const_F</span><span class="p">,</span> <span class="n">const_beta</span><span class="p">,</span> <span class="n">const_Gamma</span><span class="p">,</span> <span class="n">const_q</span><span class="p">,</span> <span class="n">const_Q</span><span class="p">,</span> <span class="n">const_R</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">inflexion_point</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inflexion_point</span>
+
+        <span class="c1"># Compute relative diameter based on height regions</span>
+        <span class="k">if</span> <span class="n">rel_height</span> <span class="o">&lt;=</span> <span class="n">inflexion_point</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">100</span> <span class="o">-</span> <span class="n">const_q</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">10000</span> <span class="o">*</span> <span class="n">rel_height</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">inflexion_point</span> <span class="o">&lt;</span> <span class="n">rel_height</span> <span class="o">&lt;=</span> <span class="mf">0.6</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">const_Q</span><span class="p">)):</span>
+                <span class="n">Diameter_inflexion_point</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">-</span> <span class="n">const_q</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">10000</span> <span class="o">*</span> <span class="n">inflexion_point</span><span class="p">)</span>
+                <span class="n">Diameter_60p_height</span> <span class="o">=</span> <span class="n">const_R</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mf">0.6</span><span class="p">)</span> <span class="o">*</span> <span class="n">const_Gamma</span><span class="p">)</span>
+                <span class="n">slope</span> <span class="o">=</span> <span class="p">(</span><span class="n">Diameter_60p_height</span><span class="o">-</span><span class="n">Diameter_inflexion_point</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mf">0.6</span><span class="o">-</span><span class="n">inflexion_point</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">Diameter_inflexion_point</span><span class="o">+</span><span class="n">slope</span><span class="o">*</span><span class="p">(</span><span class="n">rel_height</span><span class="o">-</span><span class="n">inflexion_point</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">const_Q</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">rel_height</span><span class="p">)</span> <span class="o">*</span> <span class="n">const_beta</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="mf">0.6</span> <span class="o">&lt;</span> <span class="n">rel_height</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">const_R</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">rel_height</span><span class="p">)</span> <span class="o">*</span> <span class="n">const_Gamma</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning: Unexpected value for relative height: </span><span class="si">{</span><span class="n">rel_height</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="EdgrenNylinder1949.get_diameter_at_height">
+<a class="viewcode-back" href="../../../../api/taper.html#Munin.Taper.EdgrenNylinder1949.get_diameter_at_height">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_diameter_at_height</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">height_m</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Instance method using pre-calculated base diameter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">height_m</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">height_m</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">timber</span><span class="o">.</span><span class="n">height_m</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">0.0</span>
+
+        <span class="n">rel_height</span> <span class="o">=</span> <span class="n">height_m</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">timber</span><span class="o">.</span><span class="n">height_m</span>
+        <span class="n">relative_diameter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_relative_diameter</span><span class="p">(</span><span class="n">rel_height</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">relative_diameter</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">relative_diameter</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">0.0</span>
+            
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_diameter</span> <span class="o">*</span> <span class="n">relative_diameter</span><span class="p">)</span> <span class="o">/</span> <span class="mi">100</span></div>
+
+
+<div class="viewcode-block" id="EdgrenNylinder1949.get_height_at_diameter">
+<a class="viewcode-back" href="../../../../api/taper.html#Munin.Taper.EdgrenNylinder1949.get_height_at_diameter">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_height_at_diameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diameter</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Instance method. &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">diameter</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">diameter</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_diameter</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid minDiameter: </span><span class="si">{</span><span class="n">diameter</span><span class="si">}</span><span class="s2">. Must be between 0 and </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base_diameter</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">objective</span><span class="p">(</span><span class="n">height</span><span class="p">):</span>
+            <span class="c1"># The objective function now calls the fast instance method</span>
+            <span class="n">diameter_at_height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_diameter_at_height</span><span class="p">(</span><span class="n">height</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">diameter_at_height</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="mi">0</span> <span class="o">-</span> <span class="n">diameter</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="n">diameter_at_height</span> <span class="o">-</span> <span class="n">diameter</span><span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">minimize_scalar</span><span class="p">(</span>
+            <span class="n">objective</span><span class="p">,</span>
+            <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">timber</span><span class="o">.</span><span class="n">height_m</span><span class="p">),</span>
+            <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bounded&#39;</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Optimization failed for minDiameter: </span><span class="si">{</span><span class="n">diameter</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+</div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../../index.html">Munin</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
