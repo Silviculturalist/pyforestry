@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Munin.Geo.Geo &#8212; Munin  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=27fed22d" />
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for Munin.Geo.Geo</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Point</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyproj</span><span class="w"> </span><span class="kn">import</span> <span class="n">Transformer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">importlib.resources</span><span class="w"> </span><span class="kn">import</span> <span class="n">files</span>
+<span class="c1"># Removed top-level import causing cycle:</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+
+<div class="viewcode-block" id="RetrieveGeoCode">
+<a class="viewcode-back" href="../../../api/Munin.Geo.html#Munin.Geo.Geo.RetrieveGeoCode">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RetrieveGeoCode</span><span class="p">:</span>
+
+<div class="viewcode-block" id="RetrieveGeoCode.getDistanceToCoast">
+<a class="viewcode-back" href="../../../api/Munin.Geo.html#Munin.Geo.Geo.RetrieveGeoCode.getDistanceToCoast">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getDistanceToCoast</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">epsg</span><span class="o">=</span><span class="mi">4326</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate the distance from a given point (lon, lat in the input CRS)</span>
+<span class="sd">        to the nearest coastline point. Internally, the calculation is done</span>
+<span class="sd">        in the metric projection EPSG:3857.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            lon (float): Longitude (in the input CRS).</span>
+<span class="sd">            lat (float): Latitude (in the input CRS).</span>
+<span class="sd">            epsg (int): EPSG code for the input coordinates (default: 4326).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: Distance in kilometers to the nearest coastline.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Load the coastline shapefile</span>
+        <span class="n">coast_gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">files</span><span class="p">(</span><span class="s2">&quot;Munin.Geo.Coastline&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;SwedishCoastLine_NE_medium_clipped.shp&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Ensure coastline data is in EPSG:4326 for consistency</span>
+        <span class="k">if</span> <span class="n">coast_gdf</span><span class="o">.</span><span class="n">crs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">coast_gdf</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">to_epsg</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">4326</span><span class="p">:</span>
+            <span class="n">coast_gdf</span> <span class="o">=</span> <span class="n">coast_gdf</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">epsg</span><span class="o">=</span><span class="mi">4326</span><span class="p">)</span>
+
+        <span class="c1"># Transform the input coordinates from the provided epsg to the internal metric CRS (EPSG:3857)</span>
+        <span class="n">transformer</span> <span class="o">=</span> <span class="n">Transformer</span><span class="o">.</span><span class="n">from_crs</span><span class="p">(</span><span class="n">epsg</span><span class="p">,</span> <span class="mi">3857</span><span class="p">,</span> <span class="n">always_xy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">lon_metric</span><span class="p">,</span> <span class="n">lat_metric</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">lon</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">lat</span><span class="p">))</span>
+        <span class="n">point_metric</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="n">lon_metric</span><span class="p">,</span> <span class="n">lat_metric</span><span class="p">)</span>
+
+        <span class="c1"># Reproject coastline data to EPSG:3857 for accurate metric calculations</span>
+        <span class="n">coast_gdf_metric</span> <span class="o">=</span> <span class="n">coast_gdf</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">epsg</span><span class="o">=</span><span class="mi">3857</span><span class="p">)</span>
+
+        <span class="c1"># Calculate the minimum distance (in meters) from the point to the coastline</span>
+        <span class="n">distances</span> <span class="o">=</span> <span class="n">coast_gdf_metric</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">point_metric</span><span class="p">)</span>
+        <span class="n">nearest_distance</span> <span class="o">=</span> <span class="n">distances</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">nearest_distance</span> <span class="o">/</span> <span class="mi">1000</span>  <span class="c1"># Convert meters to kilometers</span></div>
+
+
+
+<div class="viewcode-block" id="RetrieveGeoCode.getClimateCode">
+<a class="viewcode-back" href="../../../api/Munin.Geo.html#Munin.Geo.Geo.RetrieveGeoCode.getClimateCode">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="c1"># Use string literal for the type hint</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getClimateCode</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">epsg</span><span class="o">=</span><span class="mi">4326</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;SwedenClimateZone&#39;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve the climate zone enum member for a given coordinate.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            lon (float): Longitude (in the input CRS).</span>
+<span class="sd">            lat (float): Latitude (in the input CRS).</span>
+<span class="sd">            epsg (int): EPSG code for the input coordinates (default: 4326).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            SwedenClimateZone | None: The climate zone enum member or None if not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Import locally within the method for runtime use</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">Munin.Site.sweden.SwedishSite</span><span class="w"> </span><span class="kn">import</span> <span class="n">SwedenClimateZone</span>
+
+        <span class="c1"># Load the climate shapefile and reproject to EPSG:3006</span>
+        <span class="n">klimat_gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">files</span><span class="p">(</span><span class="s1">&#39;Munin.Geo.Climate&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;Klimat.shp&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">epsg</span><span class="o">=</span><span class="mi">3006</span><span class="p">)</span>
+
+        <span class="c1"># Transform the input coordinates from the provided epsg to EPSG:3006</span>
+        <span class="n">transformer</span> <span class="o">=</span> <span class="n">Transformer</span><span class="o">.</span><span class="n">from_crs</span><span class="p">(</span><span class="n">epsg</span><span class="p">,</span> <span class="mi">3006</span><span class="p">,</span> <span class="n">always_xy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">lon_proj</span><span class="p">,</span> <span class="n">lat_proj</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">lon</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">lat</span><span class="p">))</span>
+        <span class="n">point_proj</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="n">lon_proj</span><span class="p">,</span> <span class="n">lat_proj</span><span class="p">)</span>
+
+        <span class="c1"># Find the polygon that contains the transformed point</span>
+        <span class="n">klimat_polygon</span> <span class="o">=</span> <span class="n">klimat_gdf</span><span class="p">[</span><span class="n">klimat_gdf</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">point_proj</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">klimat_polygon</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span> <span class="c1"># Return None if no matching zone is found</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">climate_zone_code_int</span> <span class="o">=</span> <span class="n">klimat_polygon</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;KLIMZON_&#39;</span><span class="p">]</span>
+            <span class="c1"># Lookup and return the enum member using the code (runtime use)</span>
+            <span class="k">return</span> <span class="n">SwedenClimateZone</span><span class="o">.</span><span class="n">from_code</span><span class="p">(</span><span class="n">climate_zone_code_int</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="RetrieveGeoCode.getCountyCode">
+<a class="viewcode-back" href="../../../api/Munin.Geo.html#Munin.Geo.Geo.RetrieveGeoCode.getCountyCode">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="c1"># Use string literal for the type hint</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getCountyCode</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">epsg</span><span class="o">=</span><span class="mi">4326</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;SwedenCounty&#39;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve the county enum member for a given coordinate.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            lon (float): Longitude (in the input CRS).</span>
+<span class="sd">            lat (float): Latitude (in the input CRS).</span>
+<span class="sd">            epsg (int): EPSG code for the input coordinates (default: 4326).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            SwedenCounty | None: The corresponding SwedenCounty enum member or None if not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Import locally within the method for runtime use</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">Munin.Site.sweden.SwedishSite</span><span class="w"> </span><span class="kn">import</span> <span class="n">SwedenCounty</span>
+
+        <span class="c1"># Load the county shapefile and reproject to EPSG:3006</span>
+        <span class="n">dlanskod_gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">files</span><span class="p">(</span><span class="s1">&#39;Munin.Geo.Counties&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s1">&#39;RT_Dlanskod.shp&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">epsg</span><span class="o">=</span><span class="mi">3006</span><span class="p">)</span>
+
+        <span class="c1"># Transform the input coordinates from the provided epsg to EPSG:3006</span>
+        <span class="n">transformer</span> <span class="o">=</span> <span class="n">Transformer</span><span class="o">.</span><span class="n">from_crs</span><span class="p">(</span><span class="n">epsg</span><span class="p">,</span> <span class="mi">3006</span><span class="p">,</span> <span class="n">always_xy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">lon_proj</span><span class="p">,</span> <span class="n">lat_proj</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">lon</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">lat</span><span class="p">))</span>
+        <span class="n">point_proj</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="n">lon_proj</span><span class="p">,</span> <span class="n">lat_proj</span><span class="p">)</span>
+
+        <span class="c1"># Find the polygon that contains the transformed point</span>
+        <span class="n">dlanskod_polygon</span> <span class="o">=</span> <span class="n">dlanskod_gdf</span><span class="p">[</span><span class="n">dlanskod_gdf</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">point_proj</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">dlanskod_polygon</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span> <span class="c1"># Return None if no matching polygon</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">county_code_int</span> <span class="o">=</span> <span class="n">dlanskod_polygon</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;DLANSKOD&#39;</span><span class="p">]</span>
+            <span class="c1"># Lookup and return the enum member using the code (runtime use)</span>
+            <span class="k">return</span> <span class="n">SwedenCounty</span><span class="o">.</span><span class="n">from_code</span><span class="p">(</span><span class="n">county_code_int</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">Munin</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">Munin</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

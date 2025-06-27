@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Munin.SiteIndex.sweden.Johansson_2013 &#8212; Munin  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/alabaster.css?v=27fed22d" />
+    <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for Munin.SiteIndex.sweden.Johansson_2013</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Johansson_2013.py</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
+<span class="c1"># Imports added</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Munin.Helpers.Primitives</span><span class="w"> </span><span class="kn">import</span> <span class="n">Age</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">,</span> <span class="n">SiteIndexValue</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Munin.Helpers.TreeSpecies</span><span class="w"> </span><span class="kn">import</span> <span class="n">TreeSpecies</span>
+
+<div class="viewcode-block" id="johansson_2013_height_trajectory_sweden_beech">
+<a class="viewcode-back" href="../../../../api/Munin.SiteIndex.sweden.html#Munin.SiteIndex.sweden.Johansson_2013.johansson_2013_height_trajectory_sweden_beech">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">johansson_2013_height_trajectory_sweden_beech</span><span class="p">(</span>
+    <span class="n">dominant_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">age</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">],</span>
+    <span class="n">age2</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SiteIndexValue</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Height trajectory for Beech in Sweden based on Johansson et al. (2013).</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        dominant_height (float): Dominant height of the stand (meters).</span>
+<span class="sd">        age (Union[float, AgeMeasurement]): Total age of the stand (years). Must be float/int or Age.TOTAL.</span>
+<span class="sd">        age2 (Union[float, AgeMeasurement]): Target age for output height (years). Must be float/int or Age.TOTAL.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        SiteIndexValue: Dominant height at age2 (meters) wrapped in a SiteIndexValue object.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        Warning: If age or age2 is outside the range of 20 to 150 years.</span>
+<span class="sd">        TypeError: If age or age2 are not float/int or AgeMeasurement with Age.TOTAL code.</span>
+
+<span class="sd">    References:</span>
+<span class="sd">        Johansson, U., Ekö, P.-M., Elfving, B., Johansson, T., Nilsson, U. (2013).</span>
+<span class="sd">        &quot;Nya höjdutvecklingskurvor för bonitering.&quot; FAKTA SKOG nr. 14.</span>
+<span class="sd">        https://www.slu.se/globalassets/ew/ew-centrala/forskn/popvet-dok/faktaskog/faktaskog13/faktaskog_14_2013.pdf</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">        - Requires total age (Age.TOTAL).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Argument Validation Added</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">age</span><span class="o">.</span><span class="n">code</span> <span class="o">!=</span> <span class="n">Age</span><span class="o">.</span><span class="n">TOTAL</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Parameter &#39;age&#39; must be a float/int or an instance of Age.TOTAL.&quot;</span><span class="p">)</span>
+        <span class="n">age_val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">age</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+        <span class="n">age_val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">age</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Parameter &#39;age&#39; must be a float/int or an instance of Age.TOTAL.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">age2</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">age2</span><span class="o">.</span><span class="n">code</span> <span class="o">!=</span> <span class="n">Age</span><span class="o">.</span><span class="n">TOTAL</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Parameter &#39;age2&#39; must be a float/int or an instance of Age.TOTAL.&quot;</span><span class="p">)</span>
+        <span class="n">age2_val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">age2</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">age2</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+        <span class="n">age2_val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">age2</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Parameter &#39;age2&#39; must be a float/int or an instance of Age.TOTAL.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Age range warning</span>
+    <span class="k">if</span> <span class="n">age_val</span> <span class="o">&lt;</span> <span class="mi">20</span> <span class="ow">or</span> <span class="n">age2_val</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Suitable for cultivated stands of Beech between total ages of 20 and 150.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">age_val</span> <span class="o">&gt;</span> <span class="mi">150</span> <span class="ow">or</span> <span class="n">age2_val</span> <span class="o">&gt;</span> <span class="mi">150</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Suitable for cultivated stands of Beech between total ages of 20 and 150.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Model parameters</span>
+    <span class="n">param_asi</span> <span class="o">=</span> <span class="mi">15</span>
+    <span class="n">param_beta</span> <span class="o">=</span> <span class="mf">4239.3</span>
+    <span class="n">param_b2</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.7753</span>
+
+    <span class="n">d</span> <span class="o">=</span> <span class="n">param_beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">param_asi</span> <span class="o">**</span> <span class="n">param_b2</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(((</span><span class="n">dominant_height</span> <span class="o">-</span> <span class="n">d</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">param_beta</span> <span class="o">*</span> <span class="n">dominant_height</span> <span class="o">*</span> <span class="p">(</span><span class="n">age_val</span> <span class="o">**</span> <span class="n">param_b2</span><span class="p">)))</span>
+
+    <span class="n">height_at_age2</span> <span class="o">=</span> <span class="p">((</span><span class="n">dominant_height</span> <span class="o">+</span> <span class="n">d</span> <span class="o">+</span> <span class="n">r</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">param_beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">age2_val</span> <span class="o">**</span> <span class="n">param_b2</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">dominant_height</span> <span class="o">-</span> <span class="n">d</span> <span class="o">+</span> <span class="n">r</span><span class="p">)))</span>
+
+    <span class="c1"># Return modified to SiteIndexValue</span>
+    <span class="k">return</span> <span class="n">SiteIndexValue</span><span class="p">(</span>
+        <span class="n">value</span><span class="o">=</span><span class="n">height_at_age2</span><span class="p">,</span>
+        <span class="n">reference_age</span><span class="o">=</span><span class="n">age2_val</span><span class="p">,</span>
+        <span class="n">species</span><span class="o">=</span><span class="p">{</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">fagus_sylvatica</span><span class="p">},</span>
+        <span class="n">fn</span><span class="o">=</span><span class="n">johansson_2013_height_trajectory_sweden_beech</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="johansson_2013_height_trajectory_sweden_hybrid_aspen">
+<a class="viewcode-back" href="../../../../api/Munin.SiteIndex.sweden.html#Munin.SiteIndex.sweden.Johansson_2013.johansson_2013_height_trajectory_sweden_hybrid_aspen">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">johansson_2013_height_trajectory_sweden_hybrid_aspen</span><span class="p">(</span>
+    <span class="n">dominant_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">age</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">],</span>
+    <span class="n">age2</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SiteIndexValue</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Height trajectory for Hybrid Aspen in Sweden based on Johansson (2013).</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        dominant_height (float): Dominant height of the stand (meters).</span>
+<span class="sd">        age (Union[float, AgeMeasurement]): Total age of the stand (years). Must be float/int or Age.TOTAL.</span>
+<span class="sd">        age2 (Union[float, AgeMeasurement]): Target age for output height (years). Must be float/int or Age.TOTAL.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        SiteIndexValue: Dominant height at age2 (meters) wrapped in a SiteIndexValue object.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        Warning: If age or age2 is above 50 years.</span>
+<span class="sd">        TypeError: If age or age2 are not float/int or AgeMeasurement with Age.TOTAL code.</span>
+
+<span class="sd">    References:</span>
+<span class="sd">        Johansson, T. (2013). &quot;A site dependent top height growth model for hybrid aspen.&quot;</span>
+<span class="sd">        Journal of Forestry Research, Vol. 24, pp. 691-698.</span>
+<span class="sd">        https://doi.org/10.1007/s11676-013-0365-6</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">        - Requires total age (Age.TOTAL).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Argument Validation Added</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">age</span><span class="o">.</span><span class="n">code</span> <span class="o">!=</span> <span class="n">Age</span><span class="o">.</span><span class="n">TOTAL</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Parameter &#39;age&#39; must be a float/int or an instance of Age.TOTAL.&quot;</span><span class="p">)</span>
+        <span class="n">age_val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">age</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+        <span class="n">age_val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">age</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Parameter &#39;age&#39; must be a float/int or an instance of Age.TOTAL.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">age2</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">age2</span><span class="o">.</span><span class="n">code</span> <span class="o">!=</span> <span class="n">Age</span><span class="o">.</span><span class="n">TOTAL</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Parameter &#39;age2&#39; must be a float/int or an instance of Age.TOTAL.&quot;</span><span class="p">)</span>
+        <span class="n">age2_val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">age2</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">age2</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+        <span class="n">age2_val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">age2</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Parameter &#39;age2&#39; must be a float/int or an instance of Age.TOTAL.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Age range warning</span>
+    <span class="k">if</span> <span class="n">age_val</span> <span class="o">&gt;</span> <span class="mi">50</span> <span class="ow">or</span> <span class="n">age2_val</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Suitable for stands of Hybrid Aspen under age of 50.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Model parameters</span>
+    <span class="n">b0</span> <span class="o">=</span> <span class="mf">2.0381</span>
+    <span class="n">b1</span> <span class="o">=</span> <span class="mf">4692.5</span>
+    <span class="n">b2</span> <span class="o">=</span> <span class="mf">23.1758</span>
+
+    <span class="n">Z0</span> <span class="o">=</span> <span class="n">dominant_height</span> <span class="o">-</span> <span class="n">b2</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="n">Z0</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Z0</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">b1</span> <span class="o">*</span> <span class="n">dominant_height</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">age_val</span> <span class="o">**</span> <span class="n">b0</span><span class="p">))</span>
+
+    <span class="n">height_at_age2</span> <span class="o">=</span> <span class="n">dominant_height</span> <span class="o">*</span> <span class="p">(((</span><span class="n">age2_val</span> <span class="o">**</span> <span class="n">b0</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="n">age_val</span> <span class="o">**</span> <span class="n">b0</span><span class="p">)</span> <span class="o">*</span> <span class="n">P</span> <span class="o">+</span> <span class="n">b1</span><span class="p">))</span> <span class="o">/</span> <span class="p">((</span><span class="n">age_val</span> <span class="o">**</span> <span class="n">b0</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="n">age2_val</span> <span class="o">**</span> <span class="n">b0</span><span class="p">)</span> <span class="o">*</span> <span class="n">P</span> <span class="o">+</span> <span class="n">b1</span><span class="p">)))</span>
+
+    <span class="c1"># Return modified to SiteIndexValue</span>
+    <span class="k">return</span> <span class="n">SiteIndexValue</span><span class="p">(</span>
+        <span class="n">value</span><span class="o">=</span><span class="n">height_at_age2</span><span class="p">,</span>
+        <span class="n">reference_age</span><span class="o">=</span><span class="n">age2_val</span><span class="p">,</span>
+        <span class="n">species</span><span class="o">=</span><span class="p">{</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">populus_tremula_x_tremuloides</span><span class="p">},</span> <span class="c1">#TODO : Check if valid.</span>
+        <span class="n">fn</span><span class="o">=</span><span class="n">johansson_2013_height_trajectory_sweden_hybrid_aspen</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="johansson_2013_height_trajectory_sweden_larch">
+<a class="viewcode-back" href="../../../../api/Munin.SiteIndex.sweden.html#Munin.SiteIndex.sweden.Johansson_2013.johansson_2013_height_trajectory_sweden_larch">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">johansson_2013_height_trajectory_sweden_larch</span><span class="p">(</span>
+    <span class="n">dominant_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">age</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">],</span>
+    <span class="n">age2</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SiteIndexValue</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Height trajectory for Larch in Sweden based on Johansson et al. (2013).</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        dominant_height (float): Dominant height of the stand (meters).</span>
+<span class="sd">        age (Union[float, AgeMeasurement]): Total age of the stand (years). Must be float/int or Age.TOTAL.</span>
+<span class="sd">        age2 (Union[float, AgeMeasurement]): Target age for output height (years). Must be float/int or Age.TOTAL.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        SiteIndexValue: Dominant height at age2 (meters) wrapped in a SiteIndexValue object.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        Warning: If age or age2 is outside the range of 10 to 100 years.</span>
+<span class="sd">        TypeError: If age or age2 are not float/int or AgeMeasurement with Age.TOTAL code.</span>
+
+<span class="sd">    References:</span>
+<span class="sd">        Johansson, U., Ekö, P.-M., Elfving, B., Johansson, T., Nilsson, U. (2013).</span>
+<span class="sd">        &quot;Nya höjdutvecklingskurvor för bonitering.&quot; FAKTA SKOG nr. 14.</span>
+<span class="sd">        https://www.slu.se/globalassets/ew/ew-centrala/forskn/popvet-dok/faktaskog/faktaskog13/faktaskog_14_2013.pdf</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">        - Requires total age (Age.TOTAL).</span>
+<span class="sd">        - Assigns TreeSpecies.Sweden.larix_sibirica as the species.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Argument Validation Added</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">age</span><span class="o">.</span><span class="n">code</span> <span class="o">!=</span> <span class="n">Age</span><span class="o">.</span><span class="n">TOTAL</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Parameter &#39;age&#39; must be a float/int or an instance of Age.TOTAL.&quot;</span><span class="p">)</span>
+        <span class="n">age_val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">age</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+        <span class="n">age_val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">age</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Parameter &#39;age&#39; must be a float/int or an instance of Age.TOTAL.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">age2</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">age2</span><span class="o">.</span><span class="n">code</span> <span class="o">!=</span> <span class="n">Age</span><span class="o">.</span><span class="n">TOTAL</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Parameter &#39;age2&#39; must be a float/int or an instance of Age.TOTAL.&quot;</span><span class="p">)</span>
+        <span class="n">age2_val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">age2</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">age2</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+        <span class="n">age2_val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">age2</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Parameter &#39;age2&#39; must be a float/int or an instance of Age.TOTAL.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Age range warning</span>
+    <span class="k">if</span> <span class="n">age_val</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="ow">or</span> <span class="n">age2_val</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Suitable for cultivated stands of Larch between total ages of 10 and 100.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">age_val</span> <span class="o">&gt;</span> <span class="mi">100</span> <span class="ow">or</span> <span class="n">age2_val</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Suitable for cultivated stands of Larch between total ages of 10 and 100.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Model parameters</span>
+    <span class="n">param_asi</span> <span class="o">=</span> <span class="mf">17.97</span>
+    <span class="n">param_beta</span> <span class="o">=</span> <span class="mi">1529</span>
+    <span class="n">param_b2</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.3451</span>
+
+    <span class="n">d</span> <span class="o">=</span> <span class="n">param_beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">param_asi</span> <span class="o">**</span> <span class="n">param_b2</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(((</span><span class="n">dominant_height</span> <span class="o">-</span> <span class="n">d</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">param_beta</span> <span class="o">*</span> <span class="n">dominant_height</span> <span class="o">*</span> <span class="p">(</span><span class="n">age_val</span> <span class="o">**</span> <span class="n">param_b2</span><span class="p">)))</span>
+
+    <span class="n">height_at_age2</span> <span class="o">=</span> <span class="p">((</span><span class="n">dominant_height</span> <span class="o">+</span> <span class="n">d</span> <span class="o">+</span> <span class="n">r</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">param_beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">age2_val</span> <span class="o">**</span> <span class="n">param_b2</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">dominant_height</span> <span class="o">-</span> <span class="n">d</span> <span class="o">+</span> <span class="n">r</span><span class="p">)))</span>
+
+    <span class="c1"># Return modified to SiteIndexValue (Using Larix sibirica as representative)</span>
+    <span class="k">return</span> <span class="n">SiteIndexValue</span><span class="p">(</span>
+        <span class="n">value</span><span class="o">=</span><span class="n">height_at_age2</span><span class="p">,</span>
+        <span class="n">reference_age</span><span class="o">=</span><span class="n">age2_val</span><span class="p">,</span>
+        <span class="n">species</span><span class="o">=</span><span class="p">{</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">larix_sibirica</span><span class="p">},</span>
+        <span class="n">fn</span><span class="o">=</span><span class="n">johansson_2013_height_trajectory_sweden_larch</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="johansson_2013_height_trajectory_sweden_oak">
+<a class="viewcode-back" href="../../../../api/Munin.SiteIndex.sweden.html#Munin.SiteIndex.sweden.Johansson_2013.johansson_2013_height_trajectory_sweden_oak">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">johansson_2013_height_trajectory_sweden_oak</span><span class="p">(</span>
+    <span class="n">dominant_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">age</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">],</span>
+    <span class="n">age2</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SiteIndexValue</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Height trajectory for Oak in Sweden based on Johansson et al. (2013).</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        dominant_height (float): Dominant height of the stand (meters).</span>
+<span class="sd">        age (Union[float, AgeMeasurement]): Total age of the stand (years). Must be float/int or Age.TOTAL.</span>
+<span class="sd">        age2 (Union[float, AgeMeasurement]): Target age for output height (years). Must be float/int or Age.TOTAL.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        SiteIndexValue: Dominant height at age2 (meters) wrapped in a SiteIndexValue object.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        Warning: If age or age2 is outside the range of 20 to 150 years.</span>
+<span class="sd">        TypeError: If age or age2 are not float/int or AgeMeasurement with Age.TOTAL code.</span>
+
+<span class="sd">    References:</span>
+<span class="sd">        Johansson, U., Ekö, P.-M., Elfving, B., Johansson, T., Nilsson, U. (2013).</span>
+<span class="sd">        &quot;Nya höjdutvecklingskurvor för bonitering.&quot; FAKTA SKOG nr. 14.</span>
+<span class="sd">        https://www.slu.se/globalassets/ew/ew-centrala/forskn/popvet-dok/faktaskog/faktaskog13/faktaskog_14_2013.pdf</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">        - Requires total age (Age.TOTAL).</span>
+<span class="sd">        - Assigns TreeSpecies.Sweden.quercus_robur as the species.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Argument Validation Added</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">age</span><span class="o">.</span><span class="n">code</span> <span class="o">!=</span> <span class="n">Age</span><span class="o">.</span><span class="n">TOTAL</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Parameter &#39;age&#39; must be a float/int or an instance of Age.TOTAL.&quot;</span><span class="p">)</span>
+        <span class="n">age_val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">age</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+        <span class="n">age_val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">age</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Parameter &#39;age&#39; must be a float/int or an instance of Age.TOTAL.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">age2</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">age2</span><span class="o">.</span><span class="n">code</span> <span class="o">!=</span> <span class="n">Age</span><span class="o">.</span><span class="n">TOTAL</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Parameter &#39;age2&#39; must be a float/int or an instance of Age.TOTAL.&quot;</span><span class="p">)</span>
+        <span class="n">age2_val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">age2</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">age2</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+        <span class="n">age2_val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">age2</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Parameter &#39;age2&#39; must be a float/int or an instance of Age.TOTAL.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Age range warning</span>
+    <span class="k">if</span> <span class="n">age_val</span> <span class="o">&lt;</span> <span class="mi">20</span> <span class="ow">or</span> <span class="n">age2_val</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Suitable for cultivated stands of Oak between total ages of 20 and 150.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">age_val</span> <span class="o">&gt;</span> <span class="mi">150</span> <span class="ow">or</span> <span class="n">age2_val</span> <span class="o">&gt;</span> <span class="mi">150</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Suitable for cultivated stands of Oak between total ages of 20 and 150.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Model parameters</span>
+    <span class="n">param_asi</span> <span class="o">=</span> <span class="mi">1000</span> 
+    <span class="n">param_beta</span> <span class="o">=</span> <span class="mf">8841.4</span>
+    <span class="n">param_b2</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.4317</span>
+
+    <span class="n">d</span> <span class="o">=</span> <span class="n">param_beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">param_asi</span> <span class="o">**</span> <span class="n">param_b2</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(((</span><span class="n">dominant_height</span> <span class="o">-</span> <span class="n">d</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">param_beta</span> <span class="o">*</span> <span class="n">dominant_height</span> <span class="o">*</span> <span class="p">(</span><span class="n">age_val</span> <span class="o">**</span> <span class="n">param_b2</span><span class="p">)))</span>
+
+    <span class="n">height_at_age2</span> <span class="o">=</span> <span class="p">((</span><span class="n">dominant_height</span> <span class="o">+</span> <span class="n">d</span> <span class="o">+</span> <span class="n">r</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">param_beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">age2_val</span> <span class="o">**</span> <span class="n">param_b2</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">dominant_height</span> <span class="o">-</span> <span class="n">d</span> <span class="o">+</span> <span class="n">r</span><span class="p">)))</span>
+
+    <span class="c1"># Return modified to SiteIndexValue (Using Quercus robur as representative)</span>
+    <span class="k">return</span> <span class="n">SiteIndexValue</span><span class="p">(</span>
+        <span class="n">value</span><span class="o">=</span><span class="n">height_at_age2</span><span class="p">,</span>
+        <span class="n">reference_age</span><span class="o">=</span><span class="n">age2_val</span><span class="p">,</span>
+        <span class="n">species</span><span class="o">=</span><span class="p">{</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">quercus_robur</span><span class="p">},</span>
+        <span class="n">fn</span><span class="o">=</span><span class="n">johansson_2013_height_trajectory_sweden_oak</span>
+    <span class="p">)</span></div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../../index.html">Munin</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/modules.html">Munin</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

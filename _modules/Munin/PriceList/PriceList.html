@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Munin.PriceList.PriceList &#8212; Munin  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=27fed22d" />
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for Munin.PriceList.PriceList</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">IntEnum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Munin.Helpers.TreeSpecies</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_tree_species</span><span class="p">,</span> <span class="n">TreeName</span>
+
+<div class="viewcode-block" id="DiameterRange">
+<a class="viewcode-back" href="../../../api/Munin.PriceList.html#Munin.PriceList.PriceList.DiameterRange">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DiameterRange</span><span class="p">:</span>
+    <span class="n">Min</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">Max</span><span class="p">:</span> <span class="nb">float</span></div>
+
+
+<div class="viewcode-block" id="LengthRange">
+<a class="viewcode-back" href="../../../api/Munin.PriceList.html#Munin.PriceList.PriceList.LengthRange">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LengthRange</span><span class="p">:</span>
+    <span class="n">Min</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">Max</span><span class="p">:</span> <span class="nb">float</span></div>
+
+
+
+<div class="viewcode-block" id="TimberPriceForDiameter">
+<a class="viewcode-back" href="../../../api/Munin.PriceList.html#Munin.PriceList.PriceList.TimberPriceForDiameter">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TimberPriceForDiameter</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents the set of prices for a given diameter, for each log part type.</span>
+<span class="sd">    E.g. an entry might store: PriceButt, PriceMiddle, PriceTop, ...</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">butt_price</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">middle_price</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">top_price</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">butt_price</span> <span class="o">=</span> <span class="n">butt_price</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">middle_price</span> <span class="o">=</span> <span class="n">middle_price</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">top_price</span> <span class="o">=</span> <span class="n">top_price</span>
+
+<div class="viewcode-block" id="TimberPriceForDiameter.price_for_log_part">
+<a class="viewcode-back" href="../../../api/Munin.PriceList.html#Munin.PriceList.PriceList.TimberPriceForDiameter.price_for_log_part">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">price_for_log_part</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the price (in e.g. SEK/m3) for the given part type index.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">part_type</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># butt</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">butt_price</span>
+        <span class="k">elif</span> <span class="n">part_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># middle</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">middle_price</span>
+        <span class="k">elif</span> <span class="n">part_type</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># top</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">top_price</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">0.0</span></div>
+</div>
+
+
+<div class="viewcode-block" id="LengthCorrections">
+<a class="viewcode-back" href="../../../api/Munin.PriceList.html#Munin.PriceList.PriceList.LengthCorrections">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LengthCorrections</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Holds logic for how the length modifies price (absolute or percent).</span>
+<span class="sd">    Now accepts a dictionary of corrections in the form:</span>
+<span class="sd">      { diameter: { length: correction_percentage, ... }, ... }</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">corrections</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">corrections</span> <span class="o">=</span> <span class="n">corrections</span> <span class="ow">or</span> <span class="p">{}</span>
+    
+<div class="viewcode-block" id="LengthCorrections.get_length_correction">
+<a class="viewcode-back" href="../../../api/Munin.PriceList.html#Munin.PriceList.PriceList.LengthCorrections.get_length_correction">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_length_correction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diameter</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">log_part</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the correction percentage for a given diameter and log length.</span>
+<span class="sd">        Looks up the corrections dictionary for the closest available length (floored).</span>
+<span class="sd">        Returns 0 if no correction applies.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">diameter</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">corrections</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="n">length_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">corrections</span><span class="p">[</span><span class="n">diameter</span><span class="p">]</span>
+        <span class="c1"># Get all lengths that are &lt;= provided length</span>
+        <span class="n">available_lengths</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">l</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">length_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">l</span> <span class="o">&lt;=</span> <span class="n">length</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">available_lengths</span><span class="p">:</span>
+            <span class="n">nearest_length</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">available_lengths</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">length_dict</span><span class="p">[</span><span class="n">nearest_length</span><span class="p">]</span>
+        <span class="k">return</span> <span class="mi">0</span>  <span class="c1"># no suitable correction</span></div>
+</div>
+
+
+<div class="viewcode-block" id="TimberPricelist">
+<a class="viewcode-back" href="../../../api/Munin.PriceList.html#Munin.PriceList.PriceList.TimberPricelist">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TimberPricelist</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stores the entire set of timber prices by diameter class, etc.&quot;&quot;&quot;</span>
+    <span class="c1"># Using your code&#39;s idea of enumerations: Butt = 0, Middle = 1, Top = 2 ...</span>
+<div class="viewcode-block" id="TimberPricelist.LogParts">
+<a class="viewcode-back" href="../../../api/Munin.PriceList.html#Munin.PriceList.PriceList.TimberPricelist.LogParts">[docs]</a>
+    <span class="k">class</span><span class="w"> </span><span class="nc">LogParts</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+        <span class="n">Butt</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">Middle</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">Top</span> <span class="o">=</span> <span class="mi">2</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                 <span class="n">min_diameter</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
+                 <span class="n">max_diameter</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
+                 <span class="n">volume_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;m3to&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_diameter</span> <span class="o">=</span> <span class="n">min_diameter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_diameter</span> <span class="o">=</span> <span class="n">max_diameter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">volume_type</span>  <span class="o">=</span> <span class="n">volume_type</span>  <span class="c1"># e.g. &quot;m3to&quot; or &quot;m3fub&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_price_by_diameter</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">TimberPriceForDiameter</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># Default length corrections (can be replaced when data is loaded)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">length_corrections</span> <span class="o">=</span> <span class="n">LengthCorrections</span><span class="p">()</span>
+        <span class="c1"># Placeholders for additional data:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quality_outcome</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">downgrade_proportions</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># Example maximum heights for different quality logs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_height_quality1</span> <span class="o">=</span> <span class="mf">99.9</span>  <span class="c1"># in meters </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_height_quality2</span> <span class="o">=</span> <span class="mf">99.9</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_height_quality3</span> <span class="o">=</span> <span class="mf">99.9</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diameter</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TimberPriceForDiameter</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the price structure for a given diameter.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_price_by_diameter</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">diameter</span><span class="p">,</span> <span class="n">TimberPriceForDiameter</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+<div class="viewcode-block" id="TimberPricelist.set_price_for_diameter">
+<a class="viewcode-back" href="../../../api/Munin.PriceList.html#Munin.PriceList.PriceList.TimberPricelist.set_price_for_diameter">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_price_for_diameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diameter</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">price_struct</span><span class="p">:</span> <span class="n">TimberPriceForDiameter</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store a price entry for a certain diameter class.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_price_by_diameter</span><span class="p">[</span><span class="n">diameter</span><span class="p">]</span> <span class="o">=</span> <span class="n">price_struct</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">minDiameter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_diameter</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">maxDiameter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_diameter</span>
+
+<div class="viewcode-block" id="TimberPricelist.getTimberWeight">
+<a class="viewcode-back" href="../../../api/Munin.PriceList.html#Munin.PriceList.PriceList.TimberPricelist.getTimberWeight">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getTimberWeight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log_part</span><span class="p">:</span> <span class="s1">&#39;TimberPricelist.LogParts&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        If you&#39;re applying downgrading or certain proportions for pulp/fuel/cull,</span>
+<span class="sd">        return an object that has .PulpwoodPercentage, .FuelWoodPercentage, .LogCullPercentage, etc.</span>
+<span class="sd">        This is a placeholder. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">class</span><span class="w"> </span><span class="nc">LogWeights</span><span class="p">:</span>
+            <span class="n">pulpwoodPercentage</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">fuelWoodPercentage</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">logCullPercentage</span>  <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">return</span> <span class="n">LogWeights</span><span class="p">()</span></div>
+
+    
+<div class="viewcode-block" id="TimberPricelist.price_for_log_part">
+<a class="viewcode-back" href="../../../api/Munin.PriceList.html#Munin.PriceList.PriceList.TimberPricelist.price_for_log_part">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">price_for_log_part</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log_part</span><span class="p">:</span> <span class="s1">&#39;TimberPricelist.LogParts&#39;</span><span class="p">,</span> <span class="n">diameter_cm</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the price for a given log part (Butt, Middle, Top) at a given diameter (cm).</span>
+<span class="sd">        Rounds or floors the diameter to the nearest available diameter class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">diameter_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_nearest_diameter_class</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">)</span>
+        <span class="n">price_struct</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">diameter_class</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">price_struct</span><span class="o">.</span><span class="n">price_for_log_part</span><span class="p">(</span><span class="n">log_part</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TimberPricelist.get_nearest_diameter_class">
+<a class="viewcode-back" href="../../../api/Munin.PriceList.html#Munin.PriceList.PriceList.TimberPricelist.get_nearest_diameter_class">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_nearest_diameter_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diameter_cm</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the closest available diameter class (floored down to available class).</span>
+<span class="sd">        If the requested diameter is smaller than min, returns min. If larger than max, returns max.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">available_classes</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_price_by_diameter</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">suitable_classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">available_classes</span> <span class="k">if</span> <span class="n">d</span> <span class="o">&lt;=</span> <span class="n">diameter_cm</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="n">suitable_classes</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">suitable_classes</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>  <span class="c1"># smallest available class</span></div>
+</div>
+
+
+<div class="viewcode-block" id="PulpPricelist">
+<a class="viewcode-back" href="../../../api/Munin.PriceList.html#Munin.PriceList.PriceList.PulpPricelist">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PulpPricelist</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Placeholder for pulp prices per species.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prices</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="PulpPricelist.getPulpwoodPrice">
+<a class="viewcode-back" href="../../../api/Munin.PriceList.html#Munin.PriceList.PriceList.PulpPricelist.getPulpwoodPrice">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getPulpwoodPrice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">species</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">TreeName</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Try to find the price for a species by first looking for a full name match.</span>
+<span class="sd">        If none is found, look for a match on just the genus.</span>
+<span class="sd">        Returns a default price if no match is found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Ensure we have a TreeName object</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">species</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">species_obj</span> <span class="o">=</span> <span class="n">parse_tree_species</span><span class="p">(</span><span class="n">species</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="c1"># Could not parse full species; treat the string as a genus.</span>
+                <span class="n">species_obj</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">normalized</span> <span class="o">=</span> <span class="n">species</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">species_obj</span> <span class="o">=</span> <span class="n">species</span>
+
+        <span class="k">if</span> <span class="n">species_obj</span><span class="p">:</span>
+            <span class="n">full_name_key</span> <span class="o">=</span> <span class="n">species_obj</span><span class="o">.</span><span class="n">full_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">full_name_key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prices</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prices</span><span class="p">[</span><span class="n">full_name_key</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Fallback: look up by genus</span>
+                <span class="n">genus_key</span> <span class="o">=</span> <span class="n">species_obj</span><span class="o">.</span><span class="n">genus</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">genus_key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prices</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prices</span><span class="p">[</span><span class="n">genus_key</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># When species_obj is None, try matching the input as a genus.</span>
+            <span class="k">if</span> <span class="n">normalized</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prices</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prices</span><span class="p">[</span><span class="n">normalized</span><span class="p">]</span>
+
+        <span class="c1"># Default price if no match is found.</span>
+        <span class="k">return</span> <span class="mi">200</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Pricelist">
+<a class="viewcode-back" href="../../../api/Munin.PriceList.html#Munin.PriceList.PriceList.Pricelist">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Pricelist</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Holds the combined pulpwood, timber, etc. prices and constraints.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Timber</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">TimberPricelist</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PulpLogDiameter</span> <span class="o">=</span> <span class="n">DiameterRange</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">70</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Pulp</span> <span class="o">=</span> <span class="n">PulpPricelist</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">TopDiameter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">LogCullPrice</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">50</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">FuelWoodPrice</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">25</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">HighStumpHeight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PulpLogLength</span> <span class="o">=</span> <span class="n">LengthRange</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">TimberLogLength</span> <span class="o">=</span> <span class="n">LengthRange</span><span class="p">(</span><span class="mi">31</span><span class="p">,</span> <span class="mi">55</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Pricelist.load_from_dict">
+<a class="viewcode-back" href="../../../api/Munin.PriceList.html#Munin.PriceList.PriceList.Pricelist.load_from_dict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_from_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">price_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads and configures the entire pricelist from a dictionary.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Load common parameters</span>
+            <span class="n">common</span> <span class="o">=</span> <span class="n">price_data</span><span class="p">[</span><span class="s2">&quot;Common&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">PulpLogDiameter</span> <span class="o">=</span> <span class="n">DiameterRange</span><span class="p">(</span><span class="o">*</span><span class="n">common</span><span class="p">[</span><span class="s2">&quot;PulpLogDiameterRange&quot;</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">TopDiameter</span> <span class="o">=</span> <span class="n">common</span><span class="p">[</span><span class="s2">&quot;TopDiameter&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">LogCullPrice</span> <span class="o">=</span> <span class="n">common</span><span class="p">[</span><span class="s2">&quot;HarvestResiduePrice&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">FuelWoodPrice</span> <span class="o">=</span> <span class="n">common</span><span class="p">[</span><span class="s2">&quot;FuelwoodLogPrice&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">HighStumpHeight</span> <span class="o">=</span> <span class="n">common</span><span class="p">[</span><span class="s2">&quot;HighStumpHeight&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">PulpLogLength</span> <span class="o">=</span> <span class="n">LengthRange</span><span class="p">(</span><span class="o">*</span><span class="n">common</span><span class="p">[</span><span class="s2">&quot;PulpwoodLengthRange&quot;</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">TimberLogLength</span> <span class="o">=</span> <span class="n">LengthRange</span><span class="p">(</span><span class="o">*</span><span class="n">common</span><span class="p">[</span><span class="s2">&quot;SawlogLengthRange&quot;</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Pulp</span><span class="o">.</span><span class="n">_prices</span> <span class="o">=</span> <span class="n">common</span><span class="p">[</span><span class="s2">&quot;PulpwoodPrices&quot;</span><span class="p">]</span>
+
+            <span class="c1"># Load timber data for all species in the pricelist</span>
+            <span class="k">for</span> <span class="n">species_key</span> <span class="ow">in</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">price_data</span> <span class="k">if</span> <span class="n">key</span> <span class="o">!=</span> <span class="s1">&#39;Common&#39;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_load_species_specific_data</span><span class="p">(</span><span class="n">price_data</span><span class="p">,</span> <span class="n">species_key</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing key in price data: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error loading price data: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_load_species_specific_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">price_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">species_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Helper to load data for a single species.&quot;&quot;&quot;</span>
+        <span class="n">timber_data</span> <span class="o">=</span> <span class="n">price_data</span><span class="p">[</span><span class="n">species_key</span><span class="p">]</span>
+        <span class="n">diameters</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">timber_data</span><span class="p">[</span><span class="s2">&quot;DiameterPrices&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        
+        <span class="n">timber_pricelist</span> <span class="o">=</span> <span class="n">TimberPricelist</span><span class="p">(</span>
+            <span class="n">min_diameter</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">diameters</span><span class="p">),</span>
+            <span class="n">max_diameter</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">diameters</span><span class="p">),</span>
+            <span class="n">volume_type</span><span class="o">=</span><span class="n">timber_data</span><span class="p">[</span><span class="s2">&quot;VolumeType&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">diameter</span><span class="p">,</span> <span class="n">prices</span> <span class="ow">in</span> <span class="n">timber_data</span><span class="p">[</span><span class="s2">&quot;DiameterPrices&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">price_struct</span> <span class="o">=</span> <span class="n">TimberPriceForDiameter</span><span class="p">(</span><span class="o">*</span><span class="n">prices</span><span class="p">)</span>
+            <span class="n">timber_pricelist</span><span class="o">.</span><span class="n">set_price_for_diameter</span><span class="p">(</span><span class="n">diameter</span><span class="p">,</span> <span class="n">price_struct</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot;LengthCorrectionsPercent&quot;</span> <span class="ow">in</span> <span class="n">timber_data</span><span class="p">:</span>
+            <span class="n">timber_pricelist</span><span class="o">.</span><span class="n">length_corrections</span> <span class="o">=</span> <span class="n">LengthCorrections</span><span class="p">(</span>
+                <span class="n">timber_data</span><span class="p">[</span><span class="s2">&quot;LengthCorrectionsPercent&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;QualityOutcome&quot;</span> <span class="ow">in</span> <span class="n">timber_data</span><span class="p">:</span>
+            <span class="n">timber_pricelist</span><span class="o">.</span><span class="n">quality_outcome</span> <span class="o">=</span> <span class="n">timber_data</span><span class="p">[</span><span class="s2">&quot;QualityOutcome&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;DowngradeProportions&quot;</span> <span class="ow">in</span> <span class="n">timber_data</span><span class="p">:</span>
+            <span class="n">timber_pricelist</span><span class="o">.</span><span class="n">downgrade_proportions</span> <span class="o">=</span> <span class="n">timber_data</span><span class="p">[</span><span class="s2">&quot;DowngradeProportions&quot;</span><span class="p">]</span>
+
+        <span class="n">timber_pricelist</span><span class="o">.</span><span class="n">max_height_quality1</span> <span class="o">=</span> <span class="n">timber_data</span><span class="p">[</span><span class="s2">&quot;MaxHeight&quot;</span><span class="p">][</span><span class="s2">&quot;Butt&quot;</span><span class="p">]</span>
+        <span class="n">timber_pricelist</span><span class="o">.</span><span class="n">max_height_quality2</span> <span class="o">=</span> <span class="n">timber_data</span><span class="p">[</span><span class="s2">&quot;MaxHeight&quot;</span><span class="p">][</span><span class="s2">&quot;Middle&quot;</span><span class="p">]</span>
+        <span class="n">timber_pricelist</span><span class="o">.</span><span class="n">max_height_quality3</span> <span class="o">=</span> <span class="n">timber_data</span><span class="p">[</span><span class="s2">&quot;MaxHeight&quot;</span><span class="p">][</span><span class="s2">&quot;Top&quot;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">Timber</span><span class="p">[</span><span class="n">species_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">timber_pricelist</span></div>
+
+
+
+<div class="viewcode-block" id="create_pricelist_from_data">
+<a class="viewcode-back" href="../../../api/Munin.PriceList.html#Munin.PriceList.PriceList.create_pricelist_from_data">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_pricelist_from_data</span><span class="p">(</span>
+    <span class="n">price_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="n">species_to_load</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pricelist</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Build a `Pricelist` from a dictionary.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    price_data : dict</span>
+<span class="sd">        The complete price dictionary (must contain the &#39;Common&#39; block).</span>
+<span class="sd">    species_to_load : str | Sequence[str] | None, default None</span>
+<span class="sd">        * **None**  - load *all* species that have timber price tables.</span>
+<span class="sd">        * **str**   - load just that species.</span>
+<span class="sd">        * **iterable** - load every species in the iterable; it is *not*</span>
+<span class="sd">          an error if some of them have only pulp prices.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Pricelist</span>
+<span class="sd">        A fully populated `Pricelist` instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pricelist</span> <span class="o">=</span> <span class="n">Pricelist</span><span class="p">()</span>
+
+    <span class="c1"># ---- common block ---------------------------------------------------</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">common</span> <span class="o">=</span> <span class="n">price_data</span><span class="p">[</span><span class="s2">&quot;Common&quot;</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Price data is missing the mandatory &#39;Common&#39; block&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+
+    <span class="n">pricelist</span><span class="o">.</span><span class="n">PulpLogDiameter</span> <span class="o">=</span> <span class="n">DiameterRange</span><span class="p">(</span><span class="o">*</span><span class="n">common</span><span class="p">[</span><span class="s2">&quot;PulpLogDiameterRange&quot;</span><span class="p">])</span>
+    <span class="n">pricelist</span><span class="o">.</span><span class="n">TopDiameter</span>     <span class="o">=</span> <span class="n">common</span><span class="p">[</span><span class="s2">&quot;TopDiameter&quot;</span><span class="p">]</span>
+    <span class="n">pricelist</span><span class="o">.</span><span class="n">LogCullPrice</span>    <span class="o">=</span> <span class="n">common</span><span class="p">[</span><span class="s2">&quot;HarvestResiduePrice&quot;</span><span class="p">]</span>
+    <span class="n">pricelist</span><span class="o">.</span><span class="n">FuelWoodPrice</span>   <span class="o">=</span> <span class="n">common</span><span class="p">[</span><span class="s2">&quot;FuelwoodLogPrice&quot;</span><span class="p">]</span>
+    <span class="n">pricelist</span><span class="o">.</span><span class="n">HighStumpHeight</span> <span class="o">=</span> <span class="n">common</span><span class="p">[</span><span class="s2">&quot;HighStumpHeight&quot;</span><span class="p">]</span>
+    <span class="n">pricelist</span><span class="o">.</span><span class="n">PulpLogLength</span>   <span class="o">=</span> <span class="n">LengthRange</span><span class="p">(</span><span class="o">*</span><span class="n">common</span><span class="p">[</span><span class="s2">&quot;PulpwoodLengthRange&quot;</span><span class="p">])</span>
+    <span class="n">pricelist</span><span class="o">.</span><span class="n">TimberLogLength</span> <span class="o">=</span> <span class="n">LengthRange</span><span class="p">(</span><span class="o">*</span><span class="n">common</span><span class="p">[</span><span class="s2">&quot;SawlogLengthRange&quot;</span><span class="p">])</span>
+    <span class="n">pricelist</span><span class="o">.</span><span class="n">Pulp</span><span class="o">.</span><span class="n">_prices</span>    <span class="o">=</span> <span class="n">common</span><span class="p">[</span><span class="s2">&quot;PulpwoodPrices&quot;</span><span class="p">]</span>
+
+    <span class="c1"># ---- normalise parameter -------------------------------------------</span>
+    <span class="k">if</span> <span class="n">species_to_load</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">species_keys</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">price_data</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s2">&quot;Common&quot;</span>
+        <span class="p">]</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">species_to_load</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">species_keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">species_to_load</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">species_to_load</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
+        <span class="n">species_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">species_to_load</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="s2">&quot;&#39;species_to_load&#39; must be None, a string, or an iterable of strings&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># ---- load timber price tables --------------------------------------</span>
+    <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="n">species_keys</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">sp</span> <span class="ow">in</span> <span class="n">price_data</span><span class="p">:</span>
+            <span class="n">pricelist</span><span class="o">.</span><span class="n">_load_species_specific_data</span><span class="p">(</span><span class="n">price_data</span><span class="p">,</span> <span class="n">sp</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># It is OK if the species is missing in timber tables but present</span>
+            <span class="c1"># in the pulp‑price section – we already copied those above.</span>
+            <span class="k">if</span> <span class="n">sp</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">common</span><span class="p">[</span><span class="s2">&quot;PulpwoodPrices&quot;</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Species &#39;</span><span class="si">{</span><span class="n">sp</span><span class="si">}</span><span class="s2">&#39; not found in timber prices **or** pulp prices.&quot;</span>
+                <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pricelist</span></div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">Munin</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">Munin</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

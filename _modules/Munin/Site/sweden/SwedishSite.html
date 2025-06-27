@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Munin.Site.sweden.SwedishSite &#8212; Munin  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/alabaster.css?v=27fed22d" />
+    <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for Munin.Site.sweden.SwedishSite</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Munin.Site.SiteBase</span><span class="w"> </span><span class="kn">import</span> <span class="n">SiteBase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Munin.Geo.Geo</span><span class="w"> </span><span class="kn">import</span> <span class="n">RetrieveGeoCode</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Munin.SiteIndex.sweden.SIS</span><span class="w"> </span><span class="kn">import</span> <span class="n">Hagglund_Lundmark_1979_SIS</span><span class="p">,</span> <span class="n">eko_pm_2008_estimate_si_birch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Munin.Geo.Humidity</span><span class="w"> </span><span class="kn">import</span> <span class="n">eriksson_1986_humidity</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Munin.Geo.Temperature</span><span class="w"> </span><span class="kn">import</span> <span class="n">Odin_temperature_sum</span>
+
+<span class="c1"># -------------------------------------------------------------------</span>
+<span class="c1"># Helper dataclasses for region-specific properties</span>
+<span class="c1"># -------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="Vegetation">
+<a class="viewcode-back" href="../../../../api/Munin.Site.sweden.html#Munin.Site.sweden.SwedishSite.Vegetation">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Vegetation</span><span class="p">:</span>
+    <span class="n">code</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">swedish_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">english_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">index</span><span class="p">:</span> <span class="nb">float</span></div>
+
+
+<div class="viewcode-block" id="BottomLayerType">
+<a class="viewcode-back" href="../../../../api/Munin.Site.sweden.html#Munin.Site.sweden.SwedishSite.BottomLayerType">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BottomLayerType</span><span class="p">:</span>
+    <span class="n">code</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">english_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">swedish_name</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+<div class="viewcode-block" id="SoilWaterCat">
+<a class="viewcode-back" href="../../../../api/Munin.Site.sweden.html#Munin.Site.sweden.SwedishSite.SoilWaterCat">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SoilWaterCat</span><span class="p">:</span>
+    <span class="n">code</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">swedish_description</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">english_description</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+<div class="viewcode-block" id="SoilDepthCat">
+<a class="viewcode-back" href="../../../../api/Munin.Site.sweden.html#Munin.Site.sweden.SwedishSite.SoilDepthCat">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SoilDepthCat</span><span class="p">:</span>
+    <span class="n">code</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">swedish_description</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">english_description</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+<div class="viewcode-block" id="SoilTextureCategory">
+<a class="viewcode-back" href="../../../../api/Munin.Site.sweden.html#Munin.Site.sweden.SwedishSite.SoilTextureCategory">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SoilTextureCategory</span><span class="p">:</span>
+    <span class="n">code</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">swedish_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">english_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">short_name</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+<div class="viewcode-block" id="SoilMoistureData">
+<a class="viewcode-back" href="../../../../api/Munin.Site.sweden.html#Munin.Site.sweden.SwedishSite.SoilMoistureData">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SoilMoistureData</span><span class="p">:</span>
+    <span class="n">code</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">swedish_description</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">english_description</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+<div class="viewcode-block" id="CountyData">
+<a class="viewcode-back" href="../../../../api/Munin.Site.sweden.html#Munin.Site.sweden.SwedishSite.CountyData">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CountyData</span><span class="p">:</span>
+    <span class="n">code</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="c1">#Descriptive string label</span></div>
+
+
+
+<div class="viewcode-block" id="ClimateZoneData">
+<a class="viewcode-back" href="../../../../api/Munin.Site.sweden.html#Munin.Site.sweden.SwedishSite.ClimateZoneData">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ClimateZoneData</span><span class="p">:</span>
+    <span class="n">code</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="c1"># e.g., &quot;M1&quot;, &quot;K2&quot;</span>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="c1"># Descriptive name</span></div>
+
+
+<span class="c1"># -------------------------------------------------------------------</span>
+<span class="c1"># Region-specific enums defined for the Sweden model</span>
+<span class="c1"># -------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="SwedenFieldLayer">
+<a class="viewcode-back" href="../../../../api/Munin.Site.sweden.html#Munin.Site.sweden.SwedishSite.SwedenFieldLayer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SwedenFieldLayer</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">HIGH_HERB_WITHOUT_SHRUBS</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Högört utan ris&quot;</span><span class="p">,</span> <span class="s2">&quot;Rich-herb without shrubs&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">HIGH_HERB_WITH_SHRUBS_BLUEBERRY</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Högört med ris/blåbär&quot;</span><span class="p">,</span> <span class="s2">&quot;Rich-herb with shrubs/bilberry&quot;</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)</span>
+    <span class="n">HIGH_HERB_WITH_SHRUBS_LINGON</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Högört med ris/lingon&quot;</span><span class="p">,</span> <span class="s2">&quot;Rich-herb with shrubs/lingonberry&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">LOW_HERB_WITHOUT_SHRUBS</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;Lågört utan ris&quot;</span><span class="p">,</span> <span class="s2">&quot;Low-herb without shrubs&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">LOW_HERB_WITH_SHRUBS_BLUEBERRY</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;Lågört med ris/blåbär&quot;</span><span class="p">,</span> <span class="s2">&quot;Low-herb with shrubs/bilberry&quot;</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)</span>
+    <span class="n">LOW_HERB_WITH_SHRUBS_LINGON</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="s2">&quot;Lågört med ris/lingon&quot;</span><span class="p">,</span> <span class="s2">&quot;Low-herb with shrubs/lingonberry&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">NO_FIELD_LAYER</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="s2">&quot;Utan fältskikt&quot;</span><span class="p">,</span> <span class="s2">&quot;No field layer&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">BROADLEAVED_GRASS</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="s2">&quot;Bredbl. gräs&quot;</span><span class="p">,</span> <span class="s2">&quot;Broadleaved grass&quot;</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)</span>
+    <span class="n">THINLEAVED_GRASS</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="s2">&quot;Smalbl. gräs&quot;</span><span class="p">,</span> <span class="s2">&quot;Thinleaved grass&quot;</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
+    <span class="n">SEDGE_HIGH</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;Carex ssp.,Hög starr&quot;</span><span class="p">,</span> <span class="s2">&quot;Sedge, high&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">SEDGE_LOW</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="s2">&quot;Carex ssp.,Låg starr&quot;</span><span class="p">,</span> <span class="s2">&quot;Sedge, low&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">HORSETAIL</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="s2">&quot;Fräken&quot;</span><span class="p">,</span> <span class="s2">&quot;Horsetail, Equisetum ssp.&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">BILBERRY</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="s2">&quot;Blåbär&quot;</span><span class="p">,</span> <span class="s2">&quot;European blueberry, bilberry&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">LINGONBERRY</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="s2">&quot;Lingon&quot;</span><span class="p">,</span> <span class="s2">&quot;Lingonberry&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">CROWBERRY</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="s2">&quot;Kråkbär&quot;</span><span class="p">,</span> <span class="s2">&quot;Crowberry&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">POOR_SHRUB</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="s2">&quot;Fattigris&quot;</span><span class="p">,</span> <span class="s2">&quot;Poor shrub&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">LICHEN_FREQUENT</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span><span class="mi">17</span><span class="p">,</span> <span class="s2">&quot;Lavrik&quot;</span><span class="p">,</span> <span class="s2">&quot;Lichen, frequent occurrence&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">LICHEN_DOMINANT</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="s2">&quot;Lav&quot;</span><span class="p">,</span> <span class="s2">&quot;Lichen, dominating&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SwedenBottomLayer">
+<a class="viewcode-back" href="../../../../api/Munin.Site.sweden.html#Munin.Site.sweden.SwedishSite.SwedenBottomLayer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SwedenBottomLayer</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">LICHEN_TYPE</span> <span class="o">=</span> <span class="n">BottomLayerType</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Lichen type&quot;</span><span class="p">,</span> <span class="s2">&quot;Lavtyp&quot;</span><span class="p">)</span>
+    <span class="n">LICHEN_RICH_BOGMOSS</span> <span class="o">=</span> <span class="n">BottomLayerType</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Lichen-rich bogmoss type&quot;</span><span class="p">,</span> <span class="s2">&quot;Lavrik vitmosstyp&quot;</span><span class="p">)</span>
+    <span class="n">LICHEN_RICH</span> <span class="o">=</span> <span class="n">BottomLayerType</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Lichen-rich&quot;</span><span class="p">,</span> <span class="s2">&quot;Lavrik typ&quot;</span><span class="p">)</span>
+    <span class="n">BOGMOSS_TYPE</span> <span class="o">=</span> <span class="n">BottomLayerType</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;Bogmoss type (Sphagnum)&quot;</span><span class="p">,</span> <span class="s2">&quot;Vitmosstyp&quot;</span><span class="p">)</span>
+    <span class="n">SWAMP_MOSS</span> <span class="o">=</span> <span class="n">BottomLayerType</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;Swamp moss type&quot;</span><span class="p">,</span> <span class="s2">&quot;Sumpmosstyp&quot;</span><span class="p">)</span>
+    <span class="n">FRESH_MOSS</span> <span class="o">=</span> <span class="n">BottomLayerType</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="s2">&quot;Fresh moss type&quot;</span><span class="p">,</span> <span class="s2">&quot;Friskmosstyp&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SwedenSoilWater">
+<a class="viewcode-back" href="../../../../api/Munin.Site.sweden.html#Munin.Site.sweden.SwedishSite.SwedenSoilWater">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SwedenSoilWater</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">SELDOM_NEVER</span> <span class="o">=</span> <span class="n">SoilWaterCat</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;saknas&quot;</span><span class="p">,</span> <span class="s2">&quot;Seldom/never&quot;</span><span class="p">)</span>
+    <span class="n">SHORTER_PERIODS</span> <span class="o">=</span> <span class="n">SoilWaterCat</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;kortare perioder&quot;</span><span class="p">,</span> <span class="s2">&quot;Shorter periods&quot;</span><span class="p">)</span>
+    <span class="n">LONGER_PERIODS</span> <span class="o">=</span> <span class="n">SoilWaterCat</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;längre perioder&quot;</span><span class="p">,</span> <span class="s2">&quot;Longer periods&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SwedenSoilDepth">
+<a class="viewcode-back" href="../../../../api/Munin.Site.sweden.html#Munin.Site.sweden.SwedishSite.SwedenSoilDepth">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SwedenSoilDepth</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">DEEP</span> <span class="o">=</span> <span class="n">SoilDepthCat</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Mäktigt &gt;70 cm. Inga synliga hällar&quot;</span><span class="p">,</span> <span class="s2">&quot;Deep &gt;70cm. No visible stone outcrops.&quot;</span><span class="p">)</span>
+    <span class="n">RATHER_SHALLOW</span> <span class="o">=</span> <span class="n">SoilDepthCat</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Tämligen grunt jorddjupt 20-70 cm&quot;</span><span class="p">,</span> <span class="s2">&quot;Rather shallow soil depth, 20-70 cm&quot;</span><span class="p">)</span>
+    <span class="n">SHALLOW</span> <span class="o">=</span> <span class="n">SoilDepthCat</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Grunt jorddjup &lt; 20 cm. Rikligt med hällar.&quot;</span><span class="p">,</span> <span class="s2">&quot;Rather shallow soil depth &lt; 20 cm. Plenty of stony outcrops.&quot;</span><span class="p">)</span>
+    <span class="n">VARYING</span> <span class="o">=</span> <span class="n">SoilDepthCat</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;Mycket varierande jorddjup. Brottytor i berggrunden delvis synliga.&quot;</span><span class="p">,</span> <span class="s2">&quot;Widely varying soil depth. Breaks in bedrock partly visible.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SwedenSoilTextureTill">
+<a class="viewcode-back" href="../../../../api/Munin.Site.sweden.html#Munin.Site.sweden.SwedishSite.SwedenSoilTextureTill">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SwedenSoilTextureTill</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">BOULDER</span> <span class="o">=</span> <span class="n">SoilTextureCategory</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Stenig/blockig morän&quot;</span><span class="p">,</span> <span class="s2">&quot;Boulder rich/stony till&quot;</span><span class="p">,</span> <span class="s2">&quot;Boulder&quot;</span><span class="p">)</span>
+    <span class="n">GRAVEL</span> <span class="o">=</span> <span class="n">SoilTextureCategory</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Grusig morän&quot;</span><span class="p">,</span> <span class="s2">&quot;Gravelly till&quot;</span><span class="p">,</span> <span class="s2">&quot;Gravel&quot;</span><span class="p">)</span>
+    <span class="n">SANDY</span> <span class="o">=</span> <span class="n">SoilTextureCategory</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Sandig morän&quot;</span><span class="p">,</span> <span class="s2">&quot;Sandy till&quot;</span><span class="p">,</span> <span class="s2">&quot;Coarse sand&quot;</span><span class="p">)</span>
+    <span class="n">SANDY_MOIG</span> <span class="o">=</span> <span class="n">SoilTextureCategory</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;Sandig-moig morän&quot;</span><span class="p">,</span> <span class="s2">&quot;Sandy-silty till&quot;</span><span class="p">,</span> <span class="s2">&quot;Medium sand&quot;</span><span class="p">)</span>
+    <span class="n">SILTY_SAND</span> <span class="o">=</span> <span class="n">SoilTextureCategory</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;Sandig-moig morän&quot;</span><span class="p">,</span> <span class="s2">&quot;Silty-sandy till&quot;</span><span class="p">,</span> <span class="s2">&quot;Fine sand&quot;</span><span class="p">)</span>
+    <span class="n">COARSE_SILTY</span> <span class="o">=</span> <span class="n">SoilTextureCategory</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="s2">&quot;Moig morän&quot;</span><span class="p">,</span> <span class="s2">&quot;Coarse silty till&quot;</span><span class="p">,</span> <span class="s2">&quot;Coarse silt&quot;</span><span class="p">)</span>
+    <span class="n">FINE_SILTY</span> <span class="o">=</span> <span class="n">SoilTextureCategory</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="s2">&quot;Mjälig morän&quot;</span><span class="p">,</span> <span class="s2">&quot;Fine silty till&quot;</span><span class="p">,</span> <span class="s2">&quot;Fine silt&quot;</span><span class="p">)</span>
+    <span class="n">CLAY</span> <span class="o">=</span> <span class="n">SoilTextureCategory</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="s2">&quot;Lerig morän&quot;</span><span class="p">,</span> <span class="s2">&quot;Clayey till&quot;</span><span class="p">,</span> <span class="s2">&quot;Clay&quot;</span><span class="p">)</span>
+    <span class="n">PEAT</span> <span class="o">=</span> <span class="n">SoilTextureCategory</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="s2">&quot;Torv&quot;</span><span class="p">,</span> <span class="s2">&quot;Peat&quot;</span><span class="p">,</span> <span class="s2">&quot;Peat&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SwedenSoilTextureSediment">
+<a class="viewcode-back" href="../../../../api/Munin.Site.sweden.html#Munin.Site.sweden.SwedishSite.SwedenSoilTextureSediment">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SwedenSoilTextureSediment</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">BOULDER</span> <span class="o">=</span> <span class="n">SoilTextureCategory</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Sten/block&quot;</span><span class="p">,</span> <span class="s2">&quot;Boulders/stones&quot;</span><span class="p">,</span> <span class="s2">&quot;Boulder&quot;</span><span class="p">)</span>
+    <span class="n">GRAVEL</span> <span class="o">=</span> <span class="n">SoilTextureCategory</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Grus&quot;</span><span class="p">,</span> <span class="s2">&quot;Gravel&quot;</span><span class="p">,</span> <span class="s2">&quot;Gravel&quot;</span><span class="p">)</span>
+    <span class="n">COARSE_SAND</span> <span class="o">=</span> <span class="n">SoilTextureCategory</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Grovsand&quot;</span><span class="p">,</span> <span class="s2">&quot;Coarse sand&quot;</span><span class="p">,</span> <span class="s2">&quot;Coarse sand&quot;</span><span class="p">)</span>
+    <span class="n">MEDIUM_SAND</span> <span class="o">=</span> <span class="n">SoilTextureCategory</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;Mellansand&quot;</span><span class="p">,</span> <span class="s2">&quot;Medium sand&quot;</span><span class="p">,</span> <span class="s2">&quot;Medium sand&quot;</span><span class="p">)</span>
+    <span class="n">FINE_SAND</span> <span class="o">=</span> <span class="n">SoilTextureCategory</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;Grovmo&quot;</span><span class="p">,</span> <span class="s2">&quot;Fine sand&quot;</span><span class="p">,</span> <span class="s2">&quot;Fine sand&quot;</span><span class="p">)</span>
+    <span class="n">COARSE_SILT</span> <span class="o">=</span> <span class="n">SoilTextureCategory</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="s2">&quot;Finmo&quot;</span><span class="p">,</span> <span class="s2">&quot;Coarse silt&quot;</span><span class="p">,</span> <span class="s2">&quot;Coarse silt&quot;</span><span class="p">)</span>
+    <span class="n">FINE_SILT</span> <span class="o">=</span> <span class="n">SoilTextureCategory</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="s2">&quot;Mjäla&quot;</span><span class="p">,</span> <span class="s2">&quot;Fine silt&quot;</span><span class="p">,</span> <span class="s2">&quot;Fine silt&quot;</span><span class="p">)</span>
+    <span class="n">CLAY</span> <span class="o">=</span> <span class="n">SoilTextureCategory</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="s2">&quot;Lera&quot;</span><span class="p">,</span> <span class="s2">&quot;Clay&quot;</span><span class="p">,</span> <span class="s2">&quot;Clay&quot;</span><span class="p">)</span>
+    <span class="n">PEAT</span> <span class="o">=</span> <span class="n">SoilTextureCategory</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="s2">&quot;Torv&quot;</span><span class="p">,</span> <span class="s2">&quot;Peat&quot;</span><span class="p">,</span> <span class="s2">&quot;Peat&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SwedenSoilMoisture">
+<a class="viewcode-back" href="../../../../api/Munin.Site.sweden.html#Munin.Site.sweden.SwedishSite.SwedenSoilMoisture">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SwedenSoilMoisture</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">DRY</span> <span class="o">=</span> <span class="n">SoilMoistureData</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;torr&quot;</span><span class="p">,</span> <span class="s2">&quot;Dry (subsoil water depth &gt;2 m)&quot;</span><span class="p">)</span>
+    <span class="n">MESIC</span> <span class="o">=</span> <span class="n">SoilMoistureData</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;frisk&quot;</span><span class="p">,</span> <span class="s2">&quot;Mesic (subsoil water depth = 1-2 m)&quot;</span><span class="p">)</span>
+    <span class="n">MESIC_MOIST</span> <span class="o">=</span> <span class="n">SoilMoistureData</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;frisk-fuktig&quot;</span><span class="p">,</span> <span class="s2">&quot;Mesic-moist (subsoil water depth &lt;1 m)&quot;</span><span class="p">)</span>
+    <span class="n">MOIST</span> <span class="o">=</span> <span class="n">SoilMoistureData</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;fuktig&quot;</span><span class="p">,</span> <span class="s2">&quot;Moist (subsoil water depth &lt;1 m, and pools visible in hollows)&quot;</span><span class="p">)</span>
+    <span class="n">WET</span> <span class="o">=</span> <span class="n">SoilMoistureData</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;blöt&quot;</span><span class="p">,</span> <span class="s2">&quot;Wet (subsoil water pools visible)&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SwedenCounty">
+<a class="viewcode-back" href="../../../../api/Munin.Site.sweden.html#Munin.Site.sweden.SwedishSite.SwedenCounty">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SwedenCounty</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">NORRBOTTENS_LAPPMARK</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Norrbottens lappmark (BD lappm)&quot;</span><span class="p">)</span>
+    <span class="n">NORRBOTTENS_KUSTLAND</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Norrbottens kustland (BD kust)&quot;</span><span class="p">)</span>
+    <span class="n">VASTERBOTTENS_LAPPMARK</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Västerbottens lappmark (AC lappm)&quot;</span><span class="p">)</span>
+    <span class="n">VASTERBOTTENS_KUSTLAND</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;Västerbottens kustland (AC kust)&quot;</span><span class="p">)</span>
+    <span class="n">JAMTLAND_JAMTLANDS</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;Jämtland - Jämtlands landskap (Z)&quot;</span><span class="p">)</span>
+    <span class="n">JAMTLAND_HARJEDALENS</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="s2">&quot;Jämtland - Härjedalens landskap (Z Härjed)&quot;</span><span class="p">)</span>
+    <span class="n">VASTERNORRLAND_ANGERMANLANDS</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="s2">&quot;Västernorrland - Ångermanlands landskap (Y Ångerm)&quot;</span><span class="p">)</span>
+    <span class="n">VASTERNORRLAND_MEDELPADS</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="s2">&quot;Västernorrland - Medelpads landskap (Y Medelp)&quot;</span><span class="p">)</span>
+    <span class="n">GAVLEBORG_HALSINGLANDS</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="s2">&quot;Gävleborg - Hälsinglands landskap (X Hälsingl)&quot;</span><span class="p">)</span>
+    <span class="n">GAVLEBORG_OVRIGA</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;Gävleborg, övriga (X övr)&quot;</span><span class="p">)</span>
+    <span class="n">KOPPARBERG_SALEN_IDRE</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="s2">&quot;Kopparberg (Dalarna), Sälen - Idre (W)&quot;</span><span class="p">)</span>
+    <span class="n">KOPPARBERG_OVRIGA</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="s2">&quot;Kopparberg (Dalarna), övriga (W övr)&quot;</span><span class="p">)</span>
+    <span class="n">VARMLAND</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="s2">&quot;Värmland (S)&quot;</span><span class="p">)</span>
+    <span class="n">OREBRO</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="s2">&quot;Örebro (T)&quot;</span><span class="p">)</span>
+    <span class="n">VASTMANLAND</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="s2">&quot;Västmanland (U)&quot;</span><span class="p">)</span>
+    <span class="n">UPPSALA</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="s2">&quot;Uppsala (C)&quot;</span><span class="p">)</span>
+    <span class="n">STOCKHOLM</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">17</span><span class="p">,</span> <span class="s2">&quot;Stockholm (AB)&quot;</span><span class="p">)</span>
+    <span class="n">SODERMANLAND</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="s2">&quot;Södermanland (D)&quot;</span><span class="p">)</span>
+    <span class="n">OSTERGOTLAND</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">19</span><span class="p">,</span> <span class="s2">&quot;Östergötland (E)&quot;</span><span class="p">)</span>
+    <span class="n">SKARABORG</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="s2">&quot;Skaraborg (R)&quot;</span><span class="p">)</span>
+    <span class="n">ALVSBORG_DALSLANDS</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">21</span><span class="p">,</span> <span class="s2">&quot;Älvsborg, Dalslands landskap (P)&quot;</span><span class="p">)</span>
+    <span class="n">ALVSBORG_VASTERGOTLANDS</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">22</span><span class="p">,</span> <span class="s2">&quot;Älvsborg, Västergötlands landskap (P)&quot;</span><span class="p">)</span>
+    <span class="n">JONKOPING</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">23</span><span class="p">,</span> <span class="s2">&quot;Jönköping (F)&quot;</span><span class="p">)</span>
+    <span class="n">KRONOBERG</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">24</span><span class="p">,</span> <span class="s2">&quot;Kronoberg (G)&quot;</span><span class="p">)</span>
+    <span class="n">KALMAR</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="s2">&quot;Kalmar (H)&quot;</span><span class="p">)</span>
+    <span class="n">VASTRA_GOTALANDS</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">26</span><span class="p">,</span> <span class="s2">&quot;Västra Götalands (Göteborg - Bohuslän) (O)&quot;</span><span class="p">)</span>
+    <span class="n">HALLAND</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">27</span><span class="p">,</span> <span class="s2">&quot;Halland (N)&quot;</span><span class="p">)</span>
+    <span class="n">KRISTIANSTAD</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">28</span><span class="p">,</span> <span class="s2">&quot;Kristianstad (L)&quot;</span><span class="p">)</span>
+    <span class="n">MALMOHUS</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">29</span><span class="p">,</span> <span class="s2">&quot;Malmöhus (M)&quot;</span><span class="p">)</span>
+    <span class="n">BLEKINGE</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="s2">&quot;Blekinge (K)&quot;</span><span class="p">)</span>
+    <span class="n">GOTLAND</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">31</span><span class="p">,</span> <span class="s2">&quot;Gotland (I)&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SwedenCounty.from_code">
+<a class="viewcode-back" href="../../../../api/Munin.Site.sweden.html#Munin.Site.sweden.SwedishSite.SwedenCounty.from_code">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_code</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">code</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;SwedenCounty&#39;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lookup enum member by code.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="bp">cls</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">member</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span> <span class="o">==</span> <span class="n">code</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">member</span>
+        <span class="k">return</span> <span class="kc">None</span> <span class="c1"># Return None if code not found</span></div>
+</div>
+
+    
+<div class="viewcode-block" id="SwedenClimateZone">
+<a class="viewcode-back" href="../../../../api/Munin.Site.sweden.html#Munin.Site.sweden.SwedishSite.SwedenClimateZone">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SwedenClimateZone</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">M1</span> <span class="o">=</span> <span class="n">ClimateZoneData</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;M1&quot;</span><span class="p">,</span> <span class="s2">&quot;Maritime, West coast&quot;</span><span class="p">)</span>
+    <span class="n">M2</span> <span class="o">=</span> <span class="n">ClimateZoneData</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;M2&quot;</span><span class="p">,</span> <span class="s2">&quot;Maritime, East coast&quot;</span><span class="p">)</span>
+    <span class="n">M3</span> <span class="o">=</span> <span class="n">ClimateZoneData</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;M3&quot;</span><span class="p">,</span> <span class="s2">&quot;Maritime, Mountain range&quot;</span><span class="p">)</span>
+    <span class="n">K1</span> <span class="o">=</span> <span class="n">ClimateZoneData</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;K1&quot;</span><span class="p">,</span> <span class="s2">&quot;Continental, Middle Sweden&quot;</span><span class="p">)</span>
+    <span class="n">K2</span> <span class="o">=</span> <span class="n">ClimateZoneData</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;K2&quot;</span><span class="p">,</span> <span class="s2">&quot;Continental, Northern Sweden&quot;</span><span class="p">)</span>
+    <span class="n">K3</span> <span class="o">=</span> <span class="n">ClimateZoneData</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="s2">&quot;K3&quot;</span><span class="p">,</span> <span class="s2">&quot;Continental, Southern Sweden&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SwedenClimateZone.from_code">
+<a class="viewcode-back" href="../../../../api/Munin.Site.sweden.html#Munin.Site.sweden.SwedishSite.SwedenClimateZone.from_code">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_code</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">code</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;SwedenClimateZone&#39;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lookup enum member by code.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="bp">cls</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">member</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span> <span class="o">==</span> <span class="n">code</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">member</span>
+        <span class="k">return</span> <span class="kc">None</span> <span class="c1"># Return None if code not found</span></div>
+</div>
+
+<span class="c1"># -------------------------------------------------------------------</span>
+<span class="c1"># Define the Sweden namespace for this model.</span>
+<span class="c1"># -------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="Sweden">
+<a class="viewcode-back" href="../../../../api/Munin.Site.sweden.html#Munin.Site.sweden.SwedishSite.Sweden">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Sweden</span><span class="p">:</span>
+    <span class="n">FieldLayer</span> <span class="o">=</span> <span class="n">SwedenFieldLayer</span>
+    <span class="n">BottomLayer</span> <span class="o">=</span> <span class="n">SwedenBottomLayer</span>
+    <span class="n">SoilWater</span> <span class="o">=</span> <span class="n">SwedenSoilWater</span>
+    <span class="n">SoilDepth</span> <span class="o">=</span> <span class="n">SwedenSoilDepth</span>
+    <span class="n">SoilTextureTill</span> <span class="o">=</span> <span class="n">SwedenSoilTextureTill</span>
+    <span class="n">SoilTextureSediment</span> <span class="o">=</span> <span class="n">SwedenSoilTextureSediment</span>
+    <span class="n">SoilMoistureEnum</span> <span class="o">=</span> <span class="n">SwedenSoilMoisture</span>
+    <span class="n">County</span> <span class="o">=</span> <span class="n">SwedenCounty</span>
+    <span class="n">ClimateZone</span> <span class="o">=</span> <span class="n">SwedenClimateZone</span></div>
+
+
+<span class="c1"># -------------------------------------------------------------------</span>
+<span class="c1"># SwedishSite using the Sweden namespace</span>
+<span class="c1"># -------------------------------------------------------------------</span>
+<div class="viewcode-block" id="SwedishSite">
+<a class="viewcode-back" href="../../../../api/Munin.Site.sweden.html#Munin.Site.sweden.SwedishSite.SwedishSite">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SwedishSite</span><span class="p">(</span><span class="n">SiteBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A robust SwedishSite class that carries at least latitude and longitude.</span>
+<span class="sd">    Other attributes (altitude, field layer, etc.) are optional.</span>
+<span class="sd">    If not provided (or if computation fails), the computed attributes will be left as None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">longitude</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">altitude</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">field_layer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sweden</span><span class="o">.</span><span class="n">FieldLayer</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">bottom_layer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sweden</span><span class="o">.</span><span class="n">BottomLayer</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">soil_texture</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Sweden</span><span class="o">.</span><span class="n">SoilTextureTill</span><span class="p">,</span> <span class="n">Sweden</span><span class="o">.</span><span class="n">SoilTextureSediment</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">soil_moisture</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sweden</span><span class="o">.</span><span class="n">SoilMoistureEnum</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">soil_depth</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sweden</span><span class="o">.</span><span class="n">SoilDepth</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">soil_water</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sweden</span><span class="o">.</span><span class="n">SoilWater</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">aspect</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">incline_percent</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">ditched</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># Computed attributes are optional and default to None.</span>
+    <span class="n">temperature_sum_odin1983</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">county</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sweden</span><span class="o">.</span><span class="n">County</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">humidity</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">distance_to_coast</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">climate_zone</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sweden</span><span class="o">.</span><span class="n">ClimateZone</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="c1"># Changed type hint</span>
+    <span class="n">sis_spruce_100</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">sis_pine_100</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">sis_birch_50</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">n_of_limes_norrlandicus</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Compute county first</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">county_enum</span> <span class="o">=</span> <span class="n">RetrieveGeoCode</span><span class="o">.</span><span class="n">getCountyCode</span><span class="p">(</span><span class="n">lon</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">longitude</span><span class="p">,</span> <span class="n">lat</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">)</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;county&#39;</span><span class="p">,</span> <span class="n">county_enum</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;county&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="c1"># Compute climate zone</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">climate_enum</span> <span class="o">=</span> <span class="n">RetrieveGeoCode</span><span class="o">.</span><span class="n">getClimateCode</span><span class="p">(</span><span class="n">lon</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">longitude</span><span class="p">,</span> <span class="n">lat</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">)</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;climate_zone&#39;</span><span class="p">,</span> <span class="n">climate_enum</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;climate_zone&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="c1"># Compute n_of_limes_norrlandicus</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;n_of_limes_norrlandicus&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">latitude</span> <span class="o">&gt;</span> <span class="mi">60</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;n_of_limes_norrlandicus&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="c1"># Compute temperature sum</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">altitude</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">ts</span> <span class="o">=</span> <span class="n">Odin_temperature_sum</span><span class="p">(</span><span class="n">latitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span> <span class="n">altitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">altitude</span><span class="p">)</span>
+                <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;temperature_sum_odin1983&#39;</span><span class="p">,</span> <span class="n">ts</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;temperature_sum_odin1983&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;temperature_sum_odin1983&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="c1"># Compute humidity</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="n">eriksson_1986_humidity</span><span class="p">(</span><span class="n">longitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">longitude</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">)</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;humidity&#39;</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;humidity&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="c1"># Compute distance to coast</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">RetrieveGeoCode</span><span class="o">.</span><span class="n">getDistanceToCoast</span><span class="p">(</span><span class="n">lon</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">longitude</span><span class="p">,</span> <span class="n">lat</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">)</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;distance_to_coast&#39;</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;distance_to_coast&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="c1"># --- Site Index Calculations ---</span>
+
+        <span class="c1"># Check if all required inputs for SIS are present (including computed ones)</span>
+        <span class="n">sis_inputs_ok</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">altitude</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">field_layer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bottom_layer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">soil_texture</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">soil_moisture</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">soil_depth</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">soil_water</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">aspect</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">incline_percent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ditched</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">climate_zone</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="c1"># Check climate_zone (enum)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">county</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_of_limes_norrlandicus</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">sis_inputs_ok</span><span class="p">:</span>
+            <span class="c1"># Common inputs derived from site state</span>
+            <span class="n">is_peat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">soil_texture</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Sweden</span><span class="o">.</span><span class="n">SoilTextureSediment</span><span class="o">.</span><span class="n">PEAT</span><span class="p">,</span> <span class="n">Sweden</span><span class="o">.</span><span class="n">SoilTextureTill</span><span class="o">.</span><span class="n">PEAT</span><span class="p">)</span>
+            <span class="n">is_gotland</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">county</span> <span class="o">==</span> <span class="n">Sweden</span><span class="o">.</span><span class="n">County</span><span class="o">.</span><span class="n">GOTLAND</span><span class="p">)</span>
+            <span class="n">is_coast</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distance_to_coast</span> <span class="o">&lt;</span> <span class="mi">50</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance_to_coast</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">False</span>
+            <span class="n">county_label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">county</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">label</span>
+            <span class="n">climate_label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">climate_zone</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">label</span> <span class="c1"># Use the label string (&quot;M1&quot;, &quot;K2&quot;, etc.)</span>
+
+            <span class="c1"># Attempt Spruce SI</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">spruce_si</span> <span class="o">=</span> <span class="n">Hagglund_Lundmark_1979_SIS</span><span class="p">(</span>
+                    <span class="n">latitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span> <span class="n">altitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">altitude</span><span class="p">,</span>
+                    <span class="n">soil_moisture</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">soil_moisture</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span><span class="p">,</span> <span class="n">ground_layer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bottom_layer</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span><span class="p">,</span>
+                    <span class="n">vegetation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">field_layer</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span><span class="p">,</span> <span class="n">soil_texture</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">soil_texture</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span><span class="p">,</span>
+                    <span class="n">climate_code</span><span class="o">=</span><span class="n">climate_label</span><span class="p">,</span> <span class="c1"># Pass the label</span>
+                    <span class="n">lateral_water</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">soil_water</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span><span class="p">,</span> <span class="n">soil_depth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">soil_depth</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span><span class="p">,</span>
+                    <span class="n">incline_percent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">incline_percent</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aspect</span><span class="p">,</span> <span class="n">ditched</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ditched</span><span class="p">,</span>
+                    <span class="n">peat</span><span class="o">=</span><span class="n">is_peat</span><span class="p">,</span> <span class="n">gotland</span><span class="o">=</span><span class="n">is_gotland</span><span class="p">,</span> <span class="n">coast</span><span class="o">=</span><span class="n">is_coast</span><span class="p">,</span>
+                    <span class="n">limes_norrlandicus</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_of_limes_norrlandicus</span><span class="p">,</span> <span class="n">nfi_adjustments</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">species</span><span class="o">=</span><span class="s1">&#39;Picea abies&#39;</span><span class="p">,</span> <span class="n">dlan</span><span class="o">=</span><span class="n">county_label</span>
+                <span class="p">)</span>
+                <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;sis_spruce_100&#39;</span><span class="p">,</span> <span class="n">spruce_si</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;sis_spruce_100&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+            <span class="c1"># Attempt Pine SI</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">pine_si</span> <span class="o">=</span> <span class="n">Hagglund_Lundmark_1979_SIS</span><span class="p">(</span>
+                    <span class="n">latitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span> <span class="n">altitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">altitude</span><span class="p">,</span>
+                    <span class="n">soil_moisture</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">soil_moisture</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span><span class="p">,</span> <span class="n">ground_layer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bottom_layer</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span><span class="p">,</span>
+                    <span class="n">vegetation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">field_layer</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span><span class="p">,</span> <span class="n">soil_texture</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">soil_texture</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span><span class="p">,</span>
+                    <span class="n">climate_code</span><span class="o">=</span><span class="n">climate_label</span><span class="p">,</span> <span class="c1"># Pass the label</span>
+                    <span class="n">lateral_water</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">soil_water</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span><span class="p">,</span> <span class="n">soil_depth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">soil_depth</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span><span class="p">,</span>
+                    <span class="n">incline_percent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">incline_percent</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aspect</span><span class="p">,</span> <span class="n">ditched</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ditched</span><span class="p">,</span>
+                    <span class="n">peat</span><span class="o">=</span><span class="n">is_peat</span><span class="p">,</span> <span class="n">gotland</span><span class="o">=</span><span class="n">is_gotland</span><span class="p">,</span> <span class="n">coast</span><span class="o">=</span><span class="n">is_coast</span><span class="p">,</span>
+                    <span class="n">limes_norrlandicus</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_of_limes_norrlandicus</span><span class="p">,</span> <span class="n">nfi_adjustments</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">species</span><span class="o">=</span><span class="s1">&#39;Pinus sylvestris&#39;</span><span class="p">,</span> <span class="n">dlan</span><span class="o">=</span><span class="n">county_label</span>
+                <span class="p">)</span>
+                <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;sis_pine_100&#39;</span><span class="p">,</span> <span class="n">pine_si</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;sis_pine_100&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Set SI to None if inputs weren&#39;t complete</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;sis_spruce_100&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;sis_pine_100&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+
+        <span class="c1"># Compute sis_birch_50 if possible.</span>
+        <span class="n">birch_inputs_ok</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">altitude</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">latitude</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">field_layer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">bottom_layer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">soil_water</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">soil_moisture</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">birch_inputs_ok</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">birch_si</span> <span class="o">=</span> <span class="n">eko_pm_2008_estimate_si_birch</span><span class="p">(</span>
+                    <span class="n">altitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">altitude</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span>
+                    <span class="n">vegetation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">field_layer</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span><span class="p">,</span> <span class="n">ground_layer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bottom_layer</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span><span class="p">,</span>
+                    <span class="n">lateral_water</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">soil_water</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span><span class="p">,</span> <span class="n">soil_moisture</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">soil_moisture</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span>
+                <span class="p">)</span>
+                <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;sis_birch_50&#39;</span><span class="p">,</span> <span class="n">birch_si</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;sis_birch_50&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;sis_birch_50&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../../index.html">Munin</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/modules.html">Munin</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

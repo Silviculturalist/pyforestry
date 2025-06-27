@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Munin.SiteIndex.sweden.SIS.Tegnhammar_1992 &#8212; Munin  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/alabaster.css?v=27fed22d" />
+    <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for Munin.SiteIndex.sweden.SIS.Tegnhammar_1992</h1><div class="highlight"><pre>
+<span></span><span class="c1">#Tegnhammar Site Index corrections for Hagglund Site Index for Swedish Spruce.</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Munin.Geo.Geo</span><span class="w"> </span><span class="kn">import</span> <span class="n">RetrieveGeoCode</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span>
+
+<div class="viewcode-block" id="tegnhammar_1992_adjusted_spruce_si_by_stand_variables">
+<a class="viewcode-back" href="../../../../../api/Munin.SiteIndex.sweden.SIS.html#Munin.SiteIndex.sweden.SIS.Tegnhammar_1992.tegnhammar_1992_adjusted_spruce_si_by_stand_variables">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">tegnhammar_1992_adjusted_spruce_si_by_stand_variables</span><span class="p">(</span>
+    <span class="n">latitude</span><span class="p">,</span> <span class="n">longitude</span><span class="p">,</span> <span class="n">altitude</span><span class="p">,</span> <span class="n">vegetation</span><span class="p">,</span> <span class="n">ground_layer</span><span class="p">,</span> <span class="n">aspect_main</span><span class="p">,</span>
+    <span class="n">soil_moisture</span><span class="p">,</span> <span class="n">soil_depth</span><span class="p">,</span> <span class="n">soil_texture</span><span class="p">,</span> <span class="n">humidity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ditched</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">lateral_water</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">peat_humification</span><span class="o">=</span><span class="s2">&quot;Medium&quot;</span><span class="p">,</span> <span class="n">epsg</span><span class="o">=</span><span class="s1">&#39;EPSG:4326&#39;</span><span class="p">):</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate Tegnhammar&#39;s adjusted Site Index from stand variables.</span>
+<span class="sd">    </span>
+<span class="sd">    Source: Tegnhammar, L. (1992). &quot;Om skattningen av ståndortsindex för gran&quot;. </span>
+<span class="sd">    Report 53. Dept. of Forest Survey. Swedish University of Agricultural Sciences. Umeå.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        latitude (float): Decimal degrees. Default WGS84, see parameter &#39;epsg&#39;.</span>
+<span class="sd">        longitude (float): Decimal degrees. Default WGS84, see parameter &#39;epsg&#39;.</span>
+<span class="sd">        altitude (float): Metres above sea level.</span>
+<span class="sd">        vegetation (int): Vegetation type code.</span>
+<span class="sd">        ground_layer (int): Ground layer type code.</span>
+<span class="sd">        aspect_main (int): Aspect code. Use 0 if slope is below 5%.</span>
+<span class="sd">        soil_moisture (int): Soil moisture type (1=&quot;Dry&quot;, 5=&quot;Wet&quot;).</span>
+<span class="sd">        soil_depth (int): Soil depth type (1=&quot;Deep&quot;, 4=&quot;Varying&quot;).</span>
+<span class="sd">        soil_texture (int): Soil texture code (1=&quot;Boulder&quot;, 9=&quot;Peat&quot;).</span>
+<span class="sd">        humidity (float, optional): Humidity during the vegetation period in mm. If None, it will be calculated.</span>
+<span class="sd">        ditched (bool): True if affected by ditching.</span>
+<span class="sd">        lateral_water (int): Water availability code (1=&quot;Missing&quot;, 5=&quot;Slope&quot;).</span>
+<span class="sd">        peat_humification (str): &quot;Low&quot;, &quot;Medium&quot;, or &quot;High&quot; based on peat decomposition.</span>
+<span class="sd">        epsg (str): Coordinate system (default is WGS84: &#39;EPSG:4326&#39;).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        float: Tegnhammar&#39;s adjusted SI in metres.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Placeholder function to calculate humidity (equivalent to `forester::Eriksson_1986_humidity`)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_humidity</span><span class="p">(</span><span class="n">latitude</span><span class="p">,</span> <span class="n">longitude</span><span class="p">,</span> <span class="n">epsg</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">100</span>  <span class="c1"># Replace with actual humidity calculation logic.</span>
+
+    <span class="k">if</span> <span class="n">humidity</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">humidity</span> <span class="o">=</span> <span class="n">calculate_humidity</span><span class="p">(</span><span class="n">latitude</span><span class="p">,</span> <span class="n">longitude</span><span class="p">,</span> <span class="n">epsg</span><span class="p">)</span>
+
+    <span class="c1"># Determine if site is north or south of Limes Norrlandicus</span>
+    <span class="c1"># (Placeholder logic; replace with actual spatial analysis if required.)</span>
+    <span class="n">limes_n</span> <span class="o">=</span> <span class="n">latitude</span> <span class="o">&gt;</span> <span class="mf">60.0</span>  <span class="c1"># Example condition; adjust as needed.</span>
+    <span class="n">lat_n</span> <span class="o">=</span> <span class="n">limes_n</span>
+    <span class="n">lat_s</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">limes_n</span>
+
+    <span class="n">altitude_s_south_sweden</span> <span class="o">=</span> <span class="n">altitude</span> <span class="k">if</span> <span class="n">lat_s</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">altitude_n_north_sweden</span> <span class="o">=</span> <span class="n">altitude</span> <span class="k">if</span> <span class="n">lat_n</span> <span class="k">else</span> <span class="mi">0</span>
+
+    <span class="n">humidity_south_sweden_dry</span> <span class="o">=</span> <span class="n">humidity</span> <span class="k">if</span> <span class="n">lat_s</span> <span class="ow">and</span> <span class="n">soil_moisture</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">humidity_north_sweden</span> <span class="o">=</span> <span class="n">humidity</span> <span class="k">if</span> <span class="n">lat_n</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">humidity_north_sweden_lat_n</span> <span class="o">=</span> <span class="n">humidity_north_sweden</span> <span class="o">*</span> <span class="n">lat_n</span>
+
+    <span class="n">shallow</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">soil_depth</span> <span class="o">!=</span> <span class="mi">1</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">dry</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">soil_moisture</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">moist</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">soil_moisture</span> <span class="o">==</span> <span class="mi">4</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">peat</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">soil_texture</span> <span class="o">==</span> <span class="mi">9</span> <span class="k">else</span> <span class="mi">0</span>
+
+    <span class="k">if</span> <span class="n">ditched</span> <span class="ow">and</span> <span class="n">peat</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">moist</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ditched only defined for peat or moist soils! Setting ditched to 0.&quot;</span><span class="p">)</span>
+        <span class="n">ditched</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">lateral_water_longer_periods</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">lateral_water</span> <span class="o">==</span> <span class="mi">4</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">lateral_water_shorter_periods</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">lateral_water</span> <span class="o">==</span> <span class="mi">3</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">coarse</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">soil_texture</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">fine</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">soil_texture</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+
+    <span class="k">if</span> <span class="n">peat</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">peat_humification_low</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">peat_humification_medium</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">peat_humification_high</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">elif</span> <span class="n">peat</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">peat_humification_low</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">peat_humification</span> <span class="o">==</span> <span class="s2">&quot;Low&quot;</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="n">peat_humification_medium</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">peat_humification</span> <span class="o">==</span> <span class="s2">&quot;Medium&quot;</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="n">peat_humification_high</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">peat_humification</span> <span class="o">==</span> <span class="s2">&quot;High&quot;</span> <span class="k">else</span> <span class="mi">0</span>
+
+    <span class="n">aspect_east_south_east_incline</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">aspect_main</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">extremely_cold</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">altitude</span> <span class="o">+</span> <span class="p">(</span><span class="mi">130</span> <span class="o">*</span> <span class="n">latitude</span><span class="p">)</span> <span class="o">-</span> <span class="mi">8900</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Use Munin.Geo.Geo.RetrieveGeoCode.getDistanceToCoast</span>
+    <span class="n">distance_to_swedish_coast</span> <span class="o">=</span> <span class="n">RetrieveGeoCode</span><span class="p">()</span><span class="o">.</span><span class="n">getDistanceToCoast</span><span class="p">(</span><span class="n">longitude</span><span class="p">,</span> <span class="n">latitude</span><span class="p">)</span><span class="o">/</span><span class="mi">1000</span> <span class="c1">#m to km</span>
+    <span class="n">distance_to_swedish_coast_2</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">distance_to_swedish_coast</span> <span class="o">/</span> <span class="mi">5</span><span class="p">)</span> <span class="k">if</span> <span class="n">soil_moisture</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Vegetation types</span>
+    <span class="n">rich_herb_no_shrub</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">vegetation</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">low_herb_no_shrub</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">vegetation</span> <span class="o">==</span> <span class="mi">3</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">herb_with_shrub</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">vegetation</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">herb</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">vegetation</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">no_field_layer</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">vegetation</span> <span class="o">==</span> <span class="mi">7</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">broadleaved_grass</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">vegetation</span> <span class="o">==</span> <span class="mi">8</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">thinleaved_grass</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">vegetation</span> <span class="o">==</span> <span class="mi">9</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">carex_or_equisetum</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">vegetation</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">13</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">bilberry</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">vegetation</span> <span class="o">==</span> <span class="mi">13</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">lingonberry</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">vegetation</span> <span class="o">==</span> <span class="mi">14</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">crowberry_or_worse</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">vegetation</span> <span class="o">&gt;=</span> <span class="mi">15</span> <span class="k">else</span> <span class="mi">0</span>
+
+    <span class="c1"># Ground layer</span>
+    <span class="n">sphagnum</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">ground_layer</span> <span class="o">==</span> <span class="mi">4</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">polytrichum</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">ground_layer</span> <span class="o">==</span> <span class="mi">5</span> <span class="k">else</span> <span class="mi">0</span>
+
+    <span class="c1"># Calculation</span>
+    <span class="n">sih_just</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="mf">1210.813605</span>
+        <span class="o">-</span> <span class="mf">14.969124</span> <span class="o">*</span> <span class="n">lat_n</span>
+        <span class="o">-</span> <span class="mf">15.444848</span> <span class="o">*</span> <span class="n">lat_s</span>
+        <span class="o">-</span> <span class="mf">1.308729</span> <span class="o">*</span> <span class="n">altitude_n_north_sweden</span>
+        <span class="o">-</span> <span class="mf">0.000062709</span> <span class="o">*</span> <span class="p">(</span><span class="n">altitude_n_north_sweden</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="o">-</span> <span class="mf">0.048787</span> <span class="o">*</span> <span class="n">altitude_n_north_sweden</span> <span class="o">*</span> <span class="n">moist</span>
+        <span class="o">+</span> <span class="mf">0.000099984</span> <span class="o">*</span> <span class="p">(</span><span class="n">altitude_n_north_sweden</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">moist</span>
+        <span class="o">-</span> <span class="mf">2.396754</span> <span class="o">*</span> <span class="n">altitude_s_south_sweden</span>
+        <span class="o">-</span> <span class="mf">0.000326</span> <span class="o">*</span> <span class="p">(</span><span class="n">altitude_s_south_sweden</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="o">+</span> <span class="mf">0.019672</span> <span class="o">*</span> <span class="n">lat_n</span> <span class="o">*</span> <span class="n">altitude_n_north_sweden</span>
+        <span class="o">+</span> <span class="mf">0.042405</span> <span class="o">*</span> <span class="n">lat_s</span> <span class="o">*</span> <span class="n">altitude_s_south_sweden</span>
+        <span class="o">+</span> <span class="mf">4.084904</span> <span class="o">*</span> <span class="n">humidity_north_sweden</span>
+        <span class="o">-</span> <span class="mf">0.064359</span> <span class="o">*</span> <span class="n">humidity_north_sweden_lat_n</span>
+        <span class="o">-</span> <span class="mf">0.085390</span> <span class="o">*</span> <span class="n">humidity_north_sweden</span> <span class="o">*</span> <span class="n">moist</span>
+        <span class="o">+</span> <span class="mf">0.026421</span> <span class="o">*</span> <span class="n">humidity_south_sweden_dry</span>
+        <span class="o">-</span> <span class="mf">22.492215</span> <span class="o">*</span> <span class="n">distance_to_swedish_coast_2</span>
+        <span class="o">-</span> <span class="mf">6.494468</span> <span class="o">*</span> <span class="n">dry</span>
+        <span class="o">+</span> <span class="mf">3.284251</span> <span class="o">*</span> <span class="n">moist</span>
+        <span class="o">+</span> <span class="mf">8.004164</span> <span class="o">*</span> <span class="n">lateral_water_shorter_periods</span>
+        <span class="o">+</span> <span class="mf">12.557257</span> <span class="o">*</span> <span class="n">lateral_water_longer_periods</span>
+        <span class="o">+</span> <span class="mf">7.162013</span> <span class="o">*</span> <span class="n">ditched</span>
+        <span class="o">-</span> <span class="mf">2.241642</span> <span class="o">*</span> <span class="n">fine</span>
+        <span class="o">-</span> <span class="mf">3.944443</span> <span class="o">*</span> <span class="n">coarse</span>
+        <span class="o">-</span> <span class="mf">22.450707</span> <span class="o">*</span> <span class="n">peat_humification_low</span>
+        <span class="o">-</span> <span class="mf">10.735284</span> <span class="o">*</span> <span class="n">peat_humification_medium</span>
+        <span class="o">-</span> <span class="mf">2.872332</span> <span class="o">*</span> <span class="n">peat_humification_high</span>
+        <span class="o">-</span> <span class="mf">12.206813</span> <span class="o">*</span> <span class="n">shallow</span>
+        <span class="o">+</span> <span class="mf">5.792854</span> <span class="o">*</span> <span class="n">shallow</span> <span class="o">*</span> <span class="n">moist</span>
+        <span class="o">+</span> <span class="mf">36.421502</span> <span class="o">*</span> <span class="n">rich_herb_no_shrub</span>
+        <span class="o">+</span> <span class="mf">31.110677</span> <span class="o">*</span> <span class="n">low_herb_no_shrub</span>
+        <span class="o">+</span> <span class="mf">20.906555</span> <span class="o">*</span> <span class="n">herb_with_shrub</span>
+        <span class="o">+</span> <span class="mf">22.879371</span> <span class="o">*</span> <span class="n">no_field_layer</span>
+        <span class="o">+</span> <span class="mf">11.623366</span> <span class="o">*</span> <span class="n">broadleaved_grass</span>
+        <span class="o">+</span> <span class="mf">13.542164</span> <span class="o">*</span> <span class="n">thinleaved_grass</span>
+        <span class="o">-</span> <span class="mf">6.635013</span> <span class="o">*</span> <span class="n">carex_or_equisetum</span>
+        <span class="o">-</span> <span class="mf">10.954260</span> <span class="o">*</span> <span class="n">lingonberry</span>
+        <span class="o">-</span> <span class="mf">19.853882</span> <span class="o">*</span> <span class="n">crowberry_or_worse</span>
+        <span class="o">-</span> <span class="mf">15.615067</span> <span class="o">*</span> <span class="n">sphagnum</span>
+        <span class="o">-</span> <span class="mf">5.950684</span> <span class="o">*</span> <span class="n">polytrichum</span>
+        <span class="o">-</span> <span class="mf">0.062692</span> <span class="o">*</span> <span class="n">extremely_cold</span>
+        <span class="o">+</span> <span class="mf">5.299670</span> <span class="o">*</span> <span class="n">aspect_east_south_east_incline</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">sih_just</span> <span class="o">/</span> <span class="mi">10</span>  <span class="c1"># Return in metres.</span></div>
+
+
+
+<div class="viewcode-block" id="tegnhammar_1992_adjusted_si_spruce">
+<a class="viewcode-back" href="../../../../../api/Munin.SiteIndex.sweden.SIS.html#Munin.SiteIndex.sweden.SIS.Tegnhammar_1992.tegnhammar_1992_adjusted_si_spruce">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">tegnhammar_1992_adjusted_si_spruce</span><span class="p">(</span><span class="n">sih</span><span class="p">,</span> <span class="n">dominant_age</span><span class="p">,</span> <span class="n">latitude</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tegnhammar&#39;s correction for SI 1992.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sih (float): Site index in metres.</span>
+<span class="sd">        dominant_age (float): Arithmetic mean of the age at breast height of the dominant trees.</span>
+<span class="sd">        latitude (float): Latitude in degrees.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        float: Adjusted SIH in metres.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">((</span><span class="n">sih</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mf">3.89</span> <span class="o">-</span> <span class="mf">0.0498</span> <span class="o">*</span> <span class="n">latitude</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">dominant_age</span> <span class="o">-</span> <span class="mi">15</span><span class="p">))</span> <span class="o">/</span> <span class="mi">10</span></div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../../../index.html">Munin</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api/modules.html">Munin</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

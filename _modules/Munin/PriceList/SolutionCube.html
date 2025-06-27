@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Munin.PriceList.SolutionCube &#8212; Munin  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=27fed22d" />
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for Munin.PriceList.SolutionCube</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pool</span><span class="p">,</span> <span class="n">cpu_count</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="c1"># Import your project&#39;s classes</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Munin.Timber.SweTimber</span><span class="w"> </span><span class="kn">import</span> <span class="n">SweTimber</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Munin.PriceList.PriceList</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pricelist</span><span class="p">,</span> <span class="n">create_pricelist_from_data</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Munin.Taper.Taper</span><span class="w"> </span><span class="kn">import</span> <span class="n">Taper</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Munin.TimberBucking.Nasberg_1985</span><span class="w"> </span><span class="kn">import</span> <span class="n">Nasberg_1985_BranchBound</span><span class="p">,</span> <span class="n">BuckingConfig</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_hash_pricelist</span><span class="p">(</span><span class="n">price_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a SHA256 hash of a pricelist dictionary for validation.&quot;&quot;&quot;</span>
+    <span class="c1"># Using json.dumps with sort_keys ensures a consistent string representation</span>
+    <span class="n">dhash</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">()</span>
+    <span class="n">encoded</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">price_data</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+    <span class="n">dhash</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">encoded</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dhash</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_worker_buck_one_tree</span><span class="p">(</span><span class="n">tree_params</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">pricelist_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">taper_model_class</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Taper</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A top-level function for a single tree optimization.</span>
+<span class="sd">    This is what each parallel process will execute.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">species</span><span class="p">,</span> <span class="n">dbh_cm</span><span class="p">,</span> <span class="n">height_dm</span> <span class="o">=</span> <span class="n">tree_params</span>
+    <span class="n">height_m</span> <span class="o">=</span> <span class="n">height_dm</span> <span class="o">/</span> <span class="mf">10.0</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">timber</span> <span class="o">=</span> <span class="n">SweTimber</span><span class="p">(</span><span class="n">species</span><span class="o">=</span><span class="n">species</span><span class="p">,</span> <span class="n">diameter_cm</span><span class="o">=</span><span class="n">dbh_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="o">=</span><span class="n">height_m</span><span class="p">)</span>
+        <span class="n">pricelist</span> <span class="o">=</span> <span class="n">create_pricelist_from_data</span><span class="p">(</span><span class="n">pricelist_data</span><span class="p">,</span> <span class="n">species</span><span class="p">,)</span>
+        <span class="n">optimizer</span> <span class="o">=</span> <span class="n">Nasberg_1985_BranchBound</span><span class="p">(</span><span class="n">timber</span><span class="p">,</span> <span class="n">pricelist</span><span class="p">,</span> <span class="n">taper_model_class</span><span class="p">)</span>
+        
+        <span class="c1"># We need the full result to get the sections</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">calculate_tree_value</span><span class="p">(</span><span class="n">min_diam_dead_wood</span><span class="o">=</span><span class="mi">99</span><span class="p">,</span><span class="n">config</span><span class="o">=</span><span class="n">BuckingConfig</span><span class="p">(</span><span class="n">save_sections</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">sections</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">sections_data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sections_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="vm">__dict__</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">sections</span><span class="p">]</span>
+
+        <span class="n">sections_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span>
+            <span class="n">sections_data</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="n">o</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">generic</span><span class="p">)</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+        <span class="p">)</span>
+        
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;species&quot;</span><span class="p">:</span> <span class="n">species</span><span class="p">,</span>
+            <span class="s2">&quot;dbh&quot;</span><span class="p">:</span> <span class="n">dbh_cm</span><span class="p">,</span>
+            <span class="s2">&quot;height&quot;</span><span class="p">:</span> <span class="n">height_m</span><span class="p">,</span>
+            <span class="s2">&quot;total_value&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">total_value</span><span class="p">,</span>
+            <span class="s2">&quot;solution_sections&quot;</span><span class="p">:</span> <span class="n">sections_json</span>
+        <span class="p">}</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="c1"># Log or handle errors for specific tree combinations</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error processing </span><span class="si">{</span><span class="n">species</span><span class="si">}</span><span class="s2"> DBH=</span><span class="si">{</span><span class="n">dbh_cm</span><span class="si">}</span><span class="s2"> H=</span><span class="si">{</span><span class="n">height_m</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;species&quot;</span><span class="p">:</span> <span class="n">species</span><span class="p">,</span>
+            <span class="s2">&quot;dbh&quot;</span><span class="p">:</span> <span class="n">dbh_cm</span><span class="p">,</span>
+            <span class="s2">&quot;height&quot;</span><span class="p">:</span> <span class="n">height_m</span><span class="p">,</span>
+            <span class="s2">&quot;total_value&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+            <span class="s2">&quot;solution_sections&quot;</span><span class="p">:</span> <span class="s1">&#39;[]&#39;</span>
+        <span class="p">}</span>
+
+
+<div class="viewcode-block" id="SolutionCube">
+<a class="viewcode-back" href="../../../api/Munin.PriceList.html#Munin.PriceList.SolutionCube.SolutionCube">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SolutionCube</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the SolutionCube with a loaded xarray Dataset.</span>
+<span class="sd">        It&#39;s recommended to use the `load` classmethod to create instances.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pricelist_hash</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pricelist_hash&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">taper_model</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;taper_model&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SolutionCube.generate">
+<a class="viewcode-back" href="../../../api/Munin.PriceList.html#Munin.PriceList.SolutionCube.SolutionCube.generate">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">pricelist_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">taper_model</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Taper</span><span class="p">],</span>
+        <span class="n">species_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">dbh_range</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+        <span class="n">height_range</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+        <span class="n">dbh_step</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">height_step</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span>
+        <span class="n">workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the solution cube by running the optimizer in parallel.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">workers</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">workers</span> <span class="o">=</span> <span class="n">cpu_count</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generating Solution Cube using </span><span class="si">{</span><span class="n">workers</span><span class="si">}</span><span class="s2"> parallel processes...&quot;</span><span class="p">)</span>
+
+        <span class="n">pricelist_hash</span> <span class="o">=</span> <span class="n">_hash_pricelist</span><span class="p">(</span><span class="n">pricelist_data</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pricelist hash: </span><span class="si">{</span><span class="n">pricelist_hash</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Create the grid of all tree parameters to compute</span>
+        <span class="n">dbh_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">dbh_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dbh_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">dbh_step</span><span class="p">,</span> <span class="n">dbh_step</span><span class="p">)</span>
+        <span class="n">height_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">height_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">height_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">height_step</span><span class="p">,</span> <span class="n">height_step</span><span class="p">)</span>
+        
+        <span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="n">sp</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">dbh</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">h</span><span class="o">*</span><span class="mi">10</span><span class="p">))</span> <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="n">species_list</span> <span class="k">for</span> <span class="n">dbh</span> <span class="ow">in</span> <span class="n">dbh_coords</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">height_coords</span>
+        <span class="p">]</span>
+
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total trees to process: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">tasks</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Use a partial function to pass the static pricelist and taper model to the worker</span>
+        <span class="n">worker_func</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">_worker_buck_one_tree</span><span class="p">,</span> <span class="n">pricelist_data</span><span class="o">=</span><span class="n">pricelist_data</span><span class="p">,</span> <span class="n">taper_model_class</span><span class="o">=</span><span class="n">taper_model</span><span class="p">)</span>
+
+        <span class="c1"># Run the optimizations in parallel</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">Pool</span><span class="p">(</span><span class="n">processes</span><span class="o">=</span><span class="n">workers</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
+            <span class="c1"># imap_unordered is great for getting results as they complete</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span>
+                <span class="nb">list</span><span class="p">(</span><span class="n">pool</span><span class="o">.</span><span class="n">imap_unordered</span><span class="p">(</span><span class="n">worker_func</span><span class="p">,</span> <span class="n">tasks</span><span class="p">,</span> <span class="n">chunksize</span><span class="o">=</span><span class="mi">10</span><span class="p">)),</span>
+                <span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">tasks</span><span class="p">),</span>
+                <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Generating Solution Cube&#39;</span>
+            <span class="p">)</span>
+        <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Finished parallel computation in </span><span class="si">{</span><span class="n">end_time</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start_time</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> seconds.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># --- Structure the results into an xarray Dataset ---</span>
+        <span class="c1"># Convert flat list of dicts to a DataFrame for easier manipulation</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;species&#39;</span><span class="p">,</span> <span class="s1">&#39;height&#39;</span><span class="p">,</span> <span class="s1">&#39;dbh&#39;</span><span class="p">])</span>
+
+        <span class="c1"># Convert to an xarray Dataset</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="o">.</span><span class="n">from_dataframe</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        
+        <span class="c1"># Add metadata as attributes</span>
+        <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;pricelist_hash&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pricelist_hash</span>
+        <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;taper_model&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">taper_model</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;creation_date_utc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+        <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;dbh_range&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dbh_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">dbh_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> cm&quot;</span>
+        <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;height_range&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">height_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">height_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> m&quot;</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Successfully created xarray Dataset.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SolutionCube.save">
+<a class="viewcode-back" href="../../../api/Munin.PriceList.html#Munin.PriceList.SolutionCube.SolutionCube.save">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Saves the dataset to a netCDF file.&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saving solution cube to </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">to_netcdf</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Save complete.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SolutionCube.load">
+<a class="viewcode-back" href="../../../api/Munin.PriceList.html#Munin.PriceList.SolutionCube.SolutionCube.load">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pricelist_to_verify</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads a solution cube from a netCDF file.&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading solution cube from </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">pricelist_to_verify</span><span class="p">:</span>
+            <span class="n">new_hash</span> <span class="o">=</span> <span class="n">_hash_pricelist</span><span class="p">(</span><span class="n">pricelist_to_verify</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pricelist_hash&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">new_hash</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Pricelist hash mismatch! The loaded cube was not generated with the provided pricelist.&quot;</span>
+                <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pricelist hash verified.&quot;</span><span class="p">)</span>
+            
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cube loaded successfully.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SolutionCube.lookup">
+<a class="viewcode-back" href="../../../api/Munin.PriceList.html#Munin.PriceList.SolutionCube.SolutionCube.lookup">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">species</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dbh</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">list</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs a fast lookup for a given tree&#39;s properties.</span>
+<span class="sd">        Uses nearest-neighbor interpolation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># .sel is xarray&#39;s powerful selection method. &#39;nearest&#39; finds the closest point.</span>
+            <span class="n">solution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span>
+                <span class="n">species</span><span class="o">=</span><span class="n">species</span><span class="p">,</span>
+                <span class="n">dbh</span><span class="o">=</span><span class="n">dbh</span><span class="p">,</span>
+                <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
+                <span class="n">method</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span>
+            <span class="p">)</span>
+            
+            <span class="n">total_value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">solution</span><span class="p">[</span><span class="s1">&#39;total_value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+            <span class="n">sections_json</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">solution</span><span class="p">[</span><span class="s1">&#39;solution_sections&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+            <span class="n">sections</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">sections_json</span><span class="p">)</span>
+            
+            <span class="k">return</span> <span class="n">total_value</span><span class="p">,</span> <span class="n">sections</span>
+
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning: Species &#39;</span><span class="si">{</span><span class="n">species</span><span class="si">}</span><span class="s2">&#39; not found in the solution cube.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="mf">0.0</span><span class="p">,</span> <span class="p">[]</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;An error occurred during lookup: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="mf">0.0</span><span class="p">,</span> <span class="p">[]</span></div>
+</div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">Munin</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">Munin</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
