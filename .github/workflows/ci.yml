@@ -66,8 +66,11 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          # This next line is the crucial addition
+          # Install project dependencies (e.g., your Munin package and its dev extras)
+          pip install .[dev]
+          # Install documentation-specific dependencies
           pip install -r docs/requirements.txt
+
 
       - name: Build Sphinx docs
         working-directory: docs
