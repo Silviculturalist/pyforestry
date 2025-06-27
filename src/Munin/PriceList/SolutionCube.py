@@ -4,7 +4,7 @@ import pandas as pd
 import hashlib
 import json
 import time
-from datetime import datetime, UTC
+from datetime import datetime, timezone as UTC
 from multiprocessing import Pool, cpu_count
 from typing import Dict, Any, Tuple, Type, Optional
 from functools import partial
