@@ -1,18 +1,11 @@
 .. MyProject documentation master file
 
-Welcome to MyProject’s documentation!
+Munin Documentation
 ====================================
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
+   api/*.rst
 
-   usage
-   api
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+..
