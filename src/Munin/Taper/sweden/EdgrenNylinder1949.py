@@ -238,21 +238,21 @@ class EdgrenNylinder1949(Taper):
         Instance method using pre-calculated base diameter.
         """
         if height_m < 0 or height_m >= self.timber.height_m:
-            return 0
+            return 0.0
 
         rel_height = height_m / self.timber.height_m
         relative_diameter = self.get_relative_diameter(rel_height)
 
         if relative_diameter is None or relative_diameter <= 0:
-            return None
+            return 0.0
             
         return (self.base_diameter * relative_diameter) / 100
 
     def get_height_at_diameter(self, diameter: float) -> float:
         """ Instance method. """
         if diameter <= 0 or diameter > self.base_diameter:
-             print(f"Invalid minDiameter: {diameter}. Must be between 0 and {self.base_diameter}.")
-             return None
+            print(f"Invalid minDiameter: {diameter}. Must be between 0 and {self.base_diameter}.")
+            return None
 
         def objective(height):
             # The objective function now calls the fast instance method
