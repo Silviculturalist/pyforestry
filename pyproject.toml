@@ -22,7 +22,18 @@ dependencies    = [
 ]
 
 [project.optional-dependencies]
-dev   = ["pytest", "black", "ruff", "build", "twine"]
+dev = [
+  "pytest",
+  "pytest-cov",          # ← measure coverage
+  "coverage",            # ← coverage engine
+  "black",
+  "ruff",
+  "build",
+  "twine",
+  "sphinx",              # ← docs tool
+  "sphinx-rtd-theme",    # ← a popular Sphinx theme
+  "myst-parser",         # ← if you want Markdown support
+]
 
 # ----- setuptools‑specific bits -----
 [tool.setuptools]
@@ -40,4 +51,9 @@ where = ["src"]              # automatic discovery under src/
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = ["--import-mode=importlib"]
+addopts = [
+  "--import-mode=importlib",
+  "--cov=Munin",                # measure your package
+  "--cov-report=term-missing",  # show missing lines in console
+  "--cov-report=html"           # generate htmlcov/
+]
