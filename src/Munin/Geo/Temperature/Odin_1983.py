@@ -1,6 +1,8 @@
 import math
+from typing import Optional
 
-def Odin_temperature_sum(latitude, altitude_m):
+def Odin_temperature_sum(latitude : float,
+                         altitude_m : float) -> float:
     '''
     Estimate annual temperature sum above 5°C.
 
@@ -32,7 +34,11 @@ def Odin_temperature_sum(latitude, altitude_m):
 import math
 
 class Moren_Perttu_radiation_1994:
-    def __init__(self, latitude, altitude, july_avg_temp=None, jan_avg_temp=None):
+    def __init__(self, 
+                latitude: float,
+                altitude: float,
+                july_avg_temp: Optional[float] = None,
+                jan_avg_temp: Optional[float] = None):
         """
         Initializes the class with common geographical and temperature data.
         Args:
@@ -243,6 +249,5 @@ class Moren_Perttu_radiation_1994:
 
     @staticmethod
     def get_growing_season_start_day(latitude_deg, altitude_m):
-        # GS_start = -35.760 + 2.489*lat - 0.0637*alt + 0.00132*lat*alt (Eq 14 [cite: 141])
         start_day = -35.760 + 2.489 * latitude_deg - 0.0637 * altitude_m + 0.00132 * latitude_deg * altitude_m
         return int(round(start_day))

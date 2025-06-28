@@ -4,7 +4,7 @@ from math import exp, log
 from typing import Tuple, Optional
 
 # Import base classes and helpers - Adjust paths as necessary
-from Munin.Helpers.Base import (
+from Munin.Helpers.Primitives import (
     Age, AgeMeasurement, SiteIndexValue, StandBasalArea, Stems
 )
 from Munin.Helpers.TreeSpecies import TreeSpecies, TreeName

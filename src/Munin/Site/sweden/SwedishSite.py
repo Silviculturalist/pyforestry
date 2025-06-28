@@ -1,7 +1,7 @@
 from typing import Optional, Union
 from dataclasses import dataclass, field
 from enum import Enum
-from Munin.Site.SiteBase import SiteBase
+from Munin.Helpers.Primitives import SiteBase
 from Munin.Geo.Geo import RetrieveGeoCode
 from Munin.SiteIndex.sweden.SIS import Hagglund_Lundmark_1979_SIS, eko_pm_2008_estimate_si_birch
 from Munin.Geo.Humidity import eriksson_1986_humidity
@@ -262,7 +262,7 @@ class SwedishSite(SiteBase):
         # Compute temperature sum
         try:
             if self.altitude is not None:
-                ts = Odin_temperature_sum(latitude=self.latitude, altitude=self.altitude)
+                ts = Odin_temperature_sum(latitude=self.latitude, altitude_m=self.altitude)
                 object.__setattr__(self, 'temperature_sum_odin1983', ts)
             else:
                 object.__setattr__(self, 'temperature_sum_odin1983', None)
@@ -303,11 +303,29 @@ class SwedishSite(SiteBase):
         )
 
         if sis_inputs_ok:
+            
+            #To assure static code analysis tools that this clause is only possible if sis_inputs_ok. 
+            #it will otherwise cause warnings when getting the labels.
+            assert self.county is not None
+            assert self.climate_zone is not None
+            assert self.altitude is not None
+            assert self.soil_moisture is not None
+            assert self.bottom_layer is not None
+            assert self.soil_texture is not None
+            assert self.field_layer is not None
+            assert self.soil_water is not None
+            assert self.soil_depth is not None
+            assert self.incline_percent is not None
+            assert self.aspect is not None
+            assert self.ditched is not None
+            assert self.n_of_limes_norrlandicus is not None
+
+
             # Common inputs derived from site state
             is_peat = self.soil_texture in (Sweden.SoilTextureSediment.PEAT, Sweden.SoilTextureTill.PEAT)
             is_gotland = (self.county == Sweden.County.GOTLAND)
             is_coast = (self.distance_to_coast < 50) if self.distance_to_coast is not None else False
-            county_label = self.county.value.label
+            county_label = self.county.value.code
             climate_label = self.climate_zone.value.label # Use the label string ("M1", "K2", etc.)
 
             # Attempt Spruce SI
@@ -356,6 +374,12 @@ class SwedishSite(SiteBase):
             self.soil_water is not None and self.soil_moisture is not None
         )
         if birch_inputs_ok:
+            assert self.altitude is not None
+            assert self.field_layer is not None
+            assert self.bottom_layer is not None
+            assert self.soil_water is not None
+            assert self.soil_moisture is not None
+
             try:
                 birch_si = eko_pm_2008_estimate_si_birch(
                     altitude=self.altitude, latitude=self.latitude,
