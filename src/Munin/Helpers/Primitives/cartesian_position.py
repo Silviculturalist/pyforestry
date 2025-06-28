@@ -1,23 +1,37 @@
-# ------------------------------------------------------------------------------
-# Position: a small data container for location with optional CRS
-# ------------------------------------------------------------------------------
+"""Module for cartesian coordinate operations.
+
+This module provides the Position class for handling 2D/3D coordinates,
+including construction from cartesian or polar inputs, optional CRS support,
+and utility methods for representation and input standardization.
+"""
 
 from typing import Optional, Union
 from math import cos, sin
 from pyproj import CRS
 
 class Position:
-    """
-    Represents an (X, Y, Z) coordinate with an optional CRS.
-    
-    If crs is None, the coordinate system is assumed to be non-geographic.
-        
+    """Container for an (X, Y, Z) coordinate with optional CRS.
+
+    Attributes:
+        X (float): X-coordinate (easting) in specified CRS or local units.
+        Y (float): Y-coordinate (northing) in specified CRS or local units.
+        Z (float): Elevation or third dimension value; defaults to 0.0.
+        crs (Optional[CRS]): Coordinate Reference System for interpreting coordinates.
+        coordinate_system (str): Underlying coordinate system type, always 'cartesian'.
     """
     def __init__(self,
                  X: float,
                  Y: float,
                  Z: Optional[float] = 0.0,
                  crs: Optional[CRS] = None):
+        """Initialize a Position.
+
+        Args:
+            X (float): X-coordinate value.
+            Y (float): Y-coordinate value.
+            Z (Optional[float], optional): Z-coordinate or elevation; defaults to 0.0.
+            crs (Optional[CRS], optional): Coordinate reference system; defaults to None.
+        """
         self.X = X
         self.Y = Y
         self.Z = Z
@@ -26,11 +40,17 @@ class Position:
 
     @classmethod
     def from_polar(cls, r: float, theta: float, z: Optional[float] = 0.0):
-        """
-        Create a Position using polar coordinates.
+        """Create a Position from polar coordinates.
 
-        Theta is assumed to be in radians.
-        The resulting Position has no CRS.
+        Converts radial distance and angle to cartesian X/Y.
+
+        Args:
+            r (float): Radial distance from origin.
+            theta (float): Angle in radians from X-axis.
+            z (Optional[float], optional): Z-coordinate; defaults to 0.0.
+
+        Returns:
+            Position: New Position instance in cartesian space.
         """
         x = r * cos(theta)
         y = r * sin(theta)
@@ -39,6 +59,11 @@ class Position:
         return obj
 
     def __repr__(self):
+        """Return unambiguous string representation of Position.
+
+        Returns:
+            str: Formatted string including X, Y, Z, and CRS.
+        """
         return f"Position(X={self.X}, Y={self.Y}, Z={self.Z}, crs={self.crs})"
 
 
@@ -47,9 +72,16 @@ class Position:
                                     tuple[float, float],
                                     tuple[float, float, float],
                                     None] = None) -> Optional['Position']:
-        """
-        Internal helper to standardize a user-provided position or tuple
-        into a Position instance, or return None if no valid position is given.
+        """Standardize input into a Position or return None.
+
+        Args:
+            pos_in (Union[Position, tuple, None]): Position instance or coordinate tuple.
+
+        Returns:
+            Optional[Position]: Input as Position, constructed if tuple, or None.
+        Raises:
+            ValueError: If tuple length is not 2 or 3.
+            TypeError: If input type is unsupported.
         """
         if pos_in is None:
             return None

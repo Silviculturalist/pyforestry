@@ -1,6 +1,10 @@
-# ------------------------------------------------------------------------------
-# Bitterlich (Angle count) Sampling
-# ------------------------------------------------------------------------------
+"""Module for Bitterlich (angle count) sampling techniques.
+
+This module provides classes to tally tree counts per species
+using the angle-count (relascope) method and to aggregate
+multiple sampling points into stand-level basal area and
+stem density metrics."""
+
 import math
 import statistics
 from typing import Optional, List, Tuple, Dict, Set, Union
@@ -8,22 +12,17 @@ from Munin.Helpers.TreeSpecies import TreeName
 from Munin.Helpers.Primitives import StandBasalArea, Stems
 
 class AngleCount:
-    """
-    Holds parameters for angle-count (relascope) sampling,
-    along with species-specific tally counts.
+    """Parameters and tallies for angle-count sampling at a single point.
+
+    See Also:
+        https://en.wikipedia.org/wiki/Relascope_sampling
 
     Attributes:
-    -----------
-    ba_factor : float
-        Basal Area Factor (m²/ha) per count.
-    value : list[float]
-        Parallel list of float counts, each entry matching a species in 'species'.
-    species : list[TreeName]
-        Parallel list of species, each matching an entry in 'value'.
-    point_id : str | None
-        Identifies the sampling point location (e.g., 'P1', 'P2', etc.).
-    slope : float
-        Slope correction factor or slope angle, if desired (default: 0.0).
+        ba_factor (float): Basal area factor (m²/ha) applied per count.
+        slope (float): Slope correction factor (rise/run).
+        point_id (Optional[str]): Identifier for the sampling point.
+        species (List[TreeName]): List of tree species encountered.
+        value (List[float]): Corresponding tallied counts for each species.
     """
     def __init__(self,
                  ba_factor: float,
@@ -31,6 +30,17 @@ class AngleCount:
                  species: Optional[List[TreeName]] = None,
                  point_id: Optional[str] = None,
                  slope: float = 0.0):
+        """Initialize sampling parameters and optional existing tallies.
+
+        Args:
+            ba_factor (float): Basal area factor in m²/ha per count.
+            slope (float, optional): Slope correction factor. Defaults to 0.0.
+            point_id (Optional[str], optional): Plot identifier. Defaults to None.
+            species (Optional[List[TreeName]], optional): Initial species list.
+                Defaults to empty list.
+            value (Optional[List[float]], optional): Initial counts list.
+                Defaults to empty list.
+        """
         self.ba_factor = ba_factor
         self.value: List[float] = value if value is not None else []
         self.species: List[TreeName] = species if species is not None else []
@@ -41,11 +51,11 @@ class AngleCount:
             raise ValueError(f"Length mismatch for point {point_id}")
 
     def add_observation(self, sp: TreeName, count: float):
-        """
-        Add (or update) the tally count for the given species by `count`.
-        Example:
-            add_observation(TreeSpecies.Sweden.Picea_abies, 2)
-            increments the Picea_abies count by 2.
+        """Add or update tally for a species at this point.
+
+        Args:
+            sp (TreeName): Tree species identifier.
+            count (float): Count increment for species tallies.
         """
         if sp in self.species:
             idx = self.species.index(sp)
@@ -55,17 +65,27 @@ class AngleCount:
             self.value.append(count)
 
 class AngleCountAggregator:
-    """
-    Aggregates multiple AngleCount objects, correctly handling per-plot BAF.
-    Handles merging records with the same point_id and computes stand-level metrics.
+    """Aggregate multiple AngleCount samples into stand metrics.
+
+    Combines per-point basal area factors (BAF) and tallies,
+    merging duplicate point records and computing mean and
+    standard error for basal area and stems per species.
     """
     def __init__(self, records: List[AngleCount]):
+        """Initialize with a list of AngleCount records.
+
+        Args:
+            records (List[AngleCount]): Individual plot samples.
+        """
         self.records = records
 
     def merge_by_point_id(self) -> List[AngleCount]:
-        """
-        Merge records with the same point_id.
-        Crucially, this now validates that BAF is consistent for a given point.
+        """Merge records sharing the same point_id, ensuring consistent BAF.
+
+        Returns:
+            List[AngleCount]: Merged samples per unique point.
+        Raises:
+            ValueError: If BAF differs among records with same point_id.
         """
         merged_records: Dict[Union[str, int], AngleCount] = {}
         for rec in self.records:
@@ -90,9 +110,13 @@ class AngleCountAggregator:
     
     def aggregate_stand_metrics(self) -> Tuple[Dict[TreeName, StandBasalArea],
                                              Dict[TreeName, Stems]]:
-        """
-        Aggregates records to compute per-species stand-level metrics,
-        correctly applying the BAF for each individual plot before aggregation.
+        """Compute mean basal area and stems density per species across plots.
+
+        Returns:
+            Tuple[
+                Dict[TreeName, StandBasalArea],
+                Dict[TreeName, Stems]
+            ]: Mapping species to basal area and stems metrics.
         """
         merged_records = self.merge_by_point_id()
         if not merged_records:
