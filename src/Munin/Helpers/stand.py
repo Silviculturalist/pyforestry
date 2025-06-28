@@ -267,8 +267,8 @@ class Stand:
                                         species=None,
                                         precision= sqrt(total_ba_var))
 
-        self._metric_estimates["Stems"] = stems_dict
-        self._metric_estimates["BasalArea"] = ba_dict
+        self._metric_estimates["Stems"] = {k: v for k, v in stems_dict.items()}
+        self._metric_estimates["BasalArea"] = {k: v for k, v in ba_dict.items()}
 
 
     def __repr__(self):
@@ -333,11 +333,19 @@ class Stand:
                                   key=lambda t: (t.diameter_cm if t.diameter_cm else -999),
                                   reverse=True)
             # The top M among those that have heights
-            top_m = [t for t in sorted_trees[:m_real] if t.height_m is not None]
-            if len(top_m) < m_real:
-                continue
+            valid_heights = [
+                t.height_m for t in sorted_trees[:m_real] if t.height_m is not None
+            ]
 
-            subplot_mean_h = statistics.mean([t.height_m for t in top_m])
+            # The original logic intended to skip any plot that could not provide M valid heights.
+            # This check preserves that intent.
+            if len(valid_heights) < m_real:
+                continue
+            
+            # Because the "if t.height_m is not None" check is inside the comprehension,
+            # Pylance knows that `valid_heights` is of type `list[float]`.
+            subplot_mean_h = statistics.mean(valid_heights)
+
             subplot_means.append(subplot_mean_h)
 
         if not subplot_means:
@@ -374,7 +382,7 @@ class Stand:
             definition=self.top_height_definition,
             species=None,  # or you could attempt an aggregated species list
             precision=precision_est,
-            est_bias=bias
+            est_bias=float(bias)
         )
 
     @staticmethod
@@ -479,8 +487,8 @@ class Stand:
         if all_angle_counts:
             # Use the AngleCount aggregator.
             ba_dict, stems_dict = AngleCountAggregator(all_angle_counts).aggregate_stand_metrics()
-            self._metric_estimates["BasalArea"] = ba_dict
-            self._metric_estimates["Stems"] = stems_dict
+            self._metric_estimates["Stems"] = {k: v for k, v in stems_dict.items()}
+            self._metric_estimates["BasalArea"] = {k: v for k, v in ba_dict.items()}
             self.use_angle_count = True
         else:
             # Otherwise, recompute using the tree-based estimates.

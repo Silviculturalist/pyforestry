@@ -1,7 +1,9 @@
-from typing import Union, Optional, List
+from typing import Union, Optional, List, TYPE_CHECKING
 from math import sqrt, pi
 from Munin.Helpers import Position, AngleCount, RepresentationTree, TreeName, parse_tree_species, SiteBase
 
+if TYPE_CHECKING:
+    from Munin.Helpers import Stand #Cannot be imported due to circular dependency.
 
 # ------------------------------------------------------------------------------
 # Plot: a set of representation trees over a circular or known-area region
@@ -98,7 +100,7 @@ class StandMetricAccessor:
         float(stand.BasalArea) -> numeric total
         stand.BasalArea.precision -> total's precision
     """
-    def __init__(self, stand: 'Stand', metric_name: str):
+    def __init__(self, stand: Stand, metric_name: str):
         self._stand = stand
         self._metric_name = metric_name
 
