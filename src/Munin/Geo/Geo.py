@@ -1,10 +1,11 @@
 from shapely.geometry import Point
 import geopandas as gpd
 from pyproj import Transformer
-from importlib.resources import files
-# Removed top-level import causing cycle:
+from importlib.resources import files, as_file
 
 from typing import Optional
+
+from Munin.Site.sweden import Sweden
 
 class RetrieveGeoCode:
 
@@ -24,7 +25,8 @@ class RetrieveGeoCode:
             float: Distance in kilometers to the nearest coastline.
         """
         # Load the coastline shapefile
-        coast_gdf = gpd.read_file(files("Munin.Geo.Coastline").joinpath("SwedishCoastLine_NE_medium_clipped.shp"))
+        with as_file(files("Munin.Geo.Coastline").joinpath("SwedishCoastLine_NE_medium_clipped.shp")) as coastline_path:
+            coast_gdf = gpd.read_file(coastline_path)
 
         # Ensure coastline data is in EPSG:4326 for consistency
         if coast_gdf.crs is None or coast_gdf.crs.to_epsg() != 4326:
@@ -47,7 +49,7 @@ class RetrieveGeoCode:
 
     @staticmethod
     # Use string literal for the type hint
-    def getClimateCode(lon, lat, epsg=4326) -> Optional['SwedenClimateZone']:
+    def getClimateCode(lon, lat, epsg=4326) -> Optional[Sweden.ClimateZone]:
         """
         Retrieve the climate zone enum member for a given coordinate.
 
@@ -57,13 +59,12 @@ class RetrieveGeoCode:
             epsg (int): EPSG code for the input coordinates (default: 4326).
 
         Returns:
-            SwedenClimateZone | None: The climate zone enum member or None if not found.
+            Sweden.ClimateZone | None: The climate zone enum member or None if not found.
         """
-        # Import locally within the method for runtime use
-        from Munin.Site.sweden.SwedishSite import SwedenClimateZone
-
+        
         # Load the climate shapefile and reproject to EPSG:3006
-        klimat_gdf = gpd.read_file(files('Munin.Geo.Climate').joinpath("Klimat.shp")).to_crs(epsg=3006)
+        with as_file(files('Munin.Geo.Climate').joinpath("Klimat.shp")) as climatezone_path:
+            klimat_gdf = gpd.read_file(climatezone_path).to_crs(epsg=3006)
 
         # Transform the input coordinates from the provided epsg to EPSG:3006
         transformer = Transformer.from_crs(epsg, 3006, always_xy=True)
@@ -77,12 +78,12 @@ class RetrieveGeoCode:
         else:
             climate_zone_code_int = klimat_polygon.iloc[0]['KLIMZON_']
             # Lookup and return the enum member using the code (runtime use)
-            return SwedenClimateZone.from_code(climate_zone_code_int)
+            return Sweden.ClimateZone.from_code(climate_zone_code_int)
 
 
     @staticmethod
     # Use string literal for the type hint
-    def getCountyCode(lon, lat, epsg=4326) -> Optional['SwedenCounty']:
+    def getCountyCode(lon, lat, epsg=4326) -> Optional[Sweden.County]:
         """
         Retrieve the county enum member for a given coordinate.
 
@@ -94,11 +95,11 @@ class RetrieveGeoCode:
         Returns:
             SwedenCounty | None: The corresponding SwedenCounty enum member or None if not found.
         """
-        # Import locally within the method for runtime use
-        from Munin.Site.sweden.SwedishSite import SwedenCounty
 
         # Load the county shapefile and reproject to EPSG:3006
-        dlanskod_gdf = gpd.read_file(files('Munin.Geo.Counties').joinpath('RT_Dlanskod.shp')).to_crs(epsg=3006)
+        with as_file(files('Munin.Geo.Counties').joinpath('RT_Dlanskod.shp')) as dlanskod_path:
+            dlanskod_gdf = gpd.read_file(dlanskod_path).to_crs(epsg=3006)
+
 
         # Transform the input coordinates from the provided epsg to EPSG:3006
         transformer = Transformer.from_crs(epsg, 3006, always_xy=True)
@@ -112,4 +113,4 @@ class RetrieveGeoCode:
         else:
             county_code_int = dlanskod_polygon.iloc[0]['DLANSKOD']
             # Lookup and return the enum member using the code (runtime use)
-            return SwedenCounty.from_code(county_code_int)
+            return Sweden.County.from_code(county_code_int)

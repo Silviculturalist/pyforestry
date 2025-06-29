@@ -1,115 +1,34 @@
-from shapely import Polygon
-import geopandas as gpd
-import math
+# ------------------------------------------------------------------------------
+# Stand: a collection of plots and/or a polygon
+# ------------------------------------------------------------------------------
+
+from math import pi, sqrt, isclose
 import numpy as np
+from typing import Optional, List, Dict, Any, Union, cast
 import statistics
-from typing import List, Any, Dict, Optional, Union
-
-
-# -------------
-# Stubs
-# -------------
-from Munin.Site.SiteBase import SiteBase  
-from Munin.Helpers.TreeSpecies import (
-    TreeName, 
-    parse_tree_species
-)
-
+from pyproj import CRS
+from shapely import Polygon
+from shapely.geometry.base import BaseGeometry
+import geopandas as gpd
+from Munin.Helpers.plot import CircularPlot
 from Munin.Helpers.Primitives import (
-    Position,
-    AngleCount,
-    AngleCountAggregator,
-    RepresentationTree,
-    TopHeightDefinition,
     Stems,
     StandBasalArea,
-    QuadraticMeanDiameter,
     TopHeightMeasurement,
-
+    TopHeightDefinition,
+    SiteBase,
+    QuadraticMeanDiameter,
+    
 )
 
-# ------------------------------------------------------------------------------
-# Plot: a set of representation trees over a circular or known-area region
-# ------------------------------------------------------------------------------
+from Munin.Helpers import (
+    TreeName,
+    CircularPlot,
+    AngleCountAggregator,
+    RepresentationTree,
+    parse_tree_species 
+)
 
-class CircularPlot:
-    """
-    Contains information from a (usually) circular plot in a stand.
-
-    Attributes:
-    -----------
-    id : int | str
-        An identifier for this plot.
-    position : Position | None
-        The location of the plot center (if known).
-    radius_m : float | None
-        The radius of the circular plot in meters (if known).
-    occlusion : float
-        Portion [0-1] of the stand to be adjusted for being outside of the stand. Adjustment is 
-    area_m2 : float | None
-        The area of the plot in m² (if known). Must supply either radius_m or area_m2.
-    site : SiteBase | None
-        Reference to a site object, if any.
-    trees : list[RepresentationTree]
-        The trees recorded on this plot (each possibly representing multiple stems).
-    """
-    def __init__(self,
-                 id: Union[int, str],
-                 position: Optional[Position] = None,
-                 radius_m: Optional[float] = None,
-                 area_m2: Optional[float] = None,
-                 site: Optional[SiteBase] = None,
-                 occlusion: Optional[float] = 0,
-                 AngleCount: Optional[List[AngleCount]] = None,
-                 trees: Optional[List[RepresentationTree]] = None):
-        if id is None:
-            raise ValueError('Plot must be given an ID (integer or string).')
-
-        self.id = id
-        self.position = position
-        self.site = site
-
-        if not 0<=occlusion<1:
-            raise ValueError('Plot must have [0,0.99] occlusion!')
-        self.occlusion = occlusion
-
-        self.AngleCount = AngleCount if AngleCount is not None else []
-
-        self.trees = trees if trees is not None else []
-
-        # Must have either radius or area
-        if radius_m is None and area_m2 is None:
-            raise ValueError('Plot cannot be created without either a radius_m or an area_m2!')
-
-        if radius_m is not None:
-            self.radius_m = radius_m
-
-        if area_m2 is not None:
-            self.area_m2 = area_m2
-
-        if radius_m is not None and area_m2 is None:
-            self.area_m2 = math.pi * (radius_m ** 2)
-        else:
-            self.radius_m = math.sqrt(self.area_m2/math.pi) 
-        
-        # If both were given, verify consistency
-        if radius_m is not None and area_m2 is not None:
-            # Check the difference
-            correct_area = math.pi * (radius_m ** 2)
-            if abs(correct_area - area_m2) > 1e-6:
-                raise ValueError(f"Mismatch: given radius {radius_m} => area {correct_area:.6f}, "
-                                 f"but you specified {area_m2:.6f}.")
-
-    @property
-    def area_ha(self) -> float:
-        """
-        Returns the plot area in hectares.
-        """
-        return self.area_m2 / 10_000.0
-
-    def __repr__(self):
-        return (f"Plot(id={self.id}, radius_m={getattr(self, 'radius_m', None)}, "
-                f"area_m2={self.area_m2:.2f}, #trees={len(self.trees)})")
 
 # -------------------------------------------------------------------------
 # Accessor for .BasalArea, .Stems, etc.
@@ -123,7 +42,7 @@ class StandMetricAccessor:
         float(stand.BasalArea) -> numeric total
         stand.BasalArea.precision -> total's precision
     """
-    def __init__(self, stand: 'Stand', metric_name: str):
+    def __init__(self, stand: "Stand", metric_name: str):
         self._stand = stand
         self._metric_name = metric_name
 
@@ -185,10 +104,6 @@ class StandMetricAccessor:
         return f"<StandMetricAccessor metric={self._metric_name}>"
 
 
-# ------------------------------------------------------------------------------
-# Stand: a collection of plots and/or a polygon
-# ------------------------------------------------------------------------------
-
 class Stand:
     """
     Represents a forest stand, which may have:
@@ -206,7 +121,7 @@ class Stand:
                  area_ha: Optional[float] = None,
                  plots: Optional[List[CircularPlot]] = None,
                  polygon: Optional[Polygon] = None,
-                 crs: str = None,
+                 crs: Optional[CRS] = None,
                  top_height_definition: Optional[TopHeightDefinition] = None):
         self.site = site
         self.polygon = polygon
@@ -226,7 +141,8 @@ class Stand:
                 # Reproject to an appropriate UTM
                 utm_crs = gdf.estimate_utm_crs()
                 gdf = gdf.to_crs(utm_crs)
-            proj_polygon = gdf.geometry.iloc[0]
+                
+            proj_polygon = cast(BaseGeometry,gdf.geometry.iloc[0])
             if not proj_polygon.is_valid:
                 raise ValueError('Polygon is not valid after reprojection to a UTM projection. Check original provided CRS.')
             polygon_area_m2 = proj_polygon.area
@@ -248,12 +164,19 @@ class Stand:
 
         #Get angle-counting estimates for stand (should be stored in self._metric_estimates)
         # Determine if any plots supply AngleCount objects.
-        all_angle_counts = [(ac, plot.occlusion) for plot in self.plots for ac in plot.AngleCount]
+        all_angle_counts = [ac for plot in self.plots for ac in plot.AngleCount]
         if all_angle_counts:
             # Use AngleCount-based estimates.
-            ba_dict, stems_dict = AngleCountAggregator(all_angle_counts).aggregate_stand_metrics()
-            self._metric_estimates["BasalArea"] = ba_dict
-            self._metric_estimates["Stems"] = stems_dict
+            ba_from_angle_count, stems_from_angle_count = AngleCountAggregator(all_angle_counts).aggregate_stand_metrics()
+
+            # To satisfy the invariant type of the _metric_estimates dictionary, we must build new 
+            # dictionaries that explicitly match the target type: Dict[Any, Union[Stems, StandBasalArea]].
+            
+            basal_area_metrics: Dict[Any, Union[Stems, StandBasalArea]] = {k: v for k, v in ba_from_angle_count.items()}
+            stems_metrics: Dict[Any, Union[Stems, StandBasalArea]] = {k: v for k, v in stems_from_angle_count.items()}
+
+            self._metric_estimates["BasalArea"] = basal_area_metrics
+            self._metric_estimates["Stems"] = stems_metrics
             self.use_angle_count = True
         else:
             self.use_angle_count = False
@@ -318,16 +241,16 @@ class Stand:
             stems_obj = stems_dict[key]
             if stems_obj.value > 0:
                 # QMD in cm computed from BA (m²/ha) and stems (stems/ha)
-                qmd_value = math.sqrt((40000.0 * ba_obj.value) / (math.pi * stems_obj.value))
+                qmd_value =  sqrt((40000.0 * ba_obj.value) / ( pi * stems_obj.value))
                 # Propagate errors:
                 # dQ/dBA = 20000 / (pi * stems * QMD)
                 # dQ/dStems = - QMD / (2 * stems)
                 if qmd_value > 0:
-                    dQ_dBA = 20000.0 / (math.pi * stems_obj.value * qmd_value)
+                    dQ_dBA = 20000.0 / ( pi * stems_obj.value * qmd_value)
                 else:
                     dQ_dBA = 0.0
                 dQ_dStems = qmd_value / (2 * stems_obj.value)
-                qmd_precision = math.sqrt((dQ_dBA * ba_obj.precision)**2 +
+                qmd_precision =  sqrt((dQ_dBA * ba_obj.precision)**2 +
                                           (dQ_dStems * stems_obj.precision)**2)
             else:
                 qmd_value = 0.0
@@ -340,7 +263,7 @@ class Stand:
 
     def _compute_ht_estimates(self):
         """
-        Compute Horvitz–Thompson style estimates across all plots.
+        Compute Horvitz-Thompson style estimates across all plots.
         We'll sum or average the per-plot values for each species:
           - stems/ha
           - basal_area/ha
@@ -378,7 +301,7 @@ class Stand:
                 for t in trlist:
                     d_cm = float(t.diameter_cm) if t.diameter_cm is not None else 0.0
                     r_m = (d_cm / 100.0) / 2.0
-                    ba_sum += math.pi * (r_m ** 2) * t.weight
+                    ba_sum +=  pi * (r_m ** 2) * t.weight
                 # Adjusted BA/ha: divide by effective area.
                 ba_ha = ba_sum / effective_area_ha
 
@@ -406,8 +329,8 @@ class Stand:
             ba_mean = statistics.mean(b_vals) if b_vals else 0.0
             ba_var = statistics.pvariance(b_vals) if len(b_vals) > 1 else 0.0
 
-            stems_dict[sp] = Stems(value=stems_mean, species=sp, precision=math.sqrt(stems_var))
-            ba_dict[sp] = StandBasalArea(value=ba_mean, species=sp, precision=math.sqrt(ba_var))
+            stems_dict[sp] = Stems(value=stems_mean, species=sp, precision= sqrt(stems_var))
+            ba_dict[sp] = StandBasalArea(value=ba_mean, species=sp, precision= sqrt(ba_var))
 
             total_stems_val += stems_mean
             total_stems_var += stems_var
@@ -417,13 +340,13 @@ class Stand:
             # "TOTAL" aggregator
         stems_dict["TOTAL"] = Stems(value=total_stems_val,
                                         species=None,
-                                        precision=math.sqrt(total_stems_var))
+                                        precision= sqrt(total_stems_var))
         ba_dict["TOTAL"] = StandBasalArea(value=total_ba_val,
                                         species=None,
-                                        precision=math.sqrt(total_ba_var))
+                                        precision= sqrt(total_ba_var))
 
-        self._metric_estimates["Stems"] = stems_dict
-        self._metric_estimates["BasalArea"] = ba_dict
+        self._metric_estimates["Stems"] = {k: v for k, v in stems_dict.items()}
+        self._metric_estimates["BasalArea"] = {k: v for k, v in ba_dict.items()}
 
 
     def __repr__(self):
@@ -455,7 +378,7 @@ class Stand:
             mode_area_ha = plot_areas_ha[0]
 
         # Subset the plots that match this mode
-        subplots = [p for p in self.plots if math.isclose(p.area_ha, mode_area_ha, rel_tol=1e-9)]
+        subplots = [p for p in self.plots if  isclose(p.area_ha, mode_area_ha, rel_tol=1e-9)]
 
         if not subplots:
             return None
@@ -488,11 +411,19 @@ class Stand:
                                   key=lambda t: (t.diameter_cm if t.diameter_cm else -999),
                                   reverse=True)
             # The top M among those that have heights
-            top_m = [t for t in sorted_trees[:m_real] if t.height_m is not None]
-            if len(top_m) < m_real:
-                continue
+            valid_heights = [
+                t.height_m for t in sorted_trees[:m_real] if t.height_m is not None
+            ]
 
-            subplot_mean_h = statistics.mean([t.height_m for t in top_m])
+            # The original logic intended to skip any plot that could not provide M valid heights.
+            # This check preserves that intent.
+            if len(valid_heights) < m_real:
+                continue
+            
+            # Because the "if t.height_m is not None" check is inside the comprehension,
+            # Pylance knows that `valid_heights` is of type `list[float]`.
+            subplot_mean_h = statistics.mean(valid_heights)
+
             subplot_means.append(subplot_mean_h)
 
         if not subplot_means:
@@ -502,12 +433,12 @@ class Stand:
 
         # Simple standard error across subplots
         if len(subplot_means) > 1:
-            precision_est = statistics.pstdev(subplot_means) / math.sqrt(len(subplot_means))
+            precision_est = statistics.pstdev(subplot_means) /  sqrt(len(subplot_means))
         else:
             precision_est = 0.0
 
         # 4. Use a small Monte Carlo to estimate bias for (r_real, m_real)
-        real_radius_m = math.sqrt(mode_area_ha * 10_000 / math.pi)
+        real_radius_m =  sqrt(mode_area_ha * 10_000 /  pi)
         nominal_top_n = self.top_height_definition.nominal_n
         nominal_area_ha = self.top_height_definition.nominal_area_ha
 
@@ -529,7 +460,7 @@ class Stand:
             definition=self.top_height_definition,
             species=None,  # or you could attempt an aggregated species list
             precision=precision_est,
-            est_bias=bias
+            est_bias=float(bias)
         )
 
     @staticmethod
@@ -574,7 +505,7 @@ class Stand:
 
         for _ in range(n_simulations):
             # Generate random positions in the square bounding nominal_area
-            side = math.sqrt(nominal_area)
+            side =  sqrt(nominal_area)
             x_pos = np.random.uniform(0, side, n_trees)
             y_pos = np.random.uniform(0, side, n_trees)
 
@@ -634,8 +565,8 @@ class Stand:
         if all_angle_counts:
             # Use the AngleCount aggregator.
             ba_dict, stems_dict = AngleCountAggregator(all_angle_counts).aggregate_stand_metrics()
-            self._metric_estimates["BasalArea"] = ba_dict
-            self._metric_estimates["Stems"] = stems_dict
+            self._metric_estimates["Stems"] = {k: v for k, v in stems_dict.items()}
+            self._metric_estimates["BasalArea"] = {k: v for k, v in ba_dict.items()}
             self.use_angle_count = True
         else:
             # Otherwise, recompute using the tree-based estimates.

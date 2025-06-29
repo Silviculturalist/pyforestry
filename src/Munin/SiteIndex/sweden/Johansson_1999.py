@@ -78,7 +78,7 @@ def johansson_1999_height_trajectory_sweden_alnus_glutinosa(
     # Return modified to SiteIndexValue
     return SiteIndexValue(
         value=height_at_age2,
-        reference_age=age2_val,
+        reference_age=Age.TOTAL(age2_val),
         species={TreeSpecies.Sweden.alnus_glutinosa},
         fn=johansson_1999_height_trajectory_sweden_alnus_glutinosa
     )
@@ -155,7 +155,7 @@ def johansson_1999_height_trajectory_sweden_alnus_incana(
     # Return modified to SiteIndexValue
     return SiteIndexValue(
         value=height_at_age2,
-        reference_age=age2_val,
+        reference_age=Age.TOTAL(age2_val),
         species={TreeSpecies.Sweden.alnus_incana},
         fn=johansson_1999_height_trajectory_sweden_alnus_incana
     )

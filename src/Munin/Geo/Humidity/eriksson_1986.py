@@ -1,8 +1,10 @@
 import geopandas as gpd
 from shapely.geometry import Point
-from importlib.resources import files
+from importlib.resources import files, as_file
 
-def eriksson_1986_humidity(longitude,latitude, epsg=4326):
+def eriksson_1986_humidity(longitude : float,
+                           latitude : float,
+                           epsg : int=4326):
     """
     Estimate humidity during the vegetation period for Swedish sites.
 
@@ -21,11 +23,11 @@ def eriksson_1986_humidity(longitude,latitude, epsg=4326):
     if epsg == 3006 and longitude > 1e6:
         raise ValueError("Latitude and Longitude appear to be mixed up.")
 
-    # Locate the humidity shapefile using importlib.resources
-    humidity_shapefile_path = files("Munin.Geo.Humidity").joinpath("humidity.shp")
-
-    # Load the humidity shapefile
-    humidity_gdf = gpd.read_file(humidity_shapefile_path)
+    # Locate the humidity shapefile using importlib.resources in a context manager
+    # This is the corrected section
+    with as_file(files("Munin.Geo.Humidity").joinpath("humidity.shp")) as humidity_shapefile_path:
+        # Load the humidity shapefile
+        humidity_gdf = gpd.read_file(humidity_shapefile_path)
 
     # Create a GeoDataFrame with the input point
     point = gpd.GeoDataFrame(
@@ -35,12 +37,11 @@ def eriksson_1986_humidity(longitude,latitude, epsg=4326):
 
     # Reproject the point to match the shapefile CRS if needed
     if epsg != 4326:
-        target_crs = "EPSG:4326"
-        point = point.to_crs(target_crs)
+        point = point.to_crs(epsg=4326)
 
     # Ensure the humidity shapefile is in the same CRS
     if humidity_gdf.crs != point.crs:
-        humidity_gdf = humidity_gdf.to_crs(point.crs)
+        humidity_gdf = humidity_gdf.to_crs(epsg=4326)
 
     # Perform spatial join to extract humidity value
     joined = gpd.sjoin(point, humidity_gdf, how="left", predicate="intersects")

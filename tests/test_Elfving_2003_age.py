@@ -1,15 +1,15 @@
 import pytest
 from Munin.Misc.sweden.Elfving_2003 import Elfving2003SingleTreeAge
 from Munin.Helpers.TreeSpecies import TreeSpecies, TreeName
-from Munin.Site.sweden.SwedishSite import SwedenFieldLayer
+from Munin.Site.sweden import Sweden
 from math import isclose
 # These are chosen to be generally valid for many groups.
 DEFAULT_AGE_PARAMS = {
     "diameter": 20,  # cm
     "species": TreeSpecies.Sweden.pinus_sylvestris, # Default to Pine
     "total_stand_age": 80,  # years
-    "SIS": 26,  # m
-    "field_layer": SwedenFieldLayer.BILBERRY, # code 13 (neither rich nor poor by default defs)
+    "SIS": 26,  # m 
+    "field_layer":  Sweden.FieldLayer.BILBERRY, # code 13 (neither rich nor poor by default defs)
     "basal_area_plot_m2_ha": 30,
     "basal_area_relascope_m2_ha": 25,
     "altitude_m": 100,
@@ -28,19 +28,19 @@ DEFAULT_AGE_PARAMS = {
 
 class TestElfving2003SingleTreeAgeHelpers:
     def test_is_rich_site(self):
-        assert Elfving2003SingleTreeAge._is_rich_site(SwedenFieldLayer.HIGH_HERB_WITHOUT_SHRUBS) == 1 # code 1
+        assert Elfving2003SingleTreeAge._is_rich_site( Sweden.FieldLayer.HIGH_HERB_WITHOUT_SHRUBS) == 1 # code 1
         assert Elfving2003SingleTreeAge._is_rich_site(5) == 1 # code 5 (Low-herb with shrubs/bilberry)
         assert Elfving2003SingleTreeAge._is_rich_site(12) == 1 # code 12 (Horsetail)
-        assert Elfving2003SingleTreeAge._is_rich_site(SwedenFieldLayer.BILBERRY) == 0 # code 13
-        assert Elfving2003SingleTreeAge._is_rich_site(SwedenFieldLayer.LICHEN_DOMINANT) == 0 # code 18
+        assert Elfving2003SingleTreeAge._is_rich_site( Sweden.FieldLayer.BILBERRY) == 0 # code 13
+        assert Elfving2003SingleTreeAge._is_rich_site( Sweden.FieldLayer.LICHEN_DOMINANT) == 0 # code 18
         assert Elfving2003SingleTreeAge._is_rich_site(None) == 0
         assert Elfving2003SingleTreeAge._is_rich_site(2) == 1
 
     def test_is_poor_site(self):
-        assert Elfving2003SingleTreeAge._is_poor_site(SwedenFieldLayer.LICHEN_DOMINANT) == 1 # code 18
+        assert Elfving2003SingleTreeAge._is_poor_site( Sweden.FieldLayer.LICHEN_DOMINANT) == 1 # code 18
         assert Elfving2003SingleTreeAge._is_poor_site(14) == 1 # Lingonberry
-        assert Elfving2003SingleTreeAge._is_poor_site(SwedenFieldLayer.BILBERRY) == 0 # code 13
-        assert Elfving2003SingleTreeAge._is_poor_site(SwedenFieldLayer.HIGH_HERB_WITHOUT_SHRUBS) == 0 # code 1
+        assert Elfving2003SingleTreeAge._is_poor_site( Sweden.FieldLayer.BILBERRY) == 0 # code 13
+        assert Elfving2003SingleTreeAge._is_poor_site( Sweden.FieldLayer.HIGH_HERB_WITHOUT_SHRUBS) == 0 # code 1
         assert Elfving2003SingleTreeAge._is_poor_site(None) == 0
         assert Elfving2003SingleTreeAge._is_poor_site(15) == 1
 
@@ -172,7 +172,7 @@ class TestElfving2003SingleTreeAgeMain:
         params_dict["is_gotland"] = True
         params_dict["is_ditched"] = True
         params_dict["is_peat_soil"] = True
-        params_dict["field_layer"] = SwedenFieldLayer.HIGH_HERB_WITHOUT_SHRUBS # code 1
+        params_dict["field_layer"] =  Sweden.FieldLayer.HIGH_HERB_WITHOUT_SHRUBS # code 1
         params_dict["species"] = TreeSpecies.Sweden.carpinus_betulus # Shade-tolerant
         
         mp = Elfving2003SingleTreeAge._prepare_model_params(

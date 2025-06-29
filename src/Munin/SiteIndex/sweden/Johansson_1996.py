@@ -70,7 +70,7 @@ def johansson_1996_height_trajectory_sweden_aspen(
         height_at_age2 = dominant_height * (((1 - math.exp(-0.0235 * age2_val)) / (1 - math.exp(-0.0235 * age_val))) ** 1.1568)
         return SiteIndexValue(
             value=height_at_age2,
-            reference_age=age2_val,
+            reference_age=Age.TOTAL(age2_val),
             species={TreeSpecies.Sweden.populus_tremula},
             fn=johansson_1996_height_trajectory_sweden_aspen
         )
@@ -92,7 +92,7 @@ def johansson_1996_height_trajectory_sweden_aspen(
     # Return modified to SiteIndexValue
     return SiteIndexValue(
         value=height_at_age2,
-        reference_age=age2_val,
+        reference_age=Age.TOTAL(age2_val),
         species={TreeSpecies.Sweden.populus_tremula},
         fn=johansson_1996_height_trajectory_sweden_aspen
     )

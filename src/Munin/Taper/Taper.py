@@ -23,7 +23,8 @@ class Taper:
         Returns diameter under bark (cm) at a given height (m) from stump.
         This calls your subclass taper.get_diameter_at_height function.
         """
-        h = height_m + self.timber.stump_height_m
+        stump_height_m = 0.0 if self.timber.stump_height_m is None else self.timber.stump_height_m
+        h = height_m + stump_height_m
         if h < 0 or h > self.timber.height_m:
             return 0.0
         
@@ -46,11 +47,13 @@ class Taper:
         # --- CORRECTED CALL: No longer passes self.timber ---
         height_above_ground = self.taper.get_height_at_diameter(diameter)
 
+        stump_height = 0.0 if self.timber.stump_height_m is None else self.timber.stump_height_m
+
         if height_above_ground is None:
             return 0.0
             
         # Return height above stump
-        return height_above_ground - self.timber.stump_height_m
+        return height_above_ground - stump_height
 
     def volume_section(self, h1_m: float, h2_m: float) -> float:
         """

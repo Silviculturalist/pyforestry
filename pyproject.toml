@@ -32,7 +32,7 @@ dev = [
   "build",
   "twine",
   "sphinx",              # ← docs tool
-  "sphinx-rtd-theme",    # ← a popular Sphinx theme
+  "furo",                # ← a popular Sphinx theme
   "myst-parser",         # ← if you want Markdown support
 ]
 
@@ -52,6 +52,9 @@ where = ["src"]              # automatic discovery under src/
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+filterwarnings = [ #Ignore warning from pyogrio
+  "ignore:The 'shapely.geos' module is deprecated:DeprecationWarning:pyogrio"
+]
 addopts = [
   "--import-mode=importlib",
   "--cov=Munin",                # measure your package

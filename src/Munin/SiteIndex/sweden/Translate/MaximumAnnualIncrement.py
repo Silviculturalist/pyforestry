@@ -1,28 +1,7 @@
 # codefolder/MaximumAnnualIncrement.py (Modification)
-from typing import Union
 from Munin.Helpers.Primitives import SiteIndexValue
 from Munin.Helpers.TreeSpecies import TreeSpecies, TreeName
-from Munin.Site.sweden.SwedishSite import Sweden # Now includes Sweden.County
-
-# Define sets of county codes for easier checking
-NORTHERN_COUNTY_CODES = {
-    Sweden.County.NORRBOTTENS_LAPPMARK,
-    Sweden.County.NORRBOTTENS_KUSTLAND,
-    Sweden.County.VASTERBOTTENS_LAPPMARK,
-    Sweden.County.VASTERBOTTENS_KUSTLAND,
-    Sweden.County.VASTERNORRLAND_ANGERMANLANDS,
-    Sweden.County.VASTERNORRLAND_MEDELPADS,
-    Sweden.County.JAMTLAND_JAMTLANDS,
-    Sweden.County.JAMTLAND_HARJEDALENS,
-    Sweden.County.KOPPARBERG_SALEN_IDRE
-}
-
-MIDDLE_COUNTY_CODES = {
-    Sweden.County.KOPPARBERG_OVRIGA,
-    Sweden.County.GAVLEBORG_HALSINGLANDS,
-    Sweden.County.GAVLEBORG_OVRIGA,
-    Sweden.County.VARMLAND    
-}
+from Munin.Site.sweden.SwedishSite import Sweden
 
 def hagglund_1981_SI_to_productivity(
     h100_input: SiteIndexValue,
@@ -48,6 +27,27 @@ def hagglund_1981_SI_to_productivity(
         ValueError: If h100_input.reference_age value is not 100, or if H100 value is not positive.
         TypeError: If input types are incorrect.
     """
+
+    # Define sets of county codes for easier checking
+    NORTHERN_COUNTY_CODES = {
+        Sweden.County.NORRBOTTENS_LAPPMARK,
+        Sweden.County.NORRBOTTENS_KUSTLAND,
+        Sweden.County.VASTERBOTTENS_LAPPMARK,
+        Sweden.County.VASTERBOTTENS_KUSTLAND,
+        Sweden.County.VASTERNORRLAND_ANGERMANLANDS,
+        Sweden.County.VASTERNORRLAND_MEDELPADS,
+        Sweden.County.JAMTLAND_JAMTLANDS,
+        Sweden.County.JAMTLAND_HARJEDALENS,
+        Sweden.County.KOPPARBERG_SALEN_IDRE
+    }
+
+    MIDDLE_COUNTY_CODES = {
+        Sweden.County.KOPPARBERG_OVRIGA,
+        Sweden.County.GAVLEBORG_HALSINGLANDS,
+        Sweden.County.GAVLEBORG_OVRIGA,
+        Sweden.County.VARMLAND    
+    }
+
     # Validate inputs
     # Check if the numeric value of the reference_age is 100
     if h100_input.reference_age != 100:

@@ -9,7 +9,7 @@ def eko_pm_2008_estimate_si_birch(altitude, latitude, vegetation, ground_layer, 
     Parameters:
         altitude (float): Altitude in meters above sea level.
         latitude (float): Latitude in degrees.
-        vegetation (int): Vegetation type (1–18) as per Swedish National Forest Inventory (NFI). 
+        vegetation (int): Vegetation type (1-18) as per Swedish National Forest Inventory (NFI). 
             Vegetation types:
                 1  = Rich-herb without shrubs
                 2  = Rich-herb with shrubs/bilberry
@@ -29,7 +29,7 @@ def eko_pm_2008_estimate_si_birch(altitude, latitude, vegetation, ground_layer, 
                 16 = Poor shrub
                 17 = Lichen, frequent occurrence
                 18 = Lichen, dominating.
-        ground_layer (int): Ground layer type (1–6) as per Swedish NFI.
+        ground_layer (int): Ground layer type (1-6) as per Swedish NFI.
             Ground layer types:
                 1 = Lichen type (>50% of existing ground layer).
                 2 = Lichen-rich bogmoss type (>25% lichen + >50% Sphagnum).

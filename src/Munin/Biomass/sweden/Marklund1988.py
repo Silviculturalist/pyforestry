@@ -289,6 +289,52 @@ species_map = {
 
 # Wrapper function
 def Marklund_1988(species: Optional[str] = None, component: Optional[str] = None, *args, timber: Optional[Timber] = None, **kwargs):
+    """
+    Calculates the dry-weight biomass for individual trees in Sweden.
+
+    This function serves as a wrapper for the various biomass component functions
+    developed by Marklund (1988). It selects the appropriate formula based on
+    the tree species and the provided arguments.
+
+    Args:
+        species (str): The tree species. Must be one of 'Picea abies' (Norway spruce),
+            'Pinus sylvestris' (Scots pine), or 'Betula' (Birch).
+        DBH (float): Diameter at breast height (1.3m), in centimeters.
+        height_m (Optional[float]): Total tree height, in meters. Required for more
+            accurate models for stem, bark, and branches.
+        age_at_breast_height (Optional[float]): The age of the tree at breast
+            height (1.3m). Used for some pine foliage models.
+        crown_base_height_m (Optional[float]): Height from the ground to the lowest
+            green branch, in meters. Used for some foliage and branch models.
+        is_southern_sweden (Optional[bool]): Set to True if the tree is in
+            southern Sweden, False if in northern Sweden. Affects some spruce
+            component calculations.
+
+    Returns:
+        Dict[str, float]: A dictionary where keys are the biomass components
+        (e.g., 'stem', 'bark', 'living_branches', 'dead_branches', 'stump', 'roots')
+        and values are their calculated dry weight in kilograms (kg). Components
+        that cannot be calculated with the provided inputs will be omitted.
+
+    Raises:
+        ValueError: If the species is not one of the recognized types or if
+            required arguments are missing for a selected calculation.
+
+    Source:
+        Marklund, Lars-Gunnar. (1988). Biomassafunktioner för Tall, Gran och Björk i
+        Sverige [Biomass functions for pine, spruce and birch in Sweden]. Report 45.
+        Dept. of Forest Survey. Swedish University of Agricultural Sciences. Umeå.
+        73 pp. ISSN 0348-0496. ISBN 91-576-3524-2.
+
+    Examples:
+        >>> # Calculate biomass for a Norway spruce with only DBH
+        >>> Marklund_1988_biomass_Sweden(species='Picea abies', DBH=20)
+        {'stem': 148.8, 'stump': 34.6, 'roots_1mm': 30.0}
+
+        >>> # Calculate biomass for a Scots pine with DBH and height
+        >>> Marklund_1988_biomass_Sweden(species='Pinus sylvestris', DBH=25, height_m=18)
+        {'stem': 234.1, 'bark': 30.5, 'living_branches': 45.2, 'dead_branches': 5.1, 'stump': 55.7, 'roots_1mm': 49.8}
+    """
     
     # Handle Timber object as the first argument if provided
     if isinstance(species, Timber):

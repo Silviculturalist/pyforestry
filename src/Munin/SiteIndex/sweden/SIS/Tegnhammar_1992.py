@@ -1,5 +1,4 @@
 #Tegnhammar Site Index corrections for Hagglund Site Index for Swedish Spruce.
-from Munin.Geo.Geo import RetrieveGeoCode
 from math import exp
 
 def tegnhammar_1992_adjusted_spruce_si_by_stand_variables(
@@ -67,6 +66,9 @@ def tegnhammar_1992_adjusted_spruce_si_by_stand_variables(
     coarse = 1 if soil_texture in [1, 2, 3] else 0
     fine = 1 if soil_texture in [7, 8] else 0
 
+    #Defaults
+    peat_humification_low, peat_humification_medium, peat_humification_high = 0,0,0
+
     if peat == 0:
         peat_humification_low = 0
         peat_humification_medium = 0
@@ -80,6 +82,7 @@ def tegnhammar_1992_adjusted_spruce_si_by_stand_variables(
     extremely_cold = max(altitude + (130 * latitude) - 8900, 0)
 
     # Use Munin.Geo.Geo.RetrieveGeoCode.getDistanceToCoast
+    from Munin.Geo.Geo import RetrieveGeoCode
     distance_to_swedish_coast = RetrieveGeoCode().getDistanceToCoast(longitude, latitude)/1000 #m to km
     distance_to_swedish_coast_2 = (
         exp(-distance_to_swedish_coast / 5) if soil_moisture in [1, 2] else 0

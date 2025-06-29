@@ -1,7 +1,6 @@
 import pytest
 from Munin.Timber.Timber import Timber
 from Munin.Timber.SweTimber import SweTimber
-from Munin.Volume import BrandelVolume
 
 def test_timber_valid_instance():
     # Create a basic Timber instance with valid parameters.
@@ -59,27 +58,3 @@ def test_swetimber_volume_large_tree():
     assert isinstance(vol, float)
     # Check that the computed volume is in a reasonable range (example threshold)
     assert vol > 0
-
-
-# Example site data:
-latitude: float = 56.5
-altitude: float = 150
-# Example fieldlayer object with a "code" attribute:
-class fieldlayer:
-    def __init__(self, code: int) -> None:
-        self.code = code
-
-fieldlayer = fieldlayer(2)  # For example, fieldlayer code 2
-
-# Tree parameters:
-diameter_cm: float = 35
-height_m: float = 12.0  # 12.0 m
-species: str = "Pinus sylvestris"  # Example species name
-
-# Calculate volume (in dm³)
-volume_dm3: float = BrandelVolume.get_volume(species, diameter_cm, height_m,
-                                    latitude, altitude, fieldlayer,
-                                    over_bark=True)
-# Convert dm³ to m³ (1 m³ = 1000 dm³)
-volume_m3: float = volume_dm3 / 1000
-print(f"Calculated volume: {volume_m3:.3f} m³")

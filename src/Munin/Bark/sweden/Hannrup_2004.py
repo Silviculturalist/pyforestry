@@ -7,7 +7,7 @@ from Munin.Helpers.Primitives import Diameter_cm
 
 def Hannrup_2004_bark_pinus_sylvestris_sweden(
     diameter_breast_height_mm: Union[float, Diameter_cm],
-    latitude_dd: float,
+     latitude: float,
     stem_height_cm: float
 ) -> float:
     """
@@ -20,7 +20,7 @@ def Hannrup_2004_bark_pinus_sylvestris_sweden(
             height (1.3m) over bark, in millimeters. If Diameter_cm is passed,
             it will be converted to mm. Diameters over 590mm are capped at 590mm
             internally for the calculation.
-        latitude_dd (float): Latitude in decimal degrees (e.g., 63.82).
+        latitude (float): Latitude in decimal degrees (e.g., 63.82).
         stem_height_cm (float): The height along the stem (from ground level)
             where bark thickness is desired, in centimeters.
 
@@ -63,8 +63,8 @@ def Hannrup_2004_bark_pinus_sylvestris_sweden(
     if dbh_mm < 0:
         raise ValueError("Input 'diameter_breast_height_mm' must be non-negative.")
     # Latitude check (approximate range for Sweden)
-    if not (55.0 <= latitude_dd <= 70.0):
-        warnings.warn(f"Latitude {latitude_dd} is outside the typical range for Sweden (55-70). Results may be extrapolated.")
+    if not (55.0 <=  latitude <= 70.0):
+        warnings.warn(f"Latitude { latitude} is outside the typical range for Sweden (55-70). Results may be extrapolated.")
     if stem_height_cm < 0:
         raise ValueError("Input 'stem_height_cm' must be non-negative.")
 
@@ -74,7 +74,7 @@ def Hannrup_2004_bark_pinus_sylvestris_sweden(
     dbh_b = min(dbh_mm, 590.0)
 
     # Step 2: Calculate breakpoint height (htg in cm)
-    term_lat = 72.1814 + 0.0789 * dbh_b - 0.9868 * latitude_dd
+    term_lat = 72.1814 + 0.0789 * dbh_b - 0.9868 *  latitude
     term_exp_coeff = 0.0078557 - 0.0000132 * dbh_b
 
     if term_lat <= 0:
