@@ -26,5 +26,5 @@ autodoc_default_options = {
 }
 
 # -- Options for HTML output -------------------------------------------------
-html_theme = 'alabaster'  # or 'sphinx_rtd_theme', etc.
+html_theme = 'furo'  # or 'sphinx_rtd_theme', etc.
 html_static_path = ['_static']
