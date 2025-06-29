@@ -29,9 +29,6 @@ def eriksson_1986_humidity(longitude : float,
         # Load the humidity shapefile
         humidity_gdf = gpd.read_file(humidity_shapefile_path)
 
-    #Explicitly set input crs
-    humidity_gdf = humidity_gdf.set_crs(epsg=3006)
-
     # Create a GeoDataFrame with the input point
     point = gpd.GeoDataFrame(
         geometry=[Point(longitude, latitude)],

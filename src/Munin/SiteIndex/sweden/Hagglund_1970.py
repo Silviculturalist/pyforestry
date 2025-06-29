@@ -1,5 +1,5 @@
-from Munin.Helpers.Primitives import TreeSpecies, SiteIndexValue, Age, AgeMeasurement
-from Munin.Helpers.TreeSpecies import TreeSpecies
+from Munin.Helpers.Primitives import SiteIndexValue, Age, AgeMeasurement
+from Munin.Helpers import TreeSpecies
 import math
 import warnings
 from numpy import exp, log
@@ -383,13 +383,7 @@ class HagglundPineModel:
             species={TreeSpecies.Sweden.pinus_sylvestris},
             fn=Hagglund_1970.height_trajectory.pinus_sylvestris.sweden
         ), T13
-        return SiteIndexValue(
-            height,
-            reference_age=Age.TOTAL(effective_age2),
-            species={TreeSpecies.Sweden.pinus_sylvestris},
-            fn=Hagglund_1970.height_trajectory.pinus_sylvestris.sweden
-        ), T13
-
+        
 # =============================================================================
 # Container wrappers to select return value
 # =============================================================================
