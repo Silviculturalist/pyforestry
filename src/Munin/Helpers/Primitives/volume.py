@@ -75,6 +75,18 @@ class AtomicVolume:
 
     def __repr__(self):
         return f"AtomicVolume({self.value:.2f} m3, type='{self.type}', species='{self.species}', region='{self.region}')"
+    
+    # Inside the AtomicVolume class
+
+    def __eq__(self, other: Any) -> bool:
+        """
+        Two volumes are considered equal if their absolute value is the same,
+        regardless of their metadata (region, species, type).
+        """
+        if isinstance(other, (AtomicVolume, CompositeVolume)):
+            # Compare based on the total numeric value
+            return self.value == other.value
+        return NotImplemented
 
 
 class CompositeVolume:

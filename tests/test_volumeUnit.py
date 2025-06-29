@@ -1,36 +1,94 @@
 import pytest
-from Munin.Helpers.Primitives import Volume
+# It's clearer to import both classes for the tests
+from Munin.Helpers.Primitives import AtomicVolume, CompositeVolume
+from typing import Union
+# A type hint for scalars
+Numeric = Union[int, float]
 
-# Test equality of volumes with different units and regions
-def test_volume_equality():
-    assert Volume.Sweden.dm3sk(1000) == Volume.Norway.m3sk(1)  # 1000 dm³ = 1 m³
-    assert Volume.Sweden.m3sk(10) == Volume.Finland.dm3sk(10000)  # 10 m³ = 10000 dm³
-    assert Volume.Sweden.km3sk(0.00000001) == Volume.Norway.m3sk(10)  # 0.00000001 km³ = 10 m³
-    assert Volume.Sweden.Pm3sk(1).m3() == 1e45  # 1 Pm³ = 1e45 m³
-    assert Volume.Sweden.cm3sk(1e6) == Volume.Norway.m3sk(1)  # 1e6 cm³ = 1 m³
-    assert Volume.Sweden.mm3sk(1e9) == Volume.Finland.m3sk(1)  # 1e9 mm³ = 1 m³
+# --- Test AtomicVolume ---
 
-# Test addition operation with same type, different regions
-def test_volume_addition():
-    v1 = Volume.Sweden.m3sk(1)
-    v2 = Volume.Norway.m3sk(1)
+def test_atomic_volume_equality_across_metadata():
+    """
+    Tests that two AtomicVolumes are equal (==) if their value is the same,
+    even if their region or other metadata differs.
+    This assumes you have implemented a custom __eq__ method.
+    """
+    # Assuming __eq__ is implemented to compare v.value
+    assert AtomicVolume(value=1.0, region='Sweden') == AtomicVolume(value=1.0, region='Norway')
+    assert AtomicVolume(value=10.0, species='picea abies') == AtomicVolume(value=10.0, species='pinus sylvestris')
+
+def test_atomic_volume_unit_conversions():
+    """Tests the factory methods and the .to() conversion."""
+    # Using the .from_unit() and .to() methods for clarity
+    assert AtomicVolume.from_unit(1000, 'dm3').value == 1.0  # 1000 dm³ = 1 m³
+    assert AtomicVolume.from_unit(10, 'm3').to('dm3') == 10000
+    assert AtomicVolume.from_unit(1e6, 'cm3').value == 1.0
+    
+def test_atomic_volume_repr():
+    """Tests the string representation of an AtomicVolume."""
+    # The __repr__ uses the actual class name 'AtomicVolume' and formats to 2 decimal places
+    vol = AtomicVolume(value=12.345, region='Sweden', species='picea abies', type='m3sk')
+    expected_repr = "AtomicVolume(12.35 m3, type='m3sk', species='picea abies', region='Sweden')"
+    assert repr(vol) == expected_repr
+
+# --- Test CompositeVolume and Interactions ---
+
+def test_addition_of_compatible_atomic_volumes():
+    """
+    Tests that adding two compatible AtomicVolumes (same type, region, species)
+    results in a single, summed AtomicVolume.
+    """
+    v1 = AtomicVolume(value=10, region='Sweden', species='picea abies', type='m3sk')
+    v2 = AtomicVolume(value=5, region='Sweden', species='picea abies', type='m3sk')
     result = v1 + v2
-    assert result == Volume.Sweden.m3sk(2)  # 1 m³ + 1 m³ = 2 m³
-    assert str(result) == "Volume(2.0000 m3, region='Sweden', species='unknown', type='m3sk')"
 
-# Test that operations with different types raise ValueError
-def test_volume_incompatible_types():
-    v1 = Volume.Sweden.m3sk(1)
-    v3 = Volume.Sweden.m3to(1)
+    # The result should be another AtomicVolume
+    assert isinstance(result, AtomicVolume)
+    assert result.value == 15
+    assert result.region == 'Sweden'
+    assert result.species == 'picea abies'
+
+def test_addition_of_incompatible_atomic_volumes_creates_composite():
+    """
+    Tests that adding two incompatible AtomicVolumes (e.g., different regions)
+    correctly creates a CompositeVolume that preserves the original data.
+    """
+    v_sweden = AtomicVolume(value=10, region='Sweden', species='picea abies', type='m3sk')
+    v_norway = AtomicVolume(value=5, region='Norway', species='picea abies', type='m3sk')
+    
+    result = v_sweden + v_norway
+
+    # 1. The result must be a CompositeVolume
+    assert isinstance(result, CompositeVolume)
+
+    # 2. The total value should be the sum
+    assert result.value == 15.0
+
+    # 3. The underlying metadata should be preserved
+    assert result.regions == {'Sweden', 'Norway'}
+    assert result.species_composition == {'picea abies': 15.0}
+    assert len(result) == 2 # It contains two distinct components
+
+def test_composite_volume_repr():
+    """Tests the string representation of a CompositeVolume."""
+    v1 = AtomicVolume(10, region='Sweden', type='m3sk')
+    v2 = AtomicVolume(5, region='Norway', type='m3sk')
+    composite = v1 + v2
+    
+    expected_repr = "CompositeVolume(total=15.00 m3, type='m3sk', components=2)"
+    assert repr(composite) == expected_repr
+
+def test_addition_with_incompatible_types_raises_value_error():
+    """
+    Tests that creating a CompositeVolume from AtomicVolumes with different `type`
+    (e.g., 'm3sk' vs 'm3to') raises a ValueError.
+    """
+    v_m3sk = AtomicVolume(value=1, type='m3sk')
+    v_m3to = AtomicVolume(value=1, type='m3to') # A different, hypothetical type
+
     with pytest.raises(ValueError) as exc_info:
-        v1 + v3
-    assert str(exc_info.value) == "Incompatible volume types: m3sk vs m3to"
-
-# Test string representation of volumes
-def test_volume_repr():
-    assert str(Volume.Sweden.dm3sk(1000)) == "Volume(1.0000 m3, region='Sweden', species='unknown', type='m3sk')"
-    assert str(Volume.Norway.m3sk(1)) == "Volume(1.0000 m3, region='Norway', species='unknown', type='m3sk')"
-    assert str(Volume.Sweden.km3sk(0.00000001)) == "Volume(10.0000 m3, region='Sweden', species='unknown', type='m3sk')"
-    assert str(Volume.Sweden.km3sk(-0.00000001)) == "Volume(-10.0000 m3, region='Sweden', species='unknown', type='m3sk')"
-    assert str(Volume.Sweden.Pm3sk(1)) == "Volume(1.0000 Pm3, region='Sweden', species='unknown', type='m3sk')"
-
+        # The error is raised when the CompositeVolume is created inside the __add__ method
+        v_m3sk + v_m3to
+    
+    # Check that the error message from CompositeVolume.__init__ is correct
+    assert str(exc_info.value) == "All volumes in a composite must have the same 'type'."
