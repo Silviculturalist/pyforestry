@@ -1,0 +1,1074 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../../../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../../genindex.html" /><link rel="search" title="Search" href="../../../../search.html" />
+
+    <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
+        <title>Munin.Models.sweden.Elfving_Hagglund_1975 - Munin documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?v=302659d7" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../../index.html"><div class="brand">Munin  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../../index.html">
+  
+  
+  <span class="sidebar-brand-text">Munin  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../api/modules.html">Munin</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Munin</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../api/Munin.html">Munin package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Munin package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../../api/Munin.Biomass.html">Munin.Biomass package</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Munin.Biomass package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/Munin.Biomass.sweden.html">Munin.Biomass.sweden package</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../../api/Munin.Geo.html">Munin.Geo package</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Munin.Geo package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/Munin.Geo.Climate.html">Munin.Geo.Climate package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/Munin.Geo.Coastline.html">Munin.Geo.Coastline package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/Munin.Geo.Counties.html">Munin.Geo.Counties package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/Munin.Geo.Humidity.html">Munin.Geo.Humidity package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/Munin.Geo.Temperature.html">Munin.Geo.Temperature package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/Munin.Helpers.html">Munin.Helpers package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../../api/Munin.Models.html">Munin.Models package</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Munin.Models package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/Munin.Models.sweden.html">Munin.Models.sweden package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/Munin.PriceList.html">Munin.PriceList package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../../api/Munin.Site.html">Munin.Site package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of Munin.Site package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/Munin.Site.sweden.html">Munin.Site.sweden package</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../../api/Munin.SiteIndex.html">Munin.SiteIndex package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of Munin.SiteIndex package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../../../api/Munin.SiteIndex.sweden.html">Munin.SiteIndex.sweden package</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of Munin.SiteIndex.sweden package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/Munin.SiteIndex.sweden.SIS.html">Munin.SiteIndex.sweden.SIS package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/Munin.SiteIndex.sweden.Translate.html">Munin.SiteIndex.sweden.Translate package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../../api/Munin.Taper.html">Munin.Taper package</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of Munin.Taper package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/Munin.Taper.sweden.html">Munin.Taper.sweden package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/Munin.Timber.html">Munin.Timber package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/Munin.TimberBucking.html">Munin.TimberBucking package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../../api/Munin.Volume.html">Munin.Volume package</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of Munin.Volume package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/Munin.Volume.sweden.html">Munin.Volume.sweden package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <h1>Source code for Munin.Models.sweden.Elfving_Hagglund_1975</h1><div class="highlight"><pre>
+<span></span><span class="c1"># ElfvingHagglund_1975.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span><span class="p">,</span> <span class="n">log</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="c1"># Import base classes and helpers - Adjust paths as necessary</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Munin.Helpers.Primitives</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Age</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">,</span> <span class="n">SiteIndexValue</span><span class="p">,</span> <span class="n">StandBasalArea</span><span class="p">,</span> <span class="n">Stems</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Munin.Helpers.TreeSpecies</span><span class="w"> </span><span class="kn">import</span> <span class="n">TreeSpecies</span><span class="p">,</span> <span class="n">TreeName</span>
+
+<span class="c1"># Import Hagglund functions for potential age calculation (dependency)</span>
+<span class="c1"># Note: The R code uses Hagglund_age_to_height, which needs an equivalent implementation</span>
+<span class="c1">#       or inversion of the existing Hagglund height functions in Python.</span>
+<span class="c1">#       This implementation assumes age is provided or raises NotImplementedError.</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Munin.SiteIndex.sweden</span><span class="w"> </span><span class="kn">import</span> <span class="n">Hagglund_1970</span>
+
+<div class="viewcode-block" id="ElfvingHagglundInitialStand">
+<a class="viewcode-back" href="../../../../api/Munin.Models.sweden.html#Munin.Models.sweden.Elfving_Hagglund_1975.ElfvingHagglundInitialStand">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ElfvingHagglundInitialStand</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provides methods to estimate initial stand density (stems/ha) and</span>
+<span class="sd">    basal area (m²/ha) for young Spruce and Pine stands in Sweden,</span>
+<span class="sd">    based on the models published by Elfving &amp; Hägglund (1975).</span>
+
+<span class="sd">    Estimates are generally for stems thicker than 2.5 cm at breast height.</span>
+
+<span class="sd">    References:</span>
+<span class="sd">        Elfving, B., Hägglund, B. (1975). Utgångslägen för produktionsprognoser:</span>
+<span class="sd">        Tall och gran i Sverige. Skogshögskolan, Inst. f. skogsproduktion.</span>
+<span class="sd">        Rapp. o. Upps. Nr 38. Stockholm. 75 pp.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_age_structure</span><span class="p">(</span><span class="n">even_or_somewhat_uneven_aged</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">uneven_aged</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Validates mutual exclusivity of age structure flags. &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">uneven_aged</span> <span class="ow">and</span> <span class="n">even_or_somewhat_uneven_aged</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Only one of &#39;even_or_somewhat_uneven_aged&#39; or &#39;uneven_aged&#39; can be True.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">uneven_aged</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">even_or_somewhat_uneven_aged</span><span class="p">:</span>
+             <span class="c1"># This condition seems wrong in the R code check, assuming at least one must be true,</span>
+             <span class="c1"># or they represent distinct states where both being false is valid (e.g., unknown).</span>
+             <span class="c1"># Replicating R logic:</span>
+             <span class="c1"># stop(&quot;Only one of &#39;even_or_somewhat_uneven_aged&#39; or &#39;uneven_aged&#39; can be FALSE&quot;)</span>
+             <span class="c1"># Corrected logic: Assume they must cover all possibilities if exclusive.</span>
+             <span class="c1"># If they are not mutually exclusive flags, this check might be incorrect.</span>
+             <span class="c1"># For now, assuming they should be exclusive and cover the options.</span>
+             <span class="k">pass</span> <span class="c1"># Allow both to be False if that&#39;s a valid state.</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_broadleaves</span><span class="p">(</span><span class="n">broadleaves_percent</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Validates broadleaf percentage. &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">broadleaves_percent</span> <span class="o">&gt;</span> <span class="mi">40</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Broadleaves percentage &gt; 40%, potentially outside of material range.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">broadleaves_percent</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;broadleaves_percent_of_basal_area must be between 0 and 100.&quot;</span><span class="p">)</span>
+        
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_site_index</span><span class="p">(</span>
+        <span class="n">site_index</span><span class="p">:</span> <span class="n">SiteIndexValue</span><span class="p">,</span>
+        <span class="n">expected_species</span><span class="p">:</span> <span class="n">TreeName</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validates the provided SiteIndexValue object.</span>
+
+<span class="sd">        Checks:</span>
+<span class="sd">        1. Type is SiteIndexValue.</span>
+<span class="sd">        2. Reference age is Age.TOTAL(100).</span>
+<span class="sd">        3. The function used for derivation is from Hagglund_1970.</span>
+<span class="sd">        4. The species set matches the expected single species.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">site_index</span><span class="p">,</span> <span class="n">SiteIndexValue</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;site_index must be a SiteIndexValue object, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">site_index</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Check reference age: Must be total age 100</span>
+        <span class="n">expected_ref_age</span> <span class="o">=</span> <span class="n">Age</span><span class="o">.</span><span class="n">TOTAL</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">site_index</span><span class="o">.</span><span class="n">reference_age</span> <span class="o">!=</span> <span class="n">expected_ref_age</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Site index reference age must be </span><span class="si">{</span><span class="n">expected_ref_age</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">site_index</span><span class="o">.</span><span class="n">reference_age</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Check function source (heuristic check on function&#39;s module/name)</span>
+        <span class="n">fn_module</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">site_index</span><span class="o">.</span><span class="n">fn</span><span class="p">,</span> <span class="s1">&#39;__module__&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">fn_qualname</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">site_index</span><span class="o">.</span><span class="n">fn</span><span class="p">,</span> <span class="s1">&#39;__qualname__&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="c1"># Check if the function seems to originate from the Hagglund_1970 structure</span>
+        <span class="c1"># This is a heuristic check and might need adjustment based on exact function structure</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="s1">&#39;Hagglund_1970&#39;</span> <span class="ow">in</span> <span class="n">fn_module</span> <span class="ow">or</span> <span class="s1">&#39;Hagglund_1970&#39;</span> <span class="ow">in</span> <span class="n">fn_qualname</span> <span class="ow">or</span> \
+                <span class="s1">&#39;HagglundSpruceModel&#39;</span> <span class="ow">in</span> <span class="n">fn_qualname</span> <span class="ow">or</span> <span class="s1">&#39;HagglundPineModel&#39;</span> <span class="ow">in</span> <span class="n">fn_qualname</span><span class="p">):</span>
+             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Site index function &#39;</span><span class="si">{</span><span class="n">fn_qualname</span><span class="si">}</span><span class="s2">&#39; might not be from Hagglund_1970 model.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Check species: Must be a set containing only the expected species</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">site_index</span><span class="o">.</span><span class="n">species</span><span class="p">,</span> <span class="nb">set</span><span class="p">):</span>
+             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Site index species attribute must be a set, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">site_index</span><span class="o">.</span><span class="n">species</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="n">expected_species_set</span> <span class="o">=</span> <span class="p">{</span><span class="n">expected_species</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">site_index</span><span class="o">.</span><span class="n">species</span> <span class="o">!=</span> <span class="n">expected_species_set</span><span class="p">:</span>
+            <span class="n">species_names</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">sp</span><span class="o">.</span><span class="n">full_name</span> <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="n">site_index</span><span class="o">.</span><span class="n">species</span><span class="p">])</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Site index species must be </span><span class="se">{{</span><span class="si">{</span><span class="n">expected_species</span><span class="o">.</span><span class="n">full_name</span><span class="si">}</span><span class="se">}}</span><span class="s2">, got </span><span class="se">{{</span><span class="si">{</span><span class="n">species_names</span><span class="si">}</span><span class="se">}}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+
+    <span class="c1"># =========================================================================</span>
+    <span class="c1"># Stem Estimation Functions (Young Forests &gt; 2.5cm DBH)</span>
+    <span class="c1"># =========================================================================</span>
+
+<div class="viewcode-block" id="ElfvingHagglundInitialStand.estimate_stems_young_pine_north">
+<a class="viewcode-back" href="../../../../api/Munin.Models.sweden.html#Munin.Models.sweden.Elfving_Hagglund_1975.ElfvingHagglundInitialStand.estimate_stems_young_pine_north">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">estimate_stems_young_pine_north</span><span class="p">(</span>
+        <span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">altitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">dominant_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">stand_density_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.65</span><span class="p">,</span> <span class="c1"># Corresponds to Målklass*10 / 10</span>
+        <span class="n">pct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="c1"># Pre-commercial thinning occurred</span>
+        <span class="n">even_or_somewhat_uneven_aged</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Stems</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Estimates initial stems/ha (&gt;2.5cm DBH) for young Pine in Northern Sweden.</span>
+<span class="sd">        Based on Function 5.1, Elfving &amp; Hägglund (1975), p. 53.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            latitude: Latitude, degrees N.</span>
+<span class="sd">            altitude: Altitude, meters above sea level.</span>
+<span class="sd">            dominant_height: Dominant height, meters.</span>
+<span class="sd">            stand_density_factor: Stand density factor (0.1-1.0).</span>
+<span class="sd">            pct: True if pre-commercial thinning has occurred.</span>
+<span class="sd">            even_or_somewhat_uneven_aged: True if stand is even or somewhat uneven-aged.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Estimated number of stems per hectare (&gt;2.5cm DBH).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">uneven_aged</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">even_or_somewhat_uneven_aged</span> <span class="c1"># Infer based on exclusivity assumption</span>
+        <span class="n">ElfvingHagglundInitialStand</span><span class="o">.</span><span class="n">_validate_age_structure</span><span class="p">(</span><span class="n">even_or_somewhat_uneven_aged</span><span class="p">,</span> <span class="n">uneven_aged</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mf">0.1</span> <span class="o">&lt;=</span> <span class="n">stand_density_factor</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">):</span>
+             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;stand_density_factor must be between 0.1 and 1.0.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dominant_height</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;dominant_height must be a float object.&quot;</span><span class="p">)</span>
+
+        <span class="n">h_dm</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">dominant_height</span><span class="p">)</span> <span class="o">*</span> <span class="mf">10.0</span>
+        <span class="n">alt_100m</span> <span class="o">=</span> <span class="n">altitude</span> <span class="o">/</span> <span class="mf">100.0</span>
+        <span class="n">stand_dens_orig</span> <span class="o">=</span> <span class="n">stand_density_factor</span> <span class="o">*</span> <span class="mf">10.0</span> <span class="c1"># Convert 0.1-1 to 1-10</span>
+
+        <span class="n">stems_val</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span>
+            <span class="mf">8.856</span>
+            <span class="o">-</span> <span class="mf">0.033</span> <span class="o">*</span> <span class="n">latitude</span>
+            <span class="o">-</span> <span class="mf">0.062</span> <span class="o">*</span> <span class="n">alt_100m</span>
+            <span class="o">+</span> <span class="mf">0.203</span> <span class="o">*</span> <span class="n">stand_dens_orig</span>
+            <span class="o">-</span> <span class="mf">0.002</span> <span class="o">*</span> <span class="n">h_dm</span>
+            <span class="o">-</span> <span class="mf">0.233</span> <span class="o">*</span> <span class="n">pct</span> <span class="c1"># Bool -&gt; 1/0</span>
+            <span class="o">-</span> <span class="mf">0.220</span> <span class="o">*</span> <span class="n">even_or_somewhat_uneven_aged</span> <span class="c1"># Bool -&gt; 1/0</span>
+            <span class="o">-</span> <span class="mf">0.074</span> <span class="o">*</span> <span class="n">uneven_aged</span> <span class="c1"># Bool -&gt; 1/0</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">Stems</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">stems_val</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">pinus_sylvestris</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="ElfvingHagglundInitialStand.estimate_stems_young_spruce_north">
+<a class="viewcode-back" href="../../../../api/Munin.Models.sweden.html#Munin.Models.sweden.Elfving_Hagglund_1975.ElfvingHagglundInitialStand.estimate_stems_young_spruce_north">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">estimate_stems_young_spruce_north</span><span class="p">(</span>
+        <span class="n">altitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">site_index</span><span class="p">:</span> <span class="n">SiteIndexValue</span><span class="p">,</span> <span class="c1"># H100</span>
+        <span class="n">stand_density_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.65</span><span class="p">,</span>
+        <span class="n">broadleaves_percent_ba</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">pct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">even_or_somewhat_uneven_aged</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Stems</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Estimates initial stems/ha (&gt;2.5cm DBH) for young Spruce in Northern Sweden.</span>
+<span class="sd">        Based on Function 5.3, Elfving &amp; Hägglund (1975), p. 53.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            altitude: Altitude, meters above sea level.</span>
+<span class="sd">            site_index: Site index H100 (m).</span>
+<span class="sd">            stand_density_factor: Stand density factor (0.1-1.0).</span>
+<span class="sd">            broadleaves_percent_ba: Percentage of broadleaves in BA (0-100).</span>
+<span class="sd">            pct: True if pre-commercial thinning has occurred.</span>
+<span class="sd">            even_or_somewhat_uneven_aged: True if stand is even or somewhat uneven-aged.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Estimated number of stems per hectare (&gt;2.5cm DBH).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">uneven_aged</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">even_or_somewhat_uneven_aged</span>
+        <span class="n">ElfvingHagglundInitialStand</span><span class="o">.</span><span class="n">_validate_age_structure</span><span class="p">(</span><span class="n">even_or_somewhat_uneven_aged</span><span class="p">,</span> <span class="n">uneven_aged</span><span class="p">)</span>
+        <span class="n">ElfvingHagglundInitialStand</span><span class="o">.</span><span class="n">_validate_broadleaves</span><span class="p">(</span><span class="n">broadleaves_percent_ba</span><span class="p">)</span>
+        <span class="n">ElfvingHagglundInitialStand</span><span class="o">.</span><span class="n">_validate_site_index</span><span class="p">(</span><span class="n">site_index</span><span class="p">,</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">picea_abies</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mf">0.1</span> <span class="o">&lt;=</span> <span class="n">stand_density_factor</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">):</span>
+             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;stand_density_factor must be between 0.1 and 1.0.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">site_index</span><span class="p">,</span> <span class="n">SiteIndexValue</span><span class="p">):</span>
+             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;site_index must be a SiteIndexValue object.&quot;</span><span class="p">)</span>
+
+        <span class="n">alt_100m</span> <span class="o">=</span> <span class="n">altitude</span> <span class="o">/</span> <span class="mf">100.0</span>
+        <span class="n">si_m</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">site_index</span><span class="p">)</span>
+        <span class="n">stand_dens_orig</span> <span class="o">=</span> <span class="n">stand_density_factor</span> <span class="o">*</span> <span class="mf">10.0</span>
+        <span class="n">si_gt_22</span> <span class="o">=</span> <span class="n">si_m</span> <span class="o">&gt;</span> <span class="mi">22</span>
+
+        <span class="n">stems_val</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span>
+            <span class="mf">6.7117</span>
+            <span class="o">+</span> <span class="mf">0.118</span> <span class="o">*</span> <span class="n">alt_100m</span>
+            <span class="o">-</span> <span class="mf">0.028</span> <span class="o">*</span> <span class="p">(</span><span class="n">alt_100m</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="o">+</span> <span class="mf">0.175</span> <span class="o">*</span> <span class="n">stand_dens_orig</span>
+            <span class="o">-</span> <span class="mf">0.189</span> <span class="o">*</span> <span class="n">si_gt_22</span> <span class="c1"># Bool -&gt; 1/0</span>
+            <span class="o">+</span> <span class="mf">0.006</span> <span class="o">*</span> <span class="n">broadleaves_percent_ba</span>
+            <span class="o">-</span> <span class="mf">0.748</span> <span class="o">*</span> <span class="n">pct</span> <span class="c1"># Bool -&gt; 1/0</span>
+            <span class="o">-</span> <span class="mf">0.111</span> <span class="o">*</span> <span class="n">even_or_somewhat_uneven_aged</span> <span class="c1"># Bool -&gt; 1/0</span>
+            <span class="o">-</span> <span class="mf">0.077</span> <span class="o">*</span> <span class="n">uneven_aged</span> <span class="c1"># Bool -&gt; 1/0</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">Stems</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">stems_val</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">picea_abies</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="ElfvingHagglundInitialStand.estimate_stems_young_pine_south">
+<a class="viewcode-back" href="../../../../api/Munin.Models.sweden.html#Munin.Models.sweden.Elfving_Hagglund_1975.ElfvingHagglundInitialStand.estimate_stems_young_pine_south">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">estimate_stems_young_pine_south</span><span class="p">(</span>
+        <span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="c1"># Although named southern, latitude is still needed if age needs calculation</span>
+        <span class="n">site_index</span><span class="p">:</span> <span class="n">SiteIndexValue</span><span class="p">,</span> <span class="c1"># H100</span>
+        <span class="n">dominant_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">age_at_breast_height</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AgeMeasurement</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="c1"># Optional: If None, needs calculation</span>
+        <span class="n">stand_density_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.65</span><span class="p">,</span>
+        <span class="n">pct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">regeneration</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;culture&quot;</span><span class="p">,</span> <span class="c1"># &quot;culture&quot;, &quot;natural regeneration&quot;, &quot;unknown&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Stems</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Estimates initial stems/ha (&gt;2.5cm DBH) for young Pine in Southern Sweden.</span>
+<span class="sd">        Based on Function 5.2, Elfving &amp; Hägglund (1975), p. 53.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            latitude: Latitude (used if age needs calculation).</span>
+<span class="sd">            site_index: Site index H100 (m).</span>
+<span class="sd">            dominant_height: Dominant height (m).</span>
+<span class="sd">            age_at_breast_height: Age at breast height. If None, it attempts calculation (Not Implemented Yet).</span>
+<span class="sd">            stand_density_factor: Stand density factor (0.1-1.0).</span>
+<span class="sd">            pct: True if pre-commercial thinning has occurred.</span>
+<span class="sd">            regeneration: Method of establishment (&quot;culture&quot;, &quot;natural regeneration&quot;, &quot;unknown&quot;). Used if age needs calculation.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Estimated number of stems per hectare (&gt;2.5cm DBH).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mf">0.1</span> <span class="o">&lt;=</span> <span class="n">stand_density_factor</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">):</span>
+             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;stand_density_factor must be between 0.1 and 1.0.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dominant_height</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;dominant_height must be a float object.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">site_index</span><span class="p">,</span> <span class="n">SiteIndexValue</span><span class="p">):</span>
+             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;site_index must be a SiteIndexValue object.&quot;</span><span class="p">)</span>
+        <span class="n">ElfvingHagglundInitialStand</span><span class="o">.</span><span class="n">_validate_site_index</span><span class="p">(</span><span class="n">site_index</span><span class="p">,</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">pinus_sylvestris</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">age_at_breast_height</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># --- Age Calculation Placeholder ---</span>
+            <span class="c1"># R code calls: Hagglund_age_to_height(...)</span>
+            <span class="c1"># This requires inverting the Hagglund_1970 height functions.</span>
+            <span class="c1"># Example using brentq (like in Eriksson):</span>
+            <span class="c1"># try:</span>
+            <span class="c1">#     target_h = float(dominant_height)</span>
+            <span class="c1">#     # Define function to minimize: Hagglund_height(age) - target_h</span>
+            <span class="c1">#     # Note: Need the correct Hagglund pine function (not implemented in provided Hagglund_1970.py)</span>
+            <span class="c1">#     # age_val = brentq(lambda age_bh: Hagglund_1970_pine_height(..., age=Age.DBH(age_bh), ...) - target_h, 1, 200)</span>
+            <span class="c1">#     # age_at_breast_height = Age.DBH(age_val)</span>
+            <span class="c1">#     raise NotImplementedError(&quot;Age calculation from height for Pine (Hagglund 1974) is not implemented.&quot;)</span>
+            <span class="c1"># except Exception as e:</span>
+            <span class="c1">#     raise ValueError(f&quot;Could not calculate age at breast height: {e}&quot;)</span>
+             <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Automatic calculation of age_at_breast_height for Pine is not implemented. Please provide age.&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">age_at_breast_height</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">)</span> <span class="ow">or</span> <span class="n">age_at_breast_height</span><span class="o">.</span><span class="n">code</span> <span class="o">!=</span> <span class="n">Age</span><span class="o">.</span><span class="n">DBH</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;age_at_breast_height must be an AgeMeasurement object with Age.DBH code.&quot;</span><span class="p">)</span>
+
+        <span class="n">age_val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">age_at_breast_height</span><span class="p">)</span>
+        <span class="n">stand_dens_orig</span> <span class="o">=</span> <span class="n">stand_density_factor</span> <span class="o">*</span> <span class="mf">10.0</span>
+
+        <span class="n">stems_val</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span>
+            <span class="mf">6.148</span>
+            <span class="o">+</span> <span class="mf">0.268</span> <span class="o">*</span> <span class="n">stand_dens_orig</span>
+            <span class="o">-</span> <span class="mf">0.058</span> <span class="o">*</span> <span class="p">((</span><span class="n">stand_dens_orig</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">)</span>
+            <span class="o">-</span> <span class="mf">0.006</span> <span class="o">*</span> <span class="n">age_val</span>
+            <span class="o">-</span> <span class="mf">0.310</span> <span class="o">*</span> <span class="n">pct</span> <span class="c1"># Bool -&gt; 1/0</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">Stems</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">stems_val</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">pinus_sylvestris</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="ElfvingHagglundInitialStand.estimate_stems_young_spruce_south">
+<a class="viewcode-back" href="../../../../api/Munin.Models.sweden.html#Munin.Models.sweden.Elfving_Hagglund_1975.ElfvingHagglundInitialStand.estimate_stems_young_spruce_south">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">estimate_stems_young_spruce_south</span><span class="p">(</span>
+        <span class="n">altitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">site_index</span><span class="p">:</span> <span class="n">SiteIndexValue</span><span class="p">,</span> <span class="c1"># H100</span>
+        <span class="n">age_at_breast_height</span><span class="p">:</span> <span class="n">AgeMeasurement</span><span class="p">,</span>
+        <span class="n">stand_density_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.65</span><span class="p">,</span>
+        <span class="n">broadleaves_percent_ba</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">even_or_somewhat_uneven_aged</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Stems</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Estimates initial stems/ha (&gt;2.5cm DBH) for young Spruce in Southern Sweden.</span>
+<span class="sd">        Based on Function 5.4, Elfving &amp; Hägglund (1975), p. 53.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            altitude: Altitude, meters above sea level.</span>
+<span class="sd">            site_index: Site index H100 (m).</span>
+<span class="sd">            age_at_breast_height: Age at breast height (years).</span>
+<span class="sd">            stand_density_factor: Stand density factor (0.1-1.0).</span>
+<span class="sd">            broadleaves_percent_ba: Percentage of broadleaves in BA (0-100).</span>
+<span class="sd">            even_or_somewhat_uneven_aged: True if stand is even or somewhat uneven-aged.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Estimated number of stems per hectare (&gt;2.5cm DBH).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Note: R code for S Spruce stems (5.4) seems identical to N Spruce stems (5.3) except for PCT and uneven_aged flags.</span>
+        <span class="c1"># Replicating 5.4 formula as written in the R code:</span>
+        <span class="n">ElfvingHagglundInitialStand</span><span class="o">.</span><span class="n">_validate_broadleaves</span><span class="p">(</span><span class="n">broadleaves_percent_ba</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mf">0.1</span> <span class="o">&lt;=</span> <span class="n">stand_density_factor</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">):</span>
+             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;stand_density_factor must be between 0.1 and 1.0.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">site_index</span><span class="p">,</span> <span class="n">SiteIndexValue</span><span class="p">):</span>
+             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;site_index must be a SiteIndexValue object.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">age_at_breast_height</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">)</span> <span class="ow">or</span> <span class="n">age_at_breast_height</span><span class="o">.</span><span class="n">code</span> <span class="o">!=</span> <span class="n">Age</span><span class="o">.</span><span class="n">DBH</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;age_at_breast_height must be an AgeMeasurement object with Age.DBH code.&quot;</span><span class="p">)</span>
+        
+        <span class="n">ElfvingHagglundInitialStand</span><span class="o">.</span><span class="n">_validate_site_index</span><span class="p">(</span><span class="n">site_index</span><span class="p">,</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">picea_abies</span><span class="p">)</span>
+
+
+        <span class="n">alt_100m</span> <span class="o">=</span> <span class="n">altitude</span> <span class="o">/</span> <span class="mf">100.0</span>
+        <span class="n">si_m</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">site_index</span><span class="p">)</span>
+        <span class="n">stand_dens_orig</span> <span class="o">=</span> <span class="n">stand_density_factor</span> <span class="o">*</span> <span class="mf">10.0</span>
+        <span class="n">age_val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">age_at_breast_height</span><span class="p">)</span>
+        <span class="n">si_gt_22</span> <span class="o">=</span> <span class="n">si_m</span> <span class="o">&gt;</span> <span class="mi">22</span>
+
+        <span class="n">stems_val</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span>
+            <span class="mf">6.2064</span>
+            <span class="o">+</span> <span class="mf">0.066</span> <span class="o">*</span> <span class="n">alt_100m</span>
+            <span class="o">+</span> <span class="mf">0.319</span> <span class="o">*</span> <span class="n">stand_dens_orig</span>
+            <span class="o">-</span> <span class="mf">0.081</span> <span class="o">*</span> <span class="p">((</span><span class="n">stand_dens_orig</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">)</span>
+            <span class="o">-</span> <span class="mf">0.286</span> <span class="o">*</span> <span class="n">si_gt_22</span> <span class="c1"># Bool -&gt; 1/0</span>
+            <span class="o">-</span> <span class="mf">0.007</span> <span class="o">*</span> <span class="n">age_val</span>
+            <span class="o">+</span> <span class="mf">0.006</span> <span class="o">*</span> <span class="n">broadleaves_percent_ba</span>
+            <span class="o">-</span> <span class="mf">0.167</span> <span class="o">*</span> <span class="n">even_or_somewhat_uneven_aged</span> <span class="c1"># Bool -&gt; 1/0</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">Stems</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">stems_val</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">picea_abies</span><span class="p">)</span></div>
+
+
+
+    <span class="c1"># =========================================================================</span>
+    <span class="c1"># Basal Area Estimation Functions (Young Forests)</span>
+    <span class="c1"># =========================================================================</span>
+
+<div class="viewcode-block" id="ElfvingHagglundInitialStand.estimate_basal_area_young_pine_north">
+<a class="viewcode-back" href="../../../../api/Munin.Models.sweden.html#Munin.Models.sweden.Elfving_Hagglund_1975.ElfvingHagglundInitialStand.estimate_basal_area_young_pine_north">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">estimate_basal_area_young_pine_north</span><span class="p">(</span>
+        <span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">altitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">site_index</span><span class="p">:</span> <span class="n">SiteIndexValue</span><span class="p">,</span> <span class="c1"># H100</span>
+        <span class="n">dominant_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">stems</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Stems</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="c1"># If None, calculate using estimate_stems_young_pine_north</span>
+        <span class="n">stand_density_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.65</span><span class="p">,</span>
+        <span class="n">broadleaves_percent_ba</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">pct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">even_or_somewhat_uneven_aged</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StandBasalArea</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Estimates initial basal area (m²/ha) for young Pine in Northern Sweden.</span>
+<span class="sd">        Based on Function 6.1, Elfving &amp; Hägglund (1975), p. 53.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            latitude: Latitude, degrees N.</span>
+<span class="sd">            altitude: Altitude, meters above sea level.</span>
+<span class="sd">            site_index: Site index H100 (m).</span>
+<span class="sd">            dominant_height: Dominant height (m).</span>
+<span class="sd">            stems: Stems per hectare. If None, estimated internally.</span>
+<span class="sd">            stand_density_factor: Stand density factor (0.1-1.0).</span>
+<span class="sd">            broadleaves_percent_ba: Percentage of broadleaves in BA (0-100).</span>
+<span class="sd">            pct: True if pre-commercial thinning has occurred.</span>
+<span class="sd">            even_or_somewhat_uneven_aged: True if stand is even or somewhat uneven-aged.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Estimated basal area (m²/ha).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ElfvingHagglundInitialStand</span><span class="o">.</span><span class="n">_validate_broadleaves</span><span class="p">(</span><span class="n">broadleaves_percent_ba</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dominant_height</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;dominant_height must be a float object.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">site_index</span><span class="p">,</span> <span class="n">SiteIndexValue</span><span class="p">):</span>
+             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;site_index must be a SiteIndexValue object.&quot;</span><span class="p">)</span>
+        
+        <span class="n">ElfvingHagglundInitialStand</span><span class="o">.</span><span class="n">_validate_site_index</span><span class="p">(</span><span class="n">site_index</span><span class="p">,</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">pinus_sylvestris</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">stems</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+             <span class="n">stems_obj</span> <span class="o">=</span> <span class="n">ElfvingHagglundInitialStand</span><span class="o">.</span><span class="n">estimate_stems_young_pine_north</span><span class="p">(</span>
+                 <span class="n">latitude</span><span class="o">=</span><span class="n">latitude</span><span class="p">,</span>
+                 <span class="n">altitude</span><span class="o">=</span><span class="n">altitude</span><span class="p">,</span>
+                 <span class="n">dominant_height</span><span class="o">=</span><span class="n">dominant_height</span><span class="p">,</span>
+                 <span class="n">stand_density_factor</span><span class="o">=</span><span class="n">stand_density_factor</span><span class="p">,</span>
+                 <span class="n">pct</span><span class="o">=</span><span class="n">pct</span><span class="p">,</span>
+                 <span class="n">even_or_somewhat_uneven_aged</span><span class="o">=</span><span class="n">even_or_somewhat_uneven_aged</span>
+             <span class="p">)</span>
+             <span class="n">stems_val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">stems_obj</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stems</span><span class="p">,</span> <span class="n">Stems</span><span class="p">):</span>
+             <span class="n">stems_val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">stems</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;stems must be a Stems object or None.&quot;</span><span class="p">)</span>
+
+        <span class="n">alt_norm</span> <span class="o">=</span> <span class="p">(</span><span class="n">altitude</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10.0</span> <span class="c1"># Add 1m before dividing by 10? Check original.</span>
+        <span class="n">stand_dens_orig</span> <span class="o">=</span> <span class="n">stand_density_factor</span> <span class="o">*</span> <span class="mf">10.0</span>
+        <span class="n">si_dm</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">site_index</span><span class="p">)</span> <span class="o">*</span> <span class="mf">10.0</span>
+        <span class="n">h_dm</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">dominant_height</span><span class="p">)</span> <span class="o">*</span> <span class="mf">10.0</span>
+        <span class="n">broadleaves_norm</span> <span class="o">=</span> <span class="n">broadleaves_percent_ba</span> <span class="o">+</span> <span class="mf">1.0</span> <span class="c1"># Add 1 to avoid log(0)</span>
+
+        <span class="n">ba_val</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span>
+            <span class="o">-</span><span class="mf">1.604</span>
+            <span class="o">-</span> <span class="mf">0.170</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">alt_norm</span><span class="p">)</span>
+            <span class="o">+</span> <span class="mf">0.00993</span> <span class="o">*</span> <span class="n">alt_norm</span>
+            <span class="o">+</span> <span class="mf">0.314</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">stand_dens_orig</span><span class="p">)</span>
+            <span class="o">+</span> <span class="mf">0.467</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">stems_val</span><span class="p">)</span>
+            <span class="o">-</span> <span class="mf">0.138</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">si_dm</span><span class="p">)</span>
+            <span class="o">+</span> <span class="mf">1.204</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">h_dm</span><span class="p">)</span>
+            <span class="o">+</span> <span class="mf">0.032</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">broadleaves_norm</span><span class="p">)</span>
+        <span class="p">)</span> <span class="o">/</span> <span class="mf">100.0</span> <span class="c1"># Convert dm²/ha (?) to m²/ha</span>
+
+        <span class="k">return</span> <span class="n">StandBasalArea</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">ba_val</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">pinus_sylvestris</span><span class="p">,</span> <span class="n">over_bark</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">direct_estimate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="ElfvingHagglundInitialStand.estimate_basal_area_young_spruce_north">
+<a class="viewcode-back" href="../../../../api/Munin.Models.sweden.html#Munin.Models.sweden.Elfving_Hagglund_1975.ElfvingHagglundInitialStand.estimate_basal_area_young_spruce_north">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">estimate_basal_area_young_spruce_north</span><span class="p">(</span>
+        <span class="n">altitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">site_index</span><span class="p">:</span> <span class="n">SiteIndexValue</span><span class="p">,</span> <span class="c1"># H100</span>
+        <span class="n">dominant_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">stems</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Stems</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="c1"># If None, calculate using estimate_stems_young_spruce_north</span>
+        <span class="n">stand_density_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.65</span><span class="p">,</span>
+        <span class="n">broadleaves_percent_ba</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">spatial_distribution</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="c1"># 1=even, 2=somewhat uneven, 3=grouped</span>
+        <span class="n">pct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">even_or_somewhat_uneven_aged</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StandBasalArea</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Estimates initial basal area (m²/ha) for young Spruce in Northern Sweden.</span>
+<span class="sd">        Based on Function 6.3, Elfving &amp; Hägglund (1975), p. 53.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            altitude: Altitude, meters above sea level.</span>
+<span class="sd">            site_index: Site index H100 (m).</span>
+<span class="sd">            dominant_height: Dominant height (m).</span>
+<span class="sd">            stems: Stems per hectare. If None, estimated internally.</span>
+<span class="sd">            stand_density_factor: Stand density factor (0.1-1.0).</span>
+<span class="sd">            broadleaves_percent_ba: Percentage of broadleaves in BA (0-100).</span>
+<span class="sd">            spatial_distribution: Code for spatial distribution (1, 2, or 3).</span>
+<span class="sd">            pct: True if pre-commercial thinning has occurred.</span>
+<span class="sd">            even_or_somewhat_uneven_aged: True if stand is even or somewhat uneven-aged.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Estimated basal area (m²/ha).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dominant_height</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;dominant_height must be a float object.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">site_index</span><span class="p">,</span> <span class="n">SiteIndexValue</span><span class="p">):</span>
+             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;site_index must be a SiteIndexValue object.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">spatial_distribution</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]:</span>
+             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;spatial_distribution must be 1, 2, or 3.&quot;</span><span class="p">)</span>
+
+        <span class="n">uneven_aged</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">even_or_somewhat_uneven_aged</span>
+        <span class="n">ElfvingHagglundInitialStand</span><span class="o">.</span><span class="n">_validate_age_structure</span><span class="p">(</span><span class="n">even_or_somewhat_uneven_aged</span><span class="p">,</span> <span class="n">uneven_aged</span><span class="p">)</span>
+
+        <span class="n">ElfvingHagglundInitialStand</span><span class="o">.</span><span class="n">_validate_site_index</span><span class="p">(</span><span class="n">site_index</span><span class="p">,</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">picea_abies</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">stems</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+             <span class="n">stems_obj</span> <span class="o">=</span> <span class="n">ElfvingHagglundInitialStand</span><span class="o">.</span><span class="n">estimate_stems_young_spruce_north</span><span class="p">(</span>
+                 <span class="n">altitude</span><span class="o">=</span><span class="n">altitude</span><span class="p">,</span>
+                 <span class="n">site_index</span><span class="o">=</span><span class="n">site_index</span><span class="p">,</span>
+                 <span class="n">stand_density_factor</span><span class="o">=</span><span class="n">stand_density_factor</span><span class="p">,</span>
+                 <span class="n">broadleaves_percent_ba</span><span class="o">=</span><span class="n">broadleaves_percent_ba</span><span class="p">,</span>
+                 <span class="n">pct</span><span class="o">=</span><span class="n">pct</span><span class="p">,</span>
+                 <span class="n">even_or_somewhat_uneven_aged</span><span class="o">=</span><span class="n">even_or_somewhat_uneven_aged</span>
+             <span class="p">)</span>
+             <span class="n">stems_val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">stems_obj</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stems</span><span class="p">,</span> <span class="n">Stems</span><span class="p">):</span>
+            <span class="n">stems_val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">stems</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;stems must be a Stems object or None.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># R code uses uneven_aged flag (1 or 2) in formula 6.3,</span>
+        <span class="c1"># but calculates stems based on even_or_somewhat_uneven_aged.</span>
+        <span class="c1"># Replicating R code&#39;s variable usage for formula 6.3:</span>
+        <span class="n">uneven_aged_flag_for_ba</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">uneven_aged</span> <span class="k">else</span> <span class="mi">1</span>
+
+        <span class="n">alt_norm</span> <span class="o">=</span> <span class="p">(</span><span class="n">altitude</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10.0</span>
+        <span class="n">alt_norm_sq</span> <span class="o">=</span> <span class="p">((</span><span class="n">altitude</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">))</span> <span class="o">/</span> <span class="mf">10.0</span> <span class="c1"># Typo in R code? Should likely be alt_norm</span>
+        <span class="n">stand_dens_orig</span> <span class="o">=</span> <span class="n">stand_density_factor</span> <span class="o">*</span> <span class="mf">10.0</span>
+        <span class="n">si_dm</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">site_index</span><span class="p">)</span> <span class="o">*</span> <span class="mf">10.0</span>
+        <span class="n">h_dm</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">dominant_height</span><span class="p">)</span> <span class="o">*</span> <span class="mf">10.0</span>
+
+        <span class="n">ba_val</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span>
+            <span class="o">-</span><span class="mf">1.659</span>
+            <span class="o">-</span> <span class="mf">0.125</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">alt_norm</span><span class="p">)</span> <span class="c1"># Uses alt_norm here</span>
+            <span class="o">+</span> <span class="mf">0.00918</span> <span class="o">*</span> <span class="n">alt_norm_sq</span> <span class="c1"># Uses alt_norm_sq here - check source paper if discrepancy matters</span>
+            <span class="o">+</span> <span class="mf">0.488</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">stand_dens_orig</span><span class="p">)</span>
+            <span class="o">+</span> <span class="mf">0.467</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">stems_val</span><span class="p">)</span>
+            <span class="o">-</span> <span class="mf">0.268</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">si_dm</span><span class="p">)</span>
+            <span class="o">+</span> <span class="mf">1.219</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">h_dm</span><span class="p">)</span>
+            <span class="o">+</span> <span class="mf">0.153</span> <span class="o">*</span> <span class="n">spatial_distribution</span>
+            <span class="o">-</span> <span class="mf">0.055</span> <span class="o">*</span> <span class="n">uneven_aged_flag_for_ba</span> <span class="c1"># Uses the 1 or 2 flag</span>
+        <span class="p">)</span> <span class="o">/</span> <span class="mf">100.0</span> <span class="c1"># Convert dm²/ha (?) to m²/ha</span>
+
+        <span class="k">return</span> <span class="n">StandBasalArea</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">ba_val</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">picea_abies</span><span class="p">,</span> <span class="n">over_bark</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">direct_estimate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="ElfvingHagglundInitialStand.estimate_basal_area_young_pine_south">
+<a class="viewcode-back" href="../../../../api/Munin.Models.sweden.html#Munin.Models.sweden.Elfving_Hagglund_1975.ElfvingHagglundInitialStand.estimate_basal_area_young_pine_south">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">estimate_basal_area_young_pine_south</span><span class="p">(</span>
+        <span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="c1"># Needed for age calculation if not provided</span>
+        <span class="n">altitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">site_index</span><span class="p">:</span> <span class="n">SiteIndexValue</span><span class="p">,</span> <span class="c1"># H100</span>
+        <span class="n">dominant_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">stems</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Stems</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="c1"># If None, calculate using estimate_stems_young_pine_south</span>
+        <span class="n">age_at_breast_height</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AgeMeasurement</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="c1"># Optional</span>
+        <span class="n">stand_density_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.65</span><span class="p">,</span>
+        <span class="n">uneven_aged</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="c1"># Note: R code uses uneven_aged, not even_or_...</span>
+        <span class="n">pct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">regeneration</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;culture&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StandBasalArea</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Estimates initial basal area (m²/ha) for young Pine in Southern Sweden.</span>
+<span class="sd">        Based on Function 6.2, Elfving &amp; Hägglund (1975), p. 53.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            latitude: Latitude, degrees N.</span>
+<span class="sd">            altitude: Altitude, meters above sea level.</span>
+<span class="sd">            site_index: Site index H100 (m).</span>
+<span class="sd">            dominant_height: Dominant height (m).</span>
+<span class="sd">            stems: Stems per hectare. If None, estimated internally.</span>
+<span class="sd">            age_at_breast_height: Age at breast height. Required if stems is None.</span>
+<span class="sd">            stand_density_factor: Stand density factor (0.1-1.0).</span>
+<span class="sd">            uneven_aged: True if the stand is uneven-aged.</span>
+<span class="sd">            pct: True if pre-commercial thinning has occurred.</span>
+<span class="sd">            regeneration: Method of establishment (&quot;culture&quot;, &quot;natural regeneration&quot;, &quot;unknown&quot;).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Estimated basal area (m²/ha).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dominant_height</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;dominant_height must be a float object.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">site_index</span><span class="p">,</span> <span class="n">SiteIndexValue</span><span class="p">):</span>
+             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;site_index must be a SiteIndexValue object.&quot;</span><span class="p">)</span>
+        
+        <span class="n">ElfvingHagglundInitialStand</span><span class="o">.</span><span class="n">_validate_site_index</span><span class="p">(</span><span class="n">site_index</span><span class="p">,</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">pinus_sylvestris</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">stems</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">age_at_breast_height</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                 <span class="c1"># Need to calculate age first if stems are to be calculated</span>
+                 <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Cannot estimate stems for S Pine BA without age_at_breast_height.&quot;</span><span class="p">)</span>
+
+            <span class="n">stems_obj</span> <span class="o">=</span> <span class="n">ElfvingHagglundInitialStand</span><span class="o">.</span><span class="n">estimate_stems_young_pine_south</span><span class="p">(</span>
+                 <span class="n">latitude</span><span class="o">=</span><span class="n">latitude</span><span class="p">,</span>
+                 <span class="n">site_index</span><span class="o">=</span><span class="n">site_index</span><span class="p">,</span>
+                 <span class="n">dominant_height</span><span class="o">=</span><span class="n">dominant_height</span><span class="p">,</span>
+                 <span class="n">age_at_breast_height</span><span class="o">=</span><span class="n">age_at_breast_height</span><span class="p">,</span> <span class="c1"># Must be provided here</span>
+                 <span class="n">stand_density_factor</span><span class="o">=</span><span class="n">stand_density_factor</span><span class="p">,</span>
+                 <span class="n">pct</span><span class="o">=</span><span class="n">pct</span><span class="p">,</span>
+                 <span class="n">regeneration</span><span class="o">=</span><span class="n">regeneration</span>
+             <span class="p">)</span>
+            <span class="n">stems_val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">stems_obj</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stems</span><span class="p">,</span> <span class="n">Stems</span><span class="p">):</span>
+            <span class="n">stems_val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">stems</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;stems must be a Stems object or None.&quot;</span><span class="p">)</span>
+
+        <span class="n">alt_norm</span> <span class="o">=</span> <span class="p">(</span><span class="n">altitude</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10.0</span>
+        <span class="n">stand_dens_orig</span> <span class="o">=</span> <span class="n">stand_density_factor</span> <span class="o">*</span> <span class="mf">10.0</span>
+        <span class="n">si_dm</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">site_index</span><span class="p">)</span> <span class="o">*</span> <span class="mf">10.0</span>
+        <span class="n">h_dm</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">dominant_height</span><span class="p">)</span> <span class="o">*</span> <span class="mf">10.0</span>
+
+        <span class="n">ba_val</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span>
+            <span class="mf">1.280</span> <span class="c1"># Note: R code shows +1.280, paper/previous Python showed different. Using R code&#39;s value.</span>
+            <span class="o">-</span> <span class="mf">0.089</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">alt_norm</span><span class="p">)</span>
+            <span class="o">+</span> <span class="mf">0.283</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">stand_dens_orig</span><span class="p">)</span>
+            <span class="o">+</span> <span class="mf">0.370</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">stems_val</span><span class="p">)</span>
+            <span class="o">-</span> <span class="mf">0.174</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">si_dm</span><span class="p">)</span>
+            <span class="o">+</span> <span class="mf">0.878</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">h_dm</span><span class="p">)</span>
+            <span class="o">-</span> <span class="mf">0.121</span> <span class="o">*</span> <span class="n">uneven_aged</span> <span class="c1"># Bool -&gt; 1/0</span>
+        <span class="p">)</span> <span class="o">/</span> <span class="mf">100.0</span> <span class="c1"># Convert dm²/ha (?) to m²/ha</span>
+
+        <span class="k">return</span> <span class="n">StandBasalArea</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">ba_val</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">pinus_sylvestris</span><span class="p">,</span> <span class="n">over_bark</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">direct_estimate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="ElfvingHagglundInitialStand.estimate_basal_area_young_spruce_south">
+<a class="viewcode-back" href="../../../../api/Munin.Models.sweden.html#Munin.Models.sweden.Elfving_Hagglund_1975.ElfvingHagglundInitialStand.estimate_basal_area_young_spruce_south">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">estimate_basal_area_young_spruce_south</span><span class="p">(</span>
+        <span class="n">altitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">site_index</span><span class="p">:</span> <span class="n">SiteIndexValue</span><span class="p">,</span> <span class="c1"># H100</span>
+        <span class="n">dominant_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">age_at_breast_height</span><span class="p">:</span> <span class="n">AgeMeasurement</span><span class="p">,</span> <span class="c1"># Required if stems is None</span>
+        <span class="n">stems</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Stems</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="c1"># If None, calculate using estimate_stems_young_spruce_south</span>
+        <span class="n">stand_density_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.65</span><span class="p">,</span>
+        <span class="n">broadleaves_percent_ba</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">spatial_distribution</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="c1"># 1=even, 2=somewhat uneven, 3=grouped</span>
+        <span class="n">even_or_somewhat_uneven_aged</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="c1"># PCT is not used in R formula 6.4, but is used for stem calculation if needed</span>
+        <span class="n">pct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StandBasalArea</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Estimates initial basal area (m²/ha) for young Spruce in Southern Sweden.</span>
+<span class="sd">        Based on Function 6.4, Elfving &amp; Hägglund (1975), p. 53.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            altitude: Altitude, meters above sea level.</span>
+<span class="sd">            site_index: Site index H100 (m).</span>
+<span class="sd">            dominant_height: Dominant height (m).</span>
+<span class="sd">            age_at_breast_height: Age at breast height (years). Required if stems is None.</span>
+<span class="sd">            stems: Stems per hectare. If None, estimated internally.</span>
+<span class="sd">            stand_density_factor: Stand density factor (0.1-1.0).</span>
+<span class="sd">            broadleaves_percent_ba: Percentage of broadleaves in BA (0-100).</span>
+<span class="sd">            spatial_distribution: Code for spatial distribution (1, 2, or 3).</span>
+<span class="sd">            even_or_somewhat_uneven_aged: True if stand is even or somewhat uneven-aged.</span>
+<span class="sd">            pct: Pre-commercial thinning flag (used only if stems need estimation).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Estimated basal area (m²/ha).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Note: R code for S Spruce BA (6.4) seems identical to N Spruce BA (6.3) except for arguments.</span>
+        <span class="c1"># Replicating 6.4 formula as written in the R code:</span>
+        <span class="n">ElfvingHagglundInitialStand</span><span class="o">.</span><span class="n">_validate_broadleaves</span><span class="p">(</span><span class="n">broadleaves_percent_ba</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dominant_height</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;dominant_height must be a float object.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">site_index</span><span class="p">,</span> <span class="n">SiteIndexValue</span><span class="p">):</span>
+             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;site_index must be a SiteIndexValue object.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">spatial_distribution</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]:</span>
+             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;spatial_distribution must be 1, 2, or 3.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">stems</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+             <span class="k">if</span> <span class="n">age_at_breast_height</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;age_at_breast_height is required to estimate stems for S Spruce BA.&quot;</span><span class="p">)</span>
+             <span class="n">stems_obj</span> <span class="o">=</span> <span class="n">ElfvingHagglundInitialStand</span><span class="o">.</span><span class="n">estimate_stems_young_spruce_south</span><span class="p">(</span>
+                 <span class="n">altitude</span><span class="o">=</span><span class="n">altitude</span><span class="p">,</span>
+                 <span class="n">site_index</span><span class="o">=</span><span class="n">site_index</span><span class="p">,</span>
+                 <span class="n">age_at_breast_height</span><span class="o">=</span><span class="n">age_at_breast_height</span><span class="p">,</span>
+                 <span class="n">stand_density_factor</span><span class="o">=</span><span class="n">stand_density_factor</span><span class="p">,</span>
+                 <span class="n">broadleaves_percent_ba</span><span class="o">=</span><span class="n">broadleaves_percent_ba</span><span class="p">,</span>
+                 <span class="n">even_or_somewhat_uneven_aged</span><span class="o">=</span><span class="n">even_or_somewhat_uneven_aged</span>
+             <span class="p">)</span>
+             <span class="n">stems_val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">stems_obj</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stems</span><span class="p">,</span> <span class="n">Stems</span><span class="p">):</span>
+            <span class="n">stems_val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">stems</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;stems must be a Stems object or None.&quot;</span><span class="p">)</span>
+
+        <span class="n">alt_norm</span> <span class="o">=</span> <span class="p">(</span><span class="n">altitude</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10.0</span>
+        <span class="n">h_dm</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">dominant_height</span><span class="p">)</span> <span class="o">*</span> <span class="mf">10.0</span>
+        <span class="n">broadleaves_norm</span> <span class="o">=</span> <span class="n">broadleaves_percent_ba</span> <span class="o">+</span> <span class="mf">1.0</span> <span class="c1"># Add 1 to avoid log(0)</span>
+
+        <span class="n">ba_val</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span>
+            <span class="o">-</span><span class="mf">0.102</span> <span class="c1"># Constant from R code for F 6.4</span>
+            <span class="o">-</span> <span class="mf">0.059</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">alt_norm</span><span class="p">)</span>
+            <span class="o">+</span> <span class="mf">0.584</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">stems_val</span><span class="p">)</span>
+            <span class="o">+</span> <span class="mf">0.723</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">h_dm</span><span class="p">)</span>
+            <span class="o">-</span> <span class="mf">0.025</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">broadleaves_norm</span><span class="p">)</span>
+            <span class="o">-</span> <span class="mf">0.098</span> <span class="o">*</span> <span class="n">spatial_distribution</span>
+        <span class="p">)</span> <span class="o">/</span> <span class="mf">100.0</span> <span class="c1"># Convert dm²/ha (?) to m²/ha</span>
+
+        <span class="k">return</span> <span class="n">StandBasalArea</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">ba_val</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">picea_abies</span><span class="p">,</span> <span class="n">over_bark</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">direct_estimate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+    <span class="c1"># =========================================================================</span>
+    <span class="c1"># Combined Estimator (Previous Implementation - kept for reference/compatibility)</span>
+    <span class="c1"># =========================================================================</span>
+<div class="viewcode-block" id="ElfvingHagglundInitialStand.estimate_initial_spruce_stand">
+<a class="viewcode-back" href="../../../../api/Munin.Models.sweden.html#Munin.Models.sweden.Elfving_Hagglund_1975.ElfvingHagglundInitialStand.estimate_initial_spruce_stand">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">estimate_initial_spruce_stand</span><span class="p">(</span>
+        <span class="n">dominant_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">age_bh</span><span class="p">:</span> <span class="n">AgeMeasurement</span><span class="p">,</span>
+        <span class="n">site_index</span><span class="p">:</span> <span class="n">SiteIndexValue</span><span class="p">,</span> <span class="c1"># Expects SI object, uses its value</span>
+        <span class="n">altitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">northern_sweden</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">broadleaves_percent_ba</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="c1"># Flags derived from R code params:</span>
+        <span class="n">even_aged</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="c1"># Combines even_or_somewhat_uneven vs uneven</span>
+        <span class="n">stand_density_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.65</span><span class="p">,</span> <span class="c1"># Corresponds to Målklass * 10 in original code</span>
+        <span class="n">pct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="c1"># Pre-commercial thinning</span>
+        <span class="n">spatial_distribution</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="c1"># 1:even, 2:somewhat uneven, 3: grouped stand.</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Stems</span><span class="p">,</span> <span class="n">StandBasalArea</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Estimates initial stems/ha and basal area/ha for Spruce stands.</span>
+<span class="sd">        (Combined function calling specific estimators based on region).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dominant_height: Dominant height of the stand (m).</span>
+<span class="sd">            age_bh: Age at breast height (years).</span>
+<span class="sd">            site_index: Site index object (e.g., H100). The numeric value is used.</span>
+<span class="sd">            altitude: Altitude (meters above sea level).</span>
+<span class="sd">            northern_sweden: True if the site is in Northern Sweden, False otherwise.</span>
+<span class="sd">            broadleaves_percent_ba: Percentage of broadleaves in the basal area (0-100).</span>
+<span class="sd">            even_aged: True if the stand is considered even-aged or somewhat uneven-aged.</span>
+<span class="sd">            stand_density_factor: A factor related to target density (0.1 to 1.0).</span>
+<span class="sd">            pct: True if pre-commercial thinning has occurred.</span>
+<span class="sd">            spatial_distribution: Code indicating spatial distribution (1=even, 2=somewhat uneven, 3=grouped).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A tuple containing:</span>
+<span class="sd">             - Stems: Estimated number of stems per hectare.</span>
+<span class="sd">             - StandBasalArea: Estimated basal area (m²/ha).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># --- Input Validation ---</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dominant_height</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;dominant_height must be a float object.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">age_bh</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;age_bh must be an AgeMeasurement object.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">age_bh</span><span class="o">.</span><span class="n">code</span> <span class="o">!=</span> <span class="n">Age</span><span class="o">.</span><span class="n">DBH</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;age_bh must represent age at breast height (Age.DBH).&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">site_index</span><span class="p">,</span> <span class="n">SiteIndexValue</span><span class="p">):</span>
+             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;site_index must be a SiteIndexValue object.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Call the appropriate specific functions</span>
+        <span class="k">if</span> <span class="n">northern_sweden</span><span class="p">:</span>
+            <span class="n">stems_obj</span> <span class="o">=</span> <span class="n">ElfvingHagglundInitialStand</span><span class="o">.</span><span class="n">estimate_stems_young_spruce_north</span><span class="p">(</span>
+                <span class="n">altitude</span><span class="o">=</span><span class="n">altitude</span><span class="p">,</span>
+                <span class="n">site_index</span><span class="o">=</span><span class="n">site_index</span><span class="p">,</span>
+                <span class="n">stand_density_factor</span><span class="o">=</span><span class="n">stand_density_factor</span><span class="p">,</span>
+                <span class="n">broadleaves_percent_ba</span><span class="o">=</span><span class="n">broadleaves_percent_ba</span><span class="p">,</span>
+                <span class="n">pct</span><span class="o">=</span><span class="n">pct</span><span class="p">,</span>
+                <span class="n">even_or_somewhat_uneven_aged</span><span class="o">=</span><span class="n">even_aged</span> <span class="c1"># Map flag</span>
+            <span class="p">)</span>
+            <span class="n">ba_obj</span> <span class="o">=</span> <span class="n">ElfvingHagglundInitialStand</span><span class="o">.</span><span class="n">estimate_basal_area_young_spruce_north</span><span class="p">(</span>
+                 <span class="n">altitude</span><span class="o">=</span><span class="n">altitude</span><span class="p">,</span>
+                 <span class="n">site_index</span><span class="o">=</span><span class="n">site_index</span><span class="p">,</span>
+                 <span class="n">dominant_height</span><span class="o">=</span><span class="n">dominant_height</span><span class="p">,</span>
+                 <span class="n">stems</span><span class="o">=</span><span class="n">stems_obj</span><span class="p">,</span> <span class="c1"># Use calculated stems</span>
+                 <span class="n">stand_density_factor</span><span class="o">=</span><span class="n">stand_density_factor</span><span class="p">,</span>
+                 <span class="n">broadleaves_percent_ba</span><span class="o">=</span><span class="n">broadleaves_percent_ba</span><span class="p">,</span>
+                 <span class="n">spatial_distribution</span><span class="o">=</span><span class="n">spatial_distribution</span><span class="p">,</span>
+                 <span class="n">pct</span><span class="o">=</span><span class="n">pct</span><span class="p">,</span>
+                 <span class="n">even_or_somewhat_uneven_aged</span><span class="o">=</span><span class="n">even_aged</span> <span class="c1"># Map flag</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span> <span class="c1"># Southern Sweden</span>
+            <span class="n">stems_obj</span> <span class="o">=</span> <span class="n">ElfvingHagglundInitialStand</span><span class="o">.</span><span class="n">estimate_stems_young_spruce_south</span><span class="p">(</span>
+                 <span class="n">altitude</span><span class="o">=</span><span class="n">altitude</span><span class="p">,</span>
+                 <span class="n">site_index</span><span class="o">=</span><span class="n">site_index</span><span class="p">,</span>
+                 <span class="n">age_at_breast_height</span><span class="o">=</span><span class="n">age_bh</span><span class="p">,</span> <span class="c1"># Pass age</span>
+                 <span class="n">stand_density_factor</span><span class="o">=</span><span class="n">stand_density_factor</span><span class="p">,</span>
+                 <span class="n">broadleaves_percent_ba</span><span class="o">=</span><span class="n">broadleaves_percent_ba</span><span class="p">,</span>
+                 <span class="n">even_or_somewhat_uneven_aged</span><span class="o">=</span><span class="n">even_aged</span> <span class="c1"># Map flag</span>
+            <span class="p">)</span>
+            <span class="n">ba_obj</span> <span class="o">=</span> <span class="n">ElfvingHagglundInitialStand</span><span class="o">.</span><span class="n">estimate_basal_area_young_spruce_south</span><span class="p">(</span>
+                 <span class="n">altitude</span><span class="o">=</span><span class="n">altitude</span><span class="p">,</span>
+                 <span class="n">site_index</span><span class="o">=</span><span class="n">site_index</span><span class="p">,</span>
+                 <span class="n">dominant_height</span><span class="o">=</span><span class="n">dominant_height</span><span class="p">,</span>
+                 <span class="n">age_at_breast_height</span><span class="o">=</span><span class="n">age_bh</span><span class="p">,</span> <span class="c1"># Pass age</span>
+                 <span class="n">stems</span><span class="o">=</span><span class="n">stems_obj</span><span class="p">,</span> <span class="c1"># Use calculated stems</span>
+                 <span class="n">stand_density_factor</span><span class="o">=</span><span class="n">stand_density_factor</span><span class="p">,</span>
+                 <span class="n">broadleaves_percent_ba</span><span class="o">=</span><span class="n">broadleaves_percent_ba</span><span class="p">,</span>
+                 <span class="n">spatial_distribution</span><span class="o">=</span><span class="n">spatial_distribution</span><span class="p">,</span>
+                 <span class="n">even_or_somewhat_uneven_aged</span><span class="o">=</span><span class="n">even_aged</span><span class="p">,</span> <span class="c1"># Map flag</span>
+                 <span class="n">pct</span><span class="o">=</span><span class="n">pct</span> <span class="c1"># Pass PCT for consistency if stem estimation called</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">stems_obj</span><span class="p">,</span> <span class="n">ba_obj</span></div>
+</div>
+
+</pre></div>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    </body>
+</html>
