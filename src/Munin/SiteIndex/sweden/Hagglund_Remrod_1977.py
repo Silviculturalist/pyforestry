@@ -109,7 +109,7 @@ def hagglund_remrod_1977_height_trajectories_lodgepole_pine(
 
     return SiteIndexValue(
         value=height_at_age2,
-        reference_age=age2,
+        reference_age=Age.DBH(age2),
         species={TreeSpecies.Sweden.pinus_contorta},
         fn=hagglund_remrod_1977_height_trajectories_lodgepole_pine
     )

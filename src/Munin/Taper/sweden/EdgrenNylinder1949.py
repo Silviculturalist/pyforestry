@@ -252,7 +252,7 @@ class EdgrenNylinder1949(Taper):
         """ Instance method. """
         if diameter <= 0 or diameter > self.base_diameter:
             print(f"Invalid minDiameter: {diameter}. Must be between 0 and {self.base_diameter}.")
-            return None
+            return 0.0
 
         def objective(height):
             # The objective function now calls the fast instance method
@@ -270,4 +270,4 @@ class EdgrenNylinder1949(Taper):
             return result.x
         else:
             print(f"Optimization failed for minDiameter: {diameter}")
-            return None
+            return 0.0

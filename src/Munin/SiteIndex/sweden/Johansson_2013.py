@@ -73,7 +73,7 @@ def johansson_2013_height_trajectory_sweden_beech(
     # Return modified to SiteIndexValue
     return SiteIndexValue(
         value=height_at_age2,
-        reference_age=age2_val,
+        reference_age=Age.TOTAL(age2_val),
         species={TreeSpecies.Sweden.fagus_sylvatica},
         fn=johansson_2013_height_trajectory_sweden_beech
     )
@@ -143,7 +143,7 @@ def johansson_2013_height_trajectory_sweden_hybrid_aspen(
     # Return modified to SiteIndexValue
     return SiteIndexValue(
         value=height_at_age2,
-        reference_age=age2_val,
+        reference_age=Age.TOTAL(age2_val),
         species={TreeSpecies.Sweden.populus_tremula_x_tremuloides}, #TODO : Check if valid.
         fn=johansson_2013_height_trajectory_sweden_hybrid_aspen
     )
@@ -216,7 +216,7 @@ def johansson_2013_height_trajectory_sweden_larch(
     # Return modified to SiteIndexValue (Using Larix sibirica as representative)
     return SiteIndexValue(
         value=height_at_age2,
-        reference_age=age2_val,
+        reference_age=Age.TOTAL(age2_val),
         species={TreeSpecies.Sweden.larix_sibirica},
         fn=johansson_2013_height_trajectory_sweden_larch
     )
@@ -289,7 +289,7 @@ def johansson_2013_height_trajectory_sweden_oak(
     # Return modified to SiteIndexValue (Using Quercus robur as representative)
     return SiteIndexValue(
         value=height_at_age2,
-        reference_age=age2_val,
+        reference_age=Age.TOTAL(age2_val),
         species={TreeSpecies.Sweden.quercus_robur},
         fn=johansson_2013_height_trajectory_sweden_oak
     )

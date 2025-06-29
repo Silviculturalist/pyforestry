@@ -75,7 +75,7 @@ def elfving_kiviste_1997_height_trajectory_sweden_pine(dominant_height : float,
 
     return SiteIndexValue(
         value=height_at_age2,
-        reference_age=age2,
+        reference_age=Age.TOTAL(age2),
         species={TreeSpecies.Sweden.pinus_sylvestris},
         fn=elfving_kiviste_1997_height_trajectory_sweden_pine
     )

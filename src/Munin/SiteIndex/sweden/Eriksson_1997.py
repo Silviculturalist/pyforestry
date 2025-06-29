@@ -91,7 +91,7 @@ def eriksson_1997_height_trajectory_sweden_birch(
     # Use age2_val explicitly for reference_age
     return SiteIndexValue(
         value=height_at_age2,
-        reference_age=age2_val,
+        reference_age=Age.DBH(age2_val),
         species={TreeSpecies.Sweden.betula_pendula, TreeSpecies.Sweden.betula_pubescens}, # This represents the genus group Betula
         fn=eriksson_1997_height_trajectory_sweden_birch
     )
