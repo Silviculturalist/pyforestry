@@ -3,10 +3,9 @@ import geopandas as gpd
 from pyproj import Transformer
 from importlib.resources import files, as_file
 
-from typing import Optional, TYPE_CHECKING
+from typing import Optional
 
-if TYPE_CHECKING:
-    from Munin.Site.sweden.SwedishSite import SwedenClimateZone, SwedenCounty
+from Munin.Site.sweden.SwedishSite import SwedenClimateZone, SwedenCounty
 
 class RetrieveGeoCode:
 
@@ -98,7 +97,7 @@ class RetrieveGeoCode:
         Returns:
             SwedenCounty | None: The corresponding SwedenCounty enum member or None if not found.
         """
-        
+
         # Load the county shapefile and reproject to EPSG:3006
         with as_file(files('Munin.Geo.Counties').joinpath('RT_Dlanskod.shp')) as dlanskod_path:
             dlanskod_gdf = gpd.read_file(dlanskod_path).to_crs(epsg=3006)

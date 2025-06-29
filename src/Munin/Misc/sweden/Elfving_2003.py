@@ -13,7 +13,7 @@ from dataclasses import dataclass, field
 
 # Assuming these imports are from your project structure
 # Ensure Munin.Helpers.TreeSpecies.parse_tree_species returns a TreeName object
-from Munin.Site.sweden.SwedishSite import SwedenFieldLayer, Vegetation, SwedenCounty # type: ignore
+from Munin.Site.sweden.SwedishSite import SwedenFieldLayer, Vegetation
 from Munin.Helpers.TreeSpecies import TreeSpecies, TreeName, parse_tree_species, RegionalGenusGroup # type: ignore
 
 Number = Union[int, float, SupportsFloat]
