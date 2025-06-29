@@ -15,28 +15,9 @@ from .TreeSpecies import (
 )
 
 # From Primitives.py
-from .Primitives import (
-    Age,
-    AgeMeasurement,
-    Diameter_cm,
-    Position,
-    SiteIndexValue,
-    StandBasalArea,
-    StandVolume,
-    Stems,
-    TopHeightDefinition,
-    TopHeightMeasurement,
-    QuadraticMeanDiameter,
-    AtomicVolume,
-    CompositeVolume,
-    AngleCount,
-    AngleCountAggregator,
-    Tree,
-    SingleTree,
-    RepresentationTree,
-    SiteBase
-)
-
+from .Primitives import *
+from .tree import Tree, SingleTree, RepresentationTree
+from .bitterlich_angle_count import AngleCount, AngleCountAggregator
 from .plot import CircularPlot, StandMetricAccessor
 from .stand import Stand
 
