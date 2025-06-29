@@ -1,5 +1,12 @@
 import pytest
-from Munin.Volume import *
+from Munin.Volume.sweden import (
+    BrandelVolume,
+    andersson_1954_volume_small_trees_birch_height_above_4_m, 
+    carbonnier_1954_volume_larch,
+    matern_1975_volume_sweden_beech,
+    Eriksson_1973_volume_aspen_Sweden,
+    Eriksson_1973_volume_lodgepole_pine_Sweden
+)
 
 def test_brandel_volume_log():
     # Example coefficients for southern pine (adjust based on your model)

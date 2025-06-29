@@ -13,10 +13,13 @@ from Munin.Helpers import (
     Position,
     TreeSpecies,
     Stems,
-    StandBasalArea
+    StandBasalArea,
+    AtomicVolume,
+    CompositeVolume
 )
 import math
- 
+from pyproj import CRS
+
 def test_diameter_cm():
     """Test the Diameter_cm class for basic constraints."""
     d = Diameter_cm(25)
@@ -52,14 +55,15 @@ def test_stand_polygon_area():
     """Check polygon-based area computation."""
     # A simple square polygon 100 x 100 => 10000 m² => 1.0 ha
     poly = Polygon([(0,0),(100,0),(100,100),(0,100)])
-    st = Stand(polygon=poly,crs='EPSG:3006')
+    st = Stand(polygon=poly,crs=CRS('EPSG:3006'))
+    assert st.area_ha is not None
     assert math.isclose(st.area_ha, 1.0, rel_tol=1e-3)
 
 def test_stand_polygon_mismatch_value_error():
     """Check that a mismatch in user area_ha vs. polygon area triggers a ValueError."""
     poly = Polygon([(0, 0), (100, 0), (100, 100), (0, 100)])  # 10000 m² => 1 ha
     with pytest.raises(ValueError, match='Polygon area is 1.00 ha, but you set area_ha=2.00 ha.'):
-        st = Stand(polygon=poly, crs='EPSG:3006', area_ha=2.0)
+        st = Stand(polygon=poly, crs=CRS('EPSG:3006'), area_ha=2.0)
 
 
 def test_stand_metric_calculations():
@@ -139,8 +143,8 @@ def test_stems_basalarea_negatives():
         StandBasalArea(-5)
 
 def test_metric_value_property():
-    ba = StandBasalArea(30.0, species="picea", precision=2.5)
-    s = Stems(100, species="picea", precision=5)
+    ba = StandBasalArea(30.0, species=parse_tree_species('picea abies'), precision=2.5)
+    s = Stems(100, species=parse_tree_species('picea abies'), precision=5)
     # Using the .value property we added
     assert ba.value == 30.0
     assert s.value == 100
@@ -192,7 +196,7 @@ def test_aggregate_stand_metrics():
 
 # --- Volume conversion tests ---
 def test_volume_conversion():
-    vol = Volume(1, region="Sweden", species="Picea_abies", unit='m3', type='m3sk')
+    vol = AtomicVolume(1, region="Sweden", species="Picea_abies",type='m3sk')
     # 1 m3 = 1000 dm3
     assert math.isclose(vol.to('dm3'), 1000, rel_tol=1e-6)
 

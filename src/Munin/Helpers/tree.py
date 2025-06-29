@@ -2,7 +2,7 @@
 # Tree classes
 # ------------------------------------------------------------------------------
 from typing import Optional, Union
-from Munin.Helpers.TreeSpecies import TreeName, TreeSpecies, parse_tree_species
+from Munin.Helpers.TreeSpecies import TreeName, parse_tree_species
 from Munin.Helpers.Primitives import Position, Diameter_cm, Age 
 
 class Tree:
@@ -21,7 +21,7 @@ class SingleTree(Tree):
     -----------
     position : Position | tuple[float,float] | tuple[float,float,float] | None
         The location of the tree in some coordinate system.
-    species : TreeSpecies | str | None
+    species : TreeName | str | None
         The species of the tree (or a string name to be parsed).
     age : Age | float | None
         The age of the tree. If an Age enum is used, it wraps the value in AgeMeasurement.
@@ -32,7 +32,7 @@ class SingleTree(Tree):
     """
     def __init__(self,
                  position: Optional[Union[Position, tuple, None]] = None,
-                 species: Optional[Union[TreeSpecies, str]] = None,
+                 species: Optional[Union[TreeName, str]] = None,
                  age: Optional[Union[Age, float]] = None,
                  diameter_cm: Optional[Union[Diameter_cm, float]] = None,
                  height_m: Optional[float] = None):
@@ -68,7 +68,7 @@ class RepresentationTree(Tree):
     -----------
     position : Position | tuple[float,float] | tuple[float,float,float] | None
         Location if relevant (often None or the plot center).
-    species : TreeSpecies | str | None
+    species : TreeName | str | None
         Species of the tree(s).
     age : Age | float | None
         Age of the tree(s).
@@ -81,7 +81,7 @@ class RepresentationTree(Tree):
     """
     def __init__(self,
                  position: Optional[Union[Position, tuple, None]] = None,
-                 species: Optional[Union[TreeSpecies, str]] = None,
+                 species: Optional[Union[TreeName, str]] = None,
                  age: Optional[Union[Age, float]] = None,
                  diameter_cm: Optional[Union[Diameter_cm, float]] = None,
                  height_m: Optional[float] = None,
