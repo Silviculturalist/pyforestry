@@ -14,11 +14,9 @@ from Munin.Helpers.plot import CircularPlot
 from Munin.Helpers.Primitives import (
     Stems,
     StandBasalArea,
-    AngleCountAggregator,
     TopHeightMeasurement,
     TopHeightDefinition,
     SiteBase,
-    RepresentationTree,
     QuadraticMeanDiameter,
     
 )
@@ -26,9 +24,85 @@ from Munin.Helpers.Primitives import (
 from Munin.Helpers import (
     TreeName,
     CircularPlot,
-    StandMetricAccessor,
+    AngleCountAggregator,
+    RepresentationTree,
     parse_tree_species 
 )
+
+
+# -------------------------------------------------------------------------
+# Accessor for .BasalArea, .Stems, etc.
+# -------------------------------------------------------------------------
+class StandMetricAccessor:
+    """
+    Provides access to stand-level metric data (e.g. BasalArea or Stems).
+    Usage:
+        stand.BasalArea.TOTAL
+        stand.BasalArea(TreeName(...))
+        float(stand.BasalArea) -> numeric total
+        stand.BasalArea.precision -> total's precision
+    """
+    def __init__(self, stand: 'Stand', metric_name: str):
+        self._stand = stand
+        self._metric_name = metric_name
+
+    def _ensure_estimates(self):
+        """Compute or refresh HT estimates if not done."""
+        if self._metric_name not in self._stand._metric_estimates:
+             if not self._stand.use_angle_count:
+                self._stand._compute_ht_estimates()
+
+
+    def __getattr__(self, item):
+        """
+        Allows dot-based access .TOTAL => returns aggregator for total.
+        """
+        if item == "TOTAL":
+            self._ensure_estimates()
+            metric_dict = self._stand._metric_estimates[self._metric_name]
+            return metric_dict["TOTAL"]
+        raise AttributeError(f"No attribute '{item}' in StandMetricAccessor for {self._metric_name}")
+
+    def __call__(self, species: Union[TreeName, str]):
+        """
+        Call-syntax for species-level estimates:
+          stand.BasalArea(TreeName(...)) or stand.BasalArea("picea abies")
+        """
+        self._ensure_estimates()
+        # Convert species (TreeName or str) → TreeName
+        if isinstance(species, str):
+            sp_obj = parse_tree_species(species)
+        else:
+            sp_obj = species
+
+        metric_dict = self._stand._metric_estimates[self._metric_name]
+        if sp_obj not in metric_dict:
+            raise KeyError(f"No estimate found for species={sp_obj.full_name} in {self._metric_name}.")
+        return metric_dict[sp_obj]
+
+    def __float__(self):
+        """
+        float(stand.BasalArea) -> numeric value of the total aggregator
+        """
+        self._ensure_estimates()
+        total_obj = self._stand._metric_estimates[self._metric_name]["TOTAL"]
+        return float(total_obj)
+
+    @property
+    def value(self) -> float:
+        """Shortcut to the total aggregator's numeric value."""
+        return float(self)
+
+    @property
+    def precision(self) -> float:
+        """Shortcut to the total aggregator's precision."""
+        self._ensure_estimates()
+        total_obj = self._stand._metric_estimates[self._metric_name]["TOTAL"]
+        return getattr(total_obj, "precision", 0.0)
+
+    def __repr__(self):
+        return f"<StandMetricAccessor metric={self._metric_name}>"
+
 
 class Stand:
     """

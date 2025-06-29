@@ -18,8 +18,8 @@ from .TreeSpecies import (
 from .Primitives import *
 from .tree import Tree, SingleTree, RepresentationTree
 from .bitterlich_angle_count import AngleCount, AngleCountAggregator
-from .plot import CircularPlot, StandMetricAccessor
-from .stand import Stand
+from .plot import CircularPlot
+from .stand import Stand, StandMetricAccessor
 
 
 __all__ = [
