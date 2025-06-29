@@ -2,8 +2,20 @@ import pytest
 from shapely.geometry import Point, Polygon
 import random
 
-from Munin.Helpers.Primitives import * 
-from Munin.Helpers.Base import *
+from Munin.Helpers import (
+    CircularPlot,
+    Diameter_cm,
+    Stand,
+    parse_tree_species,
+    RepresentationTree,
+    AngleCount,
+    AngleCountAggregator,
+    Position,
+    TreeSpecies,
+    Stems,
+    StandBasalArea
+)
+import math
  
 def test_diameter_cm():
     """Test the Diameter_cm class for basic constraints."""
