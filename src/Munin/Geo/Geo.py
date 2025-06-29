@@ -5,7 +5,7 @@ from importlib.resources import files, as_file
 
 from typing import Optional
 
-from Munin.Site.sweden.SwedishSite import SwedenClimateZone, SwedenCounty
+from Munin.Site.sweden import Sweden
 
 class RetrieveGeoCode:
 
@@ -49,7 +49,7 @@ class RetrieveGeoCode:
 
     @staticmethod
     # Use string literal for the type hint
-    def getClimateCode(lon, lat, epsg=4326) -> Optional[SwedenClimateZone]:
+    def getClimateCode(lon, lat, epsg=4326) -> Optional[Sweden.ClimateZone]:
         """
         Retrieve the climate zone enum member for a given coordinate.
 
@@ -59,11 +59,9 @@ class RetrieveGeoCode:
             epsg (int): EPSG code for the input coordinates (default: 4326).
 
         Returns:
-            SwedenClimateZone | None: The climate zone enum member or None if not found.
+            Sweden.ClimateZone | None: The climate zone enum member or None if not found.
         """
-        # Import locally within the method for runtime use
-        from Munin.Site.sweden.SwedishSite import SwedenClimateZone
-
+        
         # Load the climate shapefile and reproject to EPSG:3006
         with as_file(files('Munin.Geo.Climate').joinpath("Klimat.shp")) as climatezone_path:
             klimat_gdf = gpd.read_file(climatezone_path).to_crs(epsg=3006)
@@ -80,12 +78,12 @@ class RetrieveGeoCode:
         else:
             climate_zone_code_int = klimat_polygon.iloc[0]['KLIMZON_']
             # Lookup and return the enum member using the code (runtime use)
-            return SwedenClimateZone.from_code(climate_zone_code_int)
+            return Sweden.ClimateZone.from_code(climate_zone_code_int)
 
 
     @staticmethod
     # Use string literal for the type hint
-    def getCountyCode(lon, lat, epsg=4326) -> Optional[SwedenCounty]:
+    def getCountyCode(lon, lat, epsg=4326) -> Optional[Sweden.County]:
         """
         Retrieve the county enum member for a given coordinate.
 
@@ -115,4 +113,4 @@ class RetrieveGeoCode:
         else:
             county_code_int = dlanskod_polygon.iloc[0]['DLANSKOD']
             # Lookup and return the enum member using the code (runtime use)
-            return SwedenCounty.from_code(county_code_int)
+            return Sweden.County.from_code(county_code_int)

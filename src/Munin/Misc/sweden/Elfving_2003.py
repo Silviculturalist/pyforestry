@@ -8,13 +8,13 @@ implausible age calculations.
 """
 
 from math import exp, log, sqrt, pi
-from typing import Union, SupportsFloat, Optional, Any, Dict, Tuple, Callable
+from typing import Union, SupportsFloat, Optional, Any, Tuple, Callable
 from dataclasses import dataclass, field
 
-# Assuming these imports are from your project structure
-# Ensure Munin.Helpers.TreeSpecies.parse_tree_species returns a TreeName object
-from Munin.Site.sweden.SwedishSite import SwedenFieldLayer, Vegetation
-from Munin.Helpers.TreeSpecies import TreeSpecies, TreeName, parse_tree_species, RegionalGenusGroup # type: ignore
+
+from Munin.Site.sweden import Sweden
+from Munin.Site.sweden.site_primitives import Vegetation
+from Munin.Helpers.TreeSpecies import TreeSpecies, TreeName, parse_tree_species, RegionalGenusGroup
 
 Number = Union[int, float, SupportsFloat]
 
@@ -54,7 +54,7 @@ class Lind2003MeanDiameterCodominantTrees:
 class _ModelParams: # Simplified for brevity, ensure all fields from previous version are here
     d_cm: float; species_obj: TreeName; altitude_m: float; latitude: float
     processed_total_stand_age: Optional[float] = None; sis: Optional[float] = None
-    field_layer_vegetation: Vegetation = SwedenFieldLayer.BILBERRY.value
+    field_layer_vegetation: Vegetation = Sweden.FieldLayer.BILBERRY.value
     processed_basal_area_plot_m2_ha: Optional[float] = None # NOTE: Removed * 0.01 scaling here
     processed_basal_area_relascope_m2_ha: Optional[float] = None
     local_qmd_cm: Optional[float] = None; stems_ha: Optional[int] = None
@@ -256,11 +256,11 @@ class Elfving2003SingleTreeAge:
         local_qmd = float(QMD_cm) if QMD_cm is not None else (sqrt(processed_ba_relascope/((pi/40000.0)*int(stems_ha))) if processed_ba_relascope is not None and stems_ha and int(stems_ha)>0 and processed_ba_relascope>=0 and (pi/40000.0)*int(stems_ha)>0 else None)
         if local_qmd is not None and local_qmd <= 0 : raise ValueError("QMD_cm must be > 0.")
 
-        actual_fl_veg = SwedenFieldLayer.BILBERRY.value # type: ignore
-        if isinstance(field_layer,SwedenFieldLayer): actual_fl_veg = field_layer.value # type: ignore
+        actual_fl_veg = Sweden.FieldLayer.BILBERRY.value # type: ignore
+        if isinstance(field_layer,Sweden.FieldLayer): actual_fl_veg = field_layer.value # type: ignore
         elif isinstance(field_layer,Vegetation): actual_fl_veg = field_layer # type: ignore
         else:
-            try: code = int(field_layer); actual_fl_veg = next((m.value for m in SwedenFieldLayer if m.value.code == code), SwedenFieldLayer.BILBERRY.value) # type: ignore
+            try: code = int(field_layer); actual_fl_veg = next((m.value for m in Sweden.FieldLayer if m.value.code == code), Sweden.FieldLayer.BILBERRY.value) # type: ignore
             except(ValueError,TypeError): pass
 
         # Explicitly convert dominant_mean_diameter_override to float if not None
@@ -518,7 +518,7 @@ class Elfving2003SingleTreeAge:
                           GROUP_PINE_CONTORTA: _calculate_ln_a13_group_pine_contorta}
 
     @staticmethod
-    def age(*, diameter:Number,species:str|TreeName,total_stand_age:Optional[Number]=None,SIS:Optional[Number]=None,field_layer:Any=SwedenFieldLayer.BILBERRY,basal_area_plot_m2_ha:Optional[Number]=None,basal_area_relascope_m2_ha:Optional[Number]=None,altitude_m:Number=100,latitude:Number=64,QMD_cm:Optional[Number]=None,stems_ha:Optional[int]=None,is_uneven_aged:Optional[bool]=None,dominant_mean_diameter:Optional[Number]=None,is_standard_tree_hint:Optional[bool]=None,is_undergrowth_tree_hint:Optional[bool]=None,is_gotland:Optional[bool]=None,is_ditched:Optional[bool]=None,is_peat_soil:Optional[bool]=None,is_shade_tolerant_broadleaf_hint:Optional[bool]=None) -> float: # type: ignore
+    def age(*, diameter:Number,species:str|TreeName,total_stand_age:Optional[Number]=None,SIS:Optional[Number]=None,field_layer:Any=Sweden.FieldLayer.BILBERRY,basal_area_plot_m2_ha:Optional[Number]=None,basal_area_relascope_m2_ha:Optional[Number]=None,altitude_m:Number=100,latitude:Number=64,QMD_cm:Optional[Number]=None,stems_ha:Optional[int]=None,is_uneven_aged:Optional[bool]=None,dominant_mean_diameter:Optional[Number]=None,is_standard_tree_hint:Optional[bool]=None,is_undergrowth_tree_hint:Optional[bool]=None,is_gotland:Optional[bool]=None,is_ditched:Optional[bool]=None,is_peat_soil:Optional[bool]=None,is_shade_tolerant_broadleaf_hint:Optional[bool]=None) -> float: # type: ignore
         params = Elfving2003SingleTreeAge._prepare_model_params(diameter,species,total_stand_age,SIS,field_layer,basal_area_plot_m2_ha,basal_area_relascope_m2_ha,altitude_m,latitude,QMD_cm,stems_ha,is_uneven_aged,dominant_mean_diameter,is_standard_tree_hint,is_undergrowth_tree_hint,is_gotland,is_ditched,is_peat_soil,is_shade_tolerant_broadleaf_hint)
         group = Elfving2003SingleTreeAge._determine_calculation_group(params)
         if group not in Elfving2003SingleTreeAge._COEFFS or group not in Elfving2003SingleTreeAge._BIAS:
@@ -532,7 +532,7 @@ class Elfving2003SingleTreeAge:
     @staticmethod
     def _get_vegetation_code(fi:Any)->Optional[int]:
         if fi is None:return None
-        if isinstance(fi,SwedenFieldLayer):return fi.value.code # type: ignore
+        if isinstance(fi,Sweden.FieldLayer):return fi.value.code # type: ignore
         if isinstance(fi,Vegetation):return fi.code # type: ignore
         try:return int(fi)
         except(ValueError,TypeError):return None
