@@ -11,17 +11,21 @@ from shapely import Polygon
 from shapely.geometry.base import BaseGeometry
 import geopandas as gpd
 from Munin.Helpers.plot import CircularPlot
-from Munin.Helpers import (
+from Munin.Helpers.Primitives import (
     Stems,
     StandBasalArea,
     AngleCountAggregator,
-    CircularPlot,
     TopHeightMeasurement,
     TopHeightDefinition,
     SiteBase,
-    TreeName,
     RepresentationTree,
     QuadraticMeanDiameter,
+    
+)
+
+from Munin.Helpers import (
+    TreeName,
+    CircularPlot,
     StandMetricAccessor,
     parse_tree_species 
 )
