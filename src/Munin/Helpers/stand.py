@@ -42,7 +42,7 @@ class StandMetricAccessor:
         float(stand.BasalArea) -> numeric total
         stand.BasalArea.precision -> total's precision
     """
-    def __init__(self, stand: 'Stand', metric_name: str):
+    def __init__(self, stand: "Stand", metric_name: str):
         self._stand = stand
         self._metric_name = metric_name
 

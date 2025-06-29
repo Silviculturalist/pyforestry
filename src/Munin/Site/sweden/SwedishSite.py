@@ -2,7 +2,6 @@ from typing import Optional, Union
 from dataclasses import dataclass, field
 from enum import Enum
 from Munin.Helpers.Primitives import SiteBase
-from Munin.Geo.Geo import RetrieveGeoCode
 from Munin.SiteIndex.sweden.SIS import Hagglund_Lundmark_1979_SIS, eko_pm_2008_estimate_si_birch
 from Munin.Geo.Humidity import eriksson_1986_humidity
 from Munin.Geo.Temperature import Odin_temperature_sum
@@ -239,6 +238,7 @@ class SwedishSite(SiteBase):
     n_of_limes_norrlandicus: Optional[bool] = field(init=False, default=None)
 
     def __post_init__(self) -> None:
+        from Munin.Geo.Geo import RetrieveGeoCode
         # Compute county first
         try:
             county_enum = RetrieveGeoCode.getCountyCode(lon=self.longitude, lat=self.latitude)
