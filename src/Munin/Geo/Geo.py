@@ -98,9 +98,7 @@ class RetrieveGeoCode:
         Returns:
             SwedenCounty | None: The corresponding SwedenCounty enum member or None if not found.
         """
-        # Import locally within the method for runtime use
-        from Munin.Site.sweden.SwedishSite import SwedenCounty
-
+        
         # Load the county shapefile and reproject to EPSG:3006
         with as_file(files('Munin.Geo.Counties').joinpath('RT_Dlanskod.shp')) as dlanskod_path:
             dlanskod_gdf = gpd.read_file(dlanskod_path).to_crs(epsg=3006)
