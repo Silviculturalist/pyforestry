@@ -1,5 +1,7 @@
 [![CI](https://github.com/Silviculturalist/Munin/actions/workflows/ci.yml/badge.svg?event=push)](https://github.com/Silviculturalist/Munin/actions/workflows/ci.yml) [![codecov](https://codecov.io/gh/Silviculturalist/Munin/branch/main/graph/badge.svg?token=2C3Z6NXHA4)](https://codecov.io/gh/Silviculturalist/Munin)
 
+Documentation: [Available 2025-06-30](https://silviculturalist.github.io/Munin/)
+
 This package is currently under *very early* development.
 Use at your own risk. 
 
