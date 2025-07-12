@@ -13,7 +13,7 @@ from tqdm import tqdm
 # Import your project's classes
 from pyforestry.timber.swe_timber import SweTimber
 from pyforestry.pricelist.pricelist import Pricelist, create_pricelist_from_data
-from pyforestry.taper.Taper import Taper
+from pyforestry.taper.taper import Taper
 from pyforestry.timber_bucking.nasberg_1985 import Nasberg_1985_BranchBound, BuckingConfig
 
 def _hash_pricelist(price_data: Dict[str, Any]) -> str:
