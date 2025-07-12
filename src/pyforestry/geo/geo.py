@@ -25,7 +25,7 @@ class RetrieveGeoCode:
             float: Distance in kilometers to the nearest coastline.
         """
         # Load the coastline shapefile
-        with as_file(files("pyforestry.Geo.Coastline").joinpath("SwedishCoastLine_NE_medium_clipped.shp")) as coastline_path:
+        with as_file(files("pyforestry.geo.Coastline").joinpath("SwedishCoastLine_NE_medium_clipped.shp")) as coastline_path:
             coast_gdf = gpd.read_file(coastline_path)
 
         # Ensure coastline data is in EPSG:4326 for consistency
@@ -63,7 +63,7 @@ class RetrieveGeoCode:
         """
         
         # Load the climate shapefile and reproject to EPSG:3006
-        with as_file(files('pyforestry.Geo.Climate').joinpath("Klimat.shp")) as climatezone_path:
+        with as_file(files('pyforestry.geo.Climate').joinpath("Klimat.shp")) as climatezone_path:
             klimat_gdf = gpd.read_file(climatezone_path).to_crs(epsg=3006)
 
         # Transform the input coordinates from the provided epsg to EPSG:3006
@@ -97,7 +97,7 @@ class RetrieveGeoCode:
         """
 
         # Load the county shapefile and reproject to EPSG:3006
-        with as_file(files('pyforestry.Geo.Counties').joinpath('RT_Dlanskod.shp')) as dlanskod_path:
+        with as_file(files('pyforestry.geo.Counties').joinpath('RT_Dlanskod.shp')) as dlanskod_path:
             dlanskod_gdf = gpd.read_file(dlanskod_path).to_crs(epsg=3006)
 
 
