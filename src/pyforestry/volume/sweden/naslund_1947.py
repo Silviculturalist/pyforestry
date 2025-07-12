@@ -1,7 +1,7 @@
 from typing import Optional
+from pyforestry.timber import SweTimber
 
 class NaslundVolume:
-    from pyforestry.timber import SweTimber
     @staticmethod
     def calculate(timber: SweTimber) -> float:
         timber.validate()
