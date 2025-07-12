@@ -245,7 +245,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.helpers.primitives</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandBasalArea</span><span class="p">,</span> <span class="n">Stems</span>
 
 <div class="viewcode-block" id="AngleCount">
-<a class="viewcode-back" href="../../../source/munin.helpers.html#pyforestry.helpers.bitterlich_angle_count.AngleCount">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.helpers.html#pyforestry.helpers.bitterlich_angle_count.AngleCount">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">AngleCount</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parameters and tallies for angle-count sampling at a single point.</span>
 
@@ -286,7 +286,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Length mismatch for point </span><span class="si">{</span><span class="n">point_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="AngleCount.add_observation">
-<a class="viewcode-back" href="../../../source/munin.helpers.html#pyforestry.helpers.bitterlich_angle_count.AngleCount.add_observation">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.helpers.html#pyforestry.helpers.bitterlich_angle_count.AngleCount.add_observation">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_observation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sp</span><span class="p">:</span> <span class="n">TreeName</span><span class="p">,</span> <span class="n">count</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add or update tally for a species at this point.</span>
 
@@ -304,7 +304,7 @@
 
 
 <div class="viewcode-block" id="AngleCountAggregator">
-<a class="viewcode-back" href="../../../source/munin.helpers.html#pyforestry.helpers.bitterlich_angle_count.AngleCountAggregator">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.helpers.html#pyforestry.helpers.bitterlich_angle_count.AngleCountAggregator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">AngleCountAggregator</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Aggregate multiple AngleCount samples into stand metrics.</span>
 
@@ -321,7 +321,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">records</span> <span class="o">=</span> <span class="n">records</span>
 
 <div class="viewcode-block" id="AngleCountAggregator.merge_by_point_id">
-<a class="viewcode-back" href="../../../source/munin.helpers.html#pyforestry.helpers.bitterlich_angle_count.AngleCountAggregator.merge_by_point_id">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.helpers.html#pyforestry.helpers.bitterlich_angle_count.AngleCountAggregator.merge_by_point_id">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">merge_by_point_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">AngleCount</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Merge records sharing the same point_id, ensuring consistent BAF.</span>
 
@@ -353,7 +353,7 @@
 
     
 <div class="viewcode-block" id="AngleCountAggregator.aggregate_stand_metrics">
-<a class="viewcode-back" href="../../../source/munin.helpers.html#pyforestry.helpers.bitterlich_angle_count.AngleCountAggregator.aggregate_stand_metrics">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.helpers.html#pyforestry.helpers.bitterlich_angle_count.AngleCountAggregator.aggregate_stand_metrics">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">aggregate_stand_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">TreeName</span><span class="p">,</span> <span class="n">StandBasalArea</span><span class="p">],</span>
                                              <span class="n">Dict</span><span class="p">[</span><span class="n">TreeName</span><span class="p">,</span> <span class="n">Stems</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute mean basal area and stems density per species across plots.</span>

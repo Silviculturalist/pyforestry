@@ -237,7 +237,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.helpers.tree_species</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_tree_species</span><span class="p">,</span> <span class="n">TreeName</span>
 
 <div class="viewcode-block" id="DiameterRange">
-<a class="viewcode-back" href="../../../source/munin.pricelist.html#pyforestry.pricelist.pricelist.DiameterRange">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.pricelist.html#pyforestry.pricelist.pricelist.DiameterRange">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">DiameterRange</span><span class="p">:</span>
     <span class="n">Min</span><span class="p">:</span> <span class="nb">float</span>
@@ -245,7 +245,7 @@
 
 
 <div class="viewcode-block" id="LengthRange">
-<a class="viewcode-back" href="../../../source/munin.pricelist.html#pyforestry.pricelist.pricelist.LengthRange">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.pricelist.html#pyforestry.pricelist.pricelist.LengthRange">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">LengthRange</span><span class="p">:</span>
     <span class="n">Min</span><span class="p">:</span> <span class="nb">float</span>
@@ -254,7 +254,7 @@
 
 
 <div class="viewcode-block" id="TimberPriceForDiameter">
-<a class="viewcode-back" href="../../../source/munin.pricelist.html#pyforestry.pricelist.pricelist.TimberPriceForDiameter">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.pricelist.html#pyforestry.pricelist.pricelist.TimberPriceForDiameter">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">TimberPriceForDiameter</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Represents the set of prices for a given diameter, for each log part type.</span>
@@ -266,7 +266,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">top_price</span> <span class="o">=</span> <span class="n">top_price</span>
 
 <div class="viewcode-block" id="TimberPriceForDiameter.price_for_log_part">
-<a class="viewcode-back" href="../../../source/munin.pricelist.html#pyforestry.pricelist.pricelist.TimberPriceForDiameter.price_for_log_part">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.pricelist.html#pyforestry.pricelist.pricelist.TimberPriceForDiameter.price_for_log_part">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">price_for_log_part</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the price (in e.g. SEK/m3) for the given part type index.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">part_type</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># butt</span>
@@ -281,7 +281,7 @@
 
 
 <div class="viewcode-block" id="LengthCorrections">
-<a class="viewcode-back" href="../../../source/munin.pricelist.html#pyforestry.pricelist.pricelist.LengthCorrections">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.pricelist.html#pyforestry.pricelist.pricelist.LengthCorrections">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">LengthCorrections</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Holds logic for how the length modifies price (absolute or percent).</span>
@@ -292,7 +292,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">corrections</span> <span class="o">=</span> <span class="n">corrections</span> <span class="ow">or</span> <span class="p">{}</span>
     
 <div class="viewcode-block" id="LengthCorrections.get_length_correction">
-<a class="viewcode-back" href="../../../source/munin.pricelist.html#pyforestry.pricelist.pricelist.LengthCorrections.get_length_correction">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.pricelist.html#pyforestry.pricelist.pricelist.LengthCorrections.get_length_correction">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_length_correction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diameter</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">log_part</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the correction percentage for a given diameter and log length.</span>
@@ -312,12 +312,12 @@
 
 
 <div class="viewcode-block" id="TimberPricelist">
-<a class="viewcode-back" href="../../../source/munin.pricelist.html#pyforestry.pricelist.pricelist.TimberPricelist">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.pricelist.html#pyforestry.pricelist.pricelist.TimberPricelist">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">TimberPricelist</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Stores the entire set of timber prices by diameter class, etc.&quot;&quot;&quot;</span>
     <span class="c1"># Using your code&#39;s idea of enumerations: Butt = 0, Middle = 1, Top = 2 ...</span>
 <div class="viewcode-block" id="TimberPricelist.LogParts">
-<a class="viewcode-back" href="../../../source/munin.pricelist.html#pyforestry.pricelist.pricelist.TimberPricelist.LogParts">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.pricelist.html#pyforestry.pricelist.pricelist.TimberPricelist.LogParts">[docs]</a>
     <span class="k">class</span><span class="w"> </span><span class="nc">LogParts</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
         <span class="n">Butt</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">Middle</span> <span class="o">=</span> <span class="mi">1</span>
@@ -348,7 +348,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_price_by_diameter</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">diameter</span><span class="p">,</span> <span class="n">TimberPriceForDiameter</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
 
 <div class="viewcode-block" id="TimberPricelist.set_price_for_diameter">
-<a class="viewcode-back" href="../../../source/munin.pricelist.html#pyforestry.pricelist.pricelist.TimberPricelist.set_price_for_diameter">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.pricelist.html#pyforestry.pricelist.pricelist.TimberPricelist.set_price_for_diameter">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_price_for_diameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diameter</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">price_struct</span><span class="p">:</span> <span class="n">TimberPriceForDiameter</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Store a price entry for a certain diameter class.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_price_by_diameter</span><span class="p">[</span><span class="n">diameter</span><span class="p">]</span> <span class="o">=</span> <span class="n">price_struct</span></div>
@@ -363,7 +363,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_diameter</span>
 
 <div class="viewcode-block" id="TimberPricelist.getTimberWeight">
-<a class="viewcode-back" href="../../../source/munin.pricelist.html#pyforestry.pricelist.pricelist.TimberPricelist.getTimberWeight">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.pricelist.html#pyforestry.pricelist.pricelist.TimberPricelist.getTimberWeight">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">getTimberWeight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log_part</span><span class="p">:</span> <span class="s1">&#39;TimberPricelist.LogParts&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        If you&#39;re applying downgrading or certain proportions for pulp/fuel/cull,</span>
@@ -378,7 +378,7 @@
 
     
 <div class="viewcode-block" id="TimberPricelist.price_for_log_part">
-<a class="viewcode-back" href="../../../source/munin.pricelist.html#pyforestry.pricelist.pricelist.TimberPricelist.price_for_log_part">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.pricelist.html#pyforestry.pricelist.pricelist.TimberPricelist.price_for_log_part">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">price_for_log_part</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log_part</span><span class="p">:</span> <span class="s1">&#39;TimberPricelist.LogParts&#39;</span><span class="p">,</span> <span class="n">diameter_cm</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the price for a given log part (Butt, Middle, Top) at a given diameter (cm).</span>
@@ -390,7 +390,7 @@
 
 
 <div class="viewcode-block" id="TimberPricelist.get_nearest_diameter_class">
-<a class="viewcode-back" href="../../../source/munin.pricelist.html#pyforestry.pricelist.pricelist.TimberPricelist.get_nearest_diameter_class">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.pricelist.html#pyforestry.pricelist.pricelist.TimberPricelist.get_nearest_diameter_class">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_nearest_diameter_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diameter_cm</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the closest available diameter class (floored down to available class).</span>
@@ -407,14 +407,14 @@
 
 
 <div class="viewcode-block" id="PulpPricelist">
-<a class="viewcode-back" href="../../../source/munin.pricelist.html#pyforestry.pricelist.pricelist.PulpPricelist">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.pricelist.html#pyforestry.pricelist.pricelist.PulpPricelist">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PulpPricelist</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Placeholder for pulp prices per species.&quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_prices</span> <span class="o">=</span> <span class="p">{}</span>
 
 <div class="viewcode-block" id="PulpPricelist.getPulpwoodPrice">
-<a class="viewcode-back" href="../../../source/munin.pricelist.html#pyforestry.pricelist.pricelist.PulpPricelist.getPulpwoodPrice">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.pricelist.html#pyforestry.pricelist.pricelist.PulpPricelist.getPulpwoodPrice">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">getPulpwoodPrice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">species</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">TreeName</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Try to find the price for a species by first looking for a full name match.</span>
@@ -456,7 +456,7 @@
 
 
 <div class="viewcode-block" id="Pricelist">
-<a class="viewcode-back" href="../../../source/munin.pricelist.html#pyforestry.pricelist.pricelist.Pricelist">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.pricelist.html#pyforestry.pricelist.pricelist.Pricelist">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Pricelist</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Holds the combined pulpwood, timber, etc. prices and constraints.&quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -471,7 +471,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">TimberLogLength</span> <span class="o">=</span> <span class="n">LengthRange</span><span class="p">(</span><span class="mi">31</span><span class="p">,</span> <span class="mi">55</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Pricelist.load_from_dict">
-<a class="viewcode-back" href="../../../source/munin.pricelist.html#pyforestry.pricelist.pricelist.Pricelist.load_from_dict">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.pricelist.html#pyforestry.pricelist.pricelist.Pricelist.load_from_dict">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">load_from_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">price_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads and configures the entire pricelist from a dictionary.&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
@@ -529,7 +529,7 @@
 
 
 <div class="viewcode-block" id="create_pricelist_from_data">
-<a class="viewcode-back" href="../../../source/munin.pricelist.html#pyforestry.pricelist.pricelist.create_pricelist_from_data">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.pricelist.html#pyforestry.pricelist.pricelist.create_pricelist_from_data">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">create_pricelist_from_data</span><span class="p">(</span>
     <span class="n">price_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
     <span class="n">species_to_load</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>

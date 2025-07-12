@@ -267,7 +267,7 @@
 <span class="c1"># Accessor for .BasalArea, .Stems, etc.</span>
 <span class="c1"># -------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="StandMetricAccessor">
-<a class="viewcode-back" href="../../../source/munin.helpers.html#pyforestry.helpers.stand.StandMetricAccessor">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.helpers.html#pyforestry.helpers.stand.StandMetricAccessor">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">StandMetricAccessor</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Provides access to stand-level metric data (e.g. BasalArea or Stems).</span>
@@ -341,7 +341,7 @@
 
 
 <div class="viewcode-block" id="Stand">
-<a class="viewcode-back" href="../../../source/munin.helpers.html#pyforestry.helpers.stand.Stand">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.helpers.html#pyforestry.helpers.stand.Stand">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Stand</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Represents a forest stand, which may have:</span>
@@ -591,7 +591,7 @@
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Stand(area_ha=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">area_ha</span><span class="si">}</span><span class="s2">, n_plots=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plots</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
 
 <div class="viewcode-block" id="Stand.get_dominant_height">
-<a class="viewcode-back" href="../../../source/munin.helpers.html#pyforestry.helpers.stand.Stand.get_dominant_height">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.helpers.html#pyforestry.helpers.stand.Stand.get_dominant_height">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_dominant_height</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TopHeightMeasurement</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Attempts to compute a stand-level &#39;dominant height&#39; (aka top height)</span>
@@ -705,7 +705,7 @@
 
 
 <div class="viewcode-block" id="Stand.calculate_top_height_bias">
-<a class="viewcode-back" href="../../../source/munin.helpers.html#pyforestry.helpers.stand.Stand.calculate_top_height_bias">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.helpers.html#pyforestry.helpers.stand.Stand.calculate_top_height_bias">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">calculate_top_height_bias</span><span class="p">(</span><span class="n">r</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
                                   <span class="n">m</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -797,7 +797,7 @@
 
     
 <div class="viewcode-block" id="Stand.append_plot">
-<a class="viewcode-back" href="../../../source/munin.helpers.html#pyforestry.helpers.stand.Stand.append_plot">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.helpers.html#pyforestry.helpers.stand.Stand.append_plot">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">append_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plot</span><span class="p">:</span> <span class="n">CircularPlot</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Append a new plot to the stand and recalculate the stand-level metrics.</span>

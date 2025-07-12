@@ -238,7 +238,7 @@
 <span class="c1"># Global Taxonomy: Genera and Species (renamed to TreeName)</span>
 
 <div class="viewcode-block" id="TreeGenus">
-<a class="viewcode-back" href="../../../source/munin.helpers.html#pyforestry.helpers.tree_species.TreeGenus">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.helpers.html#pyforestry.helpers.tree_species.TreeGenus">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">TreeGenus</span><span class="p">:</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
@@ -246,7 +246,7 @@
 
 
 <div class="viewcode-block" id="TreeName">
-<a class="viewcode-back" href="../../../source/munin.helpers.html#pyforestry.helpers.tree_species.TreeName">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.helpers.html#pyforestry.helpers.tree_species.TreeName">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">TreeName</span><span class="p">:</span>
     <span class="n">genus</span><span class="p">:</span> <span class="n">TreeGenus</span>
@@ -266,7 +266,7 @@
 <span class="c1"># Helper function to determine tree type based on the genus name</span>
 
 <div class="viewcode-block" id="get_tree_type_by_genus">
-<a class="viewcode-back" href="../../../source/munin.helpers.html#pyforestry.helpers.tree_species.get_tree_type_by_genus">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.helpers.html#pyforestry.helpers.tree_species.get_tree_type_by_genus">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_tree_type_by_genus</span><span class="p">(</span><span class="n">genus</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="n">DECIDUOUS_LIST</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;betula&quot;</span><span class="p">,</span> <span class="s2">&quot;alnus&quot;</span><span class="p">,</span> <span class="s2">&quot;populus&quot;</span><span class="p">,</span> <span class="s2">&quot;sorbus&quot;</span><span class="p">,</span> <span class="s2">&quot;salix&quot;</span><span class="p">,</span> <span class="s2">&quot;ulmus&quot;</span><span class="p">,</span>
@@ -401,7 +401,7 @@
 <span class="c1"># RegionalGenusGroup helper</span>
 
 <div class="viewcode-block" id="RegionalGenusGroup">
-<a class="viewcode-back" href="../../../source/munin.helpers.html#pyforestry.helpers.tree_species.RegionalGenusGroup">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.helpers.html#pyforestry.helpers.tree_species.RegionalGenusGroup">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RegionalGenusGroup</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A container for a group of TreeName objects sharing the same genus.</span>
@@ -429,7 +429,7 @@
 <span class="c1"># Regional Subsets</span>
 
 <div class="viewcode-block" id="RegionalTreeSpecies">
-<a class="viewcode-back" href="../../../source/munin.helpers.html#pyforestry.helpers.tree_species.RegionalTreeSpecies">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.helpers.html#pyforestry.helpers.tree_species.RegionalTreeSpecies">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RegionalTreeSpecies</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Exposes a subset of globally defined TreeName objects as attributes.</span>
@@ -461,7 +461,7 @@
 
 <span class="c1"># Global Regional Species Namespace</span>
 <div class="viewcode-block" id="TreeSpecies">
-<a class="viewcode-back" href="../../../source/munin.helpers.html#pyforestry.helpers.tree_species.TreeSpecies">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.helpers.html#pyforestry.helpers.tree_species.TreeSpecies">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">TreeSpecies</span><span class="p">:</span>
     <span class="n">Sweden</span> <span class="o">=</span> <span class="n">RegionalTreeSpecies</span><span class="p">(</span><span class="s2">&quot;Sweden&quot;</span><span class="p">,</span> <span class="n">allowed_species</span><span class="o">=</span><span class="p">[</span>
         <span class="n">PICEA_ABIES</span><span class="p">,</span>
@@ -506,7 +506,7 @@
 
 
 <div class="viewcode-block" id="parse_tree_species">
-<a class="viewcode-back" href="../../../source/munin.helpers.html#pyforestry.helpers.tree_species.parse_tree_species">[docs]</a>
+<a class="viewcode-back" href="../../../source/pyforestry.helpers.html#pyforestry.helpers.tree_species.parse_tree_species">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">parse_tree_species</span><span class="p">(</span><span class="n">species_str</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="n">TreeName</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TreeName</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Try to find and return a TreeName object matching the given species string.</span>
