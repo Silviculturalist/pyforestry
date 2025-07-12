@@ -1,7 +1,7 @@
 # Example structured data for easy readability and maintenance
 # Use of TreeSpecies shorthand to avoid typos and situations e.g. Betula != Betula pendula.
 
-from Munin.Helpers.TreeSpecies import TreeSpecies
+from Munin.helpers.tree_species import TreeSpecies
 
 Mellanskog_2013_price_data = {
     "Common": {

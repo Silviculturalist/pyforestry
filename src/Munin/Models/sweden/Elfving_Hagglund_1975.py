@@ -4,16 +4,16 @@ from math import exp, log
 from typing import Tuple, Optional
 
 # Import base classes and helpers - Adjust paths as necessary
-from Munin.Helpers.Primitives import (
+from Munin.helpers.primitives import (
     Age, AgeMeasurement, SiteIndexValue, StandBasalArea, Stems
 )
-from Munin.Helpers.TreeSpecies import TreeSpecies, TreeName
+from Munin.helpers.tree_species import TreeSpecies, TreeName
 
 # Import Hagglund functions for potential age calculation (dependency)
 # Note: The R code uses Hagglund_age_to_height, which needs an equivalent implementation
 #       or inversion of the existing Hagglund height functions in Python.
 #       This implementation assumes age is provided or raises NotImplementedError.
-from Munin.SiteIndex.sweden import Hagglund_1970
+from Munin.siteindex.sweden import Hagglund_1970
 
 class ElfvingHagglundInitialStand:
     """

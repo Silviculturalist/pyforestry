@@ -1,7 +1,7 @@
 # Suggested Munin/Helpers/__init__.py
 
 # From TreeSpecies.py
-from .TreeSpecies import (
+from .tree_species import (
     TreeName,
     TreeGenus,
     TreeSpecies, # The regional container class
@@ -15,7 +15,7 @@ from .TreeSpecies import (
 )
 
 # From Primitives.py
-from .Primitives import *
+from .primitives import *
 from .tree import Tree, SingleTree, RepresentationTree
 from .bitterlich_angle_count import AngleCount, AngleCountAggregator
 from .plot import CircularPlot
@@ -24,7 +24,7 @@ from .stand import Stand, StandMetricAccessor
 
 __all__ = [
     # TreeSpecies components
-    'TreeName', 'TreeGenus', 'TreeSpecies', 'parse_tree_species', 'GLOBAL_TREE_SPECIES',
+    'TreeName', 'TreeGenus', 'tree_species', 'parse_tree_species', 'GLOBAL_TREE_SPECIES',
     'PICEA_ABIES', 'PINUS_SYLVESTRIS', 'BETULA_PENDULA', 'BETULA_PUBESCENS', # Example species constants
     # Primitives components
     'Age', 'AgeMeasurement', 'Diameter_cm', 'Position', 'SiteIndexValue',

@@ -32,5 +32,5 @@ class Timber:
         if self.crown_base_height_m is not None and self.height_m is not None and self.crown_base_height_m >= self.height_m:
             raise ValueError(f'Crown base height ({self.crown_base_height_m} m) cannot be higher than tree height: {self.height_m} m')
         
-        if self.stump_height_m < 0:
+        if self.stump_height_m is not None and self.stump_height_m < 0:
             raise ValueError(f'Stump height must be larger or equal to 0 m: {self.stump_height_m}')

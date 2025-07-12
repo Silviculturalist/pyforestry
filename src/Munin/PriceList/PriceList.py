@@ -1,7 +1,7 @@
 from enum import IntEnum
 from dataclasses import dataclass
 from typing import List, Optional, Dict, Tuple, Union, Iterable, Sequence
-from Munin.Helpers.TreeSpecies import parse_tree_species, TreeName
+from Munin.helpers.tree_species import parse_tree_species, TreeName
 
 @dataclass
 class DiameterRange:
@@ -170,8 +170,11 @@ class PulpPricelist:
                     return self._prices[genus_key]
         else:
             # When species_obj is None, try matching the input as a genus.
-            if normalized in self._prices:
-                return self._prices[normalized]
+            NotImplementedError(
+                'TODO: Implement species via genus'
+            )
+            #if normalized in self._prices:
+            #    return self._prices[normalized]
 
         # Default price if no match is found.
         return 200

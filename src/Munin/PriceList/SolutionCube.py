@@ -11,10 +11,10 @@ from functools import partial
 from tqdm import tqdm
 
 # Import your project's classes
-from Munin.Timber.SweTimber import SweTimber
-from Munin.PriceList.PriceList import Pricelist, create_pricelist_from_data
-from Munin.Taper.Taper import Taper
-from Munin.TimberBucking.Nasberg_1985 import Nasberg_1985_BranchBound, BuckingConfig
+from Munin.timber.swe_timber import SweTimber
+from Munin.pricelist.pricelist import Pricelist, create_pricelist_from_data
+from Munin.taper.Taper import Taper
+from Munin.timber_bucking.nasberg_1985 import Nasberg_1985_BranchBound, BuckingConfig
 
 def _hash_pricelist(price_data: Dict[str, Any]) -> str:
     """Creates a SHA256 hash of a pricelist dictionary for validation."""

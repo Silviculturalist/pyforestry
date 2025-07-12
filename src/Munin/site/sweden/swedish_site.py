@@ -1,11 +1,11 @@
 
 from dataclasses import dataclass, field
 from typing import Optional, Union
-from Munin.Helpers.Primitives import SiteBase
+from Munin.helpers.primitives import SiteBase
 from .enums import Sweden
-from Munin.SiteIndex.sweden.SIS import Hagglund_Lundmark_1979_SIS, eko_pm_2008_estimate_si_birch
-from Munin.Geo.Humidity import eriksson_1986_humidity
-from Munin.Geo.Temperature import Odin_temperature_sum
+from Munin.siteindex.sweden.sis import Hagglund_Lundmark_1979_SIS, eko_pm_2008_estimate_si_birch
+from Munin.geo.humidity import eriksson_1986_humidity
+from Munin.geo.temperature import Odin_temperature_sum
 
 # -------------------------------------------------------------------
 # SwedishSite using the Sweden namespace
@@ -42,7 +42,7 @@ class SwedishSite(SiteBase):
     n_of_limes_norrlandicus: Optional[bool] = field(init=False, default=None)
 
     def __post_init__(self) -> None:
-        from Munin.Geo.Geo import RetrieveGeoCode
+        from Munin.geo.geo import RetrieveGeoCode
         # Compute county first
         try:
             county_enum = RetrieveGeoCode.getCountyCode(lon=self.longitude, lat=self.latitude)

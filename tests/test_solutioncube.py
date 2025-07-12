@@ -5,10 +5,10 @@ import json
 import copy
 
 # Imports from your project
-from Munin.PriceList.SolutionCube import SolutionCube
-from Munin.Taper.sweden.EdgrenNylinder1949 import EdgrenNylinder1949
-from Munin.PriceList.Data.Mellanskog_2013 import Mellanskog_2013_price_data
-from Munin.Helpers.TreeSpecies import TreeSpecies
+from Munin.pricelist.solutioncube import SolutionCube
+from Munin.taper.sweden.edgren_nylinder_1949 import EdgrenNylinder1949
+from Munin.pricelist.data.mellanskog_2013 import Mellanskog_2013_price_data
+from Munin.helpers.tree_species import TreeSpecies
 
 @pytest.fixture(scope="module")
 def mini_cube():

@@ -1,7 +1,7 @@
 
 from typing import Optional
 from enum import Enum
-from .site_primitives import (
+from .sweden_site_primitives import (
     Vegetation,
     BottomLayerType,
     SoilWaterCat,

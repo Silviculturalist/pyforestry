@@ -1,5 +1,5 @@
 import pytest
-from Munin.Helpers.TreeSpecies import *
+from Munin.helpers.tree_species import *
 
 def test_individual_species_full_name():
     sp = TreeSpecies.Sweden.picea_abies

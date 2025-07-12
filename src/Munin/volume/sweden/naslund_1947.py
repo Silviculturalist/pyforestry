@@ -1,5 +1,5 @@
 from typing import Optional
-from Munin.Timber.Timber import Timber
+from Munin.timber.timber import Timber
 
 class NaslundVolume:
     @staticmethod

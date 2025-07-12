@@ -1,6 +1,6 @@
 import pytest
 # It's clearer to import both classes for the tests
-from Munin.Helpers.Primitives import AtomicVolume, CompositeVolume
+from Munin.helpers.primitives import AtomicVolume, CompositeVolume
 from typing import Union
 # A type hint for scalars
 Numeric = Union[int, float]

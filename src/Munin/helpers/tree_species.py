@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-import warnings
 from typing import List, Dict, Any, Iterator, Union
 
 # --------------------------------------------------------------------

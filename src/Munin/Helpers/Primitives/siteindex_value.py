@@ -2,8 +2,8 @@
 # SiteIndexValue: float with metadata
 # ------------------------------------------------------------------------------
 from typing import Callable
-from Munin.Helpers.TreeSpecies import TreeName
-from Munin.Helpers.Primitives import AgeMeasurement 
+from Munin.helpers.tree_species import TreeName
+from Munin.helpers.primitives import AgeMeasurement 
 
 class SiteIndexValue(float):
 

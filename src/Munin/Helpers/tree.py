@@ -2,8 +2,8 @@
 # Tree classes
 # ------------------------------------------------------------------------------
 from typing import Optional, Union
-from Munin.Helpers.TreeSpecies import TreeName, parse_tree_species
-from Munin.Helpers.Primitives import Position, Diameter_cm, Age 
+from Munin.helpers.tree_species import TreeName, parse_tree_species
+from Munin.helpers.primitives import Position, Diameter_cm, Age 
 
 class Tree:
     """

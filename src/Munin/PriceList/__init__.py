@@ -1,2 +1,2 @@
-from .PriceList import *
-__all__ = ['PriceList','PriceData']
+from .pricelist import *
+from .solutioncube import *

@@ -12,9 +12,9 @@ from typing import Union, SupportsFloat, Optional, Any, Tuple, Callable
 from dataclasses import dataclass, field
 
 
-from Munin.Site.sweden import Sweden
-from Munin.Site.sweden.site_primitives import Vegetation
-from Munin.Helpers.TreeSpecies import TreeSpecies, TreeName, parse_tree_species, RegionalGenusGroup
+from Munin.site.sweden import Sweden
+from Munin.site.sweden.sweden_site_primitives import Vegetation
+from Munin.helpers.tree_species import TreeSpecies, TreeName, parse_tree_species, RegionalGenusGroup
 
 Number = Union[int, float, SupportsFloat]
 

@@ -1,8 +1,8 @@
 # Näsberg (1985) branch-and-bound algorithm.
-from Munin.Taper.Taper import Taper
-from Munin.Timber.Timber import Timber
-from Munin.TimberBucking.Bucker import Bucker
-from Munin.PriceList.PriceList import *
+from Munin.taper.Taper import Taper
+from Munin.timber import Timber
+from Munin.timber_bucking.bucker import Bucker
+from Munin.pricelist.pricelist import *
 from enum import IntEnum
 from dataclasses import dataclass, field
 from typing import List, Optional, Dict, Tuple, Type, Iterator, Any

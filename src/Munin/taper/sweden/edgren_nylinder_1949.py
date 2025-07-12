@@ -1,6 +1,6 @@
-from Munin.Timber.SweTimber import SweTimber
-from Munin.Volume.sweden.Naslund1947 import NaslundFormFactor
-from Munin.Taper.Taper import Taper
+from Munin.timber.swe_timber import SweTimber
+from Munin.volume.sweden.naslund_1947 import NaslundFormFactor
+from Munin.taper import Taper
 from typing import Optional, Tuple
 import numpy as np
 from scipy.optimize import minimize_scalar

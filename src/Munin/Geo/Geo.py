@@ -5,7 +5,7 @@ from importlib.resources import files, as_file
 
 from typing import Optional
 
-from Munin.Site.sweden import Sweden
+from Munin.site.sweden import Sweden
 
 class RetrieveGeoCode:
 

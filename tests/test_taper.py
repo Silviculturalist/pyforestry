@@ -1,8 +1,8 @@
 import pytest
 import math
 import numpy as np
-from Munin.Timber.SweTimber import SweTimber
-from Munin.Taper.sweden.EdgrenNylinder1949 import EdgrenNylinder1949
+from Munin.timber.swe_timber import SweTimber
+from Munin.taper.sweden.edgren_nylinder_1949 import EdgrenNylinder1949
 
 # Fixture: a valid Timber instance for testing.
 @pytest.fixture

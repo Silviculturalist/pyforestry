@@ -1,6 +1,6 @@
 import numpy as np
 from typing import Optional
-from Munin.Timber.Timber import Timber
+from Munin.timber.timber import Timber
 
 def Marklund_1988_T1(diameter_cm):
     return np.exp(-2.3388 + 11.3264 * (diameter_cm / (diameter_cm + 13)))

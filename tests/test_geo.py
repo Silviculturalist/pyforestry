@@ -1,4 +1,4 @@
-from Munin.Geo import *
+from Munin.geo import *
 import pytest
 import math
 import numpy as np

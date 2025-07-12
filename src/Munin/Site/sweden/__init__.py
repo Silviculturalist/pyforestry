@@ -1,2 +1,2 @@
 from .enums import Sweden
-from .SwedishSite import SwedishSite
+from .swedish_site import SwedishSite

@@ -82,7 +82,7 @@ def tegnhammar_1992_adjusted_spruce_si_by_stand_variables(
     extremely_cold = max(altitude + (130 * latitude) - 8900, 0)
 
     # Use Munin.Geo.Geo.RetrieveGeoCode.getDistanceToCoast
-    from Munin.Geo.Geo import RetrieveGeoCode
+    from Munin.geo.geo import RetrieveGeoCode
     distance_to_swedish_coast = RetrieveGeoCode().getDistanceToCoast(longitude, latitude)/1000 #m to km
     distance_to_swedish_coast_2 = (
         exp(-distance_to_swedish_coast / 5) if soil_moisture in [1, 2] else 0
