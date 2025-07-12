@@ -1,1 +1,0 @@
-from .odin_1983 import Odin_temperature_sum, Moren_Perttu_radiation_1994
