@@ -74,11 +74,11 @@ jobs:
         run: |
           sphinx-apidoc -f -o docs/source/api src/pyforestry
 
-      # MODIFIED STEP: Build the Sphinx docs from the root
+      # MODIFIED STEP: Change to docs directory before building
       - name: Build Sphinx docs
-        run: make -f docs/Makefile html
+        run: make html
+        working-directory: ./docs
 
-      # This step should now work correctly
       - name: Deploy docs to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
