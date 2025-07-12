@@ -1,29 +1,29 @@
-Munin.SiteIndex.sweden.Translate package
+munin.SiteIndex.sweden.Translate package
 ========================================
 
 Submodules
 ----------
 
-Munin.SiteIndex.sweden.Translate.Agestam1985 module
+munin.SiteIndex.sweden.Translate.Agestam1985 module
 ---------------------------------------------------
 
-.. automodule:: Munin.SiteIndex.sweden.Translate.Agestam1985
+.. automodule:: munin.SiteIndex.sweden.Translate.Agestam1985
    :members:
    :undoc-members:
    :show-inheritance:
 
-Munin.SiteIndex.sweden.Translate.Leijon1979 module
+munin.SiteIndex.sweden.Translate.Leijon1979 module
 --------------------------------------------------
 
-.. automodule:: Munin.SiteIndex.sweden.Translate.Leijon1979
+.. automodule:: munin.SiteIndex.sweden.Translate.Leijon1979
    :members:
    :undoc-members:
    :show-inheritance:
 
-Munin.SiteIndex.sweden.Translate.MaximumAnnualIncrement module
+munin.SiteIndex.sweden.Translate.MaximumAnnualIncrement module
 --------------------------------------------------------------
 
-.. automodule:: Munin.SiteIndex.sweden.Translate.MaximumAnnualIncrement
+.. automodule:: munin.SiteIndex.sweden.Translate.MaximumAnnualIncrement
    :members:
    :undoc-members:
    :show-inheritance:
@@ -31,7 +31,7 @@ Munin.SiteIndex.sweden.Translate.MaximumAnnualIncrement module
 Module contents
 ---------------
 
-.. automodule:: Munin.SiteIndex.sweden.Translate
+.. automodule:: munin.SiteIndex.sweden.Translate
    :members:
    :undoc-members:
    :show-inheritance:

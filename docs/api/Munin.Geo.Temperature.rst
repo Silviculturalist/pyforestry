@@ -1,13 +1,13 @@
-Munin.Geo.Temperature package
+munin.Geo.Temperature package
 =============================
 
 Submodules
 ----------
 
-Munin.Geo.Temperature.Odin\_1983 module
+munin.Geo.Temperature.Odin\_1983 module
 ---------------------------------------
 
-.. automodule:: Munin.Geo.Temperature.Odin_1983
+.. automodule:: munin.Geo.Temperature.Odin_1983
    :members:
    :undoc-members:
    :show-inheritance:
@@ -15,7 +15,7 @@ Munin.Geo.Temperature.Odin\_1983 module
 Module contents
 ---------------
 
-.. automodule:: Munin.Geo.Temperature
+.. automodule:: munin.Geo.Temperature
    :members:
    :undoc-members:
    :show-inheritance:

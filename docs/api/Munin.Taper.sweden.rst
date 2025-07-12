@@ -1,13 +1,13 @@
-Munin.Taper.sweden package
+munin.Taper.sweden package
 ==========================
 
 Submodules
 ----------
 
-Munin.Taper.sweden.EdgrenNylinder1949 module
+munin.Taper.sweden.EdgrenNylinder1949 module
 --------------------------------------------
 
-.. automodule:: Munin.Taper.sweden.EdgrenNylinder1949
+.. automodule:: munin.Taper.sweden.EdgrenNylinder1949
    :members:
    :undoc-members:
    :show-inheritance:
@@ -15,7 +15,7 @@ Munin.Taper.sweden.EdgrenNylinder1949 module
 Module contents
 ---------------
 
-.. automodule:: Munin.Taper.sweden
+.. automodule:: munin.Taper.sweden
    :members:
    :undoc-members:
    :show-inheritance:

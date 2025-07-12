@@ -1,4 +1,4 @@
-Munin.SiteIndex package
+munin.SiteIndex package
 =======================
 
 Subpackages
@@ -7,12 +7,12 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   Munin.SiteIndex.sweden
+   munin.SiteIndex.sweden
 
 Module contents
 ---------------
 
-.. automodule:: Munin.SiteIndex
+.. automodule:: munin.SiteIndex
    :members:
    :undoc-members:
    :show-inheritance:

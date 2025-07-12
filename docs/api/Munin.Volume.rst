@@ -1,4 +1,4 @@
-Munin.Volume package
+munin.Volume package
 ====================
 
 Subpackages
@@ -7,12 +7,12 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   Munin.Volume.sweden
+   munin.Volume.sweden
 
 Module contents
 ---------------
 
-.. automodule:: Munin.Volume
+.. automodule:: munin.Volume
    :members:
    :undoc-members:
    :show-inheritance:

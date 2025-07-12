@@ -1,4 +1,3 @@
-from Munin.taper.Taper import Taper
 import numpy as np
 from scipy.integrate import quad
 

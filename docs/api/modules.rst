@@ -1,7 +1,7 @@
-Munin
+munin
 =====
 
 .. toctree::
    :maxdepth: 4
 
-   Munin
+   munin

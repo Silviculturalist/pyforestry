@@ -1,10 +1,10 @@
-Munin.Geo.Climate package
+munin.Geo.Climate package
 =========================
 
 Module contents
 ---------------
 
-.. automodule:: Munin.Geo.Climate
+.. automodule:: munin.Geo.Climate
    :members:
    :undoc-members:
    :show-inheritance:

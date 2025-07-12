@@ -1,4 +1,4 @@
-Munin.Taper package
+munin.Taper package
 ===================
 
 Subpackages
@@ -7,15 +7,15 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   Munin.Taper.sweden
+   munin.Taper.sweden
 
 Submodules
 ----------
 
-Munin.Taper.Taper module
+munin.Taper.Taper module
 ------------------------
 
-.. automodule:: Munin.Taper.Taper
+.. automodule:: munin.Taper.Taper
    :members:
    :undoc-members:
    :show-inheritance:
@@ -23,7 +23,7 @@ Munin.Taper.Taper module
 Module contents
 ---------------
 
-.. automodule:: Munin.Taper
+.. automodule:: munin.Taper
    :members:
    :undoc-members:
    :show-inheritance:

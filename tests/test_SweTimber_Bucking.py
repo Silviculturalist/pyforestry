@@ -1,9 +1,9 @@
 import pytest
-from Munin.timber.swe_timber import SweTimber
-from Munin.taper.sweden import EdgrenNylinder1949
-from Munin.pricelist import create_pricelist_from_data
-from Munin.pricelist.data.mellanskog_2013 import Mellanskog_2013_price_data
-from Munin.timber_bucking.nasberg_1985 import Nasberg_1985_BranchBound, BuckingConfig
+from munin.timber.swe_timber import SweTimber
+from munin.taper.sweden import EdgrenNylinder1949
+from munin.pricelist import create_pricelist_from_data
+from munin.pricelist.data.mellanskog_2013 import Mellanskog_2013_price_data
+from munin.timber_bucking.nasberg_1985 import Nasberg_1985_BranchBound, BuckingConfig
 
 @pytest.fixture
 def test_log():

@@ -1,29 +1,29 @@
-Munin.PriceList package
+munin.PriceList package
 =======================
 
 Submodules
 ----------
 
-Munin.PriceList.PriceList module
+munin.PriceList.PriceList module
 --------------------------------
 
-.. automodule:: Munin.PriceList.PriceList
+.. automodule:: munin.PriceList.PriceList
    :members:
    :undoc-members:
    :show-inheritance:
 
-Munin.PriceList.PriceMatrix module
+munin.PriceList.PriceMatrix module
 ----------------------------------
 
-.. automodule:: Munin.PriceList.PriceMatrix
+.. automodule:: munin.PriceList.PriceMatrix
    :members:
    :undoc-members:
    :show-inheritance:
 
-Munin.PriceList.SolutionCube module
+munin.PriceList.SolutionCube module
 -----------------------------------
 
-.. automodule:: Munin.PriceList.SolutionCube
+.. automodule:: munin.PriceList.SolutionCube
    :members:
    :undoc-members:
    :show-inheritance:
@@ -31,7 +31,7 @@ Munin.PriceList.SolutionCube module
 Module contents
 ---------------
 
-.. automodule:: Munin.PriceList
+.. automodule:: munin.PriceList
    :members:
    :undoc-members:
    :show-inheritance:

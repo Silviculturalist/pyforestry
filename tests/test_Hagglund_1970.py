@@ -3,8 +3,8 @@
 import pytest
 import math
 # Assuming the new V2 classes are now the primary imports
-from Munin.siteindex.sweden.hagglund_1970 import Hagglund_1970, HagglundPineModel, HagglundSpruceModel
-from Munin.helpers.primitives import Age
+from munin.siteindex.sweden.hagglund_1970 import Hagglund_1970, HagglundPineModel, HagglundSpruceModel
+from munin.helpers.primitives import Age
 
 
 # --- Test Data ---

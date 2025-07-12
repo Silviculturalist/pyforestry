@@ -4,7 +4,7 @@ import sys
 sys.path.insert(0, os.path.abspath('../src'))
 
 # -- Project information -----------------------------------------------------
-project = 'Munin'
+project = 'munin'
 author = 'Carl Vigren'
 # Pull version/version info from your package if you want:
 # from your_package import __version__ as release

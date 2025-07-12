@@ -1,10 +1,10 @@
-Munin.Geo.Counties package
+munin.Geo.Counties package
 ==========================
 
 Module contents
 ---------------
 
-.. automodule:: Munin.Geo.Counties
+.. automodule:: munin.Geo.Counties
    :members:
    :undoc-members:
    :show-inheritance:

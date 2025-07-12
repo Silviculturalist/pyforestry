@@ -1,4 +1,4 @@
-Munin.Site package
+munin.Site package
 ==================
 
 Subpackages
@@ -7,15 +7,15 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   Munin.Site.sweden
+   munin.Site.sweden
 
 Submodules
 ----------
 
-Munin.Site.SiteBase module
+munin.Site.SiteBase module
 --------------------------
 
-.. automodule:: Munin.Site.SiteBase
+.. automodule:: munin.Site.SiteBase
    :members:
    :undoc-members:
    :show-inheritance:
@@ -23,7 +23,7 @@ Munin.Site.SiteBase module
 Module contents
 ---------------
 
-.. automodule:: Munin.Site
+.. automodule:: munin.Site
    :members:
    :undoc-members:
    :show-inheritance:

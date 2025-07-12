@@ -1,7 +1,7 @@
 import pytest
-from Munin.pricelist import create_pricelist_from_data, Pricelist, TimberPricelist
-from Munin.pricelist.data.mellanskog_2013 import Mellanskog_2013_price_data
-from Munin.helpers.tree_species import TreeSpecies
+from munin.pricelist import create_pricelist_from_data, Pricelist, TimberPricelist
+from munin.pricelist.data.mellanskog_2013 import Mellanskog_2013_price_data
+from munin.helpers.tree_species import TreeSpecies
 
 @pytest.fixture(scope="module")
 def pricelist() -> Pricelist:

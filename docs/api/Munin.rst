@@ -1,4 +1,4 @@
-Munin package
+munin package
 =============
 
 Subpackages
@@ -7,22 +7,22 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   Munin.Biomass
-   Munin.Geo
-   Munin.Helpers
-   Munin.Models
-   Munin.PriceList
-   Munin.Site
-   Munin.SiteIndex
-   Munin.Taper
-   Munin.Timber
-   Munin.TimberBucking
-   Munin.Volume
+   munin.Biomass
+   munin.Geo
+   munin.Helpers
+   munin.Models
+   munin.PriceList
+   munin.Site
+   munin.SiteIndex
+   munin.Taper
+   munin.Timber
+   munin.TimberBucking
+   munin.Volume
 
 Module contents
 ---------------
 
-.. automodule:: Munin
+.. automodule:: munin
    :members:
    :undoc-members:
    :show-inheritance:

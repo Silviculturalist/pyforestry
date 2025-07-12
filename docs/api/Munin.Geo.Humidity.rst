@@ -1,13 +1,13 @@
-Munin.Geo.Humidity package
+munin.Geo.Humidity package
 ==========================
 
 Submodules
 ----------
 
-Munin.Geo.Humidity.eriksson\_1986 module
+munin.Geo.Humidity.eriksson\_1986 module
 ----------------------------------------
 
-.. automodule:: Munin.Geo.Humidity.eriksson_1986
+.. automodule:: munin.Geo.Humidity.eriksson_1986
    :members:
    :undoc-members:
    :show-inheritance:
@@ -15,7 +15,7 @@ Munin.Geo.Humidity.eriksson\_1986 module
 Module contents
 ---------------
 
-.. automodule:: Munin.Geo.Humidity
+.. automodule:: munin.Geo.Humidity
    :members:
    :undoc-members:
    :show-inheritance:

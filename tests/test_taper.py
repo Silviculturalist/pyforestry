@@ -1,8 +1,8 @@
 import pytest
 import math
 import numpy as np
-from Munin.timber.swe_timber import SweTimber
-from Munin.taper.sweden.edgren_nylinder_1949 import EdgrenNylinder1949
+from munin.timber.swe_timber import SweTimber
+from munin.taper.sweden.edgren_nylinder_1949 import EdgrenNylinder1949
 
 # Fixture: a valid Timber instance for testing.
 @pytest.fixture
@@ -35,7 +35,7 @@ def test_taper_instance_creation(taper_instance, valid_timber):
     Tests that the taper instance is created correctly, holds the timber object,
     and is of the expected type.
     """
-    from Munin.taper import Taper
+    from munin.taper import Taper
     assert isinstance(taper_instance, Taper)
     assert taper_instance.timber is valid_timber
     assert math.isclose(taper_instance.timber.height_m, 30)

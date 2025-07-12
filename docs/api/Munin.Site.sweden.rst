@@ -1,13 +1,13 @@
-Munin.Site.sweden package
+munin.Site.sweden package
 =========================
 
 Submodules
 ----------
 
-Munin.Site.sweden.SwedishSite module
+munin.Site.sweden.SwedishSite module
 ------------------------------------
 
-.. automodule:: Munin.Site.sweden.SwedishSite
+.. automodule:: munin.Site.sweden.SwedishSite
    :members:
    :undoc-members:
    :show-inheritance:
@@ -15,7 +15,7 @@ Munin.Site.sweden.SwedishSite module
 Module contents
 ---------------
 
-.. automodule:: Munin.Site.sweden
+.. automodule:: munin.Site.sweden
    :members:
    :undoc-members:
    :show-inheritance:

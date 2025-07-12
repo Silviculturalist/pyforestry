@@ -1,9 +1,9 @@
 from typing import Optional
-from Munin.timber.timber import Timber
+from munin.timber import SweTimber
 
 class NaslundVolume:
     @staticmethod
-    def calculate(timber: Timber) -> float:
+    def calculate(timber: SweTimber) -> float:
         timber.validate()
         if timber.region == "southern":
             if timber.species == "pinus sylvestris":
@@ -24,7 +24,7 @@ class NaslundVolume:
         )
 
     @staticmethod
-    def _southern_pine_volume(timber: Timber) -> float:
+    def _southern_pine_volume(timber: SweTimber) -> float:
         if timber.over_bark:
             if timber.crown_base_height_m and timber.double_bark_mm:
                 return (
@@ -57,7 +57,7 @@ class NaslundVolume:
                 )
 
     @staticmethod
-    def _southern_spruce_volume(timber: Timber) -> float:
+    def _southern_spruce_volume(timber: SweTimber) -> float:
         if timber.over_bark:
             if timber.crown_base_height_m:
                 return (
@@ -92,7 +92,7 @@ class NaslundVolume:
                 )
 
     @staticmethod
-    def _southern_birch_volume(timber: Timber) -> float:
+    def _southern_birch_volume(timber: SweTimber) -> float:
         if timber.over_bark:
             if timber.double_bark_mm:
                 return (
@@ -127,7 +127,7 @@ class NaslundVolume:
                 )
 
     @staticmethod
-    def _northern_pine_volume(timber: Timber) -> float:
+    def _northern_pine_volume(timber: SweTimber) -> float:
         if timber.over_bark:
             if timber.crown_base_height_m and timber.double_bark_mm:
                 return (
@@ -158,7 +158,7 @@ class NaslundVolume:
                 )
 
     @staticmethod
-    def _northern_spruce_volume(timber: Timber) -> float:
+    def _northern_spruce_volume(timber: SweTimber) -> float:
         if timber.over_bark:
             if timber.crown_base_height_m:
                 return (
@@ -193,7 +193,7 @@ class NaslundVolume:
                 )
 
     @staticmethod
-    def _northern_birch_volume(timber: Timber) -> float:
+    def _northern_birch_volume(timber: SweTimber) -> float:
         if timber.over_bark:
             if timber.crown_base_height_m and timber.double_bark_mm:
                 return (

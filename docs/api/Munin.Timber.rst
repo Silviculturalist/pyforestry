@@ -1,29 +1,29 @@
-Munin.Timber package
+munin.Timber package
 ====================
 
 Submodules
 ----------
 
-Munin.Timber.SweTimber module
+munin.Timber.SweTimber module
 -----------------------------
 
-.. automodule:: Munin.Timber.SweTimber
+.. automodule:: munin.Timber.SweTimber
    :members:
    :undoc-members:
    :show-inheritance:
 
-Munin.Timber.Timber module
+munin.Timber.Timber module
 --------------------------
 
-.. automodule:: Munin.Timber.Timber
+.. automodule:: munin.Timber.Timber
    :members:
    :undoc-members:
    :show-inheritance:
 
-Munin.Timber.TimberVolumeIntegrator module
+munin.Timber.TimberVolumeIntegrator module
 ------------------------------------------
 
-.. automodule:: Munin.Timber.TimberVolumeIntegrator
+.. automodule:: munin.Timber.TimberVolumeIntegrator
    :members:
    :undoc-members:
    :show-inheritance:
@@ -31,7 +31,7 @@ Munin.Timber.TimberVolumeIntegrator module
 Module contents
 ---------------
 
-.. automodule:: Munin.Timber
+.. automodule:: munin.Timber
    :members:
    :undoc-members:
    :show-inheritance:

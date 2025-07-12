@@ -1,4 +1,4 @@
-Munin.Models package
+munin.Models package
 ====================
 
 Subpackages
@@ -7,12 +7,12 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   Munin.Models.sweden
+   munin.Models.sweden
 
 Module contents
 ---------------
 
-.. automodule:: Munin.Models
+.. automodule:: munin.Models
    :members:
    :undoc-members:
    :show-inheritance:

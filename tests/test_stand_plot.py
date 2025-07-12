@@ -2,7 +2,7 @@ import pytest
 from shapely.geometry import Point, Polygon
 import random
 
-from Munin.helpers import (
+from munin.helpers import (
     CircularPlot,
     Diameter_cm,
     Stand,

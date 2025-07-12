@@ -1,8 +1,8 @@
 from typing import Optional
-from .timber import Timber
-from Munin.volume.sweden import *
+from .timber_base import Timber
+from munin.volume.sweden import *
 # Import SwedishSite and its region-specific namespace.
-from Munin.site.sweden import Sweden, SwedishSite
+from munin.site.sweden import SwedishSite
 
 class SweTimber(Timber):
     def __init__(

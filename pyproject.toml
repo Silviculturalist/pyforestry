@@ -3,14 +3,14 @@ requires = ["setuptools>=69", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name            = "Munin"
+name            = "munin"
 version         = "0.3"
 description     = "Forest‑model toolkit"
 readme          = "README.md"
 requires-python = ">=3.10"
 authors         = [{name = "Carl Vigren", email = "carl.vigren@slu.se"}]
 license         = {text = "MIT"}
-urls            = {Homepage = "https://github.com/Silviculturalist/Munin"}
+urls            = {Homepage = "https://github.com/Silviculturalist/munin"}
 dependencies    = [
   "numpy",
   "tqdm",
@@ -45,10 +45,10 @@ where = ["src"]              # automatic discovery under src/
 
 # ship **all** shapefile components
 [tool.setuptools.package-data]
-"Munin.Geo.Humidity"  = ["humidity.*"]
-"Munin.Geo.Climate"   = ["Klimat.*"]
-"Munin.Geo.Coastline" = ["SwedishCoastLine_NE_medium_clipped.*"]
-"Munin.Geo.Counties"  = ["RT_Dlanskod.*"]
+"munin.Geo.Humidity"  = ["humidity.*"]
+"munin.Geo.Climate"   = ["Klimat.*"]
+"munin.Geo.Coastline" = ["SwedishCoastLine_NE_medium_clipped.*"]
+"munin.Geo.Counties"  = ["RT_Dlanskod.*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -57,7 +57,7 @@ filterwarnings = [ #Ignore warning from pyogrio
 ]
 addopts = [
   "--import-mode=importlib",
-  "--cov=Munin",                # measure your package
+  "--cov=munin",                # measure your package
   "--cov-report=term-missing",  # show missing lines in console
   "--cov-report=html"           # generate htmlcov/
 ]

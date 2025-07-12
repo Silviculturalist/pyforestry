@@ -1,10 +1,10 @@
-Munin.Geo.Coastline package
+munin.Geo.Coastline package
 ===========================
 
 Module contents
 ---------------
 
-.. automodule:: Munin.Geo.Coastline
+.. automodule:: munin.Geo.Coastline
    :members:
    :undoc-members:
    :show-inheritance:

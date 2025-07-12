@@ -1,6 +1,6 @@
 .. MyProject documentation master file
 
-Munin Documentation
+munin Documentation
 ====================================
 
 .. toctree::

@@ -1,21 +1,21 @@
-Munin.TimberBucking package
+munin.TimberBucking package
 ===========================
 
 Submodules
 ----------
 
-Munin.TimberBucking.Bucker module
+munin.TimberBucking.Bucker module
 ---------------------------------
 
-.. automodule:: Munin.TimberBucking.Bucker
+.. automodule:: munin.TimberBucking.Bucker
    :members:
    :undoc-members:
    :show-inheritance:
 
-Munin.TimberBucking.Nasberg\_1985 module
+munin.TimberBucking.Nasberg\_1985 module
 ----------------------------------------
 
-.. automodule:: Munin.TimberBucking.Nasberg_1985
+.. automodule:: munin.TimberBucking.Nasberg_1985
    :members:
    :undoc-members:
    :show-inheritance:
@@ -23,7 +23,7 @@ Munin.TimberBucking.Nasberg\_1985 module
 Module contents
 ---------------
 
-.. automodule:: Munin.TimberBucking
+.. automodule:: munin.TimberBucking
    :members:
    :undoc-members:
    :show-inheritance:

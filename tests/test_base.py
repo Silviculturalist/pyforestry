@@ -1,6 +1,6 @@
-from Munin.helpers.primitives import *
-from Munin.helpers.tree_species import TreeSpecies, TreeName, parse_tree_species
-from Munin.siteindex.sweden.eriksson_1997 import eriksson_1997_height_trajectory_sweden_birch
+from munin.helpers.primitives import *
+from munin.helpers.tree_species import TreeSpecies, TreeName, parse_tree_species
+from munin.siteindex.sweden.eriksson_1997 import eriksson_1997_height_trajectory_sweden_birch
 import pytest
 
 # --- Add these new fixtures ---

@@ -1,4 +1,4 @@
-Munin.Biomass package
+munin.Biomass package
 =====================
 
 Subpackages
@@ -7,12 +7,12 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   Munin.Biomass.sweden
+   munin.Biomass.sweden
 
 Module contents
 ---------------
 
-.. automodule:: Munin.Biomass
+.. automodule:: munin.Biomass
    :members:
    :undoc-members:
    :show-inheritance:

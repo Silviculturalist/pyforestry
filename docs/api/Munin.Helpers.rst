@@ -1,29 +1,29 @@
-Munin.Helpers package
+munin.Helpers package
 =====================
 
 Submodules
 ----------
 
-Munin.Helpers.Base module
+munin.Helpers.Base module
 -------------------------
 
-.. automodule:: Munin.Helpers.Base
+.. automodule:: munin.Helpers.Base
    :members:
    :undoc-members:
    :show-inheritance:
 
-Munin.Helpers.Primitives module
+munin.Helpers.Primitives module
 -------------------------------
 
-.. automodule:: Munin.Helpers.Primitives
+.. automodule:: munin.Helpers.Primitives
    :members:
    :undoc-members:
    :show-inheritance:
 
-Munin.Helpers.TreeSpecies module
+munin.Helpers.TreeSpecies module
 --------------------------------
 
-.. automodule:: Munin.Helpers.TreeSpecies
+.. automodule:: munin.Helpers.TreeSpecies
    :members:
    :undoc-members:
    :show-inheritance:
@@ -31,7 +31,7 @@ Munin.Helpers.TreeSpecies module
 Module contents
 ---------------
 
-.. automodule:: Munin.Helpers
+.. automodule:: munin.Helpers
    :members:
    :undoc-members:
    :show-inheritance:

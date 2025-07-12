@@ -1,4 +1,4 @@
-Munin.Geo package
+munin.Geo package
 =================
 
 Subpackages
@@ -7,19 +7,19 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   Munin.Geo.Climate
-   Munin.Geo.Coastline
-   Munin.Geo.Counties
-   Munin.Geo.Humidity
-   Munin.Geo.Temperature
+   munin.Geo.Climate
+   munin.Geo.Coastline
+   munin.Geo.Counties
+   munin.Geo.Humidity
+   munin.Geo.Temperature
 
 Submodules
 ----------
 
-Munin.Geo.Geo module
+munin.Geo.Geo module
 --------------------
 
-.. automodule:: Munin.Geo.Geo
+.. automodule:: munin.Geo.Geo
    :members:
    :undoc-members:
    :show-inheritance:
@@ -27,7 +27,7 @@ Munin.Geo.Geo module
 Module contents
 ---------------
 
-.. automodule:: Munin.Geo
+.. automodule:: munin.Geo
    :members:
    :undoc-members:
    :show-inheritance:
