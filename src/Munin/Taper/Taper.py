@@ -1,4 +1,4 @@
-from Munin.timber.timber import Timber
+from munin.timber import Timber
 from typing import Optional, Union
 import numpy as np
 import numpy.typing as npt
@@ -59,7 +59,7 @@ class Taper:
         """
         Integrate volume (m^3) from h1_m to h2_m above stump.
         """
-        from Munin.timber.timber_volume_integrator import TimberVolumeIntegrator #Local import to break circular dependency
+        from munin.timber import TimberVolumeIntegrator #Local import to break circular dependency
         if h2_m <= h1_m:
             return 0.0
         
