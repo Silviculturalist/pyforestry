@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.10", "3.11", "3.12"] # Removed 3.13 as it might not be fully supported by all dependencies yet
 
     steps:
       - name: Check out code
@@ -34,7 +34,6 @@ jobs:
           pip install --force-reinstall --no-cache-dir .[dev]
 
       - name: Run tests with coverage
-        # this will produce both XML (for codecov) and HTML (for browse-artifact)
         run: pytest --cov=pyforestry --cov-report=xml --cov-report=html --cov-fail-under=50
 
       - name: Upload coverage report artifact
@@ -44,13 +43,13 @@ jobs:
           path: htmlcov/
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v4
         with:
           token: ${{secrets.CODECOV_TOKEN}}
           files: ./coverage.xml
           fail_ci_if_error: true
 
-  build-docs:
+  build-and-deploy-docs:
     runs-on: ubuntu-latest
     needs: test-and-coverage
     if: github.ref == 'refs/heads/main'
@@ -61,21 +60,25 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.13 # Or your desired version
+          python-version: 3.12 # Or your desired version
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          # Install project dependencies (e.g., your pyforestry package and its dev extras)
+          # Install project dependencies and documentation-specific dependencies
           pip install .[dev]
-          # Install documentation-specific dependencies
           pip install -r docs/requirements.txt
 
+      # NEW STEP: Generate API documentation .rst files
+      - name: Generate API docs
+        run: |
+          sphinx-apidoc -f -o docs/source/api src/pyforestry
 
+      # MODIFIED STEP: Build the Sphinx docs from the root
       - name: Build Sphinx docs
-        working-directory: docs
-        run: make html
+        run: make -f docs/Makefile html
 
+      # This step should now work correctly
       - name: Deploy docs to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
