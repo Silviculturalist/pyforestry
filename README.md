@@ -1,6 +1,6 @@
-[![CI](https://github.com/Silviculturalist/munin/actions/workflows/ci.yml/badge.svg?event=push)](https://github.com/Silviculturalist/munin/actions/workflows/ci.yml) [![codecov](https://codecov.io/gh/Silviculturalist/munin/branch/main/graph/badge.svg?token=2C3Z6NXHA4)](https://codecov.io/gh/Silviculturalist/munin)
+[![CI](https://github.com/Silviculturalist/pyforestry/actions/workflows/ci.yml/badge.svg?event=push)](https://github.com/Silviculturalist/pyforestry/actions/workflows/ci.yml) [![codecov](https://codecov.io/gh/Silviculturalist/pyforestry/branch/main/graph/badge.svg?token=2C3Z6NXHA4)](https://codecov.io/gh/Silviculturalist/pyforestry)
 
-Documentation: [Available 2025-06-30](https://silviculturalist.github.io/munin/)
+Documentation: [Available 2025-06-30](https://silviculturalist.github.io/pyforestry/)
 
 This package is currently under *very early* development.
 Use at your own risk. 
@@ -9,14 +9,14 @@ Any corrections, comments, suggestions are greatly appreciated.
 
 Carl Vigren 2025-06-30
 
-`munin` is a Python package for forest science, providing a standardized, open-source collection of models and functions. Many forest simulators are difficult to replicate, incur a language barrier, are hard to access, and use inconsistent units and variable names. By standardizing these components in a modern framework, we can easily swap out data, functions, and simulation models, or run them side-by-side for validation and comparison.
+`pyforestry` is a Python package for forest science, providing a standardized, open-source collection of models and functions. Many forest simulators are difficult to replicate, incur a language barrier, are hard to access, and use inconsistent units and variable names. By standardizing these components in a modern framework, we can easily swap out data, functions, and simulation models, or run them side-by-side for validation and comparison.
 
 ## Installation
 
-You can install the latest development version of `munin` directly from GitHub using `pip`.
+You can install the latest development version of `pyforestry` directly from GitHub using `pip`.
 
 ```bash
-pip install git+[https://github.com/](https://github.com/)<Silviculturalist>/munin.git
+pip install git+[https://github.com/](https://github.com/)<Silviculturalist>/pyforestry.git
 ```
 
 ## Goal
@@ -26,9 +26,9 @@ The goal of this GitHub repository is to be a center to:
 -   Review, discuss, validate, and update these functions in an open, collaborative environment.
 -   Maintain robust version control and clear, accessible documentation.
 
-We are developing object-oriented structures for trees, stands, sites, and treatments, allowing munin to grow into a stand-alone simulator. As the project progresses, we envision it becoming part of a larger ecosystem of open-source tools for forest science, with standardized variable names and a shared philosophy, welcoming contributions from all over the world.
+We are developing object-oriented structures for trees, stands, sites, and treatments, allowing pyforestry to grow into a stand-alone simulator. As the project progresses, we envision it becoming part of a larger ecosystem of open-source tools for forest science, with standardized variable names and a shared philosophy, welcoming contributions from all over the world.
 
-## Why munin?
+## Why pyforestry?
 
 This package aims to remedy several issues found in earlier stand simulators:
 -   Modern Documentation: Python docstrings, combined with tools like Sphinx, create documentation that is structured, discoverable, and integrated with the code.

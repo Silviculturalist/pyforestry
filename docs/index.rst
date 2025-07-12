@@ -1,6 +1,6 @@
 .. MyProject documentation master file
 
-munin Documentation
+pyforestry Documentation
 ====================================
 
 .. toctree::

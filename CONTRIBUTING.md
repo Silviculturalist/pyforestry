@@ -1,8 +1,8 @@
-# Contributing to munin
+# Contributing to pyforestry
 
-First off, thank you for considering contributing to munin! We welcome contributions from the community. Your help is essential for keeping it great. Please remember to adhere by our [Code of Conduct](CODE_OF_CONDUCT.md).
+First off, thank you for considering contributing to pyforestry! We welcome contributions from the community. Your help is essential for keeping it great. Please remember to adhere by our [Code of Conduct](CODE_OF_CONDUCT.md).
 
-This document provides a set of guidelines for contributing to munin.
+This document provides a set of guidelines for contributing to pyforestry.
 
 ## Submitting Changes
 

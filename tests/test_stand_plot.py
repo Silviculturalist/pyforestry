@@ -2,7 +2,7 @@ import pytest
 from shapely.geometry import Point, Polygon
 import random
 
-from munin.helpers import (
+from pyforestry.helpers import (
     CircularPlot,
     Diameter_cm,
     Stand,

@@ -1,4 +1,4 @@
-from munin.geo import Moren_Perttu_radiation_1994, RetrieveGeoCode, eriksson_1986_humidity
+from pyforestry.geo import Moren_Perttu_radiation_1994, RetrieveGeoCode, eriksson_1986_humidity
 import pytest
 import math
 import numpy as np

@@ -1,6 +1,6 @@
 import pytest
 # It's clearer to import both classes for the tests
-from munin.helpers.primitives import AtomicVolume, CompositeVolume
+from pyforestry.helpers.primitives import AtomicVolume, CompositeVolume
 from typing import Union
 # A type hint for scalars
 Numeric = Union[int, float]

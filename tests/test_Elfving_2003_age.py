@@ -1,7 +1,7 @@
 import pytest
-from munin.misc.sweden.elfving_2003 import Elfving2003SingleTreeAge
-from munin.helpers.tree_species import TreeSpecies, TreeName
-from munin.site.sweden import Sweden
+from pyforestry.misc.sweden.elfving_2003 import Elfving2003SingleTreeAge
+from pyforestry.helpers.tree_species import TreeSpecies, TreeName
+from pyforestry.site.sweden import Sweden
 from math import isclose
 # These are chosen to be generally valid for many groups.
 DEFAULT_AGE_PARAMS = {

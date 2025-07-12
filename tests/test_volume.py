@@ -1,5 +1,5 @@
 import pytest
-from munin.volume.sweden import (
+from pyforestry.volume.sweden import (
     BrandelVolume,
     andersson_1954_volume_small_trees_birch_height_above_4_m, 
     carbonnier_1954_volume_larch,
