@@ -235,7 +235,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
 <div class="viewcode-block" id="Odin_temperature_sum">
-<a class="viewcode-back" href="../../../../source/pyforestry.geo.temperature.html#pyforestry.geo.temperature.odin_1983.Odin_temperature_sum">[docs]</a>
+<a class="viewcode-back" href="../../../../source/api/pyforestry.geo.temperature.html#pyforestry.geo.temperature.odin_1983.Odin_temperature_sum">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Odin_temperature_sum</span><span class="p">(</span><span class="n">latitude</span> <span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
                          <span class="n">altitude_m</span> <span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
@@ -270,7 +270,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 
 <div class="viewcode-block" id="Moren_Perttu_radiation_1994">
-<a class="viewcode-back" href="../../../../source/pyforestry.geo.temperature.html#pyforestry.geo.temperature.odin_1983.Moren_Perttu_radiation_1994">[docs]</a>
+<a class="viewcode-back" href="../../../../source/api/pyforestry.geo.temperature.html#pyforestry.geo.temperature.odin_1983.Moren_Perttu_radiation_1994">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Moren_Perttu_radiation_1994</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
                 <span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -342,7 +342,7 @@
         <span class="k">return</span> <span class="n">F0</span> <span class="o">+</span> <span class="n">F1</span><span class="o">*</span><span class="n">latitude</span> <span class="o">+</span> <span class="n">F2</span><span class="o">*</span><span class="n">altitude</span>
     
 <div class="viewcode-block" id="Moren_Perttu_radiation_1994.get_gorczynski_continentality_index">
-<a class="viewcode-back" href="../../../../source/pyforestry.geo.temperature.html#pyforestry.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.get_gorczynski_continentality_index">[docs]</a>
+<a class="viewcode-back" href="../../../../source/api/pyforestry.geo.temperature.html#pyforestry.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.get_gorczynski_continentality_index">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_gorczynski_continentality_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1"># Renamed for clarity as a &quot;getter&quot;</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculates the Gorczynski continentality index using instance data.</span>
@@ -362,7 +362,7 @@
 
 
 <div class="viewcode-block" id="Moren_Perttu_radiation_1994.calculate_temperature_sum_1000m">
-<a class="viewcode-back" href="../../../../source/pyforestry.geo.temperature.html#pyforestry.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.calculate_temperature_sum_1000m">[docs]</a>
+<a class="viewcode-back" href="../../../../source/api/pyforestry.geo.temperature.html#pyforestry.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.calculate_temperature_sum_1000m">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">calculate_temperature_sum_1000m</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold_temperature</span><span class="p">):</span>
         <span class="n">coeffs_A</span> <span class="o">=</span> <span class="p">{</span>
             <span class="mi">0</span><span class="p">:</span>  <span class="p">{</span><span class="s1">&#39;A0&#39;</span><span class="p">:</span> <span class="mf">8279.3</span><span class="p">,</span> <span class="s1">&#39;A1&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">98.115</span><span class="p">,</span> <span class="s1">&#39;A2&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.131</span><span class="p">},</span>
@@ -378,7 +378,7 @@
 
 
 <div class="viewcode-block" id="Moren_Perttu_radiation_1994.calculate_growing_season_duration_1000m">
-<a class="viewcode-back" href="../../../../source/pyforestry.geo.temperature.html#pyforestry.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.calculate_growing_season_duration_1000m">[docs]</a>
+<a class="viewcode-back" href="../../../../source/api/pyforestry.geo.temperature.html#pyforestry.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.calculate_growing_season_duration_1000m">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">calculate_growing_season_duration_1000m</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold_temperature</span><span class="p">):</span>
         <span class="n">coeffs_B</span> <span class="o">=</span> <span class="p">{</span> 
             <span class="mi">0</span><span class="p">:</span>  <span class="p">{</span><span class="s1">&#39;B0&#39;</span><span class="p">:</span> <span class="mf">894.2</span><span class="p">,</span>  <span class="s1">&#39;B1&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">10.678</span><span class="p">,</span> <span class="s1">&#39;B2&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.780</span><span class="p">,</span> <span class="s1">&#39;B3&#39;</span><span class="p">:</span> <span class="mf">0.01147</span><span class="p">},</span>
@@ -394,7 +394,7 @@
 
 
 <div class="viewcode-block" id="Moren_Perttu_radiation_1994.calculate_temperature_sum_1500m">
-<a class="viewcode-back" href="../../../../source/pyforestry.geo.temperature.html#pyforestry.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.calculate_temperature_sum_1500m">[docs]</a>
+<a class="viewcode-back" href="../../../../source/api/pyforestry.geo.temperature.html#pyforestry.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.calculate_temperature_sum_1500m">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">calculate_temperature_sum_1500m</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold_temperature</span><span class="p">):</span>
         <span class="n">coeffs_a</span> <span class="o">=</span> <span class="p">{</span> 
             <span class="mi">0</span><span class="p">:</span>  <span class="p">{</span><span class="s1">&#39;x0&#39;</span><span class="p">:</span> <span class="mf">8116.4</span><span class="p">,</span> <span class="s1">&#39;x1&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">80.85</span><span class="p">,</span>  <span class="s1">&#39;x2&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.240</span><span class="p">,</span>  <span class="s1">&#39;x3&#39;</span><span class="p">:</span> <span class="mf">0.07762</span><span class="p">,</span>   <span class="s1">&#39;x4&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">5.947</span><span class="p">,</span> <span class="s1">&#39;x5&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.000075</span><span class="p">},</span>
@@ -410,7 +410,7 @@
 
 
 <div class="viewcode-block" id="Moren_Perttu_radiation_1994.calculate_growing_season_duration_1500m">
-<a class="viewcode-back" href="../../../../source/pyforestry.geo.temperature.html#pyforestry.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.calculate_growing_season_duration_1500m">[docs]</a>
+<a class="viewcode-back" href="../../../../source/api/pyforestry.geo.temperature.html#pyforestry.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.calculate_growing_season_duration_1500m">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">calculate_growing_season_duration_1500m</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold_temperature</span><span class="p">):</span>
         <span class="n">coeffs_b</span> <span class="o">=</span> <span class="p">{</span> <span class="c1"># From Table 3b [cite: 136]</span>
             <span class="mi">0</span><span class="p">:</span>  <span class="p">{</span><span class="s1">&#39;x0&#39;</span><span class="p">:</span> <span class="mf">1339.7</span><span class="p">,</span> <span class="s1">&#39;x1&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">25.417</span><span class="p">,</span> <span class="s1">&#39;x2&#39;</span><span class="p">:</span> <span class="mf">0.122</span><span class="p">,</span>   <span class="s1">&#39;x3&#39;</span><span class="p">:</span> <span class="mf">0.00978</span><span class="p">,</span>   <span class="s1">&#39;x4&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.687</span><span class="p">,</span> <span class="s1">&#39;x5&#39;</span><span class="p">:</span>  <span class="mf">0.000011</span><span class="p">},</span>
@@ -426,7 +426,7 @@
 
 
 <div class="viewcode-block" id="Moren_Perttu_radiation_1994.get_corrected_temperature_sum">
-<a class="viewcode-back" href="../../../../source/pyforestry.geo.temperature.html#pyforestry.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.get_corrected_temperature_sum">[docs]</a>
+<a class="viewcode-back" href="../../../../source/api/pyforestry.geo.temperature.html#pyforestry.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.get_corrected_temperature_sum">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_corrected_temperature_sum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold_temperature</span><span class="p">,</span> <span class="n">for_1500m_model</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">for_1500m_model</span><span class="p">:</span>
             <span class="n">base_ts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_temperature_sum_1500m</span><span class="p">(</span><span class="n">threshold_temperature</span><span class="p">)</span>
@@ -449,7 +449,7 @@
 
 
 <div class="viewcode-block" id="Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_clear_sky">
-<a class="viewcode-back" href="../../../../source/pyforestry.geo.temperature.html#pyforestry.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_clear_sky">[docs]</a>
+<a class="viewcode-back" href="../../../../source/api/pyforestry.geo.temperature.html#pyforestry.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_clear_sky">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_ratio_global_to_extraterrestrial_radiation_clear_sky</span><span class="p">(</span><span class="n">day_number</span><span class="p">,</span> <span class="n">region</span><span class="p">):</span>
         <span class="c1"># Using D1 = -0.000403 for North, (105,273) based on user&#39;s implied coefficient from test result</span>
@@ -484,7 +484,7 @@
 
 
 <div class="viewcode-block" id="Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_average_sky">
-<a class="viewcode-back" href="../../../../source/pyforestry.geo.temperature.html#pyforestry.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_average_sky">[docs]</a>
+<a class="viewcode-back" href="../../../../source/api/pyforestry.geo.temperature.html#pyforestry.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_average_sky">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_ratio_global_to_extraterrestrial_radiation_average_sky</span><span class="p">(</span><span class="n">day_number</span><span class="p">,</span> <span class="n">region</span><span class="p">):</span>
         <span class="n">coeffs_E</span> <span class="o">=</span> <span class="p">{</span> 
@@ -497,7 +497,7 @@
 
 
 <div class="viewcode-block" id="Moren_Perttu_radiation_1994.calculate_global_radiation_sum_growing_season">
-<a class="viewcode-back" href="../../../../source/pyforestry.geo.temperature.html#pyforestry.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.calculate_global_radiation_sum_growing_season">[docs]</a>
+<a class="viewcode-back" href="../../../../source/api/pyforestry.geo.temperature.html#pyforestry.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.calculate_global_radiation_sum_growing_season">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">calculate_global_radiation_sum_growing_season</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold_temperature</span><span class="p">):</span>
         <span class="n">coeffs_F</span> <span class="o">=</span> <span class="p">{</span> 
             <span class="mi">0</span><span class="p">:</span>  <span class="p">{</span><span class="s1">&#39;F0&#39;</span><span class="p">:</span> <span class="mf">6.9712</span><span class="p">,</span> <span class="s1">&#39;F1&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.0667</span><span class="p">,</span> <span class="s1">&#39;F2&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.00070</span><span class="p">},</span> <span class="c1"># Table 7 [cite: 183]</span>
@@ -513,7 +513,7 @@
 
 
 <div class="viewcode-block" id="Moren_Perttu_radiation_1994.get_growing_season_start_day">
-<a class="viewcode-back" href="../../../../source/pyforestry.geo.temperature.html#pyforestry.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.get_growing_season_start_day">[docs]</a>
+<a class="viewcode-back" href="../../../../source/api/pyforestry.geo.temperature.html#pyforestry.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.get_growing_season_start_day">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_growing_season_start_day</span><span class="p">(</span><span class="n">latitude_deg</span><span class="p">,</span> <span class="n">altitude_m</span><span class="p">):</span>
         <span class="n">start_day</span> <span class="o">=</span> <span class="o">-</span><span class="mf">35.760</span> <span class="o">+</span> <span class="mf">2.489</span> <span class="o">*</span> <span class="n">latitude_deg</span> <span class="o">-</span> <span class="mf">0.0637</span> <span class="o">*</span> <span class="n">altitude_m</span> <span class="o">+</span> <span class="mf">0.00132</span> <span class="o">*</span> <span class="n">latitude_deg</span> <span class="o">*</span> <span class="n">altitude_m</span>

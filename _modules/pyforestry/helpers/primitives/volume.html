@@ -240,7 +240,7 @@
 <span class="n">Numeric</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
 
 <div class="viewcode-block" id="AtomicVolume">
-<a class="viewcode-back" href="../../../../source/pyforestry.helpers.primitives.html#pyforestry.helpers.AtomicVolume">[docs]</a>
+<a class="viewcode-back" href="../../../../source/api/pyforestry.helpers.primitives.html#pyforestry.helpers.AtomicVolume">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">eq</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">AtomicVolume</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -265,7 +265,7 @@
 
     <span class="c1"># --- (Factory and conversion methods are the same) ---</span>
 <div class="viewcode-block" id="AtomicVolume.from_unit">
-<a class="viewcode-back" href="../../../../source/pyforestry.helpers.primitives.html#pyforestry.helpers.AtomicVolume.from_unit">[docs]</a>
+<a class="viewcode-back" href="../../../../source/api/pyforestry.helpers.primitives.html#pyforestry.helpers.AtomicVolume.from_unit">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_unit</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AtomicVolume</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">unit</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">UNIT_CONVERSION</span><span class="p">:</span>
@@ -274,7 +274,7 @@
 
 
 <div class="viewcode-block" id="AtomicVolume.to">
-<a class="viewcode-back" href="../../../../source/pyforestry.helpers.primitives.html#pyforestry.helpers.AtomicVolume.to">[docs]</a>
+<a class="viewcode-back" href="../../../../source/api/pyforestry.helpers.primitives.html#pyforestry.helpers.AtomicVolume.to">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">UNIT_CONVERSION</span><span class="p">[</span><span class="n">unit</span><span class="p">]</span></div>
 
@@ -332,7 +332,7 @@
 
 
 <div class="viewcode-block" id="CompositeVolume">
-<a class="viewcode-back" href="../../../../source/pyforestry.helpers.primitives.html#pyforestry.helpers.CompositeVolume">[docs]</a>
+<a class="viewcode-back" href="../../../../source/api/pyforestry.helpers.primitives.html#pyforestry.helpers.CompositeVolume">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CompositeVolume</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Represents a collection of AtomicVolume objects.</span>

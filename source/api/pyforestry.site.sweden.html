@@ -1,0 +1,1398 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
+
+    <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
+        <title>pyforestry.site.sweden package - pyforestry documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=302659d7" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../index.html"><div class="brand">pyforestry  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
+  
+  
+  <span class="sidebar-brand-text">pyforestry  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../../_sources/source/api/pyforestry.site.sweden.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="pyforestry-site-sweden-package">
+<h1>pyforestry.site.sweden package<a class="headerlink" href="#pyforestry-site-sweden-package" title="Link to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-pyforestry.site.sweden.enums">
+<span id="pyforestry-site-sweden-enums-module"></span><h2>pyforestry.site.sweden.enums module<a class="headerlink" href="#module-pyforestry.site.sweden.enums" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.Sweden">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.site.sweden.enums.</span></span><span class="sig-name descname"><span class="pre">Sweden</span></span><a class="reference internal" href="../../_modules/pyforestry/site/sweden/enums.html#Sweden"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.site.sweden.enums.Sweden" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.Sweden.BottomLayer">
+<span class="sig-name descname"><span class="pre">BottomLayer</span></span><a class="headerlink" href="#pyforestry.site.sweden.enums.Sweden.BottomLayer" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenBottomLayer" title="pyforestry.site.sweden.enums.SwedenBottomLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SwedenBottomLayer</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.Sweden.ClimateZone">
+<span class="sig-name descname"><span class="pre">ClimateZone</span></span><a class="headerlink" href="#pyforestry.site.sweden.enums.Sweden.ClimateZone" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenClimateZone" title="pyforestry.site.sweden.enums.SwedenClimateZone"><code class="xref py py-class docutils literal notranslate"><span class="pre">SwedenClimateZone</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.Sweden.County">
+<span class="sig-name descname"><span class="pre">County</span></span><a class="headerlink" href="#pyforestry.site.sweden.enums.Sweden.County" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty" title="pyforestry.site.sweden.enums.SwedenCounty"><code class="xref py py-class docutils literal notranslate"><span class="pre">SwedenCounty</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.Sweden.FieldLayer">
+<span class="sig-name descname"><span class="pre">FieldLayer</span></span><a class="headerlink" href="#pyforestry.site.sweden.enums.Sweden.FieldLayer" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenFieldLayer" title="pyforestry.site.sweden.enums.SwedenFieldLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SwedenFieldLayer</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.Sweden.SoilDepth">
+<span class="sig-name descname"><span class="pre">SoilDepth</span></span><a class="headerlink" href="#pyforestry.site.sweden.enums.Sweden.SoilDepth" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilDepth" title="pyforestry.site.sweden.enums.SwedenSoilDepth"><code class="xref py py-class docutils literal notranslate"><span class="pre">SwedenSoilDepth</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.Sweden.SoilMoistureEnum">
+<span class="sig-name descname"><span class="pre">SoilMoistureEnum</span></span><a class="headerlink" href="#pyforestry.site.sweden.enums.Sweden.SoilMoistureEnum" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilMoisture" title="pyforestry.site.sweden.enums.SwedenSoilMoisture"><code class="xref py py-class docutils literal notranslate"><span class="pre">SwedenSoilMoisture</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.Sweden.SoilTextureSediment">
+<span class="sig-name descname"><span class="pre">SoilTextureSediment</span></span><a class="headerlink" href="#pyforestry.site.sweden.enums.Sweden.SoilTextureSediment" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilTextureSediment" title="pyforestry.site.sweden.enums.SwedenSoilTextureSediment"><code class="xref py py-class docutils literal notranslate"><span class="pre">SwedenSoilTextureSediment</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.Sweden.SoilTextureTill">
+<span class="sig-name descname"><span class="pre">SoilTextureTill</span></span><a class="headerlink" href="#pyforestry.site.sweden.enums.Sweden.SoilTextureTill" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilTextureTill" title="pyforestry.site.sweden.enums.SwedenSoilTextureTill"><code class="xref py py-class docutils literal notranslate"><span class="pre">SwedenSoilTextureTill</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.Sweden.SoilWater">
+<span class="sig-name descname"><span class="pre">SoilWater</span></span><a class="headerlink" href="#pyforestry.site.sweden.enums.Sweden.SoilWater" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilWater" title="pyforestry.site.sweden.enums.SwedenSoilWater"><code class="xref py py-class docutils literal notranslate"><span class="pre">SwedenSoilWater</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenBottomLayer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.site.sweden.enums.</span></span><span class="sig-name descname"><span class="pre">SwedenBottomLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names=&lt;not</span> <span class="pre">given&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyforestry/site/sweden/enums.html#SwedenBottomLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenBottomLayer" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenBottomLayer.BOGMOSS_TYPE">
+<span class="sig-name descname"><span class="pre">BOGMOSS_TYPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">BottomLayerType(code=4,</span> <span class="pre">english_name='Bogmoss</span> <span class="pre">type</span> <span class="pre">(Sphagnum)',</span> <span class="pre">swedish_name='Vitmosstyp')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenBottomLayer.BOGMOSS_TYPE" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenBottomLayer.FRESH_MOSS">
+<span class="sig-name descname"><span class="pre">FRESH_MOSS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">BottomLayerType(code=6,</span> <span class="pre">english_name='Fresh</span> <span class="pre">moss</span> <span class="pre">type',</span> <span class="pre">swedish_name='Friskmosstyp')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenBottomLayer.FRESH_MOSS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenBottomLayer.LICHEN_RICH">
+<span class="sig-name descname"><span class="pre">LICHEN_RICH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">BottomLayerType(code=3,</span> <span class="pre">english_name='Lichen-rich',</span> <span class="pre">swedish_name='Lavrik</span> <span class="pre">typ')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenBottomLayer.LICHEN_RICH" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenBottomLayer.LICHEN_RICH_BOGMOSS">
+<span class="sig-name descname"><span class="pre">LICHEN_RICH_BOGMOSS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">BottomLayerType(code=2,</span> <span class="pre">english_name='Lichen-rich</span> <span class="pre">bogmoss</span> <span class="pre">type',</span> <span class="pre">swedish_name='Lavrik</span> <span class="pre">vitmosstyp')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenBottomLayer.LICHEN_RICH_BOGMOSS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenBottomLayer.LICHEN_TYPE">
+<span class="sig-name descname"><span class="pre">LICHEN_TYPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">BottomLayerType(code=1,</span> <span class="pre">english_name='Lichen</span> <span class="pre">type',</span> <span class="pre">swedish_name='Lavtyp')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenBottomLayer.LICHEN_TYPE" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenBottomLayer.SWAMP_MOSS">
+<span class="sig-name descname"><span class="pre">SWAMP_MOSS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">BottomLayerType(code=5,</span> <span class="pre">english_name='Swamp</span> <span class="pre">moss</span> <span class="pre">type',</span> <span class="pre">swedish_name='Sumpmosstyp')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenBottomLayer.SWAMP_MOSS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenClimateZone">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.site.sweden.enums.</span></span><span class="sig-name descname"><span class="pre">SwedenClimateZone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names=&lt;not</span> <span class="pre">given&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyforestry/site/sweden/enums.html#SwedenClimateZone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenClimateZone" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenClimateZone.K1">
+<span class="sig-name descname"><span class="pre">K1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">ClimateZoneData(code=4,</span> <span class="pre">label='K1',</span> <span class="pre">description='Continental,</span> <span class="pre">Middle</span> <span class="pre">Sweden')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenClimateZone.K1" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenClimateZone.K2">
+<span class="sig-name descname"><span class="pre">K2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">ClimateZoneData(code=5,</span> <span class="pre">label='K2',</span> <span class="pre">description='Continental,</span> <span class="pre">Northern</span> <span class="pre">Sweden')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenClimateZone.K2" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenClimateZone.K3">
+<span class="sig-name descname"><span class="pre">K3</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">ClimateZoneData(code=6,</span> <span class="pre">label='K3',</span> <span class="pre">description='Continental,</span> <span class="pre">Southern</span> <span class="pre">Sweden')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenClimateZone.K3" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenClimateZone.M1">
+<span class="sig-name descname"><span class="pre">M1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">ClimateZoneData(code=1,</span> <span class="pre">label='M1',</span> <span class="pre">description='Maritime,</span> <span class="pre">West</span> <span class="pre">coast')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenClimateZone.M1" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenClimateZone.M2">
+<span class="sig-name descname"><span class="pre">M2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">ClimateZoneData(code=2,</span> <span class="pre">label='M2',</span> <span class="pre">description='Maritime,</span> <span class="pre">East</span> <span class="pre">coast')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenClimateZone.M2" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenClimateZone.M3">
+<span class="sig-name descname"><span class="pre">M3</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">ClimateZoneData(code=3,</span> <span class="pre">label='M3',</span> <span class="pre">description='Maritime,</span> <span class="pre">Mountain</span> <span class="pre">range')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenClimateZone.M3" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenClimateZone.from_code">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_code</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenClimateZone" title="pyforestry.site.sweden.enums.SwedenClimateZone"><span class="pre">SwedenClimateZone</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/pyforestry/site/sweden/enums.html#SwedenClimateZone.from_code"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenClimateZone.from_code" title="Link to this definition">¶</a></dt>
+<dd><p>Lookup enum member by code.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.site.sweden.enums.</span></span><span class="sig-name descname"><span class="pre">SwedenCounty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names=&lt;not</span> <span class="pre">given&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyforestry/site/sweden/enums.html#SwedenCounty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.ALVSBORG_DALSLANDS">
+<span class="sig-name descname"><span class="pre">ALVSBORG_DALSLANDS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=21,</span> <span class="pre">label='Älvsborg,</span> <span class="pre">Dalslands</span> <span class="pre">landskap</span> <span class="pre">(P)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.ALVSBORG_DALSLANDS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.ALVSBORG_VASTERGOTLANDS">
+<span class="sig-name descname"><span class="pre">ALVSBORG_VASTERGOTLANDS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=22,</span> <span class="pre">label='Älvsborg,</span> <span class="pre">Västergötlands</span> <span class="pre">landskap</span> <span class="pre">(P)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.ALVSBORG_VASTERGOTLANDS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.BLEKINGE">
+<span class="sig-name descname"><span class="pre">BLEKINGE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=30,</span> <span class="pre">label='Blekinge</span> <span class="pre">(K)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.BLEKINGE" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.GAVLEBORG_HALSINGLANDS">
+<span class="sig-name descname"><span class="pre">GAVLEBORG_HALSINGLANDS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=9,</span> <span class="pre">label='Gävleborg</span> <span class="pre">-</span> <span class="pre">Hälsinglands</span> <span class="pre">landskap</span> <span class="pre">(X</span> <span class="pre">Hälsingl)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.GAVLEBORG_HALSINGLANDS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.GAVLEBORG_OVRIGA">
+<span class="sig-name descname"><span class="pre">GAVLEBORG_OVRIGA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=10,</span> <span class="pre">label='Gävleborg,</span> <span class="pre">övriga</span> <span class="pre">(X</span> <span class="pre">övr)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.GAVLEBORG_OVRIGA" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.GOTLAND">
+<span class="sig-name descname"><span class="pre">GOTLAND</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=31,</span> <span class="pre">label='Gotland</span> <span class="pre">(I)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.GOTLAND" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.HALLAND">
+<span class="sig-name descname"><span class="pre">HALLAND</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=27,</span> <span class="pre">label='Halland</span> <span class="pre">(N)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.HALLAND" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.JAMTLAND_HARJEDALENS">
+<span class="sig-name descname"><span class="pre">JAMTLAND_HARJEDALENS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=6,</span> <span class="pre">label='Jämtland</span> <span class="pre">-</span> <span class="pre">Härjedalens</span> <span class="pre">landskap</span> <span class="pre">(Z</span> <span class="pre">Härjed)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.JAMTLAND_HARJEDALENS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.JAMTLAND_JAMTLANDS">
+<span class="sig-name descname"><span class="pre">JAMTLAND_JAMTLANDS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=5,</span> <span class="pre">label='Jämtland</span> <span class="pre">-</span> <span class="pre">Jämtlands</span> <span class="pre">landskap</span> <span class="pre">(Z)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.JAMTLAND_JAMTLANDS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.JONKOPING">
+<span class="sig-name descname"><span class="pre">JONKOPING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=23,</span> <span class="pre">label='Jönköping</span> <span class="pre">(F)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.JONKOPING" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.KALMAR">
+<span class="sig-name descname"><span class="pre">KALMAR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=25,</span> <span class="pre">label='Kalmar</span> <span class="pre">(H)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.KALMAR" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.KOPPARBERG_OVRIGA">
+<span class="sig-name descname"><span class="pre">KOPPARBERG_OVRIGA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=12,</span> <span class="pre">label='Kopparberg</span> <span class="pre">(Dalarna),</span> <span class="pre">övriga</span> <span class="pre">(W</span> <span class="pre">övr)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.KOPPARBERG_OVRIGA" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.KOPPARBERG_SALEN_IDRE">
+<span class="sig-name descname"><span class="pre">KOPPARBERG_SALEN_IDRE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=11,</span> <span class="pre">label='Kopparberg</span> <span class="pre">(Dalarna),</span> <span class="pre">Sälen</span> <span class="pre">-</span> <span class="pre">Idre</span> <span class="pre">(W)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.KOPPARBERG_SALEN_IDRE" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.KRISTIANSTAD">
+<span class="sig-name descname"><span class="pre">KRISTIANSTAD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=28,</span> <span class="pre">label='Kristianstad</span> <span class="pre">(L)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.KRISTIANSTAD" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.KRONOBERG">
+<span class="sig-name descname"><span class="pre">KRONOBERG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=24,</span> <span class="pre">label='Kronoberg</span> <span class="pre">(G)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.KRONOBERG" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.MALMOHUS">
+<span class="sig-name descname"><span class="pre">MALMOHUS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=29,</span> <span class="pre">label='Malmöhus</span> <span class="pre">(M)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.MALMOHUS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.NORRBOTTENS_KUSTLAND">
+<span class="sig-name descname"><span class="pre">NORRBOTTENS_KUSTLAND</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=2,</span> <span class="pre">label='Norrbottens</span> <span class="pre">kustland</span> <span class="pre">(BD</span> <span class="pre">kust)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.NORRBOTTENS_KUSTLAND" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.NORRBOTTENS_LAPPMARK">
+<span class="sig-name descname"><span class="pre">NORRBOTTENS_LAPPMARK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=1,</span> <span class="pre">label='Norrbottens</span> <span class="pre">lappmark</span> <span class="pre">(BD</span> <span class="pre">lappm)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.NORRBOTTENS_LAPPMARK" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.OREBRO">
+<span class="sig-name descname"><span class="pre">OREBRO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=14,</span> <span class="pre">label='Örebro</span> <span class="pre">(T)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.OREBRO" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.OSTERGOTLAND">
+<span class="sig-name descname"><span class="pre">OSTERGOTLAND</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=19,</span> <span class="pre">label='Östergötland</span> <span class="pre">(E)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.OSTERGOTLAND" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.SKARABORG">
+<span class="sig-name descname"><span class="pre">SKARABORG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=20,</span> <span class="pre">label='Skaraborg</span> <span class="pre">(R)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.SKARABORG" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.SODERMANLAND">
+<span class="sig-name descname"><span class="pre">SODERMANLAND</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=18,</span> <span class="pre">label='Södermanland</span> <span class="pre">(D)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.SODERMANLAND" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.STOCKHOLM">
+<span class="sig-name descname"><span class="pre">STOCKHOLM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=17,</span> <span class="pre">label='Stockholm</span> <span class="pre">(AB)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.STOCKHOLM" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.UPPSALA">
+<span class="sig-name descname"><span class="pre">UPPSALA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=16,</span> <span class="pre">label='Uppsala</span> <span class="pre">(C)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.UPPSALA" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.VARMLAND">
+<span class="sig-name descname"><span class="pre">VARMLAND</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=13,</span> <span class="pre">label='Värmland</span> <span class="pre">(S)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.VARMLAND" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.VASTERBOTTENS_KUSTLAND">
+<span class="sig-name descname"><span class="pre">VASTERBOTTENS_KUSTLAND</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=4,</span> <span class="pre">label='Västerbottens</span> <span class="pre">kustland</span> <span class="pre">(AC</span> <span class="pre">kust)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.VASTERBOTTENS_KUSTLAND" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.VASTERBOTTENS_LAPPMARK">
+<span class="sig-name descname"><span class="pre">VASTERBOTTENS_LAPPMARK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=3,</span> <span class="pre">label='Västerbottens</span> <span class="pre">lappmark</span> <span class="pre">(AC</span> <span class="pre">lappm)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.VASTERBOTTENS_LAPPMARK" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.VASTERNORRLAND_ANGERMANLANDS">
+<span class="sig-name descname"><span class="pre">VASTERNORRLAND_ANGERMANLANDS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=7,</span> <span class="pre">label='Västernorrland</span> <span class="pre">-</span> <span class="pre">Ångermanlands</span> <span class="pre">landskap</span> <span class="pre">(Y</span> <span class="pre">Ångerm)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.VASTERNORRLAND_ANGERMANLANDS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.VASTERNORRLAND_MEDELPADS">
+<span class="sig-name descname"><span class="pre">VASTERNORRLAND_MEDELPADS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=8,</span> <span class="pre">label='Västernorrland</span> <span class="pre">-</span> <span class="pre">Medelpads</span> <span class="pre">landskap</span> <span class="pre">(Y</span> <span class="pre">Medelp)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.VASTERNORRLAND_MEDELPADS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.VASTMANLAND">
+<span class="sig-name descname"><span class="pre">VASTMANLAND</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=15,</span> <span class="pre">label='Västmanland</span> <span class="pre">(U)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.VASTMANLAND" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.VASTRA_GOTALANDS">
+<span class="sig-name descname"><span class="pre">VASTRA_GOTALANDS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">CountyData(code=26,</span> <span class="pre">label='Västra</span> <span class="pre">Götalands</span> <span class="pre">(Göteborg</span> <span class="pre">-</span> <span class="pre">Bohuslän)</span> <span class="pre">(O)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.VASTRA_GOTALANDS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenCounty.from_code">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_code</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty" title="pyforestry.site.sweden.enums.SwedenCounty"><span class="pre">SwedenCounty</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/pyforestry/site/sweden/enums.html#SwedenCounty.from_code"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenCounty.from_code" title="Link to this definition">¶</a></dt>
+<dd><p>Lookup enum member by code.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenFieldLayer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.site.sweden.enums.</span></span><span class="sig-name descname"><span class="pre">SwedenFieldLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names=&lt;not</span> <span class="pre">given&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyforestry/site/sweden/enums.html#SwedenFieldLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenFieldLayer" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenFieldLayer.BILBERRY">
+<span class="sig-name descname"><span class="pre">BILBERRY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Vegetation(code=13,</span> <span class="pre">swedish_name='Blåbär',</span> <span class="pre">english_name='European</span> <span class="pre">blueberry,</span> <span class="pre">bilberry',</span> <span class="pre">index=0)</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.BILBERRY" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenFieldLayer.BROADLEAVED_GRASS">
+<span class="sig-name descname"><span class="pre">BROADLEAVED_GRASS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Vegetation(code=8,</span> <span class="pre">swedish_name='Bredbl.</span> <span class="pre">gräs',</span> <span class="pre">english_name='Broadleaved</span> <span class="pre">grass',</span> <span class="pre">index=2.5)</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.BROADLEAVED_GRASS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenFieldLayer.CROWBERRY">
+<span class="sig-name descname"><span class="pre">CROWBERRY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Vegetation(code=15,</span> <span class="pre">swedish_name='Kråkbär',</span> <span class="pre">english_name='Crowberry',</span> <span class="pre">index=-3)</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.CROWBERRY" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenFieldLayer.HIGH_HERB_WITHOUT_SHRUBS">
+<span class="sig-name descname"><span class="pre">HIGH_HERB_WITHOUT_SHRUBS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Vegetation(code=1,</span> <span class="pre">swedish_name='Högört</span> <span class="pre">utan</span> <span class="pre">ris',</span> <span class="pre">english_name='Rich-herb</span> <span class="pre">without</span> <span class="pre">shrubs',</span> <span class="pre">index=4)</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.HIGH_HERB_WITHOUT_SHRUBS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenFieldLayer.HIGH_HERB_WITH_SHRUBS_BLUEBERRY">
+<span class="sig-name descname"><span class="pre">HIGH_HERB_WITH_SHRUBS_BLUEBERRY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Vegetation(code=2,</span> <span class="pre">swedish_name='Högört</span> <span class="pre">med</span> <span class="pre">ris/blåbär',</span> <span class="pre">english_name='Rich-herb</span> <span class="pre">with</span> <span class="pre">shrubs/bilberry',</span> <span class="pre">index=2.5)</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.HIGH_HERB_WITH_SHRUBS_BLUEBERRY" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenFieldLayer.HIGH_HERB_WITH_SHRUBS_LINGON">
+<span class="sig-name descname"><span class="pre">HIGH_HERB_WITH_SHRUBS_LINGON</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Vegetation(code=3,</span> <span class="pre">swedish_name='Högört</span> <span class="pre">med</span> <span class="pre">ris/lingon',</span> <span class="pre">english_name='Rich-herb</span> <span class="pre">with</span> <span class="pre">shrubs/lingonberry',</span> <span class="pre">index=2)</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.HIGH_HERB_WITH_SHRUBS_LINGON" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenFieldLayer.HORSETAIL">
+<span class="sig-name descname"><span class="pre">HORSETAIL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Vegetation(code=12,</span> <span class="pre">swedish_name='Fräken',</span> <span class="pre">english_name='Horsetail,</span> <span class="pre">Equisetum</span> <span class="pre">ssp.',</span> <span class="pre">index=1)</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.HORSETAIL" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenFieldLayer.LICHEN_DOMINANT">
+<span class="sig-name descname"><span class="pre">LICHEN_DOMINANT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Vegetation(code=18,</span> <span class="pre">swedish_name='Lav',</span> <span class="pre">english_name='Lichen,</span> <span class="pre">dominating',</span> <span class="pre">index=-1)</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.LICHEN_DOMINANT" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenFieldLayer.LICHEN_FREQUENT">
+<span class="sig-name descname"><span class="pre">LICHEN_FREQUENT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Vegetation(code=17,</span> <span class="pre">swedish_name='Lavrik',</span> <span class="pre">english_name='Lichen,</span> <span class="pre">frequent</span> <span class="pre">occurrence',</span> <span class="pre">index=-0.5)</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.LICHEN_FREQUENT" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenFieldLayer.LINGONBERRY">
+<span class="sig-name descname"><span class="pre">LINGONBERRY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Vegetation(code=14,</span> <span class="pre">swedish_name='Lingon',</span> <span class="pre">english_name='Lingonberry',</span> <span class="pre">index=-0.5)</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.LINGONBERRY" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenFieldLayer.LOW_HERB_WITHOUT_SHRUBS">
+<span class="sig-name descname"><span class="pre">LOW_HERB_WITHOUT_SHRUBS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Vegetation(code=4,</span> <span class="pre">swedish_name='Lågört</span> <span class="pre">utan</span> <span class="pre">ris',</span> <span class="pre">english_name='Low-herb</span> <span class="pre">without</span> <span class="pre">shrubs',</span> <span class="pre">index=3)</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.LOW_HERB_WITHOUT_SHRUBS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenFieldLayer.LOW_HERB_WITH_SHRUBS_BLUEBERRY">
+<span class="sig-name descname"><span class="pre">LOW_HERB_WITH_SHRUBS_BLUEBERRY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Vegetation(code=5,</span> <span class="pre">swedish_name='Lågört</span> <span class="pre">med</span> <span class="pre">ris/blåbär',</span> <span class="pre">english_name='Low-herb</span> <span class="pre">with</span> <span class="pre">shrubs/bilberry',</span> <span class="pre">index=2.5)</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.LOW_HERB_WITH_SHRUBS_BLUEBERRY" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenFieldLayer.LOW_HERB_WITH_SHRUBS_LINGON">
+<span class="sig-name descname"><span class="pre">LOW_HERB_WITH_SHRUBS_LINGON</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Vegetation(code=6,</span> <span class="pre">swedish_name='Lågört</span> <span class="pre">med</span> <span class="pre">ris/lingon',</span> <span class="pre">english_name='Low-herb</span> <span class="pre">with</span> <span class="pre">shrubs/lingonberry',</span> <span class="pre">index=2)</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.LOW_HERB_WITH_SHRUBS_LINGON" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenFieldLayer.NO_FIELD_LAYER">
+<span class="sig-name descname"><span class="pre">NO_FIELD_LAYER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Vegetation(code=7,</span> <span class="pre">swedish_name='Utan</span> <span class="pre">fältskikt',</span> <span class="pre">english_name='No</span> <span class="pre">field</span> <span class="pre">layer',</span> <span class="pre">index=3)</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.NO_FIELD_LAYER" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenFieldLayer.POOR_SHRUB">
+<span class="sig-name descname"><span class="pre">POOR_SHRUB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Vegetation(code=16,</span> <span class="pre">swedish_name='Fattigris',</span> <span class="pre">english_name='Poor</span> <span class="pre">shrub',</span> <span class="pre">index=-5)</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.POOR_SHRUB" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenFieldLayer.SEDGE_HIGH">
+<span class="sig-name descname"><span class="pre">SEDGE_HIGH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Vegetation(code=10,</span> <span class="pre">swedish_name='Carex</span> <span class="pre">ssp.,Hög</span> <span class="pre">starr',</span> <span class="pre">english_name='Sedge,</span> <span class="pre">high',</span> <span class="pre">index=-3)</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.SEDGE_HIGH" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenFieldLayer.SEDGE_LOW">
+<span class="sig-name descname"><span class="pre">SEDGE_LOW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Vegetation(code=11,</span> <span class="pre">swedish_name='Carex</span> <span class="pre">ssp.,Låg</span> <span class="pre">starr',</span> <span class="pre">english_name='Sedge,</span> <span class="pre">low',</span> <span class="pre">index=-3)</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.SEDGE_LOW" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenFieldLayer.THINLEAVED_GRASS">
+<span class="sig-name descname"><span class="pre">THINLEAVED_GRASS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Vegetation(code=9,</span> <span class="pre">swedish_name='Smalbl.</span> <span class="pre">gräs',</span> <span class="pre">english_name='Thinleaved</span> <span class="pre">grass',</span> <span class="pre">index=1.5)</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.THINLEAVED_GRASS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilDepth">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.site.sweden.enums.</span></span><span class="sig-name descname"><span class="pre">SwedenSoilDepth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names=&lt;not</span> <span class="pre">given&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyforestry/site/sweden/enums.html#SwedenSoilDepth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilDepth" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilDepth.DEEP">
+<span class="sig-name descname"><span class="pre">DEEP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SoilDepthCat(code=1,</span> <span class="pre">swedish_description='Mäktigt</span> <span class="pre">&gt;70</span> <span class="pre">cm.</span> <span class="pre">Inga</span> <span class="pre">synliga</span> <span class="pre">hällar',</span> <span class="pre">english_description='Deep</span> <span class="pre">&gt;70cm.</span> <span class="pre">No</span> <span class="pre">visible</span> <span class="pre">stone</span> <span class="pre">outcrops.')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilDepth.DEEP" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilDepth.RATHER_SHALLOW">
+<span class="sig-name descname"><span class="pre">RATHER_SHALLOW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SoilDepthCat(code=2,</span> <span class="pre">swedish_description='Tämligen</span> <span class="pre">grunt</span> <span class="pre">jorddjupt</span> <span class="pre">20-70</span> <span class="pre">cm',</span> <span class="pre">english_description='Rather</span> <span class="pre">shallow</span> <span class="pre">soil</span> <span class="pre">depth,</span> <span class="pre">20-70</span> <span class="pre">cm')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilDepth.RATHER_SHALLOW" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilDepth.SHALLOW">
+<span class="sig-name descname"><span class="pre">SHALLOW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SoilDepthCat(code=3,</span> <span class="pre">swedish_description='Grunt</span> <span class="pre">jorddjup</span> <span class="pre">&lt;</span> <span class="pre">20</span> <span class="pre">cm.</span> <span class="pre">Rikligt</span> <span class="pre">med</span> <span class="pre">hällar.',</span> <span class="pre">english_description='Rather</span> <span class="pre">shallow</span> <span class="pre">soil</span> <span class="pre">depth</span> <span class="pre">&lt;</span> <span class="pre">20</span> <span class="pre">cm.</span> <span class="pre">Plenty</span> <span class="pre">of</span> <span class="pre">stony</span> <span class="pre">outcrops.')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilDepth.SHALLOW" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilDepth.VARYING">
+<span class="sig-name descname"><span class="pre">VARYING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SoilDepthCat(code=4,</span> <span class="pre">swedish_description='Mycket</span> <span class="pre">varierande</span> <span class="pre">jorddjup.</span> <span class="pre">Brottytor</span> <span class="pre">i</span> <span class="pre">berggrunden</span> <span class="pre">delvis</span> <span class="pre">synliga.',</span> <span class="pre">english_description='Widely</span> <span class="pre">varying</span> <span class="pre">soil</span> <span class="pre">depth.</span> <span class="pre">Breaks</span> <span class="pre">in</span> <span class="pre">bedrock</span> <span class="pre">partly</span> <span class="pre">visible.')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilDepth.VARYING" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilMoisture">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.site.sweden.enums.</span></span><span class="sig-name descname"><span class="pre">SwedenSoilMoisture</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names=&lt;not</span> <span class="pre">given&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyforestry/site/sweden/enums.html#SwedenSoilMoisture"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilMoisture" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilMoisture.DRY">
+<span class="sig-name descname"><span class="pre">DRY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SoilMoistureData(code=1,</span> <span class="pre">swedish_description='torr',</span> <span class="pre">english_description='Dry</span> <span class="pre">(subsoil</span> <span class="pre">water</span> <span class="pre">depth</span> <span class="pre">&gt;2</span> <span class="pre">m)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilMoisture.DRY" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilMoisture.MESIC">
+<span class="sig-name descname"><span class="pre">MESIC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SoilMoistureData(code=2,</span> <span class="pre">swedish_description='frisk',</span> <span class="pre">english_description='Mesic</span> <span class="pre">(subsoil</span> <span class="pre">water</span> <span class="pre">depth</span> <span class="pre">=</span> <span class="pre">1-2</span> <span class="pre">m)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilMoisture.MESIC" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilMoisture.MESIC_MOIST">
+<span class="sig-name descname"><span class="pre">MESIC_MOIST</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SoilMoistureData(code=3,</span> <span class="pre">swedish_description='frisk-fuktig',</span> <span class="pre">english_description='Mesic-moist</span> <span class="pre">(subsoil</span> <span class="pre">water</span> <span class="pre">depth</span> <span class="pre">&lt;1</span> <span class="pre">m)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilMoisture.MESIC_MOIST" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilMoisture.MOIST">
+<span class="sig-name descname"><span class="pre">MOIST</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SoilMoistureData(code=4,</span> <span class="pre">swedish_description='fuktig',</span> <span class="pre">english_description='Moist</span> <span class="pre">(subsoil</span> <span class="pre">water</span> <span class="pre">depth</span> <span class="pre">&lt;1</span> <span class="pre">m,</span> <span class="pre">and</span> <span class="pre">pools</span> <span class="pre">visible</span> <span class="pre">in</span> <span class="pre">hollows)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilMoisture.MOIST" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilMoisture.WET">
+<span class="sig-name descname"><span class="pre">WET</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SoilMoistureData(code=5,</span> <span class="pre">swedish_description='blöt',</span> <span class="pre">english_description='Wet</span> <span class="pre">(subsoil</span> <span class="pre">water</span> <span class="pre">pools</span> <span class="pre">visible)')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilMoisture.WET" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilTextureSediment">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.site.sweden.enums.</span></span><span class="sig-name descname"><span class="pre">SwedenSoilTextureSediment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names=&lt;not</span> <span class="pre">given&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyforestry/site/sweden/enums.html#SwedenSoilTextureSediment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilTextureSediment" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilTextureSediment.BOULDER">
+<span class="sig-name descname"><span class="pre">BOULDER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SoilTextureCategory(code=1,</span> <span class="pre">swedish_name='Sten/block',</span> <span class="pre">english_name='Boulders/stones',</span> <span class="pre">short_name='Boulder')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilTextureSediment.BOULDER" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilTextureSediment.CLAY">
+<span class="sig-name descname"><span class="pre">CLAY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SoilTextureCategory(code=8,</span> <span class="pre">swedish_name='Lera',</span> <span class="pre">english_name='Clay',</span> <span class="pre">short_name='Clay')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilTextureSediment.CLAY" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilTextureSediment.COARSE_SAND">
+<span class="sig-name descname"><span class="pre">COARSE_SAND</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SoilTextureCategory(code=3,</span> <span class="pre">swedish_name='Grovsand',</span> <span class="pre">english_name='Coarse</span> <span class="pre">sand',</span> <span class="pre">short_name='Coarse</span> <span class="pre">sand')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilTextureSediment.COARSE_SAND" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilTextureSediment.COARSE_SILT">
+<span class="sig-name descname"><span class="pre">COARSE_SILT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SoilTextureCategory(code=6,</span> <span class="pre">swedish_name='Finmo',</span> <span class="pre">english_name='Coarse</span> <span class="pre">silt',</span> <span class="pre">short_name='Coarse</span> <span class="pre">silt')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilTextureSediment.COARSE_SILT" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilTextureSediment.FINE_SAND">
+<span class="sig-name descname"><span class="pre">FINE_SAND</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SoilTextureCategory(code=5,</span> <span class="pre">swedish_name='Grovmo',</span> <span class="pre">english_name='Fine</span> <span class="pre">sand',</span> <span class="pre">short_name='Fine</span> <span class="pre">sand')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilTextureSediment.FINE_SAND" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilTextureSediment.FINE_SILT">
+<span class="sig-name descname"><span class="pre">FINE_SILT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SoilTextureCategory(code=7,</span> <span class="pre">swedish_name='Mjäla',</span> <span class="pre">english_name='Fine</span> <span class="pre">silt',</span> <span class="pre">short_name='Fine</span> <span class="pre">silt')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilTextureSediment.FINE_SILT" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilTextureSediment.GRAVEL">
+<span class="sig-name descname"><span class="pre">GRAVEL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SoilTextureCategory(code=2,</span> <span class="pre">swedish_name='Grus',</span> <span class="pre">english_name='Gravel',</span> <span class="pre">short_name='Gravel')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilTextureSediment.GRAVEL" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilTextureSediment.MEDIUM_SAND">
+<span class="sig-name descname"><span class="pre">MEDIUM_SAND</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SoilTextureCategory(code=4,</span> <span class="pre">swedish_name='Mellansand',</span> <span class="pre">english_name='Medium</span> <span class="pre">sand',</span> <span class="pre">short_name='Medium</span> <span class="pre">sand')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilTextureSediment.MEDIUM_SAND" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilTextureSediment.PEAT">
+<span class="sig-name descname"><span class="pre">PEAT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SoilTextureCategory(code=9,</span> <span class="pre">swedish_name='Torv',</span> <span class="pre">english_name='Peat',</span> <span class="pre">short_name='Peat')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilTextureSediment.PEAT" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilTextureTill">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.site.sweden.enums.</span></span><span class="sig-name descname"><span class="pre">SwedenSoilTextureTill</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names=&lt;not</span> <span class="pre">given&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyforestry/site/sweden/enums.html#SwedenSoilTextureTill"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilTextureTill" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilTextureTill.BOULDER">
+<span class="sig-name descname"><span class="pre">BOULDER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SoilTextureCategory(code=1,</span> <span class="pre">swedish_name='Stenig/blockig</span> <span class="pre">morän',</span> <span class="pre">english_name='Boulder</span> <span class="pre">rich/stony</span> <span class="pre">till',</span> <span class="pre">short_name='Boulder')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilTextureTill.BOULDER" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilTextureTill.CLAY">
+<span class="sig-name descname"><span class="pre">CLAY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SoilTextureCategory(code=8,</span> <span class="pre">swedish_name='Lerig</span> <span class="pre">morän',</span> <span class="pre">english_name='Clayey</span> <span class="pre">till',</span> <span class="pre">short_name='Clay')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilTextureTill.CLAY" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilTextureTill.COARSE_SILTY">
+<span class="sig-name descname"><span class="pre">COARSE_SILTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SoilTextureCategory(code=6,</span> <span class="pre">swedish_name='Moig</span> <span class="pre">morän',</span> <span class="pre">english_name='Coarse</span> <span class="pre">silty</span> <span class="pre">till',</span> <span class="pre">short_name='Coarse</span> <span class="pre">silt')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilTextureTill.COARSE_SILTY" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilTextureTill.FINE_SILTY">
+<span class="sig-name descname"><span class="pre">FINE_SILTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SoilTextureCategory(code=7,</span> <span class="pre">swedish_name='Mjälig</span> <span class="pre">morän',</span> <span class="pre">english_name='Fine</span> <span class="pre">silty</span> <span class="pre">till',</span> <span class="pre">short_name='Fine</span> <span class="pre">silt')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilTextureTill.FINE_SILTY" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilTextureTill.GRAVEL">
+<span class="sig-name descname"><span class="pre">GRAVEL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SoilTextureCategory(code=2,</span> <span class="pre">swedish_name='Grusig</span> <span class="pre">morän',</span> <span class="pre">english_name='Gravelly</span> <span class="pre">till',</span> <span class="pre">short_name='Gravel')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilTextureTill.GRAVEL" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilTextureTill.PEAT">
+<span class="sig-name descname"><span class="pre">PEAT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SoilTextureCategory(code=9,</span> <span class="pre">swedish_name='Torv',</span> <span class="pre">english_name='Peat',</span> <span class="pre">short_name='Peat')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilTextureTill.PEAT" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilTextureTill.SANDY">
+<span class="sig-name descname"><span class="pre">SANDY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SoilTextureCategory(code=3,</span> <span class="pre">swedish_name='Sandig</span> <span class="pre">morän',</span> <span class="pre">english_name='Sandy</span> <span class="pre">till',</span> <span class="pre">short_name='Coarse</span> <span class="pre">sand')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilTextureTill.SANDY" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilTextureTill.SANDY_MOIG">
+<span class="sig-name descname"><span class="pre">SANDY_MOIG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SoilTextureCategory(code=4,</span> <span class="pre">swedish_name='Sandig-moig</span> <span class="pre">morän',</span> <span class="pre">english_name='Sandy-silty</span> <span class="pre">till',</span> <span class="pre">short_name='Medium</span> <span class="pre">sand')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilTextureTill.SANDY_MOIG" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilTextureTill.SILTY_SAND">
+<span class="sig-name descname"><span class="pre">SILTY_SAND</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SoilTextureCategory(code=5,</span> <span class="pre">swedish_name='Sandig-moig</span> <span class="pre">morän',</span> <span class="pre">english_name='Silty-sandy</span> <span class="pre">till',</span> <span class="pre">short_name='Fine</span> <span class="pre">sand')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilTextureTill.SILTY_SAND" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilWater">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.site.sweden.enums.</span></span><span class="sig-name descname"><span class="pre">SwedenSoilWater</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names=&lt;not</span> <span class="pre">given&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyforestry/site/sweden/enums.html#SwedenSoilWater"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilWater" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilWater.LONGER_PERIODS">
+<span class="sig-name descname"><span class="pre">LONGER_PERIODS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SoilWaterCat(code=3,</span> <span class="pre">swedish_description='längre</span> <span class="pre">perioder',</span> <span class="pre">english_description='Longer</span> <span class="pre">periods')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilWater.LONGER_PERIODS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilWater.SELDOM_NEVER">
+<span class="sig-name descname"><span class="pre">SELDOM_NEVER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SoilWaterCat(code=1,</span> <span class="pre">swedish_description='saknas',</span> <span class="pre">english_description='Seldom/never')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilWater.SELDOM_NEVER" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.enums.SwedenSoilWater.SHORTER_PERIODS">
+<span class="sig-name descname"><span class="pre">SHORTER_PERIODS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SoilWaterCat(code=2,</span> <span class="pre">swedish_description='kortare</span> <span class="pre">perioder',</span> <span class="pre">english_description='Shorter</span> <span class="pre">periods')</span></em><a class="headerlink" href="#pyforestry.site.sweden.enums.SwedenSoilWater.SHORTER_PERIODS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-pyforestry.site.sweden.sweden_site_primitives">
+<span id="pyforestry-site-sweden-sweden-site-primitives-module"></span><h2>pyforestry.site.sweden.sweden_site_primitives module<a class="headerlink" href="#module-pyforestry.site.sweden.sweden_site_primitives" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.BottomLayerType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.site.sweden.sweden_site_primitives.</span></span><span class="sig-name descname"><span class="pre">BottomLayerType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">english_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swedish_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyforestry/site/sweden/sweden_site_primitives.html#BottomLayerType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.BottomLayerType" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.BottomLayerType.code">
+<span class="sig-name descname"><span class="pre">code</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.BottomLayerType.code" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.BottomLayerType.english_name">
+<span class="sig-name descname"><span class="pre">english_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.BottomLayerType.english_name" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.BottomLayerType.swedish_name">
+<span class="sig-name descname"><span class="pre">swedish_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.BottomLayerType.swedish_name" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.ClimateZoneData">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.site.sweden.sweden_site_primitives.</span></span><span class="sig-name descname"><span class="pre">ClimateZoneData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyforestry/site/sweden/sweden_site_primitives.html#ClimateZoneData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.ClimateZoneData" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.ClimateZoneData.code">
+<span class="sig-name descname"><span class="pre">code</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.ClimateZoneData.code" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.ClimateZoneData.description">
+<span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.ClimateZoneData.description" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.ClimateZoneData.label">
+<span class="sig-name descname"><span class="pre">label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.ClimateZoneData.label" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.CountyData">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.site.sweden.sweden_site_primitives.</span></span><span class="sig-name descname"><span class="pre">CountyData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyforestry/site/sweden/sweden_site_primitives.html#CountyData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.CountyData" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.CountyData.code">
+<span class="sig-name descname"><span class="pre">code</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.CountyData.code" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.CountyData.label">
+<span class="sig-name descname"><span class="pre">label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.CountyData.label" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.SoilDepthCat">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.site.sweden.sweden_site_primitives.</span></span><span class="sig-name descname"><span class="pre">SoilDepthCat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swedish_description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">english_description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyforestry/site/sweden/sweden_site_primitives.html#SoilDepthCat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.SoilDepthCat" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.SoilDepthCat.code">
+<span class="sig-name descname"><span class="pre">code</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.SoilDepthCat.code" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.SoilDepthCat.english_description">
+<span class="sig-name descname"><span class="pre">english_description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.SoilDepthCat.english_description" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.SoilDepthCat.swedish_description">
+<span class="sig-name descname"><span class="pre">swedish_description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.SoilDepthCat.swedish_description" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.SoilMoistureData">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.site.sweden.sweden_site_primitives.</span></span><span class="sig-name descname"><span class="pre">SoilMoistureData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swedish_description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">english_description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyforestry/site/sweden/sweden_site_primitives.html#SoilMoistureData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.SoilMoistureData" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.SoilMoistureData.code">
+<span class="sig-name descname"><span class="pre">code</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.SoilMoistureData.code" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.SoilMoistureData.english_description">
+<span class="sig-name descname"><span class="pre">english_description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.SoilMoistureData.english_description" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.SoilMoistureData.swedish_description">
+<span class="sig-name descname"><span class="pre">swedish_description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.SoilMoistureData.swedish_description" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.SoilTextureCategory">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.site.sweden.sweden_site_primitives.</span></span><span class="sig-name descname"><span class="pre">SoilTextureCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swedish_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">english_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">short_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyforestry/site/sweden/sweden_site_primitives.html#SoilTextureCategory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.SoilTextureCategory" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.SoilTextureCategory.code">
+<span class="sig-name descname"><span class="pre">code</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.SoilTextureCategory.code" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.SoilTextureCategory.english_name">
+<span class="sig-name descname"><span class="pre">english_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.SoilTextureCategory.english_name" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.SoilTextureCategory.short_name">
+<span class="sig-name descname"><span class="pre">short_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.SoilTextureCategory.short_name" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.SoilTextureCategory.swedish_name">
+<span class="sig-name descname"><span class="pre">swedish_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.SoilTextureCategory.swedish_name" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.SoilWaterCat">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.site.sweden.sweden_site_primitives.</span></span><span class="sig-name descname"><span class="pre">SoilWaterCat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swedish_description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">english_description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyforestry/site/sweden/sweden_site_primitives.html#SoilWaterCat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.SoilWaterCat" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.SoilWaterCat.code">
+<span class="sig-name descname"><span class="pre">code</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.SoilWaterCat.code" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.SoilWaterCat.english_description">
+<span class="sig-name descname"><span class="pre">english_description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.SoilWaterCat.english_description" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.SoilWaterCat.swedish_description">
+<span class="sig-name descname"><span class="pre">swedish_description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.SoilWaterCat.swedish_description" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.Vegetation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.site.sweden.sweden_site_primitives.</span></span><span class="sig-name descname"><span class="pre">Vegetation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swedish_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">english_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyforestry/site/sweden/sweden_site_primitives.html#Vegetation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.Vegetation" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.Vegetation.code">
+<span class="sig-name descname"><span class="pre">code</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.Vegetation.code" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.Vegetation.english_name">
+<span class="sig-name descname"><span class="pre">english_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.Vegetation.english_name" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.Vegetation.index">
+<span class="sig-name descname"><span class="pre">index</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.Vegetation.index" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.sweden_site_primitives.Vegetation.swedish_name">
+<span class="sig-name descname"><span class="pre">swedish_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pyforestry.site.sweden.sweden_site_primitives.Vegetation.swedish_name" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-pyforestry.site.sweden.swedish_site">
+<span id="pyforestry-site-sweden-swedish-site-module"></span><h2>pyforestry.site.sweden.swedish_site module<a class="headerlink" href="#module-pyforestry.site.sweden.swedish_site" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.swedish_site.SwedishSite">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.site.sweden.swedish_site.</span></span><span class="sig-name descname"><span class="pre">SwedishSite</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">latitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_layer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenFieldLayer" title="pyforestry.site.sweden.enums.SwedenFieldLayer"><span class="pre">SwedenFieldLayer</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottom_layer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenBottomLayer" title="pyforestry.site.sweden.enums.SwedenBottomLayer"><span class="pre">SwedenBottomLayer</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">soil_texture</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilTextureTill" title="pyforestry.site.sweden.enums.SwedenSoilTextureTill"><span class="pre">SwedenSoilTextureTill</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilTextureSediment" title="pyforestry.site.sweden.enums.SwedenSoilTextureSediment"><span class="pre">SwedenSoilTextureSediment</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">soil_moisture</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilMoisture" title="pyforestry.site.sweden.enums.SwedenSoilMoisture"><span class="pre">SwedenSoilMoisture</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">soil_depth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilDepth" title="pyforestry.site.sweden.enums.SwedenSoilDepth"><span class="pre">SwedenSoilDepth</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">soil_water</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilWater" title="pyforestry.site.sweden.enums.SwedenSoilWater"><span class="pre">SwedenSoilWater</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aspect</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incline_percent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ditched</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyforestry/site/sweden/swedish_site.html#SwedishSite"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.site.sweden.swedish_site.SwedishSite" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyforestry.helpers.primitives.html#pyforestry.helpers.primitives.sitebase.SiteBase" title="pyforestry.helpers.primitives.sitebase.SiteBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">SiteBase</span></code></a></p>
+<p>A robust SwedishSite class that carries at least latitude and longitude.
+Other attributes (altitude, field layer, etc.) are optional.
+If not provided (or if computation fails), the computed attributes will be left as None.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.swedish_site.SwedishSite.altitude">
+<span class="sig-name descname"><span class="pre">altitude</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyforestry.site.sweden.swedish_site.SwedishSite.altitude" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.swedish_site.SwedishSite.aspect">
+<span class="sig-name descname"><span class="pre">aspect</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyforestry.site.sweden.swedish_site.SwedishSite.aspect" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.swedish_site.SwedishSite.bottom_layer">
+<span class="sig-name descname"><span class="pre">bottom_layer</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenBottomLayer" title="pyforestry.site.sweden.enums.SwedenBottomLayer"><span class="pre">SwedenBottomLayer</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyforestry.site.sweden.swedish_site.SwedishSite.bottom_layer" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.swedish_site.SwedishSite.climate_zone">
+<span class="sig-name descname"><span class="pre">climate_zone</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenClimateZone" title="pyforestry.site.sweden.enums.SwedenClimateZone"><span class="pre">SwedenClimateZone</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyforestry.site.sweden.swedish_site.SwedishSite.climate_zone" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.swedish_site.SwedishSite.county">
+<span class="sig-name descname"><span class="pre">county</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty" title="pyforestry.site.sweden.enums.SwedenCounty"><span class="pre">SwedenCounty</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyforestry.site.sweden.swedish_site.SwedishSite.county" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.swedish_site.SwedishSite.distance_to_coast">
+<span class="sig-name descname"><span class="pre">distance_to_coast</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyforestry.site.sweden.swedish_site.SwedishSite.distance_to_coast" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.swedish_site.SwedishSite.ditched">
+<span class="sig-name descname"><span class="pre">ditched</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyforestry.site.sweden.swedish_site.SwedishSite.ditched" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.swedish_site.SwedishSite.field_layer">
+<span class="sig-name descname"><span class="pre">field_layer</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenFieldLayer" title="pyforestry.site.sweden.enums.SwedenFieldLayer"><span class="pre">SwedenFieldLayer</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyforestry.site.sweden.swedish_site.SwedishSite.field_layer" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.swedish_site.SwedishSite.humidity">
+<span class="sig-name descname"><span class="pre">humidity</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyforestry.site.sweden.swedish_site.SwedishSite.humidity" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.swedish_site.SwedishSite.incline_percent">
+<span class="sig-name descname"><span class="pre">incline_percent</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyforestry.site.sweden.swedish_site.SwedishSite.incline_percent" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.swedish_site.SwedishSite.latitude">
+<span class="sig-name descname"><span class="pre">latitude</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#pyforestry.site.sweden.swedish_site.SwedishSite.latitude" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.swedish_site.SwedishSite.longitude">
+<span class="sig-name descname"><span class="pre">longitude</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#pyforestry.site.sweden.swedish_site.SwedishSite.longitude" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.swedish_site.SwedishSite.n_of_limes_norrlandicus">
+<span class="sig-name descname"><span class="pre">n_of_limes_norrlandicus</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyforestry.site.sweden.swedish_site.SwedishSite.n_of_limes_norrlandicus" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.swedish_site.SwedishSite.sis_birch_50">
+<span class="sig-name descname"><span class="pre">sis_birch_50</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyforestry.site.sweden.swedish_site.SwedishSite.sis_birch_50" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.swedish_site.SwedishSite.sis_pine_100">
+<span class="sig-name descname"><span class="pre">sis_pine_100</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyforestry.site.sweden.swedish_site.SwedishSite.sis_pine_100" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.swedish_site.SwedishSite.sis_spruce_100">
+<span class="sig-name descname"><span class="pre">sis_spruce_100</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyforestry.site.sweden.swedish_site.SwedishSite.sis_spruce_100" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.swedish_site.SwedishSite.soil_depth">
+<span class="sig-name descname"><span class="pre">soil_depth</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilDepth" title="pyforestry.site.sweden.enums.SwedenSoilDepth"><span class="pre">SwedenSoilDepth</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyforestry.site.sweden.swedish_site.SwedishSite.soil_depth" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.swedish_site.SwedishSite.soil_moisture">
+<span class="sig-name descname"><span class="pre">soil_moisture</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilMoisture" title="pyforestry.site.sweden.enums.SwedenSoilMoisture"><span class="pre">SwedenSoilMoisture</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyforestry.site.sweden.swedish_site.SwedishSite.soil_moisture" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.swedish_site.SwedishSite.soil_texture">
+<span class="sig-name descname"><span class="pre">soil_texture</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilTextureTill" title="pyforestry.site.sweden.enums.SwedenSoilTextureTill"><span class="pre">SwedenSoilTextureTill</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilTextureSediment" title="pyforestry.site.sweden.enums.SwedenSoilTextureSediment"><span class="pre">SwedenSoilTextureSediment</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyforestry.site.sweden.swedish_site.SwedishSite.soil_texture" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.swedish_site.SwedishSite.soil_water">
+<span class="sig-name descname"><span class="pre">soil_water</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilWater" title="pyforestry.site.sweden.enums.SwedenSoilWater"><span class="pre">SwedenSoilWater</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyforestry.site.sweden.swedish_site.SwedishSite.soil_water" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.site.sweden.swedish_site.SwedishSite.temperature_sum_odin1983">
+<span class="sig-name descname"><span class="pre">temperature_sum_odin1983</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyforestry.site.sweden.swedish_site.SwedishSite.temperature_sum_odin1983" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-pyforestry.site.sweden">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pyforestry.site.sweden" title="Link to this heading">¶</a></h2>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">pyforestry.site.sweden package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-pyforestry.site.sweden.enums">pyforestry.site.sweden.enums module</a><ul>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.Sweden"><code class="docutils literal notranslate"><span class="pre">Sweden</span></code></a><ul>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.Sweden.BottomLayer"><code class="docutils literal notranslate"><span class="pre">Sweden.BottomLayer</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.Sweden.ClimateZone"><code class="docutils literal notranslate"><span class="pre">Sweden.ClimateZone</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.Sweden.County"><code class="docutils literal notranslate"><span class="pre">Sweden.County</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.Sweden.FieldLayer"><code class="docutils literal notranslate"><span class="pre">Sweden.FieldLayer</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.Sweden.SoilDepth"><code class="docutils literal notranslate"><span class="pre">Sweden.SoilDepth</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.Sweden.SoilMoistureEnum"><code class="docutils literal notranslate"><span class="pre">Sweden.SoilMoistureEnum</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.Sweden.SoilTextureSediment"><code class="docutils literal notranslate"><span class="pre">Sweden.SoilTextureSediment</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.Sweden.SoilTextureTill"><code class="docutils literal notranslate"><span class="pre">Sweden.SoilTextureTill</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.Sweden.SoilWater"><code class="docutils literal notranslate"><span class="pre">Sweden.SoilWater</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenBottomLayer"><code class="docutils literal notranslate"><span class="pre">SwedenBottomLayer</span></code></a><ul>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenBottomLayer.BOGMOSS_TYPE"><code class="docutils literal notranslate"><span class="pre">SwedenBottomLayer.BOGMOSS_TYPE</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenBottomLayer.FRESH_MOSS"><code class="docutils literal notranslate"><span class="pre">SwedenBottomLayer.FRESH_MOSS</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenBottomLayer.LICHEN_RICH"><code class="docutils literal notranslate"><span class="pre">SwedenBottomLayer.LICHEN_RICH</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenBottomLayer.LICHEN_RICH_BOGMOSS"><code class="docutils literal notranslate"><span class="pre">SwedenBottomLayer.LICHEN_RICH_BOGMOSS</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenBottomLayer.LICHEN_TYPE"><code class="docutils literal notranslate"><span class="pre">SwedenBottomLayer.LICHEN_TYPE</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenBottomLayer.SWAMP_MOSS"><code class="docutils literal notranslate"><span class="pre">SwedenBottomLayer.SWAMP_MOSS</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenClimateZone"><code class="docutils literal notranslate"><span class="pre">SwedenClimateZone</span></code></a><ul>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenClimateZone.K1"><code class="docutils literal notranslate"><span class="pre">SwedenClimateZone.K1</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenClimateZone.K2"><code class="docutils literal notranslate"><span class="pre">SwedenClimateZone.K2</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenClimateZone.K3"><code class="docutils literal notranslate"><span class="pre">SwedenClimateZone.K3</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenClimateZone.M1"><code class="docutils literal notranslate"><span class="pre">SwedenClimateZone.M1</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenClimateZone.M2"><code class="docutils literal notranslate"><span class="pre">SwedenClimateZone.M2</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenClimateZone.M3"><code class="docutils literal notranslate"><span class="pre">SwedenClimateZone.M3</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenClimateZone.from_code"><code class="docutils literal notranslate"><span class="pre">SwedenClimateZone.from_code()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty"><code class="docutils literal notranslate"><span class="pre">SwedenCounty</span></code></a><ul>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.ALVSBORG_DALSLANDS"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.ALVSBORG_DALSLANDS</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.ALVSBORG_VASTERGOTLANDS"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.ALVSBORG_VASTERGOTLANDS</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.BLEKINGE"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.BLEKINGE</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.GAVLEBORG_HALSINGLANDS"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.GAVLEBORG_HALSINGLANDS</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.GAVLEBORG_OVRIGA"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.GAVLEBORG_OVRIGA</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.GOTLAND"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.GOTLAND</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.HALLAND"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.HALLAND</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.JAMTLAND_HARJEDALENS"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.JAMTLAND_HARJEDALENS</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.JAMTLAND_JAMTLANDS"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.JAMTLAND_JAMTLANDS</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.JONKOPING"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.JONKOPING</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.KALMAR"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.KALMAR</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.KOPPARBERG_OVRIGA"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.KOPPARBERG_OVRIGA</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.KOPPARBERG_SALEN_IDRE"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.KOPPARBERG_SALEN_IDRE</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.KRISTIANSTAD"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.KRISTIANSTAD</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.KRONOBERG"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.KRONOBERG</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.MALMOHUS"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.MALMOHUS</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.NORRBOTTENS_KUSTLAND"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.NORRBOTTENS_KUSTLAND</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.NORRBOTTENS_LAPPMARK"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.NORRBOTTENS_LAPPMARK</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.OREBRO"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.OREBRO</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.OSTERGOTLAND"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.OSTERGOTLAND</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.SKARABORG"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.SKARABORG</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.SODERMANLAND"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.SODERMANLAND</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.STOCKHOLM"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.STOCKHOLM</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.UPPSALA"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.UPPSALA</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.VARMLAND"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.VARMLAND</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.VASTERBOTTENS_KUSTLAND"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.VASTERBOTTENS_KUSTLAND</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.VASTERBOTTENS_LAPPMARK"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.VASTERBOTTENS_LAPPMARK</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.VASTERNORRLAND_ANGERMANLANDS"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.VASTERNORRLAND_ANGERMANLANDS</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.VASTERNORRLAND_MEDELPADS"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.VASTERNORRLAND_MEDELPADS</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.VASTMANLAND"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.VASTMANLAND</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.VASTRA_GOTALANDS"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.VASTRA_GOTALANDS</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenCounty.from_code"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.from_code()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenFieldLayer"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer</span></code></a><ul>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.BILBERRY"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.BILBERRY</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.BROADLEAVED_GRASS"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.BROADLEAVED_GRASS</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.CROWBERRY"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.CROWBERRY</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.HIGH_HERB_WITHOUT_SHRUBS"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.HIGH_HERB_WITHOUT_SHRUBS</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.HIGH_HERB_WITH_SHRUBS_BLUEBERRY"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.HIGH_HERB_WITH_SHRUBS_BLUEBERRY</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.HIGH_HERB_WITH_SHRUBS_LINGON"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.HIGH_HERB_WITH_SHRUBS_LINGON</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.HORSETAIL"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.HORSETAIL</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.LICHEN_DOMINANT"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.LICHEN_DOMINANT</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.LICHEN_FREQUENT"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.LICHEN_FREQUENT</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.LINGONBERRY"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.LINGONBERRY</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.LOW_HERB_WITHOUT_SHRUBS"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.LOW_HERB_WITHOUT_SHRUBS</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.LOW_HERB_WITH_SHRUBS_BLUEBERRY"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.LOW_HERB_WITH_SHRUBS_BLUEBERRY</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.LOW_HERB_WITH_SHRUBS_LINGON"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.LOW_HERB_WITH_SHRUBS_LINGON</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.NO_FIELD_LAYER"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.NO_FIELD_LAYER</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.POOR_SHRUB"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.POOR_SHRUB</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.SEDGE_HIGH"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.SEDGE_HIGH</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.SEDGE_LOW"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.SEDGE_LOW</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenFieldLayer.THINLEAVED_GRASS"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.THINLEAVED_GRASS</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilDepth"><code class="docutils literal notranslate"><span class="pre">SwedenSoilDepth</span></code></a><ul>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilDepth.DEEP"><code class="docutils literal notranslate"><span class="pre">SwedenSoilDepth.DEEP</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilDepth.RATHER_SHALLOW"><code class="docutils literal notranslate"><span class="pre">SwedenSoilDepth.RATHER_SHALLOW</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilDepth.SHALLOW"><code class="docutils literal notranslate"><span class="pre">SwedenSoilDepth.SHALLOW</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilDepth.VARYING"><code class="docutils literal notranslate"><span class="pre">SwedenSoilDepth.VARYING</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilMoisture"><code class="docutils literal notranslate"><span class="pre">SwedenSoilMoisture</span></code></a><ul>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilMoisture.DRY"><code class="docutils literal notranslate"><span class="pre">SwedenSoilMoisture.DRY</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilMoisture.MESIC"><code class="docutils literal notranslate"><span class="pre">SwedenSoilMoisture.MESIC</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilMoisture.MESIC_MOIST"><code class="docutils literal notranslate"><span class="pre">SwedenSoilMoisture.MESIC_MOIST</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilMoisture.MOIST"><code class="docutils literal notranslate"><span class="pre">SwedenSoilMoisture.MOIST</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilMoisture.WET"><code class="docutils literal notranslate"><span class="pre">SwedenSoilMoisture.WET</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilTextureSediment"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureSediment</span></code></a><ul>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilTextureSediment.BOULDER"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureSediment.BOULDER</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilTextureSediment.CLAY"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureSediment.CLAY</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilTextureSediment.COARSE_SAND"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureSediment.COARSE_SAND</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilTextureSediment.COARSE_SILT"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureSediment.COARSE_SILT</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilTextureSediment.FINE_SAND"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureSediment.FINE_SAND</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilTextureSediment.FINE_SILT"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureSediment.FINE_SILT</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilTextureSediment.GRAVEL"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureSediment.GRAVEL</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilTextureSediment.MEDIUM_SAND"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureSediment.MEDIUM_SAND</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilTextureSediment.PEAT"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureSediment.PEAT</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilTextureTill"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureTill</span></code></a><ul>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilTextureTill.BOULDER"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureTill.BOULDER</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilTextureTill.CLAY"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureTill.CLAY</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilTextureTill.COARSE_SILTY"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureTill.COARSE_SILTY</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilTextureTill.FINE_SILTY"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureTill.FINE_SILTY</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilTextureTill.GRAVEL"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureTill.GRAVEL</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilTextureTill.PEAT"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureTill.PEAT</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilTextureTill.SANDY"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureTill.SANDY</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilTextureTill.SANDY_MOIG"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureTill.SANDY_MOIG</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilTextureTill.SILTY_SAND"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureTill.SILTY_SAND</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilWater"><code class="docutils literal notranslate"><span class="pre">SwedenSoilWater</span></code></a><ul>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilWater.LONGER_PERIODS"><code class="docutils literal notranslate"><span class="pre">SwedenSoilWater.LONGER_PERIODS</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilWater.SELDOM_NEVER"><code class="docutils literal notranslate"><span class="pre">SwedenSoilWater.SELDOM_NEVER</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.enums.SwedenSoilWater.SHORTER_PERIODS"><code class="docutils literal notranslate"><span class="pre">SwedenSoilWater.SHORTER_PERIODS</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-pyforestry.site.sweden.sweden_site_primitives">pyforestry.site.sweden.sweden_site_primitives module</a><ul>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.BottomLayerType"><code class="docutils literal notranslate"><span class="pre">BottomLayerType</span></code></a><ul>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.BottomLayerType.code"><code class="docutils literal notranslate"><span class="pre">BottomLayerType.code</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.BottomLayerType.english_name"><code class="docutils literal notranslate"><span class="pre">BottomLayerType.english_name</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.BottomLayerType.swedish_name"><code class="docutils literal notranslate"><span class="pre">BottomLayerType.swedish_name</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.ClimateZoneData"><code class="docutils literal notranslate"><span class="pre">ClimateZoneData</span></code></a><ul>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.ClimateZoneData.code"><code class="docutils literal notranslate"><span class="pre">ClimateZoneData.code</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.ClimateZoneData.description"><code class="docutils literal notranslate"><span class="pre">ClimateZoneData.description</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.ClimateZoneData.label"><code class="docutils literal notranslate"><span class="pre">ClimateZoneData.label</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.CountyData"><code class="docutils literal notranslate"><span class="pre">CountyData</span></code></a><ul>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.CountyData.code"><code class="docutils literal notranslate"><span class="pre">CountyData.code</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.CountyData.label"><code class="docutils literal notranslate"><span class="pre">CountyData.label</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.SoilDepthCat"><code class="docutils literal notranslate"><span class="pre">SoilDepthCat</span></code></a><ul>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.SoilDepthCat.code"><code class="docutils literal notranslate"><span class="pre">SoilDepthCat.code</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.SoilDepthCat.english_description"><code class="docutils literal notranslate"><span class="pre">SoilDepthCat.english_description</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.SoilDepthCat.swedish_description"><code class="docutils literal notranslate"><span class="pre">SoilDepthCat.swedish_description</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.SoilMoistureData"><code class="docutils literal notranslate"><span class="pre">SoilMoistureData</span></code></a><ul>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.SoilMoistureData.code"><code class="docutils literal notranslate"><span class="pre">SoilMoistureData.code</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.SoilMoistureData.english_description"><code class="docutils literal notranslate"><span class="pre">SoilMoistureData.english_description</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.SoilMoistureData.swedish_description"><code class="docutils literal notranslate"><span class="pre">SoilMoistureData.swedish_description</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.SoilTextureCategory"><code class="docutils literal notranslate"><span class="pre">SoilTextureCategory</span></code></a><ul>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.SoilTextureCategory.code"><code class="docutils literal notranslate"><span class="pre">SoilTextureCategory.code</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.SoilTextureCategory.english_name"><code class="docutils literal notranslate"><span class="pre">SoilTextureCategory.english_name</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.SoilTextureCategory.short_name"><code class="docutils literal notranslate"><span class="pre">SoilTextureCategory.short_name</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.SoilTextureCategory.swedish_name"><code class="docutils literal notranslate"><span class="pre">SoilTextureCategory.swedish_name</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.SoilWaterCat"><code class="docutils literal notranslate"><span class="pre">SoilWaterCat</span></code></a><ul>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.SoilWaterCat.code"><code class="docutils literal notranslate"><span class="pre">SoilWaterCat.code</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.SoilWaterCat.english_description"><code class="docutils literal notranslate"><span class="pre">SoilWaterCat.english_description</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.SoilWaterCat.swedish_description"><code class="docutils literal notranslate"><span class="pre">SoilWaterCat.swedish_description</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.Vegetation"><code class="docutils literal notranslate"><span class="pre">Vegetation</span></code></a><ul>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.Vegetation.code"><code class="docutils literal notranslate"><span class="pre">Vegetation.code</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.Vegetation.english_name"><code class="docutils literal notranslate"><span class="pre">Vegetation.english_name</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.Vegetation.index"><code class="docutils literal notranslate"><span class="pre">Vegetation.index</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.sweden_site_primitives.Vegetation.swedish_name"><code class="docutils literal notranslate"><span class="pre">Vegetation.swedish_name</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-pyforestry.site.sweden.swedish_site">pyforestry.site.sweden.swedish_site module</a><ul>
+<li><a class="reference internal" href="#pyforestry.site.sweden.swedish_site.SwedishSite"><code class="docutils literal notranslate"><span class="pre">SwedishSite</span></code></a><ul>
+<li><a class="reference internal" href="#pyforestry.site.sweden.swedish_site.SwedishSite.altitude"><code class="docutils literal notranslate"><span class="pre">SwedishSite.altitude</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.swedish_site.SwedishSite.aspect"><code class="docutils literal notranslate"><span class="pre">SwedishSite.aspect</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.swedish_site.SwedishSite.bottom_layer"><code class="docutils literal notranslate"><span class="pre">SwedishSite.bottom_layer</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.swedish_site.SwedishSite.climate_zone"><code class="docutils literal notranslate"><span class="pre">SwedishSite.climate_zone</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.swedish_site.SwedishSite.county"><code class="docutils literal notranslate"><span class="pre">SwedishSite.county</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.swedish_site.SwedishSite.distance_to_coast"><code class="docutils literal notranslate"><span class="pre">SwedishSite.distance_to_coast</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.swedish_site.SwedishSite.ditched"><code class="docutils literal notranslate"><span class="pre">SwedishSite.ditched</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.swedish_site.SwedishSite.field_layer"><code class="docutils literal notranslate"><span class="pre">SwedishSite.field_layer</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.swedish_site.SwedishSite.humidity"><code class="docutils literal notranslate"><span class="pre">SwedishSite.humidity</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.swedish_site.SwedishSite.incline_percent"><code class="docutils literal notranslate"><span class="pre">SwedishSite.incline_percent</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.swedish_site.SwedishSite.latitude"><code class="docutils literal notranslate"><span class="pre">SwedishSite.latitude</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.swedish_site.SwedishSite.longitude"><code class="docutils literal notranslate"><span class="pre">SwedishSite.longitude</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.swedish_site.SwedishSite.n_of_limes_norrlandicus"><code class="docutils literal notranslate"><span class="pre">SwedishSite.n_of_limes_norrlandicus</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.swedish_site.SwedishSite.sis_birch_50"><code class="docutils literal notranslate"><span class="pre">SwedishSite.sis_birch_50</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.swedish_site.SwedishSite.sis_pine_100"><code class="docutils literal notranslate"><span class="pre">SwedishSite.sis_pine_100</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.swedish_site.SwedishSite.sis_spruce_100"><code class="docutils literal notranslate"><span class="pre">SwedishSite.sis_spruce_100</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.swedish_site.SwedishSite.soil_depth"><code class="docutils literal notranslate"><span class="pre">SwedishSite.soil_depth</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.swedish_site.SwedishSite.soil_moisture"><code class="docutils literal notranslate"><span class="pre">SwedishSite.soil_moisture</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.swedish_site.SwedishSite.soil_texture"><code class="docutils literal notranslate"><span class="pre">SwedishSite.soil_texture</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.swedish_site.SwedishSite.soil_water"><code class="docutils literal notranslate"><span class="pre">SwedishSite.soil_water</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.site.sweden.swedish_site.SwedishSite.temperature_sum_odin1983"><code class="docutils literal notranslate"><span class="pre">SwedishSite.temperature_sum_odin1983</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-pyforestry.site.sweden">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    </body>
+</html>
