@@ -1,5 +1,5 @@
 # Näsberg (1985) branch-and-bound algorithm.
-from pyforestry.taper.Taper import Taper
+from pyforestry.taper import Taper
 from pyforestry.timber import Timber
 from .bucker import Bucker
 from pyforestry.pricelist.pricelist import *
