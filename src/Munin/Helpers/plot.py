@@ -1,6 +1,6 @@
 from typing import Union, Optional, List, TYPE_CHECKING
 from math import sqrt, pi
-from Munin.helpers import Position, AngleCount, RepresentationTree, TreeName, parse_tree_species, SiteBase
+from munin.helpers import Position, AngleCount, RepresentationTree, TreeName, parse_tree_species, SiteBase
 
 # ------------------------------------------------------------------------------
 # Plot: a set of representation trees over a circular or known-area region

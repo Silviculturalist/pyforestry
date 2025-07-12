@@ -1,4 +1,4 @@
-# Suggested Munin/Helpers/__init__.py
+# Suggested munin/Helpers/__init__.py
 
 # From TreeSpecies.py
 from .tree_species import (

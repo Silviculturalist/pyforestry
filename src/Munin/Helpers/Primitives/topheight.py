@@ -1,5 +1,5 @@
 from typing import Union, List
-from Munin.helpers.tree_species import TreeName
+from munin.helpers.tree_species import TreeName
 
 class TopHeightDefinition:
     """

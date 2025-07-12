@@ -15,7 +15,7 @@ diameter increment (cm) or basal area increment (m²).
 
 Example
 -------
->>> from Munin.Site.sweden import SwedishSite, Sweden
+>>> from munin.Site.sweden import SwedishSite, Sweden
 >>> site = SwedishSite(latitude=60.0, longitude=15.0, altitude=120)
 >>> d_bh_initial_cm = 28.0   # Initial diameter in cm
 >>> ba_plot = 30.0  # m2 ha-1
@@ -70,11 +70,11 @@ from math import exp, log, sqrt, pi  # Only math is required - keep NumPy-free.
 from typing import Union, Optional, overload, Dict, Callable
 
 # -----------------------------------------------------------------------------
-# Munin helper imports - *only* those required for typing / enum coercion.
+# munin helper imports - *only* those required for typing / enum coercion.
 # -----------------------------------------------------------------------------
-from Munin.site.sweden.swedish_site import Sweden  # Field layer enum, etc.
-from Munin.helpers.tree_species import TreeName, parse_tree_species #Species
-from Munin.geo.temperature.odin_1983 import Odin_temperature_sum
+from munin.site.sweden.swedish_site import Sweden  # Field layer enum, etc.
+from munin.helpers.tree_species import TreeName, parse_tree_species #Species
+from munin.geo.temperature.odin_1983 import Odin_temperature_sum
 
 # Type alias for vegetation codes so we can accept either the enum *or* an int.
 VegetationInput = Union[int, Sweden.FieldLayer]

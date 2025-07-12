@@ -1,8 +1,8 @@
 import warnings
 import math
 from typing import Union
-from Munin.helpers.primitives import Age, AgeMeasurement, SiteIndexValue
-from Munin.helpers.tree_species import TreeSpecies
+from munin.helpers.primitives import Age, AgeMeasurement, SiteIndexValue
+from munin.helpers.tree_species import TreeSpecies
 
 # Type hints added to signature, return type changed to SiteIndexValue
 def eriksson_1997_height_trajectory_sweden_birch(

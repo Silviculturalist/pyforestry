@@ -1,8 +1,8 @@
 import warnings
 from math import exp
 from typing import Union
-from Munin.helpers.primitives import Age, AgeMeasurement, SiteIndexValue
-from Munin.helpers.tree_species import TreeSpecies
+from munin.helpers.primitives import Age, AgeMeasurement, SiteIndexValue
+from munin.helpers.tree_species import TreeSpecies
 
 def hagglund_remrod_1977_height_trajectories_lodgepole_pine(
         dominant_height_m : float,

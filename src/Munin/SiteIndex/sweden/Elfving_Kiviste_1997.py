@@ -1,8 +1,8 @@
 import warnings
 import math
 from typing import Union
-from Munin.helpers.primitives import Age, AgeMeasurement, SiteIndexValue
-from Munin.helpers.tree_species import TreeSpecies
+from munin.helpers.primitives import Age, AgeMeasurement, SiteIndexValue
+from munin.helpers.tree_species import TreeSpecies
 
 def elfving_kiviste_1997_height_trajectory_sweden_pine(dominant_height : float,
                                                        age : Union[float,AgeMeasurement], 

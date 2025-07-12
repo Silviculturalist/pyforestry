@@ -1,7 +1,7 @@
 # codefolder/MaximumAnnualIncrement.py (Modification)
-from Munin.helpers.primitives import SiteIndexValue
-from Munin.helpers.tree_species import TreeSpecies, TreeName
-from Munin.site.sweden.swedish_site import Sweden
+from munin.helpers.primitives import SiteIndexValue
+from munin.helpers.tree_species import TreeSpecies, TreeName
+from munin.site.sweden.swedish_site import Sweden
 
 def hagglund_1981_SI_to_productivity(
     h100_input: SiteIndexValue,

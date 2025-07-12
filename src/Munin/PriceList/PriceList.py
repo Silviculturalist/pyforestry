@@ -1,7 +1,7 @@
 from enum import IntEnum
 from dataclasses import dataclass
 from typing import List, Optional, Dict, Tuple, Union, Iterable, Sequence
-from Munin.helpers.tree_species import parse_tree_species, TreeName
+from munin.helpers.tree_species import parse_tree_species, TreeName
 
 @dataclass
 class DiameterRange:

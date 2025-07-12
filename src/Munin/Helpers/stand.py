@@ -10,8 +10,8 @@ from pyproj import CRS
 from shapely import Polygon
 from shapely.geometry.base import BaseGeometry
 import geopandas as gpd
-from Munin.helpers.plot import CircularPlot
-from Munin.helpers.primitives import (
+from munin.helpers.plot import CircularPlot
+from munin.helpers.primitives import (
     Stems,
     StandBasalArea,
     TopHeightMeasurement,
@@ -21,7 +21,7 @@ from Munin.helpers.primitives import (
     
 )
 
-from Munin.helpers import (
+from munin.helpers import (
     TreeName,
     CircularPlot,
     AngleCountAggregator,

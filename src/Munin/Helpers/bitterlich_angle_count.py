@@ -8,8 +8,8 @@ stem density metrics."""
 import math
 import statistics
 from typing import Optional, List, Tuple, Dict, Set, Union
-from Munin.helpers.tree_species import TreeName
-from Munin.helpers.primitives import StandBasalArea, Stems
+from munin.helpers.tree_species import TreeName
+from munin.helpers.primitives import StandBasalArea, Stems
 
 class AngleCount:
     """Parameters and tallies for angle-count sampling at a single point.

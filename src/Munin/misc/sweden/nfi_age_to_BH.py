@@ -3,7 +3,7 @@
 #Regression smoothed table from Swedish NFI for time-to-reach breast-height.
 #'''
 #
-#from Munin.helpers.tree_species import TreeName, parse_tree_species
+#from munin.helpers.tree_species import TreeName, parse_tree_species
 #
 #def SENFI_time_to_BH(latitude : float,
 #                     sis : float,

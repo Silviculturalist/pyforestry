@@ -1,5 +1,5 @@
-from Munin.helpers.primitives import SiteIndexValue, Age, AgeMeasurement
-from Munin.helpers import TreeSpecies
+from munin.helpers.primitives import SiteIndexValue, Age, AgeMeasurement
+from munin.helpers import TreeSpecies
 import math
 import warnings
 from numpy import exp, log
