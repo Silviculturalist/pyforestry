@@ -35,7 +35,7 @@ def test_taper_instance_creation(taper_instance, valid_timber):
     Tests that the taper instance is created correctly, holds the timber object,
     and is of the expected type.
     """
-    from Munin.Taper.Taper import Taper
+    from Munin.taper import Taper
     assert isinstance(taper_instance, Taper)
     assert taper_instance.timber is valid_timber
     assert math.isclose(taper_instance.timber.height_m, 30)
