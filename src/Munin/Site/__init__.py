@@ -1,1 +1,1 @@
-from .sweden import *
+from . import sweden

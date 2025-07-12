@@ -1,5 +1,5 @@
 from typing import Optional
-from Munin.timber.timber import Timber
+from .timber import Timber
 from Munin.volume.sweden import *
 # Import SwedishSite and its region-specific namespace.
 from Munin.site.sweden import Sweden, SwedishSite
