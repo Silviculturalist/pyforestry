@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name            = "pyforestry"
-version         = "0.3"
+version         = "0.35"
 description     = "Forest‑model toolkit"
 readme          = "README.md"
 requires-python = ">=3.10"
@@ -23,6 +23,18 @@ dependencies    = [
 ]
 
 [project.optional-dependencies]
+
+#optional country-specific dependencies
+sweden = []
+germany = []
+
+
+all = [
+  "pyforestry[sweden]",
+  "pyforestry[germany]"
+]
+
+#Dev dependencies for writing documentation and testing.
 dev = [
   "pytest",
   "pytest-cov",          # ← measure coverage
