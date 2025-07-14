@@ -7,6 +7,6 @@ pyforestry Documentation
    :maxdepth: 3
    :caption: Contents:
    
-   source/api/modules
+   api/modules
 
 ..
