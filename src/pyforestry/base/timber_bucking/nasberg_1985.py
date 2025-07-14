@@ -1,11 +1,11 @@
 # Näsberg (1985) branch-and-bound algorithm.
-from pyforestry.taper import Taper
-from pyforestry.timber import Timber
+from pyforestry.base.taper import Taper
+from pyforestry.base.timber import Timber
 from .bucker import Bucker
-from pyforestry.pricelist.pricelist import *
+from pyforestry.base.pricelist.pricelist import *
 from enum import IntEnum
 from dataclasses import dataclass, field
-from typing import List, Optional, Dict, Tuple, Type, Iterator, Any
+from typing import List, Optional, Type, Iterator, Any
 import math
 import matplotlib.pyplot as plt
 import numpy as np
