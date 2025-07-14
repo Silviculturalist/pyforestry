@@ -25,7 +25,7 @@ def eriksson_1986_humidity(longitude : float,
 
     # Locate the humidity shapefile using importlib.resources in a context manager
     # This is the corrected section
-    with as_file(files("pyforestry.geo.humidity").joinpath("humidity.shp")) as humidity_shapefile_path:
+    with as_file(files("pyforestry.sweden.geo.humidity").joinpath("humidity.shp")) as humidity_shapefile_path:
         # Load the humidity shapefile
         humidity_gdf = gpd.read_file(humidity_shapefile_path)
 
