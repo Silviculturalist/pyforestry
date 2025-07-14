@@ -1,7 +1,7 @@
 import os
 import sys
 # 1. Tell Sphinx where to find your code:
-sys.path.insert(0, os.path.abspath('../src'))
+sys.path.insert(0, os.path.abspath('../../src'))
 
 # -- Project information -----------------------------------------------------
 project = 'pyforestry'
