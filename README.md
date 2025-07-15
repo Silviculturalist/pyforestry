@@ -1,13 +1,14 @@
-[![CI](https://github.com/Silviculturalist/pyforestry/actions/workflows/ci.yml/badge.svg?event=push)](https://github.com/Silviculturalist/pyforestry/actions/workflows/ci.yml) [![codecov](https://codecov.io/gh/Silviculturalist/pyforestry/branch/main/graph/badge.svg?token=2C3Z6NXHA4)](https://codecov.io/gh/Silviculturalist/pyforestry)
+[![CI](https://github.com/Silviculturalist/pyforestry/actions/workflows/ci.yml/badge.svg?event=push)](https://github.com/Silviculturalist/pyforestry/actions/workflows/ci.yml) [![codecov](https://codecov.io/gh/Silviculturalist/pyforestry/branch/main/graph/badge.svg?token=2C3Z6NXHA4)](https://codecov.io/gh/Silviculturalist/pyforestry) ![Docstring Coverage](.docstring_coverage.svg)
 
-Documentation: [Available 2025-06-30](https://silviculturalist.github.io/pyforestry/)
+## Documentation: [Available](https://silviculturalist.github.io/pyforestry/)
 
 This package is currently under *very early* development.
 Use at your own risk. 
 
 Any corrections, comments, suggestions are greatly appreciated.
 
-Carl Vigren 2025-06-30
+## Introduction
+
 
 `pyforestry` is a Python package for forest science, providing a standardized, open-source collection of models and functions. Many forest simulators are difficult to replicate, incur a language barrier, are hard to access, and use inconsistent units and variable names. By standardizing these components in a modern framework, we can easily swap out data, functions, and simulation models, or run them side-by-side for validation and comparison.
 
