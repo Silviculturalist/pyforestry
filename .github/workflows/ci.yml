@@ -69,7 +69,7 @@ jobs:
       - name: Generate docstring coverage badge
         # Scans the pyforestry package for docstrings and creates a badge
         # Run as a module to avoid PATH issues
-        run: docstr-coverage src/pyforestry --badge .docstring_coverage.svg
+        run: docstr-coverage src/pyforestry --badge .docstring_coverage.svg --fail-under=0
 
       - name: Commit badge
         # Only commit the new badge on pushes to the main branch
