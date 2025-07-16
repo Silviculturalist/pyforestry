@@ -317,10 +317,13 @@
             <span class="n">TimberVolumeIntegrator</span><span class="o">.</span><span class="n">cylinder_volume_integrand</span><span class="p">,</span>
             <span class="n">height1</span><span class="p">,</span>
             <span class="n">height2</span><span class="p">,</span>
-            <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">taper_instance</span><span class="p">),</span>
-            <span class="c1"># Other parameters remain the same</span>
-            <span class="n">epsabs</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> 
-            <span class="n">limit</span><span class="o">=</span><span class="mi">50</span>
+            <span class="c1"># ``quad`` expects a tuple of extra arguments.  Passing the taper</span>
+            <span class="c1"># instance without a trailing comma would attempt to iterate over</span>
+            <span class="c1"># it, raising ``TypeError`` since ``Taper`` does not implement</span>
+            <span class="c1"># iteration.</span>
+            <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">taper_instance</span><span class="p">,),</span>
+            <span class="n">epsabs</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
+            <span class="n">limit</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">volume</span></div>
 </div>
