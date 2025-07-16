@@ -27,9 +27,12 @@ class TimberVolumeIntegrator:
             TimberVolumeIntegrator.cylinder_volume_integrand,
             height1,
             height2,
-            args=(taper_instance),
-            # Other parameters remain the same
-            epsabs=1e-3, 
-            limit=50
+            # ``quad`` expects a tuple of extra arguments.  Passing the taper
+            # instance without a trailing comma would attempt to iterate over
+            # it, raising ``TypeError`` since ``Taper`` does not implement
+            # iteration.
+            args=(taper_instance,),
+            epsabs=1e-3,
+            limit=50,
         )
         return volume
