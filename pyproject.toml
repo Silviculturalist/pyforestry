@@ -38,7 +38,7 @@ all = [
 dev = [
   "pytest",
   "pytest-cov",          # ← measure coverage
-  "docstr-coverage",     # <- docstring coverage engine
+  "docstr-coverage",     # <- docstring coverage
   "coverage",            # ← coverage engine
   "black",
   "ruff",
@@ -74,3 +74,14 @@ addopts = [
   "--cov-report=term-missing",  # show missing lines in console
   "--cov-report=html"           # generate htmlcov/
 ]
+
+# --- Black Configuration ---
+[tool.black]
+line-length = 99
+target-version = ['py312']
+
+# --- Ruff Configuration ---
+[tool.ruff]
+line-length = 99
+# Enable import-sorting, standard lint rules, and bug-finding
+select = ["E", "F", "W", "I", "B"]
