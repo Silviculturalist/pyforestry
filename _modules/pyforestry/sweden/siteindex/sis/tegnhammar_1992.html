@@ -287,6 +287,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">cast</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Age</span><span class="p">,</span> <span class="n">SiteIndexValue</span><span class="p">,</span> <span class="n">TreeSpecies</span><span class="p">,</span> <span class="n">enum_code</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.sweden.geo.humidity.eriksson_1986</span><span class="w"> </span><span class="kn">import</span> <span class="n">eriksson_1986_humidity</span>
@@ -347,13 +348,13 @@
             <span class="n">humidity</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="c1"># convert enums to numeric codes if needed</span>
-    <span class="n">vegetation</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">vegetation</span><span class="p">)</span>
-    <span class="n">ground_layer</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">ground_layer</span><span class="p">)</span>
-    <span class="n">soil_moisture</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">soil_moisture</span><span class="p">)</span>
-    <span class="n">soil_depth</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">soil_depth</span><span class="p">)</span>
-    <span class="n">soil_texture</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">soil_texture</span><span class="p">)</span>
-    <span class="n">lateral_water</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">lateral_water</span><span class="p">)</span>
-    <span class="n">peat_humification</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">peat_humification</span><span class="p">)</span>
+    <span class="n">vegetation</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">vegetation</span><span class="p">))</span>
+    <span class="n">ground_layer</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">ground_layer</span><span class="p">))</span>
+    <span class="n">soil_moisture</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">soil_moisture</span><span class="p">))</span>
+    <span class="n">soil_depth</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">soil_depth</span><span class="p">))</span>
+    <span class="n">soil_texture</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">soil_texture</span><span class="p">))</span>
+    <span class="n">lateral_water</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">lateral_water</span><span class="p">))</span>
+    <span class="n">peat_humification</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">peat_humification</span><span class="p">))</span>
 
     <span class="c1"># Determine if site is north or south of Limes Norrlandicus</span>
     <span class="c1"># (Placeholder logic; replace with actual spatial analysis if required.)</span>
