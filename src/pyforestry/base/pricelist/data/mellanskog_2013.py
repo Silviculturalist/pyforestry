@@ -1,4 +1,5 @@
-# Example structured data for easy readability and maintenance
+"""Example price list data from Mellanskog's 2013 tables."""
+
 # Use of TreeSpecies shorthand to avoid typos and situations e.g. Betula != Betula pendula.
 
 from pyforestry.base.helpers.tree_species import TreeSpecies
@@ -13,7 +14,7 @@ Mellanskog_2013_price_data = {
         "PulpwoodPrices": {
             TreeSpecies.Sweden.pinus_sylvestris.full_name: 250,
             TreeSpecies.Sweden.picea_abies.full_name: 265,
-            TreeSpecies.Sweden.betula.full_name: 250
+            TreeSpecies.Sweden.betula.full_name: 250,
         },
         "PulpwoodCullProportion": 0.05,
         "FuelwoodProportion": 0.0,
@@ -21,9 +22,8 @@ Mellanskog_2013_price_data = {
         "FuelwoodLogPrice": 200,
         "StumpPrice": 380,
         "ApplyPriceTrends": False,
-        "HighStumpHeight": 4
+        "HighStumpHeight": 4,
     },
-
     TreeSpecies.Sweden.pinus_sylvestris.full_name: {
         "VolumeType": "m3to",
         "DiameterPrices": {
@@ -46,16 +46,13 @@ Mellanskog_2013_price_data = {
             14: {34: 80, 37: 85, 40: 90, 43: 95, 46: 100, 49: 102, 52: 104, 55: 106}
         },
         "QualityOutcome": {
-            "Butt":   [0.31, 0.00, 0.57, 0.12],
+            "Butt": [0.31, 0.00, 0.57, 0.12],
             "Middle": [0.00, 0.31, 0.57, 0.12],
-            "Top":    [0.00, 0.31, 0.57, 0.12],
+            "Top": [0.00, 0.31, 0.57, 0.12],
         },
-        "DowngradeProportions": {
-            "Pulpwood": 0.10, "Fuelwood": 0.0, "HarvestResidue": 0.02
-        },
-        "MaxHeight": {"Butt": 5.5, "Middle": 11.0, "Top": 99.0}
+        "DowngradeProportions": {"Pulpwood": 0.10, "Fuelwood": 0.0, "HarvestResidue": 0.02},
+        "MaxHeight": {"Butt": 5.5, "Middle": 11.0, "Top": 99.0},
     },
-
     TreeSpecies.Sweden.picea_abies.full_name: {
         "VolumeType": "m3to",
         "DiameterPrices": {
@@ -78,13 +75,11 @@ Mellanskog_2013_price_data = {
             14: {34: 80, 37: 85, 40: 90, 43: 95, 46: 100, 49: 102, 52: 104, 55: 106}
         },
         "QualityOutcome": {
-            "Butt":   [0.86, 0.14],
+            "Butt": [0.86, 0.14],
             "Middle": [0.86, 0.14],
-            "Top":    [0.86, 0.14],
+            "Top": [0.86, 0.14],
         },
-        "DowngradeProportions": {
-            "Pulpwood": 0.10, "Fuelwood": 0.0, "HarvestResidue": 0.02
-        },
-        "MaxHeight": {"Butt": 5.5, "Middle": 11.0, "Top": 99.0}
-    }
+        "DowngradeProportions": {"Pulpwood": 0.10, "Fuelwood": 0.0, "HarvestResidue": 0.02},
+        "MaxHeight": {"Butt": 5.5, "Middle": 11.0, "Top": 99.0},
+    },
 }
