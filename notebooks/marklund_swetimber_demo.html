@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Timber bucking demo" href="timber_bucking_demo.html" /><link rel="prev" title="pyforestry.sweden.volume package" href="../api/pyforestry.sweden.volume.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="prev" title="Stand metrics and site enums" href="stand_site_enum_demo.html" />
 
     <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
-        <title>Tree species basics - pyforestry documentation</title>
+        <title>Marklund biomass with SweTimber - pyforestry documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
@@ -249,10 +249,10 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Tree species basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tree_species_intro.html">Tree species basics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="timber_bucking_demo.html">Timber bucking demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="stand_site_enum_demo.html">Stand metrics and site enums</a></li>
-<li class="toctree-l1"><a class="reference internal" href="marklund_swetimber_demo.html">Marklund biomass with SweTimber</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Marklund biomass with SweTimber</a></li>
 </ul>
 
 </div>
@@ -273,7 +273,7 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="../_sources/notebooks/tree_species_intro.ipynb.txt" title="View this page">
+  <a class="muted-link" href="../_sources/notebooks/marklund_swetimber_demo.ipynb.txt" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
@@ -293,48 +293,40 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="Tree-species-basics">
-<h1>Tree species basics<a class="headerlink" href="#Tree-species-basics" title="Link to this heading">¶</a></h1>
-<p>This notebook shows how to retrieve species using <code class="docutils literal notranslate"><span class="pre">TreeSpecies</span></code> and inspect the underlying <code class="docutils literal notranslate"><span class="pre">TreeName</span></code> objects.</p>
+          <section id="Marklund-biomass-with-SweTimber">
+<h1>Marklund biomass with SweTimber<a class="headerlink" href="#Marklund-biomass-with-SweTimber" title="Link to this heading">¶</a></h1>
+<p>This notebook demonstrates how to combine the <code class="docutils literal notranslate"><span class="pre">SweTimber</span></code> helper class with the <code class="docutils literal notranslate"><span class="pre">Marklund_1988</span></code> biomass wrapper.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.tree_species</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">TreeSpecies</span><span class="p">,</span>
-    <span class="n">TreeName</span><span class="p">,</span>
-    <span class="n">parse_tree_species</span><span class="p">,</span>
-    <span class="n">ALNUS_GLUTINOSA</span><span class="p">,</span>
-    <span class="n">ALNUS_INCANA</span><span class="p">,</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.sweden.timber</span><span class="w"> </span><span class="kn">import</span> <span class="n">SweTimber</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.sweden.biomass</span><span class="w"> </span><span class="kn">import</span> <span class="n">Marklund_1988</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Construct a SweTimber instance</span>
+<span class="n">pine</span> <span class="o">=</span> <span class="n">SweTimber</span><span class="p">(</span>
+    <span class="n">species</span><span class="o">=</span><span class="s2">&quot;pinus sylvestris&quot;</span><span class="p">,</span>
+    <span class="n">diameter_cm</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+    <span class="n">height_m</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+    <span class="n">double_bark_mm</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+    <span class="n">crown_base_height_m</span><span class="o">=</span><span class="mi">7</span>
 <span class="p">)</span>
-<br/></pre></div>
-</div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">TreeSpecies</span></code> exposes region-specific namespaces. Each attribute is a <code class="docutils literal notranslate"><span class="pre">TreeName</span></code> instance.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">pinus_sylvestris</span>
-<br/></pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-TreeName(genus=TreeGenus(name=&#39;Pinus&#39;, code=&#39;PINUS&#39;), species_name=&#39;sylvestris&#39;, code=&#39;PSYL&#39;)
-</pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">pinus</span><span class="o">.</span><span class="n">full_name</span>
-<span class="nb">list</span><span class="p">(</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">pinus</span><span class="p">)</span>
-<br/></pre></div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate biomass for all components</span>
+<span class="n">Marklund_1988</span><span class="p">(</span><span class="n">pine</span><span class="p">)</span>
+</pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -343,19 +335,23 @@ TreeName(genus=TreeGenus(name=&#39;Pinus&#39;, code=&#39;PINUS&#39;), species_na
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[TreeName(genus=TreeGenus(name=&#39;Pinus&#39;, code=&#39;PINUS&#39;), species_name=&#39;sylvestris&#39;, code=&#39;PSYL&#39;),
- TreeName(genus=TreeGenus(name=&#39;Pinus&#39;, code=&#39;PINUS&#39;), species_name=&#39;contorta&#39;, code=&#39;PCON&#39;),
- TreeName(genus=TreeGenus(name=&#39;Pinus&#39;, code=&#39;PINUS&#39;), species_name=&#39;mugo&#39;, code=&#39;PMUG&#39;)]
+{&#39;stem&#39;: np.float64(138.17212824703805),
+ &#39;stem_wood&#39;: np.float64(125.74493189426362),
+ &#39;stem_bark&#39;: np.float64(10.572288353477234),
+ &#39;living_branches&#39;: np.float64(7.419433610116955),
+ &#39;needles&#39;: np.float64(3.5667312294648026),
+ &#39;dead_branches&#39;: np.float64(1.0440901553242214),
+ &#39;stump_root_system&#39;: np.float64(13.045246317168706),
+ &#39;stump&#39;: np.float64(25.30894605743497)}
 </pre></div></div>
 </div>
-<p>Strings can be converted to <code class="docutils literal notranslate"><span class="pre">TreeName</span></code> objects using <code class="docutils literal notranslate"><span class="pre">parse_tree_species()</span></code>.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">parse_tree_species</span><span class="p">(</span><span class="s1">&#39;Pinus sylvestris&#39;</span><span class="p">)</span>
-<span class="n">parse_tree_species</span><span class="p">(</span><span class="s1">&#39;pInus sylvestris&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">pinus_sylvestris</span>
-<br/></pre></div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Retrieve only the stem biomass</span>
+<span class="n">Marklund_1988</span><span class="p">(</span><span class="n">pine</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="s2">&quot;stem&quot;</span><span class="p">)</span>
+</pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -364,45 +360,7 @@ TreeName(genus=TreeGenus(name=&#39;Pinus&#39;, code=&#39;PINUS&#39;), species_na
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-True
-</pre></div></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">TreeName</span></code> holds genus and species information and can be compared directly. <code class="docutils literal notranslate"><span class="pre">TreeSpecies</span></code> simply provides organized access to these objects.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">isinstance</span><span class="p">(</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">pinus_sylvestris</span><span class="p">,</span> <span class="n">TreeName</span><span class="p">)</span>
-<span class="nb">type</span><span class="p">(</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="p">)</span>
-<br/></pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-pyforestry.base.helpers.tree_species.RegionalTreeSpecies
-</pre></div></div>
-</div>
-<p>Genus groups act like containers. We can check membership just like in the tests.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ALNUS_GLUTINOSA</span> <span class="ow">in</span> <span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">alnus</span>
-<span class="n">ALNUS_INCANA</span> <span class="ow">in</span> <span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">alnus</span>
-<br/></pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-True
+np.float64(138.17212824703805)
 </pre></div></div>
 </div>
 </section>
@@ -412,23 +370,15 @@ True
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="timber_bucking_demo.html">
-              <div class="page-info">
-                <div class="context">
-                  <span>Next</span>
-                </div>
-                <div class="title">Timber bucking demo</div>
-              </div>
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-            </a>
-          <a class="prev-page" href="../api/pyforestry.sweden.volume.html">
+          
+          <a class="prev-page" href="stand_site_enum_demo.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">pyforestry.sweden.volume package</div>
+                <div class="title">Stand metrics and site enums</div>
                 
               </div>
             </a>

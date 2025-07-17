@@ -249,7 +249,9 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../notebooks/tree_species_intro.html">Tree species basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/timber_bucking_demo.html">Timber bucking demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../notebooks/stand_site_enum_demo.html">Stand metrics and site enums</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/marklund_swetimber_demo.html">Marklund biomass with SweTimber</a></li>
 </ul>
 
 </div>
@@ -308,8 +310,195 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
 </section>
-<section id="pyforestry-base-pricelist-pricelist-module">
-<h2>pyforestry.base.pricelist.pricelist module<a class="headerlink" href="#pyforestry-base-pricelist-pricelist-module" title="Link to this heading">¶</a></h2>
+<section id="module-pyforestry.base.pricelist.pricelist">
+<span id="pyforestry-base-pricelist-pricelist-module"></span><h2>pyforestry.base.pricelist.pricelist module<a class="headerlink" href="#module-pyforestry.base.pricelist.pricelist" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.base.pricelist.pricelist.DiameterRange">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.base.pricelist.pricelist.</span></span><span class="sig-name descname"><span class="pre">DiameterRange</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Min</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/base/pricelist/pricelist.html#DiameterRange"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.pricelist.pricelist.DiameterRange" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.base.pricelist.pricelist.DiameterRange.Max">
+<span class="sig-name descname"><span class="pre">Max</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#pyforestry.base.pricelist.pricelist.DiameterRange.Max" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.base.pricelist.pricelist.DiameterRange.Min">
+<span class="sig-name descname"><span class="pre">Min</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#pyforestry.base.pricelist.pricelist.DiameterRange.Min" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.base.pricelist.pricelist.LengthCorrections">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.base.pricelist.pricelist.</span></span><span class="sig-name descname"><span class="pre">LengthCorrections</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">corrections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/base/pricelist/pricelist.html#LengthCorrections"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.pricelist.pricelist.LengthCorrections" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Holds logic for how the length modifies price (absolute or percent).</p>
+<p>Now accepts a dictionary of corrections in the form:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">diameter</span><span class="p">:</span> <span class="p">{</span><span class="n">length</span><span class="p">:</span> <span class="n">correction_percentage</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span> <span class="o">...</span><span class="p">}</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.base.pricelist.pricelist.LengthCorrections.get_length_correction">
+<span class="sig-name descname"><span class="pre">get_length_correction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_part</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/pyforestry/base/pricelist/pricelist.html#LengthCorrections.get_length_correction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.pricelist.pricelist.LengthCorrections.get_length_correction" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the correction percentage for a given diameter and log length.
+Looks up the corrections dictionary for the closest available length (floored).
+Returns 0 if no correction applies.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.base.pricelist.pricelist.LengthRange">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.base.pricelist.pricelist.</span></span><span class="sig-name descname"><span class="pre">LengthRange</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Min</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/base/pricelist/pricelist.html#LengthRange"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.pricelist.pricelist.LengthRange" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.base.pricelist.pricelist.LengthRange.Max">
+<span class="sig-name descname"><span class="pre">Max</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#pyforestry.base.pricelist.pricelist.LengthRange.Max" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.base.pricelist.pricelist.LengthRange.Min">
+<span class="sig-name descname"><span class="pre">Min</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#pyforestry.base.pricelist.pricelist.LengthRange.Min" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.base.pricelist.pricelist.Pricelist">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.base.pricelist.pricelist.</span></span><span class="sig-name descname"><span class="pre">Pricelist</span></span><a class="reference internal" href="../_modules/pyforestry/base/pricelist/pricelist.html#Pricelist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.pricelist.pricelist.Pricelist" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Holds the combined pulpwood, timber, etc. prices and constraints.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.base.pricelist.pricelist.Pricelist.load_from_dict">
+<span class="sig-name descname"><span class="pre">load_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">price_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/base/pricelist/pricelist.html#Pricelist.load_from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.pricelist.pricelist.Pricelist.load_from_dict" title="Link to this definition">¶</a></dt>
+<dd><p>Loads and configures the entire pricelist from a dictionary.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.base.pricelist.pricelist.PulpPricelist">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.base.pricelist.pricelist.</span></span><span class="sig-name descname"><span class="pre">PulpPricelist</span></span><a class="reference internal" href="../_modules/pyforestry/base/pricelist/pricelist.html#PulpPricelist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.pricelist.pricelist.PulpPricelist" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Placeholder for pulp prices per species.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.base.pricelist.pricelist.PulpPricelist.getPulpwoodPrice">
+<span class="sig-name descname"><span class="pre">getPulpwoodPrice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/pyforestry/base/pricelist/pricelist.html#PulpPricelist.getPulpwoodPrice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.pricelist.pricelist.PulpPricelist.getPulpwoodPrice" title="Link to this definition">¶</a></dt>
+<dd><p>Try to find the price for a species by first looking for a full name match.
+If none is found, look for a match on just the genus.
+Returns a default price if no match is found.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.base.pricelist.pricelist.TimberPriceForDiameter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.base.pricelist.pricelist.</span></span><span class="sig-name descname"><span class="pre">TimberPriceForDiameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">butt_price</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">middle_price</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_price</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/base/pricelist/pricelist.html#TimberPriceForDiameter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.pricelist.pricelist.TimberPriceForDiameter" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents the set of prices for a given diameter, for each log part type.
+E.g. an entry might store: PriceButt, PriceMiddle, PriceTop, …</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.base.pricelist.pricelist.TimberPriceForDiameter.price_for_log_part">
+<span class="sig-name descname"><span class="pre">price_for_log_part</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/base/pricelist/pricelist.html#TimberPriceForDiameter.price_for_log_part"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.pricelist.pricelist.TimberPriceForDiameter.price_for_log_part" title="Link to this definition">¶</a></dt>
+<dd><p>Return the price (in e.g. SEK/m3) for the given part type index.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.base.pricelist.pricelist.TimberPricelist">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.base.pricelist.pricelist.</span></span><span class="sig-name descname"><span class="pre">TimberPricelist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">min_diameter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_diameter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'m3to'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/base/pricelist/pricelist.html#TimberPricelist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.pricelist.pricelist.TimberPricelist" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Stores the entire set of timber prices by diameter class, etc.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.base.pricelist.pricelist.TimberPricelist.LogParts">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">LogParts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names=&lt;not</span> <span class="pre">given&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/base/pricelist/pricelist.html#TimberPricelist.LogParts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.pricelist.pricelist.TimberPricelist.LogParts" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.base.pricelist.pricelist.TimberPricelist.LogParts.Butt">
+<span class="sig-name descname"><span class="pre">Butt</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#pyforestry.base.pricelist.pricelist.TimberPricelist.LogParts.Butt" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.base.pricelist.pricelist.TimberPricelist.LogParts.Middle">
+<span class="sig-name descname"><span class="pre">Middle</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#pyforestry.base.pricelist.pricelist.TimberPricelist.LogParts.Middle" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.base.pricelist.pricelist.TimberPricelist.LogParts.Top">
+<span class="sig-name descname"><span class="pre">Top</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#pyforestry.base.pricelist.pricelist.TimberPricelist.LogParts.Top" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.base.pricelist.pricelist.TimberPricelist.getTimberWeight">
+<span class="sig-name descname"><span class="pre">getTimberWeight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_part</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.TimberPricelist.LogParts" title="pyforestry.base.pricelist.pricelist.TimberPricelist.LogParts"><span class="pre">LogParts</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/base/pricelist/pricelist.html#TimberPricelist.getTimberWeight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.pricelist.pricelist.TimberPricelist.getTimberWeight" title="Link to this definition">¶</a></dt>
+<dd><p>If you’re applying downgrading or certain proportions for pulp/fuel/cull,
+this returns an object with attributes like <code class="docutils literal notranslate"><span class="pre">.PulpwoodPercentage</span></code>,
+<code class="docutils literal notranslate"><span class="pre">.FuelWoodPercentage</span></code> and <code class="docutils literal notranslate"><span class="pre">.LogCullPercentage</span></code>.
+This is a placeholder.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.base.pricelist.pricelist.TimberPricelist.get_nearest_diameter_class">
+<span class="sig-name descname"><span class="pre">get_nearest_diameter_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/pyforestry/base/pricelist/pricelist.html#TimberPricelist.get_nearest_diameter_class"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.pricelist.pricelist.TimberPricelist.get_nearest_diameter_class" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the closest available diameter class (floored down to available class).
+If the requested diameter is smaller than <code class="docutils literal notranslate"><span class="pre">min</span></code>, returns <code class="docutils literal notranslate"><span class="pre">min</span></code>.
+If larger than <code class="docutils literal notranslate"><span class="pre">max</span></code>, returns <code class="docutils literal notranslate"><span class="pre">max</span></code>.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyforestry.base.pricelist.pricelist.TimberPricelist.maxDiameter">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">maxDiameter</span></span><a class="headerlink" href="#pyforestry.base.pricelist.pricelist.TimberPricelist.maxDiameter" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyforestry.base.pricelist.pricelist.TimberPricelist.minDiameter">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">minDiameter</span></span><a class="headerlink" href="#pyforestry.base.pricelist.pricelist.TimberPricelist.minDiameter" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.base.pricelist.pricelist.TimberPricelist.price_for_log_part">
+<span class="sig-name descname"><span class="pre">price_for_log_part</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_part</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.TimberPricelist.LogParts" title="pyforestry.base.pricelist.pricelist.TimberPricelist.LogParts"><span class="pre">LogParts</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/base/pricelist/pricelist.html#TimberPricelist.price_for_log_part"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.pricelist.pricelist.TimberPricelist.price_for_log_part" title="Link to this definition">¶</a></dt>
+<dd><p>Get the price for a given log part (Butt, Middle, Top) at a given diameter (cm).
+Rounds or floors the diameter to the nearest available diameter class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.base.pricelist.pricelist.TimberPricelist.set_price_for_diameter">
+<span class="sig-name descname"><span class="pre">set_price_for_diameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price_struct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.TimberPriceForDiameter" title="pyforestry.base.pricelist.pricelist.TimberPriceForDiameter"><span class="pre">TimberPriceForDiameter</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/base/pricelist/pricelist.html#TimberPricelist.set_price_for_diameter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.pricelist.pricelist.TimberPricelist.set_price_for_diameter" title="Link to this definition">¶</a></dt>
+<dd><p>Store a price entry for a certain diameter class.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.base.pricelist.pricelist.create_pricelist_from_data">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.base.pricelist.pricelist.</span></span><span class="sig-name descname"><span class="pre">create_pricelist_from_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">price_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species_to_load</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.Pricelist" title="pyforestry.base.pricelist.pricelist.Pricelist"><span class="pre">Pricelist</span></a></span></span><a class="reference internal" href="../_modules/pyforestry/base/pricelist/pricelist.html#create_pricelist_from_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.pricelist.pricelist.create_pricelist_from_data" title="Link to this definition">¶</a></dt>
+<dd><p>Build a <cite>Pricelist</cite> from a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>price_data</strong> (<em>dict</em>) – The complete price dictionary (must contain the ‘Common’ block).</p></li>
+<li><p><strong>species_to_load</strong> (<em>str</em><em> | </em><em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em><em>, </em><em>default None</em>) – <ul>
+<li><p><strong>None</strong>  - load <em>all</em> species that have timber price tables.</p></li>
+<li><p><strong>str</strong>   - load just that species.</p></li>
+<li><p><strong>iterable</strong> - load every species in the iterable; it is <em>not</em>
+an error if some of them have only pulp prices.</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A fully populated <cite>Pricelist</cite> instance.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.Pricelist" title="pyforestry.base.pricelist.pricelist.Pricelist">Pricelist</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-pyforestry.base.pricelist.solutioncube">
 <span id="pyforestry-base-pricelist-solutioncube-module"></span><h2>pyforestry.base.pricelist.solutioncube module<a class="headerlink" href="#module-pyforestry.base.pricelist.solutioncube" title="Link to this heading">¶</a></h2>
@@ -408,7 +597,51 @@ Uses nearest-neighbor interpolation.</p>
 <li><a class="reference internal" href="#">pyforestry.base.pricelist package</a><ul>
 <li><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#pyforestry-base-pricelist-pricelist-module">pyforestry.base.pricelist.pricelist module</a></li>
+<li><a class="reference internal" href="#module-pyforestry.base.pricelist.pricelist">pyforestry.base.pricelist.pricelist module</a><ul>
+<li><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.DiameterRange"><code class="docutils literal notranslate"><span class="pre">DiameterRange</span></code></a><ul>
+<li><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.DiameterRange.Max"><code class="docutils literal notranslate"><span class="pre">DiameterRange.Max</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.DiameterRange.Min"><code class="docutils literal notranslate"><span class="pre">DiameterRange.Min</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.LengthCorrections"><code class="docutils literal notranslate"><span class="pre">LengthCorrections</span></code></a><ul>
+<li><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.LengthCorrections.get_length_correction"><code class="docutils literal notranslate"><span class="pre">LengthCorrections.get_length_correction()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.LengthRange"><code class="docutils literal notranslate"><span class="pre">LengthRange</span></code></a><ul>
+<li><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.LengthRange.Max"><code class="docutils literal notranslate"><span class="pre">LengthRange.Max</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.LengthRange.Min"><code class="docutils literal notranslate"><span class="pre">LengthRange.Min</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.Pricelist"><code class="docutils literal notranslate"><span class="pre">Pricelist</span></code></a><ul>
+<li><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.Pricelist.load_from_dict"><code class="docutils literal notranslate"><span class="pre">Pricelist.load_from_dict()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.PulpPricelist"><code class="docutils literal notranslate"><span class="pre">PulpPricelist</span></code></a><ul>
+<li><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.PulpPricelist.getPulpwoodPrice"><code class="docutils literal notranslate"><span class="pre">PulpPricelist.getPulpwoodPrice()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.TimberPriceForDiameter"><code class="docutils literal notranslate"><span class="pre">TimberPriceForDiameter</span></code></a><ul>
+<li><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.TimberPriceForDiameter.price_for_log_part"><code class="docutils literal notranslate"><span class="pre">TimberPriceForDiameter.price_for_log_part()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.TimberPricelist"><code class="docutils literal notranslate"><span class="pre">TimberPricelist</span></code></a><ul>
+<li><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.TimberPricelist.LogParts"><code class="docutils literal notranslate"><span class="pre">TimberPricelist.LogParts</span></code></a><ul>
+<li><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.TimberPricelist.LogParts.Butt"><code class="docutils literal notranslate"><span class="pre">TimberPricelist.LogParts.Butt</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.TimberPricelist.LogParts.Middle"><code class="docutils literal notranslate"><span class="pre">TimberPricelist.LogParts.Middle</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.TimberPricelist.LogParts.Top"><code class="docutils literal notranslate"><span class="pre">TimberPricelist.LogParts.Top</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.TimberPricelist.getTimberWeight"><code class="docutils literal notranslate"><span class="pre">TimberPricelist.getTimberWeight()</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.TimberPricelist.get_nearest_diameter_class"><code class="docutils literal notranslate"><span class="pre">TimberPricelist.get_nearest_diameter_class()</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.TimberPricelist.maxDiameter"><code class="docutils literal notranslate"><span class="pre">TimberPricelist.maxDiameter</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.TimberPricelist.minDiameter"><code class="docutils literal notranslate"><span class="pre">TimberPricelist.minDiameter</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.TimberPricelist.price_for_log_part"><code class="docutils literal notranslate"><span class="pre">TimberPricelist.price_for_log_part()</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.TimberPricelist.set_price_for_diameter"><code class="docutils literal notranslate"><span class="pre">TimberPricelist.set_price_for_diameter()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyforestry.base.pricelist.pricelist.create_pricelist_from_data"><code class="docutils literal notranslate"><span class="pre">create_pricelist_from_data()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-pyforestry.base.pricelist.solutioncube">pyforestry.base.pricelist.solutioncube module</a><ul>
 <li><a class="reference internal" href="#pyforestry.base.pricelist.solutioncube.SolutionCube"><code class="docutils literal notranslate"><span class="pre">SolutionCube</span></code></a><ul>
 <li><a class="reference internal" href="#pyforestry.base.pricelist.solutioncube.SolutionCube.generate"><code class="docutils literal notranslate"><span class="pre">SolutionCube.generate()</span></code></a></li>

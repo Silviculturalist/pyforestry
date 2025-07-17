@@ -248,7 +248,9 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../notebooks/tree_species_intro.html">Tree species basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebooks/timber_bucking_demo.html">Timber bucking demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../notebooks/stand_site_enum_demo.html">Stand metrics and site enums</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebooks/marklund_swetimber_demo.html">Marklund biomass with SweTimber</a></li>
 </ul>
 
 </div>
@@ -286,8 +288,9 @@
           <h1>Source code for pyforestry.sweden.siteindex.translate.hagglund_1981_si_to_productivity</h1><div class="highlight"><pre>
 <span></span><span class="c1"># codefolder/MaximumAnnualIncrement.py (Modification)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.primitives</span><span class="w"> </span><span class="kn">import</span> <span class="n">SiteIndexValue</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.tree_species</span><span class="w"> </span><span class="kn">import</span> <span class="n">TreeSpecies</span><span class="p">,</span> <span class="n">TreeName</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.sweden.site.swedish_site</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sweden</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.tree_species</span><span class="w"> </span><span class="kn">import</span> <span class="n">TreeName</span><span class="p">,</span> <span class="n">TreeSpecies</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.sweden.site.enums</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sweden</span>
+
 
 <div class="viewcode-block" id="hagglund_1981_SI_to_productivity">
 <a class="viewcode-back" href="../../../../../api/pyforestry.sweden.siteindex.translate.html#pyforestry.sweden.siteindex.translate.hagglund_1981_si_to_productivity.hagglund_1981_SI_to_productivity">[docs]</a>
@@ -296,14 +299,16 @@
     <span class="n">main_species</span><span class="p">:</span> <span class="n">TreeName</span><span class="p">,</span>
     <span class="n">vegetation</span><span class="p">:</span> <span class="n">Sweden</span><span class="o">.</span><span class="n">FieldLayer</span><span class="p">,</span>
     <span class="n">altitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-    <span class="n">county</span><span class="p">:</span> <span class="n">Sweden</span><span class="o">.</span><span class="n">County</span> <span class="c1"># Changed type hint to the Enum</span>
+    <span class="n">county</span><span class="p">:</span> <span class="n">Sweden</span><span class="o">.</span><span class="n">County</span><span class="p">,</span>  <span class="c1"># Changed type hint to the Enum</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate smoothed productivity estimates in m3sk (cu.m.) from Hägglund 1981.</span>
 
 <span class="sd">    Parameters:</span>
-<span class="sd">        h100_input (SiteIndexValue): Estimated stand top height object (must be H100, i.e., reference_age value must be 100).</span>
-<span class="sd">        main_species (TreeName): Main species (e.g., TreeSpecies.Sweden.picea_abies).</span>
+<span class="sd">        h100_input (SiteIndexValue):</span>
+<span class="sd">            Estimated stand top height object. Must be H100, meaning</span>
+<span class="sd">            ``reference_age`` equals 100.</span>
+<span class="sd">        main_species (TreeName): Main species (e.g., ``TreeSpecies.Sweden.picea_abies``).</span>
 <span class="sd">        vegetation (Sweden.FieldLayer): Vegetation enum member.</span>
 <span class="sd">        altitude (float): Altitude in meters above sea level.</span>
 <span class="sd">        county (Sweden.County): Swedish county enum member.</span>
@@ -326,38 +331,41 @@
         <span class="n">Sweden</span><span class="o">.</span><span class="n">County</span><span class="o">.</span><span class="n">VASTERNORRLAND_MEDELPADS</span><span class="p">,</span>
         <span class="n">Sweden</span><span class="o">.</span><span class="n">County</span><span class="o">.</span><span class="n">JAMTLAND_JAMTLANDS</span><span class="p">,</span>
         <span class="n">Sweden</span><span class="o">.</span><span class="n">County</span><span class="o">.</span><span class="n">JAMTLAND_HARJEDALENS</span><span class="p">,</span>
-        <span class="n">Sweden</span><span class="o">.</span><span class="n">County</span><span class="o">.</span><span class="n">KOPPARBERG_SALEN_IDRE</span>
+        <span class="n">Sweden</span><span class="o">.</span><span class="n">County</span><span class="o">.</span><span class="n">KOPPARBERG_SALEN_IDRE</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="n">MIDDLE_COUNTY_CODES</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">Sweden</span><span class="o">.</span><span class="n">County</span><span class="o">.</span><span class="n">KOPPARBERG_OVRIGA</span><span class="p">,</span>
         <span class="n">Sweden</span><span class="o">.</span><span class="n">County</span><span class="o">.</span><span class="n">GAVLEBORG_HALSINGLANDS</span><span class="p">,</span>
         <span class="n">Sweden</span><span class="o">.</span><span class="n">County</span><span class="o">.</span><span class="n">GAVLEBORG_OVRIGA</span><span class="p">,</span>
-        <span class="n">Sweden</span><span class="o">.</span><span class="n">County</span><span class="o">.</span><span class="n">VARMLAND</span>    
+        <span class="n">Sweden</span><span class="o">.</span><span class="n">County</span><span class="o">.</span><span class="n">VARMLAND</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="c1"># Validate inputs</span>
     <span class="c1"># Check if the numeric value of the reference_age is 100</span>
     <span class="k">if</span> <span class="n">h100_input</span><span class="o">.</span><span class="n">reference_age</span> <span class="o">!=</span> <span class="mi">100</span><span class="p">:</span>
-         <span class="c1"># Raise ValueError instead of warning</span>
-         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input SiteIndexValue must have a reference_age value of 100 (H100). Received: </span><span class="si">{</span><span class="n">h100_input</span><span class="o">.</span><span class="n">reference_age</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="c1">#</span>
+        <span class="c1"># Raise ValueError instead of warning</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Input SiteIndexValue must have a reference_age value of 100 (H100). &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Received: </span><span class="si">{</span><span class="n">h100_input</span><span class="o">.</span><span class="n">reference_age</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
 
-    <span class="n">H100</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">h100_input</span><span class="p">)</span> <span class="c1"># Extract the float value for calculations</span>
+    <span class="n">H100</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">h100_input</span><span class="p">)</span>  <span class="c1"># Extract the float value for calculations</span>
     <span class="k">if</span> <span class="n">H100</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;H100 value must be positive.&quot;</span><span class="p">)</span> <span class="c1">#</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;H100 value must be positive.&quot;</span><span class="p">)</span>  <span class="c1">#</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">main_species</span><span class="p">,</span> <span class="n">TreeName</span><span class="p">):</span>
-         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;main_species must be a TreeName object.&quot;</span><span class="p">)</span> <span class="c1">#</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;main_species must be a TreeName object.&quot;</span><span class="p">)</span>  <span class="c1">#</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vegetation</span><span class="p">,</span> <span class="n">Sweden</span><span class="o">.</span><span class="n">FieldLayer</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;vegetation must be a Sweden.FieldLayer enum member.&quot;</span><span class="p">)</span> <span class="c1">#</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;vegetation must be a Sweden.FieldLayer enum member.&quot;</span><span class="p">)</span>  <span class="c1">#</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">county</span><span class="p">,</span> <span class="n">Sweden</span><span class="o">.</span><span class="n">County</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;county must be a Sweden.County enum member.&quot;</span><span class="p">)</span> <span class="c1">#</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;county must be a Sweden.County enum member.&quot;</span><span class="p">)</span>  <span class="c1">#</span>
 
     <span class="c1"># --- rest of the function remains the same ---</span>
     <span class="n">veg_code</span> <span class="o">=</span> <span class="n">vegetation</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span>
-    <span class="n">county_code</span> <span class="o">=</span> <span class="n">county</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span> <span class="c1"># Get the integer code from the enum</span>
+    <span class="n">county_code</span> <span class="o">=</span> <span class="n">county</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span>  <span class="c1"># Get the integer code from the enum</span>
 
     <span class="n">F1</span> <span class="o">=</span> <span class="mf">0.72</span> <span class="o">+</span> <span class="p">(</span><span class="n">H100</span> <span class="o">/</span> <span class="mi">130</span><span class="p">)</span>
     <span class="n">F2</span> <span class="o">=</span> <span class="mf">0.70</span> <span class="o">+</span> <span class="p">(</span><span class="n">H100</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span>
@@ -369,7 +377,7 @@
             <span class="n">fun</span> <span class="o">=</span> <span class="s2">&quot;d&quot;</span> <span class="k">if</span> <span class="n">veg_code</span> <span class="o">&lt;=</span> <span class="mi">9</span> <span class="k">else</span> <span class="s2">&quot;e&quot;</span>
         <span class="k">elif</span> <span class="n">county_code</span> <span class="ow">in</span> <span class="n">MIDDLE_COUNTY_CODES</span><span class="p">:</span>
             <span class="n">fun</span> <span class="o">=</span> <span class="s2">&quot;b&quot;</span> <span class="k">if</span> <span class="n">veg_code</span> <span class="o">&lt;=</span> <span class="mi">9</span> <span class="k">else</span> <span class="s2">&quot;c&quot;</span>
-        <span class="k">else</span><span class="p">:</span> <span class="c1"># Southern Sweden assumed otherwise</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># Southern Sweden assumed otherwise</span>
             <span class="n">fun</span> <span class="o">=</span> <span class="s2">&quot;a&quot;</span>
     <span class="k">elif</span> <span class="n">main_species</span> <span class="o">==</span> <span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">pinus_sylvestris</span><span class="p">:</span>
         <span class="c1"># For Pine: Northern Sweden with altitude &gt;= 200 meters</span>
@@ -377,24 +385,27 @@
 
     <span class="k">if</span> <span class="n">fun</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Use county label in error message for clarity</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unrecognized combination for species </span><span class="si">{</span><span class="n">main_species</span><span class="o">.</span><span class="n">full_name</span><span class="si">}</span><span class="s2">, county </span><span class="si">{</span><span class="n">county</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">, veg_code </span><span class="si">{</span><span class="n">veg_code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="s2">&quot;Unrecognized combination for species &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">main_species</span><span class="o">.</span><span class="n">full_name</span><span class="si">}</span><span class="s2">, county </span><span class="si">{</span><span class="n">county</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">, veg_code </span><span class="si">{</span><span class="n">veg_code</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
 
     <span class="c1"># Calculate bonitet (same logic as before)</span>
     <span class="n">bon</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="k">if</span> <span class="n">fun</span> <span class="o">==</span> <span class="s2">&quot;a&quot;</span><span class="p">:</span>
-        <span class="n">bon</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.57207</span> <span class="o">+</span> <span class="mf">0.22166</span> <span class="o">*</span> <span class="n">H100</span> <span class="o">+</span> <span class="mf">0.0050164</span> <span class="o">*</span> <span class="n">H100</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">F1</span>
+        <span class="n">bon</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.57207</span> <span class="o">+</span> <span class="mf">0.22166</span> <span class="o">*</span> <span class="n">H100</span> <span class="o">+</span> <span class="mf">0.0050164</span> <span class="o">*</span> <span class="n">H100</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">F1</span>
     <span class="k">elif</span> <span class="n">fun</span> <span class="o">==</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span>
-        <span class="n">bon</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.28417</span> <span class="o">+</span> <span class="mf">0.31060</span> <span class="o">*</span> <span class="n">H100</span> <span class="o">+</span> <span class="mf">0.0020048</span> <span class="o">*</span> <span class="n">H100</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">F1</span>
+        <span class="n">bon</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.28417</span> <span class="o">+</span> <span class="mf">0.31060</span> <span class="o">*</span> <span class="n">H100</span> <span class="o">+</span> <span class="mf">0.0020048</span> <span class="o">*</span> <span class="n">H100</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">F1</span>
     <span class="k">elif</span> <span class="n">fun</span> <span class="o">==</span> <span class="s2">&quot;c&quot;</span><span class="p">:</span>
-        <span class="n">bon</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.42289</span> <span class="o">+</span> <span class="mf">0.17735</span> <span class="o">*</span> <span class="n">H100</span> <span class="o">+</span> <span class="mf">0.0050580</span> <span class="o">*</span> <span class="n">H100</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">F1</span>
+        <span class="n">bon</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.42289</span> <span class="o">+</span> <span class="mf">0.17735</span> <span class="o">*</span> <span class="n">H100</span> <span class="o">+</span> <span class="mf">0.0050580</span> <span class="o">*</span> <span class="n">H100</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">F1</span>
     <span class="k">elif</span> <span class="n">fun</span> <span class="o">==</span> <span class="s2">&quot;d&quot;</span><span class="p">:</span>
-        <span class="n">bon</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.75761</span> <span class="o">+</span> <span class="mf">0.24393</span> <span class="o">*</span> <span class="n">H100</span> <span class="o">+</span> <span class="mf">0.0014564</span> <span class="o">*</span> <span class="n">H100</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">F2</span>
+        <span class="n">bon</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.75761</span> <span class="o">+</span> <span class="mf">0.24393</span> <span class="o">*</span> <span class="n">H100</span> <span class="o">+</span> <span class="mf">0.0014564</span> <span class="o">*</span> <span class="n">H100</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">F2</span>
     <span class="k">elif</span> <span class="n">fun</span> <span class="o">==</span> <span class="s2">&quot;e&quot;</span><span class="p">:</span>
-        <span class="n">bon</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.59224</span> <span class="o">+</span> <span class="mf">0.21765</span> <span class="o">*</span> <span class="n">H100</span> <span class="o">+</span> <span class="mf">0.0011391</span> <span class="o">*</span> <span class="n">H100</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">F2</span>
+        <span class="n">bon</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.59224</span> <span class="o">+</span> <span class="mf">0.21765</span> <span class="o">*</span> <span class="n">H100</span> <span class="o">+</span> <span class="mf">0.0011391</span> <span class="o">*</span> <span class="n">H100</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">F2</span>
     <span class="k">elif</span> <span class="n">fun</span> <span class="o">==</span> <span class="s2">&quot;f&quot;</span><span class="p">:</span>
-        <span class="n">bon</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.39456</span> <span class="o">+</span> <span class="mf">0.16469</span> <span class="o">*</span> <span class="n">H100</span> <span class="o">+</span> <span class="mf">0.0047191</span> <span class="o">*</span> <span class="n">H100</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">F2</span>
+        <span class="n">bon</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.39456</span> <span class="o">+</span> <span class="mf">0.16469</span> <span class="o">*</span> <span class="n">H100</span> <span class="o">+</span> <span class="mf">0.0047191</span> <span class="o">*</span> <span class="n">H100</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">F2</span>
     <span class="k">elif</span> <span class="n">fun</span> <span class="o">==</span> <span class="s2">&quot;g&quot;</span><span class="p">:</span>
-        <span class="n">bon</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.099227</span> <span class="o">+</span> <span class="mf">0.067873</span> <span class="o">*</span> <span class="n">H100</span> <span class="o">+</span> <span class="mf">0.0066316</span> <span class="o">*</span> <span class="n">H100</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">F2</span>
+        <span class="n">bon</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.099227</span> <span class="o">+</span> <span class="mf">0.067873</span> <span class="o">*</span> <span class="n">H100</span> <span class="o">+</span> <span class="mf">0.0066316</span> <span class="o">*</span> <span class="n">H100</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">F2</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Internal error: function code &#39;</span><span class="si">{</span><span class="n">fun</span><span class="si">}</span><span class="s2">&#39; not recognized.&quot;</span><span class="p">)</span>
 

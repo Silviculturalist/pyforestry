@@ -248,7 +248,9 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../notebooks/tree_species_intro.html">Tree species basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../notebooks/timber_bucking_demo.html">Timber bucking demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../notebooks/stand_site_enum_demo.html">Stand metrics and site enums</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../notebooks/marklund_swetimber_demo.html">Marklund biomass with SweTimber</a></li>
 </ul>
 
 </div>
@@ -284,9 +286,13 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for pyforestry.sweden.biomass.marklund_1988</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.timber</span><span class="w"> </span><span class="kn">import</span> <span class="n">Timber</span>
+
 
 <div class="viewcode-block" id="Marklund_1988_T1">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T1">[docs]</a>
@@ -294,30 +300,65 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.3388</span> <span class="o">+</span> <span class="mf">11.3264</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">13</span><span class="p">)))</span></div>
 
 
+
 <div class="viewcode-block" id="Marklund_1988_T2">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T2">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T2</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.6768</span> <span class="o">+</span> <span class="mf">7.5939</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">13</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.0151</span> <span class="o">*</span> <span class="n">height_m</span> <span class="o">+</span> <span class="mf">0.8799</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">2.6768</span>
+        <span class="o">+</span> <span class="mf">7.5939</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">13</span><span class="p">))</span>
+        <span class="o">+</span> <span class="mf">0.0151</span> <span class="o">*</span> <span class="n">height_m</span>
+        <span class="o">+</span> <span class="mf">0.8799</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="Marklund_1988_T3">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T3">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T3</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">double_bark_mm</span><span class="p">,</span> <span class="n">age</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.6232</span> <span class="o">+</span> <span class="mf">7.7318</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">13</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.0139</span> <span class="o">*</span> <span class="n">height_m</span> <span class="o">+</span> <span class="mf">0.8625</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.0704</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">double_bark_mm</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.00185</span> <span class="o">*</span> <span class="n">age</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">2.6232</span>
+        <span class="o">+</span> <span class="mf">7.7318</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">13</span><span class="p">))</span>
+        <span class="o">+</span> <span class="mf">0.0139</span> <span class="o">*</span> <span class="n">height_m</span>
+        <span class="o">+</span> <span class="mf">0.8625</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+        <span class="o">-</span> <span class="mf">0.0704</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">double_bark_mm</span><span class="p">)</span>
+        <span class="o">+</span> <span class="mf">0.00185</span> <span class="o">*</span> <span class="n">age</span>
+    <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="Marklund_1988_T4">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T4">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T4</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">double_bark_mm</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">form_quotient5</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">form_quotient3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">altitude_m</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T4</span><span class="p">(</span>
+    <span class="n">diameter_cm</span><span class="p">,</span>
+    <span class="n">height_m</span><span class="p">,</span>
+    <span class="n">double_bark_mm</span><span class="p">,</span>
+    <span class="n">age</span><span class="p">,</span>
+    <span class="n">form_quotient5</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">form_quotient3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">altitude_m</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
     <span class="k">if</span> <span class="n">form_quotient5</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">form_quotient3</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Either form_quotient5 or form_quotient3 can be supplied. Not both.&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;form_quotient5 taking precedence.&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Either form_quotient5 or form_quotient3 can be supplied. Not both.&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;form_quotient5 taking precedence.&quot;</span><span class="p">)</span>
         <span class="n">form_quotient3</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.4826</span> <span class="o">+</span> <span class="mf">7.9039</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">13</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.0184</span> <span class="o">*</span> <span class="n">height_m</span> <span class="o">+</span> <span class="mf">0.6939</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.0731</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">double_bark_mm</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.00182</span> <span class="o">*</span> <span class="n">age</span> <span class="o">+</span> <span class="mf">0.2382</span> <span class="o">*</span> <span class="p">(</span><span class="n">form_quotient5</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.2217</span> <span class="o">*</span> <span class="p">(</span><span class="n">form_quotient3</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.1596</span> <span class="o">*</span> <span class="p">(</span><span class="n">altitude_m</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">2.4826</span>
+        <span class="o">+</span> <span class="mf">7.9039</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">13</span><span class="p">))</span>
+        <span class="o">+</span> <span class="mf">0.0184</span> <span class="o">*</span> <span class="n">height_m</span>
+        <span class="o">+</span> <span class="mf">0.6939</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+        <span class="o">-</span> <span class="mf">0.0731</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">double_bark_mm</span><span class="p">)</span>
+        <span class="o">+</span> <span class="mf">0.00182</span> <span class="o">*</span> <span class="n">age</span>
+        <span class="o">+</span> <span class="mf">0.2382</span> <span class="o">*</span> <span class="p">(</span><span class="n">form_quotient5</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="o">+</span> <span class="mf">0.2217</span> <span class="o">*</span> <span class="p">(</span><span class="n">form_quotient3</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="o">-</span> <span class="mf">0.1596</span> <span class="o">*</span> <span class="p">(</span><span class="n">altitude_m</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <span class="n">MarklundPineStem</span> <span class="o">=</span> <span class="p">[</span><span class="n">Marklund_1988_T1</span><span class="p">,</span> <span class="n">Marklund_1988_T2</span><span class="p">,</span> <span class="n">Marklund_1988_T3</span><span class="p">,</span> <span class="n">Marklund_1988_T4</span><span class="p">]</span>
 <span class="n">MarklundPineStem</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">MarklundPineStem</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
 
 <span class="c1"># Stem wood functions</span>
 <div class="viewcode-block" id="Marklund_1988_T5">
@@ -326,30 +367,67 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.2184</span> <span class="o">+</span> <span class="mf">11.4219</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">14</span><span class="p">)))</span></div>
 
 
+
 <div class="viewcode-block" id="Marklund_1988_T6">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T6">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T6</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.6864</span> <span class="o">+</span> <span class="mf">7.6066</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">14</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.0200</span> <span class="o">*</span> <span class="n">height_m</span> <span class="o">+</span> <span class="mf">0.8658</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">2.6864</span>
+        <span class="o">+</span> <span class="mf">7.6066</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">14</span><span class="p">))</span>
+        <span class="o">+</span> <span class="mf">0.0200</span> <span class="o">*</span> <span class="n">height_m</span>
+        <span class="o">+</span> <span class="mf">0.8658</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="Marklund_1988_T7">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T7">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T7</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">double_bark_mm</span><span class="p">,</span> <span class="n">age</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.5325</span> <span class="o">+</span> <span class="mf">7.8936</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">14</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.0231</span> <span class="o">*</span> <span class="n">height_m</span> <span class="o">+</span> <span class="mf">0.7887</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.1065</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">double_bark_mm</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.00201</span> <span class="o">*</span> <span class="n">age</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">2.5325</span>
+        <span class="o">+</span> <span class="mf">7.8936</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">14</span><span class="p">))</span>
+        <span class="o">+</span> <span class="mf">0.0231</span> <span class="o">*</span> <span class="n">height_m</span>
+        <span class="o">+</span> <span class="mf">0.7887</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+        <span class="o">-</span> <span class="mf">0.1065</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">double_bark_mm</span><span class="p">)</span>
+        <span class="o">+</span> <span class="mf">0.00201</span> <span class="o">*</span> <span class="n">age</span>
+    <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="Marklund_1988_T8">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T8">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T8</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">double_bark_mm</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">form_quotient5</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">form_quotient3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">altitude_m</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T8</span><span class="p">(</span>
+    <span class="n">diameter_cm</span><span class="p">,</span>
+    <span class="n">height_m</span><span class="p">,</span>
+    <span class="n">double_bark_mm</span><span class="p">,</span>
+    <span class="n">age</span><span class="p">,</span>
+    <span class="n">form_quotient5</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">form_quotient3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">altitude_m</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
     <span class="k">if</span> <span class="n">form_quotient5</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">form_quotient3</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Either form_quotient5 or form_quotient3 can be supplied. Not both.&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;form_quotient5 taking precedence.&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Either form_quotient5 or form_quotient3 can be supplied. Not both.&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;form_quotient5 taking precedence.&quot;</span><span class="p">)</span>
         <span class="n">form_quotient3</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.0028</span> <span class="o">+</span> <span class="mf">7.9455</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">14</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.0439</span> <span class="o">*</span> <span class="n">height_m</span> <span class="o">+</span> <span class="mf">0.2437</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.0875</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">double_bark_mm</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.00172</span> <span class="o">*</span> <span class="n">age</span> <span class="o">+</span> <span class="mf">0.7778</span> <span class="o">*</span> <span class="p">(</span><span class="n">form_quotient5</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.4855</span> <span class="o">*</span> <span class="p">(</span><span class="n">form_quotient3</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.1557</span> <span class="o">*</span> <span class="p">(</span><span class="n">altitude_m</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">2.0028</span>
+        <span class="o">+</span> <span class="mf">7.9455</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">14</span><span class="p">))</span>
+        <span class="o">+</span> <span class="mf">0.0439</span> <span class="o">*</span> <span class="n">height_m</span>
+        <span class="o">+</span> <span class="mf">0.2437</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+        <span class="o">-</span> <span class="mf">0.0875</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">double_bark_mm</span><span class="p">)</span>
+        <span class="o">+</span> <span class="mf">0.00172</span> <span class="o">*</span> <span class="n">age</span>
+        <span class="o">+</span> <span class="mf">0.7778</span> <span class="o">*</span> <span class="p">(</span><span class="n">form_quotient5</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="o">+</span> <span class="mf">0.4855</span> <span class="o">*</span> <span class="p">(</span><span class="n">form_quotient3</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="o">-</span> <span class="mf">0.1557</span> <span class="o">*</span> <span class="p">(</span><span class="n">altitude_m</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <span class="n">MarklundPineStemWood</span> <span class="o">=</span> <span class="p">[</span><span class="n">Marklund_1988_T5</span><span class="p">,</span> <span class="n">Marklund_1988_T6</span><span class="p">,</span> <span class="n">Marklund_1988_T7</span><span class="p">,</span> <span class="n">Marklund_1988_T8</span><span class="p">]</span>
-<span class="n">MarklundPineStemWood</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">MarklundPineStemWood</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">MarklundPineStemWood</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+    <span class="n">MarklundPineStemWood</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
 
 <span class="c1"># Stem bark functions</span>
 <div class="viewcode-block" id="Marklund_1988_T9">
@@ -358,26 +436,44 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.9748</span> <span class="o">+</span> <span class="mf">8.8489</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">16</span><span class="p">)))</span></div>
 
 
+
 <div class="viewcode-block" id="Marklund_1988_T10">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T10">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T10</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">3.2765</span> <span class="o">+</span> <span class="mf">7.2482</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">16</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.4487</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">3.2765</span> <span class="o">+</span> <span class="mf">7.2482</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">16</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.4487</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="Marklund_1988_T11">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T11">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T11</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">relative_bark_thickness</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">3.6065</span> <span class="o">+</span> <span class="mf">7.0834</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">16</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.5086</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.0255</span> <span class="o">*</span> <span class="n">relative_bark_thickness</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">3.6065</span>
+        <span class="o">+</span> <span class="mf">7.0834</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">16</span><span class="p">))</span>
+        <span class="o">+</span> <span class="mf">0.5086</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+        <span class="o">+</span> <span class="mf">0.0255</span> <span class="o">*</span> <span class="n">relative_bark_thickness</span>
+    <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="Marklund_1988_T12">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T12">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T12</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">crown_base_height_m</span><span class="p">,</span> <span class="n">relative_bark_thickness</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">3.5076</span> <span class="o">+</span> <span class="mf">7.5295</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">16</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.5629</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.2271</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.0222</span> <span class="o">*</span> <span class="n">relative_bark_thickness</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">3.5076</span>
+        <span class="o">+</span> <span class="mf">7.5295</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">16</span><span class="p">))</span>
+        <span class="o">+</span> <span class="mf">0.5629</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+        <span class="o">-</span> <span class="mf">0.2271</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">)</span>
+        <span class="o">+</span> <span class="mf">0.0222</span> <span class="o">*</span> <span class="n">relative_bark_thickness</span>
+    <span class="p">)</span></div>
+
 
 
 <span class="n">MarklundPineBark</span> <span class="o">=</span> <span class="p">[</span><span class="n">Marklund_1988_T9</span><span class="p">,</span> <span class="n">Marklund_1988_T10</span><span class="p">,</span> <span class="n">Marklund_1988_T11</span><span class="p">,</span> <span class="n">Marklund_1988_T12</span><span class="p">]</span>
 <span class="n">MarklundPineBark</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">MarklundPineBark</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
 
 <span class="c1"># Living branches functions</span>
 <div class="viewcode-block" id="Marklund_1988_T13">
@@ -386,20 +482,33 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.9580</span> <span class="o">+</span> <span class="mf">7.7428</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">18</span><span class="p">)))</span></div>
 
 
+
 <div class="viewcode-block" id="Marklund_1988_T14">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T14">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T14</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">3.0331</span> <span class="o">+</span> <span class="mf">6.7610</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">18</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.6565</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">3.0331</span> <span class="o">+</span> <span class="mf">6.7610</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">18</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.6565</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="Marklund_1988_T15">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T15">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T15</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">crown_base_height_m</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">3.1398</span> <span class="o">+</span> <span class="mf">6.6698</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">18</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.6797</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.2763</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">3.1398</span>
+        <span class="o">+</span> <span class="mf">6.6698</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">18</span><span class="p">))</span>
+        <span class="o">+</span> <span class="mf">0.6797</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+        <span class="o">-</span> <span class="mf">0.2763</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <span class="n">MarklundPineLivingBranches</span> <span class="o">=</span> <span class="p">[</span><span class="n">Marklund_1988_T13</span><span class="p">,</span> <span class="n">Marklund_1988_T14</span><span class="p">,</span> <span class="n">Marklund_1988_T15</span><span class="p">]</span>
-<span class="n">MarklundPineLivingBranches</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">MarklundPineLivingBranches</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">MarklundPineLivingBranches</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+    <span class="n">MarklundPineLivingBranches</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
 
 <span class="c1"># Needles functions</span>
 <div class="viewcode-block" id="Marklund_1988_T16">
@@ -408,20 +517,33 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">3.5285</span> <span class="o">+</span> <span class="mf">6.5301</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">20</span><span class="p">)))</span></div>
 
 
+
 <div class="viewcode-block" id="Marklund_1988_T17">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T17">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T17</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">3.6531</span> <span class="o">+</span> <span class="mf">5.9425</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">20</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.8165</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">3.6531</span> <span class="o">+</span> <span class="mf">5.9425</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">20</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.8165</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="Marklund_1988_T18">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T18">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T18</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">crown_base_height_m</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">3.7941</span> <span class="o">+</span> <span class="mf">5.8956</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">20</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.8482</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.2436</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">3.7941</span>
+        <span class="o">+</span> <span class="mf">5.8956</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">20</span><span class="p">))</span>
+        <span class="o">+</span> <span class="mf">0.8482</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+        <span class="o">-</span> <span class="mf">0.2436</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <span class="n">MarklundPineNeedles</span> <span class="o">=</span> <span class="p">[</span><span class="n">Marklund_1988_T16</span><span class="p">,</span> <span class="n">Marklund_1988_T17</span><span class="p">,</span> <span class="n">Marklund_1988_T18</span><span class="p">]</span>
-<span class="n">MarklundPineNeedles</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">MarklundPineNeedles</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">MarklundPineNeedles</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+    <span class="n">MarklundPineNeedles</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
 
 <span class="c1"># Dead branches functions</span>
 <div class="viewcode-block" id="Marklund_1988_T19">
@@ -430,20 +552,33 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">4.3352</span> <span class="o">+</span> <span class="mf">5.8210</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">23</span><span class="p">)))</span></div>
 
 
+
 <div class="viewcode-block" id="Marklund_1988_T20">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T20">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T20</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">4.4668</span> <span class="o">+</span> <span class="mf">5.3836</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">23</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.9584</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">4.4668</span> <span class="o">+</span> <span class="mf">5.3836</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">23</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.9584</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="Marklund_1988_T21">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T21">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T21</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">crown_base_height_m</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">4.5368</span> <span class="o">+</span> <span class="mf">5.4689</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">23</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.8945</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.3322</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">4.5368</span>
+        <span class="o">+</span> <span class="mf">5.4689</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">23</span><span class="p">))</span>
+        <span class="o">+</span> <span class="mf">0.8945</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+        <span class="o">-</span> <span class="mf">0.3322</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <span class="n">MarklundPineDeadBranches</span> <span class="o">=</span> <span class="p">[</span><span class="n">Marklund_1988_T19</span><span class="p">,</span> <span class="n">Marklund_1988_T20</span><span class="p">,</span> <span class="n">Marklund_1988_T21</span><span class="p">]</span>
-<span class="n">MarklundPineDeadBranches</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">MarklundPineDeadBranches</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">MarklundPineDeadBranches</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+    <span class="n">MarklundPineDeadBranches</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
 
 <span class="c1"># Stump-root system functions</span>
 <div class="viewcode-block" id="Marklund_1988_T22">
@@ -452,20 +587,33 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.2114</span> <span class="o">+</span> <span class="mf">7.5246</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">19</span><span class="p">)))</span></div>
 
 
+
 <div class="viewcode-block" id="Marklund_1988_T23">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T23">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T23</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.3323</span> <span class="o">+</span> <span class="mf">6.4935</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">19</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.6055</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">2.3323</span> <span class="o">+</span> <span class="mf">6.4935</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">19</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.6055</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="Marklund_1988_T24">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T24">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T24</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">crown_base_height_m</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.4008</span> <span class="o">+</span> <span class="mf">6.5480</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">19</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.6187</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.2052</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">2.4008</span>
+        <span class="o">+</span> <span class="mf">6.5480</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">19</span><span class="p">))</span>
+        <span class="o">+</span> <span class="mf">0.6187</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+        <span class="o">-</span> <span class="mf">0.2052</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <span class="n">MarklundPineStumpRootSystem</span> <span class="o">=</span> <span class="p">[</span><span class="n">Marklund_1988_T22</span><span class="p">,</span> <span class="n">Marklund_1988_T23</span><span class="p">,</span> <span class="n">Marklund_1988_T24</span><span class="p">]</span>
-<span class="n">MarklundPineStumpRootSystem</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">MarklundPineStumpRootSystem</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">MarklundPineStumpRootSystem</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+    <span class="n">MarklundPineStumpRootSystem</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
 
 <span class="c1"># Stump functions</span>
 <div class="viewcode-block" id="Marklund_1988_T25">
@@ -474,20 +622,31 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">3.1444</span> <span class="o">+</span> <span class="mf">8.4027</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">15</span><span class="p">)))</span></div>
 
 
+
 <div class="viewcode-block" id="Marklund_1988_T26">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T26">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T26</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">3.2571</span> <span class="o">+</span> <span class="mf">7.3144</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">15</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.7078</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">3.2571</span> <span class="o">+</span> <span class="mf">7.3144</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">15</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.7078</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="Marklund_1988_T27">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T27">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T27</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">relative_bark_thickness</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">3.3738</span> <span class="o">+</span> <span class="mf">7.1416</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">15</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.7956</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.0119</span> <span class="o">*</span> <span class="n">relative_bark_thickness</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">3.3738</span>
+        <span class="o">+</span> <span class="mf">7.1416</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">15</span><span class="p">))</span>
+        <span class="o">+</span> <span class="mf">0.7956</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+        <span class="o">+</span> <span class="mf">0.0119</span> <span class="o">*</span> <span class="n">relative_bark_thickness</span>
+    <span class="p">)</span></div>
+
 
 
 <span class="n">MarklundPineStump</span> <span class="o">=</span> <span class="p">[</span><span class="n">Marklund_1988_T25</span><span class="p">,</span> <span class="n">Marklund_1988_T26</span><span class="p">,</span> <span class="n">Marklund_1988_T27</span><span class="p">]</span>
 <span class="n">MarklundPineStump</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">MarklundPineStump</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
 
 <span class="c1"># Norway Spruce Stem functions</span>
 <div class="viewcode-block" id="Marklund_1988_S1">
@@ -496,20 +655,36 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.3450</span> <span class="o">+</span> <span class="mf">11.1111</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">)))</span></div>
 
 
+
 <div class="viewcode-block" id="Marklund_1988_S2">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S2">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_S2</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.7190</span> <span class="o">+</span> <span class="mf">7.8497</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.0095</span> <span class="o">*</span> <span class="n">height_m</span> <span class="o">+</span> <span class="mf">0.8693</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">2.7190</span>
+        <span class="o">+</span> <span class="mf">7.8497</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">))</span>
+        <span class="o">+</span> <span class="mf">0.0095</span> <span class="o">*</span> <span class="n">height_m</span>
+        <span class="o">+</span> <span class="mf">0.8693</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="Marklund_1988_S3">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S3">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_S3</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">double_bark_mm</span><span class="p">,</span> <span class="n">age</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.5490</span> <span class="o">+</span> <span class="mf">7.7334</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.0125</span> <span class="o">*</span> <span class="n">height_m</span> <span class="o">+</span> <span class="mf">0.8854</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.0588</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">double_bark_mm</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.00191</span> <span class="o">*</span> <span class="n">age</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">2.5490</span>
+        <span class="o">+</span> <span class="mf">7.7334</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">))</span>
+        <span class="o">+</span> <span class="mf">0.0125</span> <span class="o">*</span> <span class="n">height_m</span>
+        <span class="o">+</span> <span class="mf">0.8854</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+        <span class="o">-</span> <span class="mf">0.0588</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">double_bark_mm</span><span class="p">)</span>
+        <span class="o">+</span> <span class="mf">0.00191</span> <span class="o">*</span> <span class="n">age</span>
+    <span class="p">)</span></div>
+
 
 
 <span class="n">MarklundSpruceStem</span> <span class="o">=</span> <span class="p">[</span><span class="n">Marklund_1988_S1</span><span class="p">,</span> <span class="n">Marklund_1988_S2</span><span class="p">,</span> <span class="n">Marklund_1988_S3</span><span class="p">]</span>
 <span class="n">MarklundSpruceStem</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">MarklundSpruceStem</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
 
 <span class="c1"># Norway Spruce Living branches functions</span>
 <div class="viewcode-block" id="Marklund_1988_S4">
@@ -518,20 +693,33 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.8470</span> <span class="o">+</span> <span class="mf">8.6120</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">)))</span></div>
 
 
+
 <div class="viewcode-block" id="Marklund_1988_S5">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S5">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_S5</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.9892</span> <span class="o">+</span> <span class="mf">7.1881</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.7534</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">2.9892</span> <span class="o">+</span> <span class="mf">7.1881</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.7534</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="Marklund_1988_S6">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S6">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_S6</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">crown_base_height_m</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">3.1020</span> <span class="o">+</span> <span class="mf">7.0834</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.7707</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.2426</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">3.1020</span>
+        <span class="o">+</span> <span class="mf">7.0834</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">))</span>
+        <span class="o">+</span> <span class="mf">0.7707</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+        <span class="o">-</span> <span class="mf">0.2426</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <span class="n">MarklundSpruceLivingBranches</span> <span class="o">=</span> <span class="p">[</span><span class="n">Marklund_1988_S4</span><span class="p">,</span> <span class="n">Marklund_1988_S5</span><span class="p">,</span> <span class="n">Marklund_1988_S6</span><span class="p">]</span>
-<span class="n">MarklundSpruceLivingBranches</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">MarklundSpruceLivingBranches</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">MarklundSpruceLivingBranches</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+    <span class="n">MarklundSpruceLivingBranches</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
 
 <span class="c1"># Norway Spruce Dead branches functions</span>
 <div class="viewcode-block" id="Marklund_1988_S7">
@@ -540,20 +728,33 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">4.3352</span> <span class="o">+</span> <span class="mf">5.8210</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">23</span><span class="p">)))</span></div>
 
 
+
 <div class="viewcode-block" id="Marklund_1988_S8">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S8">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_S8</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">4.4668</span> <span class="o">+</span> <span class="mf">5.3836</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">23</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.9584</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">4.4668</span> <span class="o">+</span> <span class="mf">5.3836</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">23</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.9584</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="Marklund_1988_S9">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S9">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_S9</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">crown_base_height_m</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">4.5368</span> <span class="o">+</span> <span class="mf">5.4689</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">23</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.8945</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.3322</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">4.5368</span>
+        <span class="o">+</span> <span class="mf">5.4689</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">23</span><span class="p">))</span>
+        <span class="o">+</span> <span class="mf">0.8945</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+        <span class="o">-</span> <span class="mf">0.3322</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <span class="n">MarklundSpruceDeadBranches</span> <span class="o">=</span> <span class="p">[</span><span class="n">Marklund_1988_S7</span><span class="p">,</span> <span class="n">Marklund_1988_S8</span><span class="p">,</span> <span class="n">Marklund_1988_S9</span><span class="p">]</span>
-<span class="n">MarklundSpruceDeadBranches</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">MarklundSpruceDeadBranches</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">MarklundSpruceDeadBranches</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+    <span class="n">MarklundSpruceDeadBranches</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
 
 <span class="c1"># Norway Spruce Stump-root system functions</span>
 <div class="viewcode-block" id="Marklund_1988_S10">
@@ -562,20 +763,33 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.2114</span> <span class="o">+</span> <span class="mf">7.5246</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">19</span><span class="p">)))</span></div>
 
 
+
 <div class="viewcode-block" id="Marklund_1988_S11">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S11">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_S11</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.3323</span> <span class="o">+</span> <span class="mf">6.4935</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">19</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.6055</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">2.3323</span> <span class="o">+</span> <span class="mf">6.4935</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">19</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.6055</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="Marklund_1988_S12">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S12">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_S12</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">crown_base_height_m</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.4008</span> <span class="o">+</span> <span class="mf">6.5480</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">19</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.6187</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.2052</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">2.4008</span>
+        <span class="o">+</span> <span class="mf">6.5480</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">19</span><span class="p">))</span>
+        <span class="o">+</span> <span class="mf">0.6187</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+        <span class="o">-</span> <span class="mf">0.2052</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <span class="n">MarklundSpruceStumpRootSystem</span> <span class="o">=</span> <span class="p">[</span><span class="n">Marklund_1988_S10</span><span class="p">,</span> <span class="n">Marklund_1988_S11</span><span class="p">,</span> <span class="n">Marklund_1988_S12</span><span class="p">]</span>
-<span class="n">MarklundSpruceStumpRootSystem</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">MarklundSpruceStumpRootSystem</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">MarklundSpruceStumpRootSystem</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+    <span class="n">MarklundSpruceStumpRootSystem</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
 
 <span class="c1"># Norway Spruce Stump functions</span>
 <div class="viewcode-block" id="Marklund_1988_S13">
@@ -584,20 +798,33 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">3.1444</span> <span class="o">+</span> <span class="mf">8.4027</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">15</span><span class="p">)))</span></div>
 
 
+
 <div class="viewcode-block" id="Marklund_1988_S14">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S14">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_S14</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">3.2571</span> <span class="o">+</span> <span class="mf">7.3144</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">15</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.7078</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">3.2571</span> <span class="o">+</span> <span class="mf">7.3144</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">15</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.7078</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="Marklund_1988_S15">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S15">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_S15</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">relative_bark_thickness</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">3.3738</span> <span class="o">+</span> <span class="mf">7.1416</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">15</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.7956</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.0119</span> <span class="o">*</span> <span class="n">relative_bark_thickness</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">3.3738</span>
+        <span class="o">+</span> <span class="mf">7.1416</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">15</span><span class="p">))</span>
+        <span class="o">+</span> <span class="mf">0.7956</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+        <span class="o">+</span> <span class="mf">0.0119</span> <span class="o">*</span> <span class="n">relative_bark_thickness</span>
+    <span class="p">)</span></div>
+
 
 
 <span class="n">MarklundSpruceStump</span> <span class="o">=</span> <span class="p">[</span><span class="n">Marklund_1988_S13</span><span class="p">,</span> <span class="n">Marklund_1988_S14</span><span class="p">,</span> <span class="n">Marklund_1988_S15</span><span class="p">]</span>
-<span class="n">MarklundSpruceStump</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">MarklundSpruceStump</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">MarklundSpruceStump</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+    <span class="n">MarklundSpruceStump</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
 
 <span class="c1"># Birch Stem functions</span>
 <div class="viewcode-block" id="Marklund_1988_B1">
@@ -606,20 +833,36 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.3450</span> <span class="o">+</span> <span class="mf">11.1111</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">)))</span></div>
 
 
+
 <div class="viewcode-block" id="Marklund_1988_B2">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B2">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_B2</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.7190</span> <span class="o">+</span> <span class="mf">7.8497</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.0095</span> <span class="o">*</span> <span class="n">height_m</span> <span class="o">+</span> <span class="mf">0.8693</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">2.7190</span>
+        <span class="o">+</span> <span class="mf">7.8497</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">))</span>
+        <span class="o">+</span> <span class="mf">0.0095</span> <span class="o">*</span> <span class="n">height_m</span>
+        <span class="o">+</span> <span class="mf">0.8693</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="Marklund_1988_B3">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B3">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_B3</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">double_bark_mm</span><span class="p">,</span> <span class="n">age</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.5490</span> <span class="o">+</span> <span class="mf">7.7334</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.0125</span> <span class="o">*</span> <span class="n">height_m</span> <span class="o">+</span> <span class="mf">0.8854</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.0588</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">double_bark_mm</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.00191</span> <span class="o">*</span> <span class="n">age</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">2.5490</span>
+        <span class="o">+</span> <span class="mf">7.7334</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">))</span>
+        <span class="o">+</span> <span class="mf">0.0125</span> <span class="o">*</span> <span class="n">height_m</span>
+        <span class="o">+</span> <span class="mf">0.8854</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+        <span class="o">-</span> <span class="mf">0.0588</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">double_bark_mm</span><span class="p">)</span>
+        <span class="o">+</span> <span class="mf">0.00191</span> <span class="o">*</span> <span class="n">age</span>
+    <span class="p">)</span></div>
+
 
 
 <span class="n">MarklundBirchStem</span> <span class="o">=</span> <span class="p">[</span><span class="n">Marklund_1988_B1</span><span class="p">,</span> <span class="n">Marklund_1988_B2</span><span class="p">,</span> <span class="n">Marklund_1988_B3</span><span class="p">]</span>
 <span class="n">MarklundBirchStem</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">MarklundBirchStem</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
 
 <span class="c1"># Birch Living branches functions</span>
 <div class="viewcode-block" id="Marklund_1988_B4">
@@ -628,20 +871,33 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.8470</span> <span class="o">+</span> <span class="mf">8.6120</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">)))</span></div>
 
 
+
 <div class="viewcode-block" id="Marklund_1988_B5">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B5">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_B5</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.9892</span> <span class="o">+</span> <span class="mf">7.1881</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.7534</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">2.9892</span> <span class="o">+</span> <span class="mf">7.1881</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.7534</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="Marklund_1988_B6">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B6">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_B6</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">crown_base_height_m</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">3.1020</span> <span class="o">+</span> <span class="mf">7.0834</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.7707</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.2426</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">3.1020</span>
+        <span class="o">+</span> <span class="mf">7.0834</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">))</span>
+        <span class="o">+</span> <span class="mf">0.7707</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+        <span class="o">-</span> <span class="mf">0.2426</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <span class="n">MarklundBirchLivingBranches</span> <span class="o">=</span> <span class="p">[</span><span class="n">Marklund_1988_B4</span><span class="p">,</span> <span class="n">Marklund_1988_B5</span><span class="p">,</span> <span class="n">Marklund_1988_B6</span><span class="p">]</span>
-<span class="n">MarklundBirchLivingBranches</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">MarklundBirchLivingBranches</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">MarklundBirchLivingBranches</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+    <span class="n">MarklundBirchLivingBranches</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
 
 <span class="c1"># Birch Dead branches functions</span>
 <div class="viewcode-block" id="Marklund_1988_B7">
@@ -650,20 +906,33 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">4.3352</span> <span class="o">+</span> <span class="mf">5.8210</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">23</span><span class="p">)))</span></div>
 
 
+
 <div class="viewcode-block" id="Marklund_1988_B8">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B8">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_B8</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">4.4668</span> <span class="o">+</span> <span class="mf">5.3836</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">23</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.9584</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">4.4668</span> <span class="o">+</span> <span class="mf">5.3836</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">23</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.9584</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="Marklund_1988_B9">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B9">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_B9</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">crown_base_height_m</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">4.5368</span> <span class="o">+</span> <span class="mf">5.4689</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">23</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.8945</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.3322</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">4.5368</span>
+        <span class="o">+</span> <span class="mf">5.4689</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">23</span><span class="p">))</span>
+        <span class="o">+</span> <span class="mf">0.8945</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+        <span class="o">-</span> <span class="mf">0.3322</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <span class="n">MarklundBirchDeadBranches</span> <span class="o">=</span> <span class="p">[</span><span class="n">Marklund_1988_B7</span><span class="p">,</span> <span class="n">Marklund_1988_B8</span><span class="p">,</span> <span class="n">Marklund_1988_B9</span><span class="p">]</span>
-<span class="n">MarklundBirchDeadBranches</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">MarklundBirchDeadBranches</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">MarklundBirchDeadBranches</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+    <span class="n">MarklundBirchDeadBranches</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
 
 <span class="c1"># Birch Stump-root system functions</span>
 <div class="viewcode-block" id="Marklund_1988_B10">
@@ -672,20 +941,33 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.2114</span> <span class="o">+</span> <span class="mf">7.5246</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">19</span><span class="p">)))</span></div>
 
 
+
 <div class="viewcode-block" id="Marklund_1988_B11">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B11">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_B11</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.3323</span> <span class="o">+</span> <span class="mf">6.4935</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">19</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.6055</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">2.3323</span> <span class="o">+</span> <span class="mf">6.4935</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">19</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.6055</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="Marklund_1988_B12">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B12">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_B12</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">crown_base_height_m</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.4008</span> <span class="o">+</span> <span class="mf">6.5480</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">19</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.6187</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.2052</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">2.4008</span>
+        <span class="o">+</span> <span class="mf">6.5480</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">19</span><span class="p">))</span>
+        <span class="o">+</span> <span class="mf">0.6187</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+        <span class="o">-</span> <span class="mf">0.2052</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <span class="n">MarklundBirchStumpRootSystem</span> <span class="o">=</span> <span class="p">[</span><span class="n">Marklund_1988_B10</span><span class="p">,</span> <span class="n">Marklund_1988_B11</span><span class="p">,</span> <span class="n">Marklund_1988_B12</span><span class="p">]</span>
-<span class="n">MarklundBirchStumpRootSystem</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">MarklundBirchStumpRootSystem</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">MarklundBirchStumpRootSystem</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+    <span class="n">MarklundBirchStumpRootSystem</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
 
 <span class="c1"># Birch Stump functions</span>
 <div class="viewcode-block" id="Marklund_1988_B13">
@@ -694,60 +976,76 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">3.1444</span> <span class="o">+</span> <span class="mf">8.4027</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">15</span><span class="p">)))</span></div>
 
 
+
 <div class="viewcode-block" id="Marklund_1988_B14">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B14">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_B14</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">3.2571</span> <span class="o">+</span> <span class="mf">7.3144</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">15</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.7078</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">3.2571</span> <span class="o">+</span> <span class="mf">7.3144</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">15</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.7078</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="Marklund_1988_B15">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B15">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_B15</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">relative_bark_thickness</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">3.3738</span> <span class="o">+</span> <span class="mf">7.1416</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">15</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.7956</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.0119</span> <span class="o">*</span> <span class="n">relative_bark_thickness</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="mf">3.3738</span>
+        <span class="o">+</span> <span class="mf">7.1416</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">15</span><span class="p">))</span>
+        <span class="o">+</span> <span class="mf">0.7956</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
+        <span class="o">+</span> <span class="mf">0.0119</span> <span class="o">*</span> <span class="n">relative_bark_thickness</span>
+    <span class="p">)</span></div>
+
 
 
 <span class="n">MarklundBirchStump</span> <span class="o">=</span> <span class="p">[</span><span class="n">Marklund_1988_B13</span><span class="p">,</span> <span class="n">Marklund_1988_B14</span><span class="p">,</span> <span class="n">Marklund_1988_B15</span><span class="p">]</span>
 <span class="n">MarklundBirchStump</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">MarklundBirchStump</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="n">species_map</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;pinus sylvestris&#39;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s1">&#39;stem&#39;</span><span class="p">:</span> <span class="n">MarklundPineStem</span><span class="p">,</span>
-            <span class="s1">&#39;stem_wood&#39;</span><span class="p">:</span> <span class="n">MarklundPineStemWood</span><span class="p">,</span>
-            <span class="s1">&#39;stem_bark&#39;</span><span class="p">:</span> <span class="n">MarklundPineBark</span><span class="p">,</span>
-            <span class="s1">&#39;living_branches&#39;</span><span class="p">:</span> <span class="n">MarklundPineLivingBranches</span><span class="p">,</span>
-            <span class="s1">&#39;needles&#39;</span><span class="p">:</span> <span class="n">MarklundPineNeedles</span><span class="p">,</span>
-            <span class="s1">&#39;dead_branches&#39;</span><span class="p">:</span> <span class="n">MarklundPineDeadBranches</span><span class="p">,</span>
-            <span class="s1">&#39;stump_root_system&#39;</span><span class="p">:</span> <span class="n">MarklundPineStumpRootSystem</span><span class="p">,</span>
-            <span class="s1">&#39;stump&#39;</span><span class="p">:</span> <span class="n">MarklundPineStump</span>
-        <span class="p">},</span>
-        <span class="s1">&#39;picea abies&#39;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s1">&#39;stem&#39;</span><span class="p">:</span> <span class="n">MarklundSpruceStem</span><span class="p">,</span>
-            <span class="s1">&#39;living_branches&#39;</span><span class="p">:</span> <span class="n">MarklundSpruceLivingBranches</span><span class="p">,</span>
-            <span class="s1">&#39;dead_branches&#39;</span><span class="p">:</span> <span class="n">MarklundSpruceDeadBranches</span><span class="p">,</span>
-            <span class="s1">&#39;stump_root_system&#39;</span><span class="p">:</span> <span class="n">MarklundSpruceStumpRootSystem</span><span class="p">,</span>
-            <span class="s1">&#39;stump&#39;</span><span class="p">:</span> <span class="n">MarklundSpruceStump</span>
-        <span class="p">},</span>
-        <span class="s1">&#39;betula pendula&#39;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s1">&#39;stem&#39;</span><span class="p">:</span> <span class="n">MarklundBirchStem</span><span class="p">,</span>
-            <span class="s1">&#39;living_branches&#39;</span><span class="p">:</span> <span class="n">MarklundBirchLivingBranches</span><span class="p">,</span>
-            <span class="s1">&#39;dead_branches&#39;</span><span class="p">:</span> <span class="n">MarklundBirchDeadBranches</span><span class="p">,</span>
-            <span class="s1">&#39;stump_root_system&#39;</span><span class="p">:</span> <span class="n">MarklundBirchStumpRootSystem</span><span class="p">,</span>
-            <span class="s1">&#39;stump&#39;</span><span class="p">:</span> <span class="n">MarklundBirchStump</span>
-        <span class="p">},</span>
-        <span class="s1">&#39;betula pubescens&#39;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s1">&#39;stem&#39;</span><span class="p">:</span> <span class="n">MarklundBirchStem</span><span class="p">,</span>
-            <span class="s1">&#39;living_branches&#39;</span><span class="p">:</span> <span class="n">MarklundBirchLivingBranches</span><span class="p">,</span>
-            <span class="s1">&#39;dead_branches&#39;</span><span class="p">:</span> <span class="n">MarklundBirchDeadBranches</span><span class="p">,</span>
-            <span class="s1">&#39;stump_root_system&#39;</span><span class="p">:</span> <span class="n">MarklundBirchStumpRootSystem</span><span class="p">,</span>
-            <span class="s1">&#39;stump&#39;</span><span class="p">:</span> <span class="n">MarklundBirchStump</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
+    <span class="s2">&quot;pinus sylvestris&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;stem&quot;</span><span class="p">:</span> <span class="n">MarklundPineStem</span><span class="p">,</span>
+        <span class="s2">&quot;stem_wood&quot;</span><span class="p">:</span> <span class="n">MarklundPineStemWood</span><span class="p">,</span>
+        <span class="s2">&quot;stem_bark&quot;</span><span class="p">:</span> <span class="n">MarklundPineBark</span><span class="p">,</span>
+        <span class="s2">&quot;living_branches&quot;</span><span class="p">:</span> <span class="n">MarklundPineLivingBranches</span><span class="p">,</span>
+        <span class="s2">&quot;needles&quot;</span><span class="p">:</span> <span class="n">MarklundPineNeedles</span><span class="p">,</span>
+        <span class="s2">&quot;dead_branches&quot;</span><span class="p">:</span> <span class="n">MarklundPineDeadBranches</span><span class="p">,</span>
+        <span class="s2">&quot;stump_root_system&quot;</span><span class="p">:</span> <span class="n">MarklundPineStumpRootSystem</span><span class="p">,</span>
+        <span class="s2">&quot;stump&quot;</span><span class="p">:</span> <span class="n">MarklundPineStump</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;picea abies&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;stem&quot;</span><span class="p">:</span> <span class="n">MarklundSpruceStem</span><span class="p">,</span>
+        <span class="s2">&quot;living_branches&quot;</span><span class="p">:</span> <span class="n">MarklundSpruceLivingBranches</span><span class="p">,</span>
+        <span class="s2">&quot;dead_branches&quot;</span><span class="p">:</span> <span class="n">MarklundSpruceDeadBranches</span><span class="p">,</span>
+        <span class="s2">&quot;stump_root_system&quot;</span><span class="p">:</span> <span class="n">MarklundSpruceStumpRootSystem</span><span class="p">,</span>
+        <span class="s2">&quot;stump&quot;</span><span class="p">:</span> <span class="n">MarklundSpruceStump</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;betula pendula&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;stem&quot;</span><span class="p">:</span> <span class="n">MarklundBirchStem</span><span class="p">,</span>
+        <span class="s2">&quot;living_branches&quot;</span><span class="p">:</span> <span class="n">MarklundBirchLivingBranches</span><span class="p">,</span>
+        <span class="s2">&quot;dead_branches&quot;</span><span class="p">:</span> <span class="n">MarklundBirchDeadBranches</span><span class="p">,</span>
+        <span class="s2">&quot;stump_root_system&quot;</span><span class="p">:</span> <span class="n">MarklundBirchStumpRootSystem</span><span class="p">,</span>
+        <span class="s2">&quot;stump&quot;</span><span class="p">:</span> <span class="n">MarklundBirchStump</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;betula pubescens&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;stem&quot;</span><span class="p">:</span> <span class="n">MarklundBirchStem</span><span class="p">,</span>
+        <span class="s2">&quot;living_branches&quot;</span><span class="p">:</span> <span class="n">MarklundBirchLivingBranches</span><span class="p">,</span>
+        <span class="s2">&quot;dead_branches&quot;</span><span class="p">:</span> <span class="n">MarklundBirchDeadBranches</span><span class="p">,</span>
+        <span class="s2">&quot;stump_root_system&quot;</span><span class="p">:</span> <span class="n">MarklundBirchStumpRootSystem</span><span class="p">,</span>
+        <span class="s2">&quot;stump&quot;</span><span class="p">:</span> <span class="n">MarklundBirchStump</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">}</span>
 
 
 <span class="c1"># Wrapper function</span>
 <div class="viewcode-block" id="Marklund_1988">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988</span><span class="p">(</span><span class="n">species</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">component</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">timber</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Timber</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988</span><span class="p">(</span>
+    <span class="n">species</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">component</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+    <span class="n">timber</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Timber</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the dry-weight biomass for individual trees in Sweden.</span>
 
@@ -791,10 +1089,19 @@
 <span class="sd">        {&#39;stem&#39;: 148.8, &#39;stump&#39;: 34.6, &#39;roots_1mm&#39;: 30.0}</span>
 
 <span class="sd">        &gt;&gt;&gt; # Calculate biomass for a Scots pine with DBH and height</span>
-<span class="sd">        &gt;&gt;&gt; Marklund_1988_biomass_Sweden(species=&#39;Pinus sylvestris&#39;, DBH=25, height_m=18)</span>
-<span class="sd">        {&#39;stem&#39;: 234.1, &#39;bark&#39;: 30.5, &#39;living_branches&#39;: 45.2, &#39;dead_branches&#39;: 5.1, &#39;stump&#39;: 55.7, &#39;roots_1mm&#39;: 49.8}</span>
+<span class="sd">        &gt;&gt;&gt; Marklund_1988_biomass_Sweden(</span>
+<span class="sd">        ...     species=&#39;Pinus sylvestris&#39;, DBH=25, height_m=18</span>
+<span class="sd">        ... )</span>
+<span class="sd">        {</span>
+<span class="sd">            &#39;stem&#39;: 234.1,</span>
+<span class="sd">            &#39;bark&#39;: 30.5,</span>
+<span class="sd">            &#39;living_branches&#39;: 45.2,</span>
+<span class="sd">            &#39;dead_branches&#39;: 5.1,</span>
+<span class="sd">            &#39;stump&#39;: 55.7,</span>
+<span class="sd">            &#39;roots_1mm&#39;: 49.8,</span>
+<span class="sd">        }</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
+
     <span class="c1"># Handle Timber object as the first argument if provided</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">species</span><span class="p">,</span> <span class="n">Timber</span><span class="p">):</span>
         <span class="n">timber</span> <span class="o">=</span> <span class="n">species</span>
@@ -804,10 +1111,10 @@
         <span class="n">timber</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
         <span class="n">species</span> <span class="o">=</span> <span class="n">timber</span><span class="o">.</span><span class="n">species</span>
         <span class="n">component_args</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;diameter_cm&#39;</span><span class="p">:</span> <span class="n">timber</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span>
-            <span class="s1">&#39;height_m&#39;</span><span class="p">:</span> <span class="n">timber</span><span class="o">.</span><span class="n">height_m</span><span class="p">,</span>
-            <span class="s1">&#39;double_bark_mm&#39;</span><span class="p">:</span> <span class="n">timber</span><span class="o">.</span><span class="n">double_bark_mm</span><span class="p">,</span>
-            <span class="s1">&#39;crown_base_height_m&#39;</span><span class="p">:</span> <span class="n">timber</span><span class="o">.</span><span class="n">crown_base_height_m</span>
+            <span class="s2">&quot;diameter_cm&quot;</span><span class="p">:</span> <span class="n">timber</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span>
+            <span class="s2">&quot;height_m&quot;</span><span class="p">:</span> <span class="n">timber</span><span class="o">.</span><span class="n">height_m</span><span class="p">,</span>
+            <span class="s2">&quot;double_bark_mm&quot;</span><span class="p">:</span> <span class="n">timber</span><span class="o">.</span><span class="n">double_bark_mm</span><span class="p">,</span>
+            <span class="s2">&quot;crown_base_height_m&quot;</span><span class="p">:</span> <span class="n">timber</span><span class="o">.</span><span class="n">crown_base_height_m</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">component_args</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">})</span>
 
@@ -824,7 +1131,9 @@
         <span class="n">functions</span> <span class="o">=</span> <span class="n">species_map</span><span class="p">[</span><span class="n">species</span><span class="p">][</span><span class="n">component</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">functions</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="n">params</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span>
+                <span class="n">call_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">params</span><span class="p">}</span>
+                <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">**</span><span class="n">call_kwargs</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
                 <span class="k">continue</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No function matched the provided arguments.&quot;</span><span class="p">)</span>
@@ -834,7 +1143,9 @@
         <span class="k">for</span> <span class="n">comp</span><span class="p">,</span> <span class="n">functions</span> <span class="ow">in</span> <span class="n">species_map</span><span class="p">[</span><span class="n">species</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">functions</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="n">results</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                    <span class="n">params</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span>
+                    <span class="n">call_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">params</span><span class="p">}</span>
+                    <span class="n">results</span><span class="p">[</span><span class="n">comp</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">**</span><span class="n">call_kwargs</span><span class="p">)</span>
                     <span class="k">break</span>
                 <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
                     <span class="k">continue</span>
