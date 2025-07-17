@@ -9,6 +9,7 @@ pyforestry Documentation
 
    api/modules
    notebooks/tree_species_intro
+   notebooks/timber_bucking_demo
    notebooks/stand_site_enum_demo
    notebooks/marklund_swetimber_demo
 
