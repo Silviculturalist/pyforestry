@@ -10,5 +10,6 @@ pyforestry Documentation
    api/modules
    notebooks/tree_species_intro
    notebooks/stand_site_enum_demo
+   notebooks/marklund_swetimber_demo
 
 ..
