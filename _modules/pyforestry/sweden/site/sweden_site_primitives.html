@@ -286,13 +286,17 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for pyforestry.sweden.site.sweden_site_primitives</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span></span><span class="sd">&quot;&quot;&quot;Dataclasses defining Swedish site classification codes.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 
 
 <div class="viewcode-block" id="Vegetation">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.Vegetation">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Vegetation</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Vegetation type with a productivity index.&quot;&quot;&quot;</span>
+
     <span class="n">code</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">swedish_name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">english_name</span><span class="p">:</span> <span class="nb">str</span>
@@ -304,6 +308,8 @@
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.BottomLayerType">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">BottomLayerType</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Main ground vegetation category.&quot;&quot;&quot;</span>
+
     <span class="n">code</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">english_name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">swedish_name</span><span class="p">:</span> <span class="nb">str</span></div>
@@ -314,6 +320,8 @@
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.SoilWaterCat">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SoilWaterCat</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Qualitative class describing soil water availability.&quot;&quot;&quot;</span>
+
     <span class="n">code</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">swedish_description</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">english_description</span><span class="p">:</span> <span class="nb">str</span></div>
@@ -324,6 +332,8 @@
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.SoilDepthCat">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SoilDepthCat</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Categorical depth to parent material.&quot;&quot;&quot;</span>
+
     <span class="n">code</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">swedish_description</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">english_description</span><span class="p">:</span> <span class="nb">str</span></div>
@@ -334,6 +344,8 @@
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.SoilTextureCategory">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SoilTextureCategory</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Soil texture group such as clay or sand.&quot;&quot;&quot;</span>
+
     <span class="n">code</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">swedish_name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">english_name</span><span class="p">:</span> <span class="nb">str</span>
@@ -345,6 +357,8 @@
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.SoilMoistureData">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SoilMoistureData</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Relative soil moisture description.&quot;&quot;&quot;</span>
+
     <span class="n">code</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">swedish_description</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">english_description</span><span class="p">:</span> <span class="nb">str</span></div>
@@ -355,6 +369,8 @@
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.PeatHumificationCat">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">PeatHumificationCat</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Degree of humification for peat soils.&quot;&quot;&quot;</span>
+
     <span class="n">code</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">swedish_description</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">english_description</span><span class="p">:</span> <span class="nb">str</span></div>
@@ -365,6 +381,8 @@
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.CountyData">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">CountyData</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Swedish county identifier.&quot;&quot;&quot;</span>
+
     <span class="n">code</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">label</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># Descriptive string label</span></div>
 
@@ -374,6 +392,8 @@
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.ClimateZoneData">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ClimateZoneData</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Zonal climate classification.&quot;&quot;&quot;</span>
+
     <span class="n">code</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">label</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># e.g., &quot;M1&quot;, &quot;K2&quot;</span>
     <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># Descriptive name</span></div>
