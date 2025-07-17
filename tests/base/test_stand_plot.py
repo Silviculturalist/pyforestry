@@ -1,24 +1,25 @@
-import pytest
-from shapely.geometry import Point, Polygon
+import math
 import random
 
+import pytest
+from pyproj import CRS
+from shapely.geometry import Point, Polygon
+
 from pyforestry.base.helpers import (
-    CircularPlot,
-    Diameter_cm,
-    Stand,
-    parse_tree_species,
-    RepresentationTree,
     AngleCount,
     AngleCountAggregator,
-    Position,
-    TreeSpecies,
-    Stems,
-    StandBasalArea,
     AtomicVolume,
-    CompositeVolume
+    CircularPlot,
+    Diameter_cm,
+    Position,
+    RepresentationTree,
+    Stand,
+    StandBasalArea,
+    Stems,
+    TreeSpecies,
+    parse_tree_species,
 )
-import math
-from pyproj import CRS
+
 
 def test_diameter_cm():
     """Test the Diameter_cm class for basic constraints."""
@@ -63,7 +64,7 @@ def test_stand_polygon_mismatch_value_error():
     """Check that a mismatch in user area_ha vs. polygon area triggers a ValueError."""
     poly = Polygon([(0, 0), (100, 0), (100, 100), (0, 100)])  # 10000 m² => 1 ha
     with pytest.raises(ValueError, match='Polygon area is 1.00 ha, but you set area_ha=2.00 ha.'):
-        st = Stand(polygon=poly, crs=CRS('EPSG:3006'), area_ha=2.0)
+        Stand(polygon=poly, crs=CRS('EPSG:3006'), area_ha=2.0)
 
 
 def test_stand_metric_calculations():
@@ -240,6 +241,26 @@ def test_stand_metric_accessor_species_keyerror():
         _ = st.BasalArea("nonexistent species")
 
 
+def test_qmd_recomputes_after_append_plot():
+    """QMD values should update when a new plot is added."""
+    sp = parse_tree_species("picea abies")
+
+    plot1 = CircularPlot(
+        id=1, radius_m=5.0, trees=[RepresentationTree(species=sp, diameter_cm=20)]
+    )
+    stand = Stand(plots=[plot1])
+    initial_qmd = stand.QMD.TOTAL.value
+
+    plot2 = CircularPlot(
+        id=2, radius_m=5.0, trees=[RepresentationTree(species=sp, diameter_cm=40)]
+    )
+    stand.append_plot(plot2)
+
+    updated_qmd = stand.QMD.TOTAL.value
+
+    assert not math.isclose(initial_qmd, updated_qmd)
+
+
 # --- Test H-T estimator with RepresentationTrees ---
 
 # Use the existing diameter-height relation from the bias function:
@@ -250,7 +271,7 @@ def compute_height(d_cm: float) -> float:
 def test_random_plots_on_stand():
     # Define a rectangular stand (200 m x 100 m)
     stand_polygon = Polygon([(0, 0), (200, 0), (200, 100), (0, 100)])
-    
+
     # Parameters for plots and species
     r = 7.62  # plot radius in meters
     n_plots = 10
@@ -281,16 +302,16 @@ def test_random_plots_on_stand():
         occlusion = max(0.0,min(1 - (intersection_area / area_circle),0.9999))
         # Create the plot. (The constructor requires occlusion to be in [0, 1))
         plot = CircularPlot(id=i+1, position=pos, radius_m=r, occlusion=occlusion)
-        
+
         # Calculate the effective plot area in hectares:
         plot_area_ha = plot.area_ha  # total plot area in ha
         effective_area_ha = plot_area_ha * (1 - occlusion)
-        
+
         # Expected number of trees = density (trees/ha) * effective area (ha)
         # Round to nearest integer for simulation.
         n_pinus = int(round(density_pinus * effective_area_ha))
         n_picea = int(round(density_picea * effective_area_ha))
-        
+
         # Create RepresentationTree objects for each species.
         trees = []
         for _ in range(n_pinus):
@@ -309,15 +330,15 @@ def test_random_plots_on_stand():
             ))
         plot.trees = trees
         plots.append(plot)
-    
+
     # Create the stand with the polygon and the generated plots.
     stand = Stand(plots=plots, polygon=stand_polygon)
-    
-    # Get the aggregated metrics via the accessors.
-    # (Since plots supply AngleCount data? – In this test, we use tree data, so the _compute_ht_estimates method is used.)
+
+    # Get the aggregated metrics via the accessors. In this test we use tree
+    # data, so the _compute_ht_estimates method is used.
     ba_accessor = stand.BasalArea
     stems_accessor = stand.Stems
-    
+
     # Extract species-level metrics:
     ba_pinus = ba_accessor(TreeSpecies.Sweden.pinus_sylvestris)
     ba_picea = ba_accessor(TreeSpecies.Sweden.picea_abies)
@@ -325,13 +346,13 @@ def test_random_plots_on_stand():
     stems_picea = stems_accessor(TreeSpecies.Sweden.picea_abies)
     ba_total = ba_accessor.TOTAL
     stems_total = stems_accessor.TOTAL
-    
+
     top_height = stand.get_dominant_height()
 
     qmd_total = stand.QMD.TOTAL
     qmd_pinus = stand.QMD(TreeSpecies.Sweden.pinus_sylvestris)
     qmd_picea = stand.QMD(TreeSpecies.Sweden.picea_abies)
-       
+
     # Basic assertions: all values should be > 0.
     assert ba_pinus.value > 0
     assert ba_picea.value > 0
@@ -342,7 +363,7 @@ def test_random_plots_on_stand():
     assert top_height is not None
     assert top_height.value > 0
     assert qmd_total.value > 0
-    assert qmd_total.precision >0 
+    assert qmd_total.precision >0
     assert qmd_picea.value > 0
     assert qmd_picea.precision > 0
     assert qmd_pinus.value > 0
