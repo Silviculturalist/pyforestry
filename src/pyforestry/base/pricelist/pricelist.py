@@ -1,12 +1,15 @@
-from enum import IntEnum
 from dataclasses import dataclass
-from typing import List, Optional, Dict, Tuple, Union, Iterable, Sequence
-from pyforestry.base.helpers.tree_species import parse_tree_species, TreeName
+from enum import IntEnum
+from typing import Dict, Iterable, List, Optional, Sequence, Union
+
+from pyforestry.base.helpers.tree_species import TreeName, parse_tree_species
+
 
 @dataclass
 class DiameterRange:
     Min: float
     Max: float
+
 
 @dataclass
 class LengthRange:
@@ -19,6 +22,7 @@ class TimberPriceForDiameter:
     Represents the set of prices for a given diameter, for each log part type.
     E.g. an entry might store: PriceButt, PriceMiddle, PriceTop, ...
     """
+
     def __init__(self, butt_price: float, middle_price: float, top_price: float):
         self.butt_price = butt_price
         self.middle_price = middle_price
@@ -35,15 +39,19 @@ class TimberPriceForDiameter:
         else:
             return 0.0
 
+
 class LengthCorrections:
     """
     Holds logic for how the length modifies price (absolute or percent).
-    Now accepts a dictionary of corrections in the form:
-      { diameter: { length: correction_percentage, ... }, ... }
+
+    Now accepts a dictionary of corrections in the form::
+
+        {diameter: {length: correction_percentage, ...}, ...}
     """
+
     def __init__(self, corrections: Optional[Dict[int, Dict[int, int]]] = None):
         self.corrections = corrections or {}
-    
+
     def get_length_correction(self, diameter: int, log_part: Optional[int], length: int) -> int:
         """
         Returns the correction percentage for a given diameter and log length.
@@ -54,27 +62,28 @@ class LengthCorrections:
             return 0
         length_dict = self.corrections[diameter]
         # Get all lengths that are <= provided length
-        available_lengths = sorted(l for l in length_dict.keys() if l <= length)
+        available_lengths = sorted(
+            length_val for length_val in length_dict.keys() if length_val <= length
+        )
         if available_lengths:
             nearest_length = max(available_lengths)
             return length_dict[nearest_length]
         return 0  # no suitable correction
 
+
 class TimberPricelist:
     """Stores the entire set of timber prices by diameter class, etc."""
+
     # Using your code's idea of enumerations: Butt = 0, Middle = 1, Top = 2 ...
     class LogParts(IntEnum):
         Butt = 0
         Middle = 1
         Top = 2
 
-    def __init__(self, 
-                 min_diameter: int, 
-                 max_diameter: int, 
-                 volume_type: str = "m3to"):
+    def __init__(self, min_diameter: int, max_diameter: int, volume_type: str = "m3to"):
         self.min_diameter = min_diameter
         self.max_diameter = max_diameter
-        self.volume_type  = volume_type  # e.g. "m3to" or "m3fub"
+        self.volume_type = volume_type  # e.g. "m3to" or "m3fub"
         self._price_by_diameter: Dict[int, TimberPriceForDiameter] = {}
         # Default length corrections (can be replaced when data is loaded)
         self.length_corrections = LengthCorrections()
@@ -83,7 +92,7 @@ class TimberPricelist:
         self.downgrade_proportions: Dict[str, float] = {}
 
         # Example maximum heights for different quality logs
-        self.max_height_quality1 = 99.9  # in meters 
+        self.max_height_quality1 = 99.9  # in meters
         self.max_height_quality2 = 99.9
         self.max_height_quality3 = 99.9
 
@@ -103,19 +112,24 @@ class TimberPricelist:
     def maxDiameter(self):
         return self.max_diameter
 
-    def getTimberWeight(self, log_part: 'TimberPricelist.LogParts'):
+    def getTimberWeight(self, log_part: "TimberPricelist.LogParts"):
         """
         If you're applying downgrading or certain proportions for pulp/fuel/cull,
-        return an object that has .PulpwoodPercentage, .FuelWoodPercentage, .LogCullPercentage, etc.
-        This is a placeholder. 
+        this returns an object with attributes like ``.PulpwoodPercentage``,
+        ``.FuelWoodPercentage`` and ``.LogCullPercentage``.
+        This is a placeholder.
         """
+
         class LogWeights:
             pulpwoodPercentage = 0.0
             fuelWoodPercentage = 0.0
-            logCullPercentage  = 0.0
+            logCullPercentage = 0.0
+
         return LogWeights()
-    
-    def price_for_log_part(self, log_part: 'TimberPricelist.LogParts', diameter_cm: float) -> float:
+
+    def price_for_log_part(
+        self, log_part: "TimberPricelist.LogParts", diameter_cm: float
+    ) -> float:
         """
         Get the price for a given log part (Butt, Middle, Top) at a given diameter (cm).
         Rounds or floors the diameter to the nearest available diameter class.
@@ -127,18 +141,21 @@ class TimberPricelist:
     def get_nearest_diameter_class(self, diameter_cm: float) -> int:
         """
         Returns the closest available diameter class (floored down to available class).
-        If the requested diameter is smaller than min, returns min. If larger than max, returns max.
+        If the requested diameter is smaller than ``min``, returns ``min``.
+        If larger than ``max``, returns ``max``.
         """
         available_classes = sorted(self._price_by_diameter.keys())
         suitable_classes = [d for d in available_classes if d <= diameter_cm]
-        
+
         if suitable_classes:
             return max(suitable_classes)
         else:
             return 0  # smallest available class
 
+
 class PulpPricelist:
     """Placeholder for pulp prices per species."""
+
     def __init__(self):
         self._prices = {}
 
@@ -155,7 +172,6 @@ class PulpPricelist:
             except ValueError:
                 # Could not parse full species; treat the string as a genus.
                 species_obj = None
-                normalized = species.strip().lower()
         else:
             species_obj = species
 
@@ -170,10 +186,8 @@ class PulpPricelist:
                     return self._prices[genus_key]
         else:
             # When species_obj is None, try matching the input as a genus.
-            NotImplementedError(
-                'TODO: Implement species via genus'
-            )
-            #if normalized in self._prices:
+            NotImplementedError("TODO: Implement species via genus")
+            # if normalized in self._prices:
             #    return self._prices[normalized]
 
         # Default price if no match is found.
@@ -182,12 +196,13 @@ class PulpPricelist:
 
 class Pricelist:
     """Holds the combined pulpwood, timber, etc. prices and constraints."""
+
     def __init__(self):
         self.Timber: Dict[str, TimberPricelist] = {}
         self.PulpLogDiameter = DiameterRange(5, 70)
         self.Pulp = PulpPricelist()
         self.TopDiameter: int = 5
-        self.LogCullPrice: float = 50 
+        self.LogCullPrice: float = 50
         self.FuelWoodPrice: float = 25
         self.HighStumpHeight: float = 0.0
         self.PulpLogLength = LengthRange(30, 50)
@@ -208,7 +223,7 @@ class Pricelist:
             self.Pulp._prices = common["PulpwoodPrices"]
 
             # Load timber data for all species in the pricelist
-            for species_key in [key for key in price_data if key != 'Common']:
+            for species_key in [key for key in price_data if key != "Common"]:
                 self._load_species_specific_data(price_data, species_key)
 
         except KeyError as e:
@@ -220,11 +235,11 @@ class Pricelist:
         """Helper to load data for a single species."""
         timber_data = price_data[species_key]
         diameters = list(timber_data["DiameterPrices"].keys())
-        
+
         timber_pricelist = TimberPricelist(
             min_diameter=min(diameters),
             max_diameter=max(diameters),
-            volume_type=timber_data["VolumeType"]
+            volume_type=timber_data["VolumeType"],
         )
 
         for diameter, prices in timber_data["DiameterPrices"].items():
@@ -248,8 +263,7 @@ class Pricelist:
 
 
 def create_pricelist_from_data(
-    price_data: dict,
-    species_to_load: Optional[Union[str, Sequence[str]]] = None
+    price_data: dict, species_to_load: Optional[Union[str, Sequence[str]]] = None
 ) -> Pricelist:
     """
     Build a `Pricelist` from a dictionary.
@@ -278,27 +292,23 @@ def create_pricelist_from_data(
         raise ValueError("Price data is missing the mandatory 'Common' block") from exc
 
     pricelist.PulpLogDiameter = DiameterRange(*common["PulpLogDiameterRange"])
-    pricelist.TopDiameter     = common["TopDiameter"]
-    pricelist.LogCullPrice    = common["HarvestResiduePrice"]
-    pricelist.FuelWoodPrice   = common["FuelwoodLogPrice"]
+    pricelist.TopDiameter = common["TopDiameter"]
+    pricelist.LogCullPrice = common["HarvestResiduePrice"]
+    pricelist.FuelWoodPrice = common["FuelwoodLogPrice"]
     pricelist.HighStumpHeight = common["HighStumpHeight"]
-    pricelist.PulpLogLength   = LengthRange(*common["PulpwoodLengthRange"])
+    pricelist.PulpLogLength = LengthRange(*common["PulpwoodLengthRange"])
     pricelist.TimberLogLength = LengthRange(*common["SawlogLengthRange"])
-    pricelist.Pulp._prices    = common["PulpwoodPrices"]
+    pricelist.Pulp._prices = common["PulpwoodPrices"]
 
     # ---- normalise parameter -------------------------------------------
     if species_to_load is None:
-        species_keys: List[str] = [
-            k for k in price_data.keys() if k != "Common"
-        ]
+        species_keys: List[str] = [k for k in price_data.keys() if k != "Common"]
     elif isinstance(species_to_load, str):
         species_keys = [species_to_load]
     elif isinstance(species_to_load, Iterable):
         species_keys = list(species_to_load)
     else:
-        raise TypeError(
-            "'species_to_load' must be None, a string, or an iterable of strings"
-        )
+        raise TypeError("'species_to_load' must be None, a string, or an iterable of strings")
 
     # ---- load timber price tables --------------------------------------
     for sp in species_keys:
@@ -308,8 +318,6 @@ def create_pricelist_from_data(
             # It is OK if the species is missing in timber tables but present
             # in the pulp‑price section – we already copied those above.
             if sp not in common["PulpwoodPrices"]:
-                raise ValueError(
-                    f"Species '{sp}' not found in timber prices **or** pulp prices."
-                )
+                raise ValueError(f"Species '{sp}' not found in timber prices **or** pulp prices.")
 
     return pricelist
