@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from math import exp
+from typing import cast
 
 from pyforestry.base.helpers import Age, SiteIndexValue, TreeSpecies, enum_code
 from pyforestry.sweden.geo.humidity.eriksson_1986 import eriksson_1986_humidity
@@ -60,13 +61,13 @@ def tegnhammar_1992_adjusted_spruce_si_by_stand_variables(
             humidity = 0
 
     # convert enums to numeric codes if needed
-    vegetation = enum_code(vegetation)
-    ground_layer = enum_code(ground_layer)
-    soil_moisture = enum_code(soil_moisture)
-    soil_depth = enum_code(soil_depth)
-    soil_texture = enum_code(soil_texture)
-    lateral_water = enum_code(lateral_water)
-    peat_humification = enum_code(peat_humification)
+    vegetation = cast(int, enum_code(vegetation))
+    ground_layer = cast(int, enum_code(ground_layer))
+    soil_moisture = cast(int, enum_code(soil_moisture))
+    soil_depth = cast(int, enum_code(soil_depth))
+    soil_texture = cast(int, enum_code(soil_texture))
+    lateral_water = cast(int, enum_code(lateral_water))
+    peat_humification = cast(int, enum_code(peat_humification))
 
     # Determine if site is north or south of Limes Norrlandicus
     # (Placeholder logic; replace with actual spatial analysis if required.)
