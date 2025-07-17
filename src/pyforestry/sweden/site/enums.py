@@ -5,6 +5,7 @@ from .sweden_site_primitives import (
     BottomLayerType,
     ClimateZoneData,
     CountyData,
+    PeatHumificationCat,
     SoilDepthCat,
     SoilMoistureData,
     SoilTextureCategory,
@@ -74,6 +75,11 @@ class SwedenSoilDepth(Enum):
         "Mycket varierande jorddjup. Brottytor i berggrunden delvis synliga.",
         "Widely varying soil depth. Breaks in bedrock partly visible.",
     )
+    OUTCROP = SoilDepthCat(
+        5,
+        "Häll, inget egentligt jordtäcke",
+        "Outcrop. No discernible topsoil",
+    )
 
 
 class SwedenSoilTextureTill(Enum):
@@ -108,6 +114,13 @@ class SwedenSoilMoisture(Enum):
         4, "fuktig", "Moist (subsoil water depth <1 m, and pools visible in hollows)"
     )
     WET = SoilMoistureData(5, "blöt", "Wet (subsoil water pools visible)")
+
+
+class SwedenPeatHumification(Enum):
+    NONE = PeatHumificationCat(0, "ingen", "None")
+    LOW = PeatHumificationCat(1, "låg", "Low")
+    MEDIUM = PeatHumificationCat(2, "medium", "Medium")
+    HIGH = PeatHumificationCat(3, "hög", "High")
 
 
 class SwedenCounty(Enum):
@@ -179,5 +192,6 @@ class Sweden:
     SoilTextureTill = SwedenSoilTextureTill
     SoilTextureSediment = SwedenSoilTextureSediment
     SoilMoistureEnum = SwedenSoilMoisture
+    PeatHumification = SwedenPeatHumification
     County = SwedenCounty
     ClimateZone = SwedenClimateZone
