@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 # --- Age Enum ---
 class Age(Enum):
     """
@@ -9,10 +10,11 @@ class Age(Enum):
         TOTAL (Age): Total age measurement.
         DBH (Age): Diameter at breast height age measurement.
     """
+
     TOTAL = 1
     DBH = 2
 
-    def __call__(self, value: float) -> 'AgeMeasurement': # Use forward reference string
+    def __call__(self, value: float) -> "AgeMeasurement":  # Use forward reference string
         """
         Create an AgeMeasurement for this age type.
 
@@ -27,6 +29,7 @@ class Age(Enum):
         """
         return AgeMeasurement(value, self.value)
 
+
 # --- AgeMeasurement Class ---
 class AgeMeasurement(float):
     """
@@ -36,7 +39,7 @@ class AgeMeasurement(float):
         code (int): Age enum code corresponding to measurement type.
     """
 
-    __slots__ = ('code')
+    __slots__ = ("code",)
 
     def __new__(cls, value: float, code: int):
         """
@@ -55,8 +58,9 @@ class AgeMeasurement(float):
         if value < 0:
             raise ValueError("Age must be non-negative.")
         # Ensure code is valid using the Age enum definition
-        if code not in [m.value for m in Age]: # Check against Age enum values
-             raise ValueError(f"Invalid age code: {code}. Must be one of {[m.value for m in Age]}.")
+        if code not in [m.value for m in Age]:  # Check against Age enum values
+            allowed = [m.value for m in Age]
+            raise ValueError(f"Invalid age code: {code}. Must be one of {allowed}.")
         obj = super().__new__(cls, value)
         obj.code = code
         return obj
@@ -79,11 +83,11 @@ class AgeMeasurement(float):
             str: Formatted repr string.
         """
         # Ensure Age enum lookup is safe
-        age_type = 'UNKNOWN'
+        age_type = "UNKNOWN"
         try:
             age_type = Age(self.code).name
         except ValueError:
-            pass # Keep 'UNKNOWN' if code not in enum
+            pass  # Keep 'UNKNOWN' if code not in enum
         return f"AgeMeasurement({float(self)}, code={self.code} [{age_type}])"
 
     def __eq__(self, other):
