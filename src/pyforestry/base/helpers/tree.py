@@ -2,14 +2,17 @@
 # Tree classes
 # ------------------------------------------------------------------------------
 from typing import Optional, Union
+
+from .primitives import Age, Diameter_cm, Position
 from .tree_species import TreeName, parse_tree_species
-from .primitives import Position, Diameter_cm, Age 
+
 
 class Tree:
     """
     Base class for all tree objects. You can expand this to include common fields/methods
     that should exist on any type of tree.
     """
+
     pass
 
 
@@ -30,12 +33,16 @@ class SingleTree(Tree):
     height_m : float | None
         The height (m) of the tree if known.
     """
-    def __init__(self,
-                 position: Optional[Union[Position, tuple, None]] = None,
-                 species: Optional[Union[TreeName, str]] = None,
-                 age: Optional[Union[Age, float]] = None,
-                 diameter_cm: Optional[Union[Diameter_cm, float]] = None,
-                 height_m: Optional[float] = None):
+
+    def __init__(
+        self,
+        position: Optional[Union[Position, tuple, None]] = None,
+        species: Optional[Union[TreeName, str]] = None,
+        age: Optional[Union[Age, float]] = None,
+        diameter_cm: Optional[Union[Diameter_cm, float]] = None,
+        height_m: Optional[float] = None,
+        uid: Optional[Union[int, str]] = None,
+    ):
         self.position = Position._set_position(position)
 
         # Convert string species → TreeSpecies if parseable
@@ -52,11 +59,14 @@ class SingleTree(Tree):
         # or just store as float. For now, store as given:
         self.diameter_cm = diameter_cm
         self.height_m = height_m
+        self.uid = uid
 
     def __repr__(self):
-        return (f"SingleTree(species={self.species}, age={self.age}, "
-                f"diameter_cm={self.diameter_cm}, height_m={self.height_m}, "
-                f"position={self.position})")
+        return (
+            f"SingleTree(species={self.species}, age={self.age}, "
+            f"diameter_cm={self.diameter_cm}, height_m={self.height_m}, "
+            f"position={self.position}, uid={self.uid})"
+        )
 
 
 class RepresentationTree(Tree):
@@ -79,13 +89,17 @@ class RepresentationTree(Tree):
     weight : float
         Number of stems represented by this single record (e.g. 1, or 5).
     """
-    def __init__(self,
-                 position: Optional[Union[Position, tuple, None]] = None,
-                 species: Optional[Union[TreeName, str]] = None,
-                 age: Optional[Union[Age, float]] = None,
-                 diameter_cm: Optional[Union[Diameter_cm, float]] = None,
-                 height_m: Optional[float] = None,
-                 weight: float = 1.0):
+
+    def __init__(
+        self,
+        position: Optional[Union[Position, tuple, None]] = None,
+        species: Optional[Union[TreeName, str]] = None,
+        age: Optional[Union[Age, float]] = None,
+        diameter_cm: Optional[Union[Diameter_cm, float]] = None,
+        height_m: Optional[float] = None,
+        weight: float = 1.0,
+        uid: Optional[Union[int, str]] = None,
+    ):
         self.position = Position._set_position(position)
 
         if isinstance(species, str):
@@ -97,7 +111,11 @@ class RepresentationTree(Tree):
         self.diameter_cm = diameter_cm
         self.height_m = height_m
         self.weight = weight
+        self.uid = uid
 
     def __repr__(self):
-        return (f"RepresentationTree(species={self.species}, age={self.age}, "
-                f"diameter_cm={self.diameter_cm}, height_m={self.height_m}, weight={self.weight})")
+        return (
+            f"RepresentationTree(species={self.species}, age={self.age}, "
+            f"diameter_cm={self.diameter_cm}, height_m={self.height_m}, "
+            f"weight={self.weight}, uid={self.uid})"
+        )
