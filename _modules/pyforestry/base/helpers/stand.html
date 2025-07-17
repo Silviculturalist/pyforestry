@@ -293,12 +293,13 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">statistics</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">isclose</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">cast</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">cast</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyproj</span><span class="w"> </span><span class="kn">import</span> <span class="n">CRS</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">shapely</span><span class="w"> </span><span class="kn">import</span> <span class="n">Polygon</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Point</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseGeometry</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -884,6 +885,63 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">use_angle_count</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="c1"># Invalidate any cached QMD estimates</span>
+        <span class="k">if</span> <span class="s2">&quot;QMD&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metric_estimates</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metric_estimates</span><span class="p">[</span><span class="s2">&quot;QMD&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Stand.thin_trees">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.stand.Stand.thin_trees">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">thin_trees</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">uids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">rule</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">RepresentationTree</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">polygon</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Polygon</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove trees from the stand based on various criteria.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        uids:</span>
+<span class="sd">            List of tree ``uid`` values to remove.</span>
+<span class="sd">        rule:</span>
+<span class="sd">            Callable that returns ``True`` for trees that should be removed.</span>
+<span class="sd">        polygon:</span>
+<span class="sd">            When provided, the rule and/or UIDs are applied only to trees whose</span>
+<span class="sd">            coordinates fall inside this polygon. If both ``uids`` and ``rule``</span>
+<span class="sd">            are ``None`` all trees inside the polygon are removed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_angle_count</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Thinning not supported when using AngleCount data.&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">plot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plots</span><span class="p">:</span>
+            <span class="n">new_trees</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">plot</span><span class="o">.</span><span class="n">trees</span><span class="p">:</span>
+                <span class="n">within_poly</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">if</span> <span class="n">polygon</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">pos</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="s2">&quot;position&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">pos</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">within_poly</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">within_poly</span> <span class="o">=</span> <span class="n">polygon</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="n">pos</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">pos</span><span class="o">.</span><span class="n">Y</span><span class="p">))</span>
+
+                <span class="n">remove</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">if</span> <span class="n">polygon</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">uids</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">rule</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">remove</span> <span class="o">=</span> <span class="n">within_poly</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">uids</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="s2">&quot;uid&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">in</span> <span class="n">uids</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">polygon</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">within_poly</span><span class="p">:</span>
+                            <span class="n">remove</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">if</span> <span class="n">rule</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">rule</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">polygon</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">within_poly</span><span class="p">:</span>
+                            <span class="n">remove</span> <span class="o">=</span> <span class="kc">True</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">remove</span><span class="p">:</span>
+                    <span class="n">new_trees</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+
+            <span class="n">plot</span><span class="o">.</span><span class="n">trees</span> <span class="o">=</span> <span class="n">new_trees</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_compute_ht_estimates</span><span class="p">()</span>
         <span class="k">if</span> <span class="s2">&quot;QMD&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metric_estimates</span><span class="p">:</span>
             <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metric_estimates</span><span class="p">[</span><span class="s2">&quot;QMD&quot;</span><span class="p">]</span></div>
 </div>
