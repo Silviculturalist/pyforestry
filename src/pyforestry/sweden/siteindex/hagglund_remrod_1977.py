@@ -73,6 +73,7 @@ def hagglund_remrod_1977_height_trajectories_lodgepole_pine(
         """
         AI1 = 10
         AI2 = 800
+        A, RK, RM2 = 0, 0, 0 #placeholders
 
         while abs(AI1 - AI2) > 1:
             AI3 = (AI1 + AI2) / 2
