@@ -8,5 +8,6 @@ pyforestry Documentation
    :caption: Contents:
    
    api/modules
+   notebooks/tree_species_intro
 
 ..
