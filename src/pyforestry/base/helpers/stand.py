@@ -2,31 +2,31 @@
 # Stand: a collection of plots and/or a polygon
 # ------------------------------------------------------------------------------
 
-from math import pi, sqrt, isclose
-import numpy as np
-from typing import Optional, List, Dict, Any, Union, cast
 import statistics
+from dataclasses import dataclass, field
+from math import isclose, pi, sqrt
+from typing import Any, Dict, List, Optional, Union, cast
+
+import geopandas as gpd
+import numpy as np
 from pyproj import CRS
 from shapely import Polygon
 from shapely.geometry.base import BaseGeometry
-import geopandas as gpd
-from pyforestry.base.helpers.plot import CircularPlot
-from pyforestry.base.helpers.primitives import (
-    Stems,
-    StandBasalArea,
-    TopHeightMeasurement,
-    TopHeightDefinition,
-    SiteBase,
-    QuadraticMeanDiameter,
-    
-)
 
 from pyforestry.base.helpers import (
-    TreeName,
-    CircularPlot,
     AngleCountAggregator,
+    CircularPlot,
     RepresentationTree,
-    parse_tree_species 
+    TreeName,
+    parse_tree_species,
+)
+from pyforestry.base.helpers.primitives import (
+    QuadraticMeanDiameter,
+    SiteBase,
+    StandBasalArea,
+    Stems,
+    TopHeightDefinition,
+    TopHeightMeasurement,
 )
 
 
@@ -49,7 +49,7 @@ class StandMetricAccessor:
     def _ensure_estimates(self):
         """Compute or refresh HT estimates if not done."""
         if self._metric_name not in self._stand._metric_estimates:
-             if not self._stand.use_angle_count:
+            if not self._stand.use_angle_count:
                 self._stand._compute_ht_estimates()
 
 
@@ -61,7 +61,9 @@ class StandMetricAccessor:
             self._ensure_estimates()
             metric_dict = self._stand._metric_estimates[self._metric_name]
             return metric_dict["TOTAL"]
-        raise AttributeError(f"No attribute '{item}' in StandMetricAccessor for {self._metric_name}")
+        raise AttributeError(
+            f"No attribute '{item}' in StandMetricAccessor for {self._metric_name}"
+        )
 
     def __call__(self, species: Union[TreeName, str]):
         """
@@ -77,7 +79,9 @@ class StandMetricAccessor:
 
         metric_dict = self._stand._metric_estimates[self._metric_name]
         if sp_obj not in metric_dict:
-            raise KeyError(f"No estimate found for species={sp_obj.full_name} in {self._metric_name}.")
+            raise KeyError(
+                f"No estimate found for species={sp_obj.full_name} in {self._metric_name}."
+            )
         return metric_dict[sp_obj]
 
     def __float__(self):
@@ -104,6 +108,9 @@ class StandMetricAccessor:
         return f"<StandMetricAccessor metric={self._metric_name}>"
 
 
+
+
+@dataclass
 class Stand:
     """
     Represents a forest stand, which may have:
@@ -116,71 +123,64 @@ class Stand:
     If a polygon is provided, the area_ha is computed from the polygon geometry
     (reprojected to a suitable UTM if the original CRS is geographic).
     """
-    def __init__(self,
-                 site: Optional[SiteBase] = None,
-                 area_ha: Optional[float] = None,
-                 plots: Optional[List[CircularPlot]] = None,
-                 polygon: Optional[Polygon] = None,
-                 crs: Optional[CRS] = None,
-                 top_height_definition: Optional[TopHeightDefinition] = None):
-        self.site = site
-        self.polygon = polygon
-        self.crs = crs
+    site: Optional[SiteBase] = None
+    area_ha: Optional[float] = None
+    plots: List[CircularPlot] = field(default_factory=list)
+    polygon: Optional[Polygon] = None
+    crs: Optional[CRS] = None
+    top_height_definition: TopHeightDefinition = field(default_factory=TopHeightDefinition)
+    attrs: Dict[str, Any] = field(default_factory=dict, init=False)
+    _metric_estimates: Dict[str, Dict[Any, Union[Stems, StandBasalArea]]] = field(
+        default_factory=dict,
+        init=False,
+    )
+    use_angle_count: bool = field(default=False, init=False)
 
-        self.top_height_definition = top_height_definition if top_height_definition else TopHeightDefinition()
-
-        self.plots = plots if plots else []
-
-        # If user gave an explicit area
-        self.area_ha = area_ha
-
+    def __post_init__(self) -> None:
         # If a polygon is given, compute its area in hectares after projecting
-        if polygon:
-            gdf = gpd.GeoDataFrame({'geometry': [polygon]}, crs=self.crs)
+        if self.polygon:
+            gdf = gpd.GeoDataFrame({"geometry": [self.polygon]}, crs=self.crs)
             if gdf.crs is not None and gdf.crs.is_geographic:
-                # Reproject to an appropriate UTM
                 utm_crs = gdf.estimate_utm_crs()
                 gdf = gdf.to_crs(utm_crs)
-                
-            proj_polygon = cast(BaseGeometry,gdf.geometry.iloc[0])
+
+            proj_polygon = cast(BaseGeometry, gdf.geometry.iloc[0])
             if not proj_polygon.is_valid:
-                raise ValueError('Polygon is not valid after reprojection to a UTM projection. Check original provided CRS.')
+                raise ValueError(
+                    "Polygon is not valid after reprojection to a UTM projection. "
+                    "Check original provided CRS."
+                )
             polygon_area_m2 = proj_polygon.area
             derived_area_ha = polygon_area_m2 / 10_000.0
 
-            # If user specified area_ha, check consistency
             if self.area_ha is not None:
                 diff = abs(self.area_ha - derived_area_ha)
                 if diff > 0.01:
-                    raise ValueError(f"Polygon area is {derived_area_ha:.2f} ha, but you set area_ha={self.area_ha:.2f} ha.")
+                    raise ValueError(
+                        f"Polygon area is {derived_area_ha:.2f} ha, but you set "
+                        f"area_ha={self.area_ha:.2f} ha."
+                    )
             else:
                 self.area_ha = derived_area_ha
 
-        # Arbitrary dictionary for user-defined stand-level metadata
-        self.attrs: Dict[str, Any] = {}
-
-        # Where we store final "Stems", "BasalArea", etc. after computing
-        self._metric_estimates: Dict[str, Dict[Any, Union[Stems, StandBasalArea]]] = {}
-
-        #Get angle-counting estimates for stand (should be stored in self._metric_estimates)
-        # Determine if any plots supply AngleCount objects.
+        # Determine if any plots supply AngleCount objects
         all_angle_counts = [ac for plot in self.plots for ac in plot.AngleCount]
         if all_angle_counts:
-            # Use AngleCount-based estimates.
-            ba_from_angle_count, stems_from_angle_count = AngleCountAggregator(all_angle_counts).aggregate_stand_metrics()
-
-            # To satisfy the invariant type of the _metric_estimates dictionary, we must build new 
-            # dictionaries that explicitly match the target type: Dict[Any, Union[Stems, StandBasalArea]].
-            
-            basal_area_metrics: Dict[Any, Union[Stems, StandBasalArea]] = {k: v for k, v in ba_from_angle_count.items()}
-            stems_metrics: Dict[Any, Union[Stems, StandBasalArea]] = {k: v for k, v in stems_from_angle_count.items()}
-
+            ba_from_angle_count, stems_from_angle_count = AngleCountAggregator(
+                all_angle_counts
+            ).aggregate_stand_metrics()
+            basal_area_metrics: Dict[Any, Union[Stems, StandBasalArea]] = {
+                k: v for k, v in ba_from_angle_count.items()
+            }
+            stems_metrics: Dict[Any, Union[Stems, StandBasalArea]] = {
+                k: v for k, v in stems_from_angle_count.items()
+            }
             self._metric_estimates["BasalArea"] = basal_area_metrics
             self._metric_estimates["Stems"] = stems_metrics
             self.use_angle_count = True
         else:
             self.use_angle_count = False
-    
+
     # Two key properties for your requested usage:
     @property
     def BasalArea(self) -> StandMetricAccessor:
@@ -203,7 +203,7 @@ class Stand:
             float(stand.Stems)         -> numeric total
         """
         return StandMetricAccessor(self, "Stems")
-    
+
     @property
     def QMD(self) -> StandMetricAccessor:
         """
@@ -267,10 +267,14 @@ class Stand:
         We'll sum or average the per-plot values for each species:
           - stems/ha
           - basal_area/ha
-        Store them in self._metric_estimates: 
+        Store them in self._metric_estimates:
             {
-              "Stems": {TreeName(...) : Stems(...), ..., "TOTAL": Stems(...)},
-              "BasalArea": {TreeName(...): StandBasalArea(...), ..., "TOTAL": StandBasalArea(...)}
+                "Stems": {TreeName(...): Stems(...), ..., "TOTAL": Stems(...)},
+                "BasalArea": {
+                    TreeName(...): StandBasalArea(...),
+                    ...,
+                    "TOTAL": StandBasalArea(...),
+                }
             }
         """
         species_data: Dict[TreeName, Dict[str, List[float]]] = {}
@@ -278,7 +282,9 @@ class Stand:
         for plot in self.plots:
             area_ha = plot.area_ha or 1.0
             # effective area is the visible portion of the plot
-            effective_area_ha = area_ha * (1 - plot.occlusion) if (1 - plot.occlusion) > 0 else area_ha
+            effective_area_ha = (
+                area_ha * (1 - plot.occlusion) if (1 - plot.occlusion) > 0 else area_ha
+            )
 
             # Group trees by species
             trees_by_sp: Dict[TreeName, List[RepresentationTree]] = {}
@@ -419,7 +425,7 @@ class Stand:
             # This check preserves that intent.
             if len(valid_heights) < m_real:
                 continue
-            
+
             # Because the "if t.height_m is not None" check is inside the comprehension,
             # Pylance knows that `valid_heights` is of type `list[float]`.
             subplot_mean_h = statistics.mean(valid_heights)
@@ -520,7 +526,8 @@ class Stand:
             noise = np.random.normal(0, (sigma / 100.0) * heights_true, n_trees)
             heights_measured = heights_true + noise
 
-            # The "true" top height H_bar in the entire stand is the mean of top nominal_top_n by diameter
+            # The "true" top height H_bar in the entire stand is the mean of
+            # top nominal_top_n by diameter
             top_indices = np.argsort(diameters)[-nominal_top_n:][::-1]
             H_bar = np.mean(heights_true[top_indices])
             H_bar_list.append(H_bar)
@@ -551,7 +558,7 @@ class Stand:
         bias_percentage = (bias / H_bar_avg) * 100.0 if H_bar_avg != 0 else 0.0
 
         return bias, bias_percentage
-    
+
     def append_plot(self, plot: CircularPlot) -> None:
         """
         Append a new plot to the stand and recalculate the stand-level metrics.
@@ -572,5 +579,9 @@ class Stand:
             # Otherwise, recompute using the tree-based estimates.
             self._compute_ht_estimates()
             self.use_angle_count = False
+
+        # Invalidate any cached QMD estimates
+        if "QMD" in self._metric_estimates:
+            del self._metric_estimates["QMD"]
 
 
