@@ -1,23 +1,33 @@
-
-from typing import Optional
 from enum import Enum
+from typing import Optional
+
 from .sweden_site_primitives import (
-    Vegetation,
     BottomLayerType,
-    SoilWaterCat,
-    SoilDepthCat,
-    SoilTextureCategory,
-    SoilMoistureData,
+    ClimateZoneData,
     CountyData,
-    ClimateZoneData
+    SoilDepthCat,
+    SoilMoistureData,
+    SoilTextureCategory,
+    SoilWaterCat,
+    Vegetation,
 )
+
+
 class SwedenFieldLayer(Enum):
     HIGH_HERB_WITHOUT_SHRUBS = Vegetation(1, "Högört utan ris", "Rich-herb without shrubs", 4)
-    HIGH_HERB_WITH_SHRUBS_BLUEBERRY = Vegetation(2, "Högört med ris/blåbär", "Rich-herb with shrubs/bilberry", 2.5)
-    HIGH_HERB_WITH_SHRUBS_LINGON = Vegetation(3, "Högört med ris/lingon", "Rich-herb with shrubs/lingonberry", 2)
+    HIGH_HERB_WITH_SHRUBS_BLUEBERRY = Vegetation(
+        2, "Högört med ris/blåbär", "Rich-herb with shrubs/bilberry", 2.5
+    )
+    HIGH_HERB_WITH_SHRUBS_LINGON = Vegetation(
+        3, "Högört med ris/lingon", "Rich-herb with shrubs/lingonberry", 2
+    )
     LOW_HERB_WITHOUT_SHRUBS = Vegetation(4, "Lågört utan ris", "Low-herb without shrubs", 3)
-    LOW_HERB_WITH_SHRUBS_BLUEBERRY = Vegetation(5, "Lågört med ris/blåbär", "Low-herb with shrubs/bilberry", 2.5)
-    LOW_HERB_WITH_SHRUBS_LINGON = Vegetation(6, "Lågört med ris/lingon", "Low-herb with shrubs/lingonberry", 2)
+    LOW_HERB_WITH_SHRUBS_BLUEBERRY = Vegetation(
+        5, "Lågört med ris/blåbär", "Low-herb with shrubs/bilberry", 2.5
+    )
+    LOW_HERB_WITH_SHRUBS_LINGON = Vegetation(
+        6, "Lågört med ris/lingon", "Low-herb with shrubs/lingonberry", 2
+    )
     NO_FIELD_LAYER = Vegetation(7, "Utan fältskikt", "No field layer", 3)
     BROADLEAVED_GRASS = Vegetation(8, "Bredbl. gräs", "Broadleaved grass", 2.5)
     THINLEAVED_GRASS = Vegetation(9, "Smalbl. gräs", "Thinleaved grass", 1.5)
@@ -40,16 +50,31 @@ class SwedenBottomLayer(Enum):
     SWAMP_MOSS = BottomLayerType(5, "Swamp moss type", "Sumpmosstyp")
     FRESH_MOSS = BottomLayerType(6, "Fresh moss type", "Friskmosstyp")
 
+
 class SwedenSoilWater(Enum):
     SELDOM_NEVER = SoilWaterCat(1, "saknas", "Seldom/never")
     SHORTER_PERIODS = SoilWaterCat(2, "kortare perioder", "Shorter periods")
     LONGER_PERIODS = SoilWaterCat(3, "längre perioder", "Longer periods")
 
+
 class SwedenSoilDepth(Enum):
-    DEEP = SoilDepthCat(1, "Mäktigt >70 cm. Inga synliga hällar", "Deep >70cm. No visible stone outcrops.")
-    RATHER_SHALLOW = SoilDepthCat(2, "Tämligen grunt jorddjupt 20-70 cm", "Rather shallow soil depth, 20-70 cm")
-    SHALLOW = SoilDepthCat(3, "Grunt jorddjup < 20 cm. Rikligt med hällar.", "Rather shallow soil depth < 20 cm. Plenty of stony outcrops.")
-    VARYING = SoilDepthCat(4, "Mycket varierande jorddjup. Brottytor i berggrunden delvis synliga.", "Widely varying soil depth. Breaks in bedrock partly visible.")
+    DEEP = SoilDepthCat(
+        1, "Mäktigt >70 cm. Inga synliga hällar", "Deep >70cm. No visible stone outcrops."
+    )
+    RATHER_SHALLOW = SoilDepthCat(
+        2, "Tämligen grunt jorddjupt 20-70 cm", "Rather shallow soil depth, 20-70 cm"
+    )
+    SHALLOW = SoilDepthCat(
+        3,
+        "Grunt jorddjup < 20 cm. Rikligt med hällar.",
+        "Rather shallow soil depth < 20 cm. Plenty of stony outcrops.",
+    )
+    VARYING = SoilDepthCat(
+        4,
+        "Mycket varierande jorddjup. Brottytor i berggrunden delvis synliga.",
+        "Widely varying soil depth. Breaks in bedrock partly visible.",
+    )
+
 
 class SwedenSoilTextureTill(Enum):
     BOULDER = SoilTextureCategory(1, "Stenig/blockig morän", "Boulder rich/stony till", "Boulder")
@@ -62,6 +87,7 @@ class SwedenSoilTextureTill(Enum):
     CLAY = SoilTextureCategory(8, "Lerig morän", "Clayey till", "Clay")
     PEAT = SoilTextureCategory(9, "Torv", "Peat", "Peat")
 
+
 class SwedenSoilTextureSediment(Enum):
     BOULDER = SoilTextureCategory(1, "Sten/block", "Boulders/stones", "Boulder")
     GRAVEL = SoilTextureCategory(2, "Grus", "Gravel", "Gravel")
@@ -73,12 +99,16 @@ class SwedenSoilTextureSediment(Enum):
     CLAY = SoilTextureCategory(8, "Lera", "Clay", "Clay")
     PEAT = SoilTextureCategory(9, "Torv", "Peat", "Peat")
 
+
 class SwedenSoilMoisture(Enum):
     DRY = SoilMoistureData(1, "torr", "Dry (subsoil water depth >2 m)")
     MESIC = SoilMoistureData(2, "frisk", "Mesic (subsoil water depth = 1-2 m)")
     MESIC_MOIST = SoilMoistureData(3, "frisk-fuktig", "Mesic-moist (subsoil water depth <1 m)")
-    MOIST = SoilMoistureData(4, "fuktig", "Moist (subsoil water depth <1 m, and pools visible in hollows)")
+    MOIST = SoilMoistureData(
+        4, "fuktig", "Moist (subsoil water depth <1 m, and pools visible in hollows)"
+    )
     WET = SoilMoistureData(5, "blöt", "Wet (subsoil water pools visible)")
+
 
 class SwedenCounty(Enum):
     NORRBOTTENS_LAPPMARK = CountyData(1, "Norrbottens lappmark (BD lappm)")
@@ -87,7 +117,9 @@ class SwedenCounty(Enum):
     VASTERBOTTENS_KUSTLAND = CountyData(4, "Västerbottens kustland (AC kust)")
     JAMTLAND_JAMTLANDS = CountyData(5, "Jämtland - Jämtlands landskap (Z)")
     JAMTLAND_HARJEDALENS = CountyData(6, "Jämtland - Härjedalens landskap (Z Härjed)")
-    VASTERNORRLAND_ANGERMANLANDS = CountyData(7, "Västernorrland - Ångermanlands landskap (Y Ångerm)")
+    VASTERNORRLAND_ANGERMANLANDS = CountyData(
+        7, "Västernorrland - Ångermanlands landskap (Y Ångerm)"
+    )
     VASTERNORRLAND_MEDELPADS = CountyData(8, "Västernorrland - Medelpads landskap (Y Medelp)")
     GAVLEBORG_HALSINGLANDS = CountyData(9, "Gävleborg - Hälsinglands landskap (X Hälsingl)")
     GAVLEBORG_OVRIGA = CountyData(10, "Gävleborg, övriga (X övr)")
@@ -114,13 +146,14 @@ class SwedenCounty(Enum):
     GOTLAND = CountyData(31, "Gotland (I)")
 
     @classmethod
-    def from_code(cls, code: int) -> Optional['SwedenCounty']:
+    def from_code(cls, code: int) -> Optional["SwedenCounty"]:
         """Lookup enum member by code."""
         for member in cls:
             if member.value.code == code:
                 return member
-        return None # Return None if code not found
-    
+        return None  # Return None if code not found
+
+
 class SwedenClimateZone(Enum):
     M1 = ClimateZoneData(1, "M1", "Maritime, West coast")
     M2 = ClimateZoneData(2, "M2", "Maritime, East coast")
@@ -130,12 +163,12 @@ class SwedenClimateZone(Enum):
     K3 = ClimateZoneData(6, "K3", "Continental, Southern Sweden")
 
     @classmethod
-    def from_code(cls, code: int) -> Optional['SwedenClimateZone']:
+    def from_code(cls, code: int) -> Optional["SwedenClimateZone"]:
         """Lookup enum member by code."""
         for member in cls:
             if member.value.code == code:
                 return member
-        return None # Return None if code not found
+        return None  # Return None if code not found
 
 
 class Sweden:
