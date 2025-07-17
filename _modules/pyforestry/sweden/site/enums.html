@@ -229,6 +229,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../../api/pyforestry.sweden.geo.temperature.html">pyforestry.sweden.geo.temperature package</a></li>
 </ul>
 </li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/pyforestry.sweden.helpers.html">pyforestry.sweden.helpers package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/pyforestry.sweden.misc.html">pyforestry.sweden.misc package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/pyforestry.sweden.models.html">pyforestry.sweden.models package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/pyforestry.sweden.site.html">pyforestry.sweden.site package</a></li>
@@ -246,6 +247,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../notebooks/tree_species_intro.html">Tree species basics</a></li>
 </ul>
 
 </div>
@@ -281,28 +283,38 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for pyforestry.sweden.site.enums</h1><div class="highlight"><pre>
-<span></span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">.sweden_site_primitives</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">Vegetation</span><span class="p">,</span>
     <span class="n">BottomLayerType</span><span class="p">,</span>
-    <span class="n">SoilWaterCat</span><span class="p">,</span>
-    <span class="n">SoilDepthCat</span><span class="p">,</span>
-    <span class="n">SoilTextureCategory</span><span class="p">,</span>
-    <span class="n">SoilMoistureData</span><span class="p">,</span>
+    <span class="n">ClimateZoneData</span><span class="p">,</span>
     <span class="n">CountyData</span><span class="p">,</span>
-    <span class="n">ClimateZoneData</span>
+    <span class="n">SoilDepthCat</span><span class="p">,</span>
+    <span class="n">SoilMoistureData</span><span class="p">,</span>
+    <span class="n">SoilTextureCategory</span><span class="p">,</span>
+    <span class="n">SoilWaterCat</span><span class="p">,</span>
+    <span class="n">Vegetation</span><span class="p">,</span>
 <span class="p">)</span>
+
+
 <div class="viewcode-block" id="SwedenFieldLayer">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenFieldLayer">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SwedenFieldLayer</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
     <span class="n">HIGH_HERB_WITHOUT_SHRUBS</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Högört utan ris&quot;</span><span class="p">,</span> <span class="s2">&quot;Rich-herb without shrubs&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-    <span class="n">HIGH_HERB_WITH_SHRUBS_BLUEBERRY</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Högört med ris/blåbär&quot;</span><span class="p">,</span> <span class="s2">&quot;Rich-herb with shrubs/bilberry&quot;</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)</span>
-    <span class="n">HIGH_HERB_WITH_SHRUBS_LINGON</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Högört med ris/lingon&quot;</span><span class="p">,</span> <span class="s2">&quot;Rich-herb with shrubs/lingonberry&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">HIGH_HERB_WITH_SHRUBS_BLUEBERRY</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span>
+        <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Högört med ris/blåbär&quot;</span><span class="p">,</span> <span class="s2">&quot;Rich-herb with shrubs/bilberry&quot;</span><span class="p">,</span> <span class="mf">2.5</span>
+    <span class="p">)</span>
+    <span class="n">HIGH_HERB_WITH_SHRUBS_LINGON</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span>
+        <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Högört med ris/lingon&quot;</span><span class="p">,</span> <span class="s2">&quot;Rich-herb with shrubs/lingonberry&quot;</span><span class="p">,</span> <span class="mi">2</span>
+    <span class="p">)</span>
     <span class="n">LOW_HERB_WITHOUT_SHRUBS</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;Lågört utan ris&quot;</span><span class="p">,</span> <span class="s2">&quot;Low-herb without shrubs&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-    <span class="n">LOW_HERB_WITH_SHRUBS_BLUEBERRY</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;Lågört med ris/blåbär&quot;</span><span class="p">,</span> <span class="s2">&quot;Low-herb with shrubs/bilberry&quot;</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)</span>
-    <span class="n">LOW_HERB_WITH_SHRUBS_LINGON</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="s2">&quot;Lågört med ris/lingon&quot;</span><span class="p">,</span> <span class="s2">&quot;Low-herb with shrubs/lingonberry&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">LOW_HERB_WITH_SHRUBS_BLUEBERRY</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span>
+        <span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;Lågört med ris/blåbär&quot;</span><span class="p">,</span> <span class="s2">&quot;Low-herb with shrubs/bilberry&quot;</span><span class="p">,</span> <span class="mf">2.5</span>
+    <span class="p">)</span>
+    <span class="n">LOW_HERB_WITH_SHRUBS_LINGON</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span>
+        <span class="mi">6</span><span class="p">,</span> <span class="s2">&quot;Lågört med ris/lingon&quot;</span><span class="p">,</span> <span class="s2">&quot;Low-herb with shrubs/lingonberry&quot;</span><span class="p">,</span> <span class="mi">2</span>
+    <span class="p">)</span>
     <span class="n">NO_FIELD_LAYER</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="s2">&quot;Utan fältskikt&quot;</span><span class="p">,</span> <span class="s2">&quot;No field layer&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
     <span class="n">BROADLEAVED_GRASS</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="s2">&quot;Bredbl. gräs&quot;</span><span class="p">,</span> <span class="s2">&quot;Broadleaved grass&quot;</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)</span>
     <span class="n">THINLEAVED_GRASS</span> <span class="o">=</span> <span class="n">Vegetation</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="s2">&quot;Smalbl. gräs&quot;</span><span class="p">,</span> <span class="s2">&quot;Thinleaved grass&quot;</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
@@ -329,6 +341,7 @@
     <span class="n">FRESH_MOSS</span> <span class="o">=</span> <span class="n">BottomLayerType</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="s2">&quot;Fresh moss type&quot;</span><span class="p">,</span> <span class="s2">&quot;Friskmosstyp&quot;</span><span class="p">)</span></div>
 
 
+
 <div class="viewcode-block" id="SwedenSoilWater">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilWater">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SwedenSoilWater</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
@@ -337,13 +350,27 @@
     <span class="n">LONGER_PERIODS</span> <span class="o">=</span> <span class="n">SoilWaterCat</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;längre perioder&quot;</span><span class="p">,</span> <span class="s2">&quot;Longer periods&quot;</span><span class="p">)</span></div>
 
 
+
 <div class="viewcode-block" id="SwedenSoilDepth">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilDepth">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SwedenSoilDepth</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-    <span class="n">DEEP</span> <span class="o">=</span> <span class="n">SoilDepthCat</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Mäktigt &gt;70 cm. Inga synliga hällar&quot;</span><span class="p">,</span> <span class="s2">&quot;Deep &gt;70cm. No visible stone outcrops.&quot;</span><span class="p">)</span>
-    <span class="n">RATHER_SHALLOW</span> <span class="o">=</span> <span class="n">SoilDepthCat</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Tämligen grunt jorddjupt 20-70 cm&quot;</span><span class="p">,</span> <span class="s2">&quot;Rather shallow soil depth, 20-70 cm&quot;</span><span class="p">)</span>
-    <span class="n">SHALLOW</span> <span class="o">=</span> <span class="n">SoilDepthCat</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Grunt jorddjup &lt; 20 cm. Rikligt med hällar.&quot;</span><span class="p">,</span> <span class="s2">&quot;Rather shallow soil depth &lt; 20 cm. Plenty of stony outcrops.&quot;</span><span class="p">)</span>
-    <span class="n">VARYING</span> <span class="o">=</span> <span class="n">SoilDepthCat</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;Mycket varierande jorddjup. Brottytor i berggrunden delvis synliga.&quot;</span><span class="p">,</span> <span class="s2">&quot;Widely varying soil depth. Breaks in bedrock partly visible.&quot;</span><span class="p">)</span></div>
+    <span class="n">DEEP</span> <span class="o">=</span> <span class="n">SoilDepthCat</span><span class="p">(</span>
+        <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Mäktigt &gt;70 cm. Inga synliga hällar&quot;</span><span class="p">,</span> <span class="s2">&quot;Deep &gt;70cm. No visible stone outcrops.&quot;</span>
+    <span class="p">)</span>
+    <span class="n">RATHER_SHALLOW</span> <span class="o">=</span> <span class="n">SoilDepthCat</span><span class="p">(</span>
+        <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Tämligen grunt jorddjupt 20-70 cm&quot;</span><span class="p">,</span> <span class="s2">&quot;Rather shallow soil depth, 20-70 cm&quot;</span>
+    <span class="p">)</span>
+    <span class="n">SHALLOW</span> <span class="o">=</span> <span class="n">SoilDepthCat</span><span class="p">(</span>
+        <span class="mi">3</span><span class="p">,</span>
+        <span class="s2">&quot;Grunt jorddjup &lt; 20 cm. Rikligt med hällar.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Rather shallow soil depth &lt; 20 cm. Plenty of stony outcrops.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">VARYING</span> <span class="o">=</span> <span class="n">SoilDepthCat</span><span class="p">(</span>
+        <span class="mi">4</span><span class="p">,</span>
+        <span class="s2">&quot;Mycket varierande jorddjup. Brottytor i berggrunden delvis synliga.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Widely varying soil depth. Breaks in bedrock partly visible.&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="SwedenSoilTextureTill">
@@ -360,6 +387,7 @@
     <span class="n">PEAT</span> <span class="o">=</span> <span class="n">SoilTextureCategory</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="s2">&quot;Torv&quot;</span><span class="p">,</span> <span class="s2">&quot;Peat&quot;</span><span class="p">,</span> <span class="s2">&quot;Peat&quot;</span><span class="p">)</span></div>
 
 
+
 <div class="viewcode-block" id="SwedenSoilTextureSediment">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilTextureSediment">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SwedenSoilTextureSediment</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
@@ -374,14 +402,18 @@
     <span class="n">PEAT</span> <span class="o">=</span> <span class="n">SoilTextureCategory</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="s2">&quot;Torv&quot;</span><span class="p">,</span> <span class="s2">&quot;Peat&quot;</span><span class="p">,</span> <span class="s2">&quot;Peat&quot;</span><span class="p">)</span></div>
 
 
+
 <div class="viewcode-block" id="SwedenSoilMoisture">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilMoisture">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SwedenSoilMoisture</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
     <span class="n">DRY</span> <span class="o">=</span> <span class="n">SoilMoistureData</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;torr&quot;</span><span class="p">,</span> <span class="s2">&quot;Dry (subsoil water depth &gt;2 m)&quot;</span><span class="p">)</span>
     <span class="n">MESIC</span> <span class="o">=</span> <span class="n">SoilMoistureData</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;frisk&quot;</span><span class="p">,</span> <span class="s2">&quot;Mesic (subsoil water depth = 1-2 m)&quot;</span><span class="p">)</span>
     <span class="n">MESIC_MOIST</span> <span class="o">=</span> <span class="n">SoilMoistureData</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;frisk-fuktig&quot;</span><span class="p">,</span> <span class="s2">&quot;Mesic-moist (subsoil water depth &lt;1 m)&quot;</span><span class="p">)</span>
-    <span class="n">MOIST</span> <span class="o">=</span> <span class="n">SoilMoistureData</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;fuktig&quot;</span><span class="p">,</span> <span class="s2">&quot;Moist (subsoil water depth &lt;1 m, and pools visible in hollows)&quot;</span><span class="p">)</span>
+    <span class="n">MOIST</span> <span class="o">=</span> <span class="n">SoilMoistureData</span><span class="p">(</span>
+        <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;fuktig&quot;</span><span class="p">,</span> <span class="s2">&quot;Moist (subsoil water depth &lt;1 m, and pools visible in hollows)&quot;</span>
+    <span class="p">)</span>
     <span class="n">WET</span> <span class="o">=</span> <span class="n">SoilMoistureData</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;blöt&quot;</span><span class="p">,</span> <span class="s2">&quot;Wet (subsoil water pools visible)&quot;</span><span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="SwedenCounty">
@@ -393,7 +425,9 @@
     <span class="n">VASTERBOTTENS_KUSTLAND</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;Västerbottens kustland (AC kust)&quot;</span><span class="p">)</span>
     <span class="n">JAMTLAND_JAMTLANDS</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;Jämtland - Jämtlands landskap (Z)&quot;</span><span class="p">)</span>
     <span class="n">JAMTLAND_HARJEDALENS</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="s2">&quot;Jämtland - Härjedalens landskap (Z Härjed)&quot;</span><span class="p">)</span>
-    <span class="n">VASTERNORRLAND_ANGERMANLANDS</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="s2">&quot;Västernorrland - Ångermanlands landskap (Y Ångerm)&quot;</span><span class="p">)</span>
+    <span class="n">VASTERNORRLAND_ANGERMANLANDS</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span>
+        <span class="mi">7</span><span class="p">,</span> <span class="s2">&quot;Västernorrland - Ångermanlands landskap (Y Ångerm)&quot;</span>
+    <span class="p">)</span>
     <span class="n">VASTERNORRLAND_MEDELPADS</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="s2">&quot;Västernorrland - Medelpads landskap (Y Medelp)&quot;</span><span class="p">)</span>
     <span class="n">GAVLEBORG_HALSINGLANDS</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="s2">&quot;Gävleborg - Hälsinglands landskap (X Hälsingl)&quot;</span><span class="p">)</span>
     <span class="n">GAVLEBORG_OVRIGA</span> <span class="o">=</span> <span class="n">CountyData</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;Gävleborg, övriga (X övr)&quot;</span><span class="p">)</span>
@@ -422,15 +456,16 @@
 <div class="viewcode-block" id="SwedenCounty.from_code">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.from_code">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">from_code</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">code</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;SwedenCounty&#39;</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_code</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">code</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;SwedenCounty&quot;</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Lookup enum member by code.&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="bp">cls</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">member</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span> <span class="o">==</span> <span class="n">code</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">member</span>
-        <span class="k">return</span> <span class="kc">None</span> <span class="c1"># Return None if code not found</span></div>
+        <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># Return None if code not found</span></div>
 </div>
 
-    
+
+
 <div class="viewcode-block" id="SwedenClimateZone">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenClimateZone">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SwedenClimateZone</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
@@ -444,12 +479,12 @@
 <div class="viewcode-block" id="SwedenClimateZone.from_code">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenClimateZone.from_code">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">from_code</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">code</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;SwedenClimateZone&#39;</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_code</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">code</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;SwedenClimateZone&quot;</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Lookup enum member by code.&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="bp">cls</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">member</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span> <span class="o">==</span> <span class="n">code</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">member</span>
-        <span class="k">return</span> <span class="kc">None</span> <span class="c1"># Return None if code not found</span></div>
+        <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># Return None if code not found</span></div>
 </div>
 
 

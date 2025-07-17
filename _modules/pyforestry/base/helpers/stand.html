@@ -229,6 +229,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../../api/pyforestry.sweden.geo.temperature.html">pyforestry.sweden.geo.temperature package</a></li>
 </ul>
 </li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/pyforestry.sweden.helpers.html">pyforestry.sweden.helpers package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/pyforestry.sweden.misc.html">pyforestry.sweden.misc package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/pyforestry.sweden.models.html">pyforestry.sweden.models package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/pyforestry.sweden.site.html">pyforestry.sweden.site package</a></li>
@@ -246,6 +247,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../notebooks/tree_species_intro.html">Tree species basics</a></li>
 </ul>
 
 </div>
@@ -285,31 +287,31 @@
 <span class="c1"># Stand: a collection of plots and/or a polygon</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">isclose</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">cast</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">statistics</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">isclose</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">cast</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyproj</span><span class="w"> </span><span class="kn">import</span> <span class="n">CRS</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">shapely</span><span class="w"> </span><span class="kn">import</span> <span class="n">Polygon</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseGeometry</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">CircularPlot</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.primitives</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">Stems</span><span class="p">,</span>
-    <span class="n">StandBasalArea</span><span class="p">,</span>
-    <span class="n">TopHeightMeasurement</span><span class="p">,</span>
-    <span class="n">TopHeightDefinition</span><span class="p">,</span>
-    <span class="n">SiteBase</span><span class="p">,</span>
-    <span class="n">QuadraticMeanDiameter</span><span class="p">,</span>
-    
-<span class="p">)</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">TreeName</span><span class="p">,</span>
-    <span class="n">CircularPlot</span><span class="p">,</span>
     <span class="n">AngleCountAggregator</span><span class="p">,</span>
+    <span class="n">CircularPlot</span><span class="p">,</span>
     <span class="n">RepresentationTree</span><span class="p">,</span>
-    <span class="n">parse_tree_species</span> 
+    <span class="n">TreeName</span><span class="p">,</span>
+    <span class="n">parse_tree_species</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.primitives</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">QuadraticMeanDiameter</span><span class="p">,</span>
+    <span class="n">SiteBase</span><span class="p">,</span>
+    <span class="n">StandBasalArea</span><span class="p">,</span>
+    <span class="n">Stems</span><span class="p">,</span>
+    <span class="n">TopHeightDefinition</span><span class="p">,</span>
+    <span class="n">TopHeightMeasurement</span><span class="p">,</span>
 <span class="p">)</span>
 
 
@@ -334,7 +336,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_estimates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute or refresh HT estimates if not done.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metric_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stand</span><span class="o">.</span><span class="n">_metric_estimates</span><span class="p">:</span>
-             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stand</span><span class="o">.</span><span class="n">use_angle_count</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stand</span><span class="o">.</span><span class="n">use_angle_count</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_stand</span><span class="o">.</span><span class="n">_compute_ht_estimates</span><span class="p">()</span>
 
 
@@ -346,7 +348,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_estimates</span><span class="p">()</span>
             <span class="n">metric_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stand</span><span class="o">.</span><span class="n">_metric_estimates</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_metric_name</span><span class="p">]</span>
             <span class="k">return</span> <span class="n">metric_dict</span><span class="p">[</span><span class="s2">&quot;TOTAL&quot;</span><span class="p">]</span>
-        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No attribute &#39;</span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2">&#39; in StandMetricAccessor for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_metric_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;No attribute &#39;</span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2">&#39; in StandMetricAccessor for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_metric_name</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">species</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">TreeName</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -362,7 +366,9 @@
 
         <span class="n">metric_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stand</span><span class="o">.</span><span class="n">_metric_estimates</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_metric_name</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">sp_obj</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">metric_dict</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No estimate found for species=</span><span class="si">{</span><span class="n">sp_obj</span><span class="o">.</span><span class="n">full_name</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_metric_name</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;No estimate found for species=</span><span class="si">{</span><span class="n">sp_obj</span><span class="o">.</span><span class="n">full_name</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_metric_name</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
         <span class="k">return</span> <span class="n">metric_dict</span><span class="p">[</span><span class="n">sp_obj</span><span class="p">]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__float__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -390,8 +396,11 @@
 
 
 
+
+
 <div class="viewcode-block" id="Stand">
 <a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.stand.Stand">[docs]</a>
+<span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Stand</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Represents a forest stand, which may have:</span>
@@ -404,71 +413,64 @@
 <span class="sd">    If a polygon is provided, the area_ha is computed from the polygon geometry</span>
 <span class="sd">    (reprojected to a suitable UTM if the original CRS is geographic).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">site</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SiteBase</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">area_ha</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">plots</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">CircularPlot</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">polygon</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Polygon</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">crs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">CRS</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">top_height_definition</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TopHeightDefinition</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">site</span> <span class="o">=</span> <span class="n">site</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">polygon</span> <span class="o">=</span> <span class="n">polygon</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">crs</span> <span class="o">=</span> <span class="n">crs</span>
+    <span class="n">site</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SiteBase</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">area_ha</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">plots</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">CircularPlot</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">polygon</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Polygon</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">crs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">CRS</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">top_height_definition</span><span class="p">:</span> <span class="n">TopHeightDefinition</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">TopHeightDefinition</span><span class="p">)</span>
+    <span class="n">attrs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">_metric_estimates</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">Stems</span><span class="p">,</span> <span class="n">StandBasalArea</span><span class="p">]]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span>
+        <span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">use_angle_count</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">top_height_definition</span> <span class="o">=</span> <span class="n">top_height_definition</span> <span class="k">if</span> <span class="n">top_height_definition</span> <span class="k">else</span> <span class="n">TopHeightDefinition</span><span class="p">()</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">plots</span> <span class="o">=</span> <span class="n">plots</span> <span class="k">if</span> <span class="n">plots</span> <span class="k">else</span> <span class="p">[]</span>
-
-        <span class="c1"># If user gave an explicit area</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">area_ha</span> <span class="o">=</span> <span class="n">area_ha</span>
-
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># If a polygon is given, compute its area in hectares after projecting</span>
-        <span class="k">if</span> <span class="n">polygon</span><span class="p">:</span>
-            <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">({</span><span class="s1">&#39;geometry&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">polygon</span><span class="p">]},</span> <span class="n">crs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">crs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">polygon</span><span class="p">:</span>
+            <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">({</span><span class="s2">&quot;geometry&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">polygon</span><span class="p">]},</span> <span class="n">crs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">crs</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">gdf</span><span class="o">.</span><span class="n">crs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">gdf</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">is_geographic</span><span class="p">:</span>
-                <span class="c1"># Reproject to an appropriate UTM</span>
                 <span class="n">utm_crs</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">estimate_utm_crs</span><span class="p">()</span>
                 <span class="n">gdf</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">utm_crs</span><span class="p">)</span>
-                
-            <span class="n">proj_polygon</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">BaseGeometry</span><span class="p">,</span><span class="n">gdf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="n">proj_polygon</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">BaseGeometry</span><span class="p">,</span> <span class="n">gdf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">proj_polygon</span><span class="o">.</span><span class="n">is_valid</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Polygon is not valid after reprojection to a UTM projection. Check original provided CRS.&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Polygon is not valid after reprojection to a UTM projection. &quot;</span>
+                    <span class="s2">&quot;Check original provided CRS.&quot;</span>
+                <span class="p">)</span>
             <span class="n">polygon_area_m2</span> <span class="o">=</span> <span class="n">proj_polygon</span><span class="o">.</span><span class="n">area</span>
             <span class="n">derived_area_ha</span> <span class="o">=</span> <span class="n">polygon_area_m2</span> <span class="o">/</span> <span class="mf">10_000.0</span>
 
-            <span class="c1"># If user specified area_ha, check consistency</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_ha</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">diff</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">area_ha</span> <span class="o">-</span> <span class="n">derived_area_ha</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">diff</span> <span class="o">&gt;</span> <span class="mf">0.01</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Polygon area is </span><span class="si">{</span><span class="n">derived_area_ha</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> ha, but you set area_ha=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">area_ha</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> ha.&quot;</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Polygon area is </span><span class="si">{</span><span class="n">derived_area_ha</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> ha, but you set &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;area_ha=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">area_ha</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> ha.&quot;</span>
+                    <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">area_ha</span> <span class="o">=</span> <span class="n">derived_area_ha</span>
 
-        <span class="c1"># Arbitrary dictionary for user-defined stand-level metadata</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-
-        <span class="c1"># Where we store final &quot;Stems&quot;, &quot;BasalArea&quot;, etc. after computing</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_metric_estimates</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">Stems</span><span class="p">,</span> <span class="n">StandBasalArea</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{}</span>
-
-        <span class="c1">#Get angle-counting estimates for stand (should be stored in self._metric_estimates)</span>
-        <span class="c1"># Determine if any plots supply AngleCount objects.</span>
+        <span class="c1"># Determine if any plots supply AngleCount objects</span>
         <span class="n">all_angle_counts</span> <span class="o">=</span> <span class="p">[</span><span class="n">ac</span> <span class="k">for</span> <span class="n">plot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plots</span> <span class="k">for</span> <span class="n">ac</span> <span class="ow">in</span> <span class="n">plot</span><span class="o">.</span><span class="n">AngleCount</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">all_angle_counts</span><span class="p">:</span>
-            <span class="c1"># Use AngleCount-based estimates.</span>
-            <span class="n">ba_from_angle_count</span><span class="p">,</span> <span class="n">stems_from_angle_count</span> <span class="o">=</span> <span class="n">AngleCountAggregator</span><span class="p">(</span><span class="n">all_angle_counts</span><span class="p">)</span><span class="o">.</span><span class="n">aggregate_stand_metrics</span><span class="p">()</span>
-
-            <span class="c1"># To satisfy the invariant type of the _metric_estimates dictionary, we must build new </span>
-            <span class="c1"># dictionaries that explicitly match the target type: Dict[Any, Union[Stems, StandBasalArea]].</span>
-            
-            <span class="n">basal_area_metrics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">Stems</span><span class="p">,</span> <span class="n">StandBasalArea</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ba_from_angle_count</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
-            <span class="n">stems_metrics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">Stems</span><span class="p">,</span> <span class="n">StandBasalArea</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">stems_from_angle_count</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
-
+            <span class="n">ba_from_angle_count</span><span class="p">,</span> <span class="n">stems_from_angle_count</span> <span class="o">=</span> <span class="n">AngleCountAggregator</span><span class="p">(</span>
+                <span class="n">all_angle_counts</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">aggregate_stand_metrics</span><span class="p">()</span>
+            <span class="n">basal_area_metrics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">Stems</span><span class="p">,</span> <span class="n">StandBasalArea</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ba_from_angle_count</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="p">}</span>
+            <span class="n">stems_metrics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">Stems</span><span class="p">,</span> <span class="n">StandBasalArea</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">stems_from_angle_count</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="p">}</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_metric_estimates</span><span class="p">[</span><span class="s2">&quot;BasalArea&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">basal_area_metrics</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_metric_estimates</span><span class="p">[</span><span class="s2">&quot;Stems&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stems_metrics</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">use_angle_count</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">use_angle_count</span> <span class="o">=</span> <span class="kc">False</span>
-    
+
     <span class="c1"># Two key properties for your requested usage:</span>
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">BasalArea</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StandMetricAccessor</span><span class="p">:</span>
@@ -491,7 +493,7 @@
 <span class="sd">            float(stand.Stems)         -&gt; numeric total</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">StandMetricAccessor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Stems&quot;</span><span class="p">)</span>
-    
+
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">QMD</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StandMetricAccessor</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -555,10 +557,14 @@
 <span class="sd">        We&#39;ll sum or average the per-plot values for each species:</span>
 <span class="sd">          - stems/ha</span>
 <span class="sd">          - basal_area/ha</span>
-<span class="sd">        Store them in self._metric_estimates: </span>
+<span class="sd">        Store them in self._metric_estimates:</span>
 <span class="sd">            {</span>
-<span class="sd">              &quot;Stems&quot;: {TreeName(...) : Stems(...), ..., &quot;TOTAL&quot;: Stems(...)},</span>
-<span class="sd">              &quot;BasalArea&quot;: {TreeName(...): StandBasalArea(...), ..., &quot;TOTAL&quot;: StandBasalArea(...)}</span>
+<span class="sd">                &quot;Stems&quot;: {TreeName(...): Stems(...), ..., &quot;TOTAL&quot;: Stems(...)},</span>
+<span class="sd">                &quot;BasalArea&quot;: {</span>
+<span class="sd">                    TreeName(...): StandBasalArea(...),</span>
+<span class="sd">                    ...,</span>
+<span class="sd">                    &quot;TOTAL&quot;: StandBasalArea(...),</span>
+<span class="sd">                }</span>
 <span class="sd">            }</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">species_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">TreeName</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{}</span>
@@ -566,7 +572,9 @@
         <span class="k">for</span> <span class="n">plot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plots</span><span class="p">:</span>
             <span class="n">area_ha</span> <span class="o">=</span> <span class="n">plot</span><span class="o">.</span><span class="n">area_ha</span> <span class="ow">or</span> <span class="mf">1.0</span>
             <span class="c1"># effective area is the visible portion of the plot</span>
-            <span class="n">effective_area_ha</span> <span class="o">=</span> <span class="n">area_ha</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">plot</span><span class="o">.</span><span class="n">occlusion</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">plot</span><span class="o">.</span><span class="n">occlusion</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">area_ha</span>
+            <span class="n">effective_area_ha</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">area_ha</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">plot</span><span class="o">.</span><span class="n">occlusion</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">plot</span><span class="o">.</span><span class="n">occlusion</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">area_ha</span>
+            <span class="p">)</span>
 
             <span class="c1"># Group trees by species</span>
             <span class="n">trees_by_sp</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">TreeName</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">RepresentationTree</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
@@ -709,7 +717,7 @@
             <span class="c1"># This check preserves that intent.</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_heights</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">m_real</span><span class="p">:</span>
                 <span class="k">continue</span>
-            
+
             <span class="c1"># Because the &quot;if t.height_m is not None&quot; check is inside the comprehension,</span>
             <span class="c1"># Pylance knows that `valid_heights` is of type `list[float]`.</span>
             <span class="n">subplot_mean_h</span> <span class="o">=</span> <span class="n">statistics</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">valid_heights</span><span class="p">)</span>
@@ -813,7 +821,8 @@
             <span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">sigma</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">heights_true</span><span class="p">,</span> <span class="n">n_trees</span><span class="p">)</span>
             <span class="n">heights_measured</span> <span class="o">=</span> <span class="n">heights_true</span> <span class="o">+</span> <span class="n">noise</span>
 
-            <span class="c1"># The &quot;true&quot; top height H_bar in the entire stand is the mean of top nominal_top_n by diameter</span>
+            <span class="c1"># The &quot;true&quot; top height H_bar in the entire stand is the mean of</span>
+            <span class="c1"># top nominal_top_n by diameter</span>
             <span class="n">top_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">diameters</span><span class="p">)[</span><span class="o">-</span><span class="n">nominal_top_n</span><span class="p">:][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
             <span class="n">H_bar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">heights_true</span><span class="p">[</span><span class="n">top_indices</span><span class="p">])</span>
             <span class="n">H_bar_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">H_bar</span><span class="p">)</span>
@@ -845,7 +854,7 @@
 
         <span class="k">return</span> <span class="n">bias</span><span class="p">,</span> <span class="n">bias_percentage</span></div>
 
-    
+
 <div class="viewcode-block" id="Stand.append_plot">
 <a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.stand.Stand.append_plot">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">append_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plot</span><span class="p">:</span> <span class="n">CircularPlot</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -867,7 +876,11 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Otherwise, recompute using the tree-based estimates.</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_compute_ht_estimates</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">use_angle_count</span> <span class="o">=</span> <span class="kc">False</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">use_angle_count</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># Invalidate any cached QMD estimates</span>
+        <span class="k">if</span> <span class="s2">&quot;QMD&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metric_estimates</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metric_estimates</span><span class="p">[</span><span class="s2">&quot;QMD&quot;</span><span class="p">]</span></div>
 </div>
 
 
