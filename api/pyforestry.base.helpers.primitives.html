@@ -771,23 +771,80 @@ Subclasses must implement this method.</p>
 </section>
 <section id="module-pyforestry.base.helpers.primitives.siteindex_value">
 <span id="pyforestry-base-helpers-primitives-siteindex-value-module"></span><h2>pyforestry.base.helpers.primitives.siteindex_value module<a class="headerlink" href="#module-pyforestry.base.helpers.primitives.siteindex_value" title="Link to this heading">¶</a></h2>
+<p>Representation of site index values with metadata.</p>
+<p>This module defines <a class="reference internal" href="#pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue" title="pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue"><code class="xref py py-class docutils literal notranslate"><span class="pre">SiteIndexValue</span></code></a>, a lightweight class used to store
+site index measurements along with key contextual information.  A site index is
+commonly expressed as a height (in meters) for a given tree species at a
+specified reference age and is often derived from empirical functions.  The
+class in this module subclasses <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> so that it behaves like a numeric
+value while also carrying:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">reference_age</span></code></dt><dd><p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">AgeMeasurement</span></code> the value
+refers to.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">species</span></code></dt><dd><p>A set of <a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><code class="xref py py-class docutils literal notranslate"><span class="pre">TreeName</span></code></a> objects for
+which the site index applies.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">fn</span></code></dt><dd><p>The callable that was used to compute the value, if applicable.</p>
+</dd>
+</dl>
+<p>These additional attributes make it easier to keep track of how the site index
+was produced when using it in analyses or passing it between functions.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.base.helpers.primitives.siteindex_value.</span></span><span class="sig-name descname"><span class="pre">SiteIndexValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_age</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyforestry.base.helpers.primitives.age.AgeMeasurement" title="pyforestry.base.helpers.primitives.age.AgeMeasurement"><span class="pre">AgeMeasurement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">set</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/base/helpers/primitives/siteindex_value.html#SiteIndexValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue.fn">
-<span class="sig-name descname"><span class="pre">fn</span></span><a class="headerlink" href="#pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue.fn" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
+<p>Site index value with associated metadata.</p>
+<p>This class stores a numeric site index while also tracking the reference
+age, species, and function used to derive the value.  It subclasses
+<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> so it can be used directly in numeric operations.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue.reference_age">
 <span class="sig-name descname"><span class="pre">reference_age</span></span><a class="headerlink" href="#pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue.reference_age" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The age at which the site index is defined.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.AgeMeasurement" title="pyforestry.base.helpers.AgeMeasurement">AgeMeasurement</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue.species">
 <span class="sig-name descname"><span class="pre">species</span></span><a class="headerlink" href="#pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue.species" title="Link to this definition">¶</a></dt>
+<dd><p>One or more tree species that the site index represents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>set[<a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName">TreeName</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue.fn">
+<span class="sig-name descname"><span class="pre">fn</span></span><a class="headerlink" href="#pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue.fn" title="Link to this definition">¶</a></dt>
+<dd><p>The function that produced the value, allowing the computation to be
+traced back.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Callable</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id8">
+<span class="sig-name descname"><span class="pre">fn</span></span><a class="headerlink" href="#id8" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id9">
+<span class="sig-name descname"><span class="pre">reference_age</span></span><a class="headerlink" href="#id9" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id10">
+<span class="sig-name descname"><span class="pre">species</span></span><a class="headerlink" href="#id10" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -809,8 +866,8 @@ Subclasses must implement this method.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.base.helpers.primitives.topheight.</span></span><span class="sig-name descname"><span class="pre">TopHeightMeasurement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyforestry.base.helpers.primitives.topheight.TopHeightDefinition" title="pyforestry.base.helpers.primitives.topheight.TopHeightDefinition"><span class="pre">TopHeightDefinition</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">est_bias</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/base/helpers/primitives/topheight.html#TopHeightMeasurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.helpers.primitives.topheight.TopHeightMeasurement" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
 <p>A float-like class that stores the measured top (dominant) height of a stand.</p>
-<section id="id8">
-<h3>Attributes:<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h3>
+<section id="id11">
+<h3>Attributes:<a class="headerlink" href="#id11" title="Link to this heading">¶</a></h3>
 <dl class="simple">
 <dt>definition<span class="classifier">TopHeightDefinition</span></dt><dd><p>The definition used to identify the top height (e.g. top 100 trees per ha).</p>
 </dd>
@@ -1081,9 +1138,12 @@ This directly answers your request to preserve component information.</p>
 </li>
 <li><a class="reference internal" href="#module-pyforestry.base.helpers.primitives.siteindex_value">pyforestry.base.helpers.primitives.siteindex_value module</a><ul>
 <li><a class="reference internal" href="#pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue"><code class="docutils literal notranslate"><span class="pre">SiteIndexValue</span></code></a><ul>
-<li><a class="reference internal" href="#pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue.fn"><code class="docutils literal notranslate"><span class="pre">SiteIndexValue.fn</span></code></a></li>
 <li><a class="reference internal" href="#pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue.reference_age"><code class="docutils literal notranslate"><span class="pre">SiteIndexValue.reference_age</span></code></a></li>
 <li><a class="reference internal" href="#pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue.species"><code class="docutils literal notranslate"><span class="pre">SiteIndexValue.species</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue.fn"><code class="docutils literal notranslate"><span class="pre">SiteIndexValue.fn</span></code></a></li>
+<li><a class="reference internal" href="#id8"><code class="docutils literal notranslate"><span class="pre">SiteIndexValue.fn</span></code></a></li>
+<li><a class="reference internal" href="#id9"><code class="docutils literal notranslate"><span class="pre">SiteIndexValue.reference_age</span></code></a></li>
+<li><a class="reference internal" href="#id10"><code class="docutils literal notranslate"><span class="pre">SiteIndexValue.species</span></code></a></li>
 </ul>
 </li>
 </ul>

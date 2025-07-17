@@ -380,9 +380,12 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#module-pyforestry.base.helpers.primitives.siteindex_value">pyforestry.base.helpers.primitives.siteindex_value module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue"><code class="docutils literal notranslate"><span class="pre">SiteIndexValue</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue.fn"><code class="docutils literal notranslate"><span class="pre">SiteIndexValue.fn</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue.reference_age"><code class="docutils literal notranslate"><span class="pre">SiteIndexValue.reference_age</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue.species"><code class="docutils literal notranslate"><span class="pre">SiteIndexValue.species</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue.fn"><code class="docutils literal notranslate"><span class="pre">SiteIndexValue.fn</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#id8"><code class="docutils literal notranslate"><span class="pre">SiteIndexValue.fn</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#id9"><code class="docutils literal notranslate"><span class="pre">SiteIndexValue.reference_age</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#id10"><code class="docutils literal notranslate"><span class="pre">SiteIndexValue.species</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -1486,19 +1489,57 @@ Subclasses must implement this method.</p>
 <dt class="sig sig-object py" id="pyforestry.base.helpers.SiteIndexValue">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.base.helpers.</span></span><span class="sig-name descname"><span class="pre">SiteIndexValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_age</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.age.AgeMeasurement" title="pyforestry.base.helpers.primitives.age.AgeMeasurement"><span class="pre">AgeMeasurement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">set</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/base/helpers/primitives/siteindex_value.html#SiteIndexValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.helpers.SiteIndexValue" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.helpers.SiteIndexValue.fn">
-<span class="sig-name descname"><span class="pre">fn</span></span><a class="headerlink" href="#pyforestry.base.helpers.SiteIndexValue.fn" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
+<p>Site index value with associated metadata.</p>
+<p>This class stores a numeric site index while also tracking the reference
+age, species, and function used to derive the value.  It subclasses
+<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> so it can be used directly in numeric operations.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyforestry.base.helpers.SiteIndexValue.reference_age">
 <span class="sig-name descname"><span class="pre">reference_age</span></span><a class="headerlink" href="#pyforestry.base.helpers.SiteIndexValue.reference_age" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The age at which the site index is defined.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pyforestry.base.helpers.AgeMeasurement" title="pyforestry.base.helpers.AgeMeasurement">AgeMeasurement</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyforestry.base.helpers.SiteIndexValue.species">
 <span class="sig-name descname"><span class="pre">species</span></span><a class="headerlink" href="#pyforestry.base.helpers.SiteIndexValue.species" title="Link to this definition">¶</a></dt>
+<dd><p>One or more tree species that the site index represents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>set[<a class="reference internal" href="#pyforestry.base.helpers.TreeName" title="pyforestry.base.helpers.TreeName">TreeName</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.base.helpers.SiteIndexValue.fn">
+<span class="sig-name descname"><span class="pre">fn</span></span><a class="headerlink" href="#pyforestry.base.helpers.SiteIndexValue.fn" title="Link to this definition">¶</a></dt>
+<dd><p>The function that produced the value, allowing the computation to be
+traced back.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Callable</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id11">
+<span class="sig-name descname"><span class="pre">fn</span></span><a class="headerlink" href="#id11" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id12">
+<span class="sig-name descname"><span class="pre">reference_age</span></span><a class="headerlink" href="#id12" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id13">
+<span class="sig-name descname"><span class="pre">species</span></span><a class="headerlink" href="#id13" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1563,8 +1604,8 @@ If any plot in the updated stand has AngleCount data, those estimates take prece
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calculate_top_height_bias</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_trees</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_simulations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nominal_top_n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nominal_area</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/base/helpers/stand.html#Stand.calculate_top_height_bias"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.helpers.Stand.calculate_top_height_bias" title="Link to this definition">¶</a></dt>
 <dd><p>Calculate the bias of the estimator h_hat for top height in a forest stand.
 Based on (a simplified interpretation of) Matérn’s ideas on top-height sampling.</p>
-<section id="id11">
-<h3>Parameters:<a class="headerlink" href="#id11" title="Link to this heading">¶</a></h3>
+<section id="id14">
+<h3>Parameters:<a class="headerlink" href="#id14" title="Link to this heading">¶</a></h3>
 <dl class="simple">
 <dt>r<span class="classifier">float</span></dt><dd><p>Radius of the circular plot (meters).</p>
 </dd>
@@ -1582,8 +1623,8 @@ Based on (a simplified interpretation of) Matérn’s ideas on top-height sampli
 </dd>
 </dl>
 </section>
-<section id="id12">
-<h3>Returns:<a class="headerlink" href="#id12" title="Link to this heading">¶</a></h3>
+<section id="id15">
+<h3>Returns:<a class="headerlink" href="#id15" title="Link to this heading">¶</a></h3>
 <dl class="simple">
 <dt>(bias, bias_percentage):</dt><dd><dl class="simple">
 <dt>bias<span class="classifier">float</span></dt><dd><p>Average difference (h_hat - H_bar).</p>
@@ -1619,8 +1660,8 @@ If insufficient data, returns None.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.base.helpers.</span></span><span class="sig-name descname"><span class="pre">StandBasalArea</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">over_bark</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direct_estimate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/base/helpers/primitives/area_aggregates.html#StandBasalArea"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.helpers.StandBasalArea" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
 <p>Represents basal area (m²/ha) for one or more species.</p>
-<section id="id13">
-<h3>Attributes:<a class="headerlink" href="#id13" title="Link to this heading">¶</a></h3>
+<section id="id16">
+<h3>Attributes:<a class="headerlink" href="#id16" title="Link to this heading">¶</a></h3>
 <dl class="simple">
 <dt>species<span class="classifier">TreeName | list[TreeName]</span></dt><dd><p>The species (or list of species) to which this basal area applies.</p>
 </dd>
@@ -1691,8 +1732,8 @@ stand.BasalArea.precision -&gt; total’s precision</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
 <p>Represents a volume (m³/ha, typically) of standing trees in a stand,
 optionally for a single species or multiple species.</p>
-<section id="id14">
-<h3>Attributes:<a class="headerlink" href="#id14" title="Link to this heading">¶</a></h3>
+<section id="id17">
+<h3>Attributes:<a class="headerlink" href="#id17" title="Link to this heading">¶</a></h3>
 <dl class="simple">
 <dt>species<span class="classifier">TreeName | list[TreeName]</span></dt><dd><p>The species or list of species for which the volume is estimated.</p>
 </dd>
@@ -1736,8 +1777,8 @@ optionally for a single species or multiple species.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.base.helpers.</span></span><span class="sig-name descname"><span class="pre">Stems</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/base/helpers/primitives/area_aggregates.html#Stems"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.helpers.Stems" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
 <p>Represents the number of stems per hectare (stems/ha) for one or more species.</p>
-<section id="id15">
-<h3>Attributes:<a class="headerlink" href="#id15" title="Link to this heading">¶</a></h3>
+<section id="id18">
+<h3>Attributes:<a class="headerlink" href="#id18" title="Link to this heading">¶</a></h3>
 <dl class="simple">
 <dt>species<span class="classifier">TreeName | list[TreeName]</span></dt><dd><p>The species (or list of species) to which this stems count applies.</p>
 </dd>
@@ -1776,8 +1817,8 @@ optionally for a single species or multiple species.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.base.helpers.</span></span><span class="sig-name descname"><span class="pre">TopHeightMeasurement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.topheight.TopHeightDefinition" title="pyforestry.base.helpers.primitives.topheight.TopHeightDefinition"><span class="pre">TopHeightDefinition</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">est_bias</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/base/helpers/primitives/topheight.html#TopHeightMeasurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.helpers.TopHeightMeasurement" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
 <p>A float-like class that stores the measured top (dominant) height of a stand.</p>
-<section id="id16">
-<h3>Attributes:<a class="headerlink" href="#id16" title="Link to this heading">¶</a></h3>
+<section id="id19">
+<h3>Attributes:<a class="headerlink" href="#id19" title="Link to this heading">¶</a></h3>
 <dl class="simple">
 <dt>definition<span class="classifier">TopHeightDefinition</span></dt><dd><p>The definition used to identify the top height (e.g. top 100 trees per ha).</p>
 </dd>
@@ -2097,9 +2138,12 @@ it to the lower-case full_name property of the defined species in the chosen reg
 </ul>
 </li>
 <li><a class="reference internal" href="#pyforestry.base.helpers.SiteIndexValue"><code class="docutils literal notranslate"><span class="pre">SiteIndexValue</span></code></a><ul>
-<li><a class="reference internal" href="#pyforestry.base.helpers.SiteIndexValue.fn"><code class="docutils literal notranslate"><span class="pre">SiteIndexValue.fn</span></code></a></li>
 <li><a class="reference internal" href="#pyforestry.base.helpers.SiteIndexValue.reference_age"><code class="docutils literal notranslate"><span class="pre">SiteIndexValue.reference_age</span></code></a></li>
 <li><a class="reference internal" href="#pyforestry.base.helpers.SiteIndexValue.species"><code class="docutils literal notranslate"><span class="pre">SiteIndexValue.species</span></code></a></li>
+<li><a class="reference internal" href="#pyforestry.base.helpers.SiteIndexValue.fn"><code class="docutils literal notranslate"><span class="pre">SiteIndexValue.fn</span></code></a></li>
+<li><a class="reference internal" href="#id11"><code class="docutils literal notranslate"><span class="pre">SiteIndexValue.fn</span></code></a></li>
+<li><a class="reference internal" href="#id12"><code class="docutils literal notranslate"><span class="pre">SiteIndexValue.reference_age</span></code></a></li>
+<li><a class="reference internal" href="#id13"><code class="docutils literal notranslate"><span class="pre">SiteIndexValue.species</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#pyforestry.base.helpers.Stand"><code class="docutils literal notranslate"><span class="pre">Stand</span></code></a><ul>
