@@ -288,6 +288,7 @@
           <h1>Source code for pyforestry.base.helpers.primitives.age</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
 
+
 <span class="c1"># --- Age Enum ---</span>
 <div class="viewcode-block" id="Age">
 <a class="viewcode-back" href="../../../../../api/pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.Age">[docs]</a>
@@ -299,10 +300,11 @@
 <span class="sd">        TOTAL (Age): Total age measurement.</span>
 <span class="sd">        DBH (Age): Diameter at breast height age measurement.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">TOTAL</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">DBH</span> <span class="o">=</span> <span class="mi">2</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;AgeMeasurement&#39;</span><span class="p">:</span> <span class="c1"># Use forward reference string</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;AgeMeasurement&quot;</span><span class="p">:</span>  <span class="c1"># Use forward reference string</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create an AgeMeasurement for this age type.</span>
 
@@ -318,6 +320,7 @@
         <span class="k">return</span> <span class="n">AgeMeasurement</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
 
 
+
 <span class="c1"># --- AgeMeasurement Class ---</span>
 <div class="viewcode-block" id="AgeMeasurement">
 <a class="viewcode-back" href="../../../../../api/pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.AgeMeasurement">[docs]</a>
@@ -329,7 +332,7 @@
 <span class="sd">        code (int): Age enum code corresponding to measurement type.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;code&#39;</span><span class="p">)</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;code&quot;</span><span class="p">,)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">code</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -348,8 +351,9 @@
         <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Age must be non-negative.&quot;</span><span class="p">)</span>
         <span class="c1"># Ensure code is valid using the Age enum definition</span>
-        <span class="k">if</span> <span class="n">code</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">Age</span><span class="p">]:</span> <span class="c1"># Check against Age enum values</span>
-             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid age code: </span><span class="si">{</span><span class="n">code</span><span class="si">}</span><span class="s2">. Must be one of </span><span class="si">{</span><span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">value</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">Age</span><span class="p">]</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">code</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">Age</span><span class="p">]:</span>  <span class="c1"># Check against Age enum values</span>
+            <span class="n">allowed</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">Age</span><span class="p">]</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid age code: </span><span class="si">{</span><span class="n">code</span><span class="si">}</span><span class="s2">. Must be one of </span><span class="si">{</span><span class="n">allowed</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="n">code</span>
         <span class="k">return</span> <span class="n">obj</span>
@@ -372,11 +376,11 @@
 <span class="sd">            str: Formatted repr string.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Ensure Age enum lookup is safe</span>
-        <span class="n">age_type</span> <span class="o">=</span> <span class="s1">&#39;UNKNOWN&#39;</span>
+        <span class="n">age_type</span> <span class="o">=</span> <span class="s2">&quot;UNKNOWN&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">age_type</span> <span class="o">=</span> <span class="n">Age</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="k">pass</span> <span class="c1"># Keep &#39;UNKNOWN&#39; if code not in enum</span>
+            <span class="k">pass</span>  <span class="c1"># Keep &#39;UNKNOWN&#39; if code not in enum</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;AgeMeasurement(</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2">, code=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="si">}</span><span class="s2"> [</span><span class="si">{</span><span class="n">age_type</span><span class="si">}</span><span class="s2">])&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
