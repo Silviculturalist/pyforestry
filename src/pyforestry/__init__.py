@@ -1,2 +1,3 @@
-from . import base
-from . import sweden
+"""Top-level package for pyforestry."""
+
+from . import base, sweden
