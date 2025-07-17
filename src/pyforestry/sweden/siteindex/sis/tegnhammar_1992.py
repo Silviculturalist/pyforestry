@@ -2,14 +2,11 @@
 from __future__ import annotations
 
 from math import exp
-from typing import TYPE_CHECKING
 
 from pyforestry.base.helpers import Age, SiteIndexValue, TreeSpecies, enum_code
-from pyforestry.sweden.geo import eriksson_1986_humidity
+from pyforestry.sweden.geo.humidity.eriksson_1986 import eriksson_1986_humidity
+from pyforestry.sweden.site.enums import Sweden
 from pyforestry.sweden.siteindex.hagglund_1970 import Hagglund_1970
-
-if TYPE_CHECKING:  # pragma: no cover - for type checking only
-    from pyforestry.sweden.site.enums import Sweden
 
 
 def tegnhammar_1992_adjusted_spruce_si_by_stand_variables(
@@ -59,6 +56,8 @@ def tegnhammar_1992_adjusted_spruce_si_by_stand_variables(
 
     if humidity is None:
         humidity = eriksson_1986_humidity(longitude=longitude, latitude=latitude)
+        if humidity < 0:
+            humidity = 0
 
     # convert enums to numeric codes if needed
     vegetation = enum_code(vegetation)
@@ -108,7 +107,7 @@ def tegnhammar_1992_adjusted_spruce_si_by_stand_variables(
     extremely_cold = max(altitude + (130 * latitude) - 8900, 0)
 
     # Use pyforestry.Geo.Geo.RetrieveGeoCode.getDistanceToCoast
-    from pyforestry.geo.geo import RetrieveGeoCode
+    from pyforestry.sweden.geo.geo import RetrieveGeoCode
 
     distance_to_swedish_coast = (
         RetrieveGeoCode().getDistanceToCoast(longitude, latitude) / 1000
@@ -177,7 +176,7 @@ def tegnhammar_1992_adjusted_spruce_si_by_stand_variables(
         + 5.299670 * aspect_east_south_east_incline
     )
 
-    SIS = sih_just / 10
+    SIS = sih_just / 100
     fn = (
         Hagglund_1970.height_trajectory.picea_abies.northern_sweden
         if latitude >= 60

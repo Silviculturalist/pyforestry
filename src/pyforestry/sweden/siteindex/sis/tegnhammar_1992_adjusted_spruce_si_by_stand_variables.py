@@ -2,11 +2,12 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from pyforestry.sweden.site.enums import Sweden
+
 from .tegnhammar_1992 import tegnhammar_1992_adjusted_spruce_si_by_stand_variables as _impl
 
 if TYPE_CHECKING:  # pragma: no cover - for type checking only
     from pyforestry.base.helpers import SiteIndexValue
-    from pyforestry.sweden.site.enums import Sweden
 
 
 def tegnhammar_1992_adjusted_spruce_si_by_stand_variables(

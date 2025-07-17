@@ -1,14 +1,8 @@
 # Suggested pyforestry/Helpers/__init__.py
 # ruff: noqa: F401, F403, F405
+# isort: off
 
 # From TreeSpecies.py
-from .bitterlich_angle_count import AngleCount, AngleCountAggregator
-from .plot import CircularPlot
-
-# From Primitives.py
-from .primitives import *  # noqa: F401,F403
-from .stand import Stand, StandMetricAccessor
-from .tree import RepresentationTree, SingleTree, Tree
 from .tree_species import (
     BETULA_PENDULA,  # noqa: F401
     BETULA_PUBESCENS,  # noqa: F401
@@ -21,7 +15,16 @@ from .tree_species import (
     TreeSpecies,  # The regional container class
     parse_tree_species,
 )
+
+# From Primitives.py
+from .primitives import *  # noqa: F401,F403
+from .tree import Tree, SingleTree, RepresentationTree
+from .bitterlich_angle_count import AngleCount, AngleCountAggregator
+from .plot import CircularPlot
+from .stand import Stand, StandMetricAccessor
 from .utils import enum_code
+
+# isort: on
 
 __all__ = [
     # TreeSpecies components
