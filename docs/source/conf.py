@@ -1,5 +1,9 @@
 import os
 import sys
+import pypandoc
+
+# Ensure pandoc is available for nbsphinx
+pypandoc.download_pandoc()
 # 1. Tell Sphinx where to find your code:
 sys.path.insert(0, os.path.abspath('../../src'))
 
@@ -24,6 +28,11 @@ autodoc_default_options = {
     'undoc-members':True, #also include members without docstrings
     'show-inheritance':True #for classes, show base classes
 }
+
+# Execute notebooks so GitHub Pages gets static output.
+nbsphinx_execute = 'always'
+# Fail the build if cells error out.
+nbsphinx_allow_errors = False
 
 # -- Options for HTML output -------------------------------------------------
 html_theme = 'furo'  # or 'sphinx_rtd_theme', etc.
