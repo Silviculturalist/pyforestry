@@ -2,10 +2,21 @@ import os
 import sys
 import pypandoc
 
-# Ensure pandoc is available for nbsphinx
+# Ensure pandoc is available for nbsphinx and put it on PATH
 pypandoc.download_pandoc()
-# 1. Tell Sphinx where to find your code:
-sys.path.insert(0, os.path.abspath('../../src'))
+pandoc_path = pypandoc.get_pandoc_path()
+os.environ['PATH'] = os.pathsep.join([
+    os.path.dirname(pandoc_path),
+    os.environ.get('PATH', ''),
+])
+
+# 1. Tell Sphinx where to find your code and expose it to executed notebooks
+src_dir = os.path.abspath('../../src')
+sys.path.insert(0, src_dir)
+os.environ['PYTHONPATH'] = os.pathsep.join([
+    src_dir,
+    os.environ.get('PYTHONPATH', ''),
+])
 
 # -- Project information -----------------------------------------------------
 project = 'pyforestry'
