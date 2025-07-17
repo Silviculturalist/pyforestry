@@ -7,9 +7,11 @@ stem density metrics."""
 
 import math
 import statistics
-from typing import Optional, List, Tuple, Dict, Set, Union
-from pyforestry.base.helpers.tree_species import TreeName
+from typing import Dict, List, Optional, Set, Tuple, Union
+
 from pyforestry.base.helpers.primitives import StandBasalArea, Stems
+from pyforestry.base.helpers.tree_species import TreeName
+
 
 class AngleCount:
     """Parameters and tallies for angle-count sampling at a single point.
@@ -24,12 +26,15 @@ class AngleCount:
         species (List[TreeName]): List of tree species encountered.
         value (List[float]): Corresponding tallied counts for each species.
     """
-    def __init__(self,
-                 ba_factor: float,
-                 value: Optional[List[float]] = None,
-                 species: Optional[List[TreeName]] = None,
-                 point_id: Optional[str] = None,
-                 slope: float = 0.0):
+
+    def __init__(
+        self,
+        ba_factor: float,
+        value: Optional[List[float]] = None,
+        species: Optional[List[TreeName]] = None,
+        point_id: Optional[str] = None,
+        slope: float = 0.0,
+    ):
         """Initialize sampling parameters and optional existing tallies.
 
         Args:
@@ -64,6 +69,7 @@ class AngleCount:
             self.species.append(sp)
             self.value.append(count)
 
+
 class AngleCountAggregator:
     """Aggregate multiple AngleCount samples into stand metrics.
 
@@ -71,6 +77,7 @@ class AngleCountAggregator:
     merging duplicate point records and computing mean and
     standard error for basal area and stems per species.
     """
+
     def __init__(self, records: List[AngleCount]):
         """Initialize with a list of AngleCount records.
 
@@ -100,23 +107,29 @@ class AngleCountAggregator:
                         f"found {existing_rec.ba_factor} and {rec.ba_factor}."
                     )
                 # Add observations from the new record to the existing one
-                for sp, count in zip(rec.species, rec.value):
+                for sp, count in zip(rec.species, rec.value, strict=False):
                     existing_rec.add_observation(sp, count)
             else:
                 # Create a fresh copy to avoid modifying original objects
-                merged_records[key] = AngleCount(rec.ba_factor, list(rec.value), list(rec.species), rec.point_id, rec.slope)
-        
+                merged_records[key] = AngleCount(
+                    rec.ba_factor,
+                    list(rec.value),
+                    list(rec.species),
+                    rec.point_id,
+                    rec.slope,
+                )
+
         return list(merged_records.values())
-    
-    def aggregate_stand_metrics(self) -> Tuple[Dict[TreeName, StandBasalArea],
-                                             Dict[TreeName, Stems]]:
+
+    def aggregate_stand_metrics(
+        self,
+    ) -> Tuple[Dict[TreeName, StandBasalArea], Dict[TreeName, Stems]]:
         """Compute mean basal area and stems density per species across plots.
 
-        Returns:
-            Tuple[
-                Dict[TreeName, StandBasalArea],
-                Dict[TreeName, Stems]
-            ]: Mapping species to basal area and stems metrics.
+        Returns
+        -------
+        Tuple[Dict[TreeName, StandBasalArea], Dict[TreeName, Stems]]
+            Mapping species to basal area and stems metrics.
         """
         merged_records = self.merge_by_point_id()
         if not merged_records:
@@ -138,18 +151,18 @@ class AngleCountAggregator:
         for rec in merged_records:
             # The BAF is now specific to each record in the loop
             current_baf = rec.ba_factor
-            counts_in_rec = dict(zip(rec.species, rec.value))
-            
+            counts_in_rec = dict(zip(rec.species, rec.value, strict=False))
+
             for sp in all_species:
                 raw_count = counts_in_rec.get(sp, 0.0)
-                
+
                 # Append the raw count for stem calculations
                 species_stems_counts[sp].append(raw_count)
 
                 # Convert to BA for this plot and append the estimate
                 ba_estimate = raw_count * current_baf
                 species_ba_estimates[sp].append(ba_estimate)
-        
+
         basal_area_by_species: Dict[TreeName, StandBasalArea] = {}
         stems_by_species: Dict[TreeName, Stems] = {}
 
@@ -162,11 +175,7 @@ class AngleCountAggregator:
             ba_sem = math.sqrt(ba_var / n_total_points) if n_total_points > 0 else 0.0
 
             basal_area_by_species[sp] = StandBasalArea(
-                value=ba_mean,
-                species=sp,
-                precision=ba_sem,
-                over_bark=True,
-                direct_estimate=True
+                value=ba_mean, species=sp, precision=ba_sem, over_bark=True, direct_estimate=True
             )
 
             # --- Stems Calculations (on raw count values) ---
@@ -175,10 +184,6 @@ class AngleCountAggregator:
             stems_var = statistics.variance(stems_counts) if n_total_points > 1 else 0.0
             stems_sem = math.sqrt(stems_var / n_total_points) if n_total_points > 0 else 0.0
 
-            stems_by_species[sp] = Stems(
-                value=stems_mean,
-                species=sp,
-                precision=stems_sem
-            )
+            stems_by_species[sp] = Stems(value=stems_mean, species=sp, precision=stems_sem)
 
         return basal_area_by_species, stems_by_species

@@ -36,12 +36,15 @@ from pyforestry.base.helpers.primitives import (
 class StandMetricAccessor:
     """
     Provides access to stand-level metric data (e.g. BasalArea or Stems).
-    Usage:
+
+    Usage::
+
         stand.BasalArea.TOTAL
         stand.BasalArea(TreeName(...))
         float(stand.BasalArea) -> numeric total
         stand.BasalArea.precision -> total's precision
     """
+
     def __init__(self, stand: "Stand", metric_name: str):
         self._stand = stand
         self._metric_name = metric_name
@@ -51,7 +54,6 @@ class StandMetricAccessor:
         if self._metric_name not in self._stand._metric_estimates:
             if not self._stand.use_angle_count:
                 self._stand._compute_ht_estimates()
-
 
     def __getattr__(self, item):
         """
@@ -108,8 +110,6 @@ class StandMetricAccessor:
         return f"<StandMetricAccessor metric={self._metric_name}>"
 
 
-
-
 @dataclass
 class Stand:
     """
@@ -123,6 +123,7 @@ class Stand:
     If a polygon is provided, the area_ha is computed from the polygon geometry
     (reprojected to a suitable UTM if the original CRS is geographic).
     """
+
     site: Optional[SiteBase] = None
     area_ha: Optional[float] = None
     plots: List[CircularPlot] = field(default_factory=list)
@@ -208,7 +209,9 @@ class Stand:
     def QMD(self) -> StandMetricAccessor:
         """
         Access the stand's quadratic mean diameter (QMD) aggregator.
-        Usage:
+
+        Usage::
+
           Stand.QMD.TOTAL               -> Total QMD (QuadraticMeanDiameter)
           Stand.QMD(TreeSpecies(...))   -> Species-level QMD estimate
           float(Stand.QMD)              -> Numeric total QMD value (in cm)
@@ -241,17 +244,18 @@ class Stand:
             stems_obj = stems_dict[key]
             if stems_obj.value > 0:
                 # QMD in cm computed from BA (m²/ha) and stems (stems/ha)
-                qmd_value =  sqrt((40000.0 * ba_obj.value) / ( pi * stems_obj.value))
+                qmd_value = sqrt((40000.0 * ba_obj.value) / (pi * stems_obj.value))
                 # Propagate errors:
                 # dQ/dBA = 20000 / (pi * stems * QMD)
                 # dQ/dStems = - QMD / (2 * stems)
                 if qmd_value > 0:
-                    dQ_dBA = 20000.0 / ( pi * stems_obj.value * qmd_value)
+                    dQ_dBA = 20000.0 / (pi * stems_obj.value * qmd_value)
                 else:
                     dQ_dBA = 0.0
                 dQ_dStems = qmd_value / (2 * stems_obj.value)
-                qmd_precision =  sqrt((dQ_dBA * ba_obj.precision)**2 +
-                                          (dQ_dStems * stems_obj.precision)**2)
+                qmd_precision = sqrt(
+                    (dQ_dBA * ba_obj.precision) ** 2 + (dQ_dStems * stems_obj.precision) ** 2
+                )
             else:
                 qmd_value = 0.0
                 qmd_precision = 0.0
@@ -259,7 +263,6 @@ class Stand:
             qmd_dict[key] = QuadraticMeanDiameter(qmd_value, precision=qmd_precision)
 
         self._metric_estimates["QMD"] = qmd_dict
-
 
     def _compute_ht_estimates(self):
         """
@@ -278,7 +281,7 @@ class Stand:
             }
         """
         species_data: Dict[TreeName, Dict[str, List[float]]] = {}
-            # 1. Gather data from each plot
+        # 1. Gather data from each plot
         for plot in self.plots:
             area_ha = plot.area_ha or 1.0
             # effective area is the visible portion of the plot
@@ -289,7 +292,7 @@ class Stand:
             # Group trees by species
             trees_by_sp: Dict[TreeName, List[RepresentationTree]] = {}
             for tr in plot.trees:
-                sp = getattr(tr, 'species', None)
+                sp = getattr(tr, "species", None)
                 if sp is None:
                     continue
                 if isinstance(sp, str):
@@ -307,7 +310,7 @@ class Stand:
                 for t in trlist:
                     d_cm = float(t.diameter_cm) if t.diameter_cm is not None else 0.0
                     r_m = (d_cm / 100.0) / 2.0
-                    ba_sum +=  pi * (r_m ** 2) * t.weight
+                    ba_sum += pi * (r_m**2) * t.weight
                 # Adjusted BA/ha: divide by effective area.
                 ba_ha = ba_sum / effective_area_ha
 
@@ -335,8 +338,8 @@ class Stand:
             ba_mean = statistics.mean(b_vals) if b_vals else 0.0
             ba_var = statistics.pvariance(b_vals) if len(b_vals) > 1 else 0.0
 
-            stems_dict[sp] = Stems(value=stems_mean, species=sp, precision= sqrt(stems_var))
-            ba_dict[sp] = StandBasalArea(value=ba_mean, species=sp, precision= sqrt(ba_var))
+            stems_dict[sp] = Stems(value=stems_mean, species=sp, precision=sqrt(stems_var))
+            ba_dict[sp] = StandBasalArea(value=ba_mean, species=sp, precision=sqrt(ba_var))
 
             total_stems_val += stems_mean
             total_stems_var += stems_var
@@ -344,16 +347,15 @@ class Stand:
             total_ba_var += ba_var
 
             # "TOTAL" aggregator
-        stems_dict["TOTAL"] = Stems(value=total_stems_val,
-                                        species=None,
-                                        precision= sqrt(total_stems_var))
-        ba_dict["TOTAL"] = StandBasalArea(value=total_ba_val,
-                                        species=None,
-                                        precision= sqrt(total_ba_var))
+        stems_dict["TOTAL"] = Stems(
+            value=total_stems_val, species=None, precision=sqrt(total_stems_var)
+        )
+        ba_dict["TOTAL"] = StandBasalArea(
+            value=total_ba_val, species=None, precision=sqrt(total_ba_var)
+        )
 
         self._metric_estimates["Stems"] = {k: v for k, v in stems_dict.items()}
         self._metric_estimates["BasalArea"] = {k: v for k, v in ba_dict.items()}
-
 
     def __repr__(self):
         return f"Stand(area_ha={self.area_ha}, n_plots={len(self.plots)})"
@@ -384,7 +386,7 @@ class Stand:
             mode_area_ha = plot_areas_ha[0]
 
         # Subset the plots that match this mode
-        subplots = [p for p in self.plots if  isclose(p.area_ha, mode_area_ha, rel_tol=1e-9)]
+        subplots = [p for p in self.plots if isclose(p.area_ha, mode_area_ha, rel_tol=1e-9)]
 
         if not subplots:
             return None
@@ -395,9 +397,9 @@ class Stand:
         m_values = []
         for plot in subplots:
             # Sort trees descending by diameter
-            sorted_trees = sorted(plot.trees,
-                                  key=lambda t: (t.diameter_cm if t.diameter_cm else -999),
-                                  reverse=True)
+            sorted_trees = sorted(
+                plot.trees, key=lambda t: (t.diameter_cm if t.diameter_cm else -999), reverse=True
+            )
             count_valid = sum(1 for t in sorted_trees if t.height_m is not None)
             m_values.append(count_valid)
 
@@ -413,13 +415,11 @@ class Stand:
         #    Then average across subplots to get a raw estimate
         subplot_means = []
         for plot in subplots:
-            sorted_trees = sorted(plot.trees,
-                                  key=lambda t: (t.diameter_cm if t.diameter_cm else -999),
-                                  reverse=True)
+            sorted_trees = sorted(
+                plot.trees, key=lambda t: (t.diameter_cm if t.diameter_cm else -999), reverse=True
+            )
             # The top M among those that have heights
-            valid_heights = [
-                t.height_m for t in sorted_trees[:m_real] if t.height_m is not None
-            ]
+            valid_heights = [t.height_m for t in sorted_trees[:m_real] if t.height_m is not None]
 
             # The original logic intended to skip any plot that could not provide M valid heights.
             # This check preserves that intent.
@@ -439,12 +439,12 @@ class Stand:
 
         # Simple standard error across subplots
         if len(subplot_means) > 1:
-            precision_est = statistics.pstdev(subplot_means) /  sqrt(len(subplot_means))
+            precision_est = statistics.pstdev(subplot_means) / sqrt(len(subplot_means))
         else:
             precision_est = 0.0
 
         # 4. Use a small Monte Carlo to estimate bias for (r_real, m_real)
-        real_radius_m =  sqrt(mode_area_ha * 10_000 /  pi)
+        real_radius_m = sqrt(mode_area_ha * 10_000 / pi)
         nominal_top_n = self.top_height_definition.nominal_n
         nominal_area_ha = self.top_height_definition.nominal_area_ha
 
@@ -455,7 +455,7 @@ class Stand:
             n_simulations=5000,
             nominal_top_n=nominal_top_n,
             nominal_area=nominal_area_ha * 10_000,
-            sigma=3.0
+            sigma=3.0,
         )
 
         h_est_corrected = h_est_raw - bias
@@ -466,17 +466,19 @@ class Stand:
             definition=self.top_height_definition,
             species=None,  # or you could attempt an aggregated species list
             precision=precision_est,
-            est_bias=float(bias)
+            est_bias=float(bias),
         )
 
     @staticmethod
-    def calculate_top_height_bias(r: float,
-                                  m: int,
-                                  n_trees: int = 1000,
-                                  n_simulations: int = 10000,
-                                  nominal_top_n: int = 100,
-                                  nominal_area: float = 10000.0,
-                                  sigma: float = 3.0):
+    def calculate_top_height_bias(
+        r: float,
+        m: int,
+        n_trees: int = 1000,
+        n_simulations: int = 10000,
+        nominal_top_n: int = 100,
+        nominal_area: float = 10000.0,
+        sigma: float = 3.0,
+    ):
         """
         Calculate the bias of the estimator h_hat for top height in a forest stand.
         Based on (a simplified interpretation of) Matérn's ideas on top-height sampling.
@@ -511,7 +513,7 @@ class Stand:
 
         for _ in range(n_simulations):
             # Generate random positions in the square bounding nominal_area
-            side =  sqrt(nominal_area)
+            side = sqrt(nominal_area)
             x_pos = np.random.uniform(0, side, n_trees)
             y_pos = np.random.uniform(0, side, n_trees)
 
@@ -520,7 +522,7 @@ class Stand:
 
             # 'True' heights from a toy height-diameter function
             # You can replace this with a more realistic model
-            heights_true = 1.3 + (diameters**2) / ((1.1138 + 0.2075 * diameters)**2)
+            heights_true = 1.3 + (diameters**2) / ((1.1138 + 0.2075 * diameters) ** 2)
 
             # Add 3% measurement error (for example)
             noise = np.random.normal(0, (sigma / 100.0) * heights_true, n_trees)
@@ -535,7 +537,7 @@ class Stand:
             # Now place a random circular plot of radius r
             center_x = np.random.uniform(r, side - r)
             center_y = np.random.uniform(r, side - r)
-            dist = np.sqrt((x_pos - center_x)**2 + (y_pos - center_y)**2)
+            dist = np.sqrt((x_pos - center_x) ** 2 + (y_pos - center_y) ** 2)
             in_plot = dist <= r
 
             # If enough trees are in the plot, compute h_hat
@@ -583,5 +585,3 @@ class Stand:
         # Invalidate any cached QMD estimates
         if "QMD" in self._metric_estimates:
             del self._metric_estimates["QMD"]
-
-
