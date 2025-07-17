@@ -1,9 +1,12 @@
+from pyforestry.base.helpers import Age, SiteIndexValue, TreeSpecies
+
 from ...site.enums import (
     SwedenBottomLayer,
     SwedenFieldLayer,
     SwedenSoilMoisture,
     SwedenSoilWater,
 )
+from ..eriksson_1997 import eriksson_1997_height_trajectory_sweden_birch
 
 
 def eko_pm_2008_estimate_si_birch(
@@ -13,7 +16,7 @@ def eko_pm_2008_estimate_si_birch(
     ground_layer: SwedenBottomLayer,
     lateral_water: SwedenSoilWater,
     soil_moisture: SwedenSoilMoisture,
-) -> float:
+) -> SiteIndexValue:
     """
     Estimate SIH50 (Site Index for Birch H50) with stand factors based on Ekö et al. (2008).
 
@@ -30,7 +33,7 @@ def eko_pm_2008_estimate_si_birch(
         soil_moisture (SwedenSoilMoisture): Soil moisture class.
 
     Returns:
-        float: Site Index (H50) for Birch.
+        SiteIndexValue: Site index (H50) for Birch.
 
     Raises:
         ValueError: If the soil moisture type is not "mesic" (2) or "moist" (4).
@@ -60,9 +63,11 @@ def eko_pm_2008_estimate_si_birch(
     lateral_frequent = 1 if lw_code == 4 else 0
     northern = 1 if latitude > 60 else 0
 
+    si_value: float
+
     # Conditions for Northern Sweden, Mesic
     if northern == 1 and mesic == 1:
-        return (
+        si_value = (
             88.469
             - (0.00869 * altitude)
             - (1.112 * latitude)
@@ -72,7 +77,7 @@ def eko_pm_2008_estimate_si_birch(
 
     # Conditions for Northern Sweden, Moist
     elif northern == 1 and moist == 1:
-        return (
+        si_value = (
             77.862
             - (0.0103 * altitude)
             - (0.976 * latitude)
@@ -84,7 +89,7 @@ def eko_pm_2008_estimate_si_birch(
 
     # Conditions for Southern Sweden, Mesic
     elif northern == 0 and mesic == 1:
-        return (
+        si_value = (
             -9.910
             + (0.467 * latitude)
             + (2.956 * grasses)
@@ -95,7 +100,7 @@ def eko_pm_2008_estimate_si_birch(
 
     # Conditions for Southern Sweden, Moist
     elif northern == 0 and moist == 1:
-        return (
+        si_value = (
             0.259
             - (0.00729 * altitude)
             + (0.287 * latitude)
@@ -112,3 +117,10 @@ def eko_pm_2008_estimate_si_birch(
         raise ValueError(
             "Can only choose between SwedenSoilMoisture.MOIST or " "SwedenSoilMoisture.MESIC."
         )
+
+    return SiteIndexValue(
+        si_value,
+        reference_age=Age.DBH(50),
+        species={TreeSpecies.Sweden.betula_pendula, TreeSpecies.Sweden.betula_pubescens},
+        fn=eriksson_1997_height_trajectory_sweden_birch,
+    )
