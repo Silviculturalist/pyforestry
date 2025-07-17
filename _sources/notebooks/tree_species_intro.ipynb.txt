@@ -18,17 +18,24 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 1,
    "id": "3670a82d",
-   "metadata": {},
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-07-17T18:03:47.171315Z",
+     "iopub.status.busy": "2025-07-17T18:03:47.171146Z",
+     "iopub.status.idle": "2025-07-17T18:03:47.518072Z",
+     "shell.execute_reply": "2025-07-17T18:03:47.516732Z"
+    }
+   },
    "outputs": [],
    "source": [
     "from pyforestry.base.helpers.tree_species import (\n",
-    "    TreeSpecies,\n",
-    "    TreeName,\n",
-    "    parse_tree_species,\n",
     "    ALNUS_GLUTINOSA,\n",
     "    ALNUS_INCANA,\n",
+    "    TreeName,\n",
+    "    TreeSpecies,\n",
+    "    parse_tree_species,\n",
     ")\n"
    ]
   },
@@ -42,20 +49,58 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 2,
    "id": "a757c95d",
-   "metadata": {},
-   "outputs": [],
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-07-17T18:03:47.527886Z",
+     "iopub.status.busy": "2025-07-17T18:03:47.526977Z",
+     "iopub.status.idle": "2025-07-17T18:03:47.532855Z",
+     "shell.execute_reply": "2025-07-17T18:03:47.532377Z"
+    }
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "TreeName(genus=TreeGenus(name='Pinus', code='PINUS'), species_name='sylvestris', code='PSYL')"
+      ]
+     },
+     "execution_count": 2,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
    "source": [
     "TreeSpecies.Sweden.pinus_sylvestris\n"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 3,
    "id": "545b8976",
-   "metadata": {},
-   "outputs": [],
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-07-17T18:03:47.534441Z",
+     "iopub.status.busy": "2025-07-17T18:03:47.534266Z",
+     "iopub.status.idle": "2025-07-17T18:03:47.538032Z",
+     "shell.execute_reply": "2025-07-17T18:03:47.537625Z"
+    }
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "[TreeName(genus=TreeGenus(name='Pinus', code='PINUS'), species_name='sylvestris', code='PSYL'),\n",
+       " TreeName(genus=TreeGenus(name='Pinus', code='PINUS'), species_name='contorta', code='PCON'),\n",
+       " TreeName(genus=TreeGenus(name='Pinus', code='PINUS'), species_name='mugo', code='PMUG')]"
+      ]
+     },
+     "execution_count": 3,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
    "source": [
     "TreeSpecies.Sweden.pinus.full_name\n",
     "list(TreeSpecies.Sweden.pinus)\n"
@@ -71,10 +116,28 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 4,
    "id": "fbec2bee",
-   "metadata": {},
-   "outputs": [],
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-07-17T18:03:47.539890Z",
+     "iopub.status.busy": "2025-07-17T18:03:47.539529Z",
+     "iopub.status.idle": "2025-07-17T18:03:47.543012Z",
+     "shell.execute_reply": "2025-07-17T18:03:47.542494Z"
+    }
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "True"
+      ]
+     },
+     "execution_count": 4,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
    "source": [
     "parse_tree_species('Pinus sylvestris')\n",
     "parse_tree_species('pInus sylvestris') == TreeSpecies.Sweden.pinus_sylvestris\n"
@@ -90,10 +153,28 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 5,
    "id": "c3e7ec3f",
-   "metadata": {},
-   "outputs": [],
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-07-17T18:03:47.544604Z",
+     "iopub.status.busy": "2025-07-17T18:03:47.544437Z",
+     "iopub.status.idle": "2025-07-17T18:03:47.547901Z",
+     "shell.execute_reply": "2025-07-17T18:03:47.547432Z"
+    }
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "pyforestry.base.helpers.tree_species.RegionalTreeSpecies"
+      ]
+     },
+     "execution_count": 5,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
    "source": [
     "isinstance(TreeSpecies.Sweden.pinus_sylvestris, TreeName)\n",
     "type(TreeSpecies.Sweden)\n"
@@ -109,10 +190,28 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 6,
    "id": "7e3347c1",
-   "metadata": {},
-   "outputs": [],
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-07-17T18:03:47.549430Z",
+     "iopub.status.busy": "2025-07-17T18:03:47.549261Z",
+     "iopub.status.idle": "2025-07-17T18:03:47.552705Z",
+     "shell.execute_reply": "2025-07-17T18:03:47.552186Z"
+    }
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "True"
+      ]
+     },
+     "execution_count": 6,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
    "source": [
     "ALNUS_GLUTINOSA in TreeSpecies.Sweden.alnus\n",
     "ALNUS_INCANA in TreeSpecies.Sweden.alnus\n"
@@ -126,8 +225,16 @@
    "name": "python3"
   },
   "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
    "name": "python",
-   "version": "3.12"
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.11.12"
   }
  },
  "nbformat": 4,
