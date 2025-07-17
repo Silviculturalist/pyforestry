@@ -9,5 +9,6 @@ pyforestry Documentation
    
    api/modules
    notebooks/tree_species_intro
+   notebooks/timber_bucking_demo
 
 ..
