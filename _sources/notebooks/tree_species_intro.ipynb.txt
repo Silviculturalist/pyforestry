@@ -2,6 +2,7 @@
  "cells": [
   {
    "cell_type": "markdown",
+   "id": "7f08bcc7",
    "metadata": {},
    "source": [
     "# Tree species basics"
@@ -9,6 +10,7 @@
   },
   {
    "cell_type": "markdown",
+   "id": "d4dd5f8e",
    "metadata": {},
    "source": [
     "This notebook shows how to retrieve species using `TreeSpecies` and inspect the underlying `TreeName` objects."
@@ -16,8 +18,9 @@
   },
   {
    "cell_type": "code",
-   "metadata": {},
    "execution_count": null,
+   "id": "3670a82d",
+   "metadata": {},
    "outputs": [],
    "source": [
     "from pyforestry.base.helpers.tree_species import (\n",
@@ -31,6 +34,7 @@
   },
   {
    "cell_type": "markdown",
+   "id": "983749f9",
    "metadata": {},
    "source": [
     "`TreeSpecies` exposes region-specific namespaces. Each attribute is a `TreeName` instance."
@@ -39,6 +43,7 @@
   {
    "cell_type": "code",
    "execution_count": null,
+   "id": "a757c95d",
    "metadata": {},
    "outputs": [],
    "source": [
@@ -47,8 +52,9 @@
   },
   {
    "cell_type": "code",
-   "metadata": {},
    "execution_count": null,
+   "id": "545b8976",
+   "metadata": {},
    "outputs": [],
    "source": [
     "TreeSpecies.Sweden.pinus.full_name\n",
@@ -57,6 +63,7 @@
   },
   {
    "cell_type": "markdown",
+   "id": "372ff760",
    "metadata": {},
    "source": [
     "Strings can be converted to `TreeName` objects using `parse_tree_species()`."
@@ -64,8 +71,9 @@
   },
   {
    "cell_type": "code",
-   "metadata": {},
    "execution_count": null,
+   "id": "fbec2bee",
+   "metadata": {},
    "outputs": [],
    "source": [
     "parse_tree_species('Pinus sylvestris')\n",
@@ -74,6 +82,7 @@
   },
   {
    "cell_type": "markdown",
+   "id": "a56719c1",
    "metadata": {},
    "source": [
     "`TreeName` holds genus and species information and can be compared directly. `TreeSpecies` simply provides organized access to these objects."
@@ -81,8 +90,9 @@
   },
   {
    "cell_type": "code",
-   "metadata": {},
    "execution_count": null,
+   "id": "c3e7ec3f",
+   "metadata": {},
    "outputs": [],
    "source": [
     "isinstance(TreeSpecies.Sweden.pinus_sylvestris, TreeName)\n",
@@ -91,6 +101,7 @@
   },
   {
    "cell_type": "markdown",
+   "id": "0039e0ee",
    "metadata": {},
    "source": [
     "Genus groups act like containers. We can check membership just like in the tests."
@@ -98,8 +109,9 @@
   },
   {
    "cell_type": "code",
-   "metadata": {},
    "execution_count": null,
+   "id": "7e3347c1",
+   "metadata": {},
    "outputs": [],
    "source": [
     "ALNUS_GLUTINOSA in TreeSpecies.Sweden.alnus\n",

@@ -283,16 +283,15 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for pyforestry.sweden.siteindex.hagglund_1970</h1><div class="highlight"><pre>
-<span></span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">Age</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">,</span> <span class="n">SiteIndexValue</span><span class="p">,</span> <span class="n">TreeSpecies</span>
-<span class="p">)</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span><span class="p">,</span> <span class="n">log</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span><span class="p">,</span> <span class="n">log</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Age</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">,</span> <span class="n">SiteIndexValue</span><span class="p">,</span> <span class="n">TreeSpecies</span>
+
 
 <div class="viewcode-block" id="HagglundSpruceModel">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.hagglund_1970.HagglundSpruceModel">[docs]</a>
@@ -300,18 +299,22 @@
 <div class="viewcode-block" id="HagglundSpruceModel.northern_sweden">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.hagglund_1970.HagglundSpruceModel.northern_sweden">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">northern_sweden</span><span class="p">(</span><span class="n">dominant_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                        <span class="n">age</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">],</span>
-                        <span class="n">age2</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">],</span>
-                        <span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                        <span class="n">culture</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">SiteIndexValue</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">northern_sweden</span><span class="p">(</span>
+        <span class="n">dominant_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">age</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">],</span>
+        <span class="n">age2</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">],</span>
+        <span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">culture</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">SiteIndexValue</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Calculates the height trajectory of Norway Spruce in northern Sweden based on Hägglund (1972).</span>
+<span class="sd">        Calculates the height trajectory of Norway Spruce in northern Sweden</span>
+<span class="sd">        based on Hägglund (1972).</span>
 
-<span class="sd">        In this version, we allow the input parameter &#39;age&#39; to be provided either as Age.DBH</span>
-<span class="sd">        (the effective DBH age for the stand) or as Age.TOTAL. In the latter case, we use Newton–Raphson</span>
-<span class="sd">        to solve for the effective DBH age &#39;x&#39; that satisfies: x + T13(x) = age_total.</span>
-<span class="sd">        </span>
+<span class="sd">        In this version, we allow the input parameter &#39;age&#39; to be provided either</span>
+<span class="sd">        as ``Age.DBH`` (the effective DBH age for the stand) or as ``Age.TOTAL``.</span>
+<span class="sd">        In the latter case we use Newton–Raphson to solve for the effective DBH</span>
+<span class="sd">        age ``x`` that satisfies ``x + T13(x) = age_total``.</span>
+
 <span class="sd">        For the prediction age &#39;age2&#39;:</span>
 <span class="sd">         - If provided as Age.DBH, we add the computed T13 to obtain the total age.</span>
 <span class="sd">         - Otherwise (if Age.TOTAL) it is used directly.</span>
@@ -337,10 +340,13 @@
         <span class="n">top_height_dm</span> <span class="o">=</span> <span class="n">dominant_height</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">-</span> <span class="mi">13</span>
 
         <span class="k">if</span> <span class="n">age_value</span> <span class="o">&gt;</span> <span class="p">(</span><span class="mi">407</span> <span class="o">-</span> <span class="mf">1.167</span> <span class="o">*</span> <span class="n">top_height_dm</span><span class="p">):</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Too old stand, outside of the material.&quot;</span><span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Too old stand, outside of the material.&quot;</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">latitude</span> <span class="o">&gt;=</span> <span class="mi">67</span> <span class="ow">or</span> <span class="n">latitude</span> <span class="o">&lt;=</span> <span class="mi">60</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Outside of latitudinal range, 60°&lt;= L &lt;= 67° N, using function 8.4 &quot;</span><span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;Outside of latitudinal range, 60°&lt;= L &lt;= 67° N, using function 8.4 &quot;</span><span class="p">,</span>
+                <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="p">)</span>
             <span class="c1"># Parameters for function 8.4</span>
             <span class="n">B</span> <span class="o">=</span> <span class="mf">3.4501</span>
             <span class="n">C</span> <span class="o">=</span> <span class="mf">0.77518</span>
@@ -359,9 +365,9 @@
             <span class="n">AI2</span> <span class="o">=</span> <span class="mf">600.0</span>
             <span class="k">while</span> <span class="nb">abs</span><span class="p">(</span><span class="n">AI1</span> <span class="o">-</span> <span class="n">AI2</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">AI3</span> <span class="o">=</span> <span class="p">(</span><span class="n">AI1</span> <span class="o">+</span> <span class="n">AI2</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
-                <span class="n">RK</span> <span class="o">=</span> <span class="mf">0.001936</span> <span class="o">+</span> <span class="mf">0.00004100</span> <span class="o">*</span> <span class="n">AI3</span> <span class="o">**</span> <span class="mf">1.0105</span>
-                <span class="n">A2</span> <span class="o">=</span> <span class="n">B</span> <span class="o">*</span> <span class="n">AI3</span> <span class="o">**</span> <span class="n">C</span>
-                <span class="n">RM2</span> <span class="o">=</span> <span class="n">D</span> <span class="o">+</span> <span class="n">E</span> <span class="o">/</span> <span class="p">(</span><span class="mf">0.56721</span> <span class="o">+</span> <span class="mf">0.000008</span> <span class="o">*</span> <span class="n">AI3</span> <span class="o">**</span> <span class="mf">1.8008</span><span class="p">)</span>
+                <span class="n">RK</span> <span class="o">=</span> <span class="mf">0.001936</span> <span class="o">+</span> <span class="mf">0.00004100</span> <span class="o">*</span> <span class="n">AI3</span><span class="o">**</span><span class="mf">1.0105</span>
+                <span class="n">A2</span> <span class="o">=</span> <span class="n">B</span> <span class="o">*</span> <span class="n">AI3</span><span class="o">**</span><span class="n">C</span>
+                <span class="n">RM2</span> <span class="o">=</span> <span class="n">D</span> <span class="o">+</span> <span class="n">E</span> <span class="o">/</span> <span class="p">(</span><span class="mf">0.56721</span> <span class="o">+</span> <span class="mf">0.000008</span> <span class="o">*</span> <span class="n">AI3</span><span class="o">**</span><span class="mf">1.8008</span><span class="p">)</span>
                 <span class="n">DIF</span> <span class="o">=</span> <span class="n">top_height_dm</span> <span class="o">-</span> <span class="n">A2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">eff_age</span> <span class="o">*</span> <span class="n">RK</span><span class="p">))</span> <span class="o">**</span> <span class="n">RM2</span>
                 <span class="k">if</span> <span class="n">DIF</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="n">AI2</span> <span class="o">=</span> <span class="n">AI3</span>
@@ -371,7 +377,8 @@
             <span class="n">T13_local</span> <span class="o">=</span> <span class="n">P</span> <span class="o">*</span> <span class="p">(</span><span class="mf">7.0287</span> <span class="o">+</span> <span class="mf">0.66118</span> <span class="o">*</span> <span class="n">T26</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">A2</span><span class="p">,</span> <span class="n">RK</span><span class="p">,</span> <span class="n">RM2</span><span class="p">,</span> <span class="n">T26</span><span class="p">,</span> <span class="n">T13_local</span>
 
-        <span class="c1"># If age is provided as DBH, use it directly; if provided as TOTAL, solve for effective DBH age.</span>
+        <span class="c1"># If age is provided as DBH, use it directly; otherwise (if TOTAL)</span>
+        <span class="c1"># solve for the effective DBH age.</span>
         <span class="k">if</span> <span class="n">age_type</span> <span class="o">==</span> <span class="n">Age</span><span class="o">.</span><span class="n">DBH</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
             <span class="n">eff_age</span> <span class="o">=</span> <span class="n">age_value</span>
         <span class="k">else</span><span class="p">:</span>
@@ -382,11 +389,11 @@
                 <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">T13_local</span> <span class="o">-</span> <span class="n">age_value</span>
 
             <span class="k">def</span><span class="w"> </span><span class="nf">fprime</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">0.001</span><span class="p">):</span>
-                <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="n">h</span><span class="p">)</span> <span class="o">-</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">h</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">h</span><span class="p">)</span>
+                <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">h</span><span class="p">)</span> <span class="o">-</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">h</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">h</span><span class="p">)</span>
 
             <span class="c1"># Choose an initial guess. (Empirically, effective DBH age is lower than total age.)</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">age_value</span> <span class="o">*</span> <span class="mf">0.35</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">):</span>
                 <span class="n">fx</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
                 <span class="n">fpx</span> <span class="o">=</span> <span class="n">fprime</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
                 <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">fpx</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-8</span><span class="p">:</span>
@@ -401,49 +408,58 @@
         <span class="c1"># Now compute productivity parameters at the effective DBH age.</span>
         <span class="n">A2</span><span class="p">,</span> <span class="n">RK</span><span class="p">,</span> <span class="n">RM2</span><span class="p">,</span> <span class="n">T26</span><span class="p">,</span> <span class="n">T13</span> <span class="o">=</span> <span class="n">subroutineBonitering</span><span class="p">(</span><span class="n">eff_age</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">A2</span> <span class="o">&gt;</span> <span class="mi">336</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Too high productivity, outside of material.&#39;</span><span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Too high productivity, outside of material.&quot;</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">A2</span> <span class="o">&lt;</span> <span class="mi">189</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Too low productivity, outside of material.&#39;</span><span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Too low productivity, outside of material.&quot;</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
         <span class="c1"># Determine the effective DBH age for the height prediction:</span>
         <span class="k">if</span> <span class="n">age2_type</span> <span class="o">==</span> <span class="n">Age</span><span class="o">.</span><span class="n">DBH</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
-        <span class="c1"># If the target age &#39;age2&#39; is already DBH, use its value directly for the formula.</span>
+            <span class="c1"># If the target age &#39;age2&#39; is already DBH, use its value directly for the formula.</span>
             <span class="n">effective_age2_dbh</span> <span class="o">=</span> <span class="n">age2_value</span>
-        <span class="c1"># The corresponding total age for output reference (if needed) would be:</span>
+            <span class="c1"># The corresponding total age for output reference (if needed) would be:</span>
             <span class="n">output_total_age</span> <span class="o">=</span> <span class="n">age2_value</span> <span class="o">+</span> <span class="n">T13</span>
-        <span class="k">else</span><span class="p">:</span> <span class="c1"># age2_type is TOTAL</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># age2_type is TOTAL</span>
             <span class="c1"># If the target age &#39;age2&#39; is TOTAL, calculate the corresponding effective DBH age.</span>
             <span class="c1"># We use the T13 calculated based on the input conditions (age, dominant_height).</span>
             <span class="n">effective_age2_dbh</span> <span class="o">=</span> <span class="n">age2_value</span> <span class="o">-</span> <span class="n">T13</span>
             <span class="c1"># Check for potentially non-physical results (e.g., total age less than T13)</span>
             <span class="k">if</span> <span class="n">effective_age2_dbh</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-                 <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Calculated effective DBH age for prediction (</span><span class="si">{</span><span class="n">effective_age2_dbh</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">) is non-positive. &quot;</span>
-                               <span class="sa">f</span><span class="s2">&quot;This might happen if age2 (Total Age=</span><span class="si">{</span><span class="n">age2_value</span><span class="si">}</span><span class="s2">) is less than T13 (</span><span class="si">{</span><span class="n">T13</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">). &quot;</span>
-                               <span class="sa">f</span><span class="s2">&quot;Using a small positive value (e.g., 1.0) instead.&quot;</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-                 <span class="n">effective_age2_dbh</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="c1"># Use a small positive fallback or handle as an error</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="s2">&quot;Calculated effective DBH age for prediction &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">effective_age2_dbh</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">) is non-positive. &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;This might happen if age2 (Total Age=</span><span class="si">{</span><span class="n">age2_value</span><span class="si">}</span><span class="s2">) is less &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;than T13 (</span><span class="si">{</span><span class="n">T13</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">). Using a small positive value (e.g., 1.0) instead.&quot;</span><span class="p">,</span>
+                    <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">effective_age2_dbh</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># Use a small positive fallback or handle as an error</span>
             <span class="c1"># The corresponding total age for output reference is the input total age itself:</span>
             <span class="n">output_total_age</span> <span class="o">=</span> <span class="n">age2_value</span>
 
         <span class="c1"># Calculate height using the derived effective DBH age</span>
         <span class="n">height</span> <span class="o">=</span> <span class="p">(</span><span class="mi">13</span> <span class="o">+</span> <span class="n">A2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">effective_age2_dbh</span> <span class="o">*</span> <span class="n">RK</span><span class="p">))</span> <span class="o">**</span> <span class="n">RM2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span>
 
-
-        <span class="k">return</span> <span class="n">SiteIndexValue</span><span class="p">(</span>
-            <span class="n">height</span><span class="p">,</span>
-            <span class="n">reference_age</span><span class="o">=</span><span class="n">Age</span><span class="o">.</span><span class="n">TOTAL</span><span class="p">(</span><span class="n">output_total_age</span><span class="p">),</span>
-            <span class="n">species</span><span class="o">=</span><span class="p">{</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">picea_abies</span><span class="p">},</span>
-            <span class="n">fn</span><span class="o">=</span><span class="n">Hagglund_1970</span><span class="o">.</span><span class="n">height_trajectory</span><span class="o">.</span><span class="n">picea_abies</span><span class="o">.</span><span class="n">northern_sweden</span>
-        <span class="p">),</span> <span class="n">T13</span></div>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">SiteIndexValue</span><span class="p">(</span>
+                <span class="n">height</span><span class="p">,</span>
+                <span class="n">reference_age</span><span class="o">=</span><span class="n">Age</span><span class="o">.</span><span class="n">TOTAL</span><span class="p">(</span><span class="n">output_total_age</span><span class="p">),</span>
+                <span class="n">species</span><span class="o">=</span><span class="p">{</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">picea_abies</span><span class="p">},</span>
+                <span class="n">fn</span><span class="o">=</span><span class="n">Hagglund_1970</span><span class="o">.</span><span class="n">height_trajectory</span><span class="o">.</span><span class="n">picea_abies</span><span class="o">.</span><span class="n">northern_sweden</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">T13</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="HagglundSpruceModel.southern_sweden">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.hagglund_1970.HagglundSpruceModel.southern_sweden">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">southern_sweden</span><span class="p">(</span><span class="n">dominant_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                        <span class="n">age</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">],</span>
-                        <span class="n">age2</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">SiteIndexValue</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">southern_sweden</span><span class="p">(</span>
+        <span class="n">dominant_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">age</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">],</span>
+        <span class="n">age2</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">SiteIndexValue</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Calculates the height trajectory of Norway Spruce in southern Sweden based on Hägglund (1973).</span>
+<span class="sd">        Calculates the height trajectory of Norway Spruce in southern Sweden</span>
+<span class="sd">        based on Hägglund (1973).</span>
 
 <span class="sd">        As in the northern function, the input &#39;age&#39; can be provided either as DBH or TOTAL.</span>
 <span class="sd">        If provided as TOTAL, we solve using Newton–Raphson for the effective DBH age.</span>
@@ -470,9 +486,9 @@
             <span class="n">AI2</span> <span class="o">=</span> <span class="mf">600.0</span>
             <span class="k">while</span> <span class="nb">abs</span><span class="p">(</span><span class="n">AI1</span> <span class="o">-</span> <span class="n">AI2</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">AI3</span> <span class="o">=</span> <span class="p">(</span><span class="n">AI1</span> <span class="o">+</span> <span class="n">AI2</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
-                <span class="n">RK</span> <span class="o">=</span> <span class="mf">0.042624</span> <span class="o">-</span> <span class="mf">7.1145</span> <span class="o">/</span> <span class="n">AI3</span> <span class="o">**</span> <span class="mf">1.0068</span>
-                <span class="n">A2</span> <span class="o">=</span> <span class="mf">1.0017</span> <span class="o">*</span> <span class="n">AI3</span> <span class="o">**</span> <span class="mf">0.99808</span>
-                <span class="n">RM</span> <span class="o">=</span> <span class="mf">0.15933</span> <span class="o">+</span> <span class="mf">3.7e6</span> <span class="o">/</span> <span class="n">AI3</span> <span class="o">**</span> <span class="mf">3.156</span>
+                <span class="n">RK</span> <span class="o">=</span> <span class="mf">0.042624</span> <span class="o">-</span> <span class="mf">7.1145</span> <span class="o">/</span> <span class="n">AI3</span><span class="o">**</span><span class="mf">1.0068</span>
+                <span class="n">A2</span> <span class="o">=</span> <span class="mf">1.0017</span> <span class="o">*</span> <span class="n">AI3</span><span class="o">**</span><span class="mf">0.99808</span>
+                <span class="n">RM</span> <span class="o">=</span> <span class="mf">0.15933</span> <span class="o">+</span> <span class="mf">3.7e6</span> <span class="o">/</span> <span class="n">AI3</span><span class="o">**</span><span class="mf">3.156</span>
                 <span class="k">if</span> <span class="n">RM</span> <span class="o">&gt;</span> <span class="mf">0.95</span><span class="p">:</span>
                     <span class="n">RM</span> <span class="o">=</span> <span class="mf">0.95</span>
                 <span class="n">RM2</span> <span class="o">=</span> <span class="mf">0.98822</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">RM</span><span class="p">)</span>
@@ -490,15 +506,16 @@
         <span class="k">if</span> <span class="n">age_type</span> <span class="o">==</span> <span class="n">Age</span><span class="o">.</span><span class="n">DBH</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
             <span class="n">eff_age</span> <span class="o">=</span> <span class="n">age_value</span>
         <span class="k">else</span><span class="p">:</span>
+
             <span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
                 <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">T13_local</span> <span class="o">=</span> <span class="n">subroutineBonitering</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">T13_local</span> <span class="o">-</span> <span class="n">age_value</span>
 
             <span class="k">def</span><span class="w"> </span><span class="nf">fprime</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">0.001</span><span class="p">):</span>
-                <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="n">h</span><span class="p">)</span> <span class="o">-</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">h</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">h</span><span class="p">)</span>
+                <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">h</span><span class="p">)</span> <span class="o">-</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">h</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">h</span><span class="p">)</span>
 
             <span class="n">x</span> <span class="o">=</span> <span class="n">age_value</span> <span class="o">*</span> <span class="mf">0.35</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">):</span>
                 <span class="n">fx</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
                 <span class="n">fpx</span> <span class="o">=</span> <span class="n">fprime</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
                 <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">fpx</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-8</span><span class="p">:</span>
@@ -512,13 +529,13 @@
 
         <span class="n">A2</span><span class="p">,</span> <span class="n">RK</span><span class="p">,</span> <span class="n">RM2</span><span class="p">,</span> <span class="n">T26</span><span class="p">,</span> <span class="n">T13</span> <span class="o">=</span> <span class="n">subroutineBonitering</span><span class="p">(</span><span class="n">eff_age</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">A2</span> <span class="o">&gt;</span> <span class="mi">400</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Too high productivity, outside of the material.&quot;</span><span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Too high productivity, outside of the material.&quot;</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">A2</span> <span class="o">&lt;</span> <span class="mi">250</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Too low productivity, outside of the material.&quot;</span><span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Too low productivity, outside of the material.&quot;</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">A2</span> <span class="o">&gt;</span> <span class="mi">375</span> <span class="ow">and</span> <span class="n">top_height_dm</span> <span class="o">&gt;</span> <span class="mi">267</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Too old stand, outside of the material.&quot;</span><span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Too old stand, outside of the material.&quot;</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">eff_age</span> <span class="o">&gt;</span> <span class="mi">90</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Too old stand, outside of the material.&quot;</span><span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Too old stand, outside of the material.&quot;</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
             <span class="c1"># Determine the effective DBH age for the height prediction:</span>
         <span class="k">if</span> <span class="n">age2_type</span> <span class="o">==</span> <span class="n">Age</span><span class="o">.</span><span class="n">DBH</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
@@ -526,29 +543,37 @@
             <span class="n">effective_age2_dbh</span> <span class="o">=</span> <span class="n">age2_value</span>
             <span class="c1"># The corresponding total age for output reference (if needed) would be:</span>
             <span class="n">output_total_age</span> <span class="o">=</span> <span class="n">age2_value</span> <span class="o">+</span> <span class="n">T13</span>
-        <span class="k">else</span><span class="p">:</span> <span class="c1"># age2_type is TOTAL</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># age2_type is TOTAL</span>
             <span class="c1"># If the target age &#39;age2&#39; is TOTAL, calculate the corresponding effective DBH age.</span>
             <span class="c1"># We use the T13 calculated based on the input conditions (age, dominant_height).</span>
             <span class="n">effective_age2_dbh</span> <span class="o">=</span> <span class="n">age2_value</span> <span class="o">-</span> <span class="n">T13</span>
             <span class="c1"># Check for potentially non-physical results (e.g., total age less than T13)</span>
             <span class="k">if</span> <span class="n">effective_age2_dbh</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-                 <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Calculated effective DBH age for prediction (</span><span class="si">{</span><span class="n">effective_age2_dbh</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">) is non-positive. &quot;</span>
-                               <span class="sa">f</span><span class="s2">&quot;This might happen if age2 (Total Age=</span><span class="si">{</span><span class="n">age2_value</span><span class="si">}</span><span class="s2">) is less than T13 (</span><span class="si">{</span><span class="n">T13</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">). &quot;</span>
-                               <span class="sa">f</span><span class="s2">&quot;Using a small positive value (e.g., 1.0) instead.&quot;</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-                 <span class="n">effective_age2_dbh</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="c1"># Use a small positive fallback or handle as an error</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="s2">&quot;Calculated effective DBH age for prediction &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">effective_age2_dbh</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">) is non-positive. &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;This might happen if age2 (Total Age=</span><span class="si">{</span><span class="n">age2_value</span><span class="si">}</span><span class="s2">) is less &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;than T13 (</span><span class="si">{</span><span class="n">T13</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">). Using a small positive value (e.g., 1.0) instead.&quot;</span><span class="p">,</span>
+                    <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">effective_age2_dbh</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># Use a small positive fallback or handle as an error</span>
             <span class="c1"># The corresponding total age for output reference is the input total age itself:</span>
             <span class="n">output_total_age</span> <span class="o">=</span> <span class="n">age2_value</span>
 
         <span class="c1"># Calculate height using the derived effective DBH age</span>
         <span class="n">height</span> <span class="o">=</span> <span class="p">(</span><span class="mi">13</span> <span class="o">+</span> <span class="n">A2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">effective_age2_dbh</span> <span class="o">*</span> <span class="n">RK</span><span class="p">))</span> <span class="o">**</span> <span class="n">RM2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span>
 
-        <span class="k">return</span> <span class="n">SiteIndexValue</span><span class="p">(</span>
-            <span class="n">height</span><span class="p">,</span>
-            <span class="n">reference_age</span><span class="o">=</span><span class="n">Age</span><span class="o">.</span><span class="n">TOTAL</span><span class="p">(</span><span class="n">output_total_age</span><span class="p">),</span>
-            <span class="n">species</span><span class="o">=</span><span class="p">{</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">picea_abies</span><span class="p">},</span>
-            <span class="n">fn</span><span class="o">=</span><span class="n">Hagglund_1970</span><span class="o">.</span><span class="n">height_trajectory</span><span class="o">.</span><span class="n">picea_abies</span><span class="o">.</span><span class="n">southern_sweden</span>
-        <span class="p">),</span> <span class="n">T13</span></div>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">SiteIndexValue</span><span class="p">(</span>
+                <span class="n">height</span><span class="p">,</span>
+                <span class="n">reference_age</span><span class="o">=</span><span class="n">Age</span><span class="o">.</span><span class="n">TOTAL</span><span class="p">(</span><span class="n">output_total_age</span><span class="p">),</span>
+                <span class="n">species</span><span class="o">=</span><span class="p">{</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">picea_abies</span><span class="p">},</span>
+                <span class="n">fn</span><span class="o">=</span><span class="n">Hagglund_1970</span><span class="o">.</span><span class="n">height_trajectory</span><span class="o">.</span><span class="n">picea_abies</span><span class="o">.</span><span class="n">southern_sweden</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">T13</span><span class="p">,</span>
+        <span class="p">)</span></div>
 </div>
+
 
 
 <div class="viewcode-block" id="HagglundPineRegeneration">
@@ -562,24 +587,29 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span></div>
 
 
+
 <div class="viewcode-block" id="HagglundPineModel">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.hagglund_1970.HagglundPineModel">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">HagglundPineModel</span><span class="p">:</span>
 <div class="viewcode-block" id="HagglundPineModel.sweden">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.hagglund_1970.HagglundPineModel.sweden">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">sweden</span><span class="p">(</span><span class="n">dominant_height_m</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-               <span class="n">age</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">],</span>
-               <span class="n">age2</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">],</span>
-               <span class="n">regeneration</span><span class="p">:</span> <span class="n">HagglundPineRegeneration</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">SiteIndexValue</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sweden</span><span class="p">(</span>
+        <span class="n">dominant_height_m</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">age</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">],</span>
+        <span class="n">age2</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">],</span>
+        <span class="n">regeneration</span><span class="p">:</span> <span class="n">HagglundPineRegeneration</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">SiteIndexValue</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Hägglund 1974: Height growth of Scots Pine in Sweden.</span>
 <span class="sd">        The forward-only solver is used.</span>
-<span class="sd">          - For &#39;age&#39;: if provided as Age.TOTAL, we solve using Newton–Raphson for the effective DBH age.</span>
-<span class="sd">          - For &#39;age2&#39;: if Age.DBH is provided, T13 is added.</span>
+
+<span class="sd">          - For ``age``: if provided as ``Age.TOTAL``, we solve using</span>
+<span class="sd">            Newton–Raphson for the effective DBH age.</span>
+<span class="sd">          - For ``age2``: if ``Age.DBH`` is provided, ``T13`` is added.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">regeneration</span><span class="p">,</span> <span class="n">HagglundPineRegeneration</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;regeneration argument must be of type HagglundPineRegeneration&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;regeneration argument must be of type HagglundPineRegeneration&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">):</span>
             <span class="n">age_value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">age</span><span class="p">)</span>
             <span class="n">age_type</span> <span class="o">=</span> <span class="n">age</span><span class="o">.</span><span class="n">code</span>
@@ -604,10 +634,10 @@
             <span class="n">AI2</span> <span class="o">=</span> <span class="mf">600.0</span>
             <span class="k">while</span> <span class="nb">abs</span><span class="p">(</span><span class="n">AI1</span> <span class="o">-</span> <span class="n">AI2</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">AI3</span> <span class="o">=</span> <span class="p">(</span><span class="n">AI1</span> <span class="o">+</span> <span class="n">AI2</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
-                <span class="n">RM</span> <span class="o">=</span> <span class="mf">0.066074</span> <span class="o">+</span> <span class="mf">4.4189e5</span> <span class="o">/</span> <span class="n">AI3</span> <span class="o">**</span> <span class="mf">2.9134</span>
+                <span class="n">RM</span> <span class="o">=</span> <span class="mf">0.066074</span> <span class="o">+</span> <span class="mf">4.4189e5</span> <span class="o">/</span> <span class="n">AI3</span><span class="o">**</span><span class="mf">2.9134</span>
                 <span class="n">RM</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">RM</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">)</span>
                 <span class="n">RM2</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">RM</span><span class="p">)</span>
-                <span class="n">RK</span> <span class="o">=</span> <span class="mf">1.0002e-4</span> <span class="o">+</span> <span class="mf">9.5953</span> <span class="o">*</span> <span class="n">AI3</span> <span class="o">**</span> <span class="mf">1.3755</span> <span class="o">/</span> <span class="mf">1e6</span>
+                <span class="n">RK</span> <span class="o">=</span> <span class="mf">1.0002e-4</span> <span class="o">+</span> <span class="mf">9.5953</span> <span class="o">*</span> <span class="n">AI3</span><span class="o">**</span><span class="mf">1.3755</span> <span class="o">/</span> <span class="mf">1e6</span>
                 <span class="n">RK</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">RK</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">)</span>
                 <span class="n">A2</span> <span class="o">=</span> <span class="mf">1.0075</span> <span class="o">*</span> <span class="n">AI3</span>
                 <span class="n">DIF</span> <span class="o">=</span> <span class="n">top_height_dm</span> <span class="o">-</span> <span class="n">A2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">eff_age</span> <span class="o">*</span> <span class="n">RK</span><span class="p">))</span> <span class="o">**</span> <span class="n">RM2</span>
@@ -616,7 +646,7 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">AI1</span> <span class="o">=</span> <span class="n">AI3</span>
             <span class="n">T26</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="n">RK</span><span class="p">)</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="mi">13</span> <span class="o">/</span> <span class="n">A2</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">RM2</span><span class="p">))</span>
-            <span class="n">T262</span> <span class="o">=</span> <span class="n">T26</span> <span class="o">**</span> <span class="mi">2</span>
+            <span class="n">T262</span> <span class="o">=</span> <span class="n">T26</span><span class="o">**</span><span class="mi">2</span>
             <span class="k">if</span> <span class="n">regeneration</span> <span class="o">==</span> <span class="n">HagglundPineRegeneration</span><span class="o">.</span><span class="n">NATURAL</span><span class="p">:</span>
                 <span class="n">T13_local</span> <span class="o">=</span> <span class="mf">7.4624</span> <span class="o">+</span> <span class="mf">0.11672</span> <span class="o">*</span> <span class="n">T262</span>
             <span class="k">elif</span> <span class="n">regeneration</span> <span class="o">==</span> <span class="n">HagglundPineRegeneration</span><span class="o">.</span><span class="n">UNKNOWN</span><span class="p">:</span>
@@ -629,15 +659,16 @@
         <span class="k">if</span> <span class="n">age_type</span> <span class="o">==</span> <span class="n">Age</span><span class="o">.</span><span class="n">DBH</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
             <span class="n">eff_age</span> <span class="o">=</span> <span class="n">age_value</span>
         <span class="k">else</span><span class="p">:</span>
+
             <span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
                 <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">T13_local</span> <span class="o">=</span> <span class="n">subroutineBonitering</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">T13_local</span> <span class="o">-</span> <span class="n">age_value</span>
 
             <span class="k">def</span><span class="w"> </span><span class="nf">fprime</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">0.001</span><span class="p">):</span>
-                <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="n">h</span><span class="p">)</span> <span class="o">-</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">h</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">h</span><span class="p">)</span>
+                <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">h</span><span class="p">)</span> <span class="o">-</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">h</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">h</span><span class="p">)</span>
 
             <span class="n">x</span> <span class="o">=</span> <span class="n">age_value</span> <span class="o">*</span> <span class="mf">0.35</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">):</span>
                 <span class="n">fx</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
                 <span class="n">fpx</span> <span class="o">=</span> <span class="n">fprime</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
                 <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">fpx</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-8</span><span class="p">:</span>
@@ -663,16 +694,20 @@
             <span class="n">effective_age2_dbh</span> <span class="o">=</span> <span class="n">age2_value</span>
             <span class="c1"># The corresponding total age for output reference (if needed) would be:</span>
             <span class="n">output_total_age</span> <span class="o">=</span> <span class="n">age2_value</span> <span class="o">+</span> <span class="n">T13</span>
-        <span class="k">else</span><span class="p">:</span> <span class="c1"># age2_type is TOTAL</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># age2_type is TOTAL</span>
             <span class="c1"># If the target age &#39;age2&#39; is TOTAL, calculate the corresponding effective DBH age.</span>
             <span class="c1"># We use the T13 calculated based on the input conditions (age, dominant_height).</span>
             <span class="n">effective_age2_dbh</span> <span class="o">=</span> <span class="n">age2_value</span> <span class="o">-</span> <span class="n">T13</span>
             <span class="c1"># Check for potentially non-physical results (e.g., total age less than T13)</span>
             <span class="k">if</span> <span class="n">effective_age2_dbh</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-                 <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Calculated effective DBH age for prediction (</span><span class="si">{</span><span class="n">effective_age2_dbh</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">) is non-positive. &quot;</span>
-                               <span class="sa">f</span><span class="s2">&quot;This might happen if age2 (Total Age=</span><span class="si">{</span><span class="n">age2_value</span><span class="si">}</span><span class="s2">) is less than T13 (</span><span class="si">{</span><span class="n">T13</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">). &quot;</span>
-                               <span class="sa">f</span><span class="s2">&quot;Using a small positive value (e.g., 1.0) instead.&quot;</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-                 <span class="n">effective_age2_dbh</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="c1"># Use a small positive fallback or handle as an error</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="s2">&quot;Calculated effective DBH age for prediction &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">effective_age2_dbh</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">) is non-positive. &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;This might happen if age2 (Total Age=</span><span class="si">{</span><span class="n">age2_value</span><span class="si">}</span><span class="s2">) is less &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;than T13 (</span><span class="si">{</span><span class="n">T13</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">). Using a small positive value (e.g., 1.0) instead.&quot;</span><span class="p">,</span>
+                    <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">effective_age2_dbh</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># Use a small positive fallback or handle as an error</span>
             <span class="c1"># The corresponding total age for output reference is the input total age itself:</span>
             <span class="n">output_total_age</span> <span class="o">=</span> <span class="n">age2_value</span>
 
@@ -681,18 +716,23 @@
 
         <span class="c1"># Return the SiteIndexValue, referencing the corresponding TOTAL age.</span>
         <span class="c1"># This standardizes the output reference age type.</span>
-        <span class="k">return</span> <span class="n">SiteIndexValue</span><span class="p">(</span>
-            <span class="n">height</span><span class="p">,</span>
-            <span class="n">reference_age</span><span class="o">=</span><span class="n">Age</span><span class="o">.</span><span class="n">TOTAL</span><span class="p">(</span><span class="n">output_total_age</span><span class="p">),</span> <span class="c1"># Always reference total age</span>
-            <span class="n">species</span><span class="o">=</span><span class="p">{</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">pinus_sylvestris</span><span class="p">},</span>
-            <span class="n">fn</span><span class="o">=</span><span class="n">Hagglund_1970</span><span class="o">.</span><span class="n">height_trajectory</span><span class="o">.</span><span class="n">pinus_sylvestris</span><span class="o">.</span><span class="n">sweden</span>
-        <span class="p">),</span> <span class="n">T13</span></div>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">SiteIndexValue</span><span class="p">(</span>
+                <span class="n">height</span><span class="p">,</span>
+                <span class="n">reference_age</span><span class="o">=</span><span class="n">Age</span><span class="o">.</span><span class="n">TOTAL</span><span class="p">(</span><span class="n">output_total_age</span><span class="p">),</span>  <span class="c1"># Always reference total age</span>
+                <span class="n">species</span><span class="o">=</span><span class="p">{</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">pinus_sylvestris</span><span class="p">},</span>
+                <span class="n">fn</span><span class="o">=</span><span class="n">Hagglund_1970</span><span class="o">.</span><span class="n">height_trajectory</span><span class="o">.</span><span class="n">pinus_sylvestris</span><span class="o">.</span><span class="n">sweden</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">T13</span><span class="p">,</span>
+        <span class="p">)</span></div>
 </div>
 
-        
+
+
 <span class="c1"># =============================================================================</span>
 <span class="c1"># Container wrappers to select return value</span>
 <span class="c1"># =============================================================================</span>
+
 
 <div class="viewcode-block" id="HeightTrajectoryWrapper">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.hagglund_1970.HeightTrajectoryWrapper">[docs]</a>
@@ -700,17 +740,21 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Wrapper that calls the underlying model function and returns only the SiteIndexValue.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">model</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="n">attr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">attr</span><span class="p">):</span>
+
             <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
                 <span class="n">si_value</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">attr</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">si_value</span>
+
             <span class="k">return</span> <span class="n">wrapper</span>
         <span class="k">return</span> <span class="n">attr</span></div>
+
 
 
 <div class="viewcode-block" id="TimeToBreastHeightWrapper">
@@ -719,22 +763,27 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Wrapper that calls the underlying model function and returns only the T13 value.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">model</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="n">attr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">attr</span><span class="p">):</span>
+
             <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
                 <span class="n">_</span><span class="p">,</span> <span class="n">T13</span> <span class="o">=</span> <span class="n">attr</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">T13</span>
+
             <span class="k">return</span> <span class="n">wrapper</span>
         <span class="k">return</span> <span class="n">attr</span></div>
+
 
 
 <span class="c1"># =============================================================================</span>
 <span class="c1"># Container class to expose species-specific models</span>
 <span class="c1"># =============================================================================</span>
+
 
 <div class="viewcode-block" id="Hagglund_1970">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.hagglund_1970.Hagglund_1970">[docs]</a>
@@ -744,14 +793,23 @@
 <span class="sd">    Callers can choose to obtain either the height trajectory (site index)</span>
 <span class="sd">    or the time to breast height (T13).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">height_trajectory</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="s2">&quot;HeightTrajectoryContainer&quot;</span><span class="p">,</span> <span class="p">(),</span> <span class="p">{</span>
-        <span class="s2">&quot;picea_abies&quot;</span><span class="p">:</span> <span class="n">HeightTrajectoryWrapper</span><span class="p">(</span><span class="n">HagglundSpruceModel</span><span class="p">),</span>
-        <span class="s2">&quot;pinus_sylvestris&quot;</span><span class="p">:</span> <span class="n">HeightTrajectoryWrapper</span><span class="p">(</span><span class="n">HagglundPineModel</span><span class="p">)</span>
-    <span class="p">})</span>
-    <span class="n">time_to_breast_height</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="s2">&quot;TimeToBreastHeightContainer&quot;</span><span class="p">,</span> <span class="p">(),</span> <span class="p">{</span>
-        <span class="s2">&quot;picea_abies&quot;</span><span class="p">:</span> <span class="n">TimeToBreastHeightWrapper</span><span class="p">(</span><span class="n">HagglundSpruceModel</span><span class="p">),</span>
-        <span class="s2">&quot;pinus_sylvestris&quot;</span><span class="p">:</span> <span class="n">TimeToBreastHeightWrapper</span><span class="p">(</span><span class="n">HagglundPineModel</span><span class="p">)</span>
-    <span class="p">})</span>
+
+    <span class="n">height_trajectory</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span>
+        <span class="s2">&quot;HeightTrajectoryContainer&quot;</span><span class="p">,</span>
+        <span class="p">(),</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;picea_abies&quot;</span><span class="p">:</span> <span class="n">HeightTrajectoryWrapper</span><span class="p">(</span><span class="n">HagglundSpruceModel</span><span class="p">),</span>
+            <span class="s2">&quot;pinus_sylvestris&quot;</span><span class="p">:</span> <span class="n">HeightTrajectoryWrapper</span><span class="p">(</span><span class="n">HagglundPineModel</span><span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">time_to_breast_height</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span>
+        <span class="s2">&quot;TimeToBreastHeightContainer&quot;</span><span class="p">,</span>
+        <span class="p">(),</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;picea_abies&quot;</span><span class="p">:</span> <span class="n">TimeToBreastHeightWrapper</span><span class="p">(</span><span class="n">HagglundSpruceModel</span><span class="p">),</span>
+            <span class="s2">&quot;pinus_sylvestris&quot;</span><span class="p">:</span> <span class="n">TimeToBreastHeightWrapper</span><span class="p">(</span><span class="n">HagglundPineModel</span><span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
     <span class="n">regeneration</span> <span class="o">=</span> <span class="n">HagglundPineRegeneration</span></div>
 
 </pre></div>

@@ -535,13 +535,10 @@ standard error for basal area and stems per species.</p>
 <dd><p>Compute mean basal area and stems density per species across plots.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><dl class="simple">
-<dt>Tuple[</dt><dd><p>Dict[TreeName, StandBasalArea],
-Dict[TreeName, Stems]</p>
+<dd class="field-odd"><p>Mapping species to basal area and stems metrics.</p>
 </dd>
-</dl>
-<p>]: Mapping species to basal area and stems metrics.</p>
-</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple[Dict[<a class="reference internal" href="#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName">TreeName</a>, <a class="reference internal" href="#pyforestry.base.helpers.StandBasalArea" title="pyforestry.base.helpers.StandBasalArea">StandBasalArea</a>], Dict[<a class="reference internal" href="#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName">TreeName</a>, <a class="reference internal" href="#pyforestry.base.helpers.Stems" title="pyforestry.base.helpers.Stems">Stems</a>]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -632,13 +629,13 @@ float(stand.BasalArea)        -&gt; numeric total</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="pyforestry.base.helpers.stand.Stand.QMD">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">QMD</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pyforestry.base.helpers.stand.StandMetricAccessor" title="pyforestry.base.helpers.stand.StandMetricAccessor"><span class="pre">StandMetricAccessor</span></a></em><a class="headerlink" href="#pyforestry.base.helpers.stand.Stand.QMD" title="Link to this definition">¶</a></dt>
-<dd><p>Access the stand’s quadratic mean diameter (QMD) aggregator.
-Usage:</p>
-<blockquote>
-<div><p>Stand.QMD.TOTAL               -&gt; Total QMD (QuadraticMeanDiameter)
-Stand.QMD(TreeSpecies(…))   -&gt; Species-level QMD estimate
-float(Stand.QMD)              -&gt; Numeric total QMD value (in cm)</p>
-</div></blockquote>
+<dd><p>Access the stand’s quadratic mean diameter (QMD) aggregator.</p>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Stand</span><span class="o">.</span><span class="n">QMD</span><span class="o">.</span><span class="n">TOTAL</span>               <span class="o">-&gt;</span> <span class="n">Total</span> <span class="n">QMD</span> <span class="p">(</span><span class="n">QuadraticMeanDiameter</span><span class="p">)</span>
+<span class="n">Stand</span><span class="o">.</span><span class="n">QMD</span><span class="p">(</span><span class="n">TreeSpecies</span><span class="p">(</span><span class="o">...</span><span class="p">))</span>   <span class="o">-&gt;</span> <span class="n">Species</span><span class="o">-</span><span class="n">level</span> <span class="n">QMD</span> <span class="n">estimate</span>
+<span class="nb">float</span><span class="p">(</span><span class="n">Stand</span><span class="o">.</span><span class="n">QMD</span><span class="p">)</span>              <span class="o">-&gt;</span> <span class="n">Numeric</span> <span class="n">total</span> <span class="n">QMD</span> <span class="n">value</span> <span class="p">(</span><span class="ow">in</span> <span class="n">cm</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py property">
@@ -758,14 +755,14 @@ If insufficient data, returns None.</p>
 <dt class="sig sig-object py" id="pyforestry.base.helpers.stand.StandMetricAccessor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.base.helpers.stand.</span></span><span class="sig-name descname"><span class="pre">StandMetricAccessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stand</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyforestry.base.helpers.stand.Stand" title="pyforestry.base.helpers.stand.Stand"><span class="pre">Stand</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/base/helpers/stand.html#StandMetricAccessor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.helpers.stand.StandMetricAccessor" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Provides access to stand-level metric data (e.g. BasalArea or Stems).
-Usage:</p>
-<blockquote>
-<div><p>stand.BasalArea.TOTAL
-stand.BasalArea(TreeName(…))
-float(stand.BasalArea) -&gt; numeric total
-stand.BasalArea.precision -&gt; total’s precision</p>
-</div></blockquote>
+<p>Provides access to stand-level metric data (e.g. BasalArea or Stems).</p>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">stand</span><span class="o">.</span><span class="n">BasalArea</span><span class="o">.</span><span class="n">TOTAL</span>
+<span class="n">stand</span><span class="o">.</span><span class="n">BasalArea</span><span class="p">(</span><span class="n">TreeName</span><span class="p">(</span><span class="o">...</span><span class="p">))</span>
+<span class="nb">float</span><span class="p">(</span><span class="n">stand</span><span class="o">.</span><span class="n">BasalArea</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">numeric</span> <span class="n">total</span>
+<span class="n">stand</span><span class="o">.</span><span class="n">BasalArea</span><span class="o">.</span><span class="n">precision</span> <span class="o">-&gt;</span> <span class="n">total</span><span class="s1">&#39;s precision</span>
+</pre></div>
+</div>
 <dl class="py property">
 <dt class="sig sig-object py" id="pyforestry.base.helpers.stand.StandMetricAccessor.precision">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">precision</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#pyforestry.base.helpers.stand.StandMetricAccessor.precision" title="Link to this definition">¶</a></dt>
@@ -1117,13 +1114,10 @@ standard error for basal area and stems per species.</p>
 <dd><p>Compute mean basal area and stems density per species across plots.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><dl class="simple">
-<dt>Tuple[</dt><dd><p>Dict[TreeName, StandBasalArea],
-Dict[TreeName, Stems]</p>
+<dd class="field-odd"><p>Mapping species to basal area and stems metrics.</p>
 </dd>
-</dl>
-<p>]: Mapping species to basal area and stems metrics.</p>
-</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple[Dict[<a class="reference internal" href="#pyforestry.base.helpers.TreeName" title="pyforestry.base.helpers.TreeName">TreeName</a>, <a class="reference internal" href="#pyforestry.base.helpers.StandBasalArea" title="pyforestry.base.helpers.StandBasalArea">StandBasalArea</a>], Dict[<a class="reference internal" href="#pyforestry.base.helpers.TreeName" title="pyforestry.base.helpers.TreeName">TreeName</a>, <a class="reference internal" href="#pyforestry.base.helpers.Stems" title="pyforestry.base.helpers.Stems">Stems</a>]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1626,13 +1620,13 @@ float(stand.BasalArea)        -&gt; numeric total</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="pyforestry.base.helpers.Stand.QMD">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">QMD</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pyforestry.base.helpers.stand.StandMetricAccessor" title="pyforestry.base.helpers.stand.StandMetricAccessor"><span class="pre">StandMetricAccessor</span></a></em><a class="headerlink" href="#pyforestry.base.helpers.Stand.QMD" title="Link to this definition">¶</a></dt>
-<dd><p>Access the stand’s quadratic mean diameter (QMD) aggregator.
-Usage:</p>
-<blockquote>
-<div><p>Stand.QMD.TOTAL               -&gt; Total QMD (QuadraticMeanDiameter)
-Stand.QMD(TreeSpecies(…))   -&gt; Species-level QMD estimate
-float(Stand.QMD)              -&gt; Numeric total QMD value (in cm)</p>
-</div></blockquote>
+<dd><p>Access the stand’s quadratic mean diameter (QMD) aggregator.</p>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Stand</span><span class="o">.</span><span class="n">QMD</span><span class="o">.</span><span class="n">TOTAL</span>               <span class="o">-&gt;</span> <span class="n">Total</span> <span class="n">QMD</span> <span class="p">(</span><span class="n">QuadraticMeanDiameter</span><span class="p">)</span>
+<span class="n">Stand</span><span class="o">.</span><span class="n">QMD</span><span class="p">(</span><span class="n">TreeSpecies</span><span class="p">(</span><span class="o">...</span><span class="p">))</span>   <span class="o">-&gt;</span> <span class="n">Species</span><span class="o">-</span><span class="n">level</span> <span class="n">QMD</span> <span class="n">estimate</span>
+<span class="nb">float</span><span class="p">(</span><span class="n">Stand</span><span class="o">.</span><span class="n">QMD</span><span class="p">)</span>              <span class="o">-&gt;</span> <span class="n">Numeric</span> <span class="n">total</span> <span class="n">QMD</span> <span class="n">value</span> <span class="p">(</span><span class="ow">in</span> <span class="n">cm</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py property">
@@ -1797,14 +1791,14 @@ If insufficient data, returns None.</p>
 <dt class="sig sig-object py" id="pyforestry.base.helpers.StandMetricAccessor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.base.helpers.</span></span><span class="sig-name descname"><span class="pre">StandMetricAccessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stand</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyforestry.base.helpers.stand.Stand" title="pyforestry.base.helpers.stand.Stand"><span class="pre">Stand</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/base/helpers/stand.html#StandMetricAccessor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.helpers.StandMetricAccessor" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Provides access to stand-level metric data (e.g. BasalArea or Stems).
-Usage:</p>
-<blockquote>
-<div><p>stand.BasalArea.TOTAL
-stand.BasalArea(TreeName(…))
-float(stand.BasalArea) -&gt; numeric total
-stand.BasalArea.precision -&gt; total’s precision</p>
-</div></blockquote>
+<p>Provides access to stand-level metric data (e.g. BasalArea or Stems).</p>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">stand</span><span class="o">.</span><span class="n">BasalArea</span><span class="o">.</span><span class="n">TOTAL</span>
+<span class="n">stand</span><span class="o">.</span><span class="n">BasalArea</span><span class="p">(</span><span class="n">TreeName</span><span class="p">(</span><span class="o">...</span><span class="p">))</span>
+<span class="nb">float</span><span class="p">(</span><span class="n">stand</span><span class="o">.</span><span class="n">BasalArea</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">numeric</span> <span class="n">total</span>
+<span class="n">stand</span><span class="o">.</span><span class="n">BasalArea</span><span class="o">.</span><span class="n">precision</span> <span class="o">-&gt;</span> <span class="n">total</span><span class="s1">&#39;s precision</span>
+</pre></div>
+</div>
 <dl class="py property">
 <dt class="sig sig-object py" id="pyforestry.base.helpers.StandMetricAccessor.precision">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">precision</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#pyforestry.base.helpers.StandMetricAccessor.precision" title="Link to this definition">¶</a></dt>

@@ -323,12 +323,15 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">StandMetricAccessor</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Provides access to stand-level metric data (e.g. BasalArea or Stems).</span>
-<span class="sd">    Usage:</span>
+
+<span class="sd">    Usage::</span>
+
 <span class="sd">        stand.BasalArea.TOTAL</span>
 <span class="sd">        stand.BasalArea(TreeName(...))</span>
 <span class="sd">        float(stand.BasalArea) -&gt; numeric total</span>
 <span class="sd">        stand.BasalArea.precision -&gt; total&#39;s precision</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stand</span><span class="p">:</span> <span class="s2">&quot;Stand&quot;</span><span class="p">,</span> <span class="n">metric_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_stand</span> <span class="o">=</span> <span class="n">stand</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_metric_name</span> <span class="o">=</span> <span class="n">metric_name</span>
@@ -338,7 +341,6 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metric_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stand</span><span class="o">.</span><span class="n">_metric_estimates</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stand</span><span class="o">.</span><span class="n">use_angle_count</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_stand</span><span class="o">.</span><span class="n">_compute_ht_estimates</span><span class="p">()</span>
-
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -396,8 +398,6 @@
 
 
 
-
-
 <div class="viewcode-block" id="Stand">
 <a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.stand.Stand">[docs]</a>
 <span class="nd">@dataclass</span>
@@ -413,6 +413,7 @@
 <span class="sd">    If a polygon is provided, the area_ha is computed from the polygon geometry</span>
 <span class="sd">    (reprojected to a suitable UTM if the original CRS is geographic).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">site</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SiteBase</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">area_ha</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">plots</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">CircularPlot</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
@@ -498,7 +499,9 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">QMD</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StandMetricAccessor</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Access the stand&#39;s quadratic mean diameter (QMD) aggregator.</span>
-<span class="sd">        Usage:</span>
+
+<span class="sd">        Usage::</span>
+
 <span class="sd">          Stand.QMD.TOTAL               -&gt; Total QMD (QuadraticMeanDiameter)</span>
 <span class="sd">          Stand.QMD(TreeSpecies(...))   -&gt; Species-level QMD estimate</span>
 <span class="sd">          float(Stand.QMD)              -&gt; Numeric total QMD value (in cm)</span>
@@ -531,17 +534,18 @@
             <span class="n">stems_obj</span> <span class="o">=</span> <span class="n">stems_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">stems_obj</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="c1"># QMD in cm computed from BA (m²/ha) and stems (stems/ha)</span>
-                <span class="n">qmd_value</span> <span class="o">=</span>  <span class="n">sqrt</span><span class="p">((</span><span class="mf">40000.0</span> <span class="o">*</span> <span class="n">ba_obj</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span> <span class="n">pi</span> <span class="o">*</span> <span class="n">stems_obj</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+                <span class="n">qmd_value</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">((</span><span class="mf">40000.0</span> <span class="o">*</span> <span class="n">ba_obj</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">pi</span> <span class="o">*</span> <span class="n">stems_obj</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
                 <span class="c1"># Propagate errors:</span>
                 <span class="c1"># dQ/dBA = 20000 / (pi * stems * QMD)</span>
                 <span class="c1"># dQ/dStems = - QMD / (2 * stems)</span>
                 <span class="k">if</span> <span class="n">qmd_value</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">dQ_dBA</span> <span class="o">=</span> <span class="mf">20000.0</span> <span class="o">/</span> <span class="p">(</span> <span class="n">pi</span> <span class="o">*</span> <span class="n">stems_obj</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="n">qmd_value</span><span class="p">)</span>
+                    <span class="n">dQ_dBA</span> <span class="o">=</span> <span class="mf">20000.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">pi</span> <span class="o">*</span> <span class="n">stems_obj</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="n">qmd_value</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">dQ_dBA</span> <span class="o">=</span> <span class="mf">0.0</span>
                 <span class="n">dQ_dStems</span> <span class="o">=</span> <span class="n">qmd_value</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">stems_obj</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-                <span class="n">qmd_precision</span> <span class="o">=</span>  <span class="n">sqrt</span><span class="p">((</span><span class="n">dQ_dBA</span> <span class="o">*</span> <span class="n">ba_obj</span><span class="o">.</span><span class="n">precision</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span>
-                                          <span class="p">(</span><span class="n">dQ_dStems</span> <span class="o">*</span> <span class="n">stems_obj</span><span class="o">.</span><span class="n">precision</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+                <span class="n">qmd_precision</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span>
+                    <span class="p">(</span><span class="n">dQ_dBA</span> <span class="o">*</span> <span class="n">ba_obj</span><span class="o">.</span><span class="n">precision</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">dQ_dStems</span> <span class="o">*</span> <span class="n">stems_obj</span><span class="o">.</span><span class="n">precision</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+                <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">qmd_value</span> <span class="o">=</span> <span class="mf">0.0</span>
                 <span class="n">qmd_precision</span> <span class="o">=</span> <span class="mf">0.0</span>
@@ -549,7 +553,6 @@
             <span class="n">qmd_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">QuadraticMeanDiameter</span><span class="p">(</span><span class="n">qmd_value</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="n">qmd_precision</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_metric_estimates</span><span class="p">[</span><span class="s2">&quot;QMD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">qmd_dict</span>
-
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_compute_ht_estimates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -568,7 +571,7 @@
 <span class="sd">            }</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">species_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">TreeName</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="c1"># 1. Gather data from each plot</span>
+        <span class="c1"># 1. Gather data from each plot</span>
         <span class="k">for</span> <span class="n">plot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plots</span><span class="p">:</span>
             <span class="n">area_ha</span> <span class="o">=</span> <span class="n">plot</span><span class="o">.</span><span class="n">area_ha</span> <span class="ow">or</span> <span class="mf">1.0</span>
             <span class="c1"># effective area is the visible portion of the plot</span>
@@ -579,7 +582,7 @@
             <span class="c1"># Group trees by species</span>
             <span class="n">trees_by_sp</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">TreeName</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">RepresentationTree</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="k">for</span> <span class="n">tr</span> <span class="ow">in</span> <span class="n">plot</span><span class="o">.</span><span class="n">trees</span><span class="p">:</span>
-                <span class="n">sp</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">tr</span><span class="p">,</span> <span class="s1">&#39;species&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="n">sp</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">tr</span><span class="p">,</span> <span class="s2">&quot;species&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">sp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="k">continue</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sp</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
@@ -597,7 +600,7 @@
                 <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">trlist</span><span class="p">:</span>
                     <span class="n">d_cm</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">)</span> <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">diameter_cm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mf">0.0</span>
                     <span class="n">r_m</span> <span class="o">=</span> <span class="p">(</span><span class="n">d_cm</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
-                    <span class="n">ba_sum</span> <span class="o">+=</span>  <span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">r_m</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">t</span><span class="o">.</span><span class="n">weight</span>
+                    <span class="n">ba_sum</span> <span class="o">+=</span> <span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">r_m</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">t</span><span class="o">.</span><span class="n">weight</span>
                 <span class="c1"># Adjusted BA/ha: divide by effective area.</span>
                 <span class="n">ba_ha</span> <span class="o">=</span> <span class="n">ba_sum</span> <span class="o">/</span> <span class="n">effective_area_ha</span>
 
@@ -625,8 +628,8 @@
             <span class="n">ba_mean</span> <span class="o">=</span> <span class="n">statistics</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">b_vals</span><span class="p">)</span> <span class="k">if</span> <span class="n">b_vals</span> <span class="k">else</span> <span class="mf">0.0</span>
             <span class="n">ba_var</span> <span class="o">=</span> <span class="n">statistics</span><span class="o">.</span><span class="n">pvariance</span><span class="p">(</span><span class="n">b_vals</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">b_vals</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="mf">0.0</span>
 
-            <span class="n">stems_dict</span><span class="p">[</span><span class="n">sp</span><span class="p">]</span> <span class="o">=</span> <span class="n">Stems</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">stems_mean</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="n">sp</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">stems_var</span><span class="p">))</span>
-            <span class="n">ba_dict</span><span class="p">[</span><span class="n">sp</span><span class="p">]</span> <span class="o">=</span> <span class="n">StandBasalArea</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">ba_mean</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="n">sp</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">ba_var</span><span class="p">))</span>
+            <span class="n">stems_dict</span><span class="p">[</span><span class="n">sp</span><span class="p">]</span> <span class="o">=</span> <span class="n">Stems</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">stems_mean</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="n">sp</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="n">sqrt</span><span class="p">(</span><span class="n">stems_var</span><span class="p">))</span>
+            <span class="n">ba_dict</span><span class="p">[</span><span class="n">sp</span><span class="p">]</span> <span class="o">=</span> <span class="n">StandBasalArea</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">ba_mean</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="n">sp</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="n">sqrt</span><span class="p">(</span><span class="n">ba_var</span><span class="p">))</span>
 
             <span class="n">total_stems_val</span> <span class="o">+=</span> <span class="n">stems_mean</span>
             <span class="n">total_stems_var</span> <span class="o">+=</span> <span class="n">stems_var</span>
@@ -634,16 +637,15 @@
             <span class="n">total_ba_var</span> <span class="o">+=</span> <span class="n">ba_var</span>
 
             <span class="c1"># &quot;TOTAL&quot; aggregator</span>
-        <span class="n">stems_dict</span><span class="p">[</span><span class="s2">&quot;TOTAL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Stems</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">total_stems_val</span><span class="p">,</span>
-                                        <span class="n">species</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                                        <span class="n">precision</span><span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">total_stems_var</span><span class="p">))</span>
-        <span class="n">ba_dict</span><span class="p">[</span><span class="s2">&quot;TOTAL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">StandBasalArea</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">total_ba_val</span><span class="p">,</span>
-                                        <span class="n">species</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                                        <span class="n">precision</span><span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">total_ba_var</span><span class="p">))</span>
+        <span class="n">stems_dict</span><span class="p">[</span><span class="s2">&quot;TOTAL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Stems</span><span class="p">(</span>
+            <span class="n">value</span><span class="o">=</span><span class="n">total_stems_val</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="n">sqrt</span><span class="p">(</span><span class="n">total_stems_var</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">ba_dict</span><span class="p">[</span><span class="s2">&quot;TOTAL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">StandBasalArea</span><span class="p">(</span>
+            <span class="n">value</span><span class="o">=</span><span class="n">total_ba_val</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="n">sqrt</span><span class="p">(</span><span class="n">total_ba_var</span><span class="p">)</span>
+        <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_metric_estimates</span><span class="p">[</span><span class="s2">&quot;Stems&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">stems_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_metric_estimates</span><span class="p">[</span><span class="s2">&quot;BasalArea&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ba_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
-
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Stand(area_ha=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">area_ha</span><span class="si">}</span><span class="s2">, n_plots=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plots</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
@@ -676,7 +678,7 @@
             <span class="n">mode_area_ha</span> <span class="o">=</span> <span class="n">plot_areas_ha</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="c1"># Subset the plots that match this mode</span>
-        <span class="n">subplots</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plots</span> <span class="k">if</span>  <span class="n">isclose</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">area_ha</span><span class="p">,</span> <span class="n">mode_area_ha</span><span class="p">,</span> <span class="n">rel_tol</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">)]</span>
+        <span class="n">subplots</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plots</span> <span class="k">if</span> <span class="n">isclose</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">area_ha</span><span class="p">,</span> <span class="n">mode_area_ha</span><span class="p">,</span> <span class="n">rel_tol</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">)]</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">subplots</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
@@ -687,9 +689,9 @@
         <span class="n">m_values</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">plot</span> <span class="ow">in</span> <span class="n">subplots</span><span class="p">:</span>
             <span class="c1"># Sort trees descending by diameter</span>
-            <span class="n">sorted_trees</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">plot</span><span class="o">.</span><span class="n">trees</span><span class="p">,</span>
-                                  <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">diameter_cm</span> <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">diameter_cm</span> <span class="k">else</span> <span class="o">-</span><span class="mi">999</span><span class="p">),</span>
-                                  <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">sorted_trees</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+                <span class="n">plot</span><span class="o">.</span><span class="n">trees</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">diameter_cm</span> <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">diameter_cm</span> <span class="k">else</span> <span class="o">-</span><span class="mi">999</span><span class="p">),</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
             <span class="n">count_valid</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">sorted_trees</span> <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">height_m</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
             <span class="n">m_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">count_valid</span><span class="p">)</span>
 
@@ -705,13 +707,11 @@
         <span class="c1">#    Then average across subplots to get a raw estimate</span>
         <span class="n">subplot_means</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">plot</span> <span class="ow">in</span> <span class="n">subplots</span><span class="p">:</span>
-            <span class="n">sorted_trees</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">plot</span><span class="o">.</span><span class="n">trees</span><span class="p">,</span>
-                                  <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">diameter_cm</span> <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">diameter_cm</span> <span class="k">else</span> <span class="o">-</span><span class="mi">999</span><span class="p">),</span>
-                                  <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">sorted_trees</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+                <span class="n">plot</span><span class="o">.</span><span class="n">trees</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">diameter_cm</span> <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">diameter_cm</span> <span class="k">else</span> <span class="o">-</span><span class="mi">999</span><span class="p">),</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
             <span class="c1"># The top M among those that have heights</span>
-            <span class="n">valid_heights</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="n">t</span><span class="o">.</span><span class="n">height_m</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">sorted_trees</span><span class="p">[:</span><span class="n">m_real</span><span class="p">]</span> <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">height_m</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-            <span class="p">]</span>
+            <span class="n">valid_heights</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">height_m</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">sorted_trees</span><span class="p">[:</span><span class="n">m_real</span><span class="p">]</span> <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">height_m</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
 
             <span class="c1"># The original logic intended to skip any plot that could not provide M valid heights.</span>
             <span class="c1"># This check preserves that intent.</span>
@@ -731,12 +731,12 @@
 
         <span class="c1"># Simple standard error across subplots</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">subplot_means</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">precision_est</span> <span class="o">=</span> <span class="n">statistics</span><span class="o">.</span><span class="n">pstdev</span><span class="p">(</span><span class="n">subplot_means</span><span class="p">)</span> <span class="o">/</span>  <span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">subplot_means</span><span class="p">))</span>
+            <span class="n">precision_est</span> <span class="o">=</span> <span class="n">statistics</span><span class="o">.</span><span class="n">pstdev</span><span class="p">(</span><span class="n">subplot_means</span><span class="p">)</span> <span class="o">/</span> <span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">subplot_means</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">precision_est</span> <span class="o">=</span> <span class="mf">0.0</span>
 
         <span class="c1"># 4. Use a small Monte Carlo to estimate bias for (r_real, m_real)</span>
-        <span class="n">real_radius_m</span> <span class="o">=</span>  <span class="n">sqrt</span><span class="p">(</span><span class="n">mode_area_ha</span> <span class="o">*</span> <span class="mi">10_000</span> <span class="o">/</span>  <span class="n">pi</span><span class="p">)</span>
+        <span class="n">real_radius_m</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">mode_area_ha</span> <span class="o">*</span> <span class="mi">10_000</span> <span class="o">/</span> <span class="n">pi</span><span class="p">)</span>
         <span class="n">nominal_top_n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">top_height_definition</span><span class="o">.</span><span class="n">nominal_n</span>
         <span class="n">nominal_area_ha</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">top_height_definition</span><span class="o">.</span><span class="n">nominal_area_ha</span>
 
@@ -747,7 +747,7 @@
             <span class="n">n_simulations</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
             <span class="n">nominal_top_n</span><span class="o">=</span><span class="n">nominal_top_n</span><span class="p">,</span>
             <span class="n">nominal_area</span><span class="o">=</span><span class="n">nominal_area_ha</span> <span class="o">*</span> <span class="mi">10_000</span><span class="p">,</span>
-            <span class="n">sigma</span><span class="o">=</span><span class="mf">3.0</span>
+            <span class="n">sigma</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="n">h_est_corrected</span> <span class="o">=</span> <span class="n">h_est_raw</span> <span class="o">-</span> <span class="n">bias</span>
@@ -758,20 +758,22 @@
             <span class="n">definition</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">top_height_definition</span><span class="p">,</span>
             <span class="n">species</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># or you could attempt an aggregated species list</span>
             <span class="n">precision</span><span class="o">=</span><span class="n">precision_est</span><span class="p">,</span>
-            <span class="n">est_bias</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">bias</span><span class="p">)</span>
+            <span class="n">est_bias</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">bias</span><span class="p">),</span>
         <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Stand.calculate_top_height_bias">
 <a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.stand.Stand.calculate_top_height_bias">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_top_height_bias</span><span class="p">(</span><span class="n">r</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                                  <span class="n">m</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                                  <span class="n">n_trees</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
-                                  <span class="n">n_simulations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span>
-                                  <span class="n">nominal_top_n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
-                                  <span class="n">nominal_area</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10000.0</span><span class="p">,</span>
-                                  <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">3.0</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_top_height_bias</span><span class="p">(</span>
+        <span class="n">r</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">m</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">n_trees</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+        <span class="n">n_simulations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span>
+        <span class="n">nominal_top_n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="n">nominal_area</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10000.0</span><span class="p">,</span>
+        <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">3.0</span><span class="p">,</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the bias of the estimator h_hat for top height in a forest stand.</span>
 <span class="sd">        Based on (a simplified interpretation of) Matérn&#39;s ideas on top-height sampling.</span>
@@ -806,7 +808,7 @@
 
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_simulations</span><span class="p">):</span>
             <span class="c1"># Generate random positions in the square bounding nominal_area</span>
-            <span class="n">side</span> <span class="o">=</span>  <span class="n">sqrt</span><span class="p">(</span><span class="n">nominal_area</span><span class="p">)</span>
+            <span class="n">side</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">nominal_area</span><span class="p">)</span>
             <span class="n">x_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">side</span><span class="p">,</span> <span class="n">n_trees</span><span class="p">)</span>
             <span class="n">y_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">side</span><span class="p">,</span> <span class="n">n_trees</span><span class="p">)</span>
 
@@ -815,7 +817,7 @@
 
             <span class="c1"># &#39;True&#39; heights from a toy height-diameter function</span>
             <span class="c1"># You can replace this with a more realistic model</span>
-            <span class="n">heights_true</span> <span class="o">=</span> <span class="mf">1.3</span> <span class="o">+</span> <span class="p">(</span><span class="n">diameters</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">((</span><span class="mf">1.1138</span> <span class="o">+</span> <span class="mf">0.2075</span> <span class="o">*</span> <span class="n">diameters</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">heights_true</span> <span class="o">=</span> <span class="mf">1.3</span> <span class="o">+</span> <span class="p">(</span><span class="n">diameters</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">((</span><span class="mf">1.1138</span> <span class="o">+</span> <span class="mf">0.2075</span> <span class="o">*</span> <span class="n">diameters</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
 
             <span class="c1"># Add 3% measurement error (for example)</span>
             <span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">sigma</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">heights_true</span><span class="p">,</span> <span class="n">n_trees</span><span class="p">)</span>
@@ -830,7 +832,7 @@
             <span class="c1"># Now place a random circular plot of radius r</span>
             <span class="n">center_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">side</span> <span class="o">-</span> <span class="n">r</span><span class="p">)</span>
             <span class="n">center_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">side</span> <span class="o">-</span> <span class="n">r</span><span class="p">)</span>
-            <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">x_pos</span> <span class="o">-</span> <span class="n">center_x</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">y_pos</span> <span class="o">-</span> <span class="n">center_y</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">x_pos</span> <span class="o">-</span> <span class="n">center_x</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">y_pos</span> <span class="o">-</span> <span class="n">center_y</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
             <span class="n">in_plot</span> <span class="o">=</span> <span class="n">dist</span> <span class="o">&lt;=</span> <span class="n">r</span>
 
             <span class="c1"># If enough trees are in the plot, compute h_hat</span>
@@ -882,8 +884,6 @@
         <span class="k">if</span> <span class="s2">&quot;QMD&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metric_estimates</span><span class="p">:</span>
             <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metric_estimates</span><span class="p">[</span><span class="s2">&quot;QMD&quot;</span><span class="p">]</span></div>
 </div>
-
-
 
 </pre></div>
         </article>

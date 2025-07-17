@@ -298,7 +298,7 @@
 <span id="pyforestry-sweden-siteindex-sis-eko-2008-module"></span><h2>pyforestry.sweden.siteindex.sis.eko_2008 module<a class="headerlink" href="#module-pyforestry.sweden.siteindex.sis.eko_2008" title="Link to this heading">¶</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.siteindex.sis.eko_2008.eko_pm_2008_estimate_si_birch">
-<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.siteindex.sis.eko_2008.</span></span><span class="sig-name descname"><span class="pre">eko_pm_2008_estimate_si_birch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">altitude</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vegetation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ground_layer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lateral_water</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">soil_moisture</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/siteindex/sis/eko_2008.html#eko_pm_2008_estimate_si_birch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.siteindex.sis.eko_2008.eko_pm_2008_estimate_si_birch" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.siteindex.sis.eko_2008.</span></span><span class="sig-name descname"><span class="pre">eko_pm_2008_estimate_si_birch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">altitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vegetation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenFieldLayer" title="pyforestry.sweden.site.enums.SwedenFieldLayer"><span class="pre">SwedenFieldLayer</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ground_layer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenBottomLayer" title="pyforestry.sweden.site.enums.SwedenBottomLayer"><span class="pre">SwedenBottomLayer</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">lateral_water</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilWater" title="pyforestry.sweden.site.enums.SwedenSoilWater"><span class="pre">SwedenSoilWater</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">soil_moisture</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilMoisture" title="pyforestry.sweden.site.enums.SwedenSoilMoisture"><span class="pre">SwedenSoilMoisture</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/siteindex/sis/eko_2008.html#eko_pm_2008_estimate_si_birch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.siteindex.sis.eko_2008.eko_pm_2008_estimate_si_birch" title="Link to this definition">¶</a></dt>
 <dd><p>Estimate SIH50 (Site Index for Birch H50) with stand factors based on Ekö et al. (2008).</p>
 <p>This function calculates the Site Index for Birch based on altitude, latitude, vegetation,
 ground layer, lateral water presence, and soil moisture type. The model is derived
@@ -308,52 +308,10 @@ from empirical relationships provided in Ekö et al. (2008).</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>altitude</strong> (<em>float</em>) – Altitude in meters above sea level.</p></li>
 <li><p><strong>latitude</strong> (<em>float</em>) – Latitude in degrees.</p></li>
-<li><p><strong>vegetation</strong> (<em>int</em>) – <p>Vegetation type (1-18) as per Swedish National Forest Inventory (NFI).
-Vegetation types:</p>
-<blockquote>
-<div><p>1  = Rich-herb without shrubs
-2  = Rich-herb with shrubs/bilberry
-3  = Rich-herb with shrubs/lingonberry
-4  = Low-herb without shrubs
-5  = Low-herb with shrubs/bilberry
-6  = Low-herb with shrubs/lingonberry
-7  = No field layer
-8  = Broadleaved grass
-9  = Thinleaved grass
-10 = Sedge, high
-11 = Sedge, low
-12 = Horsetail (Equisetum ssp.)
-13 = Bilberry
-14 = Lingonberry
-15 = Crowberry
-16 = Poor shrub
-17 = Lichen, frequent occurrence
-18 = Lichen, dominating.</p>
-</div></blockquote>
-</p></li>
-<li><p><strong>ground_layer</strong> (<em>int</em>) – <p>Ground layer type (1-6) as per Swedish NFI.
-Ground layer types:</p>
-<blockquote>
-<div><p>1 = Lichen type (&gt;50% of existing ground layer).
-2 = Lichen-rich bogmoss type (&gt;25% lichen + &gt;50% Sphagnum).
-3 = Lichen rich (&gt;25% lichen, not &gt;50% Sphagnum).
-4 = Bogmoss type (Sphagnum &gt;50% of existing ground layer).
-5 = Swamp moss type (e.g., Polytrichum commune, P. gracile, P. strictum).
-6 = Fresh moss type (e.g., Hylocomium splendens, Ptilium crista-castrensis).</p>
-</div></blockquote>
-</p></li>
-<li><p><strong>lateral_water</strong> (<em>int</em>) – Type of lateral water flow:
-1 = “Missing”,
-2 = “Seldom”,
-3 = “Shorter periods”,
-4 = “Longer periods”,
-5 = “Slope”.</p></li>
-<li><p><strong>soil_moisture</strong> (<em>int</em>) – Soil moisture type:
-1 = “Dry”,
-2 = “Mesic”,
-3 = “Mesic-moist”,
-4 = “Moist”,
-5 = “Wet”.</p></li>
+<li><p><strong>vegetation</strong> (<a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenFieldLayer" title="pyforestry.sweden.site.enums.SwedenFieldLayer"><em>SwedenFieldLayer</em></a>) – Vegetation type.</p></li>
+<li><p><strong>ground_layer</strong> (<a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenBottomLayer" title="pyforestry.sweden.site.enums.SwedenBottomLayer"><em>SwedenBottomLayer</em></a>) – Ground layer type.</p></li>
+<li><p><strong>lateral_water</strong> (<a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilWater" title="pyforestry.sweden.site.enums.SwedenSoilWater"><em>SwedenSoilWater</em></a>) – Degree of lateral water flow.</p></li>
+<li><p><strong>soil_moisture</strong> (<a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilMoisture" title="pyforestry.sweden.site.enums.SwedenSoilMoisture"><em>SwedenSoilMoisture</em></a>) – Soil moisture class.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

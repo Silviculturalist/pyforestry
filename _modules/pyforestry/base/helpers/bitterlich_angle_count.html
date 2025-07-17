@@ -292,9 +292,11 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">statistics</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Union</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.tree_species</span><span class="w"> </span><span class="kn">import</span> <span class="n">TreeName</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.primitives</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandBasalArea</span><span class="p">,</span> <span class="n">Stems</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.tree_species</span><span class="w"> </span><span class="kn">import</span> <span class="n">TreeName</span>
+
 
 <div class="viewcode-block" id="AngleCount">
 <a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.bitterlich_angle_count.AngleCount">[docs]</a>
@@ -311,12 +313,15 @@
 <span class="sd">        species (List[TreeName]): List of tree species encountered.</span>
 <span class="sd">        value (List[float]): Corresponding tallied counts for each species.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">ba_factor</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                 <span class="n">value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">species</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">TreeName</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">point_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">slope</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">ba_factor</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">species</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">TreeName</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">point_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">slope</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize sampling parameters and optional existing tallies.</span>
 
 <span class="sd">        Args:</span>
@@ -355,6 +360,7 @@
 </div>
 
 
+
 <div class="viewcode-block" id="AngleCountAggregator">
 <a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.bitterlich_angle_count.AngleCountAggregator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">AngleCountAggregator</span><span class="p">:</span>
@@ -364,6 +370,7 @@
 <span class="sd">    merging duplicate point records and computing mean and</span>
 <span class="sd">    standard error for basal area and stems per species.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">records</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">AngleCount</span><span class="p">]):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize with a list of AngleCount records.</span>
 
@@ -395,26 +402,32 @@
                         <span class="sa">f</span><span class="s2">&quot;found </span><span class="si">{</span><span class="n">existing_rec</span><span class="o">.</span><span class="n">ba_factor</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">rec</span><span class="o">.</span><span class="n">ba_factor</span><span class="si">}</span><span class="s2">.&quot;</span>
                     <span class="p">)</span>
                 <span class="c1"># Add observations from the new record to the existing one</span>
-                <span class="k">for</span> <span class="n">sp</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">rec</span><span class="o">.</span><span class="n">species</span><span class="p">,</span> <span class="n">rec</span><span class="o">.</span><span class="n">value</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">sp</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">rec</span><span class="o">.</span><span class="n">species</span><span class="p">,</span> <span class="n">rec</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
                     <span class="n">existing_rec</span><span class="o">.</span><span class="n">add_observation</span><span class="p">(</span><span class="n">sp</span><span class="p">,</span> <span class="n">count</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># Create a fresh copy to avoid modifying original objects</span>
-                <span class="n">merged_records</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">AngleCount</span><span class="p">(</span><span class="n">rec</span><span class="o">.</span><span class="n">ba_factor</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">rec</span><span class="o">.</span><span class="n">value</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">rec</span><span class="o">.</span><span class="n">species</span><span class="p">),</span> <span class="n">rec</span><span class="o">.</span><span class="n">point_id</span><span class="p">,</span> <span class="n">rec</span><span class="o">.</span><span class="n">slope</span><span class="p">)</span>
-        
+                <span class="n">merged_records</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">AngleCount</span><span class="p">(</span>
+                    <span class="n">rec</span><span class="o">.</span><span class="n">ba_factor</span><span class="p">,</span>
+                    <span class="nb">list</span><span class="p">(</span><span class="n">rec</span><span class="o">.</span><span class="n">value</span><span class="p">),</span>
+                    <span class="nb">list</span><span class="p">(</span><span class="n">rec</span><span class="o">.</span><span class="n">species</span><span class="p">),</span>
+                    <span class="n">rec</span><span class="o">.</span><span class="n">point_id</span><span class="p">,</span>
+                    <span class="n">rec</span><span class="o">.</span><span class="n">slope</span><span class="p">,</span>
+                <span class="p">)</span>
+
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">merged_records</span><span class="o">.</span><span class="n">values</span><span class="p">())</span></div>
 
-    
+
 <div class="viewcode-block" id="AngleCountAggregator.aggregate_stand_metrics">
 <a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.bitterlich_angle_count.AngleCountAggregator.aggregate_stand_metrics">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">aggregate_stand_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">TreeName</span><span class="p">,</span> <span class="n">StandBasalArea</span><span class="p">],</span>
-                                             <span class="n">Dict</span><span class="p">[</span><span class="n">TreeName</span><span class="p">,</span> <span class="n">Stems</span><span class="p">]]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">aggregate_stand_metrics</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">TreeName</span><span class="p">,</span> <span class="n">StandBasalArea</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="n">TreeName</span><span class="p">,</span> <span class="n">Stems</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute mean basal area and stems density per species across plots.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            Tuple[</span>
-<span class="sd">                Dict[TreeName, StandBasalArea],</span>
-<span class="sd">                Dict[TreeName, Stems]</span>
-<span class="sd">            ]: Mapping species to basal area and stems metrics.</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Tuple[Dict[TreeName, StandBasalArea], Dict[TreeName, Stems]]</span>
+<span class="sd">            Mapping species to basal area and stems metrics.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">merged_records</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge_by_point_id</span><span class="p">()</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">merged_records</span><span class="p">:</span>
@@ -436,18 +449,18 @@
         <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">merged_records</span><span class="p">:</span>
             <span class="c1"># The BAF is now specific to each record in the loop</span>
             <span class="n">current_baf</span> <span class="o">=</span> <span class="n">rec</span><span class="o">.</span><span class="n">ba_factor</span>
-            <span class="n">counts_in_rec</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">rec</span><span class="o">.</span><span class="n">species</span><span class="p">,</span> <span class="n">rec</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
-            
+            <span class="n">counts_in_rec</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">rec</span><span class="o">.</span><span class="n">species</span><span class="p">,</span> <span class="n">rec</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+
             <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="n">all_species</span><span class="p">:</span>
                 <span class="n">raw_count</span> <span class="o">=</span> <span class="n">counts_in_rec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sp</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
-                
+
                 <span class="c1"># Append the raw count for stem calculations</span>
                 <span class="n">species_stems_counts</span><span class="p">[</span><span class="n">sp</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">raw_count</span><span class="p">)</span>
 
                 <span class="c1"># Convert to BA for this plot and append the estimate</span>
                 <span class="n">ba_estimate</span> <span class="o">=</span> <span class="n">raw_count</span> <span class="o">*</span> <span class="n">current_baf</span>
                 <span class="n">species_ba_estimates</span><span class="p">[</span><span class="n">sp</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ba_estimate</span><span class="p">)</span>
-        
+
         <span class="n">basal_area_by_species</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">TreeName</span><span class="p">,</span> <span class="n">StandBasalArea</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">stems_by_species</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">TreeName</span><span class="p">,</span> <span class="n">Stems</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -460,11 +473,7 @@
             <span class="n">ba_sem</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">ba_var</span> <span class="o">/</span> <span class="n">n_total_points</span><span class="p">)</span> <span class="k">if</span> <span class="n">n_total_points</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
 
             <span class="n">basal_area_by_species</span><span class="p">[</span><span class="n">sp</span><span class="p">]</span> <span class="o">=</span> <span class="n">StandBasalArea</span><span class="p">(</span>
-                <span class="n">value</span><span class="o">=</span><span class="n">ba_mean</span><span class="p">,</span>
-                <span class="n">species</span><span class="o">=</span><span class="n">sp</span><span class="p">,</span>
-                <span class="n">precision</span><span class="o">=</span><span class="n">ba_sem</span><span class="p">,</span>
-                <span class="n">over_bark</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">direct_estimate</span><span class="o">=</span><span class="kc">True</span>
+                <span class="n">value</span><span class="o">=</span><span class="n">ba_mean</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="n">sp</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="n">ba_sem</span><span class="p">,</span> <span class="n">over_bark</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">direct_estimate</span><span class="o">=</span><span class="kc">True</span>
             <span class="p">)</span>
 
             <span class="c1"># --- Stems Calculations (on raw count values) ---</span>
@@ -473,11 +482,7 @@
             <span class="n">stems_var</span> <span class="o">=</span> <span class="n">statistics</span><span class="o">.</span><span class="n">variance</span><span class="p">(</span><span class="n">stems_counts</span><span class="p">)</span> <span class="k">if</span> <span class="n">n_total_points</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="mf">0.0</span>
             <span class="n">stems_sem</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">stems_var</span> <span class="o">/</span> <span class="n">n_total_points</span><span class="p">)</span> <span class="k">if</span> <span class="n">n_total_points</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
 
-            <span class="n">stems_by_species</span><span class="p">[</span><span class="n">sp</span><span class="p">]</span> <span class="o">=</span> <span class="n">Stems</span><span class="p">(</span>
-                <span class="n">value</span><span class="o">=</span><span class="n">stems_mean</span><span class="p">,</span>
-                <span class="n">species</span><span class="o">=</span><span class="n">sp</span><span class="p">,</span>
-                <span class="n">precision</span><span class="o">=</span><span class="n">stems_sem</span>
-            <span class="p">)</span>
+            <span class="n">stems_by_species</span><span class="p">[</span><span class="n">sp</span><span class="p">]</span> <span class="o">=</span> <span class="n">Stems</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">stems_mean</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="n">sp</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="n">stems_sem</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">basal_area_by_species</span><span class="p">,</span> <span class="n">stems_by_species</span></div>
 </div>
