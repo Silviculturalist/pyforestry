@@ -267,49 +267,7 @@ class RegionalTreeSpecies:
 # Global Regional Species Namespace
 class TreeSpecies:
     """Namespace exposing regional groups of tree species."""
-
-    Sweden = RegionalTreeSpecies(
-        "Sweden",
-        allowed_species=[
-            PICEA_ABIES,
-            FAGUS_SYLVATICA,
-            QUERCUS_ROBUR,
-            QUERCUS_PETRAEA,
-            BETULA_PENDULA,
-            BETULA_PUBESCENS,
-            PINUS_SYLVESTRIS,
-            PINUS_CONTORTA,
-            PINUS_MUGO,
-            LARIX_SIBIRICA,
-            LARIX_DECIDUA,
-            LARIX_EUROPEA_X_LEPTOLEPIS,
-            LARIX_SUKACZEWII,
-            PSEUDOTSUGA_MENZIESII,
-            PICEA_SITCHENSIS,
-            PICEA_MARIANA,
-            TAXUS_BACCATA,
-            JUNIPERUS_COMMUNIS,
-            ALNUS_GLUTINOSA,
-            ALNUS_INCANA,
-            ULMUS_GLABRA,
-            FRAXINUS_EXCELSIOR,
-            POPULUS_TREMULA,
-            POPULUS_TREMULA_X_TREMULOIDES,
-            CARPINUS_BETULUS,
-            PRUNUS_AVIUM,
-            CORYLUS_AVELLANA,
-            PRUNUS_PADUS,
-            TILIA_CORDATA,
-            ULMUS_MINOR,
-            ACER_PLATANOIDES,
-            ACER_PSEUDOPLATANUS,
-            SORBUS_INTERMEDIA,
-            SORBUS_AUCUPARIA,
-            SALIX_CAPREA,
-            ULMUS_LAEVIS,
-            QUERCUS_RUBRA,
-        ],
-    )
+    pass
 
 
 def parse_tree_species(species_str: Union[str, TreeName]) -> TreeName:
@@ -329,3 +287,11 @@ def parse_tree_species(species_str: Union[str, TreeName]) -> TreeName:
         if sp.full_name.lower() == normalized:
             return sp
     raise ValueError(f"Could not find species matching '{species_str}'")
+
+
+# --------------------------------------------------------------------
+# Automatically load regional extensions if available
+try:  # pragma: no cover - optional dependency
+    import pyforestry.sweden.helpers.tree_species_extension  # noqa: F401
+except Exception:  # pragma: no cover - fail silently if extension missing
+    pass
