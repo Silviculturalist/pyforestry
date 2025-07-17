@@ -5,12 +5,13 @@
 import statistics
 from dataclasses import dataclass, field
 from math import isclose, pi, sqrt
-from typing import Any, Dict, List, Optional, Union, cast
+from typing import Any, Callable, Dict, List, Optional, Union, cast
 
 import geopandas as gpd
 import numpy as np
 from pyproj import CRS
 from shapely import Polygon
+from shapely.geometry import Point
 from shapely.geometry.base import BaseGeometry
 
 from pyforestry.base.helpers import (
@@ -583,5 +584,59 @@ class Stand:
             self.use_angle_count = False
 
         # Invalidate any cached QMD estimates
+        if "QMD" in self._metric_estimates:
+            del self._metric_estimates["QMD"]
+
+    def thin_trees(
+        self,
+        uids: Optional[List[Any]] = None,
+        rule: Optional[Callable[[RepresentationTree], bool]] = None,
+        polygon: Optional[Polygon] = None,
+    ) -> None:
+        """Remove trees from the stand based on various criteria.
+
+        Parameters
+        ----------
+        uids:
+            List of tree ``uid`` values to remove.
+        rule:
+            Callable that returns ``True`` for trees that should be removed.
+        polygon:
+            When provided, the rule and/or UIDs are applied only to trees whose
+            coordinates fall inside this polygon. If both ``uids`` and ``rule``
+            are ``None`` all trees inside the polygon are removed.
+        """
+
+        if self.use_angle_count:
+            raise ValueError("Thinning not supported when using AngleCount data.")
+
+        for plot in self.plots:
+            new_trees = []
+            for t in plot.trees:
+                within_poly = True
+                if polygon is not None:
+                    pos = getattr(t, "position", None)
+                    if pos is None:
+                        within_poly = False
+                    else:
+                        within_poly = polygon.contains(Point(pos.X, pos.Y))
+
+                remove = False
+                if polygon is not None and uids is None and rule is None:
+                    remove = within_poly
+                else:
+                    if uids is not None and getattr(t, "uid", None) in uids:
+                        if polygon is None or within_poly:
+                            remove = True
+                    if rule is not None and rule(t):
+                        if polygon is None or within_poly:
+                            remove = True
+
+                if not remove:
+                    new_trees.append(t)
+
+            plot.trees = new_trees
+
+        self._compute_ht_estimates()
         if "QMD" in self._metric_estimates:
             del self._metric_estimates["QMD"]
