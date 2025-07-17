@@ -16,40 +16,21 @@ from __future__ import annotations
 # Author: Carl Vigren, Dept. Forest Resource Management, SLU Umeå.
 # Written to match results to SIS NFI routine.
 from math import exp
-from typing import TYPE_CHECKING, Any, Union
+from typing import TYPE_CHECKING, Union
 
 import numpy as np
 from pandas import isna as pdisna
 
-from pyforestry.base.helpers import Age, SiteIndexValue, TreeSpecies
+from pyforestry.base.helpers import (
+    Age,
+    SiteIndexValue,
+    TreeSpecies,
+    enum_code,
+)
 from pyforestry.sweden.siteindex.hagglund_1970 import Hagglund_1970
 
 if TYPE_CHECKING:
     from pyforestry.sweden.site.enums import Sweden
-
-
-def _enum_code(value: Union[int, float, bool]) -> Union[int, float, bool]:
-    """Return numeric or label from an enum member or dataclass."""
-    if hasattr(value, "value"):
-        inner = value.value
-        if hasattr(inner, "label"):
-            return inner.label
-        if hasattr(inner, "code"):
-            return inner.code
-    if hasattr(value, "label"):
-        return value.label
-    if hasattr(value, "code"):
-        return value.code
-    return value
-
-
-def _county_code(value: Any) -> Any:
-    """Return numeric county code if given a Sweden.County enum."""
-    if hasattr(value, "value") and hasattr(value.value, "code"):
-        return value.value.code
-    if hasattr(value, "code"):
-        return value.code
-    return value
 
 
 def NFI_SIS_SPRUCE(**kwargs) -> float:
@@ -110,19 +91,19 @@ def NFI_SIS_SPRUCE(**kwargs) -> float:
     """
     latitude = kwargs.get("latitude")
     altitude = kwargs.get("altitude")
-    soil_moisture = _enum_code(kwargs.get("soil_moisture"))
-    ground_layer = _enum_code(kwargs.get("ground_layer"))
-    vegetation = _enum_code(kwargs.get("vegetation"))
-    soil_texture = _enum_code(kwargs.get("soil_texture"))
-    climate_code = _enum_code(kwargs.get("climate_code"))
-    lateral_water = _enum_code(kwargs.get("lateral_water"))
-    soil_depth = _enum_code(kwargs.get("soil_depth"))
+    soil_moisture = enum_code(kwargs.get("soil_moisture"))
+    ground_layer = enum_code(kwargs.get("ground_layer"))
+    vegetation = enum_code(kwargs.get("vegetation"))
+    soil_texture = enum_code(kwargs.get("soil_texture"))
+    climate_code = enum_code(kwargs.get("climate_code"))
+    lateral_water = enum_code(kwargs.get("lateral_water"))
+    soil_depth = enum_code(kwargs.get("soil_depth"))
     incline_percent = kwargs.get("incline_percent")
     aspect = kwargs.get("aspect")
     ditched = kwargs.get("ditched")
     peat = kwargs.get("peat")
     gotland = kwargs.get("gotland")
-    dlan = _county_code(kwargs.get("dlan"))
+    dlan = enum_code(kwargs.get("dlan"))
     limes_norrlandicus = kwargs.get("limes_norrlandicus")
     coast = kwargs.get("coast")
     nfi_adjustments = kwargs.get("nfi_adjustments")
@@ -518,19 +499,19 @@ def NFI_SIS_PINE(**kwargs) -> float:
     """
     latitude = kwargs.get("latitude")
     altitude = kwargs.get("altitude")
-    soil_moisture = _enum_code(kwargs.get("soil_moisture"))
-    ground_layer = _enum_code(kwargs.get("ground_layer"))
-    vegetation = _enum_code(kwargs.get("vegetation"))
-    soil_texture = _enum_code(kwargs.get("soil_texture"))
-    climate_code = _enum_code(kwargs.get("climate_code"))
-    lateral_water = _enum_code(kwargs.get("lateral_water"))
-    soil_depth = _enum_code(kwargs.get("soil_depth"))
+    soil_moisture = enum_code(kwargs.get("soil_moisture"))
+    ground_layer = enum_code(kwargs.get("ground_layer"))
+    vegetation = enum_code(kwargs.get("vegetation"))
+    soil_texture = enum_code(kwargs.get("soil_texture"))
+    climate_code = enum_code(kwargs.get("climate_code"))
+    lateral_water = enum_code(kwargs.get("lateral_water"))
+    soil_depth = enum_code(kwargs.get("soil_depth"))
     incline_percent = kwargs.get("incline_percent")
     aspect = kwargs.get("aspect")
     ditched = kwargs.get("ditched")
     peat = kwargs.get("peat")
     gotland = kwargs.get("gotland")
-    dlan = _county_code(kwargs.get("dlan"))
+    dlan = enum_code(kwargs.get("dlan"))
     limes_norrlandicus = kwargs.get("limes_norrlandicus")
     coast = kwargs.get("coast")
     nfi_adjustments = kwargs.get("nfi_adjustments")
@@ -874,14 +855,14 @@ def Hagglund_Lundmark_1979_SIS(
         Will return NA & issue a warning message if no method was found.
     """
 
-    soil_moisture = _enum_code(soil_moisture)
-    ground_layer = _enum_code(ground_layer)
-    vegetation = _enum_code(vegetation)
-    soil_texture = _enum_code(soil_texture)
-    climate_code = _enum_code(climate_code)
-    lateral_water = _enum_code(lateral_water)
-    soil_depth = _enum_code(soil_depth)
-    dlan = _county_code(dlan)
+    soil_moisture = enum_code(soil_moisture)
+    ground_layer = enum_code(ground_layer)
+    vegetation = enum_code(vegetation)
+    soil_texture = enum_code(soil_texture)
+    climate_code = enum_code(climate_code)
+    lateral_water = enum_code(lateral_water)
+    soil_depth = enum_code(soil_depth)
+    dlan = enum_code(dlan)
 
     if species not in ["Picea abies", "Pinus sylvestris"]:
         raise ValueError(

@@ -1,20 +1,18 @@
 import pytest
-from pyforestry.base.helpers import Age, SiteIndexValue
+from pyforestry.base.helpers import Age, SiteIndexValue, enum_code
 from pyforestry.sweden.site.enums import Sweden
 from pyforestry.sweden.siteindex.sis.hagglund_lundmark_1979 import (
     Hagglund_Lundmark_1979_SIS,
-    _county_code,
-    _enum_code,
 )
 
 
 def test_enum_code_with_enums():
-    assert _enum_code(Sweden.SoilMoistureEnum.DRY) == 1
-    assert _enum_code(Sweden.ClimateZone.K1) == "K1"
+    assert enum_code(Sweden.SoilMoistureEnum.DRY) == 1
+    assert enum_code(Sweden.ClimateZone.K1) == "K1"
 
 
-def test_county_code_helper():
-    assert _county_code(Sweden.County.UPPSALA) == 16
+def test_enum_code_with_county():
+    assert enum_code(Sweden.County.UPPSALA) == 16
 
 
 def _common_params():
