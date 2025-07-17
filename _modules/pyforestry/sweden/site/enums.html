@@ -290,6 +290,7 @@
     <span class="n">BottomLayerType</span><span class="p">,</span>
     <span class="n">ClimateZoneData</span><span class="p">,</span>
     <span class="n">CountyData</span><span class="p">,</span>
+    <span class="n">PeatHumificationCat</span><span class="p">,</span>
     <span class="n">SoilDepthCat</span><span class="p">,</span>
     <span class="n">SoilMoistureData</span><span class="p">,</span>
     <span class="n">SoilTextureCategory</span><span class="p">,</span>
@@ -369,6 +370,11 @@
         <span class="mi">4</span><span class="p">,</span>
         <span class="s2">&quot;Mycket varierande jorddjup. Brottytor i berggrunden delvis synliga.&quot;</span><span class="p">,</span>
         <span class="s2">&quot;Widely varying soil depth. Breaks in bedrock partly visible.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">OUTCROP</span> <span class="o">=</span> <span class="n">SoilDepthCat</span><span class="p">(</span>
+        <span class="mi">5</span><span class="p">,</span>
+        <span class="s2">&quot;Häll, inget egentligt jordtäcke&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Outcrop. No discernible topsoil&quot;</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
@@ -413,6 +419,16 @@
         <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;fuktig&quot;</span><span class="p">,</span> <span class="s2">&quot;Moist (subsoil water depth &lt;1 m, and pools visible in hollows)&quot;</span>
     <span class="p">)</span>
     <span class="n">WET</span> <span class="o">=</span> <span class="n">SoilMoistureData</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;blöt&quot;</span><span class="p">,</span> <span class="s2">&quot;Wet (subsoil water pools visible)&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="SwedenPeatHumification">
+<a class="viewcode-back" href="../../../../api/pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenPeatHumification">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SwedenPeatHumification</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">NONE</span> <span class="o">=</span> <span class="n">PeatHumificationCat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;ingen&quot;</span><span class="p">,</span> <span class="s2">&quot;None&quot;</span><span class="p">)</span>
+    <span class="n">LOW</span> <span class="o">=</span> <span class="n">PeatHumificationCat</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;låg&quot;</span><span class="p">,</span> <span class="s2">&quot;Low&quot;</span><span class="p">)</span>
+    <span class="n">MEDIUM</span> <span class="o">=</span> <span class="n">PeatHumificationCat</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;medium&quot;</span><span class="p">,</span> <span class="s2">&quot;Medium&quot;</span><span class="p">)</span>
+    <span class="n">HIGH</span> <span class="o">=</span> <span class="n">PeatHumificationCat</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;hög&quot;</span><span class="p">,</span> <span class="s2">&quot;High&quot;</span><span class="p">)</span></div>
 
 
 
@@ -499,6 +515,7 @@
     <span class="n">SoilTextureTill</span> <span class="o">=</span> <span class="n">SwedenSoilTextureTill</span>
     <span class="n">SoilTextureSediment</span> <span class="o">=</span> <span class="n">SwedenSoilTextureSediment</span>
     <span class="n">SoilMoistureEnum</span> <span class="o">=</span> <span class="n">SwedenSoilMoisture</span>
+    <span class="n">PeatHumification</span> <span class="o">=</span> <span class="n">SwedenPeatHumification</span>
     <span class="n">County</span> <span class="o">=</span> <span class="n">SwedenCounty</span>
     <span class="n">ClimateZone</span> <span class="o">=</span> <span class="n">SwedenClimateZone</span></div>
 

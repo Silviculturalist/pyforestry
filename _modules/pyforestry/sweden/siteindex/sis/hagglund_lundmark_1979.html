@@ -301,40 +301,21 @@
 <span class="c1"># Author: Carl Vigren, Dept. Forest Resource Management, SLU Umeå.</span>
 <span class="c1"># Written to match results to SIS NFI routine.</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="kn">import</span> <span class="n">isna</span> <span class="k">as</span> <span class="n">pdisna</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Age</span><span class="p">,</span> <span class="n">SiteIndexValue</span><span class="p">,</span> <span class="n">TreeSpecies</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Age</span><span class="p">,</span>
+    <span class="n">SiteIndexValue</span><span class="p">,</span>
+    <span class="n">TreeSpecies</span><span class="p">,</span>
+    <span class="n">enum_code</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.sweden.siteindex.hagglund_1970</span><span class="w"> </span><span class="kn">import</span> <span class="n">Hagglund_1970</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.sweden.site.enums</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sweden</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">_enum_code</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return numeric or label from an enum member or dataclass.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">):</span>
-        <span class="n">inner</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">value</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">inner</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">inner</span><span class="o">.</span><span class="n">label</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">inner</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">inner</span><span class="o">.</span><span class="n">code</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">label</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">code</span>
-    <span class="k">return</span> <span class="n">value</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">_county_code</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return numeric county code if given a Sweden.County enum.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">code</span>
-    <span class="k">return</span> <span class="n">value</span>
 
 
 <div class="viewcode-block" id="NFI_SIS_SPRUCE">
@@ -397,19 +378,19 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">latitude</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;latitude&quot;</span><span class="p">)</span>
     <span class="n">altitude</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;altitude&quot;</span><span class="p">)</span>
-    <span class="n">soil_moisture</span> <span class="o">=</span> <span class="n">_enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;soil_moisture&quot;</span><span class="p">))</span>
-    <span class="n">ground_layer</span> <span class="o">=</span> <span class="n">_enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ground_layer&quot;</span><span class="p">))</span>
-    <span class="n">vegetation</span> <span class="o">=</span> <span class="n">_enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;vegetation&quot;</span><span class="p">))</span>
-    <span class="n">soil_texture</span> <span class="o">=</span> <span class="n">_enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;soil_texture&quot;</span><span class="p">))</span>
-    <span class="n">climate_code</span> <span class="o">=</span> <span class="n">_enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;climate_code&quot;</span><span class="p">))</span>
-    <span class="n">lateral_water</span> <span class="o">=</span> <span class="n">_enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;lateral_water&quot;</span><span class="p">))</span>
-    <span class="n">soil_depth</span> <span class="o">=</span> <span class="n">_enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;soil_depth&quot;</span><span class="p">))</span>
+    <span class="n">soil_moisture</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;soil_moisture&quot;</span><span class="p">))</span>
+    <span class="n">ground_layer</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ground_layer&quot;</span><span class="p">))</span>
+    <span class="n">vegetation</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;vegetation&quot;</span><span class="p">))</span>
+    <span class="n">soil_texture</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;soil_texture&quot;</span><span class="p">))</span>
+    <span class="n">climate_code</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;climate_code&quot;</span><span class="p">))</span>
+    <span class="n">lateral_water</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;lateral_water&quot;</span><span class="p">))</span>
+    <span class="n">soil_depth</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;soil_depth&quot;</span><span class="p">))</span>
     <span class="n">incline_percent</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;incline_percent&quot;</span><span class="p">)</span>
     <span class="n">aspect</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;aspect&quot;</span><span class="p">)</span>
     <span class="n">ditched</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ditched&quot;</span><span class="p">)</span>
     <span class="n">peat</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;peat&quot;</span><span class="p">)</span>
     <span class="n">gotland</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;gotland&quot;</span><span class="p">)</span>
-    <span class="n">dlan</span> <span class="o">=</span> <span class="n">_county_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dlan&quot;</span><span class="p">))</span>
+    <span class="n">dlan</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dlan&quot;</span><span class="p">))</span>
     <span class="n">limes_norrlandicus</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;limes_norrlandicus&quot;</span><span class="p">)</span>
     <span class="n">coast</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;coast&quot;</span><span class="p">)</span>
     <span class="n">nfi_adjustments</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;nfi_adjustments&quot;</span><span class="p">)</span>
@@ -808,19 +789,19 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">latitude</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;latitude&quot;</span><span class="p">)</span>
     <span class="n">altitude</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;altitude&quot;</span><span class="p">)</span>
-    <span class="n">soil_moisture</span> <span class="o">=</span> <span class="n">_enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;soil_moisture&quot;</span><span class="p">))</span>
-    <span class="n">ground_layer</span> <span class="o">=</span> <span class="n">_enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ground_layer&quot;</span><span class="p">))</span>
-    <span class="n">vegetation</span> <span class="o">=</span> <span class="n">_enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;vegetation&quot;</span><span class="p">))</span>
-    <span class="n">soil_texture</span> <span class="o">=</span> <span class="n">_enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;soil_texture&quot;</span><span class="p">))</span>
-    <span class="n">climate_code</span> <span class="o">=</span> <span class="n">_enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;climate_code&quot;</span><span class="p">))</span>
-    <span class="n">lateral_water</span> <span class="o">=</span> <span class="n">_enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;lateral_water&quot;</span><span class="p">))</span>
-    <span class="n">soil_depth</span> <span class="o">=</span> <span class="n">_enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;soil_depth&quot;</span><span class="p">))</span>
+    <span class="n">soil_moisture</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;soil_moisture&quot;</span><span class="p">))</span>
+    <span class="n">ground_layer</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ground_layer&quot;</span><span class="p">))</span>
+    <span class="n">vegetation</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;vegetation&quot;</span><span class="p">))</span>
+    <span class="n">soil_texture</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;soil_texture&quot;</span><span class="p">))</span>
+    <span class="n">climate_code</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;climate_code&quot;</span><span class="p">))</span>
+    <span class="n">lateral_water</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;lateral_water&quot;</span><span class="p">))</span>
+    <span class="n">soil_depth</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;soil_depth&quot;</span><span class="p">))</span>
     <span class="n">incline_percent</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;incline_percent&quot;</span><span class="p">)</span>
     <span class="n">aspect</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;aspect&quot;</span><span class="p">)</span>
     <span class="n">ditched</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ditched&quot;</span><span class="p">)</span>
     <span class="n">peat</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;peat&quot;</span><span class="p">)</span>
     <span class="n">gotland</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;gotland&quot;</span><span class="p">)</span>
-    <span class="n">dlan</span> <span class="o">=</span> <span class="n">_county_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dlan&quot;</span><span class="p">))</span>
+    <span class="n">dlan</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dlan&quot;</span><span class="p">))</span>
     <span class="n">limes_norrlandicus</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;limes_norrlandicus&quot;</span><span class="p">)</span>
     <span class="n">coast</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;coast&quot;</span><span class="p">)</span>
     <span class="n">nfi_adjustments</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;nfi_adjustments&quot;</span><span class="p">)</span>
@@ -1167,14 +1148,14 @@
 <span class="sd">        Will return NA &amp; issue a warning message if no method was found.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">soil_moisture</span> <span class="o">=</span> <span class="n">_enum_code</span><span class="p">(</span><span class="n">soil_moisture</span><span class="p">)</span>
-    <span class="n">ground_layer</span> <span class="o">=</span> <span class="n">_enum_code</span><span class="p">(</span><span class="n">ground_layer</span><span class="p">)</span>
-    <span class="n">vegetation</span> <span class="o">=</span> <span class="n">_enum_code</span><span class="p">(</span><span class="n">vegetation</span><span class="p">)</span>
-    <span class="n">soil_texture</span> <span class="o">=</span> <span class="n">_enum_code</span><span class="p">(</span><span class="n">soil_texture</span><span class="p">)</span>
-    <span class="n">climate_code</span> <span class="o">=</span> <span class="n">_enum_code</span><span class="p">(</span><span class="n">climate_code</span><span class="p">)</span>
-    <span class="n">lateral_water</span> <span class="o">=</span> <span class="n">_enum_code</span><span class="p">(</span><span class="n">lateral_water</span><span class="p">)</span>
-    <span class="n">soil_depth</span> <span class="o">=</span> <span class="n">_enum_code</span><span class="p">(</span><span class="n">soil_depth</span><span class="p">)</span>
-    <span class="n">dlan</span> <span class="o">=</span> <span class="n">_county_code</span><span class="p">(</span><span class="n">dlan</span><span class="p">)</span>
+    <span class="n">soil_moisture</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">soil_moisture</span><span class="p">)</span>
+    <span class="n">ground_layer</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">ground_layer</span><span class="p">)</span>
+    <span class="n">vegetation</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">vegetation</span><span class="p">)</span>
+    <span class="n">soil_texture</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">soil_texture</span><span class="p">)</span>
+    <span class="n">climate_code</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">climate_code</span><span class="p">)</span>
+    <span class="n">lateral_water</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">lateral_water</span><span class="p">)</span>
+    <span class="n">soil_depth</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">soil_depth</span><span class="p">)</span>
+    <span class="n">dlan</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">dlan</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">species</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Picea abies&quot;</span><span class="p">,</span> <span class="s2">&quot;Pinus sylvestris&quot;</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
