@@ -69,7 +69,7 @@ def get_tree_type_by_genus(genus: str) -> str:
         "pseudotsuga",
         "tsuga",
         "pinus",
-        "seqouia",
+        "sequoia",
         "sequoiadendron",
         "chamaecyparis",
         "cupressaceae",
