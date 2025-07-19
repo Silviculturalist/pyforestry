@@ -57,11 +57,11 @@ jobs:
       - name: Update coverage baseline
         run: |
           NEW=$(grep -o 'line-rate="[0-9.]*"' coverage.xml | head -1 | cut -d'"' -f2)
-          NEW=$(python - <<'EOF'
+          NEW=$(python - "$NEW" <<'EOF'
           import sys
           print(int(round(float(sys.argv[1])*100)))
           EOF
-          $NEW)
+          )
           CUR=$(cat coverage_threshold.txt)
           if [ "$NEW" -gt "$CUR" ]; then
             echo "$NEW" > coverage_threshold.txt
@@ -115,11 +115,11 @@ jobs:
       - name: Update docstring baseline
         run: |
           NEW=$(grep -o 'Total coverage: [0-9.]*%' docstring.log | tail -1 | awk '{print $3}' | tr -d '%')
-          NEW=$(python - <<'EOF'
+          NEW=$(python - "$NEW" <<'EOF'
           import sys
           print(int(round(float(sys.argv[1]))))
           EOF
-          $NEW)
+          )
           CUR=$(cat docstring_threshold.txt)
           if [ "$NEW" -gt "$CUR" ]; then
             echo "$NEW" > docstring_threshold.txt
