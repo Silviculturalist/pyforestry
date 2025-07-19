@@ -53,6 +53,7 @@ nbsphinx_allow_errors = False
 # -- Options for HTML output -------------------------------------------------
 html_theme = "pydata_sphinx_theme"
 html_static_path = ["_static"]
+html_extra_path = ["../versions.json"]
 
 # Configure version switcher so users can toggle between dev/stable docs.
 DOCS_VERSION = os.environ.get("DOCS_VERSION", "dev")
@@ -60,6 +61,6 @@ html_theme_options = {
     "navbar_end": ["theme-switcher", "version-switcher"],
     "switcher": {
         "version_match": DOCS_VERSION,
-        "json_url": "versions.json",
+        "json_url": "../versions.json",
     },
 }

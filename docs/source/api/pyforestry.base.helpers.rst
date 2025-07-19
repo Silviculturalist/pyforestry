@@ -5,6 +5,7 @@ pyforestry.base.helpers package
    :members:
    :undoc-members:
    :show-inheritance:
+   :noindex:
 
 Subpackages
 -----------

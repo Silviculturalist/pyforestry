@@ -5,6 +5,7 @@ pyforestry.base.helpers.primitives package
    :members:
    :undoc-members:
    :show-inheritance:
+   :noindex:
 
 Submodules
 ----------
