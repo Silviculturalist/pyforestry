@@ -22,6 +22,8 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
@@ -38,6 +40,19 @@ jobs:
 
       - name: Run tests with coverage
         run: pytest --cov=pyforestry --cov-report=xml --cov-report=html --cov-fail-under=$THRESHOLD
+
+      - name: Determine base reference
+        id: base
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git fetch origin ${{ github.base_ref }} --depth=1
+            echo "sha=$(git merge-base HEAD origin/${{ github.base_ref }})" >> $GITHUB_OUTPUT
+          else
+            echo "sha=${{ github.event.before }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check coverage for new files
+        run: python scripts/check_new_file_coverage.py ${{ steps.base.outputs.sha }}
 
       - name: Update coverage baseline
         run: |
@@ -77,6 +92,8 @@ $NEW)
     steps:
       - name: Check out code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -134,6 +151,8 @@ $NEW)
     steps:
       - name: Check out code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v4
