@@ -116,7 +116,6 @@ class SwedishSite(SiteBase):
         )
 
         if sis_inputs_ok:
-
             # To placate linters: this block only runs when ``sis_inputs_ok``.
             assert self.county is not None
             assert self.climate_zone is not None

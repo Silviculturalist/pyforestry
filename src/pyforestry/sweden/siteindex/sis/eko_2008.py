@@ -115,7 +115,7 @@ def eko_pm_2008_estimate_si_birch(
     # Error if soil moisture type is not valid
     else:
         raise ValueError(
-            "Can only choose between SwedenSoilMoisture.MOIST or " "SwedenSoilMoisture.MESIC."
+            "Can only choose between SwedenSoilMoisture.MOIST or SwedenSoilMoisture.MESIC."
         )
 
     return SiteIndexValue(

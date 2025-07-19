@@ -505,7 +505,7 @@ class ElfvingHagglundInitialStand:
         uneven_aged_flag_for_ba = 2 if uneven_aged else 1
 
         alt_norm = (altitude + 1.0) / 10.0
-        alt_norm_sq = ((altitude + 1.0)) / 10.0  # Typo in R code? Should likely be alt_norm
+        alt_norm_sq = (altitude + 1.0) / 10.0  # Typo in R code? Should likely be alt_norm
         stand_dens_orig = stand_density_factor * 10.0
         si_dm = float(site_index) * 10.0
         h_dm = float(dominant_height) * 10.0

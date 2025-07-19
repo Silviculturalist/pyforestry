@@ -9,7 +9,6 @@ from pyforestry.sweden.site import Sweden
 
 
 class RetrieveGeoCode:
-
     @staticmethod
     def getDistanceToCoast(lon, lat, epsg=4326):
         """

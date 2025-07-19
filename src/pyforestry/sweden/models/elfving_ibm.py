@@ -135,7 +135,11 @@ class ElfvingIBM:
 
     @classmethod
     def calculate_five_year_diameter_increment_cm(
-        cls, species: Union[str, TreeName], *, diameter_cm: float, **kwargs  # Initial diameter
+        cls,
+        species: Union[str, TreeName],
+        *,
+        diameter_cm: float,
+        **kwargs,  # Initial diameter
     ) -> float:
         """Calculate 5-year diameter increment (cm) for a specific tree species.
 

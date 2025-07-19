@@ -67,7 +67,7 @@ class Position:
 
     @staticmethod
     def _set_position(
-        pos_in: Union["Position", tuple[float, float], tuple[float, float, float], None] = None
+        pos_in: Union["Position", tuple[float, float], tuple[float, float, float], None] = None,
     ) -> Optional["Position"]:
         """Standardize input into a Position or return None.
 

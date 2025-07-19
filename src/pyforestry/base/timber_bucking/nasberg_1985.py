@@ -137,7 +137,7 @@ class BuckingResult(Mapping):
                 ax.text(
                     midpoint,
                     section.top_diameter / 2,
-                    f"{section.top_diameter:.1f} cm\n{length:.2f} m\n Vol {section.volume*1000:.0f} $dm^3$\n {section.value:.0f} :-",
+                    f"{section.top_diameter:.1f} cm\n{length:.2f} m\n Vol {section.volume * 1000:.0f} $dm^3$\n {section.value:.0f} :-",
                     ha="center",
                     va="center",
                     fontsize=8,
@@ -254,7 +254,6 @@ class Nasberg_1985_BranchBound:
     def __init__(
         self, timber: Timber, pricelist: Pricelist, taper_class: Optional[Type[Taper]] = None
     ):
-
         self._timber = timber
         self._species = timber.species
         self._taper_class = taper_class or Taper
@@ -410,7 +409,6 @@ class Nasberg_1985_BranchBound:
         zero_f = np.zeros(mod_len, dtype=np.float32)
 
         for left in range(total_dm + 1):
-
             if left > tp_idx and v[left] <= 0:
                 continue
             # vector of right indices for all modules

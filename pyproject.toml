@@ -40,7 +40,6 @@ dev = [
   "pytest-cov",          # measure coverage
   "docstr-coverage",     # docstring coverage
   "coverage",            # coverage engine
-  "black",
   "ruff",
   "build",
   "twine",
@@ -75,15 +74,14 @@ addopts = [
   "--cov-report=html"           # generate htmlcov/
 ]
 
-# --- Black Configuration ---
-[tool.black]
-line-length = 99
-target-version = ['py312']
-
 # --- Ruff Configuration ---
 [tool.ruff]
 line-length = 99
+# Exclude Jupyter notebooks from linting and formatting
+exclude = ["docs/source/notebooks/*"]
 # Enable import-sorting, standard lint rules, and bug-finding
+
+[tool.ruff.lint]
 select = ["E", "F", "W", "I", "B"]
 
 # --- Bumpversion Configuration ---
