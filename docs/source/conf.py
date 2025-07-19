@@ -60,6 +60,6 @@ html_theme_options = {
     "navbar_end": ["theme-switcher", "version-switcher"],
     "switcher": {
         "version_match": DOCS_VERSION,
-        "json_url": "https://silviculturalist.github.io/pyforestry/versions.json",
+        "json_url": "versions.json",
     },
 }
