@@ -33,16 +33,31 @@ jobs:
           python -m pip install --upgrade pip
           pip install --force-reinstall --no-cache-dir .[dev]
 
+      - name: Load coverage threshold
+        run: echo "THRESHOLD=$(cat coverage_threshold.txt)" >> $GITHUB_ENV
+
       - name: Run tests with coverage
+        run: pytest --cov=pyforestry --cov-report=xml --cov-report=html --cov-fail-under=$THRESHOLD
+
+      - name: Update coverage baseline
         run: |
-          if [[ "$GITHUB_REF" == "refs/heads/dev" || "$GITHUB_BASE_REF" == "dev" ]]; then
-            THRESHOLD=90
-          elif [[ "$GITHUB_REF" == "refs/heads/main" || "$GITHUB_BASE_REF" == "main" ]]; then
-            THRESHOLD=80
-          else
-            THRESHOLD=50
+          NEW=$(grep -o 'line-rate="[0-9.]*"' coverage.xml | head -1 | cut -d'"' -f2)
+          NEW=$(python - <<'EOF'
+import sys
+print(int(round(float(sys.argv[1])*100)))
+EOF
+$NEW)
+          CUR=$(cat coverage_threshold.txt)
+          if [ "$NEW" -gt "$CUR" ]; then
+            echo "$NEW" > coverage_threshold.txt
           fi
-          pytest --cov=pyforestry --cov-report=xml --cov-report=html --cov-fail-under=$THRESHOLD
+
+      - name: Commit updated baseline
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update coverage baseline"
+          file_pattern: coverage_threshold.txt
 
       - name: Upload coverage report artifact
         uses: actions/upload-artifact@v4
@@ -74,17 +89,31 @@ jobs:
           # Assuming docstr-coverage is in your dev dependencies
           pip install .[dev]
 
+      - name: Load docstring threshold
+        run: echo "DOC_THRESHOLD=$(cat docstring_threshold.txt)" >> $GITHUB_ENV
+
       - name: Generate docstring coverage badge
-        # Scans the pyforestry package for docstrings and creates a badge
+        run: docstr-coverage src/pyforestry --badge .docstring_coverage.svg --fail-under=$DOC_THRESHOLD | tee docstring.log
+
+      - name: Update docstring baseline
         run: |
-          if [[ "$GITHUB_REF" == "refs/heads/dev" || "$GITHUB_BASE_REF" == "dev" ]]; then
-            THRESHOLD=90
-          elif [[ "$GITHUB_REF" == "refs/heads/main" || "$GITHUB_BASE_REF" == "main" ]]; then
-            THRESHOLD=80
-          else
-            THRESHOLD=0
+          NEW=$(grep -o 'Total coverage: [0-9.]*%' docstring.log | tail -1 | awk '{print $3}' | tr -d '%')
+          NEW=$(python - <<'EOF'
+import sys
+print(int(round(float(sys.argv[1]))))
+EOF
+$NEW)
+          CUR=$(cat docstring_threshold.txt)
+          if [ "$NEW" -gt "$CUR" ]; then
+            echo "$NEW" > docstring_threshold.txt
           fi
-          docstr-coverage src/pyforestry --badge .docstring_coverage.svg --fail-under=$THRESHOLD
+
+      - name: Commit docstring baseline
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update docstring baseline"
+          file_pattern: docstring_threshold.txt
 
       - name: Commit badge
         # Only commit the new badge on pushes to the main branch

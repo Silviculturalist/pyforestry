@@ -92,9 +92,12 @@ coverage report    # summary in terminal
 coverage html      # detailed report in htmlcov/
 ```
 
-Our CI enforces a **50% minimum** coverage threshold. For the `dev` branch we
-strive for **90%** coverage of both tests and docstrings. Releases merged into
-`main` should never drop below **80%**.
+Our CI records the current coverage levels in the files
+`coverage_threshold.txt` and `docstring_threshold.txt`.
+Each pull request must keep coverage at least at these values – ideally it
+should improve them.  The thresholds will gradually rise as the project
+matures, with a long-term goal of **90%** test and documentation coverage.
+Releases merged into `main` must not decrease coverage.
 
 ---
 
@@ -131,7 +134,9 @@ Preview the output in `docs/build/html` before submitting a PR.
    ```
 4. **Commit** your changes with clear, concise messages.
 5. **Push** your branch and open a **Pull Request** against `dev`.
-6. Ensure your PR keeps both **test coverage** and **docstring coverage** above **90%** on the `dev` branch. Pull requests dropping below this bar will be asked to add tests or documentation.
+6. Ensure your PR does not decrease the values in `coverage_threshold.txt` or
+   `docstring_threshold.txt`. Increasing them is encouraged and will raise the
+   baseline for future contributions.
 7. **Respond** to any review feedback. Once all checks pass and reviewers approve, a maintainer will merge your PR into `dev`.
 
 > **Note**
