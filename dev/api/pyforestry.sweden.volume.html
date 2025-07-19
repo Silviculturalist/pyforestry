@@ -1,0 +1,1616 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pyforestry.sweden.volume package &#8212; pyforestry  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/pyforestry.sweden.volume';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://silviculturalist.github.io/pyforestry/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tree species basics" href="../notebooks/tree_species_intro.html" />
+    <link rel="prev" title="pyforestry.sweden.timber package" href="pyforestry.sweden.timber.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pyforestry  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="pyforestry.html">pyforestry package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="pyforestry.base.html">pyforestry.base package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.base.helpers.html">pyforestry.base.helpers package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.base.helpers.primitives.html">pyforestry.base.helpers.primitives package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.base.pricelist.html">pyforestry.base.pricelist package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.base.pricelist.data.html">pyforestry.base.pricelist.data package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.taper.html">pyforestry.base.taper package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.base.timber.html">pyforestry.base.timber package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.base.timber.timber_base.html">pyforestry.base.timber.timber_base package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.timber_bucking.html">pyforestry.base.timber_bucking package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="pyforestry.sweden.html">pyforestry.sweden package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.bark.html">pyforestry.sweden.bark package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html">pyforestry.sweden.biomass package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.geo.html">pyforestry.sweden.geo package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.climate.html">pyforestry.sweden.geo.climate package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.coastline.html">pyforestry.sweden.geo.coastline package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.counties.html">pyforestry.sweden.geo.counties package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.humidity.html">pyforestry.sweden.geo.humidity package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.temperature.html">pyforestry.sweden.geo.temperature package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.helpers.html">pyforestry.sweden.helpers package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.misc.html">pyforestry.sweden.misc package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.models.html">pyforestry.sweden.models package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html">pyforestry.sweden.site package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.siteindex.html">pyforestry.sweden.siteindex package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.sis.html">pyforestry.sweden.siteindex.sis package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.translate.html">pyforestry.sweden.siteindex.translate package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.taper.html">pyforestry.sweden.taper package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.timber.html">pyforestry.sweden.timber package</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">pyforestry.sweden.volume package</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="modules.html" class="nav-link">pyforestry</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="pyforestry.html" class="nav-link">pyforestry package</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="pyforestry.sweden.html" class="nav-link">pyforestry.sweden package</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pyforestry.sweden.volume package</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="pyforestry-sweden-volume-package">
+<h1>pyforestry.sweden.volume package<a class="headerlink" href="#pyforestry-sweden-volume-package" title="Link to this heading">#</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
+</section>
+<section id="module-pyforestry.sweden.volume.andersson_1954">
+<span id="pyforestry-sweden-volume-andersson-1954-module"></span><h2>pyforestry.sweden.volume.andersson_1954 module<a class="headerlink" href="#module-pyforestry.sweden.volume.andersson_1954" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.andersson_1954.andersson_1954_volume_small_trees_birch_height_above_4_m">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.volume.andersson_1954.</span></span><span class="sig-name descname"><span class="pre">andersson_1954_volume_small_trees_birch_height_above_4_m</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/andersson_1954.html#andersson_1954_volume_small_trees_birch_height_above_4_m"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.andersson_1954.andersson_1954_volume_small_trees_birch_height_above_4_m" title="Link to this definition">#</a></dt>
+<dd><p>Andersson 1954 volume for small trees, Birch.</p>
+<dl class="simple">
+<dt>Description:</dt><dd><p>Suitable for trees taller than 4 m.</p>
+</dd>
+<dt>Source:</dt><dd><p>Andersson, S.-O. 1954. Funktioner och tabeller för kubering av småträd.
+Meddelanden från Statens Skogsforskningsinstitut 44:12, 29 s.
+Available: <a class="reference external" href="https://www.skogskunskap.se/rakna-med-verktyg/mata-skogen/volymberakning/volymfunktioner/">https://www.skogskunskap.se/rakna-med-verktyg/mata-skogen/volymberakning/volymfunktioner/</a></p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diameter_cm</strong> (<em>float</em>) – Diameter in cm.</p></li>
+<li><p><strong>height_m</strong> (<em>float</em>) – Height in m.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Volume in m³.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.andersson_1954.andersson_1954_volume_small_trees_birch_under_diameter_5_cm">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.volume.andersson_1954.</span></span><span class="sig-name descname"><span class="pre">andersson_1954_volume_small_trees_birch_under_diameter_5_cm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/andersson_1954.html#andersson_1954_volume_small_trees_birch_under_diameter_5_cm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.andersson_1954.andersson_1954_volume_small_trees_birch_under_diameter_5_cm" title="Link to this definition">#</a></dt>
+<dd><p>Andersson 1954 volume for small trees, Birch.</p>
+<dl class="simple">
+<dt>Description:</dt><dd><p>Suitable for diameters &lt; 5 cm.</p>
+</dd>
+<dt>Source:</dt><dd><p>Andersson, S.-O. 1954. Funktioner och tabeller för kubering av småträd.
+Meddelanden från Statens Skogsforskningsinstitut 44:12, 29 s.
+Available: <a class="reference external" href="https://www.skogskunskap.se/rakna-med-verktyg/mata-skogen/volymberakning/volymfunktioner/">https://www.skogskunskap.se/rakna-med-verktyg/mata-skogen/volymberakning/volymfunktioner/</a></p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diameter_cm</strong> (<em>float</em>) – Diameter in cm.</p></li>
+<li><p><strong>height_m</strong> (<em>float</em>) – Height in m.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Volume in m³.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.andersson_1954.andersson_1954_volume_small_trees_pine">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.volume.andersson_1954.</span></span><span class="sig-name descname"><span class="pre">andersson_1954_volume_small_trees_pine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/andersson_1954.html#andersson_1954_volume_small_trees_pine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.andersson_1954.andersson_1954_volume_small_trees_pine" title="Link to this definition">#</a></dt>
+<dd><p>Andersson 1954 volume for small trees, Pine.</p>
+<dl class="simple">
+<dt>Description:</dt><dd><p>Suitable for diameters &lt; 5 cm.</p>
+</dd>
+<dt>Source:</dt><dd><p>Andersson, S.-O. 1954. Funktioner och tabeller för kubering av småträd.
+Meddelanden från Statens Skogsforskningsinstitut 44:12, 29 s.
+Available: <a class="reference external" href="https://www.skogskunskap.se/rakna-med-verktyg/mata-skogen/volymberakning/volymfunktioner/">https://www.skogskunskap.se/rakna-med-verktyg/mata-skogen/volymberakning/volymfunktioner/</a></p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diameter_cm</strong> (<em>float</em>) – Diameter in cm.</p></li>
+<li><p><strong>height_m</strong> (<em>float</em>) – Height in m.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Volume in m³.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.andersson_1954.andersson_1954_volume_small_trees_spruce">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.volume.andersson_1954.</span></span><span class="sig-name descname"><span class="pre">andersson_1954_volume_small_trees_spruce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/andersson_1954.html#andersson_1954_volume_small_trees_spruce"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.andersson_1954.andersson_1954_volume_small_trees_spruce" title="Link to this definition">#</a></dt>
+<dd><p>Andersson 1954 volume for small trees, Spruce.</p>
+<dl class="simple">
+<dt>Description:</dt><dd><p>Suitable for diameters &lt; 5 cm.</p>
+</dd>
+<dt>Source:</dt><dd><p>Andersson, S.-O. 1954. Funktioner och tabeller för kubering av småträd.
+Meddelanden från Statens Skogsforskningsinstitut 44:12, 29 s.
+Available: <a class="reference external" href="https://www.skogskunskap.se/rakna-med-verktyg/mata-skogen/volymberakning/volymfunktioner/">https://www.skogskunskap.se/rakna-med-verktyg/mata-skogen/volymberakning/volymfunktioner/</a></p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diameter_cm</strong> (<em>float</em>) – Diameter in cm.</p></li>
+<li><p><strong>height_m</strong> (<em>float</em>) – Height in m.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Volume in m³.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-pyforestry.sweden.volume.brandel_1990">
+<span id="pyforestry-sweden-volume-brandel-1990-module"></span><h2>pyforestry.sweden.volume.brandel_1990 module<a class="headerlink" href="#module-pyforestry.sweden.volume.brandel_1990" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.brandel_1990.BrandelVolume">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.volume.brandel_1990.</span></span><span class="sig-name descname"><span class="pre">BrandelVolume</span></span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/brandel_1990.html#BrandelVolume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.brandel_1990.BrandelVolume.BirchSouthWithLatitudeCoeff">
+<span class="sig-name descname"><span class="pre">BirchSouthWithLatitudeCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[0.0,</span> <span class="pre">2.23818,</span> <span class="pre">-1.0693,</span> <span class="pre">6.02015,</span> <span class="pre">-4.51472]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.BirchSouthWithLatitudeCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.brandel_1990.BrandelVolume.BirchSouthWithLatitudeConstant">
+<span class="sig-name descname"><span class="pre">BirchSouthWithLatitudeConstant</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-0.89363,</span> <span class="pre">-0.8548,</span> <span class="pre">-0.84627]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.BirchSouthWithLatitudeConstant" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.brandel_1990.BrandelVolume.NorthBirchCoeff">
+<span class="sig-name descname"><span class="pre">NorthBirchCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-0.44224,</span> <span class="pre">2.4758,</span> <span class="pre">-1.40854,</span> <span class="pre">5.16863,</span> <span class="pre">-3.77147]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.NorthBirchCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.brandel_1990.BrandelVolume.NorthBirchUbCoeff">
+<span class="sig-name descname"><span class="pre">NorthBirchUbCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-0.72541,</span> <span class="pre">2.36594,</span> <span class="pre">-1.10578,</span> <span class="pre">4.76151,</span> <span class="pre">-3.40177]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.NorthBirchUbCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.brandel_1990.BrandelVolume.NorthPineCoeff">
+<span class="sig-name descname"><span class="pre">NorthPineCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-1.20914,</span> <span class="pre">1.9474,</span> <span class="pre">-0.05947,</span> <span class="pre">1.40958,</span> <span class="pre">-0.4581]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.NorthPineCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.brandel_1990.BrandelVolume.NorthPineUbCoeff">
+<span class="sig-name descname"><span class="pre">NorthPineUbCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-1.23242,</span> <span class="pre">1.95242,</span> <span class="pre">-0.05839,</span> <span class="pre">1.1344,</span> <span class="pre">-0.13476]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.NorthPineUbCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.brandel_1990.BrandelVolume.NorthSpruceCoeff">
+<span class="sig-name descname"><span class="pre">NorthSpruceCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-0.79783,</span> <span class="pre">2.07157,</span> <span class="pre">-0.73882,</span> <span class="pre">3.16332,</span> <span class="pre">-1.82622]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.NorthSpruceCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.brandel_1990.BrandelVolume.NorthSpruceUbCoeff">
+<span class="sig-name descname"><span class="pre">NorthSpruceUbCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-0.77561,</span> <span class="pre">2.06126,</span> <span class="pre">-0.77313,</span> <span class="pre">3.2758,</span> <span class="pre">-1.90707]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.NorthSpruceUbCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.brandel_1990.BrandelVolume.PineNorthWithLatitudeCoeff">
+<span class="sig-name descname"><span class="pre">PineNorthWithLatitudeCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[0.0,</span> <span class="pre">1.93867,</span> <span class="pre">-0.04966,</span> <span class="pre">1.81528,</span> <span class="pre">-0.8091]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.PineNorthWithLatitudeCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.brandel_1990.BrandelVolume.PineNorthWithLatitudeConstant">
+<span class="sig-name descname"><span class="pre">PineNorthWithLatitudeConstant</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-1.30052,</span> <span class="pre">-1.29068,</span> <span class="pre">-1.28297,</span> <span class="pre">-1.28213]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.PineNorthWithLatitudeConstant" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.brandel_1990.BrandelVolume.PineSouthWithLatitudeCoeff">
+<span class="sig-name descname"><span class="pre">PineSouthWithLatitudeCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[0.0,</span> <span class="pre">1.83182,</span> <span class="pre">0.07275,</span> <span class="pre">2.12777,</span> <span class="pre">-1.09439]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.PineSouthWithLatitudeCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.brandel_1990.BrandelVolume.PineSouthWithLatitudeConstant">
+<span class="sig-name descname"><span class="pre">PineSouthWithLatitudeConstant</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-1.40718,</span> <span class="pre">-1.41955,</span> <span class="pre">-1.41472]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.PineSouthWithLatitudeConstant" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.brandel_1990.BrandelVolume.SouthBirchCoeff">
+<span class="sig-name descname"><span class="pre">SouthBirchCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-0.89359,</span> <span class="pre">2.27954,</span> <span class="pre">-1.18672,</span> <span class="pre">7.07362,</span> <span class="pre">-5.45175]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.SouthBirchCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.brandel_1990.BrandelVolume.SouthBirchUbCoeff">
+<span class="sig-name descname"><span class="pre">SouthBirchUbCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-1.09667,</span> <span class="pre">2.20855,</span> <span class="pre">-0.85821,</span> <span class="pre">5.81764,</span> <span class="pre">-4.34685]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.SouthBirchUbCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.brandel_1990.BrandelVolume.SouthPineCoeff">
+<span class="sig-name descname"><span class="pre">SouthPineCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-1.38903,</span> <span class="pre">1.84493,</span> <span class="pre">0.06563,</span> <span class="pre">2.02122,</span> <span class="pre">-1.01095]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.SouthPineCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.brandel_1990.BrandelVolume.SouthPineUbCoeff">
+<span class="sig-name descname"><span class="pre">SouthPineUbCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-1.23602,</span> <span class="pre">1.94126,</span> <span class="pre">-0.11924,</span> <span class="pre">1.80842,</span> <span class="pre">-0.74261]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.SouthPineUbCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.brandel_1990.BrandelVolume.SouthSpruceCoeff">
+<span class="sig-name descname"><span class="pre">SouthSpruceCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-1.02039,</span> <span class="pre">2.00128,</span> <span class="pre">-0.47473,</span> <span class="pre">2.87138,</span> <span class="pre">-1.61803]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.SouthSpruceCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.brandel_1990.BrandelVolume.SouthSpruceUbCoeff">
+<span class="sig-name descname"><span class="pre">SouthSpruceUbCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-1.07676,</span> <span class="pre">1.97159,</span> <span class="pre">-0.42776,</span> <span class="pre">2.84877,</span> <span class="pre">-1.5863]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.SouthSpruceUbCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.brandel_1990.BrandelVolume.SpruceNorthWithLatitudeAndAltitudeCoeff">
+<span class="sig-name descname"><span class="pre">SpruceNorthWithLatitudeAndAltitudeCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[0.0,</span> <span class="pre">2.11123,</span> <span class="pre">-0.76342,</span> <span class="pre">3.07608,</span> <span class="pre">-1.78237]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.SpruceNorthWithLatitudeAndAltitudeCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.brandel_1990.BrandelVolume.SpruceNorthWithLatitudeAndAltitudeConstant">
+<span class="sig-name descname"><span class="pre">SpruceNorthWithLatitudeAndAltitudeConstant</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[[-0.7491,</span> <span class="pre">-0.75384,</span> <span class="pre">-0.75549,</span> <span class="pre">-0.7664],</span> <span class="pre">[-0.75208,</span> <span class="pre">-0.75682,</span> <span class="pre">-0.75847,</span> <span class="pre">-0.76938],</span> <span class="pre">[-0.76488,</span> <span class="pre">-0.76962,</span> <span class="pre">-0.77127,</span> <span class="pre">-0.78218]]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.SpruceNorthWithLatitudeAndAltitudeConstant" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.brandel_1990.BrandelVolume.SpruceSouthWithfieldlayerTypeCoeff">
+<span class="sig-name descname"><span class="pre">SpruceSouthWithfieldlayerTypeCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[0.0,</span> <span class="pre">1.99515,</span> <span class="pre">-0.46351,</span> <span class="pre">2.84571,</span> <span class="pre">-1.59871]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.SpruceSouthWithfieldlayerTypeCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.brandel_1990.BrandelVolume.SpruceSouthWithfieldlayerTypeConstant">
+<span class="sig-name descname"><span class="pre">SpruceSouthWithfieldlayerTypeConstant</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-1.01862,</span> <span class="pre">-1.02745,</span> <span class="pre">-1.02651,</span> <span class="pre">-1.03775,</span> <span class="pre">-1.03775,</span> <span class="pre">-1.03775]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.SpruceSouthWithfieldlayerTypeConstant" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.brandel_1990.BrandelVolume.fieldlayerTypeToIndex">
+<span class="sig-name descname"><span class="pre">fieldlayerTypeToIndex</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">3,</span> <span class="pre">3,</span> <span class="pre">4,</span> <span class="pre">5]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.fieldlayerTypeToIndex" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.brandel_1990.BrandelVolume.get_coefficients">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_coefficients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part_of_sweden</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldlayer_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">object</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">over_bark</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/brandel_1990.html#BrandelVolume.get_coefficients"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.get_coefficients" title="Link to this definition">#</a></dt>
+<dd><p>If both altitude and fieldlayer_type are provided, the most detailed remapping is used.
+Otherwise, fallback to a simpler default based solely on latitude:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>if latitude &gt; 60: use North coefficients;</p></li>
+<li><p>else: use South coefficients.</p></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.brandel_1990.BrandelVolume.get_volume">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_volume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_layer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">object</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">over_bark</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/brandel_1990.html#BrandelVolume.get_volume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.get_volume" title="Link to this definition">#</a></dt>
+<dd><p>Main entry point.
+Computes the tree volume (in dm³) for a given species based on:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>diameter_cm: tree diameter in centimeters,</p></li>
+<li><p>height_m: tree height in meters,</p></li>
+<li><p>latitude: site latitude,</p></li>
+<li><p>altitude: site altitude,</p></li>
+<li><p>fieldlayer: fieldlayer type (as int or an object with a ‘code’ attribute),</p></li>
+<li><p>over_bark: over bark flag.</p></li>
+</ul>
+</div></blockquote>
+<dl class="simple">
+<dt>The part_of_sweden is determined from latitude:</dt><dd><p>‘south’ if lat &lt; 57, ‘middle’ if lat &lt; 59, else ‘north’.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.brandel_1990.BrandelVolume.get_volume_log">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_volume_log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coeff</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/brandel_1990.html#BrandelVolume.get_volume_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.get_volume_log" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-pyforestry.sweden.volume.carbonnier_1954">
+<span id="pyforestry-sweden-volume-carbonnier-1954-module"></span><h2>pyforestry.sweden.volume.carbonnier_1954 module<a class="headerlink" href="#module-pyforestry.sweden.volume.carbonnier_1954" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.carbonnier_1954.carbonnier_1954_volume_larch">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.volume.carbonnier_1954.</span></span><span class="sig-name descname"><span class="pre">carbonnier_1954_volume_larch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/carbonnier_1954.html#carbonnier_1954_volume_larch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.carbonnier_1954.carbonnier_1954_volume_larch" title="Link to this definition">#</a></dt>
+<dd><p>Volume of Larch trees, from Carbonnier 1954.</p>
+<dl class="simple">
+<dt>Source:</dt><dd><p>Carbonnier, C. 1954. Funktioner för kubering av europeisk, sibirisk och japansk lärk. MS.
+PM for Heureka 2004-01-20 Björn Elfving.
+Available: <a class="reference external" href="https://www.heurekaslu.org/w/images/9/93/Heureka_prognossystem_(Elfving_rapportutkast).pdf">https://www.heurekaslu.org/w/images/9/93/Heureka_prognossystem_(Elfving_rapportutkast).pdf</a></p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diameter_cm</strong> (<em>float</em>) – Diameter at breast height in cm.</p></li>
+<li><p><strong>height_m</strong> (<em>float</em>) – Height of the tree in meters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Volume of the tree in m³.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-pyforestry.sweden.volume.eriksson_1973">
+<span id="pyforestry-sweden-volume-eriksson-1973-module"></span><h2>pyforestry.sweden.volume.eriksson_1973 module<a class="headerlink" href="#module-pyforestry.sweden.volume.eriksson_1973" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.eriksson_1973.Eriksson_1973_volume_aspen_Sweden">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.volume.eriksson_1973.</span></span><span class="sig-name descname"><span class="pre">Eriksson_1973_volume_aspen_Sweden</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/eriksson_1973.html#Eriksson_1973_volume_aspen_Sweden"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.eriksson_1973.Eriksson_1973_volume_aspen_Sweden" title="Link to this definition">#</a></dt>
+<dd><p>Calculates the volume of a Ash, Aspen, Alnus glutinosa tree in m³ according to Eriksson (1973).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>height</strong> (<em>float</em>) – Tree height in dm.</p></li>
+<li><p><strong>diameter</strong> (<em>float</em>) – Tree diameter in cm.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Calculated volume in m³.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Reference:</dt><dd><p>Eriksson, H. (1973). Volymfunktioner för stående träd av ask, asp, klibbal och contortatall.
+Skogshögskolan, institutionen för skogsproduktion. Rapp. o. Upps. nr 26.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.eriksson_1973.Eriksson_1973_volume_lodgepole_pine_Sweden">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.volume.eriksson_1973.</span></span><span class="sig-name descname"><span class="pre">Eriksson_1973_volume_lodgepole_pine_Sweden</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/eriksson_1973.html#Eriksson_1973_volume_lodgepole_pine_Sweden"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.eriksson_1973.Eriksson_1973_volume_lodgepole_pine_Sweden" title="Link to this definition">#</a></dt>
+<dd><p>Calculates the volume of a Lodgepole Pine tree in m³ according to Eriksson (1973).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>height</strong> (<em>float</em>) – Tree height in dm.</p></li>
+<li><p><strong>diameter</strong> (<em>float</em>) – Tree diameter in cm.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Calculated volume in m³.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Reference:</dt><dd><p>Eriksson, H. (1973). Volymfunktioner för stående träd av ask, asp, klibbal och contortatall.
+Skogshögskolan, institutionen för skogsproduktion. Rapp. o. Upps. nr 26.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-pyforestry.sweden.volume.johnsson_1953">
+<span id="pyforestry-sweden-volume-johnsson-1953-module"></span><h2>pyforestry.sweden.volume.johnsson_1953 module<a class="headerlink" href="#module-pyforestry.sweden.volume.johnsson_1953" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.johnsson_1953.johnsson_1953_volume_hybrid_aspen">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.volume.johnsson_1953.</span></span><span class="sig-name descname"><span class="pre">johnsson_1953_volume_hybrid_aspen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/johnsson_1953.html#johnsson_1953_volume_hybrid_aspen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.johnsson_1953.johnsson_1953_volume_hybrid_aspen" title="Link to this definition">#</a></dt>
+<dd><p>Calculate stem volume for Hybrid Aspen based on Johnsson (1953).</p>
+<p>This function estimates the stem volume over bark for Hybrid Aspen trees in cubic meters
+using diameter at breast height and tree height.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diameter_cm</strong> (<em>float</em>) – Diameter at breast height (cm).</p></li>
+<li><p><strong>height_m</strong> (<em>float</em>) – Height of the tree (meters).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Stem volume over bark (m³).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<p>Johnsson, H. (1953). “Hybridaspens ungdomsutveckling och ett försök till framtidsprognos.”
+Svenska skogsvårdsföreningens tidsskrift. 51:73-96.</p>
+<p>Rytter, L., Stener, L.-G. (2014). “Growth and thinning effects during a rotation period of
+hybrid aspen in southern Sweden.” Scandinavian Journal of Forest Research, Vol. 29, Issue 8,
+pp. 747-756. DOI: <a class="reference external" href="https://doi.org/10.1080/02827581.2014.968202">https://doi.org/10.1080/02827581.2014.968202</a></p>
+</dd></dl>
+
+</section>
+<section id="module-pyforestry.sweden.volume.matern_1975">
+<span id="pyforestry-sweden-volume-matern-1975-module"></span><h2>pyforestry.sweden.volume.matern_1975 module<a class="headerlink" href="#module-pyforestry.sweden.volume.matern_1975" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.matern_1975.matern_1975_volume_sweden_beech">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.volume.matern_1975.</span></span><span class="sig-name descname"><span class="pre">matern_1975_volume_sweden_beech</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/matern_1975.html#matern_1975_volume_sweden_beech"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.matern_1975.matern_1975_volume_sweden_beech" title="Link to this definition">#</a></dt>
+<dd><p>Calculate the volume of Beech trees based on Matérn (1975).</p>
+<p>This function estimates the volume of standing Beech trees in Sweden using
+diameter at breast height and tree height.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diameter_cm</strong> (<em>float</em>) – Diameter at breast height (cm).</p></li>
+<li><p><strong>height_m</strong> (<em>float</em>) – Height of the tree (meters).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Volume of the tree (m³).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<p>Matérn, B. (1975). “Volymfunktioner för stående träd av ek och bok.”
+Skogshögskolan, institutionen för skoglig matematisk statistik. Rapp. o. Upps. nr 15.
+PM for Heureka 2004-01-20 Björn Elfving. Available:
+<a class="reference external" href="https://www.heurekaslu.org/w/images/9/93/Heureka_prognossystem_(Elfving_rapportutkast).pdf">https://www.heurekaslu.org/w/images/9/93/Heureka_prognossystem_(Elfving_rapportutkast).pdf</a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.matern_1975.matern_1975_volume_sweden_oak">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.volume.matern_1975.</span></span><span class="sig-name descname"><span class="pre">matern_1975_volume_sweden_oak</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/matern_1975.html#matern_1975_volume_sweden_oak"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.matern_1975.matern_1975_volume_sweden_oak" title="Link to this definition">#</a></dt>
+<dd><p>Calculate the volume of Oak trees based on Matérn (1975).</p>
+<p>This function estimates the volume of standing Oak trees in Sweden using
+diameter at breast height and tree height.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diameter_cm</strong> (<em>float</em>) – Diameter at breast height (cm).</p></li>
+<li><p><strong>height_m</strong> (<em>float</em>) – Height of the tree (meters).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Volume of the tree (m³).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<p>Matérn, B. (1975). “Volymfunktioner för stående träd av ek och bok.”
+Skogshögskolan, institutionen för skoglig matematisk statistik. Rapp. o. Upps. nr 15.
+PM for Heureka 2004-01-20 Björn Elfving. Available:
+<a class="reference external" href="https://www.heurekaslu.org/w/images/9/93/Heureka_prognossystem_(Elfving_rapportutkast).pdf">https://www.heurekaslu.org/w/images/9/93/Heureka_prognossystem_(Elfving_rapportutkast).pdf</a></p>
+</dd></dl>
+
+</section>
+<section id="module-pyforestry.sweden.volume.naslund_1947">
+<span id="pyforestry-sweden-volume-naslund-1947-module"></span><h2>pyforestry.sweden.volume.naslund_1947 module<a class="headerlink" href="#module-pyforestry.sweden.volume.naslund_1947" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.naslund_1947.NaslundFormFactor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.volume.naslund_1947.</span></span><span class="sig-name descname"><span class="pre">NaslundFormFactor</span></span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/naslund_1947.html#NaslundFormFactor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.naslund_1947.NaslundFormFactor" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.naslund_1947.NaslundFormFactor.calculate">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calculate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double_bark_mm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crown_base_height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">over_bark</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'southern'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/naslund_1947.html#NaslundFormFactor.calculate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.naslund_1947.NaslundFormFactor.calculate" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.naslund_1947.NaslundVolume">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.volume.naslund_1947.</span></span><span class="sig-name descname"><span class="pre">NaslundVolume</span></span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/naslund_1947.html#NaslundVolume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.naslund_1947.NaslundVolume" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.naslund_1947.NaslundVolume.calculate">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calculate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timber</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.sweden.timber.html#pyforestry.sweden.timber.swe_timber.SweTimber" title="pyforestry.sweden.timber.swe_timber.SweTimber"><span class="pre">SweTimber</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/naslund_1947.html#NaslundVolume.calculate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.naslund_1947.NaslundVolume.calculate" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-pyforestry.sweden.volume">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pyforestry.sweden.volume" title="Link to this heading">#</a></h2>
+<p>Lazy-loading interface for Swedish volume models.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.BrandelVolume">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.volume.</span></span><span class="sig-name descname"><span class="pre">BrandelVolume</span></span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/brandel_1990.html#BrandelVolume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.BrandelVolume" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.BrandelVolume.BirchSouthWithLatitudeCoeff">
+<span class="sig-name descname"><span class="pre">BirchSouthWithLatitudeCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[0.0,</span> <span class="pre">2.23818,</span> <span class="pre">-1.0693,</span> <span class="pre">6.02015,</span> <span class="pre">-4.51472]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.BrandelVolume.BirchSouthWithLatitudeCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.BrandelVolume.BirchSouthWithLatitudeConstant">
+<span class="sig-name descname"><span class="pre">BirchSouthWithLatitudeConstant</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-0.89363,</span> <span class="pre">-0.8548,</span> <span class="pre">-0.84627]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.BrandelVolume.BirchSouthWithLatitudeConstant" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.BrandelVolume.NorthBirchCoeff">
+<span class="sig-name descname"><span class="pre">NorthBirchCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-0.44224,</span> <span class="pre">2.4758,</span> <span class="pre">-1.40854,</span> <span class="pre">5.16863,</span> <span class="pre">-3.77147]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.BrandelVolume.NorthBirchCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.BrandelVolume.NorthBirchUbCoeff">
+<span class="sig-name descname"><span class="pre">NorthBirchUbCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-0.72541,</span> <span class="pre">2.36594,</span> <span class="pre">-1.10578,</span> <span class="pre">4.76151,</span> <span class="pre">-3.40177]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.BrandelVolume.NorthBirchUbCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.BrandelVolume.NorthPineCoeff">
+<span class="sig-name descname"><span class="pre">NorthPineCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-1.20914,</span> <span class="pre">1.9474,</span> <span class="pre">-0.05947,</span> <span class="pre">1.40958,</span> <span class="pre">-0.4581]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.BrandelVolume.NorthPineCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.BrandelVolume.NorthPineUbCoeff">
+<span class="sig-name descname"><span class="pre">NorthPineUbCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-1.23242,</span> <span class="pre">1.95242,</span> <span class="pre">-0.05839,</span> <span class="pre">1.1344,</span> <span class="pre">-0.13476]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.BrandelVolume.NorthPineUbCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.BrandelVolume.NorthSpruceCoeff">
+<span class="sig-name descname"><span class="pre">NorthSpruceCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-0.79783,</span> <span class="pre">2.07157,</span> <span class="pre">-0.73882,</span> <span class="pre">3.16332,</span> <span class="pre">-1.82622]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.BrandelVolume.NorthSpruceCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.BrandelVolume.NorthSpruceUbCoeff">
+<span class="sig-name descname"><span class="pre">NorthSpruceUbCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-0.77561,</span> <span class="pre">2.06126,</span> <span class="pre">-0.77313,</span> <span class="pre">3.2758,</span> <span class="pre">-1.90707]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.BrandelVolume.NorthSpruceUbCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.BrandelVolume.PineNorthWithLatitudeCoeff">
+<span class="sig-name descname"><span class="pre">PineNorthWithLatitudeCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[0.0,</span> <span class="pre">1.93867,</span> <span class="pre">-0.04966,</span> <span class="pre">1.81528,</span> <span class="pre">-0.8091]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.BrandelVolume.PineNorthWithLatitudeCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.BrandelVolume.PineNorthWithLatitudeConstant">
+<span class="sig-name descname"><span class="pre">PineNorthWithLatitudeConstant</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-1.30052,</span> <span class="pre">-1.29068,</span> <span class="pre">-1.28297,</span> <span class="pre">-1.28213]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.BrandelVolume.PineNorthWithLatitudeConstant" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.BrandelVolume.PineSouthWithLatitudeCoeff">
+<span class="sig-name descname"><span class="pre">PineSouthWithLatitudeCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[0.0,</span> <span class="pre">1.83182,</span> <span class="pre">0.07275,</span> <span class="pre">2.12777,</span> <span class="pre">-1.09439]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.BrandelVolume.PineSouthWithLatitudeCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.BrandelVolume.PineSouthWithLatitudeConstant">
+<span class="sig-name descname"><span class="pre">PineSouthWithLatitudeConstant</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-1.40718,</span> <span class="pre">-1.41955,</span> <span class="pre">-1.41472]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.BrandelVolume.PineSouthWithLatitudeConstant" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.BrandelVolume.SouthBirchCoeff">
+<span class="sig-name descname"><span class="pre">SouthBirchCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-0.89359,</span> <span class="pre">2.27954,</span> <span class="pre">-1.18672,</span> <span class="pre">7.07362,</span> <span class="pre">-5.45175]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.BrandelVolume.SouthBirchCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.BrandelVolume.SouthBirchUbCoeff">
+<span class="sig-name descname"><span class="pre">SouthBirchUbCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-1.09667,</span> <span class="pre">2.20855,</span> <span class="pre">-0.85821,</span> <span class="pre">5.81764,</span> <span class="pre">-4.34685]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.BrandelVolume.SouthBirchUbCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.BrandelVolume.SouthPineCoeff">
+<span class="sig-name descname"><span class="pre">SouthPineCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-1.38903,</span> <span class="pre">1.84493,</span> <span class="pre">0.06563,</span> <span class="pre">2.02122,</span> <span class="pre">-1.01095]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.BrandelVolume.SouthPineCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.BrandelVolume.SouthPineUbCoeff">
+<span class="sig-name descname"><span class="pre">SouthPineUbCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-1.23602,</span> <span class="pre">1.94126,</span> <span class="pre">-0.11924,</span> <span class="pre">1.80842,</span> <span class="pre">-0.74261]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.BrandelVolume.SouthPineUbCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.BrandelVolume.SouthSpruceCoeff">
+<span class="sig-name descname"><span class="pre">SouthSpruceCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-1.02039,</span> <span class="pre">2.00128,</span> <span class="pre">-0.47473,</span> <span class="pre">2.87138,</span> <span class="pre">-1.61803]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.BrandelVolume.SouthSpruceCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.BrandelVolume.SouthSpruceUbCoeff">
+<span class="sig-name descname"><span class="pre">SouthSpruceUbCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-1.07676,</span> <span class="pre">1.97159,</span> <span class="pre">-0.42776,</span> <span class="pre">2.84877,</span> <span class="pre">-1.5863]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.BrandelVolume.SouthSpruceUbCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.BrandelVolume.SpruceNorthWithLatitudeAndAltitudeCoeff">
+<span class="sig-name descname"><span class="pre">SpruceNorthWithLatitudeAndAltitudeCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[0.0,</span> <span class="pre">2.11123,</span> <span class="pre">-0.76342,</span> <span class="pre">3.07608,</span> <span class="pre">-1.78237]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.BrandelVolume.SpruceNorthWithLatitudeAndAltitudeCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.BrandelVolume.SpruceNorthWithLatitudeAndAltitudeConstant">
+<span class="sig-name descname"><span class="pre">SpruceNorthWithLatitudeAndAltitudeConstant</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[[-0.7491,</span> <span class="pre">-0.75384,</span> <span class="pre">-0.75549,</span> <span class="pre">-0.7664],</span> <span class="pre">[-0.75208,</span> <span class="pre">-0.75682,</span> <span class="pre">-0.75847,</span> <span class="pre">-0.76938],</span> <span class="pre">[-0.76488,</span> <span class="pre">-0.76962,</span> <span class="pre">-0.77127,</span> <span class="pre">-0.78218]]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.BrandelVolume.SpruceNorthWithLatitudeAndAltitudeConstant" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.BrandelVolume.SpruceSouthWithfieldlayerTypeCoeff">
+<span class="sig-name descname"><span class="pre">SpruceSouthWithfieldlayerTypeCoeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[0.0,</span> <span class="pre">1.99515,</span> <span class="pre">-0.46351,</span> <span class="pre">2.84571,</span> <span class="pre">-1.59871]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.BrandelVolume.SpruceSouthWithfieldlayerTypeCoeff" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.BrandelVolume.SpruceSouthWithfieldlayerTypeConstant">
+<span class="sig-name descname"><span class="pre">SpruceSouthWithfieldlayerTypeConstant</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-1.01862,</span> <span class="pre">-1.02745,</span> <span class="pre">-1.02651,</span> <span class="pre">-1.03775,</span> <span class="pre">-1.03775,</span> <span class="pre">-1.03775]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.BrandelVolume.SpruceSouthWithfieldlayerTypeConstant" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.BrandelVolume.fieldlayerTypeToIndex">
+<span class="sig-name descname"><span class="pre">fieldlayerTypeToIndex</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">3,</span> <span class="pre">3,</span> <span class="pre">4,</span> <span class="pre">5]</span></em><a class="headerlink" href="#pyforestry.sweden.volume.BrandelVolume.fieldlayerTypeToIndex" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.BrandelVolume.get_coefficients">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_coefficients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part_of_sweden</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldlayer_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">object</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">over_bark</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/brandel_1990.html#BrandelVolume.get_coefficients"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.BrandelVolume.get_coefficients" title="Link to this definition">#</a></dt>
+<dd><p>If both altitude and fieldlayer_type are provided, the most detailed remapping is used.
+Otherwise, fallback to a simpler default based solely on latitude:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>if latitude &gt; 60: use North coefficients;</p></li>
+<li><p>else: use South coefficients.</p></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.BrandelVolume.get_volume">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_volume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_layer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">object</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">over_bark</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/brandel_1990.html#BrandelVolume.get_volume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.BrandelVolume.get_volume" title="Link to this definition">#</a></dt>
+<dd><p>Main entry point.
+Computes the tree volume (in dm³) for a given species based on:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>diameter_cm: tree diameter in centimeters,</p></li>
+<li><p>height_m: tree height in meters,</p></li>
+<li><p>latitude: site latitude,</p></li>
+<li><p>altitude: site altitude,</p></li>
+<li><p>fieldlayer: fieldlayer type (as int or an object with a ‘code’ attribute),</p></li>
+<li><p>over_bark: over bark flag.</p></li>
+</ul>
+</div></blockquote>
+<dl class="simple">
+<dt>The part_of_sweden is determined from latitude:</dt><dd><p>‘south’ if lat &lt; 57, ‘middle’ if lat &lt; 59, else ‘north’.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.BrandelVolume.get_volume_log">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_volume_log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coeff</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/brandel_1990.html#BrandelVolume.get_volume_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.BrandelVolume.get_volume_log" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.Eriksson_1973_volume_aspen_Sweden">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.volume.</span></span><span class="sig-name descname"><span class="pre">Eriksson_1973_volume_aspen_Sweden</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/eriksson_1973.html#Eriksson_1973_volume_aspen_Sweden"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.Eriksson_1973_volume_aspen_Sweden" title="Link to this definition">#</a></dt>
+<dd><p>Calculates the volume of a Ash, Aspen, Alnus glutinosa tree in m³ according to Eriksson (1973).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>height</strong> (<em>float</em>) – Tree height in dm.</p></li>
+<li><p><strong>diameter</strong> (<em>float</em>) – Tree diameter in cm.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Calculated volume in m³.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Reference:</dt><dd><p>Eriksson, H. (1973). Volymfunktioner för stående träd av ask, asp, klibbal och contortatall.
+Skogshögskolan, institutionen för skogsproduktion. Rapp. o. Upps. nr 26.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.Eriksson_1973_volume_lodgepole_pine_Sweden">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.volume.</span></span><span class="sig-name descname"><span class="pre">Eriksson_1973_volume_lodgepole_pine_Sweden</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/eriksson_1973.html#Eriksson_1973_volume_lodgepole_pine_Sweden"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.Eriksson_1973_volume_lodgepole_pine_Sweden" title="Link to this definition">#</a></dt>
+<dd><p>Calculates the volume of a Lodgepole Pine tree in m³ according to Eriksson (1973).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>height</strong> (<em>float</em>) – Tree height in dm.</p></li>
+<li><p><strong>diameter</strong> (<em>float</em>) – Tree diameter in cm.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Calculated volume in m³.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Reference:</dt><dd><p>Eriksson, H. (1973). Volymfunktioner för stående träd av ask, asp, klibbal och contortatall.
+Skogshögskolan, institutionen för skogsproduktion. Rapp. o. Upps. nr 26.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.NaslundFormFactor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.volume.</span></span><span class="sig-name descname"><span class="pre">NaslundFormFactor</span></span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/naslund_1947.html#NaslundFormFactor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.NaslundFormFactor" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.NaslundFormFactor.calculate">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calculate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double_bark_mm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crown_base_height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">over_bark</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'southern'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/naslund_1947.html#NaslundFormFactor.calculate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.NaslundFormFactor.calculate" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.NaslundVolume">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.volume.</span></span><span class="sig-name descname"><span class="pre">NaslundVolume</span></span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/naslund_1947.html#NaslundVolume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.NaslundVolume" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.NaslundVolume.calculate">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calculate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timber</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.sweden.timber.html#pyforestry.sweden.timber.swe_timber.SweTimber" title="pyforestry.sweden.timber.swe_timber.SweTimber"><span class="pre">SweTimber</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/naslund_1947.html#NaslundVolume.calculate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.NaslundVolume.calculate" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.andersson_1954_volume_small_trees_birch_height_above_4_m">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.volume.</span></span><span class="sig-name descname"><span class="pre">andersson_1954_volume_small_trees_birch_height_above_4_m</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/andersson_1954.html#andersson_1954_volume_small_trees_birch_height_above_4_m"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.andersson_1954_volume_small_trees_birch_height_above_4_m" title="Link to this definition">#</a></dt>
+<dd><p>Andersson 1954 volume for small trees, Birch.</p>
+<dl class="simple">
+<dt>Description:</dt><dd><p>Suitable for trees taller than 4 m.</p>
+</dd>
+<dt>Source:</dt><dd><p>Andersson, S.-O. 1954. Funktioner och tabeller för kubering av småträd.
+Meddelanden från Statens Skogsforskningsinstitut 44:12, 29 s.
+Available: <a class="reference external" href="https://www.skogskunskap.se/rakna-med-verktyg/mata-skogen/volymberakning/volymfunktioner/">https://www.skogskunskap.se/rakna-med-verktyg/mata-skogen/volymberakning/volymfunktioner/</a></p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diameter_cm</strong> (<em>float</em>) – Diameter in cm.</p></li>
+<li><p><strong>height_m</strong> (<em>float</em>) – Height in m.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Volume in m³.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.andersson_1954_volume_small_trees_birch_under_diameter_5_cm">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.volume.</span></span><span class="sig-name descname"><span class="pre">andersson_1954_volume_small_trees_birch_under_diameter_5_cm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/andersson_1954.html#andersson_1954_volume_small_trees_birch_under_diameter_5_cm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.andersson_1954_volume_small_trees_birch_under_diameter_5_cm" title="Link to this definition">#</a></dt>
+<dd><p>Andersson 1954 volume for small trees, Birch.</p>
+<dl class="simple">
+<dt>Description:</dt><dd><p>Suitable for diameters &lt; 5 cm.</p>
+</dd>
+<dt>Source:</dt><dd><p>Andersson, S.-O. 1954. Funktioner och tabeller för kubering av småträd.
+Meddelanden från Statens Skogsforskningsinstitut 44:12, 29 s.
+Available: <a class="reference external" href="https://www.skogskunskap.se/rakna-med-verktyg/mata-skogen/volymberakning/volymfunktioner/">https://www.skogskunskap.se/rakna-med-verktyg/mata-skogen/volymberakning/volymfunktioner/</a></p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diameter_cm</strong> (<em>float</em>) – Diameter in cm.</p></li>
+<li><p><strong>height_m</strong> (<em>float</em>) – Height in m.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Volume in m³.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.andersson_1954_volume_small_trees_pine">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.volume.</span></span><span class="sig-name descname"><span class="pre">andersson_1954_volume_small_trees_pine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/andersson_1954.html#andersson_1954_volume_small_trees_pine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.andersson_1954_volume_small_trees_pine" title="Link to this definition">#</a></dt>
+<dd><p>Andersson 1954 volume for small trees, Pine.</p>
+<dl class="simple">
+<dt>Description:</dt><dd><p>Suitable for diameters &lt; 5 cm.</p>
+</dd>
+<dt>Source:</dt><dd><p>Andersson, S.-O. 1954. Funktioner och tabeller för kubering av småträd.
+Meddelanden från Statens Skogsforskningsinstitut 44:12, 29 s.
+Available: <a class="reference external" href="https://www.skogskunskap.se/rakna-med-verktyg/mata-skogen/volymberakning/volymfunktioner/">https://www.skogskunskap.se/rakna-med-verktyg/mata-skogen/volymberakning/volymfunktioner/</a></p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diameter_cm</strong> (<em>float</em>) – Diameter in cm.</p></li>
+<li><p><strong>height_m</strong> (<em>float</em>) – Height in m.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Volume in m³.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.andersson_1954_volume_small_trees_spruce">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.volume.</span></span><span class="sig-name descname"><span class="pre">andersson_1954_volume_small_trees_spruce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/andersson_1954.html#andersson_1954_volume_small_trees_spruce"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.andersson_1954_volume_small_trees_spruce" title="Link to this definition">#</a></dt>
+<dd><p>Andersson 1954 volume for small trees, Spruce.</p>
+<dl class="simple">
+<dt>Description:</dt><dd><p>Suitable for diameters &lt; 5 cm.</p>
+</dd>
+<dt>Source:</dt><dd><p>Andersson, S.-O. 1954. Funktioner och tabeller för kubering av småträd.
+Meddelanden från Statens Skogsforskningsinstitut 44:12, 29 s.
+Available: <a class="reference external" href="https://www.skogskunskap.se/rakna-med-verktyg/mata-skogen/volymberakning/volymfunktioner/">https://www.skogskunskap.se/rakna-med-verktyg/mata-skogen/volymberakning/volymfunktioner/</a></p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diameter_cm</strong> (<em>float</em>) – Diameter in cm.</p></li>
+<li><p><strong>height_m</strong> (<em>float</em>) – Height in m.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Volume in m³.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.carbonnier_1954_volume_larch">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.volume.</span></span><span class="sig-name descname"><span class="pre">carbonnier_1954_volume_larch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/carbonnier_1954.html#carbonnier_1954_volume_larch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.carbonnier_1954_volume_larch" title="Link to this definition">#</a></dt>
+<dd><p>Volume of Larch trees, from Carbonnier 1954.</p>
+<dl class="simple">
+<dt>Source:</dt><dd><p>Carbonnier, C. 1954. Funktioner för kubering av europeisk, sibirisk och japansk lärk. MS.
+PM for Heureka 2004-01-20 Björn Elfving.
+Available: <a class="reference external" href="https://www.heurekaslu.org/w/images/9/93/Heureka_prognossystem_(Elfving_rapportutkast).pdf">https://www.heurekaslu.org/w/images/9/93/Heureka_prognossystem_(Elfving_rapportutkast).pdf</a></p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diameter_cm</strong> (<em>float</em>) – Diameter at breast height in cm.</p></li>
+<li><p><strong>height_m</strong> (<em>float</em>) – Height of the tree in meters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Volume of the tree in m³.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.johnsson_1953_volume_hybrid_aspen">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.volume.</span></span><span class="sig-name descname"><span class="pre">johnsson_1953_volume_hybrid_aspen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/johnsson_1953.html#johnsson_1953_volume_hybrid_aspen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.johnsson_1953_volume_hybrid_aspen" title="Link to this definition">#</a></dt>
+<dd><p>Calculate stem volume for Hybrid Aspen based on Johnsson (1953).</p>
+<p>This function estimates the stem volume over bark for Hybrid Aspen trees in cubic meters
+using diameter at breast height and tree height.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diameter_cm</strong> (<em>float</em>) – Diameter at breast height (cm).</p></li>
+<li><p><strong>height_m</strong> (<em>float</em>) – Height of the tree (meters).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Stem volume over bark (m³).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<p>Johnsson, H. (1953). “Hybridaspens ungdomsutveckling och ett försök till framtidsprognos.”
+Svenska skogsvårdsföreningens tidsskrift. 51:73-96.</p>
+<p>Rytter, L., Stener, L.-G. (2014). “Growth and thinning effects during a rotation period of
+hybrid aspen in southern Sweden.” Scandinavian Journal of Forest Research, Vol. 29, Issue 8,
+pp. 747-756. DOI: <a class="reference external" href="https://doi.org/10.1080/02827581.2014.968202">https://doi.org/10.1080/02827581.2014.968202</a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.matern_1975_volume_sweden_beech">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.volume.</span></span><span class="sig-name descname"><span class="pre">matern_1975_volume_sweden_beech</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/matern_1975.html#matern_1975_volume_sweden_beech"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.matern_1975_volume_sweden_beech" title="Link to this definition">#</a></dt>
+<dd><p>Calculate the volume of Beech trees based on Matérn (1975).</p>
+<p>This function estimates the volume of standing Beech trees in Sweden using
+diameter at breast height and tree height.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diameter_cm</strong> (<em>float</em>) – Diameter at breast height (cm).</p></li>
+<li><p><strong>height_m</strong> (<em>float</em>) – Height of the tree (meters).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Volume of the tree (m³).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<p>Matérn, B. (1975). “Volymfunktioner för stående träd av ek och bok.”
+Skogshögskolan, institutionen för skoglig matematisk statistik. Rapp. o. Upps. nr 15.
+PM for Heureka 2004-01-20 Björn Elfving. Available:
+<a class="reference external" href="https://www.heurekaslu.org/w/images/9/93/Heureka_prognossystem_(Elfving_rapportutkast).pdf">https://www.heurekaslu.org/w/images/9/93/Heureka_prognossystem_(Elfving_rapportutkast).pdf</a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.sweden.volume.matern_1975_volume_sweden_oak">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.volume.</span></span><span class="sig-name descname"><span class="pre">matern_1975_volume_sweden_oak</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/volume/matern_1975.html#matern_1975_volume_sweden_oak"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.volume.matern_1975_volume_sweden_oak" title="Link to this definition">#</a></dt>
+<dd><p>Calculate the volume of Oak trees based on Matérn (1975).</p>
+<p>This function estimates the volume of standing Oak trees in Sweden using
+diameter at breast height and tree height.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diameter_cm</strong> (<em>float</em>) – Diameter at breast height (cm).</p></li>
+<li><p><strong>height_m</strong> (<em>float</em>) – Height of the tree (meters).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Volume of the tree (m³).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<p>Matérn, B. (1975). “Volymfunktioner för stående träd av ek och bok.”
+Skogshögskolan, institutionen för skoglig matematisk statistik. Rapp. o. Upps. nr 15.
+PM for Heureka 2004-01-20 Björn Elfving. Available:
+<a class="reference external" href="https://www.heurekaslu.org/w/images/9/93/Heureka_prognossystem_(Elfving_rapportutkast).pdf">https://www.heurekaslu.org/w/images/9/93/Heureka_prognossystem_(Elfving_rapportutkast).pdf</a></p>
+</dd></dl>
+
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="pyforestry.sweden.timber.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">pyforestry.sweden.timber package</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../notebooks/tree_species_intro.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Tree species basics</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.sweden.volume.andersson_1954">pyforestry.sweden.volume.andersson_1954 module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.andersson_1954.andersson_1954_volume_small_trees_birch_height_above_4_m"><code class="docutils literal notranslate"><span class="pre">andersson_1954_volume_small_trees_birch_height_above_4_m()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.andersson_1954.andersson_1954_volume_small_trees_birch_under_diameter_5_cm"><code class="docutils literal notranslate"><span class="pre">andersson_1954_volume_small_trees_birch_under_diameter_5_cm()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.andersson_1954.andersson_1954_volume_small_trees_pine"><code class="docutils literal notranslate"><span class="pre">andersson_1954_volume_small_trees_pine()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.andersson_1954.andersson_1954_volume_small_trees_spruce"><code class="docutils literal notranslate"><span class="pre">andersson_1954_volume_small_trees_spruce()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.sweden.volume.brandel_1990">pyforestry.sweden.volume.brandel_1990 module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume"><code class="docutils literal notranslate"><span class="pre">BrandelVolume</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.BirchSouthWithLatitudeCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.BirchSouthWithLatitudeCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.BirchSouthWithLatitudeConstant"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.BirchSouthWithLatitudeConstant</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.NorthBirchCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.NorthBirchCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.NorthBirchUbCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.NorthBirchUbCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.NorthPineCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.NorthPineCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.NorthPineUbCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.NorthPineUbCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.NorthSpruceCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.NorthSpruceCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.NorthSpruceUbCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.NorthSpruceUbCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.PineNorthWithLatitudeCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.PineNorthWithLatitudeCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.PineNorthWithLatitudeConstant"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.PineNorthWithLatitudeConstant</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.PineSouthWithLatitudeCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.PineSouthWithLatitudeCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.PineSouthWithLatitudeConstant"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.PineSouthWithLatitudeConstant</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.SouthBirchCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SouthBirchCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.SouthBirchUbCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SouthBirchUbCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.SouthPineCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SouthPineCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.SouthPineUbCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SouthPineUbCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.SouthSpruceCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SouthSpruceCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.SouthSpruceUbCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SouthSpruceUbCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.SpruceNorthWithLatitudeAndAltitudeCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SpruceNorthWithLatitudeAndAltitudeCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.SpruceNorthWithLatitudeAndAltitudeConstant"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SpruceNorthWithLatitudeAndAltitudeConstant</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.SpruceSouthWithfieldlayerTypeCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SpruceSouthWithfieldlayerTypeCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.SpruceSouthWithfieldlayerTypeConstant"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SpruceSouthWithfieldlayerTypeConstant</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.fieldlayerTypeToIndex"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.fieldlayerTypeToIndex</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.get_coefficients"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.get_coefficients()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.get_volume"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.get_volume()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.brandel_1990.BrandelVolume.get_volume_log"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.get_volume_log()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.sweden.volume.carbonnier_1954">pyforestry.sweden.volume.carbonnier_1954 module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.carbonnier_1954.carbonnier_1954_volume_larch"><code class="docutils literal notranslate"><span class="pre">carbonnier_1954_volume_larch()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.sweden.volume.eriksson_1973">pyforestry.sweden.volume.eriksson_1973 module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.eriksson_1973.Eriksson_1973_volume_aspen_Sweden"><code class="docutils literal notranslate"><span class="pre">Eriksson_1973_volume_aspen_Sweden()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.eriksson_1973.Eriksson_1973_volume_lodgepole_pine_Sweden"><code class="docutils literal notranslate"><span class="pre">Eriksson_1973_volume_lodgepole_pine_Sweden()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.sweden.volume.johnsson_1953">pyforestry.sweden.volume.johnsson_1953 module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.johnsson_1953.johnsson_1953_volume_hybrid_aspen"><code class="docutils literal notranslate"><span class="pre">johnsson_1953_volume_hybrid_aspen()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.sweden.volume.matern_1975">pyforestry.sweden.volume.matern_1975 module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.matern_1975.matern_1975_volume_sweden_beech"><code class="docutils literal notranslate"><span class="pre">matern_1975_volume_sweden_beech()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.matern_1975.matern_1975_volume_sweden_oak"><code class="docutils literal notranslate"><span class="pre">matern_1975_volume_sweden_oak()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.sweden.volume.naslund_1947">pyforestry.sweden.volume.naslund_1947 module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.naslund_1947.NaslundFormFactor"><code class="docutils literal notranslate"><span class="pre">NaslundFormFactor</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.naslund_1947.NaslundFormFactor.calculate"><code class="docutils literal notranslate"><span class="pre">NaslundFormFactor.calculate()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.naslund_1947.NaslundVolume"><code class="docutils literal notranslate"><span class="pre">NaslundVolume</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.naslund_1947.NaslundVolume.calculate"><code class="docutils literal notranslate"><span class="pre">NaslundVolume.calculate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.sweden.volume">Module contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.BrandelVolume"><code class="docutils literal notranslate"><span class="pre">BrandelVolume</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.BrandelVolume.BirchSouthWithLatitudeCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.BirchSouthWithLatitudeCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.BrandelVolume.BirchSouthWithLatitudeConstant"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.BirchSouthWithLatitudeConstant</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.BrandelVolume.NorthBirchCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.NorthBirchCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.BrandelVolume.NorthBirchUbCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.NorthBirchUbCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.BrandelVolume.NorthPineCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.NorthPineCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.BrandelVolume.NorthPineUbCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.NorthPineUbCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.BrandelVolume.NorthSpruceCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.NorthSpruceCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.BrandelVolume.NorthSpruceUbCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.NorthSpruceUbCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.BrandelVolume.PineNorthWithLatitudeCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.PineNorthWithLatitudeCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.BrandelVolume.PineNorthWithLatitudeConstant"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.PineNorthWithLatitudeConstant</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.BrandelVolume.PineSouthWithLatitudeCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.PineSouthWithLatitudeCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.BrandelVolume.PineSouthWithLatitudeConstant"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.PineSouthWithLatitudeConstant</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.BrandelVolume.SouthBirchCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SouthBirchCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.BrandelVolume.SouthBirchUbCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SouthBirchUbCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.BrandelVolume.SouthPineCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SouthPineCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.BrandelVolume.SouthPineUbCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SouthPineUbCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.BrandelVolume.SouthSpruceCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SouthSpruceCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.BrandelVolume.SouthSpruceUbCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SouthSpruceUbCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.BrandelVolume.SpruceNorthWithLatitudeAndAltitudeCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SpruceNorthWithLatitudeAndAltitudeCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.BrandelVolume.SpruceNorthWithLatitudeAndAltitudeConstant"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SpruceNorthWithLatitudeAndAltitudeConstant</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.BrandelVolume.SpruceSouthWithfieldlayerTypeCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SpruceSouthWithfieldlayerTypeCoeff</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.BrandelVolume.SpruceSouthWithfieldlayerTypeConstant"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SpruceSouthWithfieldlayerTypeConstant</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.BrandelVolume.fieldlayerTypeToIndex"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.fieldlayerTypeToIndex</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.BrandelVolume.get_coefficients"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.get_coefficients()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.BrandelVolume.get_volume"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.get_volume()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.BrandelVolume.get_volume_log"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.get_volume_log()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.Eriksson_1973_volume_aspen_Sweden"><code class="docutils literal notranslate"><span class="pre">Eriksson_1973_volume_aspen_Sweden()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.Eriksson_1973_volume_lodgepole_pine_Sweden"><code class="docutils literal notranslate"><span class="pre">Eriksson_1973_volume_lodgepole_pine_Sweden()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.NaslundFormFactor"><code class="docutils literal notranslate"><span class="pre">NaslundFormFactor</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.NaslundFormFactor.calculate"><code class="docutils literal notranslate"><span class="pre">NaslundFormFactor.calculate()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.NaslundVolume"><code class="docutils literal notranslate"><span class="pre">NaslundVolume</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.NaslundVolume.calculate"><code class="docutils literal notranslate"><span class="pre">NaslundVolume.calculate()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.andersson_1954_volume_small_trees_birch_height_above_4_m"><code class="docutils literal notranslate"><span class="pre">andersson_1954_volume_small_trees_birch_height_above_4_m()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.andersson_1954_volume_small_trees_birch_under_diameter_5_cm"><code class="docutils literal notranslate"><span class="pre">andersson_1954_volume_small_trees_birch_under_diameter_5_cm()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.andersson_1954_volume_small_trees_pine"><code class="docutils literal notranslate"><span class="pre">andersson_1954_volume_small_trees_pine()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.andersson_1954_volume_small_trees_spruce"><code class="docutils literal notranslate"><span class="pre">andersson_1954_volume_small_trees_spruce()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.carbonnier_1954_volume_larch"><code class="docutils literal notranslate"><span class="pre">carbonnier_1954_volume_larch()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.johnsson_1953_volume_hybrid_aspen"><code class="docutils literal notranslate"><span class="pre">johnsson_1953_volume_hybrid_aspen()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.matern_1975_volume_sweden_beech"><code class="docutils literal notranslate"><span class="pre">matern_1975_volume_sweden_beech()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.volume.matern_1975_volume_sweden_oak"><code class="docutils literal notranslate"><span class="pre">matern_1975_volume_sweden_oak()</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/pyforestry.sweden.volume.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

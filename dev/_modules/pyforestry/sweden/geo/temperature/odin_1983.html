@@ -1,0 +1,875 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pyforestry.sweden.geo.temperature.odin_1983 &#8212; pyforestry  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyforestry/sweden/geo/temperature/odin_1983';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://silviculturalist.github.io/pyforestry/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pyforestry  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../api/modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../api/modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pyforestry.sweden.geo.temperature.odin_1983</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for pyforestry.sweden.geo.temperature.odin_1983</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+
+
+<div class="viewcode-block" id="Odin_temperature_sum">
+<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.temperature.odin_1983.Odin_temperature_sum">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">Odin_temperature_sum</span><span class="p">(</span><span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">altitude_m</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Estimate annual temperature sum above 5°C.</span>
+
+<span class="sd">    This function calculates the annual temperature sum (in degree-days) above 5 degrees Celsius</span>
+<span class="sd">    based on latitude and altitude. It uses an empirical model developed by Odin, Eriksson,</span>
+<span class="sd">    and Perttu (1983).</span>
+
+<span class="sd">    Source:</span>
+<span class="sd">        Odin, Eriksson &amp; Perttu (1983). &quot;Temperature Climate Maps for Swedish Forestry.&quot;</span>
+<span class="sd">        Reports in Forest Ecology and Forest Soils, 45, p.45.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    latitude : float</span>
+<span class="sd">        Decimal latitude (degrees north).</span>
+<span class="sd">    altitude_m : float</span>
+<span class="sd">        Altitude in meters above sea level.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        Estimated annual temperature sum &gt; 5 degrees Celsius.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="mi">4835</span> <span class="o">-</span> <span class="p">(</span><span class="mf">57.6</span> <span class="o">*</span> <span class="n">latitude</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="mf">0.9</span> <span class="o">*</span> <span class="n">altitude_m</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># moren_perttu_1994_class.py</span>
+
+
+<div class="viewcode-block" id="Moren_Perttu_radiation_1994">
+<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Moren_Perttu_radiation_1994</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">altitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">july_avg_temp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">jan_avg_temp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the class with common geographical and temperature data.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            latitude (float): Latitude in degrees.</span>
+<span class="sd">            altitude (float): Altitude in meters (m).</span>
+<span class="sd">            july_avg_temp (float, optional): Average temperature in July (°C).</span>
+<span class="sd">                                            Required for continentality correction.</span>
+<span class="sd">            jan_avg_temp (float, optional): Average temperature in January (°C).</span>
+<span class="sd">                                            Required for continentality correction.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">latitude</span> <span class="o">=</span> <span class="n">latitude</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">altitude</span> <span class="o">=</span> <span class="n">altitude</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">july_avg_temp</span> <span class="o">=</span> <span class="n">july_avg_temp</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">jan_avg_temp</span> <span class="o">=</span> <span class="n">jan_avg_temp</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_helper_GS1000</span><span class="p">(</span><span class="n">latitude</span><span class="p">,</span> <span class="n">altitude</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">B0</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;B0&quot;</span><span class="p">]</span>
+        <span class="n">B1</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;B1&quot;</span><span class="p">]</span>
+        <span class="n">B2</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;B2&quot;</span><span class="p">]</span>
+        <span class="n">B3</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;B3&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">B0</span> <span class="o">+</span> <span class="n">B1</span> <span class="o">*</span> <span class="n">latitude</span> <span class="o">+</span> <span class="n">B2</span> <span class="o">*</span> <span class="n">altitude</span> <span class="o">+</span> <span class="n">B3</span> <span class="o">*</span> <span class="n">latitude</span> <span class="o">*</span> <span class="n">altitude</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_helper_TS1000</span><span class="p">(</span><span class="n">latitude</span><span class="p">,</span> <span class="n">altitude</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">A0</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;A0&quot;</span><span class="p">]</span>
+        <span class="n">A1</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;A1&quot;</span><span class="p">]</span>
+        <span class="n">A2</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;A2&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">A0</span> <span class="o">+</span> <span class="n">A1</span> <span class="o">*</span> <span class="n">latitude</span> <span class="o">+</span> <span class="n">A2</span> <span class="o">*</span> <span class="n">altitude</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_helper_1500</span><span class="p">(</span><span class="n">latitude</span><span class="p">,</span> <span class="n">altitude</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">x0</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;x0&quot;</span><span class="p">]</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;x1&quot;</span><span class="p">]</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;x2&quot;</span><span class="p">]</span>
+        <span class="n">x3</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;x3&quot;</span><span class="p">]</span>
+        <span class="n">x4</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;x4&quot;</span><span class="p">]</span>
+        <span class="n">x5</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;x5&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">x0</span>
+            <span class="o">+</span> <span class="n">x1</span> <span class="o">*</span> <span class="n">latitude</span>
+            <span class="o">+</span> <span class="n">x2</span> <span class="o">*</span> <span class="n">latitude</span><span class="o">**</span><span class="mi">2</span>
+            <span class="o">+</span> <span class="n">x3</span> <span class="o">*</span> <span class="n">latitude</span> <span class="o">*</span> <span class="n">altitude</span>
+            <span class="o">+</span> <span class="n">x4</span> <span class="o">*</span> <span class="n">altitude</span>
+            <span class="o">+</span> <span class="n">x5</span> <span class="o">*</span> <span class="n">altitude</span><span class="o">**</span><span class="mi">2</span>
+        <span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_helper_global_radiation_clear_day_ratio</span><span class="p">(</span><span class="n">day_number</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">D0</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;D0&quot;</span><span class="p">]</span>
+        <span class="n">D1</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;D1&quot;</span><span class="p">]</span>
+        <span class="n">D2</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;D2&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">D0</span> <span class="o">+</span> <span class="n">D1</span> <span class="o">*</span> <span class="n">day_number</span> <span class="o">+</span> <span class="n">D2</span> <span class="o">*</span> <span class="n">day_number</span><span class="o">**</span><span class="mi">2</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_helper_global_radiation_avg_day_ratio</span><span class="p">(</span><span class="n">day_number</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">E0</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;E0&quot;</span><span class="p">]</span>
+        <span class="n">E1</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;E1&quot;</span><span class="p">]</span>
+        <span class="n">E2</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;E2&quot;</span><span class="p">]</span>
+        <span class="n">E3</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;E3&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">E4</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;E4&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">E5</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;E5&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">E0</span>
+            <span class="o">+</span> <span class="n">E1</span> <span class="o">*</span> <span class="n">day_number</span>
+            <span class="o">+</span> <span class="n">E2</span> <span class="o">*</span> <span class="n">day_number</span><span class="o">**</span><span class="mi">2</span>
+            <span class="o">+</span> <span class="n">E3</span> <span class="o">*</span> <span class="n">day_number</span><span class="o">**</span><span class="mi">3</span>
+            <span class="o">+</span> <span class="n">E4</span> <span class="o">*</span> <span class="n">day_number</span><span class="o">**</span><span class="mi">4</span>
+            <span class="o">+</span> <span class="n">E5</span> <span class="o">*</span> <span class="n">day_number</span><span class="o">**</span><span class="mi">5</span>
+        <span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_helper_global_radiation_sum_growing_season</span><span class="p">(</span><span class="n">latitude</span><span class="p">,</span> <span class="n">altitude</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">F0</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;F0&quot;</span><span class="p">]</span>
+        <span class="n">F1</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;F1&quot;</span><span class="p">]</span>
+        <span class="n">F2</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;F2&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">F0</span> <span class="o">+</span> <span class="n">F1</span> <span class="o">*</span> <span class="n">latitude</span> <span class="o">+</span> <span class="n">F2</span> <span class="o">*</span> <span class="n">altitude</span>
+
+<div class="viewcode-block" id="Moren_Perttu_radiation_1994.get_gorczynski_continentality_index">
+<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.get_gorczynski_continentality_index">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_gorczynski_continentality_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># Renamed for clarity as a &quot;getter&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates the Gorczynski continentality index using instance data.</span>
+<span class="sd">        Tmax is July average temp, Tmin is January average temp.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            float: Continentality index C.</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If July or January temperatures are not set in the instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">july_avg_temp</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">jan_avg_temp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;July and January average temperatures must be provided during initialization to calculate continentality.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">latitude</span> <span class="o">&lt;</span> <span class="mi">90</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Latitude must be between 0 and 90 degrees for this formula.&quot;</span><span class="p">)</span>
+        <span class="c1"># Formula from page 7: C = 1.7 * (Tmax - Tmin) / sin(lat) - 20.4 [cite: 100]</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="mf">1.7</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">july_avg_temp</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">jan_avg_temp</span><span class="p">)</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">))</span>
+            <span class="o">-</span> <span class="mf">20.4</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Moren_Perttu_radiation_1994.calculate_temperature_sum_1000m">
+<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.calculate_temperature_sum_1000m">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_temperature_sum_1000m</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold_temperature</span><span class="p">):</span>
+        <span class="n">coeffs_A</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;A0&quot;</span><span class="p">:</span> <span class="mf">8279.3</span><span class="p">,</span> <span class="s2">&quot;A1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">98.115</span><span class="p">,</span> <span class="s2">&quot;A2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.131</span><span class="p">},</span>
+            <span class="mi">3</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;A0&quot;</span><span class="p">:</span> <span class="mf">6126.4</span><span class="p">,</span> <span class="s2">&quot;A1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">73.813</span><span class="p">,</span> <span class="s2">&quot;A2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.951</span><span class="p">},</span>
+            <span class="mi">5</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;A0&quot;</span><span class="p">:</span> <span class="mf">4922.1</span><span class="p">,</span> <span class="s2">&quot;A1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">60.367</span><span class="p">,</span> <span class="s2">&quot;A2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.837</span><span class="p">},</span>
+            <span class="mi">6</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;A0&quot;</span><span class="p">:</span> <span class="mf">4362.4</span><span class="p">,</span> <span class="s2">&quot;A1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">54.059</span><span class="p">,</span> <span class="s2">&quot;A2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.779</span><span class="p">},</span>
+            <span class="mi">8</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;A0&quot;</span><span class="p">:</span> <span class="mf">3320.9</span><span class="p">,</span> <span class="s2">&quot;A1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">42.172</span><span class="p">,</span> <span class="s2">&quot;A2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.653</span><span class="p">},</span>
+            <span class="mi">10</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;A0&quot;</span><span class="p">:</span> <span class="mf">2373.1</span><span class="p">,</span> <span class="s2">&quot;A1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">31.056</span><span class="p">,</span> <span class="s2">&quot;A2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.520</span><span class="p">},</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">threshold_temperature</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">coeffs_A</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid threshold_temperature. Available: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">coeffs_A</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Moren_Perttu_radiation_1994</span><span class="o">.</span><span class="n">_helper_TS1000</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">altitude</span><span class="p">,</span> <span class="o">**</span><span class="n">coeffs_A</span><span class="p">[</span><span class="n">threshold_temperature</span><span class="p">]</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Moren_Perttu_radiation_1994.calculate_growing_season_duration_1000m">
+<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.calculate_growing_season_duration_1000m">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_growing_season_duration_1000m</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold_temperature</span><span class="p">):</span>
+        <span class="n">coeffs_B</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;B0&quot;</span><span class="p">:</span> <span class="mf">894.2</span><span class="p">,</span> <span class="s2">&quot;B1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">10.678</span><span class="p">,</span> <span class="s2">&quot;B2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.780</span><span class="p">,</span> <span class="s2">&quot;B3&quot;</span><span class="p">:</span> <span class="mf">0.01147</span><span class="p">},</span>
+            <span class="mi">3</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;B0&quot;</span><span class="p">:</span> <span class="mf">695.7</span><span class="p">,</span> <span class="s2">&quot;B1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">8.050</span><span class="p">,</span> <span class="s2">&quot;B2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.432</span><span class="p">,</span> <span class="s2">&quot;B3&quot;</span><span class="p">:</span> <span class="mf">0.00600</span><span class="p">},</span>
+            <span class="mi">5</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;B0&quot;</span><span class="p">:</span> <span class="mf">597.6</span><span class="p">,</span> <span class="s2">&quot;B1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">6.823</span><span class="p">,</span> <span class="s2">&quot;B2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.225</span><span class="p">,</span> <span class="s2">&quot;B3&quot;</span><span class="p">:</span> <span class="mf">0.00268</span><span class="p">},</span>
+            <span class="mi">6</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;B0&quot;</span><span class="p">:</span> <span class="mf">562.8</span><span class="p">,</span> <span class="s2">&quot;B1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">6.432</span><span class="p">,</span> <span class="s2">&quot;B2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.170</span><span class="p">,</span> <span class="s2">&quot;B3&quot;</span><span class="p">:</span> <span class="mf">0.00175</span><span class="p">},</span>
+            <span class="mi">8</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;B0&quot;</span><span class="p">:</span> <span class="mf">508.0</span><span class="p">,</span> <span class="s2">&quot;B1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">5.909</span><span class="p">,</span> <span class="s2">&quot;B2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.131</span><span class="p">,</span> <span class="s2">&quot;B3&quot;</span><span class="p">:</span> <span class="mf">0.00106</span><span class="p">},</span>
+            <span class="mi">10</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;B0&quot;</span><span class="p">:</span> <span class="mf">445.6</span><span class="p">,</span> <span class="s2">&quot;B1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">5.271</span><span class="p">,</span> <span class="s2">&quot;B2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.021</span><span class="p">,</span> <span class="s2">&quot;B3&quot;</span><span class="p">:</span> <span class="mf">0.00081</span><span class="p">},</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">threshold_temperature</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">coeffs_B</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid threshold_temperature. Available: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">coeffs_B</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Moren_Perttu_radiation_1994</span><span class="o">.</span><span class="n">_helper_GS1000</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">altitude</span><span class="p">,</span> <span class="o">**</span><span class="n">coeffs_B</span><span class="p">[</span><span class="n">threshold_temperature</span><span class="p">]</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Moren_Perttu_radiation_1994.calculate_temperature_sum_1500m">
+<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.calculate_temperature_sum_1500m">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_temperature_sum_1500m</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold_temperature</span><span class="p">):</span>
+        <span class="n">coeffs_a</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="mi">0</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;x0&quot;</span><span class="p">:</span> <span class="mf">8116.4</span><span class="p">,</span>
+                <span class="s2">&quot;x1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">80.85</span><span class="p">,</span>
+                <span class="s2">&quot;x2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.240</span><span class="p">,</span>
+                <span class="s2">&quot;x3&quot;</span><span class="p">:</span> <span class="mf">0.07762</span><span class="p">,</span>
+                <span class="s2">&quot;x4&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">5.947</span><span class="p">,</span>
+                <span class="s2">&quot;x5&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.000075</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="mi">3</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;x0&quot;</span><span class="p">:</span> <span class="mf">4790.6</span><span class="p">,</span>
+                <span class="s2">&quot;x1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">22.51</span><span class="p">,</span>
+                <span class="s2">&quot;x2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.482</span><span class="p">,</span>
+                <span class="s2">&quot;x3&quot;</span><span class="p">:</span> <span class="mf">0.04992</span><span class="p">,</span>
+                <span class="s2">&quot;x4&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">4.026</span><span class="p">,</span>
+                <span class="s2">&quot;x5&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.000082</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="mi">5</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;x0&quot;</span><span class="p">:</span> <span class="mf">3635.3</span><span class="p">,</span>
+                <span class="s2">&quot;x1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">12.18</span><span class="p">,</span>
+                <span class="s2">&quot;x2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.444</span><span class="p">,</span>
+                <span class="s2">&quot;x3&quot;</span><span class="p">:</span> <span class="mf">0.04041</span><span class="p">,</span>
+                <span class="s2">&quot;x4&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">3.343</span><span class="p">,</span>
+                <span class="s2">&quot;x5&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.000040</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="mi">6</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;x0&quot;</span><span class="p">:</span> <span class="mf">3187.3</span><span class="p">,</span>
+                <span class="s2">&quot;x1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">10.10</span><span class="p">,</span>
+                <span class="s2">&quot;x2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.404</span><span class="p">,</span>
+                <span class="s2">&quot;x3&quot;</span><span class="p">:</span> <span class="mf">0.03691</span><span class="p">,</span>
+                <span class="s2">&quot;x4&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">3.089</span><span class="p">,</span>
+                <span class="s2">&quot;x5&quot;</span><span class="p">:</span> <span class="mf">0.000004</span><span class="p">,</span>
+            <span class="p">},</span>  <span class="c1"># As per Table 2b [cite: 117]</span>
+            <span class="mi">8</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;x0&quot;</span><span class="p">:</span> <span class="mf">2385.1</span><span class="p">,</span>
+                <span class="s2">&quot;x1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">7.07</span><span class="p">,</span>
+                <span class="s2">&quot;x2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.322</span><span class="p">,</span>
+                <span class="s2">&quot;x3&quot;</span><span class="p">:</span> <span class="mf">0.03101</span><span class="p">,</span>
+                <span class="s2">&quot;x4&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.659</span><span class="p">,</span>
+                <span class="s2">&quot;x5&quot;</span><span class="p">:</span> <span class="mf">0.000099</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="mi">10</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;x0&quot;</span><span class="p">:</span> <span class="mf">1633.3</span><span class="p">,</span>
+                <span class="s2">&quot;x1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.90</span><span class="p">,</span>
+                <span class="s2">&quot;x2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.260</span><span class="p">,</span>
+                <span class="s2">&quot;x3&quot;</span><span class="p">:</span> <span class="mf">0.02809</span><span class="p">,</span>
+                <span class="s2">&quot;x4&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.389</span><span class="p">,</span>
+                <span class="s2">&quot;x5&quot;</span><span class="p">:</span> <span class="mf">0.000173</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">threshold_temperature</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">coeffs_a</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid threshold_temperature. Available: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">coeffs_a</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Moren_Perttu_radiation_1994</span><span class="o">.</span><span class="n">_helper_1500</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">altitude</span><span class="p">,</span> <span class="o">**</span><span class="n">coeffs_a</span><span class="p">[</span><span class="n">threshold_temperature</span><span class="p">]</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Moren_Perttu_radiation_1994.calculate_growing_season_duration_1500m">
+<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.calculate_growing_season_duration_1500m">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_growing_season_duration_1500m</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold_temperature</span><span class="p">):</span>
+        <span class="n">coeffs_b</span> <span class="o">=</span> <span class="p">{</span>  <span class="c1"># From Table 3b [cite: 136]</span>
+            <span class="mi">0</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;x0&quot;</span><span class="p">:</span> <span class="mf">1339.7</span><span class="p">,</span>
+                <span class="s2">&quot;x1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">25.417</span><span class="p">,</span>
+                <span class="s2">&quot;x2&quot;</span><span class="p">:</span> <span class="mf">0.122</span><span class="p">,</span>
+                <span class="s2">&quot;x3&quot;</span><span class="p">:</span> <span class="mf">0.00978</span><span class="p">,</span>
+                <span class="s2">&quot;x4&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.687</span><span class="p">,</span>
+                <span class="s2">&quot;x5&quot;</span><span class="p">:</span> <span class="mf">0.000011</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="mi">3</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;x0&quot;</span><span class="p">:</span> <span class="mf">716.5</span><span class="p">,</span>
+                <span class="s2">&quot;x1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">8.681</span><span class="p">,</span>
+                <span class="s2">&quot;x2&quot;</span><span class="p">:</span> <span class="mf">0.005</span><span class="p">,</span>
+                <span class="s2">&quot;x3&quot;</span><span class="p">:</span> <span class="mf">0.00618</span><span class="p">,</span>
+                <span class="s2">&quot;x4&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.436</span><span class="p">,</span>
+                <span class="s2">&quot;x5&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.000013</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="mi">5</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;x0&quot;</span><span class="p">:</span> <span class="mf">474.5</span><span class="p">,</span>
+                <span class="s2">&quot;x1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.601</span><span class="p">,</span>
+                <span class="s2">&quot;x2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.036</span><span class="p">,</span>
+                <span class="s2">&quot;x3&quot;</span><span class="p">:</span> <span class="mf">0.00376</span><span class="p">,</span>
+                <span class="s2">&quot;x4&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.275</span><span class="p">,</span>
+                <span class="s2">&quot;x5&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.000029</span><span class="p">,</span>
+            <span class="p">},</span>  <span class="c1"># x2 corrected to -0.036 based on Eq 13b [cite: 128]</span>
+            <span class="mi">6</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;x0&quot;</span><span class="p">:</span> <span class="mf">422.2</span><span class="p">,</span>
+                <span class="s2">&quot;x1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.546</span><span class="p">,</span>
+                <span class="s2">&quot;x2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.043</span><span class="p">,</span>
+                <span class="s2">&quot;x3&quot;</span><span class="p">:</span> <span class="mf">0.00327</span><span class="p">,</span>
+                <span class="s2">&quot;x4&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.236</span><span class="p">,</span>
+                <span class="s2">&quot;x5&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.000047</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="mi">8</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;x0&quot;</span><span class="p">:</span> <span class="mf">397.1</span><span class="p">,</span>
+                <span class="s2">&quot;x1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.017</span><span class="p">,</span>
+                <span class="s2">&quot;x2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.034</span><span class="p">,</span>
+                <span class="s2">&quot;x3&quot;</span><span class="p">:</span> <span class="mf">0.00243</span><span class="p">,</span>
+                <span class="s2">&quot;x4&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.187</span><span class="p">,</span>
+                <span class="s2">&quot;x5&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.000045</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="mi">10</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;x0&quot;</span><span class="p">:</span> <span class="mf">349.1</span><span class="p">,</span>
+                <span class="s2">&quot;x1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.928</span><span class="p">,</span>
+                <span class="s2">&quot;x2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.029</span><span class="p">,</span>
+                <span class="s2">&quot;x3&quot;</span><span class="p">:</span> <span class="mf">0.00018</span><span class="p">,</span>
+                <span class="s2">&quot;x4&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.064</span><span class="p">,</span>
+                <span class="s2">&quot;x5&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.000030</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">threshold_temperature</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">coeffs_b</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid threshold_temperature. Available: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">coeffs_b</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Moren_Perttu_radiation_1994</span><span class="o">.</span><span class="n">_helper_1500</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">altitude</span><span class="p">,</span> <span class="o">**</span><span class="n">coeffs_b</span><span class="p">[</span><span class="n">threshold_temperature</span><span class="p">]</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Moren_Perttu_radiation_1994.get_corrected_temperature_sum">
+<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.get_corrected_temperature_sum">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_corrected_temperature_sum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold_temperature</span><span class="p">,</span> <span class="n">for_1500m_model</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">for_1500m_model</span><span class="p">:</span>
+            <span class="n">base_ts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_temperature_sum_1500m</span><span class="p">(</span><span class="n">threshold_temperature</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">base_ts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_temperature_sum_1000m</span><span class="p">(</span><span class="n">threshold_temperature</span><span class="p">)</span>
+        <span class="n">continentality_index_C</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_gorczynski_continentality_index</span><span class="p">()</span>
+        <span class="n">correction</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Based on page 14 [cite: 191]</span>
+        <span class="k">if</span> <span class="n">continentality_index_C</span> <span class="o">&lt;</span> <span class="mf">12.4</span><span class="p">:</span>
+            <span class="n">correction</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span>
+        <span class="k">elif</span> <span class="mf">12.4</span> <span class="o">&lt;=</span> <span class="n">continentality_index_C</span> <span class="o">&lt;</span> <span class="mf">18.5</span><span class="p">:</span>
+            <span class="n">correction</span> <span class="o">=</span> <span class="o">-</span><span class="mi">50</span>
+        <span class="k">elif</span> <span class="mf">18.5</span> <span class="o">&lt;=</span> <span class="n">continentality_index_C</span> <span class="o">&lt;</span> <span class="mf">27.5</span><span class="p">:</span>
+            <span class="n">correction</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">elif</span> <span class="mf">27.5</span> <span class="o">&lt;=</span> <span class="n">continentality_index_C</span> <span class="o">&lt;</span> <span class="mf">33.5</span><span class="p">:</span>
+            <span class="n">correction</span> <span class="o">=</span> <span class="mi">50</span>
+        <span class="k">elif</span> <span class="n">continentality_index_C</span> <span class="o">&gt;=</span> <span class="mf">33.5</span><span class="p">:</span>
+            <span class="n">correction</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="k">return</span> <span class="n">base_ts</span> <span class="o">+</span> <span class="n">correction</span></div>
+
+
+<div class="viewcode-block" id="Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_clear_sky">
+<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_clear_sky">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_ratio_global_to_extraterrestrial_radiation_clear_sky</span><span class="p">(</span><span class="n">day_number</span><span class="p">,</span> <span class="n">region</span><span class="p">):</span>
+        <span class="c1"># Using D1 = -0.000403 for North, (105,273) based on user&#39;s implied coefficient from test result</span>
+        <span class="n">coeffs_D</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;North&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">104</span><span class="p">):</span> <span class="p">{</span><span class="s2">&quot;D0&quot;</span><span class="p">:</span> <span class="mf">0.521</span><span class="p">,</span> <span class="s2">&quot;D1&quot;</span><span class="p">:</span> <span class="mf">0.002681</span><span class="p">},</span>
+                <span class="p">(</span><span class="mi">105</span><span class="p">,</span> <span class="mi">273</span><span class="p">):</span> <span class="p">{</span><span class="s2">&quot;D0&quot;</span><span class="p">:</span> <span class="mf">0.840</span><span class="p">,</span> <span class="s2">&quot;D1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.000403</span><span class="p">},</span>  <span class="c1"># Corrected D1</span>
+                <span class="p">(</span><span class="mi">274</span><span class="p">,</span> <span class="mi">365</span><span class="p">):</span> <span class="p">{</span><span class="s2">&quot;D0&quot;</span><span class="p">:</span> <span class="mf">1.447</span><span class="p">,</span> <span class="s2">&quot;D1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.002650</span><span class="p">},</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;South&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">104</span><span class="p">):</span> <span class="p">{</span><span class="s2">&quot;D0&quot;</span><span class="p">:</span> <span class="mf">0.589</span><span class="p">,</span> <span class="s2">&quot;D1&quot;</span><span class="p">:</span> <span class="mf">0.001833</span><span class="p">},</span>
+                <span class="p">(</span><span class="mi">105</span><span class="p">,</span> <span class="mi">273</span><span class="p">):</span> <span class="p">{</span><span class="s2">&quot;D0&quot;</span><span class="p">:</span> <span class="mf">0.792</span><span class="p">,</span> <span class="s2">&quot;D1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.000167</span><span class="p">},</span>
+                <span class="p">(</span><span class="mi">274</span><span class="p">,</span> <span class="mi">365</span><span class="p">):</span> <span class="p">{</span><span class="s2">&quot;D0&quot;</span><span class="p">:</span> <span class="mf">2.528</span><span class="p">,</span> <span class="s2">&quot;D1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.010294</span><span class="p">,</span> <span class="s2">&quot;D2&quot;</span><span class="p">:</span> <span class="mf">0.137e-4</span><span class="p">},</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">region</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">coeffs_D</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid region. Available: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">coeffs_D</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">selected_coeffs</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">start_day</span><span class="p">,</span> <span class="n">end_day</span><span class="p">),</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">coeffs_D</span><span class="p">[</span><span class="n">region</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">start_day</span> <span class="o">&lt;=</span> <span class="n">day_number</span> <span class="o">&lt;=</span> <span class="n">end_day</span><span class="p">:</span>
+                <span class="n">selected_coeffs</span> <span class="o">=</span> <span class="n">c</span>
+                <span class="k">break</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">selected_coeffs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">day_number</span> <span class="o">==</span> <span class="mi">366</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="mi">274</span><span class="p">,</span> <span class="mi">365</span><span class="p">)</span> <span class="ow">in</span> <span class="n">coeffs_D</span><span class="p">[</span><span class="n">region</span><span class="p">]:</span>
+                    <span class="n">selected_coeffs</span> <span class="o">=</span> <span class="n">coeffs_D</span><span class="p">[</span><span class="n">region</span><span class="p">][(</span><span class="mi">274</span><span class="p">,</span> <span class="mi">365</span><span class="p">)]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Coefficient data for leap day (day 366) in region </span><span class="si">{</span><span class="n">region</span><span class="si">}</span><span class="s2"> not defined.&quot;</span>
+                    <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Day number </span><span class="si">{</span><span class="n">day_number</span><span class="si">}</span><span class="s2"> out of defined ranges for region </span><span class="si">{</span><span class="n">region</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+        <span class="k">return</span> <span class="n">Moren_Perttu_radiation_1994</span><span class="o">.</span><span class="n">_helper_global_radiation_clear_day_ratio</span><span class="p">(</span>
+            <span class="n">day_number</span><span class="p">,</span> <span class="o">**</span><span class="n">selected_coeffs</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_average_sky">
+<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_average_sky">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_ratio_global_to_extraterrestrial_radiation_average_sky</span><span class="p">(</span><span class="n">day_number</span><span class="p">,</span> <span class="n">region</span><span class="p">):</span>
+        <span class="n">coeffs_E</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;North&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;E0&quot;</span><span class="p">:</span> <span class="mf">0.338</span><span class="p">,</span>
+                <span class="s2">&quot;E1&quot;</span><span class="p">:</span> <span class="mf">0.114e-2</span><span class="p">,</span>
+                <span class="s2">&quot;E2&quot;</span><span class="p">:</span> <span class="mf">0.244e-4</span><span class="p">,</span>
+                <span class="s2">&quot;E3&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.316e-6</span><span class="p">,</span>
+                <span class="s2">&quot;E4&quot;</span><span class="p">:</span> <span class="mf">0.115e-8</span><span class="p">,</span>
+                <span class="s2">&quot;E5&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.134e-11</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;South&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;E0&quot;</span><span class="p">:</span> <span class="mf">0.246</span><span class="p">,</span> <span class="s2">&quot;E1&quot;</span><span class="p">:</span> <span class="mf">0.243e-2</span><span class="p">,</span> <span class="s2">&quot;E2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.658e-5</span><span class="p">},</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">region</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">coeffs_E</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid region. Available: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">coeffs_E</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Moren_Perttu_radiation_1994</span><span class="o">.</span><span class="n">_helper_global_radiation_avg_day_ratio</span><span class="p">(</span>
+            <span class="n">day_number</span><span class="p">,</span> <span class="o">**</span><span class="n">coeffs_E</span><span class="p">[</span><span class="n">region</span><span class="p">]</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Moren_Perttu_radiation_1994.calculate_global_radiation_sum_growing_season">
+<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.calculate_global_radiation_sum_growing_season">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_global_radiation_sum_growing_season</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold_temperature</span><span class="p">):</span>
+        <span class="n">coeffs_F</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;F0&quot;</span><span class="p">:</span> <span class="mf">6.9712</span><span class="p">,</span> <span class="s2">&quot;F1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.0667</span><span class="p">,</span> <span class="s2">&quot;F2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.00070</span><span class="p">},</span>  <span class="c1"># Table 7 [cite: 183]</span>
+            <span class="mi">3</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;F0&quot;</span><span class="p">:</span> <span class="mf">7.1453</span><span class="p">,</span> <span class="s2">&quot;F1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.0731</span><span class="p">,</span> <span class="s2">&quot;F2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.00073</span><span class="p">},</span>
+            <span class="mi">5</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;F0&quot;</span><span class="p">:</span> <span class="mf">7.2774</span><span class="p">,</span> <span class="s2">&quot;F1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.0782</span><span class="p">,</span> <span class="s2">&quot;F2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.00072</span><span class="p">},</span>  <span class="c1"># F2 from Eq 17 [cite: 174]</span>
+            <span class="mi">6</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;F0&quot;</span><span class="p">:</span> <span class="mf">7.3684</span><span class="p">,</span> <span class="s2">&quot;F1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.0813</span><span class="p">,</span> <span class="s2">&quot;F2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.00069</span><span class="p">},</span>
+            <span class="mi">8</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;F0&quot;</span><span class="p">:</span> <span class="mf">7.4295</span><span class="p">,</span> <span class="s2">&quot;F1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.0858</span><span class="p">,</span> <span class="s2">&quot;F2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.00073</span><span class="p">},</span>
+            <span class="mi">10</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;F0&quot;</span><span class="p">:</span> <span class="mf">7.6033</span><span class="p">,</span> <span class="s2">&quot;F1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.0932</span><span class="p">,</span> <span class="s2">&quot;F2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.00075</span><span class="p">},</span>  <span class="c1"># F1 for 10C corrected to negative</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">threshold_temperature</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">coeffs_F</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid threshold_temperature. Available: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">coeffs_F</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Moren_Perttu_radiation_1994</span><span class="o">.</span><span class="n">_helper_global_radiation_sum_growing_season</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">altitude</span><span class="p">,</span> <span class="o">**</span><span class="n">coeffs_F</span><span class="p">[</span><span class="n">threshold_temperature</span><span class="p">]</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Moren_Perttu_radiation_1994.get_growing_season_start_day">
+<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.get_growing_season_start_day">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_growing_season_start_day</span><span class="p">(</span><span class="n">latitude_deg</span><span class="p">,</span> <span class="n">altitude_m</span><span class="p">):</span>
+        <span class="n">start_day</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="o">-</span><span class="mf">35.760</span>
+            <span class="o">+</span> <span class="mf">2.489</span> <span class="o">*</span> <span class="n">latitude_deg</span>
+            <span class="o">-</span> <span class="mf">0.0637</span> <span class="o">*</span> <span class="n">altitude_m</span>
+            <span class="o">+</span> <span class="mf">0.00132</span> <span class="o">*</span> <span class="n">latitude_deg</span> <span class="o">*</span> <span class="n">altitude_m</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">start_day</span><span class="p">))</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

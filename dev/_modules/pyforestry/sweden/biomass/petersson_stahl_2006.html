@@ -1,0 +1,844 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pyforestry.sweden.biomass.petersson_stahl_2006 &#8212; pyforestry  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyforestry/sweden/biomass/petersson_stahl_2006';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://silviculturalist.github.io/pyforestry/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pyforestry  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../api/modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../api/modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pyforestry.sweden.biomass.petersson_stahl_2006</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for pyforestry.sweden.biomass.petersson_stahl_2006</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+
+<div class="viewcode-block" id="PeterssonStahl2006">
+<a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PeterssonStahl2006</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Functions for below-ground biomass of birch, pine, and spruce in Sweden.</span>
+
+<span class="sd">    This class implements a series of allometric functions to calculate the</span>
+<span class="sd">    below-ground biomass (stump and roots) for several common tree species</span>
+<span class="sd">    in Sweden: Betula (birch), Pinus sylvestris (Scots pine), and</span>
+<span class="sd">    Picea abies (Norway spruce).</span>
+
+<span class="sd">    The functions are based on the models developed by Petersson and Ståhl (2006).</span>
+<span class="sd">    They allow for the estimation of biomass for roots with a diameter greater</span>
+<span class="sd">    than or equal to 2 mm or 5 mm. For pine and spruce, more complex models</span>
+<span class="sd">    are available that incorporate additional variables such as tree age,</span>
+<span class="sd">    basal area, and soil conditions to improve accuracy.</span>
+
+<span class="sd">    The primary method, `below_ground_biomass`, provides a unified interface</span>
+<span class="sd">    to access the appropriate model based on the provided parameters.</span>
+
+<span class="sd">    References:</span>
+<span class="sd">        Petersson, H., &amp; Ståhl, G. (2006). Functions for below-ground biomass of</span>
+<span class="sd">        Pinus sylvestris, Picea abies, Betula pendula and Betula pubescens in Sweden.</span>
+<span class="sd">        Scandinavian Journal of Forest Research, 21(sup7), 84-93.</span>
+<span class="sd">        DOI: 10.1080/014004080500486864</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Birch functions</span>
+<div class="viewcode-block" id="PeterssonStahl2006.birch_root_5mm">
+<a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.birch_root_5mm">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">birch_root_5mm</span><span class="p">(</span><span class="n">diameter_mm</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates ln(biomass) for birch roots &gt;= 5 mm.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            diameter_mm (float): Tree diameter at breast height (1.3 m) in millimeters.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The natural logarithm of below-ground biomass in grams.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">4.90864</span> <span class="o">+</span> <span class="mf">9.91194</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">+</span> <span class="mi">138</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="PeterssonStahl2006.birch_root_2mm">
+<a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.birch_root_2mm">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">birch_root_2mm</span><span class="p">(</span><span class="n">diameter_mm</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates ln(biomass) for birch roots &gt;= 2 mm.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            diameter_mm (float): Tree diameter at breast height (1.3 m) in millimeters.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The natural logarithm of below-ground biomass in grams.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">6.17080</span> <span class="o">+</span> <span class="mf">10.01111</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">+</span> <span class="mi">225</span><span class="p">))</span></div>
+
+
+    <span class="c1"># Pine functions</span>
+<div class="viewcode-block" id="PeterssonStahl2006.pine_root_5mm_1">
+<a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.pine_root_5mm_1">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pine_root_5mm_1</span><span class="p">(</span><span class="n">diameter_mm</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates ln(biomass) for pine roots &gt;= 5 mm using only diameter.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            diameter_mm (float): Tree diameter at breast height (1.3 m) in millimeters.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The natural logarithm of below-ground biomass in grams.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">3.39014</span> <span class="o">+</span> <span class="mf">11.06822</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">+</span> <span class="mi">113</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="PeterssonStahl2006.pine_root_5mm_2">
+<a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.pine_root_5mm_2">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pine_root_5mm_2</span><span class="p">(</span><span class="n">diameter_mm</span><span class="p">,</span> <span class="n">age_at_breast_height</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates ln(biomass) for pine roots &gt;= 5 mm using diameter and age.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            diameter_mm (float): Tree diameter at breast height (1.3 m) in millimeters.</span>
+<span class="sd">            age_at_breast_height (int): Tree age at breast height in years.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The natural logarithm of below-ground biomass in grams.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="mf">3.57249</span>
+            <span class="o">+</span> <span class="mf">11.07427</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">+</span> <span class="mi">113</span><span class="p">))</span>
+            <span class="o">-</span> <span class="mf">0.05119</span> <span class="o">*</span> <span class="n">diameter_mm</span> <span class="o">/</span> <span class="n">age_at_breast_height</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PeterssonStahl2006.pine_root_5mm_3">
+<a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.pine_root_5mm_3">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pine_root_5mm_3</span><span class="p">(</span><span class="n">diameter_mm</span><span class="p">,</span> <span class="n">age_basal_area_weighted</span><span class="p">,</span> <span class="n">dry_soil</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates ln(biomass) for pine roots &gt;= 5 mm with detailed parameters.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            diameter_mm (float): Tree diameter at breast height (1.3 m) in millimeters.</span>
+<span class="sd">            age_basal_area_weighted (float): Basal area weighted mean age of the stand.</span>
+<span class="sd">            dry_soil (int): Dummy variable for dry soil (1 if dry, 0 otherwise).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The natural logarithm of below-ground biomass in grams.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="mf">3.50127</span>
+            <span class="o">+</span> <span class="mf">10.96210</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">+</span> <span class="mi">113</span><span class="p">))</span>
+            <span class="o">+</span> <span class="mf">0.00250</span> <span class="o">*</span> <span class="n">age_basal_area_weighted</span>
+            <span class="o">-</span> <span class="mf">0.37595</span> <span class="o">*</span> <span class="n">dry_soil</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PeterssonStahl2006.pine_root_2mm_1">
+<a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.pine_root_2mm_1">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pine_root_2mm_1</span><span class="p">(</span><span class="n">diameter_mm</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates ln(biomass) for pine roots &gt;= 2 mm using only diameter.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            diameter_mm (float): Tree diameter at breast height (1.3 m) in millimeters.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The natural logarithm of below-ground biomass in grams.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">3.44275</span> <span class="o">+</span> <span class="mf">11.06537</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">+</span> <span class="mi">113</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="PeterssonStahl2006.pine_root_2mm_2">
+<a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.pine_root_2mm_2">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pine_root_2mm_2</span><span class="p">(</span><span class="n">diameter_mm</span><span class="p">,</span> <span class="n">age_at_breast_height</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates ln(biomass) for pine roots &gt;= 2 mm using diameter and age.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            diameter_mm (float): Tree diameter at breast height (1.3 m) in millimeters.</span>
+<span class="sd">            age_at_breast_height (int): Tree age at breast height in years.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The natural logarithm of below-ground biomass in grams.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="mf">3.62193</span>
+            <span class="o">+</span> <span class="mf">11.07117</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">+</span> <span class="mi">113</span><span class="p">))</span>
+            <span class="o">-</span> <span class="mf">0.05029</span> <span class="o">*</span> <span class="n">diameter_mm</span> <span class="o">/</span> <span class="n">age_at_breast_height</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PeterssonStahl2006.pine_root_2mm_3">
+<a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.pine_root_2mm_3">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pine_root_2mm_3</span><span class="p">(</span><span class="n">diameter_mm</span><span class="p">,</span> <span class="n">age_basal_area_weighted</span><span class="p">,</span> <span class="n">dry_soil</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates ln(biomass) for pine roots &gt;= 2 mm with detailed parameters.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            diameter_mm (float): Tree diameter at breast height (1.3 m) in millimeters.</span>
+<span class="sd">            age_basal_area_weighted (float): Basal area weighted mean age of the stand.</span>
+<span class="sd">            dry_soil (int): Dummy variable for dry soil (1 if dry, 0 otherwise).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The natural logarithm of below-ground biomass in grams.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="mf">3.56553</span>
+            <span class="o">+</span> <span class="mf">10.96370</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">+</span> <span class="mi">113</span><span class="p">))</span>
+            <span class="o">+</span> <span class="mf">0.00236</span> <span class="o">*</span> <span class="n">age_basal_area_weighted</span>
+            <span class="o">-</span> <span class="mf">0.38089</span> <span class="o">*</span> <span class="n">dry_soil</span>
+        <span class="p">)</span></div>
+
+
+    <span class="c1"># Spruce functions</span>
+<div class="viewcode-block" id="PeterssonStahl2006.spruce_root_5mm_1">
+<a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.spruce_root_5mm_1">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">spruce_root_5mm_1</span><span class="p">(</span><span class="n">diameter_mm</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates ln(biomass) for spruce roots &gt;= 5 mm using only diameter.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            diameter_mm (float): Tree diameter at breast height (1.3 m) in millimeters.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The natural logarithm of below-ground biomass in grams.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">4.52965</span> <span class="o">+</span> <span class="mf">10.57571</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">+</span> <span class="mi">142</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="PeterssonStahl2006.spruce_root_5mm_2">
+<a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.spruce_root_5mm_2">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">spruce_root_5mm_2</span><span class="p">(</span><span class="n">diameter_mm</span><span class="p">,</span> <span class="n">age_at_breast_height</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates ln(biomass) for spruce roots &gt;= 5 mm using diameter and age.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            diameter_mm (float): Tree diameter at breast height (1.3 m) in millimeters.</span>
+<span class="sd">            age_at_breast_height (int): Tree age at breast height in years.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The natural logarithm of below-ground biomass in grams.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="mf">4.60559</span>
+            <span class="o">+</span> <span class="mf">10.60542</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">+</span> <span class="mi">142</span><span class="p">))</span>
+            <span class="o">-</span> <span class="mf">0.02489</span> <span class="o">*</span> <span class="n">diameter_mm</span> <span class="o">/</span> <span class="n">age_at_breast_height</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PeterssonStahl2006.spruce_root_5mm_3">
+<a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.spruce_root_5mm_3">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">spruce_root_5mm_3</span><span class="p">(</span><span class="n">diameter_mm</span><span class="p">,</span> <span class="n">age_at_breast_height</span><span class="p">,</span> <span class="n">basal_area</span><span class="p">,</span> <span class="n">crown_length</span><span class="p">,</span> <span class="n">dry_soil</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates ln(biomass) for spruce roots &gt;= 5 mm with detailed parameters.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            diameter_mm (float): Tree diameter at breast height (1.3 m) in millimeters.</span>
+<span class="sd">            age_at_breast_height (int): Tree age at breast height in years.</span>
+<span class="sd">            basal_area (float): Stand basal area in m^2/ha.</span>
+<span class="sd">            crown_length (float): Length of the tree crown in meters.</span>
+<span class="sd">            dry_soil (int): Dummy variable for dry soil (1 if dry, 0 otherwise).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The natural logarithm of below-ground biomass in grams.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="mf">4.98414</span>
+            <span class="o">+</span> <span class="mf">9.89245</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">+</span> <span class="mi">142</span><span class="p">))</span>
+            <span class="o">-</span> <span class="mf">0.03411</span> <span class="o">*</span> <span class="n">diameter_mm</span> <span class="o">/</span> <span class="n">age_at_breast_height</span>
+            <span class="o">-</span> <span class="mf">0.00769</span> <span class="o">*</span> <span class="n">basal_area</span>
+            <span class="o">+</span> <span class="mf">0.00317</span> <span class="o">*</span> <span class="n">crown_length</span>
+            <span class="o">-</span> <span class="mf">0.23375</span> <span class="o">*</span> <span class="n">dry_soil</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PeterssonStahl2006.spruce_root_2mm_1">
+<a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.spruce_root_2mm_1">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">spruce_root_2mm_1</span><span class="p">(</span><span class="n">diameter_mm</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates ln(biomass) for spruce roots &gt;= 2 mm using only diameter.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            diameter_mm (float): Tree diameter at breast height (1.3 m) in millimeters.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The natural logarithm of below-ground biomass in grams.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">4.58761</span> <span class="o">+</span> <span class="mf">10.44035</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">+</span> <span class="mi">138</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="PeterssonStahl2006.spruce_root_2mm_2">
+<a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.spruce_root_2mm_2">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">spruce_root_2mm_2</span><span class="p">(</span><span class="n">diameter_mm</span><span class="p">,</span> <span class="n">age_at_breast_height</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates ln(biomass) for spruce roots &gt;= 2 mm using diameter and age.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            diameter_mm (float): Tree diameter at breast height (1.3 m) in millimeters.</span>
+<span class="sd">            age_at_breast_height (int): Tree age at breast height in years.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The natural logarithm of below-ground biomass in grams.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="mf">4.69287</span>
+            <span class="o">+</span> <span class="mf">10.45700</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">+</span> <span class="mi">138</span><span class="p">))</span>
+            <span class="o">-</span> <span class="mf">0.03057</span> <span class="o">*</span> <span class="n">diameter_mm</span> <span class="o">/</span> <span class="n">age_at_breast_height</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PeterssonStahl2006.spruce_root_2mm_3">
+<a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.spruce_root_2mm_3">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">spruce_root_2mm_3</span><span class="p">(</span>
+        <span class="n">diameter_mm</span><span class="p">,</span> <span class="n">age_basal_area_weighted</span><span class="p">,</span> <span class="n">basal_area</span><span class="p">,</span> <span class="n">crown_length</span><span class="p">,</span> <span class="n">dry_soil</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates ln(biomass) for spruce roots &gt;= 2 mm with detailed parameters.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            diameter_mm (float): Tree diameter at breast height (1.3 m) in millimeters.</span>
+<span class="sd">            age_basal_area_weighted (float): Basal area weighted mean age of the stand.</span>
+<span class="sd">            basal_area (float): Stand basal area in m^2/ha.</span>
+<span class="sd">            crown_length (float): Length of the tree crown in meters.</span>
+<span class="sd">            dry_soil (int): Dummy variable for dry soil (1 if dry, 0 otherwise).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The natural logarithm of below-ground biomass in grams.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="mf">5.00171</span>
+            <span class="o">+</span> <span class="mf">9.89713</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">+</span> <span class="mi">138</span><span class="p">))</span>
+            <span class="o">-</span> <span class="mf">0.03653</span> <span class="o">*</span> <span class="n">age_basal_area_weighted</span>
+            <span class="o">-</span> <span class="mf">0.00636</span> <span class="o">*</span> <span class="n">basal_area</span>
+            <span class="o">+</span> <span class="mf">0.00261</span> <span class="o">*</span> <span class="n">crown_length</span>
+            <span class="o">-</span> <span class="mf">0.21705</span> <span class="o">*</span> <span class="n">dry_soil</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PeterssonStahl2006.below_ground_biomass">
+<a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.below_ground_biomass">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">below_ground_biomass</span><span class="p">(</span><span class="n">species</span><span class="p">,</span> <span class="n">root_detail</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Selects and evaluates the appropriate below-ground biomass function.</span>
+
+<span class="sd">        This method dynamically selects the correct biomass function based on the</span>
+<span class="sd">        species and the desired root size detail. It attempts to find the most</span>
+<span class="sd">        complex model that can be satisfied by the provided keyword arguments.</span>
+
+<span class="sd">        For instance, if all arguments for a `_3` model (e.g., `pine_root_5mm_3`)</span>
+<span class="sd">        are supplied, that model will be used. If not, it will fall back to the</span>
+<span class="sd">        simpler `_2` or `_1` models.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            Diameter must be provided as `diameter_cm` in centimeters. It will be</span>
+<span class="sd">            automatically converted to millimeters for the calculations.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            species (str): The tree species. Must be one of &#39;birch&#39;, &#39;pine&#39;, or &#39;spruce&#39;.</span>
+<span class="sd">            root_detail (int): The minimum root diameter to include. Must be 2 or 5 (mm).</span>
+<span class="sd">            **kwargs: Keyword arguments required by the specific biomass functions.</span>
+<span class="sd">                Common arguments include:</span>
+<span class="sd">                - diameter_cm (float): Tree diameter at breast height in cm. (Required)</span>
+<span class="sd">                - age_at_breast_height (int): Age at breast height.</span>
+<span class="sd">                - age_basal_area_weighted (float): Basal area weighted stand age.</span>
+<span class="sd">                - basal_area (float): Stand basal area in m^2/ha.</span>
+<span class="sd">                - crown_length (float): Crown length in meters.</span>
+<span class="sd">                - dry_soil (int): 1 if soil is dry, 0 otherwise.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The calculated below-ground biomass in kilograms (kg).</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If an invalid `species` or `root_detail` is given, or if</span>
+<span class="sd">                the provided arguments do not match any available function for</span>
+<span class="sd">                the selected species and root detail.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">species_map</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;birch&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="mi">5</span><span class="p">:</span> <span class="p">[</span><span class="n">PeterssonStahl2006</span><span class="o">.</span><span class="n">birch_root_5mm</span><span class="p">],</span>
+                <span class="mi">2</span><span class="p">:</span> <span class="p">[</span><span class="n">PeterssonStahl2006</span><span class="o">.</span><span class="n">birch_root_2mm</span><span class="p">],</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;pine&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="mi">5</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="n">PeterssonStahl2006</span><span class="o">.</span><span class="n">pine_root_5mm_1</span><span class="p">,</span>
+                    <span class="n">PeterssonStahl2006</span><span class="o">.</span><span class="n">pine_root_5mm_2</span><span class="p">,</span>
+                    <span class="n">PeterssonStahl2006</span><span class="o">.</span><span class="n">pine_root_5mm_3</span><span class="p">,</span>
+                <span class="p">],</span>
+                <span class="mi">2</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="n">PeterssonStahl2006</span><span class="o">.</span><span class="n">pine_root_2mm_1</span><span class="p">,</span>
+                    <span class="n">PeterssonStahl2006</span><span class="o">.</span><span class="n">pine_root_2mm_2</span><span class="p">,</span>
+                    <span class="n">PeterssonStahl2006</span><span class="o">.</span><span class="n">pine_root_2mm_3</span><span class="p">,</span>
+                <span class="p">],</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;spruce&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="mi">5</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="n">PeterssonStahl2006</span><span class="o">.</span><span class="n">spruce_root_5mm_1</span><span class="p">,</span>
+                    <span class="n">PeterssonStahl2006</span><span class="o">.</span><span class="n">spruce_root_5mm_2</span><span class="p">,</span>
+                    <span class="n">PeterssonStahl2006</span><span class="o">.</span><span class="n">spruce_root_5mm_3</span><span class="p">,</span>
+                <span class="p">],</span>
+                <span class="mi">2</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="n">PeterssonStahl2006</span><span class="o">.</span><span class="n">spruce_root_2mm_1</span><span class="p">,</span>
+                    <span class="n">PeterssonStahl2006</span><span class="o">.</span><span class="n">spruce_root_2mm_2</span><span class="p">,</span>
+                    <span class="n">PeterssonStahl2006</span><span class="o">.</span><span class="n">spruce_root_2mm_3</span><span class="p">,</span>
+                <span class="p">],</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">species</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">species_map</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Invalid species &#39;</span><span class="si">{</span><span class="n">species</span><span class="si">}</span><span class="s2">&#39;. Must be one of &#39;birch&#39;, &#39;pine&#39;, &#39;spruce&#39;.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">root_detail</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">species_map</span><span class="p">[</span><span class="n">species</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid root_detail &#39;</span><span class="si">{</span><span class="n">root_detail</span><span class="si">}</span><span class="s2">&#39;. Must be 2 or 5.&quot;</span><span class="p">)</span>
+
+        <span class="n">functions</span> <span class="o">=</span> <span class="n">species_map</span><span class="p">[</span><span class="n">species</span><span class="p">][</span><span class="n">root_detail</span><span class="p">]</span>
+        <span class="n">diameter_mm</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;diameter_cm&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span>  <span class="c1"># Convert cm to mm</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;diameter_mm&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">diameter_mm</span>
+
+        <span class="k">for</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">functions</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Match arguments dynamically and evaluate the function</span>
+                <span class="n">func_args</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_varnames</span><span class="p">[:</span> <span class="n">func</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">]</span>
+                <span class="n">args</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">value</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">func_args</span><span class="p">}</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="o">**</span><span class="n">args</span><span class="p">))</span> <span class="o">/</span> <span class="mi">1000</span>  <span class="c1"># return kg</span>
+            <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No suitable function matched the provided arguments.&quot;</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

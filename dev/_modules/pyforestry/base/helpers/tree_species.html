@@ -1,0 +1,771 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pyforestry.base.helpers.tree_species &#8212; pyforestry  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyforestry/base/helpers/tree_species';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://silviculturalist.github.io/pyforestry/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pyforestry  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../api/modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../api/modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pyforestry.base.helpers.tree_species</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for pyforestry.base.helpers.tree_species</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Utility classes and helpers for defining tree species.</span>
+
+<span class="sd">This module exposes two related concepts:</span>
+<span class="sd">``TreeName`` represents a single biological species (genus + species name),</span>
+<span class="sd">while ``TreeSpecies`` is a namespace that groups ``TreeName`` instances for a</span>
+<span class="sd">given region.  For example ``TreeSpecies.Sweden.pinus_sylvestris`` returns the</span>
+<span class="sd">``TreeName`` object for Scots pine.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="c1"># --------------------------------------------------------------------</span>
+<span class="c1"># Global Taxonomy: Genera and Species (renamed to TreeName)</span>
+
+
+<div class="viewcode-block" id="TreeGenus">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeGenus">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TreeGenus</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a botanical genus.&quot;&quot;&quot;</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">code</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># A unique code for the genus</span></div>
+
+
+
+<div class="viewcode-block" id="TreeName">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TreeName</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A specific tree species within a genus.&quot;&quot;&quot;</span>
+
+    <span class="n">genus</span><span class="p">:</span> <span class="n">TreeGenus</span>
+    <span class="n">species_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">code</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># A unique code for the species</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">full_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">genus</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">species_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tree_type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">get_tree_type_by_genus</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">genus</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span></div>
+
+
+
+<span class="c1"># --------------------------------------------------------------------</span>
+<span class="c1"># Helper function to determine tree type based on the genus name</span>
+
+
+<div class="viewcode-block" id="get_tree_type_by_genus">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.get_tree_type_by_genus">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_tree_type_by_genus</span><span class="p">(</span><span class="n">genus</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">DECIDUOUS_LIST</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;betula&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;alnus&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;populus&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sorbus&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;salix&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ulmus&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;fraxinus&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;carpinus&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;quercus&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;tilia&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;fagus&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;prunus&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;acer&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;robinia&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;corylus&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;aesculus&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">CONIFEROUS_LIST</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;abies&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;picea&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;larix&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;pseudotsuga&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;tsuga&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;pinus&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sequoia&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sequoiadendron&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;chamaecyparis&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;cupressaceae&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;juniperus&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;thuja&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;taxus&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;cedrus&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;cathaya&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;pseudolarix&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;keteleeria&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nothotsuga&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">genus</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">CONIFEROUS_LIST</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;Coniferous&quot;</span>
+    <span class="k">elif</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">DECIDUOUS_LIST</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;Deciduous&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown tree type for genus &#39;</span><span class="si">{</span><span class="n">genus</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># --------------------------------------------------------------------</span>
+<span class="c1"># Global Genera</span>
+
+<span class="n">PICEA</span> <span class="o">=</span> <span class="n">TreeGenus</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Picea&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;PICEA&quot;</span><span class="p">)</span>
+<span class="n">FAGUS</span> <span class="o">=</span> <span class="n">TreeGenus</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Fagus&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;FAGUS&quot;</span><span class="p">)</span>
+<span class="n">QUERCUS</span> <span class="o">=</span> <span class="n">TreeGenus</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Quercus&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;QUERCUS&quot;</span><span class="p">)</span>
+<span class="n">BETULA</span> <span class="o">=</span> <span class="n">TreeGenus</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Betula&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;BETULA&quot;</span><span class="p">)</span>
+<span class="n">PINUS</span> <span class="o">=</span> <span class="n">TreeGenus</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Pinus&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;PINUS&quot;</span><span class="p">)</span>
+<span class="n">LARIX</span> <span class="o">=</span> <span class="n">TreeGenus</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Larix&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;LARIX&quot;</span><span class="p">)</span>
+<span class="n">PSEUDOTSUGA</span> <span class="o">=</span> <span class="n">TreeGenus</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Pseudotsuga&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;PSEUDO&quot;</span><span class="p">)</span>
+<span class="n">TAXUS</span> <span class="o">=</span> <span class="n">TreeGenus</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Taxus&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;TAXUS&quot;</span><span class="p">)</span>
+<span class="n">JUNIPERUS</span> <span class="o">=</span> <span class="n">TreeGenus</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Juniperus&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;JUNIPERUS&quot;</span><span class="p">)</span>
+<span class="n">ALNUS</span> <span class="o">=</span> <span class="n">TreeGenus</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Alnus&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;ALNUS&quot;</span><span class="p">)</span>
+<span class="n">ULMUS</span> <span class="o">=</span> <span class="n">TreeGenus</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Ulmus&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;ULMUS&quot;</span><span class="p">)</span>
+<span class="n">FRAXINUS</span> <span class="o">=</span> <span class="n">TreeGenus</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Fraxinus&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;FRAXINUS&quot;</span><span class="p">)</span>
+<span class="n">POPULUS</span> <span class="o">=</span> <span class="n">TreeGenus</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Populus&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;POPULUS&quot;</span><span class="p">)</span>
+<span class="n">CARPINUS</span> <span class="o">=</span> <span class="n">TreeGenus</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Carpinus&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;CARPINUS&quot;</span><span class="p">)</span>
+<span class="n">PRUNUS</span> <span class="o">=</span> <span class="n">TreeGenus</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Prunus&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;PRUNUS&quot;</span><span class="p">)</span>
+<span class="n">CORYLUS</span> <span class="o">=</span> <span class="n">TreeGenus</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Corylus&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;CORYLUS&quot;</span><span class="p">)</span>
+<span class="n">TILIA</span> <span class="o">=</span> <span class="n">TreeGenus</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Tilia&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;TILIA&quot;</span><span class="p">)</span>
+<span class="n">ACER</span> <span class="o">=</span> <span class="n">TreeGenus</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Acer&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;ACER&quot;</span><span class="p">)</span>
+<span class="n">SORBUS</span> <span class="o">=</span> <span class="n">TreeGenus</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Sorbus&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;SORBUS&quot;</span><span class="p">)</span>
+<span class="n">SALIX</span> <span class="o">=</span> <span class="n">TreeGenus</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Salix&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;SALIX&quot;</span><span class="p">)</span>
+
+<span class="c1"># --------------------------------------------------------------------</span>
+<span class="c1"># Global TreeName objects (unique species)</span>
+<span class="n">PICEA_ABIES</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">PICEA</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;abies&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;PAB&quot;</span><span class="p">)</span>
+<span class="n">FAGUS_SYLVATICA</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">FAGUS</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;sylvatica&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;FSY&quot;</span><span class="p">)</span>
+<span class="n">QUERCUS_ROBUR</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">QUERCUS</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;robur&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;QRB&quot;</span><span class="p">)</span>
+<span class="n">QUERCUS_PETRAEA</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">QUERCUS</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;petraea&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;QPT&quot;</span><span class="p">)</span>
+<span class="n">BETULA_PENDULA</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">BETULA</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;pendula&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;BPEN&quot;</span><span class="p">)</span>
+<span class="n">BETULA_PUBESCENS</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">BETULA</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;pubescens&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;BPUB&quot;</span><span class="p">)</span>
+<span class="n">PINUS_SYLVESTRIS</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">PINUS</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;sylvestris&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;PSYL&quot;</span><span class="p">)</span>
+<span class="n">PINUS_CONTORTA</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">PINUS</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;contorta&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;PCON&quot;</span><span class="p">)</span>
+<span class="n">PINUS_MUGO</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">PINUS</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;mugo&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;PMUG&quot;</span><span class="p">)</span>
+<span class="n">LARIX_SIBIRICA</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">LARIX</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;sibirica&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;LSIB&quot;</span><span class="p">)</span>
+<span class="n">LARIX_DECIDUA</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">LARIX</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;decidua&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;LDEC&quot;</span><span class="p">)</span>
+<span class="n">LARIX_EUROPEA_X_LEPTOLEPIS</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span>
+    <span class="n">genus</span><span class="o">=</span><span class="n">LARIX</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;europaea x leptolepis&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;LEXL&quot;</span>
+<span class="p">)</span>
+<span class="n">LARIX_SUKACZEWII</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">LARIX</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;sukaczewii&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;LSUK&quot;</span><span class="p">)</span>
+<span class="n">PSEUDOTSUGA_MENZIESII</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">PSEUDOTSUGA</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;menziesii&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;PMEN&quot;</span><span class="p">)</span>
+<span class="n">PICEA_SITCHENSIS</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">PICEA</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;sitchensis&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;PSIT&quot;</span><span class="p">)</span>
+<span class="n">PICEA_MARIANA</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">PICEA</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;mariana&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;PMAR&quot;</span><span class="p">)</span>
+<span class="n">TAXUS_BACCATA</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">TAXUS</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;baccata&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;TBAC&quot;</span><span class="p">)</span>
+<span class="n">JUNIPERUS_COMMUNIS</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">JUNIPERUS</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;communis&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;JCOM&quot;</span><span class="p">)</span>
+<span class="n">ALNUS_GLUTINOSA</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">ALNUS</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;glutinosa&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;AGLU&quot;</span><span class="p">)</span>
+<span class="n">ALNUS_INCANA</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">ALNUS</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;incana&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;AINC&quot;</span><span class="p">)</span>
+<span class="n">ULMUS_GLABRA</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">ULMUS</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;glabra&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;UGLA&quot;</span><span class="p">)</span>
+<span class="n">FRAXINUS_EXCELSIOR</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">FRAXINUS</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;excelsior&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;FEXC&quot;</span><span class="p">)</span>
+<span class="n">POPULUS_TREMULA</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">POPULUS</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;tremula&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;PTRE&quot;</span><span class="p">)</span>
+<span class="n">POPULUS_TREMULA_X_TREMULOIDES</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span>
+    <span class="n">genus</span><span class="o">=</span><span class="n">POPULUS</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;tremula x tremuloides&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;PTXT&quot;</span>
+<span class="p">)</span>
+<span class="n">CARPINUS_BETULUS</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">CARPINUS</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;betulus&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;CBET&quot;</span><span class="p">)</span>
+<span class="n">PRUNUS_AVIUM</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">PRUNUS</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;avium&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;PAVI&quot;</span><span class="p">)</span>
+<span class="n">CORYLUS_AVELLANA</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">CORYLUS</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;avellana&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;CAVE&quot;</span><span class="p">)</span>
+<span class="n">PRUNUS_PADUS</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">PRUNUS</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;padus&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;PPAD&quot;</span><span class="p">)</span>
+<span class="n">TILIA_CORDATA</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">TILIA</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;cordata&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;TCOR&quot;</span><span class="p">)</span>
+<span class="n">ULMUS_MINOR</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">ULMUS</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;minor&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;UMIN&quot;</span><span class="p">)</span>
+<span class="n">ACER_PLATANOIDES</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">ACER</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;platanoides&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;APLA&quot;</span><span class="p">)</span>
+<span class="n">ACER_PSEUDOPLATANUS</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">ACER</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;pseudoplatanus&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;APSE&quot;</span><span class="p">)</span>
+<span class="n">SORBUS_INTERMEDIA</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">SORBUS</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;intermedia&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;SINT&quot;</span><span class="p">)</span>
+<span class="n">SORBUS_AUCUPARIA</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">SORBUS</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;aucuparia&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;SAUC&quot;</span><span class="p">)</span>
+<span class="n">SALIX_CAPREA</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">SALIX</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;caprea&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;SCAP&quot;</span><span class="p">)</span>
+<span class="n">ULMUS_LAEVIS</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">ULMUS</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;laevis&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;ULAE&quot;</span><span class="p">)</span>
+<span class="n">QUERCUS_RUBRA</span> <span class="o">=</span> <span class="n">TreeName</span><span class="p">(</span><span class="n">genus</span><span class="o">=</span><span class="n">QUERCUS</span><span class="p">,</span> <span class="n">species_name</span><span class="o">=</span><span class="s2">&quot;rubra&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;QRUB&quot;</span><span class="p">)</span>
+
+<span class="c1"># --------------------------------------------------------------------</span>
+<span class="c1"># Global list of trees.</span>
+<span class="n">GLOBAL_TREE_SPECIES</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">TreeName</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">PICEA_ABIES</span><span class="p">,</span>
+    <span class="n">FAGUS_SYLVATICA</span><span class="p">,</span>
+    <span class="n">QUERCUS_ROBUR</span><span class="p">,</span>
+    <span class="n">QUERCUS_PETRAEA</span><span class="p">,</span>
+    <span class="n">BETULA_PENDULA</span><span class="p">,</span>
+    <span class="n">BETULA_PUBESCENS</span><span class="p">,</span>
+    <span class="n">PINUS_SYLVESTRIS</span><span class="p">,</span>
+    <span class="n">PINUS_CONTORTA</span><span class="p">,</span>
+    <span class="n">PINUS_MUGO</span><span class="p">,</span>
+    <span class="n">LARIX_SIBIRICA</span><span class="p">,</span>
+    <span class="n">LARIX_DECIDUA</span><span class="p">,</span>
+    <span class="n">LARIX_EUROPEA_X_LEPTOLEPIS</span><span class="p">,</span>
+    <span class="n">LARIX_SUKACZEWII</span><span class="p">,</span>
+    <span class="n">PSEUDOTSUGA_MENZIESII</span><span class="p">,</span>
+    <span class="n">PICEA_SITCHENSIS</span><span class="p">,</span>
+    <span class="n">PICEA_MARIANA</span><span class="p">,</span>
+    <span class="n">TAXUS_BACCATA</span><span class="p">,</span>
+    <span class="n">JUNIPERUS_COMMUNIS</span><span class="p">,</span>
+    <span class="n">ALNUS_GLUTINOSA</span><span class="p">,</span>
+    <span class="n">ALNUS_INCANA</span><span class="p">,</span>
+    <span class="n">ULMUS_GLABRA</span><span class="p">,</span>
+    <span class="n">FRAXINUS_EXCELSIOR</span><span class="p">,</span>
+    <span class="n">POPULUS_TREMULA</span><span class="p">,</span>
+    <span class="n">POPULUS_TREMULA_X_TREMULOIDES</span><span class="p">,</span>
+    <span class="n">CARPINUS_BETULUS</span><span class="p">,</span>
+    <span class="n">PRUNUS_AVIUM</span><span class="p">,</span>
+    <span class="n">CORYLUS_AVELLANA</span><span class="p">,</span>
+    <span class="n">PRUNUS_PADUS</span><span class="p">,</span>
+    <span class="n">TILIA_CORDATA</span><span class="p">,</span>
+    <span class="n">ULMUS_MINOR</span><span class="p">,</span>
+    <span class="n">ACER_PLATANOIDES</span><span class="p">,</span>
+    <span class="n">ACER_PSEUDOPLATANUS</span><span class="p">,</span>
+    <span class="n">SORBUS_INTERMEDIA</span><span class="p">,</span>
+    <span class="n">SORBUS_AUCUPARIA</span><span class="p">,</span>
+    <span class="n">SALIX_CAPREA</span><span class="p">,</span>
+    <span class="n">ULMUS_LAEVIS</span><span class="p">,</span>
+    <span class="n">QUERCUS_RUBRA</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<span class="c1"># --------------------------------------------------------------------</span>
+<span class="c1"># RegionalGenusGroup helper</span>
+
+
+<div class="viewcode-block" id="RegionalGenusGroup">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.RegionalGenusGroup">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RegionalGenusGroup</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A container for a group of TreeName objects sharing the same genus.</span>
+<span class="sd">    It is iterable and supports membership testing.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">genus</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">species</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">TreeName</span><span class="p">]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">genus</span> <span class="o">=</span> <span class="n">genus</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">species</span> <span class="o">=</span> <span class="n">species</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">TreeName</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">species</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;RegionalGenusGroup(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">genus</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">full_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">genus</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span></div>
+
+
+
+<span class="c1"># --------------------------------------------------------------------</span>
+<span class="c1"># Regional Subsets</span>
+
+
+<div class="viewcode-block" id="RegionalTreeSpecies">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.RegionalTreeSpecies">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RegionalTreeSpecies</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Exposes a subset of globally defined TreeName objects as attributes.</span>
+<span class="sd">    Also computes regional genus groups (e.g. &#39;alnus&#39;) that contain only the allowed species.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">allowed_species</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">TreeName</span><span class="p">]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="o">=</span> <span class="n">region</span>
+        <span class="c1"># Dictionary of individual species using keys like &quot;picea_abies&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_species</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">TreeName</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="n">allowed_species</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sp</span><span class="o">.</span><span class="n">genus</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">sp</span><span class="o">.</span><span class="n">species_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_species</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">sp</span>
+
+        <span class="c1"># Group species by genus (keyed by lower-case genus name)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_by_genus</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">TreeName</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="n">allowed_species</span><span class="p">:</span>
+            <span class="n">genus_key</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">genus</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_by_genus</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">genus_key</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sp</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="c1"># First check if the attribute matches a genus group.</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_by_genus</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">RegionalGenusGroup</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_by_genus</span><span class="p">[</span><span class="n">attr</span><span class="p">])</span>
+        <span class="c1"># Then check if the attribute matches an individual species.</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_species</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_species</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Species or genus &#39;</span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s2">&#39; not found in region &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># Global Regional Species Namespace</span>
+<div class="viewcode-block" id="TreeSpecies">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeSpecies">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TreeSpecies</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Namespace exposing regional groups of tree species.&quot;&quot;&quot;</span>
+
+    <span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="parse_tree_species">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.parse_tree_species">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_tree_species</span><span class="p">(</span><span class="n">species_str</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">TreeName</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TreeName</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the :class:`TreeName` corresponding to ``species_str``.</span>
+
+<span class="sd">    ``species_str`` may be either a ``TreeName`` instance or a string such as</span>
+<span class="sd">    ``&quot;Pinus sylvestris&quot;``.  Strings are normalized and looked up among the</span>
+<span class="sd">    globally defined species (for example those exposed through</span>
+<span class="sd">    :class:`TreeSpecies`).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Sometimes a TreeName object is passed by mistake. Return TreeName.full_name.lower()</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">species_str</span><span class="p">,</span> <span class="n">TreeName</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">species_str</span>
+
+    <span class="n">normalized</span> <span class="o">=</span> <span class="n">species_str</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="n">GLOBAL_TREE_SPECIES</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">sp</span><span class="o">.</span><span class="n">full_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">normalized</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">sp</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not find species matching &#39;</span><span class="si">{</span><span class="n">species_str</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># --------------------------------------------------------------------</span>
+<span class="c1"># Automatically load regional extensions if available</span>
+<span class="k">try</span><span class="p">:</span>  <span class="c1"># pragma: no cover - optional dependency</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">pyforestry.sweden.helpers.tree_species_extension</span>  <span class="c1"># noqa: F401</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># pragma: no cover - fail silently if extension missing</span>
+    <span class="k">pass</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

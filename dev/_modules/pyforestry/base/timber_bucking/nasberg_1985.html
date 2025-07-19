@@ -1,0 +1,1106 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pyforestry.base.timber_bucking.nasberg_1985 &#8212; pyforestry  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyforestry/base/timber_bucking/nasberg_1985';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://silviculturalist.github.io/pyforestry/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pyforestry  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../api/modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../api/modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pyforestry.base.timber_bucking.nasberg_1985</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for pyforestry.base.timber_bucking.nasberg_1985</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Näsberg (1985) branch-and-bound algorithm.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mapping</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">IntEnum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Type</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.pricelist.pricelist</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.taper</span><span class="w"> </span><span class="kn">import</span> <span class="n">Taper</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.timber</span><span class="w"> </span><span class="kn">import</span> <span class="n">Timber</span>
+
+
+<div class="viewcode-block" id="QualityType">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.timber_bucking.html#pyforestry.base.timber_bucking.nasberg_1985.QualityType">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">QualityType</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+    <span class="n">Undefined</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">ButtLog</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Special</span>
+    <span class="n">MiddleLog</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># OS</span>
+    <span class="n">TopLog</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># Kvint</span>
+    <span class="n">Pulp</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">LogCull</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">Fuelwood</span> <span class="o">=</span> <span class="mi">6</span></div>
+
+
+
+<div class="viewcode-block" id="CrossCutSection">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.timber_bucking.html#pyforestry.base.timber_bucking.nasberg_1985.CrossCutSection">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CrossCutSection</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Container for one log section in the final cutting solution.&quot;&quot;&quot;</span>
+
+    <span class="n">start_point</span><span class="p">:</span> <span class="nb">int</span>  <span class="c1"># Index in decimeters from the stump</span>
+    <span class="n">end_point</span><span class="p">:</span> <span class="nb">int</span>  <span class="c1"># Index in decimeters from the stump</span>
+    <span class="n">volume</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Volume (e.g., m3 f ub) for that section</span>
+    <span class="n">top_diameter</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Diameter (cm) of the top of this log</span>
+    <span class="n">value</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Monetary value (e.g. in SEK) contributed by this section</span>
+    <span class="n">species_group</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># For example, &quot;Pine&quot;, &quot;Spruce&quot;, etc.</span>
+    <span class="n">timber_proportion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">pulp_proportion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">cull_proportion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">fuelwood_proportion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">quality</span><span class="p">:</span> <span class="n">QualityType</span> <span class="o">=</span> <span class="n">QualityType</span><span class="o">.</span><span class="n">Undefined</span></div>
+
+
+
+<div class="viewcode-block" id="BuckingResult">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.timber_bucking.html#pyforestry.base.timber_bucking.nasberg_1985.BuckingResult">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BuckingResult</span><span class="p">(</span><span class="n">Mapping</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Encapsulates the output of the cross-cutting process.&quot;&quot;&quot;</span>
+
+    <span class="n">species_group</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># The species group.</span>
+    <span class="n">total_value</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># The total value in e.g. SEK</span>
+    <span class="n">top_proportion</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Proportion of volume above final cut</span>
+    <span class="n">dead_wood_proportion</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Proportion of volume considered dead wood</span>
+    <span class="n">high_stump_volume_proportion</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Proportion of total volume cut off as high stump</span>
+    <span class="n">high_stump_value_proportion</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Proportion of value that is in the high stump</span>
+    <span class="n">last_cut_relative_height</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Proportion of total height where final cut occurs</span>
+    <span class="n">volume_per_quality</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>  <span class="c1"># Breakout of volumes by quality</span>
+    <span class="n">timber_price_by_quality</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>  <span class="c1"># Per-cubic-meter average timber price by quality</span>
+    <span class="n">vol_fub_5cm</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Volume under bark, 5 cm top</span>
+    <span class="n">vol_sk_ub</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Total volume under bark for entire stem</span>
+    <span class="n">DBH_cm</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Diameter at breast height 1.3 m</span>
+    <span class="n">height_m</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Total tree height.</span>
+    <span class="n">stump_height_m</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Tree stump height.</span>
+    <span class="n">diameter_stump_cm</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Diameter at stump (cm).</span>
+    <span class="n">taperDiams_cm</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>  <span class="c1"># Taper Diameters for plotting.</span>
+    <span class="n">taperHeights_m</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>  <span class="c1"># Taper Heights for plotting.</span>
+    <span class="n">sections</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">CrossCutSection</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+
+    <span class="c1"># -------- Mapping protocol so the object behaves like a dict ----------</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="c1"># raises KeyError exactly like a dict if attribute absent</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="c1"># iterate over field names, same order as dataclass defines</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BuckingResult.plot">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.timber_bucking.html#pyforestry.base.timber_bucking.nasberg_1985.BuckingResult.plot">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">:</span>
+            <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+            <span class="c1"># Prepare points for taper line plot (subtract stump height to align axis)</span>
+            <span class="n">taper_heights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taperHeights_m</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+            <span class="n">taper_diams</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taperDiams_cm</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+            <span class="n">taper_x</span> <span class="o">=</span> <span class="p">(</span><span class="n">taper_heights</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">stump_height_m</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span>
+            <span class="n">taper_y</span> <span class="o">=</span> <span class="n">taper_diams</span>
+
+            <span class="c1"># Plot taper line</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">taper_x</span><span class="p">,</span> <span class="n">taper_y</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Taper&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Plot filled sections under taper curve</span>
+            <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">:</span>
+                <span class="c1"># Mask taper points within each section range</span>
+                <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">taper_x</span> <span class="o">&gt;=</span> <span class="n">section</span><span class="o">.</span><span class="n">start_point</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">taper_x</span> <span class="o">&lt;=</span> <span class="n">section</span><span class="o">.</span><span class="n">end_point</span><span class="p">)</span>
+                <span class="n">section_x</span> <span class="o">=</span> <span class="n">taper_x</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+                <span class="n">section_y</span> <span class="o">=</span> <span class="n">taper_y</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+
+                <span class="c1"># If there are no points within the range, interpolate</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">section_x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">section_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">section</span><span class="o">.</span><span class="n">start_point</span><span class="p">,</span> <span class="n">section</span><span class="o">.</span><span class="n">end_point</span><span class="p">])</span>
+                    <span class="n">section_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">section_x</span><span class="p">,</span> <span class="n">taper_x</span><span class="p">,</span> <span class="n">taper_y</span><span class="p">)</span>
+
+                <span class="c1"># Add start and end points explicitly for a smooth fill</span>
+                <span class="k">if</span> <span class="n">section_x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">section</span><span class="o">.</span><span class="n">start_point</span><span class="p">:</span>
+                    <span class="n">start_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">start_point</span><span class="p">,</span> <span class="n">taper_x</span><span class="p">,</span> <span class="n">taper_y</span><span class="p">)</span>
+                    <span class="n">section_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">section_x</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">section</span><span class="o">.</span><span class="n">start_point</span><span class="p">)</span>
+                    <span class="n">section_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span>
+                        <span class="n">section_y</span><span class="p">,</span>
+                        <span class="mi">0</span><span class="p">,</span>
+                        <span class="n">start_diameter</span> <span class="o">:=</span> <span class="p">(</span>
+                            <span class="n">start_diameter</span>
+                            <span class="k">if</span> <span class="p">(</span><span class="n">start_diameter</span> <span class="o">:=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">start_point</span><span class="p">,</span> <span class="n">taper_x</span><span class="p">,</span> <span class="n">taper_y</span><span class="p">))</span>
+                            <span class="o">&gt;</span> <span class="mi">0</span>
+                            <span class="k">else</span> <span class="mi">0</span>
+                        <span class="p">),</span>
+                    <span class="p">)</span>
+                <span class="k">if</span> <span class="n">section_x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">section</span><span class="o">.</span><span class="n">end_point</span><span class="p">:</span>
+                    <span class="n">section_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">section_x</span><span class="p">,</span> <span class="n">section</span><span class="o">.</span><span class="n">end_point</span><span class="p">)</span>
+                    <span class="n">section_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">section_y</span><span class="p">,</span>
+                        <span class="n">end_diameter</span> <span class="o">:=</span> <span class="p">(</span>
+                            <span class="n">end_diameter</span>
+                            <span class="k">if</span> <span class="p">(</span><span class="n">end_diameter</span> <span class="o">:=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">end_point</span><span class="p">,</span> <span class="n">taper_x</span><span class="p">,</span> <span class="n">taper_y</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span>
+                            <span class="k">else</span> <span class="mi">0</span>
+                        <span class="p">),</span>
+                    <span class="p">)</span>
+
+                <span class="c1"># Fill area under taper curve for this section</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">section_x</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">section_y</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+                <span class="c1"># Add text info (length)</span>
+                <span class="n">length</span> <span class="o">=</span> <span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">end_point</span> <span class="o">-</span> <span class="n">section</span><span class="o">.</span><span class="n">start_point</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span>
+                <span class="n">midpoint</span> <span class="o">=</span> <span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">start_point</span> <span class="o">+</span> <span class="n">section</span><span class="o">.</span><span class="n">end_point</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+
+                <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+                    <span class="n">midpoint</span><span class="p">,</span>
+                    <span class="n">section</span><span class="o">.</span><span class="n">top_diameter</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">section</span><span class="o">.</span><span class="n">top_diameter</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> cm</span><span class="se">\n</span><span class="si">{</span><span class="n">length</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> m</span><span class="se">\n</span><span class="s2"> Vol </span><span class="si">{</span><span class="n">section</span><span class="o">.</span><span class="n">volume</span><span class="o">*</span><span class="mi">1000</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> $dm^3$</span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">section</span><span class="o">.</span><span class="n">value</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> :-&quot;</span><span class="p">,</span>
+                    <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
+                    <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
+                    <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="c1"># Plot taper line (superfluous or hinder overflow of colored areas?)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">taper_x</span><span class="p">,</span> <span class="n">taper_y</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Vertical lines at section boundaries</span>
+            <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">:</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">end_point</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;grey&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+                <span class="c1"># Interpolate to get the y-value of the taper curve at x = p</span>
+                <span class="n">y_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">taper_x</span><span class="p">,</span> <span class="n">taper_y</span><span class="p">)</span>
+
+                <span class="c1"># Add the label rotated 90 degrees</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+                    <span class="n">p</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="n">y_value</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span>
+                <span class="p">)</span>
+
+            <span class="c1"># DBH marker</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+                <span class="p">(</span><span class="mf">1.3</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">stump_height_m</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">DBH_cm</span><span class="p">,</span>
+                <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Diameter @ 1.3 m&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Distance from stump (dm)&quot;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Diameter (cm)&quot;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Bucking Result Log Profile&quot;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Prevent automatic axis expansion</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Prevent automatic axis expansion</span>
+
+            <span class="n">leg</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">)</span>
+            <span class="n">leg</span><span class="o">.</span><span class="n">get_frame</span><span class="p">()</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># Set the background transparency</span>
+
+            <span class="n">textstr</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Species Group: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">species_group</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s2">&quot;DBH: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">DBH_cm</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> cm&quot;</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s2">&quot;Height: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s2">&quot;Stump Height: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stump_height_m</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s2">&quot;Stump Diameter: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter_stump_cm</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> cm&quot;</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s2">&quot;Vol fub 5cm: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">vol_fub_5cm</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> m³&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Get legend bounding box</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+            <span class="c1"># Set your textbox position slightly offset from the legend to avoid overlap</span>
+            <span class="n">legend_x0</span><span class="p">,</span> <span class="n">legend_y0</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">get_legend</span><span class="p">()</span><span class="o">.</span><span class="n">get_window_extent</span><span class="p">()</span><span class="o">.</span><span class="n">transformed</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span><span class="o">.</span><span class="n">inverted</span><span class="p">())</span><span class="o">.</span><span class="n">bounds</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Set textbox slightly below legend</span>
+            <span class="n">textbox_x</span> <span class="o">=</span> <span class="n">legend_x0</span>  <span class="c1"># Slightly left of legend</span>
+            <span class="n">textbox_y</span> <span class="o">=</span> <span class="n">legend_y0</span> <span class="o">-</span> <span class="mf">0.02</span>  <span class="c1"># Slightly below legend</span>
+
+            <span class="c1"># Positioning text box in upper-right, slightly offset from legend</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+                <span class="n">textbox_x</span><span class="p">,</span>
+                <span class="n">textbox_y</span><span class="p">,</span>
+                <span class="n">textstr</span><span class="p">,</span>
+                <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span>
+                <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span>
+                <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span>
+                <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
+                <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">boxstyle</span><span class="o">=</span><span class="s2">&quot;round&quot;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+            <span class="p">)</span>
+
+            <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No sections available for plotting.&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="BuckingConfig">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.timber_bucking.html#pyforestry.base.timber_bucking.nasberg_1985.BuckingConfig">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BuckingConfig</span><span class="p">:</span>
+    <span class="n">timber_price_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="n">pulp_price_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="n">use_downgrading</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">save_sections</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">_TreeCache</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Internal cache to avoid recomputing diameters and heights.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_diameters</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_heights</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">diameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">taper</span><span class="p">:</span> <span class="n">Taper</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">height</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_diameters</span><span class="p">:</span>
+            <span class="c1"># --- CORRECTED CALL: Now uses the taper instance directly ---</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_diameters</span><span class="p">[</span><span class="n">height</span><span class="p">]</span> <span class="o">=</span> <span class="n">taper</span><span class="o">.</span><span class="n">get_diameter_at_height</span><span class="p">(</span><span class="n">height</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_diameters</span><span class="p">[</span><span class="n">height</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">height</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">taper</span><span class="p">:</span> <span class="n">Taper</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">target</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_heights</span><span class="p">:</span>
+            <span class="c1"># --- CORRECTED CALL: Now uses the taper instance directly ---</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_heights</span><span class="p">[</span><span class="n">target</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">taper</span><span class="o">.</span><span class="n">get_height_at_diameter</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_heights</span><span class="p">[</span><span class="n">target</span><span class="p">]</span>
+
+
+<span class="c1"># -------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="Nasberg_1985_BranchBound">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.timber_bucking.html#pyforestry.base.timber_bucking.nasberg_1985.Nasberg_1985_BranchBound">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Nasberg_1985_BranchBound</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Vectorised version – interface identical to the earlier class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># -------------------- ctor helpers (unchanged except float32 tv) -------</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">timber</span><span class="p">:</span> <span class="n">Timber</span><span class="p">,</span> <span class="n">pricelist</span><span class="p">:</span> <span class="n">Pricelist</span><span class="p">,</span> <span class="n">taper_class</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">Taper</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_timber</span> <span class="o">=</span> <span class="n">timber</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_species</span> <span class="o">=</span> <span class="n">timber</span><span class="o">.</span><span class="n">species</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_taper_class</span> <span class="o">=</span> <span class="n">taper_class</span> <span class="ow">or</span> <span class="n">Taper</span>
+        <span class="k">if</span> <span class="n">pricelist</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Pricelist must be set&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pricelist</span> <span class="o">=</span> <span class="n">pricelist</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_timber_prices</span> <span class="o">=</span> <span class="n">pricelist</span><span class="o">.</span><span class="n">Timber</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">timber</span><span class="o">.</span><span class="n">species</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timber_prices</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No prices for </span><span class="si">{</span><span class="n">timber</span><span class="o">.</span><span class="n">species</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># length/diam ranges</span>
+        <span class="c1"># Convert length limits from metres to decimetres</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_minLengthTimberLog_dm</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">pricelist</span><span class="o">.</span><span class="n">TimberLogLength</span><span class="o">.</span><span class="n">Min</span> <span class="o">*</span> <span class="mi">10</span><span class="p">))</span>  <span class="c1"># 34</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_maxLengthTimberLog_dm</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">pricelist</span><span class="o">.</span><span class="n">TimberLogLength</span><span class="o">.</span><span class="n">Max</span> <span class="o">*</span> <span class="mi">10</span><span class="p">))</span>  <span class="c1"># 55</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_minLengthPulpwoodLog_dm</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">pricelist</span><span class="o">.</span><span class="n">PulpLogLength</span><span class="o">.</span><span class="n">Min</span> <span class="o">*</span> <span class="mi">10</span><span class="p">))</span>  <span class="c1"># 27</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_maxLengthPulpwoodLog_dm</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">pricelist</span><span class="o">.</span><span class="n">PulpLogLength</span><span class="o">.</span><span class="n">Max</span> <span class="o">*</span> <span class="mi">10</span><span class="p">))</span>  <span class="c1"># 55</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_minDiameterTimberLog</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timber_prices</span><span class="o">.</span><span class="n">minDiameter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_maxDiameterTimberLog</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timber_prices</span><span class="o">.</span><span class="n">maxDiameter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mvarde</span> <span class="o">=</span> <span class="n">pricelist</span><span class="o">.</span><span class="n">Pulp</span><span class="o">.</span><span class="n">getPulpwoodPrice</span><span class="p">(</span><span class="n">timber</span><span class="o">.</span><span class="n">species</span><span class="p">)</span> <span class="o">*</span> <span class="mf">100.0</span>
+
+        <span class="c1"># modules list + O(1) reverse map</span>
+        <span class="n">min_len</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_minLengthPulpwoodLog_dm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_minLengthTimberLog_dm</span><span class="p">))</span>
+        <span class="n">max_len</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_maxLengthTimberLog_dm</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">min_len</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Minimum log length must be at least 1 meter&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_moduler</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">min_len</span><span class="p">,</span> <span class="n">max_len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="mi">999</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mod_ix</span> <span class="o">=</span> <span class="p">{</span><span class="n">dm</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">dm</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_moduler</span><span class="p">)}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_timberValue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_value_table</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+        <span class="c1"># static map butt/middle/top</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quality_log_part</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">QualityType</span><span class="o">.</span><span class="n">ButtLog</span><span class="p">:</span> <span class="n">TimberPricelist</span><span class="o">.</span><span class="n">LogParts</span><span class="o">.</span><span class="n">Butt</span><span class="p">,</span>
+            <span class="n">QualityType</span><span class="o">.</span><span class="n">MiddleLog</span><span class="p">:</span> <span class="n">TimberPricelist</span><span class="o">.</span><span class="n">LogParts</span><span class="o">.</span><span class="n">Middle</span><span class="p">,</span>
+            <span class="n">QualityType</span><span class="o">.</span><span class="n">TopLog</span><span class="p">:</span> <span class="n">TimberPricelist</span><span class="o">.</span><span class="n">LogParts</span><span class="o">.</span><span class="n">Top</span><span class="p">,</span>
+            <span class="n">QualityType</span><span class="o">.</span><span class="n">Pulp</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">QualityType</span><span class="o">.</span><span class="n">LogCull</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">QualityType</span><span class="o">.</span><span class="n">Fuelwood</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">QualityType</span><span class="o">.</span><span class="n">Undefined</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_build_value_table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="n">max_diam</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_maxDiameterTimberLog</span>
+        <span class="n">tv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">max_diam</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_moduler</span><span class="p">),</span> <span class="mi">4</span><span class="p">))</span>
+        <span class="n">tp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timber_prices</span>
+        <span class="k">if</span> <span class="n">tp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">tv</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_minDiameterTimberLog</span><span class="p">,</span> <span class="n">max_diam</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">dm</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_moduler</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>  <span class="c1"># skip sentinel</span>
+                <span class="k">if</span> <span class="n">dm</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_minLengthTimberLog_dm</span> <span class="ow">or</span> <span class="n">dm</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_maxLengthTimberLog_dm</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">vf</span> <span class="o">=</span> <span class="mf">1.0</span>
+                <span class="k">if</span> <span class="n">tp</span><span class="o">.</span><span class="n">volume_type</span> <span class="o">==</span> <span class="s2">&quot;m3to&quot;</span><span class="p">:</span>
+                    <span class="n">r</span> <span class="o">=</span> <span class="p">(</span><span class="n">d</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span>
+                    <span class="n">vf</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">r</span> <span class="o">*</span> <span class="n">r</span> <span class="o">*</span> <span class="p">(</span><span class="n">dm</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+                    <span class="n">base</span> <span class="o">=</span> <span class="n">tp</span><span class="p">[</span><span class="n">d</span><span class="p">]</span><span class="o">.</span><span class="n">price_for_log_part</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                    <span class="n">corr</span> <span class="o">=</span> <span class="n">tp</span><span class="o">.</span><span class="n">length_corrections</span><span class="o">.</span><span class="n">get_length_correction</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">dm</span><span class="p">)</span>
+                    <span class="n">tv</span><span class="p">[</span><span class="n">d</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">p</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">base</span> <span class="o">+</span> <span class="n">corr</span><span class="p">)</span> <span class="o">*</span> <span class="mf">100.0</span> <span class="o">*</span> <span class="n">vf</span>
+        <span class="k">return</span> <span class="n">tv</span>
+
+    <span class="c1"># ---------------------------------------------------------------------</span>
+<div class="viewcode-block" id="Nasberg_1985_BranchBound.calculate_tree_value">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.timber_bucking.html#pyforestry.base.timber_bucking.nasberg_1985.Nasberg_1985_BranchBound.calculate_tree_value">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_tree_value</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">min_diam_dead_wood</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">BuckingConfig</span> <span class="o">=</span> <span class="n">BuckingConfig</span><span class="p">()</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BuckingResult</span><span class="p">:</span>
+        <span class="n">height_m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timber</span><span class="o">.</span><span class="n">height_m</span>
+        <span class="n">taper</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_taper_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_timber</span><span class="p">)</span>
+        <span class="n">cache</span> <span class="o">=</span> <span class="n">_TreeCache</span><span class="p">()</span>
+
+        <span class="c1"># ------------ heights with cached inversion ----------------------</span>
+        <span class="n">HSTUB</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timber</span><span class="o">.</span><span class="n">stump_height_m</span>
+        <span class="n">top_diam</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pricelist</span><span class="o">.</span><span class="n">TopDiameter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pricelist</span><span class="o">.</span><span class="n">PulpLogDiameter</span><span class="o">.</span><span class="n">Min</span><span class="p">)</span>
+        <span class="n">HTOP</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">height</span><span class="p">(</span><span class="n">taper</span><span class="p">,</span> <span class="n">top_diam</span><span class="p">)</span>
+
+        <span class="n">q_height</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">height</span><span class="p">(</span><span class="n">taper</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_minDiameterTimberLog</span><span class="p">)</span>
+        <span class="n">tp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timber_prices</span>
+        <span class="n">h_butt</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">tp</span><span class="o">.</span><span class="n">max_height_quality1</span><span class="p">,</span> <span class="n">q_height</span><span class="p">)</span>
+        <span class="n">h_mid</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">tp</span><span class="o">.</span><span class="n">max_height_quality2</span><span class="p">,</span> <span class="n">q_height</span><span class="p">)</span>
+        <span class="n">h_top</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">tp</span><span class="o">.</span><span class="n">max_height_quality3</span><span class="p">,</span> <span class="n">q_height</span><span class="p">)</span>
+
+        <span class="c1"># ------------ general --------------------------------------------</span>
+        <span class="c1"># Observe! This is *height above stump*</span>
+        <span class="n">DBH_cm</span> <span class="o">=</span> <span class="n">Taper</span><span class="o">.</span><span class="n">get_diameter_at_height</span><span class="p">(</span><span class="n">taper</span><span class="p">,</span> <span class="mf">1.3</span> <span class="o">-</span> <span class="n">HSTUB</span><span class="p">)</span>  <span class="c1"># cm</span>
+        <span class="n">diameter_stump_cm</span> <span class="o">=</span> <span class="n">Taper</span><span class="o">.</span><span class="n">get_diameter_at_height</span><span class="p">(</span><span class="n">taper</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># cm</span>
+
+        <span class="c1"># ------------ discretise (vector) --------------------------------</span>
+
+        <span class="n">NMAX</span> <span class="o">=</span> <span class="mi">400</span>
+        <span class="n">total_dm</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="n">HTOP</span> <span class="o">-</span> <span class="n">HSTUB</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)),</span> <span class="n">NMAX</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">total_dm</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">BuckingResult</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">7</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">dm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">total_dm</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">HSTUB</span> <span class="o">+</span> <span class="n">dm</span> <span class="o">*</span> <span class="mf">0.1</span>
+        <span class="n">dh</span> <span class="o">=</span> <span class="n">taper</span><span class="o">.</span><span class="n">get_diameter_vectorised</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>  <span class="c1"># vectorised diameter</span>
+
+        <span class="n">taperDiams_cm</span> <span class="o">=</span> <span class="n">dh</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>  <span class="c1"># NumPy → list[float]</span>
+        <span class="n">taperHeights_m</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>  <span class="c1"># ditto</span>
+
+        <span class="c1">#  endpoints ------------------------------------------------------</span>
+        <span class="n">dead_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dm</span><span class="p">[</span><span class="n">dh</span> <span class="o">&gt;=</span> <span class="n">min_diam_dead_wood</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">initial</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+        <span class="n">fub_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dm</span><span class="p">[</span><span class="n">dh</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">initial</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+        <span class="n">tp_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dm</span><span class="p">[</span><span class="n">dh</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pricelist</span><span class="o">.</span><span class="n">TopDiameter</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">initial</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+
+        <span class="n">vol_fub5</span> <span class="o">=</span> <span class="n">taper</span><span class="o">.</span><span class="n">volume_section</span><span class="p">(</span><span class="n">HSTUB</span><span class="p">,</span> <span class="n">h</span><span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">fub_idx</span><span class="p">,</span> <span class="n">total_dm</span><span class="p">)])</span>
+        <span class="n">vol_fub</span> <span class="o">=</span> <span class="n">taper</span><span class="o">.</span><span class="n">volume_section</span><span class="p">(</span><span class="n">HSTUB</span><span class="p">,</span> <span class="n">h</span><span class="p">[</span><span class="n">fub_idx</span><span class="p">])</span>
+        <span class="n">vol_sk</span> <span class="o">=</span> <span class="n">vol_fub</span> <span class="o">+</span> <span class="p">(</span>
+            <span class="n">taper</span><span class="o">.</span><span class="n">volume_section</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="n">fub_idx</span><span class="p">],</span> <span class="n">height_m</span><span class="p">)</span> <span class="k">if</span> <span class="n">height_m</span> <span class="o">&gt;</span> <span class="n">h</span><span class="p">[</span><span class="n">fub_idx</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="p">)</span>
+        <span class="n">vol_dead</span> <span class="o">=</span> <span class="n">taper</span><span class="o">.</span><span class="n">volume_section</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">h</span><span class="p">[</span><span class="n">dead_idx</span><span class="p">])</span>
+        <span class="n">p_dead</span> <span class="o">=</span> <span class="n">vol_dead</span> <span class="o">/</span> <span class="n">vol_sk</span> <span class="k">if</span> <span class="n">vol_sk</span> <span class="k">else</span> <span class="mf">0.0</span>
+
+        <span class="c1"># high stump</span>
+        <span class="n">hs_ep</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">HSheight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pricelist</span><span class="o">.</span><span class="n">HighStumpHeight</span>
+        <span class="k">if</span> <span class="n">HSheight</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">hs_ep</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dm</span><span class="p">[</span><span class="n">h</span> <span class="o">&gt;=</span> <span class="n">HSheight</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">initial</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+        <span class="n">vol_hs</span> <span class="o">=</span> <span class="n">taper</span><span class="o">.</span><span class="n">volume_section</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">h</span><span class="p">[</span><span class="n">hs_ep</span><span class="p">])</span> <span class="k">if</span> <span class="n">hs_ep</span> <span class="k">else</span> <span class="mf">0.0</span>
+        <span class="n">p_vol_hs</span> <span class="o">=</span> <span class="n">vol_hs</span> <span class="o">/</span> <span class="n">vol_sk</span> <span class="k">if</span> <span class="n">vol_sk</span> <span class="k">else</span> <span class="mf">0.0</span>
+
+        <span class="c1"># ---------------- DP arrays (float32) ----------------------------</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">total_dm</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">vtimber</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+        <span class="n">back</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">total_dm</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">)</span>
+        <span class="n">kval</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">total_dm</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+        <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">vtimber</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-5</span>
+
+        <span class="c1"># quality dm limits</span>
+        <span class="n">i_butt</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">h_butt</span> <span class="o">-</span> <span class="n">HSTUB</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">-</span> <span class="mf">1e-7</span><span class="p">)</span>
+        <span class="n">i_mid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">h_mid</span> <span class="o">-</span> <span class="n">HSTUB</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">-</span> <span class="mf">1e-7</span><span class="p">)</span>
+        <span class="n">i_top</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">h_top</span> <span class="o">-</span> <span class="n">HSTUB</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">-</span> <span class="mf">1e-7</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">qual</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">i_butt</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">QualityType</span><span class="o">.</span><span class="n">ButtLog</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">i_mid</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">QualityType</span><span class="o">.</span><span class="n">MiddleLog</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">i_top</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">QualityType</span><span class="o">.</span><span class="n">TopLog</span>
+            <span class="k">return</span> <span class="n">QualityType</span><span class="o">.</span><span class="n">Pulp</span>
+
+        <span class="n">cull_price</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pricelist</span><span class="o">.</span><span class="n">LogCullPrice</span> <span class="o">*</span> <span class="mf">100.0</span>
+        <span class="n">fuel_price</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pricelist</span><span class="o">.</span><span class="n">FuelWoodPrice</span> <span class="o">*</span> <span class="mf">100.0</span>
+
+        <span class="c1"># ---- DP main loop (vector over modules) -------------------------</span>
+        <span class="n">mod_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_moduler</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>  <span class="c1"># skip 999 sentinel</span>
+        <span class="n">mod_len</span> <span class="o">=</span> <span class="n">mod_arr</span><span class="o">.</span><span class="n">size</span>
+        <span class="n">zero_f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">mod_len</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">left</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">total_dm</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+
+            <span class="k">if</span> <span class="n">left</span> <span class="o">&gt;</span> <span class="n">tp_idx</span> <span class="ow">and</span> <span class="n">v</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="c1"># vector of right indices for all modules</span>
+            <span class="n">right</span> <span class="o">=</span> <span class="n">left</span> <span class="o">+</span> <span class="n">mod_arr</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">right</span> <span class="o">&lt;=</span> <span class="n">total_dm</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">mask</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+                <span class="k">continue</span>
+            <span class="n">right</span> <span class="o">=</span> <span class="n">right</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+            <span class="n">mods</span> <span class="o">=</span> <span class="n">mod_arr</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+            <span class="n">h1</span> <span class="o">=</span> <span class="n">h</span><span class="p">[</span><span class="n">left</span><span class="p">]</span>
+            <span class="n">h2</span> <span class="o">=</span> <span class="n">h</span><span class="p">[</span><span class="n">right</span><span class="p">]</span>
+            <span class="n">vol_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">taper</span><span class="o">.</span><span class="n">volume_section</span><span class="p">(</span><span class="n">h1</span><span class="p">,</span> <span class="n">hh</span><span class="p">)</span> <span class="k">for</span> <span class="n">hh</span> <span class="ow">in</span> <span class="n">h2</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+            <span class="n">diam_vec</span> <span class="o">=</span> <span class="n">dh</span><span class="p">[</span><span class="n">right</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">)</span>
+
+            <span class="n">q_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="n">qual</span><span class="p">,</span> <span class="n">otypes</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">])(</span><span class="n">right</span><span class="p">)</span>
+
+            <span class="c1"># --- timber candidate mask -----------------------------------</span>
+            <span class="n">timber_ok</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="p">(</span><span class="n">q_vec</span> <span class="o">!=</span> <span class="n">QualityType</span><span class="o">.</span><span class="n">Pulp</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">mods</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_minLengthTimberLog_dm</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">diam_vec</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_minDiameterTimberLog</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">diam_vec</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_maxDiameterTimberLog</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">right</span> <span class="o">&lt;=</span> <span class="n">i_top</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="c1"># --- pulp candidate mask ------------------------------------</span>
+            <span class="n">pulp_ok</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="p">(</span><span class="o">~</span><span class="n">timber_ok</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">mods</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_minLengthPulpwoodLog_dm</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">mods</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_maxLengthPulpwoodLog_dm</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">diam_vec</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pricelist</span><span class="o">.</span><span class="n">PulpLogDiameter</span><span class="o">.</span><span class="n">Min</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">diam_vec</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pricelist</span><span class="o">.</span><span class="n">PulpLogDiameter</span><span class="o">.</span><span class="n">Max</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="c1"># --- cull mask ----------------------------------------------</span>
+            <span class="n">cull_ok</span> <span class="o">=</span> <span class="p">(</span><span class="o">~</span><span class="n">timber_ok</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">~</span><span class="n">pulp_ok</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">mods</span> <span class="o">&gt;=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_minLengthPulpwoodLog_dm</span><span class="p">)</span>
+
+            <span class="c1"># ---------- compute values in vector form -------------------</span>
+            <span class="n">new_v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">vol_vec</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+            <span class="n">new_vt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">vol_vec</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+            <span class="c1"># timber branch</span>
+            <span class="k">if</span> <span class="n">timber_ok</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+                <span class="n">idxs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">timber_ok</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">parts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="k">lambda</span> <span class="n">q</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">quality_log_part</span><span class="p">[</span><span class="n">QualityType</span><span class="p">(</span><span class="n">q</span><span class="p">)])</span>
+                <span class="n">part_vec</span> <span class="o">=</span> <span class="n">parts</span><span class="p">(</span><span class="n">q_vec</span><span class="p">[</span><span class="n">idxs</span><span class="p">])</span>
+                <span class="n">pulp_p</span> <span class="o">=</span> <span class="n">fuel_p</span> <span class="o">=</span> <span class="n">cull_p</span> <span class="o">=</span> <span class="n">zero_f</span><span class="p">[:</span> <span class="n">idxs</span><span class="o">.</span><span class="n">size</span><span class="p">]</span>
+                <span class="n">price</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timberValue</span><span class="p">[</span>
+                    <span class="n">diam_vec</span><span class="p">[</span><span class="n">idxs</span><span class="p">],</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_mod_ix</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">mods</span><span class="p">[</span><span class="n">idxs</span><span class="p">]],</span> <span class="n">q_vec</span><span class="p">[</span><span class="n">idxs</span><span class="p">]</span>
+                <span class="p">]</span>
+                <span class="n">price</span> <span class="o">*=</span> <span class="n">config</span><span class="o">.</span><span class="n">timber_price_factor</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timber_prices</span><span class="o">.</span><span class="n">volume_type</span> <span class="o">==</span> <span class="s2">&quot;m3fub&quot;</span><span class="p">:</span>
+                    <span class="n">price</span> <span class="o">*=</span> <span class="n">vol_vec</span><span class="p">[</span><span class="n">idxs</span><span class="p">]</span>
+                <span class="n">timber_val</span> <span class="o">=</span> <span class="n">price</span>  <span class="c1"># default (no downgrade)</span>
+
+                <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">use_downgrading</span><span class="p">:</span>
+                    <span class="c1"># loop small (&lt;=3) – negligible</span>
+                    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">idxs</span><span class="p">):</span>
+                        <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timber_prices</span><span class="o">.</span><span class="n">getTimberWeight</span><span class="p">(</span><span class="n">part_vec</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+                        <span class="n">pp</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">cp</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="n">w</span><span class="o">.</span><span class="n">pulpwoodPercentage</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">,</span>
+                            <span class="n">w</span><span class="o">.</span><span class="n">fuelWoodPercentage</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">,</span>
+                            <span class="n">w</span><span class="o">.</span><span class="n">logCullPercentage</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">,</span>
+                        <span class="p">)</span>
+                        <span class="n">s</span> <span class="o">=</span> <span class="n">pp</span> <span class="o">+</span> <span class="n">fp</span> <span class="o">+</span> <span class="n">cp</span>
+                        <span class="n">cp</span> <span class="o">=</span> <span class="n">cp</span> <span class="k">if</span> <span class="n">s</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="k">else</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">pp</span> <span class="o">-</span> <span class="n">fp</span><span class="p">)</span>
+                        <span class="n">pulp_p</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">pp</span>
+                        <span class="n">fuel_p</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">fp</span>
+                        <span class="n">cull_p</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">cp</span>
+                    <span class="n">timber_val</span> <span class="o">=</span> <span class="n">price</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">pulp_p</span> <span class="o">-</span> <span class="n">fuel_p</span> <span class="o">-</span> <span class="n">cull_p</span><span class="p">)</span>
+
+                <span class="n">new_v</span><span class="p">[</span><span class="n">idxs</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">v</span><span class="p">[</span><span class="n">left</span><span class="p">]</span>
+                    <span class="o">+</span> <span class="n">timber_val</span>
+                    <span class="o">+</span> <span class="n">pulp_p</span> <span class="o">*</span> <span class="n">config</span><span class="o">.</span><span class="n">pulp_price_factor</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mvarde</span> <span class="o">*</span> <span class="n">vol_vec</span><span class="p">[</span><span class="n">idxs</span><span class="p">]</span>
+                    <span class="o">+</span> <span class="n">cull_p</span> <span class="o">*</span> <span class="n">cull_price</span> <span class="o">*</span> <span class="n">vol_vec</span><span class="p">[</span><span class="n">idxs</span><span class="p">]</span>
+                    <span class="o">+</span> <span class="n">fuel_p</span> <span class="o">*</span> <span class="n">fuel_price</span> <span class="o">*</span> <span class="n">vol_vec</span><span class="p">[</span><span class="n">idxs</span><span class="p">]</span>
+                <span class="p">)</span>
+                <span class="n">new_vt</span><span class="p">[</span><span class="n">idxs</span><span class="p">]</span> <span class="o">=</span> <span class="n">vtimber</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="o">+</span> <span class="n">price</span>
+
+            <span class="c1"># pulp branch</span>
+            <span class="k">if</span> <span class="n">pulp_ok</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+                <span class="n">idxs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">pulp_ok</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">pulp_val</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">pulp_price_factor</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mvarde</span> <span class="o">*</span> <span class="n">vol_vec</span><span class="p">[</span><span class="n">idxs</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">use_downgrading</span><span class="p">:</span>
+                    <span class="n">waste</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pricelist</span><span class="o">.</span><span class="n">getPulpWoodWasteProportion</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_species</span><span class="p">)</span>
+                    <span class="n">fuel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pricelist</span><span class="o">.</span><span class="n">getPulpwoodFuelwoodProportion</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_species</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">waste</span> <span class="o">+</span> <span class="n">fuel</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">:</span>
+                        <span class="n">waste</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">fuel</span><span class="p">)</span>
+                    <span class="n">pulp_val</span> <span class="o">*=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">waste</span> <span class="o">-</span> <span class="n">fuel</span>
+                    <span class="n">pulp_val</span> <span class="o">+=</span> <span class="p">(</span>
+                        <span class="n">fuel</span> <span class="o">*</span> <span class="n">fuel_price</span> <span class="o">*</span> <span class="n">vol_vec</span><span class="p">[</span><span class="n">idxs</span><span class="p">]</span> <span class="o">+</span> <span class="n">waste</span> <span class="o">*</span> <span class="n">cull_price</span> <span class="o">*</span> <span class="n">vol_vec</span><span class="p">[</span><span class="n">idxs</span><span class="p">]</span>
+                    <span class="p">)</span>
+                <span class="n">new_v</span><span class="p">[</span><span class="n">idxs</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="o">+</span> <span class="n">pulp_val</span>
+                <span class="n">new_vt</span><span class="p">[</span><span class="n">idxs</span><span class="p">]</span> <span class="o">=</span> <span class="n">vtimber</span><span class="p">[</span><span class="n">left</span><span class="p">]</span>
+
+            <span class="c1"># cull branch</span>
+            <span class="k">if</span> <span class="n">cull_ok</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+                <span class="n">idxs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">cull_ok</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">new_v</span><span class="p">[</span><span class="n">idxs</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="o">+</span> <span class="n">cull_price</span> <span class="o">*</span> <span class="n">vol_vec</span><span class="p">[</span><span class="n">idxs</span><span class="p">]</span>
+                <span class="n">new_vt</span><span class="p">[</span><span class="n">idxs</span><span class="p">]</span> <span class="o">=</span> <span class="n">vtimber</span><span class="p">[</span><span class="n">left</span><span class="p">]</span>
+                <span class="n">q_vec</span><span class="p">[</span><span class="n">idxs</span><span class="p">]</span> <span class="o">=</span> <span class="n">QualityType</span><span class="o">.</span><span class="n">LogCull</span><span class="o">.</span><span class="n">value</span>
+
+            <span class="c1"># -------- scatter update into global DP arrays ---------------</span>
+            <span class="n">better</span> <span class="o">=</span> <span class="n">new_v</span> <span class="o">&gt;</span> <span class="n">v</span><span class="p">[</span><span class="n">right</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">better</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+                <span class="n">v</span><span class="p">[</span><span class="n">right</span><span class="p">[</span><span class="n">better</span><span class="p">]]</span> <span class="o">=</span> <span class="n">new_v</span><span class="p">[</span><span class="n">better</span><span class="p">]</span>
+                <span class="n">vtimber</span><span class="p">[</span><span class="n">right</span><span class="p">[</span><span class="n">better</span><span class="p">]]</span> <span class="o">=</span> <span class="n">new_vt</span><span class="p">[</span><span class="n">better</span><span class="p">]</span>
+                <span class="n">back</span><span class="p">[</span><span class="n">right</span><span class="p">[</span><span class="n">better</span><span class="p">]]</span> <span class="o">=</span> <span class="n">left</span>
+                <span class="n">kval</span><span class="p">[</span><span class="n">right</span><span class="p">[</span><span class="n">better</span><span class="p">]]</span> <span class="o">=</span> <span class="n">q_vec</span><span class="p">[</span><span class="n">better</span><span class="p">]</span>
+
+        <span class="c1"># ---------------- pick best endpoint ----------------------------</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+        <span class="n">best</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="n">end</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">best</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">BuckingResult</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">p_dead</span><span class="p">,</span> <span class="n">p_vol_hs</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">7</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">7</span><span class="p">,</span> <span class="n">vol_fub5</span><span class="p">,</span> <span class="n">vol_sk</span><span class="p">)</span>
+
+        <span class="n">total_SEK</span> <span class="o">=</span> <span class="n">best</span> <span class="o">/</span> <span class="mf">100.0</span>
+        <span class="n">vol_top</span> <span class="o">=</span> <span class="n">taper</span><span class="o">.</span><span class="n">volume_section</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="n">end</span><span class="p">],</span> <span class="n">height_m</span><span class="p">)</span>
+        <span class="n">p_top</span> <span class="o">=</span> <span class="n">vol_top</span> <span class="o">/</span> <span class="n">vol_sk</span> <span class="k">if</span> <span class="n">vol_sk</span> <span class="k">else</span> <span class="mf">0.0</span>
+        <span class="n">last_rel</span> <span class="o">=</span> <span class="n">h</span><span class="p">[</span><span class="n">end</span><span class="p">]</span> <span class="o">/</span> <span class="n">height_m</span> <span class="k">if</span> <span class="n">height_m</span> <span class="k">else</span> <span class="mf">1.0</span>
+
+        <span class="c1"># ---------------- reconstruct (still small loop) ----------------</span>
+        <span class="n">vol_q</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">7</span>
+        <span class="n">price_q</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">7</span>
+        <span class="n">vol_for_p</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">7</span>
+        <span class="n">secs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">cur</span> <span class="o">=</span> <span class="n">end</span>
+        <span class="k">while</span> <span class="n">cur</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">prev</span> <span class="o">=</span> <span class="n">back</span><span class="p">[</span><span class="n">cur</span><span class="p">]</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="n">QualityType</span><span class="p">(</span><span class="n">kval</span><span class="p">[</span><span class="n">cur</span><span class="p">])</span>
+            <span class="n">vol</span> <span class="o">=</span> <span class="n">taper</span><span class="o">.</span><span class="n">volume_section</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="n">prev</span><span class="p">],</span> <span class="n">h</span><span class="p">[</span><span class="n">cur</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">q</span> <span class="ow">in</span> <span class="p">(</span><span class="n">QualityType</span><span class="o">.</span><span class="n">ButtLog</span><span class="p">,</span> <span class="n">QualityType</span><span class="o">.</span><span class="n">MiddleLog</span><span class="p">,</span> <span class="n">QualityType</span><span class="o">.</span><span class="n">TopLog</span><span class="p">):</span>
+                <span class="n">vol_q</span><span class="p">[</span><span class="n">q</span><span class="o">.</span><span class="n">value</span><span class="p">]</span> <span class="o">+=</span> <span class="n">vol</span>
+                <span class="n">vol_for_p</span><span class="p">[</span><span class="n">q</span><span class="o">.</span><span class="n">value</span><span class="p">]</span> <span class="o">+=</span> <span class="n">vol</span>
+                <span class="n">price_q</span><span class="p">[</span><span class="n">q</span><span class="o">.</span><span class="n">value</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="n">vtimber</span><span class="p">[</span><span class="n">cur</span><span class="p">]</span> <span class="o">-</span> <span class="n">vtimber</span><span class="p">[</span><span class="n">prev</span><span class="p">])</span> <span class="o">/</span> <span class="mf">100.0</span>
+            <span class="k">elif</span> <span class="n">q</span> <span class="o">==</span> <span class="n">QualityType</span><span class="o">.</span><span class="n">Pulp</span><span class="p">:</span>
+                <span class="n">vol_q</span><span class="p">[</span><span class="n">QualityType</span><span class="o">.</span><span class="n">Pulp</span><span class="o">.</span><span class="n">value</span><span class="p">]</span> <span class="o">+=</span> <span class="n">vol</span>
+            <span class="k">elif</span> <span class="n">q</span> <span class="o">==</span> <span class="n">QualityType</span><span class="o">.</span><span class="n">LogCull</span><span class="p">:</span>
+                <span class="n">vol_q</span><span class="p">[</span><span class="n">QualityType</span><span class="o">.</span><span class="n">LogCull</span><span class="o">.</span><span class="n">value</span><span class="p">]</span> <span class="o">+=</span> <span class="n">vol</span>
+
+            <span class="c1"># Store reconstruction CrossCutSection ---------------------------</span>
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">save_sections</span><span class="p">:</span>
+                <span class="c1"># crude but safe proportions (can be refined later)</span>
+                <span class="n">timber_prop</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="mf">1.0</span>
+                    <span class="k">if</span> <span class="n">q</span> <span class="ow">in</span> <span class="p">(</span><span class="n">QualityType</span><span class="o">.</span><span class="n">ButtLog</span><span class="p">,</span> <span class="n">QualityType</span><span class="o">.</span><span class="n">MiddleLog</span><span class="p">,</span> <span class="n">QualityType</span><span class="o">.</span><span class="n">TopLog</span><span class="p">)</span>
+                    <span class="k">else</span> <span class="mf">0.0</span>
+                <span class="p">)</span>
+                <span class="n">sec</span> <span class="o">=</span> <span class="n">CrossCutSection</span><span class="p">(</span>
+                    <span class="n">start_point</span><span class="o">=</span><span class="n">prev</span><span class="p">,</span>
+                    <span class="n">end_point</span><span class="o">=</span><span class="n">cur</span><span class="p">,</span>
+                    <span class="n">volume</span><span class="o">=</span><span class="n">vol</span><span class="p">,</span>
+                    <span class="n">top_diameter</span><span class="o">=</span><span class="n">dh</span><span class="p">[</span><span class="n">cur</span><span class="p">],</span>
+                    <span class="n">value</span><span class="o">=</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">cur</span><span class="p">]</span> <span class="o">-</span> <span class="n">v</span><span class="p">[</span><span class="n">prev</span><span class="p">])</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">,</span>  <span class="c1"># öre → SEK</span>
+                    <span class="n">species_group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_species</span><span class="p">,</span>
+                    <span class="n">timber_proportion</span><span class="o">=</span><span class="n">timber_prop</span><span class="p">,</span>
+                    <span class="n">pulp_proportion</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                    <span class="n">cull_proportion</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                    <span class="n">fuelwood_proportion</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                    <span class="n">quality</span><span class="o">=</span><span class="n">q</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="c1"># --- merge with previous if contiguous and same class ----</span>
+                <span class="k">if</span> <span class="n">secs</span><span class="p">:</span>
+                    <span class="n">last</span> <span class="o">=</span> <span class="n">secs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">contiguous</span> <span class="o">=</span> <span class="n">last</span><span class="o">.</span><span class="n">start_point</span> <span class="o">==</span> <span class="n">sec</span><span class="o">.</span><span class="n">end_point</span>  <span class="c1"># bottom-to-top order</span>
+                    <span class="k">if</span> <span class="n">contiguous</span> <span class="ow">and</span> <span class="n">last</span><span class="o">.</span><span class="n">quality</span> <span class="o">==</span> <span class="n">sec</span><span class="o">.</span><span class="n">quality</span><span class="p">:</span>
+                        <span class="n">secs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_merge_sections</span><span class="p">(</span><span class="n">sec</span><span class="p">,</span> <span class="n">last</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">secs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sec</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">secs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sec</span><span class="p">)</span>
+
+            <span class="n">cur</span> <span class="o">=</span> <span class="n">prev</span>
+
+        <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="p">(</span><span class="n">QualityType</span><span class="o">.</span><span class="n">ButtLog</span><span class="p">,</span> <span class="n">QualityType</span><span class="o">.</span><span class="n">MiddleLog</span><span class="p">,</span> <span class="n">QualityType</span><span class="o">.</span><span class="n">TopLog</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">vol_for_p</span><span class="p">[</span><span class="n">q</span><span class="o">.</span><span class="n">value</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">price_q</span><span class="p">[</span><span class="n">q</span><span class="o">.</span><span class="n">value</span><span class="p">]</span> <span class="o">/=</span> <span class="n">vol_for_p</span><span class="p">[</span><span class="n">q</span><span class="o">.</span><span class="n">value</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">BuckingResult</span><span class="p">(</span>
+            <span class="n">species_group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_species</span><span class="p">,</span>
+            <span class="n">total_value</span><span class="o">=</span><span class="n">total_SEK</span><span class="p">,</span>
+            <span class="n">top_proportion</span><span class="o">=</span><span class="n">p_top</span><span class="p">,</span>
+            <span class="n">dead_wood_proportion</span><span class="o">=</span><span class="n">p_dead</span><span class="p">,</span>
+            <span class="n">high_stump_volume_proportion</span><span class="o">=</span><span class="n">p_vol_hs</span><span class="p">,</span>
+            <span class="n">high_stump_value_proportion</span><span class="o">=</span><span class="p">((</span><span class="n">v</span><span class="p">[</span><span class="n">back</span><span class="p">[</span><span class="n">hs_ep</span><span class="p">]]</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">total_SEK</span> <span class="k">if</span> <span class="n">hs_ep</span> <span class="k">else</span> <span class="mf">0.0</span><span class="p">),</span>
+            <span class="n">last_cut_relative_height</span><span class="o">=</span><span class="n">last_rel</span><span class="p">,</span>
+            <span class="n">volume_per_quality</span><span class="o">=</span><span class="n">vol_q</span><span class="p">,</span>
+            <span class="n">timber_price_by_quality</span><span class="o">=</span><span class="n">price_q</span><span class="p">,</span>
+            <span class="n">vol_fub_5cm</span><span class="o">=</span><span class="n">vol_fub5</span><span class="p">,</span>
+            <span class="n">vol_sk_ub</span><span class="o">=</span><span class="n">vol_sk</span><span class="p">,</span>
+            <span class="n">DBH_cm</span><span class="o">=</span><span class="n">DBH_cm</span><span class="p">,</span>
+            <span class="n">height_m</span><span class="o">=</span><span class="n">height_m</span><span class="p">,</span>
+            <span class="n">stump_height_m</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_timber</span><span class="o">.</span><span class="n">stump_height_m</span><span class="p">,</span>
+            <span class="n">diameter_stump_cm</span><span class="o">=</span><span class="n">diameter_stump_cm</span><span class="p">,</span>
+            <span class="n">taperDiams_cm</span><span class="o">=</span><span class="n">taperDiams_cm</span><span class="p">,</span>
+            <span class="n">taperHeights_m</span><span class="o">=</span><span class="n">taperHeights_m</span><span class="p">,</span>
+            <span class="n">sections</span><span class="o">=</span><span class="n">secs</span> <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">save_sections</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_merge_sections</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">CrossCutSection</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">CrossCutSection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CrossCutSection</span><span class="p">:</span>
+        <span class="n">total_vol</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">volume</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">volume</span>
+
+        <span class="n">new_start</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">start_point</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">start_point</span><span class="p">)</span>
+        <span class="n">new_end</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">end_point</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">end_point</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">w_avg</span><span class="p">(</span><span class="n">attr</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">((</span><span class="nb">getattr</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span> <span class="o">*</span> <span class="n">a</span><span class="o">.</span><span class="n">volume</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span> <span class="o">*</span> <span class="n">b</span><span class="o">.</span><span class="n">volume</span><span class="p">))</span> <span class="o">/</span> <span class="n">total_vol</span>
+
+        <span class="k">return</span> <span class="n">CrossCutSection</span><span class="p">(</span>
+            <span class="n">start_point</span><span class="o">=</span><span class="n">new_start</span><span class="p">,</span>
+            <span class="n">end_point</span><span class="o">=</span><span class="n">new_end</span><span class="p">,</span>
+            <span class="n">volume</span><span class="o">=</span><span class="n">total_vol</span><span class="p">,</span>
+            <span class="n">top_diameter</span><span class="o">=</span><span class="n">b</span><span class="o">.</span><span class="n">top_diameter</span> <span class="k">if</span> <span class="n">b</span><span class="o">.</span><span class="n">end_point</span> <span class="o">&gt;</span> <span class="n">a</span><span class="o">.</span><span class="n">end_point</span> <span class="k">else</span> <span class="n">a</span><span class="o">.</span><span class="n">top_diameter</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">value</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="n">species_group</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">species_group</span><span class="p">,</span>
+            <span class="n">timber_proportion</span><span class="o">=</span><span class="n">w_avg</span><span class="p">(</span><span class="s2">&quot;timber_proportion&quot;</span><span class="p">),</span>
+            <span class="n">pulp_proportion</span><span class="o">=</span><span class="n">w_avg</span><span class="p">(</span><span class="s2">&quot;pulp_proportion&quot;</span><span class="p">),</span>
+            <span class="n">cull_proportion</span><span class="o">=</span><span class="n">w_avg</span><span class="p">(</span><span class="s2">&quot;cull_proportion&quot;</span><span class="p">),</span>
+            <span class="n">fuelwood_proportion</span><span class="o">=</span><span class="n">w_avg</span><span class="p">(</span><span class="s2">&quot;fuelwood_proportion&quot;</span><span class="p">),</span>
+            <span class="n">quality</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">quality</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
