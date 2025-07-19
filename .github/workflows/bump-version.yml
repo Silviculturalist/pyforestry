@@ -1,0 +1,35 @@
+name: Bump Patch Version
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [pyproject.toml]
+
+jobs:
+  bump:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install bump-my-version
+        run: pip install bump-my-version
+
+      - name: Bump patch
+        id: bump
+        run: |
+          bump-my-version bump patch --allow-dirty --no-tag
+          echo "new=$(grep '^version' pyproject.toml | head -1 | cut -d '"' -f2)" >> $GITHUB_OUTPUT
+
+      - name: Commit and push
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: bump version to ${{ steps.bump.outputs.new }}"
+          file_pattern: pyproject.toml

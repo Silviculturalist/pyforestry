@@ -8,9 +8,9 @@ permissions:
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, dev ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, dev ]
 
 jobs:
   test-and-coverage:
@@ -22,6 +22,8 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
@@ -33,8 +35,44 @@ jobs:
           python -m pip install --upgrade pip
           pip install --force-reinstall --no-cache-dir .[dev]
 
+      - name: Load coverage threshold
+        run: echo "THRESHOLD=$(cat coverage_threshold.txt)" >> $GITHUB_ENV
+
       - name: Run tests with coverage
-        run: pytest --cov=pyforestry --cov-report=xml --cov-report=html --cov-fail-under=50
+        run: pytest --cov=pyforestry --cov-report=xml --cov-report=html --cov-fail-under=$THRESHOLD
+
+      - name: Determine base reference
+        id: base
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git fetch origin ${{ github.base_ref }} --depth=1
+            echo "sha=$(git merge-base HEAD origin/${{ github.base_ref }})" >> $GITHUB_OUTPUT
+          else
+            echo "sha=${{ github.event.before }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check coverage for new files
+        run: python scripts/check_new_file_coverage.py ${{ steps.base.outputs.sha }}
+
+      - name: Update coverage baseline
+        run: |
+          NEW=$(grep -o 'line-rate="[0-9.]*"' coverage.xml | head -1 | cut -d'"' -f2)
+          NEW=$(python - <<'EOF'
+import sys
+print(int(round(float(sys.argv[1])*100)))
+EOF
+$NEW)
+          CUR=$(cat coverage_threshold.txt)
+          if [ "$NEW" -gt "$CUR" ]; then
+            echo "$NEW" > coverage_threshold.txt
+          fi
+
+      - name: Commit updated baseline
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update coverage baseline"
+          file_pattern: coverage_threshold.txt
 
       - name: Upload coverage report artifact
         uses: actions/upload-artifact@v4
@@ -54,6 +92,8 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -66,10 +106,31 @@ jobs:
           # Assuming docstr-coverage is in your dev dependencies
           pip install .[dev]
 
+      - name: Load docstring threshold
+        run: echo "DOC_THRESHOLD=$(cat docstring_threshold.txt)" >> $GITHUB_ENV
+
       - name: Generate docstring coverage badge
-        # Scans the pyforestry package for docstrings and creates a badge
-        # Run as a module to avoid PATH issues
-        run: docstr-coverage src/pyforestry --badge .docstring_coverage.svg --fail-under=0
+        run: docstr-coverage src/pyforestry --badge .docstring_coverage.svg --fail-under=$DOC_THRESHOLD | tee docstring.log
+
+      - name: Update docstring baseline
+        run: |
+          NEW=$(grep -o 'Total coverage: [0-9.]*%' docstring.log | tail -1 | awk '{print $3}' | tr -d '%')
+          NEW=$(python - <<'EOF'
+import sys
+print(int(round(float(sys.argv[1]))))
+EOF
+$NEW)
+          CUR=$(cat docstring_threshold.txt)
+          if [ "$NEW" -gt "$CUR" ]; then
+            echo "$NEW" > docstring_threshold.txt
+          fi
+
+      - name: Commit docstring baseline
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update docstring baseline"
+          file_pattern: docstring_threshold.txt
 
       - name: Commit badge
         # Only commit the new badge on pushes to the main branch
@@ -86,10 +147,12 @@ jobs:
   build-and-deploy-docs:
     runs-on: ubuntu-latest
     needs: test-and-coverage
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev'
     steps:
       - name: Check out code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -109,12 +172,33 @@ jobs:
           sphinx-apidoc -f -o docs/source/api src/pyforestry
 
       # MODIFIED STEP: Change to docs directory before building
+      - name: Set docs destination
+        id: dest
+        run: |
+          if [ "$GITHUB_REF" = "refs/heads/main" ]; then
+            echo "dir=stable" >> $GITHUB_OUTPUT
+          else
+            echo "dir=dev" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set DOCS_VERSION env
+        run: |
+          if [ "$GITHUB_REF" = "refs/heads/main" ]; then
+            echo "DOCS_VERSION=stable" >> $GITHUB_ENV
+          else
+            echo "DOCS_VERSION=dev" >> $GITHUB_ENV
+          fi
+
       - name: Build Sphinx docs
         run: make html
         working-directory: ./docs
+
+      - name: Copy versions.json
+        run: cp docs/versions.json docs/build/html/
 
       - name: Deploy docs to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: docs/build/html
+          destination_dir: ${{ steps.dest.outputs.dir }}
