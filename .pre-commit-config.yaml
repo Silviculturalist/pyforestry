@@ -13,10 +13,4 @@ repos:
   hooks:
     # Run Ruff’s linter + fixes, but do *not* exit non-zero on fix
     - id: ruff
-      args: [--fix]
-
-# (Optional) If you REALLY want Black too:
-- repo: https://github.com/psf/black
-  rev: 24.4.2
-  hooks:
-    - id: black
+      args: [--fix, --format]

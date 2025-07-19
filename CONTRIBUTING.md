@@ -27,7 +27,7 @@ should be based on `dev` and pull requests should target `dev`. The `main` branc
    pip install -e .[dev]
    ```
 
-   This installs both runtime requirements and dev tools including **pytest**, **pytest-cov**, **docstr-coverage**, **coverage**, **black**, **ruff**, **sphinx**, **pydata-sphinx-theme**, and **myst-parser**.
+   This installs both runtime requirements and dev tools including **pytest**, **pytest-cov**, **docstr-coverage**, **coverage**, **ruff**, **sphinx**, **pydata-sphinx-theme**, and **myst-parser**.
 
 ---
 
@@ -37,9 +37,9 @@ To automatically format and lint on save, add or update `.vscode/settings.json` 
 
 ```jsonc
 {
-  // Format Python with Black on save
+  // Format Python with Ruff on save
   "[python]": {
-    "editor.defaultFormatter": "ms-python.python",
+    "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.formatOnSave": true,
     // Also run Ruff’s auto-fixes on save
     "editor.codeActionsOnSave": {
@@ -49,7 +49,7 @@ To automatically format and lint on save, add or update `.vscode/settings.json` 
 }
 ```
 
-This setup invokes Black for code formatting and Ruff for import sorting, removing unused names, and other lint fixes.
+This setup invokes Ruff for both code formatting and lint fixes.
 
 ---
 
@@ -65,8 +65,7 @@ pre-commit install
 Our `.pre-commit-config.yaml` runs the following:
 
 * Trailing-whitespace, end-of-file-fixer, YAML syntax checks, and large-file checks
-* `ruff --fix` for lint auto-fixing
-* Black for consistent formatting
+* `ruff --fix` and `ruff format` for consistent formatting and lint fixes
 
 To manually run all hooks against every file:
 
@@ -127,7 +126,7 @@ Preview the output in `docs/build/html` before submitting a PR.
 
    ```bash
    ruff check . --fix
-   black .
+   ruff format .
    pytest --cov=pyforestry --cov-report=xml --cov-report=html
    docstr-coverage src/pyforestry
    make html -C docs
@@ -147,7 +146,7 @@ Preview the output in `docs/build/html` before submitting a PR.
 ## Code Style & Docstrings
 
 * Follow **PEP 8** ([https://peps.python.org/pep-0008/](https://peps.python.org/pep-0008/)).
-* We rely on **Black** for formatting and **Ruff** for linting (import sorting, bug finding, etc.)
+* We rely on **Ruff** for formatting and linting (import sorting, bug finding, etc.)
 * Use **Google-style docstrings** for all public functions, classes, and modules. Docstrings should include:
 
   * A brief description

@@ -221,7 +221,7 @@ def test_figure13_slope_factor_sample_points(
     # For now, let's keep the original expected values and tolerance to see the magnitude of difference.
     print(f"\nTesting: Lat={lat}, Slope={slope_deg}°, Azimuth={slope_az_name}({slope_az_deg}°)")
     print(
-        f"Calculated DIRECT factor: {factor*100:.2f}%, Expected GLOBAL (Table 8): {expected_factor_approx_percent:.1f}%"
+        f"Calculated DIRECT factor: {factor * 100:.2f}%, Expected GLOBAL (Table 8): {expected_factor_approx_percent:.1f}%"
     )
 
     assert factor * 100 == pytest.approx(
