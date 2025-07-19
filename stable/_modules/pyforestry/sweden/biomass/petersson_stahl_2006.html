@@ -388,6 +388,7 @@
   <h1>Source code for pyforestry.sweden.biomass.petersson_stahl_2006</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
+
 <div class="viewcode-block" id="PeterssonStahl2006">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PeterssonStahl2006</span><span class="p">:</span>
@@ -474,7 +475,11 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            float: The natural logarithm of below-ground biomass in grams.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="mf">3.57249</span> <span class="o">+</span> <span class="mf">11.07427</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">+</span> <span class="mi">113</span><span class="p">))</span> <span class="o">-</span> <span class="mf">0.05119</span> <span class="o">*</span> <span class="n">diameter_mm</span> <span class="o">/</span> <span class="n">age_at_breast_height</span></div>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="mf">3.57249</span>
+            <span class="o">+</span> <span class="mf">11.07427</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">+</span> <span class="mi">113</span><span class="p">))</span>
+            <span class="o">-</span> <span class="mf">0.05119</span> <span class="o">*</span> <span class="n">diameter_mm</span> <span class="o">/</span> <span class="n">age_at_breast_height</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PeterssonStahl2006.pine_root_5mm_3">
@@ -491,7 +496,12 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            float: The natural logarithm of below-ground biomass in grams.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="mf">3.50127</span> <span class="o">+</span> <span class="mf">10.96210</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">+</span> <span class="mi">113</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.00250</span> <span class="o">*</span> <span class="n">age_basal_area_weighted</span> <span class="o">-</span> <span class="mf">0.37595</span> <span class="o">*</span> <span class="n">dry_soil</span></div>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="mf">3.50127</span>
+            <span class="o">+</span> <span class="mf">10.96210</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">+</span> <span class="mi">113</span><span class="p">))</span>
+            <span class="o">+</span> <span class="mf">0.00250</span> <span class="o">*</span> <span class="n">age_basal_area_weighted</span>
+            <span class="o">-</span> <span class="mf">0.37595</span> <span class="o">*</span> <span class="n">dry_soil</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PeterssonStahl2006.pine_root_2mm_1">
@@ -522,7 +532,11 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            float: The natural logarithm of below-ground biomass in grams.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="mf">3.62193</span> <span class="o">+</span> <span class="mf">11.07117</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">+</span> <span class="mi">113</span><span class="p">))</span> <span class="o">-</span> <span class="mf">0.05029</span> <span class="o">*</span> <span class="n">diameter_mm</span> <span class="o">/</span> <span class="n">age_at_breast_height</span></div>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="mf">3.62193</span>
+            <span class="o">+</span> <span class="mf">11.07117</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">+</span> <span class="mi">113</span><span class="p">))</span>
+            <span class="o">-</span> <span class="mf">0.05029</span> <span class="o">*</span> <span class="n">diameter_mm</span> <span class="o">/</span> <span class="n">age_at_breast_height</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PeterssonStahl2006.pine_root_2mm_3">
@@ -539,7 +553,12 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            float: The natural logarithm of below-ground biomass in grams.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="mf">3.56553</span> <span class="o">+</span> <span class="mf">10.96370</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">+</span> <span class="mi">113</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.00236</span> <span class="o">*</span> <span class="n">age_basal_area_weighted</span> <span class="o">-</span> <span class="mf">0.38089</span> <span class="o">*</span> <span class="n">dry_soil</span></div>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="mf">3.56553</span>
+            <span class="o">+</span> <span class="mf">10.96370</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">+</span> <span class="mi">113</span><span class="p">))</span>
+            <span class="o">+</span> <span class="mf">0.00236</span> <span class="o">*</span> <span class="n">age_basal_area_weighted</span>
+            <span class="o">-</span> <span class="mf">0.38089</span> <span class="o">*</span> <span class="n">dry_soil</span>
+        <span class="p">)</span></div>
 
 
     <span class="c1"># Spruce functions</span>
@@ -571,7 +590,11 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            float: The natural logarithm of below-ground biomass in grams.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="mf">4.60559</span> <span class="o">+</span> <span class="mf">10.60542</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">+</span> <span class="mi">142</span><span class="p">))</span> <span class="o">-</span> <span class="mf">0.02489</span> <span class="o">*</span> <span class="n">diameter_mm</span> <span class="o">/</span> <span class="n">age_at_breast_height</span></div>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="mf">4.60559</span>
+            <span class="o">+</span> <span class="mf">10.60542</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">+</span> <span class="mi">142</span><span class="p">))</span>
+            <span class="o">-</span> <span class="mf">0.02489</span> <span class="o">*</span> <span class="n">diameter_mm</span> <span class="o">/</span> <span class="n">age_at_breast_height</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PeterssonStahl2006.spruce_root_5mm_3">
@@ -591,7 +614,8 @@
 <span class="sd">            float: The natural logarithm of below-ground biomass in grams.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">(</span>
-            <span class="mf">4.98414</span> <span class="o">+</span> <span class="mf">9.89245</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">+</span> <span class="mi">142</span><span class="p">))</span>
+            <span class="mf">4.98414</span>
+            <span class="o">+</span> <span class="mf">9.89245</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">+</span> <span class="mi">142</span><span class="p">))</span>
             <span class="o">-</span> <span class="mf">0.03411</span> <span class="o">*</span> <span class="n">diameter_mm</span> <span class="o">/</span> <span class="n">age_at_breast_height</span>
             <span class="o">-</span> <span class="mf">0.00769</span> <span class="o">*</span> <span class="n">basal_area</span>
             <span class="o">+</span> <span class="mf">0.00317</span> <span class="o">*</span> <span class="n">crown_length</span>
@@ -627,13 +651,19 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            float: The natural logarithm of below-ground biomass in grams.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="mf">4.69287</span> <span class="o">+</span> <span class="mf">10.45700</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">+</span> <span class="mi">138</span><span class="p">))</span> <span class="o">-</span> <span class="mf">0.03057</span> <span class="o">*</span> <span class="n">diameter_mm</span> <span class="o">/</span> <span class="n">age_at_breast_height</span></div>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="mf">4.69287</span>
+            <span class="o">+</span> <span class="mf">10.45700</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">+</span> <span class="mi">138</span><span class="p">))</span>
+            <span class="o">-</span> <span class="mf">0.03057</span> <span class="o">*</span> <span class="n">diameter_mm</span> <span class="o">/</span> <span class="n">age_at_breast_height</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PeterssonStahl2006.spruce_root_2mm_3">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.spruce_root_2mm_3">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">spruce_root_2mm_3</span><span class="p">(</span><span class="n">diameter_mm</span><span class="p">,</span> <span class="n">age_basal_area_weighted</span><span class="p">,</span> <span class="n">basal_area</span><span class="p">,</span> <span class="n">crown_length</span><span class="p">,</span> <span class="n">dry_soil</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">spruce_root_2mm_3</span><span class="p">(</span>
+        <span class="n">diameter_mm</span><span class="p">,</span> <span class="n">age_basal_area_weighted</span><span class="p">,</span> <span class="n">basal_area</span><span class="p">,</span> <span class="n">crown_length</span><span class="p">,</span> <span class="n">dry_soil</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates ln(biomass) for spruce roots &gt;= 2 mm with detailed parameters.</span>
 
 <span class="sd">        Args:</span>
@@ -647,7 +677,8 @@
 <span class="sd">            float: The natural logarithm of below-ground biomass in grams.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">(</span>
-            <span class="mf">5.00171</span> <span class="o">+</span> <span class="mf">9.89713</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">+</span> <span class="mi">138</span><span class="p">))</span>
+            <span class="mf">5.00171</span>
+            <span class="o">+</span> <span class="mf">9.89713</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_mm</span> <span class="o">+</span> <span class="mi">138</span><span class="p">))</span>
             <span class="o">-</span> <span class="mf">0.03653</span> <span class="o">*</span> <span class="n">age_basal_area_weighted</span>
             <span class="o">-</span> <span class="mf">0.00636</span> <span class="o">*</span> <span class="n">basal_area</span>
             <span class="o">+</span> <span class="mf">0.00261</span> <span class="o">*</span> <span class="n">crown_length</span>
@@ -725,7 +756,9 @@
         <span class="p">}</span>
 
         <span class="k">if</span> <span class="n">species</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">species_map</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid species &#39;</span><span class="si">{</span><span class="n">species</span><span class="si">}</span><span class="s2">&#39;. Must be one of &#39;birch&#39;, &#39;pine&#39;, &#39;spruce&#39;.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Invalid species &#39;</span><span class="si">{</span><span class="n">species</span><span class="si">}</span><span class="s2">&#39;. Must be one of &#39;birch&#39;, &#39;pine&#39;, &#39;spruce&#39;.&quot;</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="n">root_detail</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">species_map</span><span class="p">[</span><span class="n">species</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid root_detail &#39;</span><span class="si">{</span><span class="n">root_detail</span><span class="si">}</span><span class="s2">&#39;. Must be 2 or 5.&quot;</span><span class="p">)</span>
 
@@ -736,9 +769,9 @@
         <span class="k">for</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">functions</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="c1"># Match arguments dynamically and evaluate the function</span>
-                <span class="n">func_args</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_varnames</span><span class="p">[:</span><span class="n">func</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">]</span>
+                <span class="n">func_args</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_varnames</span><span class="p">[:</span> <span class="n">func</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">]</span>
                 <span class="n">args</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">value</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">func_args</span><span class="p">}</span>
-                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="o">**</span><span class="n">args</span><span class="p">))</span><span class="o">/</span><span class="mi">1000</span> <span class="c1"># return kg</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="o">**</span><span class="n">args</span><span class="p">))</span> <span class="o">/</span> <span class="mi">1000</span>  <span class="c1"># return kg</span>
             <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
                 <span class="k">continue</span>
 

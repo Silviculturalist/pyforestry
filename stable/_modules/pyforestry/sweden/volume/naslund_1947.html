@@ -387,7 +387,9 @@
                   
   <h1>Source code for pyforestry.sweden.volume.naslund_1947</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.sweden.timber</span><span class="w"> </span><span class="kn">import</span> <span class="n">SweTimber</span>
+
 
 <div class="viewcode-block" id="NaslundVolume">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.volume.html#pyforestry.sweden.volume.naslund_1947.NaslundVolume">[docs]</a>
@@ -399,18 +401,18 @@
         <span class="n">timber</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">timber</span><span class="o">.</span><span class="n">region</span> <span class="o">==</span> <span class="s2">&quot;southern&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">timber</span><span class="o">.</span><span class="n">species</span> <span class="o">==</span> <span class="s2">&quot;pinus sylvestris&quot;</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">NaslundVolume</span><span class="o">.</span><span class="n">_southern_pine_volume</span><span class="p">(</span><span class="n">timber</span><span class="p">)</span><span class="o">/</span><span class="mi">1000</span>
+                <span class="k">return</span> <span class="n">NaslundVolume</span><span class="o">.</span><span class="n">_southern_pine_volume</span><span class="p">(</span><span class="n">timber</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
             <span class="k">elif</span> <span class="n">timber</span><span class="o">.</span><span class="n">species</span> <span class="o">==</span> <span class="s2">&quot;picea abies&quot;</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">NaslundVolume</span><span class="o">.</span><span class="n">_southern_spruce_volume</span><span class="p">(</span><span class="n">timber</span><span class="p">)</span><span class="o">/</span><span class="mi">1000</span>
+                <span class="k">return</span> <span class="n">NaslundVolume</span><span class="o">.</span><span class="n">_southern_spruce_volume</span><span class="p">(</span><span class="n">timber</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
             <span class="k">elif</span> <span class="n">timber</span><span class="o">.</span><span class="n">species</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;betula&quot;</span><span class="p">,</span> <span class="s2">&quot;betula pendula&quot;</span><span class="p">,</span> <span class="s2">&quot;betula pubescens&quot;</span><span class="p">]:</span>
-                <span class="k">return</span> <span class="n">NaslundVolume</span><span class="o">.</span><span class="n">_southern_birch_volume</span><span class="p">(</span><span class="n">timber</span><span class="p">)</span><span class="o">/</span><span class="mi">1000</span>
+                <span class="k">return</span> <span class="n">NaslundVolume</span><span class="o">.</span><span class="n">_southern_birch_volume</span><span class="p">(</span><span class="n">timber</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
         <span class="k">elif</span> <span class="n">timber</span><span class="o">.</span><span class="n">region</span> <span class="o">==</span> <span class="s2">&quot;northern&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">timber</span><span class="o">.</span><span class="n">species</span> <span class="o">==</span> <span class="s2">&quot;pinus sylvestris&quot;</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">NaslundVolume</span><span class="o">.</span><span class="n">_northern_pine_volume</span><span class="p">(</span><span class="n">timber</span><span class="p">)</span><span class="o">/</span><span class="mi">1000</span>
+                <span class="k">return</span> <span class="n">NaslundVolume</span><span class="o">.</span><span class="n">_northern_pine_volume</span><span class="p">(</span><span class="n">timber</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
             <span class="k">elif</span> <span class="n">timber</span><span class="o">.</span><span class="n">species</span> <span class="o">==</span> <span class="s2">&quot;picea abies&quot;</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">NaslundVolume</span><span class="o">.</span><span class="n">_northern_spruce_volume</span><span class="p">(</span><span class="n">timber</span><span class="p">)</span><span class="o">/</span><span class="mi">1000</span>
+                <span class="k">return</span> <span class="n">NaslundVolume</span><span class="o">.</span><span class="n">_northern_spruce_volume</span><span class="p">(</span><span class="n">timber</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
             <span class="k">elif</span> <span class="n">timber</span><span class="o">.</span><span class="n">species</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;betula&quot;</span><span class="p">,</span> <span class="s2">&quot;betula pendula&quot;</span><span class="p">,</span> <span class="s2">&quot;betula pubescens&quot;</span><span class="p">]:</span>
-                <span class="k">return</span> <span class="n">NaslundVolume</span><span class="o">.</span><span class="n">_northern_birch_volume</span><span class="p">(</span><span class="n">timber</span><span class="p">)</span><span class="o">/</span><span class="mi">1000</span>
+                <span class="k">return</span> <span class="n">NaslundVolume</span><span class="o">.</span><span class="n">_northern_birch_volume</span><span class="p">(</span><span class="n">timber</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;Volume calculation for </span><span class="si">{</span><span class="n">timber</span><span class="o">.</span><span class="n">species</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">timber</span><span class="o">.</span><span class="n">region</span><span class="si">}</span><span class="s2"> region is not implemented.&quot;</span>
         <span class="p">)</span></div>
@@ -618,6 +620,7 @@
                 <span class="p">)</span></div>
 
 
+
 <div class="viewcode-block" id="NaslundFormFactor">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.volume.html#pyforestry.sweden.volume.naslund_1947.NaslundFormFactor">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">NaslundFormFactor</span><span class="p">:</span>
@@ -703,13 +706,11 @@
                     <span class="o">+</span> <span class="mf">51.62</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">)</span>
                     <span class="o">-</span> <span class="mf">3.962</span> <span class="o">*</span> <span class="n">B</span>
                     <span class="o">-</span> <span class="mf">0.9246</span> <span class="o">*</span> <span class="n">K</span>
-                <span class="p">)</span><span class="o">/</span><span class="mi">1000</span>
+                <span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="p">(</span>
-                    <span class="mf">308.97</span>
-                    <span class="o">+</span> <span class="mf">1365.38</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span>
-                    <span class="o">+</span> <span class="mf">93.14</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">)</span>
-                <span class="p">)</span><span class="o">/</span><span class="mi">1000</span>
+                    <span class="mf">308.97</span> <span class="o">+</span> <span class="mf">1365.38</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span> <span class="o">+</span> <span class="mf">93.14</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">)</span>
+                <span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">crown_base_height_m</span> <span class="ow">and</span> <span class="n">double_bark_mm</span><span class="p">:</span>
                 <span class="n">K</span> <span class="o">=</span> <span class="p">((</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">)</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
@@ -720,13 +721,9 @@
                     <span class="o">+</span> <span class="mf">44.71</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">)</span>
                     <span class="o">+</span> <span class="mf">1.339</span> <span class="o">*</span> <span class="n">B</span>
                     <span class="o">-</span> <span class="mf">1.201</span> <span class="o">*</span> <span class="n">K</span>
-                <span class="p">)</span><span class="o">/</span><span class="mi">1000</span>
+                <span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="p">(</span>
-                    <span class="mf">408.49</span>
-                    <span class="o">+</span> <span class="mf">798.46</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span>
-                    <span class="o">+</span> <span class="mf">72.89</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">)</span>
-                <span class="p">)</span><span class="o">/</span><span class="mi">1000</span>
+                <span class="k">return</span> <span class="p">(</span><span class="mf">408.49</span> <span class="o">+</span> <span class="mf">798.46</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span> <span class="o">+</span> <span class="mf">72.89</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">))</span> <span class="o">/</span> <span class="mi">1000</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_southern_spruce_form_factor</span><span class="p">(</span>
@@ -744,14 +741,14 @@
                     <span class="o">+</span> <span class="mf">186.94</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">)</span>
                     <span class="o">-</span> <span class="mf">583.74</span> <span class="o">*</span> <span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span>
                     <span class="o">-</span> <span class="mf">0.7854</span> <span class="o">*</span> <span class="n">K</span>
-                <span class="p">)</span><span class="o">/</span><span class="mi">1000</span>
+                <span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="p">(</span>
                     <span class="mf">245.09</span>
                     <span class="o">+</span> <span class="mf">1405.66</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span>
                     <span class="o">+</span> <span class="mf">231.11</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">)</span>
                     <span class="o">-</span> <span class="mf">628.48</span> <span class="o">*</span> <span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span>
-                <span class="p">)</span><span class="o">/</span><span class="mi">1000</span>
+                <span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">crown_base_height_m</span><span class="p">:</span>
                 <span class="n">K</span> <span class="o">=</span> <span class="p">((</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">)</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
@@ -761,14 +758,14 @@
                     <span class="o">+</span> <span class="mf">180.36</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">)</span>
                     <span class="o">-</span> <span class="mf">551.55</span> <span class="o">*</span> <span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span>
                     <span class="o">-</span> <span class="mf">0.7566</span> <span class="o">*</span> <span class="n">K</span>
-                <span class="p">)</span><span class="o">/</span><span class="mi">1000</span>
+                <span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="p">(</span>
                     <span class="mf">245.57</span>
                     <span class="o">+</span> <span class="mf">1369.89</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span>
                     <span class="o">+</span> <span class="mf">219.34</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">)</span>
                     <span class="o">-</span> <span class="mf">587.65</span> <span class="o">*</span> <span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span>
-                <span class="p">)</span><span class="o">/</span><span class="mi">1000</span>
+                <span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_southern_birch_form_factor</span><span class="p">(</span>
@@ -786,14 +783,14 @@
                     <span class="o">+</span> <span class="mf">155.44</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">)</span>
                     <span class="o">-</span> <span class="mf">462.95</span> <span class="o">*</span> <span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span>
                     <span class="o">-</span> <span class="mf">5.864</span> <span class="o">*</span> <span class="n">B</span>
-                <span class="p">)</span><span class="o">/</span><span class="mi">1000</span>
+                <span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="p">(</span>
                     <span class="mf">109.01</span>
                     <span class="o">+</span> <span class="mf">1823.03</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span>
                     <span class="o">+</span> <span class="mf">277.56</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">)</span>
                     <span class="o">-</span> <span class="mf">844.17</span> <span class="o">*</span> <span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span>
-                <span class="p">)</span><span class="o">/</span><span class="mi">1000</span>
+                <span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">double_bark_mm</span><span class="p">:</span>
                 <span class="n">B</span> <span class="o">=</span> <span class="p">((</span><span class="n">double_bark_mm</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
@@ -803,14 +800,14 @@
                     <span class="o">+</span> <span class="mf">149.04</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">)</span>
                     <span class="o">-</span> <span class="mf">406.04</span> <span class="o">*</span> <span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span>
                     <span class="o">-</span> <span class="mf">0.9224</span> <span class="o">*</span> <span class="n">B</span>
-                <span class="p">)</span><span class="o">/</span><span class="mi">1000</span>
+                <span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="p">(</span>
                     <span class="mf">237.03</span>
                     <span class="o">+</span> <span class="mf">1266.05</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span>
                     <span class="o">+</span> <span class="mf">162.72</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">)</span>
                     <span class="o">-</span> <span class="mf">451.26</span> <span class="o">*</span> <span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span>
-                <span class="p">)</span><span class="o">/</span><span class="mi">1000</span>
+                <span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_northern_pine_form_factor</span><span class="p">(</span>
@@ -824,34 +821,18 @@
             <span class="k">if</span> <span class="n">crown_base_height_m</span> <span class="ow">and</span> <span class="n">double_bark_mm</span><span class="p">:</span>
                 <span class="n">K</span> <span class="o">=</span> <span class="p">((</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">)</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
                 <span class="n">B</span> <span class="o">=</span> <span class="p">((</span><span class="n">double_bark_mm</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
-                <span class="k">return</span> <span class="p">(</span>
-                    <span class="mf">489.35</span>
-                    <span class="o">+</span> <span class="mf">1296.11</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span>
-                    <span class="o">-</span> <span class="mi">3700</span> <span class="o">*</span> <span class="n">B</span>
-                    <span class="o">-</span> <span class="mf">0.9310</span> <span class="o">*</span> <span class="n">K</span>
-                <span class="p">)</span><span class="o">/</span><span class="mi">1000</span>
+                <span class="k">return</span> <span class="p">(</span><span class="mf">489.35</span> <span class="o">+</span> <span class="mf">1296.11</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span> <span class="o">-</span> <span class="mi">3700</span> <span class="o">*</span> <span class="n">B</span> <span class="o">-</span> <span class="mf">0.9310</span> <span class="o">*</span> <span class="n">K</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="p">(</span>
-                    <span class="mf">390.81</span>
-                    <span class="o">+</span> <span class="mf">1185.86</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span>
-                    <span class="o">+</span> <span class="mf">35.88</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">)</span>
-                <span class="p">)</span><span class="o">/</span><span class="mi">1000</span>
+                    <span class="mf">390.81</span> <span class="o">+</span> <span class="mf">1185.86</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span> <span class="o">+</span> <span class="mf">35.88</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">)</span>
+                <span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">crown_base_height_m</span> <span class="ow">and</span> <span class="n">double_bark_mm</span><span class="p">:</span>
                 <span class="n">K</span> <span class="o">=</span> <span class="p">((</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">)</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
                 <span class="n">B</span> <span class="o">=</span> <span class="p">((</span><span class="n">double_bark_mm</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
-                <span class="k">return</span> <span class="p">(</span>
-                    <span class="mf">502.22</span>
-                    <span class="o">+</span> <span class="mf">771.5</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span>
-                    <span class="o">+</span> <span class="mf">2.257</span> <span class="o">*</span> <span class="n">B</span>
-                    <span class="o">-</span> <span class="mf">1.008</span> <span class="o">*</span> <span class="n">K</span>
-                <span class="p">)</span><span class="o">/</span><span class="mi">1000</span>
+                <span class="k">return</span> <span class="p">(</span><span class="mf">502.22</span> <span class="o">+</span> <span class="mf">771.5</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span> <span class="o">+</span> <span class="mf">2.257</span> <span class="o">*</span> <span class="n">B</span> <span class="o">-</span> <span class="mf">1.008</span> <span class="o">*</span> <span class="n">K</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="p">(</span>
-                    <span class="mf">463.55</span>
-                    <span class="o">+</span> <span class="mf">699.14</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span>
-                    <span class="o">+</span> <span class="mf">34.36</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">)</span>
-                <span class="p">)</span><span class="o">/</span><span class="mi">1000</span>
+                <span class="k">return</span> <span class="p">(</span><span class="mf">463.55</span> <span class="o">+</span> <span class="mf">699.14</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span> <span class="o">+</span> <span class="mf">34.36</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">))</span> <span class="o">/</span> <span class="mi">1000</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_northern_spruce_form_factor</span><span class="p">(</span>
@@ -869,14 +850,14 @@
                     <span class="o">+</span> <span class="mf">226.83</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">)</span>
                     <span class="o">-</span> <span class="mf">595.98</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
                     <span class="o">-</span> <span class="mf">0.7980</span> <span class="o">*</span> <span class="n">K</span>
-                <span class="p">)</span><span class="o">/</span><span class="mi">1000</span>
+                <span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="p">(</span>
                     <span class="mf">193.84</span>
                     <span class="o">+</span> <span class="mf">1467.46</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span>
                     <span class="o">+</span> <span class="mf">276.26</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">)</span>
                     <span class="o">-</span> <span class="mf">700.45</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-                <span class="p">)</span><span class="o">/</span><span class="mi">1000</span>
+                <span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">crown_base_height_m</span><span class="p">:</span>
                 <span class="n">K</span> <span class="o">=</span> <span class="p">((</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">)</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
@@ -886,14 +867,14 @@
                     <span class="o">+</span> <span class="mf">199.71</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">)</span>
                     <span class="o">-</span> <span class="mf">591.81</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
                     <span class="o">-</span> <span class="mf">0.7403</span> <span class="o">*</span> <span class="n">K</span>
-                <span class="p">)</span><span class="o">/</span><span class="mi">1000</span>
+                <span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="p">(</span>
                     <span class="mf">221.51</span>
                     <span class="o">+</span> <span class="mf">1431.21</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span>
                     <span class="o">+</span> <span class="mf">244.14</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">)</span>
                     <span class="o">-</span> <span class="mf">652.09</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-                <span class="p">)</span><span class="o">/</span><span class="mi">1000</span>
+                <span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_northern_birch_form_factor</span><span class="p">(</span>
@@ -913,13 +894,9 @@
                     <span class="o">+</span> <span class="mf">47.35</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">)</span>
                     <span class="o">-</span> <span class="mf">2.154</span> <span class="o">*</span> <span class="n">B</span>
                     <span class="o">-</span> <span class="mf">0.4154</span> <span class="o">*</span> <span class="n">K</span>
-                <span class="p">)</span><span class="o">/</span><span class="mi">1000</span>
+                <span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="p">(</span>
-                    <span class="mf">368.17</span>
-                    <span class="o">+</span> <span class="mi">473</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span>
-                    <span class="o">+</span> <span class="mf">63.44</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">)</span>
-                <span class="p">)</span><span class="o">/</span><span class="mi">1000</span>
+                <span class="k">return</span> <span class="p">(</span><span class="mf">368.17</span> <span class="o">+</span> <span class="mi">473</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span> <span class="o">+</span> <span class="mf">63.44</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">))</span> <span class="o">/</span> <span class="mi">1000</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">crown_base_height_m</span><span class="p">:</span>
                 <span class="n">K</span> <span class="o">=</span> <span class="p">((</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">)</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
@@ -928,14 +905,9 @@
                     <span class="o">+</span> <span class="mf">423.71</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span>
                     <span class="o">+</span> <span class="mf">47.05</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">)</span>
                     <span class="o">-</span> <span class="mf">0.3808</span> <span class="o">*</span> <span class="n">K</span>
-                <span class="p">)</span><span class="o">/</span><span class="mi">1000</span>
+                <span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="p">(</span>
-                    <span class="mf">384.88</span>
-                    <span class="o">+</span> <span class="mf">344.14</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span>
-                    <span class="o">+</span> <span class="mf">55.34</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">)</span>
-                <span class="p">)</span><span class="o">/</span><span class="mi">1000</span></div>
-
+                <span class="k">return</span> <span class="p">(</span><span class="mf">384.88</span> <span class="o">+</span> <span class="mf">344.14</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span> <span class="o">+</span> <span class="mf">55.34</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">))</span> <span class="o">/</span> <span class="mi">1000</span></div>
 
 </pre></div>
 

@@ -389,6 +389,7 @@
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.integrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">quad</span>
 
+
 <div class="viewcode-block" id="TimberVolumeIntegrator">
 <a class="viewcode-back" href="../../../../../api/pyforestry.base.timber.timber_base.html#pyforestry.base.timber.TimberVolumeIntegrator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">TimberVolumeIntegrator</span><span class="p">:</span>
@@ -403,8 +404,8 @@
         <span class="n">diameter</span> <span class="o">=</span> <span class="n">taper_instance</span><span class="o">.</span><span class="n">get_diameter_at_height</span><span class="p">(</span><span class="n">height_m</span><span class="o">=</span><span class="n">height</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">diameter</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="mf">0.0</span>
-        <span class="n">radius</span> <span class="o">=</span> <span class="n">diameter</span> <span class="o">/</span> <span class="mi">200</span> <span class="c1">#cm to m</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">radius</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span></div>
+        <span class="n">radius</span> <span class="o">=</span> <span class="n">diameter</span> <span class="o">/</span> <span class="mi">200</span>  <span class="c1"># cm to m</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">radius</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TimberVolumeIntegrator.integrate_volume">
@@ -416,7 +417,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">height2</span> <span class="o">&lt;=</span> <span class="n">height1</span><span class="p">:</span>
             <span class="k">return</span> <span class="mf">0.0</span>
-            
+
         <span class="c1"># The &#39;args&#39; tuple now only contains the taper_instance</span>
         <span class="n">volume</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">quad</span><span class="p">(</span>
             <span class="n">TimberVolumeIntegrator</span><span class="o">.</span><span class="n">cylinder_volume_integrand</span><span class="p">,</span>

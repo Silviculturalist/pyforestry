@@ -386,8 +386,10 @@
                 <article class="bd-article">
                   
   <h1>Source code for pyforestry.base.helpers.primitives.topheight</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.tree_species</span><span class="w"> </span><span class="kn">import</span> <span class="n">TreeName</span>
+
 
 <div class="viewcode-block" id="TopHeightDefinition">
 <a class="viewcode-back" href="../../../../../api/pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.TopHeightDefinition">[docs]</a>
@@ -397,6 +399,7 @@
 <span class="sd">    - nominal_n: number of top trees in 1.0 hectare to average</span>
 <span class="sd">    - nominal_area_ha: the area basis for that count</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nominal_n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">nominal_area_ha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nominal_n</span> <span class="o">=</span> <span class="n">nominal_n</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nominal_area_ha</span> <span class="o">=</span> <span class="n">nominal_area_ha</span>
@@ -423,13 +426,17 @@
 <span class="sd">    est_bias : float</span>
 <span class="sd">        Any known or estimated bias that might be subtracted (or added) from the measurement.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="vm">__slots__</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;definition&#39;</span><span class="p">,</span><span class="s1">&#39;species&#39;</span><span class="p">,</span><span class="s1">&#39;precision&#39;</span><span class="p">,</span><span class="s1">&#39;est_bias&#39;</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span>
-                <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                <span class="n">definition</span><span class="p">:</span> <span class="n">TopHeightDefinition</span><span class="p">,</span>
-                <span class="n">species</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">TreeName</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">TreeName</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                <span class="n">precision</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
-                <span class="n">est_bias</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;definition&quot;</span><span class="p">,</span> <span class="s2">&quot;species&quot;</span><span class="p">,</span> <span class="s2">&quot;precision&quot;</span><span class="p">,</span> <span class="s2">&quot;est_bias&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__new__</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">definition</span><span class="p">:</span> <span class="n">TopHeightDefinition</span><span class="p">,</span>
+        <span class="n">species</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">TreeName</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">TreeName</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">precision</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">est_bias</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;TopHeightMeasurement cannot be negative.&quot;</span><span class="p">)</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="nb">float</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
@@ -438,14 +445,16 @@
         <span class="n">obj</span><span class="o">.</span><span class="n">precision</span> <span class="o">=</span> <span class="n">precision</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">est_bias</span> <span class="o">=</span> <span class="n">est_bias</span>
         <span class="k">return</span> <span class="n">obj</span>
-    
+
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;TopHeightMeasurement(</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> m, definition=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">definition</span><span class="si">}</span><span class="s2">, &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;species=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="si">}</span><span class="s2">, precision=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">precision</span><span class="si">}</span><span class="s2">, est_bias=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">est_bias</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;TopHeightMeasurement(</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> m, definition=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">definition</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;species=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="si">}</span><span class="s2">, precision=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">precision</span><span class="si">}</span><span class="s2">, est_bias=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">est_bias</span><span class="si">}</span><span class="s2">)&quot;</span>
+        <span class="p">)</span></div>
 
 </pre></div>
 

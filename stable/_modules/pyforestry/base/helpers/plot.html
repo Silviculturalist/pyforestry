@@ -386,13 +386,20 @@
                 <article class="bd-article">
                   
   <h1>Source code for pyforestry.base.helpers.plot</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">pi</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Position</span><span class="p">,</span> <span class="n">AngleCount</span><span class="p">,</span> <span class="n">RepresentationTree</span><span class="p">,</span> <span class="n">TreeName</span><span class="p">,</span> <span class="n">parse_tree_species</span><span class="p">,</span> <span class="n">SiteBase</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AngleCount</span><span class="p">,</span>
+    <span class="n">Position</span><span class="p">,</span>
+    <span class="n">RepresentationTree</span><span class="p">,</span>
+    <span class="n">SiteBase</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="c1"># ------------------------------------------------------------------------------</span>
 <span class="c1"># Plot: a set of representation trees over a circular or known-area region</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
+
 
 <div class="viewcode-block" id="CircularPlot">
 <a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.plot.CircularPlot">[docs]</a>
@@ -409,7 +416,7 @@
 <span class="sd">    radius_m : float | None</span>
 <span class="sd">        The radius of the circular plot in meters (if known).</span>
 <span class="sd">    occlusion : float</span>
-<span class="sd">        Portion [0-1] of the stand to be adjusted for being outside of the stand. Adjustment is </span>
+<span class="sd">        Portion [0-1] of the stand to be adjusted for being outside of the stand. Adjustment is</span>
 <span class="sd">    area_m2 : float | None</span>
 <span class="sd">        The area of the plot in m² (if known). Must supply either radius_m or area_m2.</span>
 <span class="sd">    site : SiteBase | None</span>
@@ -417,24 +424,27 @@
 <span class="sd">    trees : list[RepresentationTree]</span>
 <span class="sd">        The trees recorded on this plot (each possibly representing multiple stems).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="nb">id</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
-                 <span class="n">occlusion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
-                 <span class="n">position</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Position</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">radius_m</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">area_m2</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">site</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SiteBase</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">AngleCount</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">AngleCount</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">trees</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">RepresentationTree</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="nb">id</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+        <span class="n">occlusion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">position</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Position</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">radius_m</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">area_m2</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">site</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SiteBase</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">AngleCount</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">AngleCount</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">trees</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">RepresentationTree</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="k">if</span> <span class="nb">id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Plot must be given an ID (integer or string).&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Plot must be given an ID (integer or string).&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">position</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">site</span> <span class="o">=</span> <span class="n">site</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span><span class="o">&lt;=</span><span class="n">occlusion</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Plot must have [0,0.99] occlusion!&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">occlusion</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Plot must have [0,0.99] occlusion!&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">occlusion</span> <span class="o">=</span> <span class="n">occlusion</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">AngleCount</span> <span class="o">=</span> <span class="n">AngleCount</span> <span class="k">if</span> <span class="n">AngleCount</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span>
@@ -443,7 +453,7 @@
 
         <span class="c1"># Must have either radius or area</span>
         <span class="k">if</span> <span class="n">radius_m</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">area_m2</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Plot cannot be created without either a radius_m or an area_m2!&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Plot cannot be created without either a radius_m or an area_m2!&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">radius_m</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">radius_m</span> <span class="o">=</span> <span class="n">radius_m</span>
@@ -452,17 +462,19 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">area_m2</span> <span class="o">=</span> <span class="n">area_m2</span>
 
         <span class="k">if</span> <span class="n">radius_m</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">area_m2</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">area_m2</span> <span class="o">=</span> <span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">radius_m</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">area_m2</span> <span class="o">=</span> <span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">radius_m</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">radius_m</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">area_m2</span><span class="o">/</span><span class="n">pi</span><span class="p">)</span> 
-        
+            <span class="bp">self</span><span class="o">.</span><span class="n">radius_m</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">area_m2</span> <span class="o">/</span> <span class="n">pi</span><span class="p">)</span>
+
         <span class="c1"># If both were given, verify consistency</span>
         <span class="k">if</span> <span class="n">radius_m</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">area_m2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># Check the difference</span>
-            <span class="n">correct_area</span> <span class="o">=</span> <span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">radius_m</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">correct_area</span> <span class="o">=</span> <span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">radius_m</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">correct_area</span> <span class="o">-</span> <span class="n">area_m2</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-6</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mismatch: given radius </span><span class="si">{</span><span class="n">radius_m</span><span class="si">}</span><span class="s2"> =&gt; area </span><span class="si">{</span><span class="n">correct_area</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">, &quot;</span>
-                                 <span class="sa">f</span><span class="s2">&quot;but you specified </span><span class="si">{</span><span class="n">area_m2</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Mismatch: given radius </span><span class="si">{</span><span class="n">radius_m</span><span class="si">}</span><span class="s2"> =&gt; area </span><span class="si">{</span><span class="n">correct_area</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">, &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;but you specified </span><span class="si">{</span><span class="n">area_m2</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">area_ha</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
@@ -472,9 +484,10 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_m2</span> <span class="o">/</span> <span class="mf">10_000.0</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Plot(id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">, radius_m=</span><span class="si">{</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;radius_m&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">None</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;area_m2=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">area_m2</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, #trees=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trees</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span></div>
-
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Plot(id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">, radius_m=</span><span class="si">{</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;radius_m&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">None</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;area_m2=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">area_m2</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, #trees=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trees</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
+        <span class="p">)</span></div>
 
 </pre></div>
 

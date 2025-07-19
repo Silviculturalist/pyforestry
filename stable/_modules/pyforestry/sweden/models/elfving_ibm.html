@@ -388,7 +388,7 @@
   <h1>Source code for pyforestry.sweden.models.elfving_ibm</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="c1"># COMMENT: is_overstorey_tree is a bool without criteria in Heureka. It is designated on instantiation. </span>
+<span class="c1"># COMMENT: is_overstorey_tree is a bool without criteria in Heureka. It is designated on instantiation.</span>
 <span class="c1"># is_overstorey_tree is valid for 1) overstorey tree, 2) retention trees, 3) seed trees.</span>
 
 <span class="sd">&quot;&quot;&quot;Elfving-based individual tree, stand growth and mortality model (IBM)</span>
@@ -454,15 +454,16 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span><span class="p">,</span> <span class="n">log</span><span class="p">,</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">pi</span>  <span class="c1"># Only math is required - keep NumPy-free.</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">overload</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span><span class="p">,</span> <span class="n">log</span><span class="p">,</span> <span class="n">sqrt</span>  <span class="c1"># Only math is required - keep NumPy-free.</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.tree_species</span><span class="w"> </span><span class="kn">import</span> <span class="n">TreeName</span><span class="p">,</span> <span class="n">parse_tree_species</span>  <span class="c1"># Species</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.sweden.geo.temperature.odin_1983</span><span class="w"> </span><span class="kn">import</span> <span class="n">Odin_temperature_sum</span>
 
 <span class="c1"># -----------------------------------------------------------------------------</span>
 <span class="c1"># pyforestry helper imports - *only* those required for typing / enum coercion.</span>
 <span class="c1"># -----------------------------------------------------------------------------</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.sweden.site.swedish_site</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sweden</span>  <span class="c1"># Field layer enum, etc.</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.tree_species</span><span class="w"> </span><span class="kn">import</span> <span class="n">TreeName</span><span class="p">,</span> <span class="n">parse_tree_species</span> <span class="c1">#Species</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.sweden.geo.temperature.odin_1983</span><span class="w"> </span><span class="kn">import</span> <span class="n">Odin_temperature_sum</span>
 
 <span class="c1"># Type alias for vegetation codes so we can accept either the enum *or* an int.</span>
 <span class="n">VegetationInput</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Sweden</span><span class="o">.</span><span class="n">FieldLayer</span><span class="p">]</span>
@@ -480,6 +481,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">vegetation</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vegetation</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">else</span> <span class="n">vegetation</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span>
 
+
 <div class="viewcode-block" id="ElfvingIBM">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.models.html#pyforestry.sweden.models.elfving_ibm.ElfvingIBM">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ElfvingIBM</span><span class="p">:</span>
@@ -495,9 +497,7 @@
         <span class="bp">cls</span><span class="p">,</span> <span class="n">species</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">TreeName</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Helper to get the species-specific squared diameter increment function.&quot;&quot;&quot;</span>
-        <span class="n">tree</span><span class="p">:</span> <span class="n">TreeName</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">species</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">species</span><span class="p">,</span> <span class="n">TreeName</span><span class="p">)</span> <span class="k">else</span> <span class="n">parse_tree_species</span><span class="p">(</span><span class="n">species</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="n">tree</span><span class="p">:</span> <span class="n">TreeName</span> <span class="o">=</span> <span class="n">species</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">species</span><span class="p">,</span> <span class="n">TreeName</span><span class="p">)</span> <span class="k">else</span> <span class="n">parse_tree_species</span><span class="p">(</span><span class="n">species</span><span class="p">)</span>
         <span class="n">genus</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">genus</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="n">full</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">full_name</span>
 
@@ -527,11 +527,7 @@
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.models.html#pyforestry.sweden.models.elfving_ibm.ElfvingIBM.calculate_five_year_diameter_increment_cm">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">calculate_five_year_diameter_increment_cm</span><span class="p">(</span>
-        <span class="bp">cls</span><span class="p">,</span>
-        <span class="n">species</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">TreeName</span><span class="p">],</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">diameter_cm</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>  <span class="c1"># Initial diameter</span>
-        <span class="o">**</span><span class="n">kwargs</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">species</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">TreeName</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">diameter_cm</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>  <span class="c1"># Initial diameter</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate 5-year diameter increment (cm) for a specific tree species.</span>
 
@@ -625,12 +621,11 @@
         <span class="n">BA_quotient_Aspen</span> <span class="o">=</span> <span class="n">BA_Aspen</span> <span class="o">/</span> <span class="n">Basal_area_plot</span> <span class="k">if</span> <span class="n">Basal_area_plot</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
         <span class="n">bal_div_dplus1</span> <span class="o">=</span> <span class="n">BA_sum_of_trees_with_larger_diameter</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span>
         <span class="n">bal_div_dplus1</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">bal_div_dplus1</span><span class="p">)</span>
-        
 
         <span class="n">veg_code_val</span> <span class="o">=</span> <span class="n">_veg_code</span><span class="p">(</span><span class="n">vegetation</span><span class="p">)</span>
         <span class="n">rich</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">veg_code_val</span> <span class="o">&lt;=</span> <span class="mi">9</span> <span class="k">else</span> <span class="mi">0</span>
         <span class="n">thinned_recently</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="p">(</span><span class="n">thinned</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">last_thinned</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
-        <span class="n">odin</span> <span class="o">=</span> <span class="n">Odin_temperature_sum</span><span class="p">(</span><span class="n">latitude</span><span class="p">,</span> <span class="n">altitude</span><span class="p">)</span><span class="o">*</span><span class="mf">0.001</span>
+        <span class="n">odin</span> <span class="o">=</span> <span class="n">Odin_temperature_sum</span><span class="p">(</span><span class="n">latitude</span><span class="p">,</span> <span class="n">altitude</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.001</span>
 
         <span class="c1"># Coefficients for ln(delta_d_squared_Aspen_cm2)</span>
         <span class="c1"># Based on AspenCoefficient[] in C#</span>
@@ -645,7 +640,10 @@
             <span class="o">+</span> <span class="mf">0.4408</span> <span class="o">*</span> <span class="n">odin</span>  <span class="c1"># C7, (Ts*0.001)</span>
             <span class="o">+</span> <span class="mf">0.4759</span> <span class="o">*</span> <span class="n">rich</span>  <span class="c1"># C8</span>
             <span class="o">+</span> <span class="mf">0.2143</span> <span class="o">*</span> <span class="n">thinned_recently</span>  <span class="c1"># C9, Hu0t10</span>
-            <span class="o">+</span> <span class="mf">0.2427</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span> <span class="p">(</span><span class="n">Basal_area_plot</span> <span class="o">+</span><span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">Basal_area_stand</span> <span class="o">+</span><span class="mf">1.0</span><span class="p">)</span> <span class="k">if</span> <span class="n">Basal_area_stand</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">1.0</span><span class="p">)</span> <span class="c1"># C10, log(gry/gryf)</span>
+            <span class="o">+</span> <span class="mf">0.2427</span>
+            <span class="o">*</span> <span class="n">log</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">Basal_area_plot</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">Basal_area_stand</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="k">if</span> <span class="n">Basal_area_stand</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">1.0</span>
+            <span class="p">)</span>  <span class="c1"># C10, log(gry/gryf)</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">exp</span><span class="p">(</span><span class="n">ln_delta_d_squared_cm2</span><span class="p">)</span>
 
@@ -673,7 +671,7 @@
         <span class="n">bal_div_dplus1</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">bal_div_dplus1</span><span class="p">)</span>
 
         <span class="n">thinned_recently</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="p">(</span><span class="n">thinned</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">last_thinned</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
-        
+
         <span class="c1"># Coefficients for ln(delta_d_squared_Beech_cm2)</span>
         <span class="c1"># Based on BeechCoefficient[] in C#</span>
         <span class="n">ln_delta_d_squared_cm2</span> <span class="o">=</span> <span class="p">(</span>
@@ -688,7 +686,10 @@
             <span class="o">+</span> <span class="mf">0.3055</span> <span class="o">*</span> <span class="p">(</span><span class="n">SIS</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">)</span>  <span class="c1"># C8</span>
             <span class="o">+</span> <span class="mf">0.2200</span> <span class="o">*</span> <span class="n">thinned_recently</span>  <span class="c1"># C9</span>
             <span class="o">+</span> <span class="mf">0.2009</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">divided_plot</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># C10</span>
-            <span class="o">+</span> <span class="mf">0.2669</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span> <span class="p">(</span><span class="n">Basal_area_plot</span> <span class="o">+</span><span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">Basal_area_stand</span> <span class="o">+</span><span class="mf">1.0</span><span class="p">)</span> <span class="k">if</span> <span class="n">Basal_area_stand</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">1.0</span><span class="p">)</span>  <span class="c1"># C11</span>
+            <span class="o">+</span> <span class="mf">0.2669</span>
+            <span class="o">*</span> <span class="n">log</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">Basal_area_plot</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">Basal_area_stand</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="k">if</span> <span class="n">Basal_area_stand</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">1.0</span>
+            <span class="p">)</span>  <span class="c1"># C11</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">exp</span><span class="p">(</span><span class="n">ln_delta_d_squared_cm2</span><span class="p">)</span>
 
@@ -699,7 +700,7 @@
         <span class="n">diameter_cm</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">distance_to_coast_km</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">BA_sum_of_trees_with_larger_diameter</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">BA_Birch</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
+        <span class="n">BA_Birch</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">Basal_area_plot</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">Basal_area_stand</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">computed_tree_age</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -711,7 +712,7 @@
         <span class="n">thinned</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">last_thinned</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="n">edge_effect</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">is_overstorey_tree</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">is_overstorey_tree</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate 5-year squared diameter increment for Birch (*Betula spp.*) (cm²).&quot;&quot;&quot;</span>
         <span class="n">adj_computed_tree_age</span> <span class="o">=</span> <span class="n">computed_tree_age</span> <span class="o">*</span> <span class="mf">0.9</span> <span class="k">if</span> <span class="n">uneven_aged</span> <span class="k">else</span> <span class="n">computed_tree_age</span>
@@ -721,11 +722,11 @@
 
         <span class="n">veg_code_val</span> <span class="o">=</span> <span class="n">_veg_code</span><span class="p">(</span><span class="n">vegetation</span><span class="p">)</span>
         <span class="n">rich</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">veg_code_val</span> <span class="o">&lt;=</span> <span class="mi">9</span> <span class="k">else</span> <span class="mi">0</span>
-        <span class="n">fertris</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="p">(</span><span class="n">fertilised</span> <span class="ow">and</span> <span class="n">veg_code_val</span> <span class="o">&lt;</span> <span class="mi">12</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span> 
+        <span class="n">fertris</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="p">(</span><span class="n">fertilised</span> <span class="ow">and</span> <span class="n">veg_code_val</span> <span class="o">&lt;</span> <span class="mi">12</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
         <span class="n">thinned_recently</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="p">(</span><span class="n">thinned</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">last_thinned</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
-        
-        <span class="n">odin</span> <span class="o">=</span> <span class="n">Odin_temperature_sum</span><span class="p">(</span><span class="n">latitude</span><span class="p">,</span> <span class="n">altitude</span><span class="p">)</span><span class="o">*</span><span class="mf">0.001</span> 
-        <span class="n">ak_term</span> <span class="o">=</span> <span class="p">(</span><span class="n">distance_to_coast_km</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">)</span> 
+
+        <span class="n">odin</span> <span class="o">=</span> <span class="n">Odin_temperature_sum</span><span class="p">(</span><span class="n">latitude</span><span class="p">,</span> <span class="n">altitude</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.001</span>
+        <span class="n">ak_term</span> <span class="o">=</span> <span class="n">distance_to_coast_km</span> <span class="o">/</span> <span class="mf">10.0</span>
 
         <span class="n">ln_delta_d_squared_cm2</span> <span class="o">=</span> <span class="p">(</span>
             <span class="mf">5.9648</span>  <span class="c1"># C0</span>
@@ -736,13 +737,17 @@
             <span class="o">-</span> <span class="mf">0.2090</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">Basal_area_plot</span> <span class="o">+</span> <span class="mf">3.0</span><span class="p">)</span>  <span class="c1"># C5</span>
             <span class="o">-</span> <span class="mf">0.5821</span> <span class="o">*</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">BA_quotient_Birch</span><span class="p">)</span>  <span class="c1"># C6</span>
             <span class="o">-</span> <span class="mf">0.5386</span> <span class="o">*</span> <span class="n">odin</span>  <span class="c1"># C7</span>
-            <span class="o">-</span> <span class="mf">0.4505</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">odin</span> <span class="o">-</span> <span class="mf">0.3</span><span class="p">)</span> <span class="k">if</span> <span class="n">odin</span> <span class="o">&gt;</span> <span class="mf">0.31</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span> <span class="c1"># C8, added safety for denominator</span>
-            <span class="o">+</span> <span class="mf">0.8801</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">ak_term</span> <span class="o">+</span> <span class="mf">3.0</span><span class="p">))</span> <span class="c1"># C9</span>
+            <span class="o">-</span> <span class="mf">0.4505</span>
+            <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">odin</span> <span class="o">-</span> <span class="mf">0.3</span><span class="p">)</span> <span class="k">if</span> <span class="n">odin</span> <span class="o">&gt;</span> <span class="mf">0.31</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># C8, added safety for denominator</span>
+            <span class="o">+</span> <span class="mf">0.8801</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">ak_term</span> <span class="o">+</span> <span class="mf">3.0</span><span class="p">))</span>  <span class="c1"># C9</span>
             <span class="o">+</span> <span class="mf">0.3439</span> <span class="o">*</span> <span class="n">rich</span>  <span class="c1"># C10</span>
             <span class="o">+</span> <span class="mf">0.3844</span> <span class="o">*</span> <span class="n">fertris</span>  <span class="c1"># C11</span>
             <span class="o">+</span> <span class="mf">0.1814</span> <span class="o">*</span> <span class="n">thinned_recently</span>  <span class="c1"># C12</span>
             <span class="o">+</span> <span class="mf">0.2258</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">edge_effect</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># C13</span>
-            <span class="o">+</span> <span class="mf">0.1321</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span> <span class="p">(</span><span class="n">Basal_area_plot</span> <span class="o">+</span><span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">Basal_area_stand</span> <span class="o">+</span><span class="mf">1.0</span><span class="p">)</span> <span class="k">if</span> <span class="n">Basal_area_stand</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">1.0</span><span class="p">)</span> <span class="c1"># C14</span>
+            <span class="o">+</span> <span class="mf">0.1321</span>
+            <span class="o">*</span> <span class="n">log</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">Basal_area_plot</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">Basal_area_stand</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="k">if</span> <span class="n">Basal_area_stand</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">1.0</span>
+            <span class="p">)</span>  <span class="c1"># C14</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">exp</span><span class="p">(</span><span class="n">ln_delta_d_squared_cm2</span><span class="p">)</span>
 
@@ -764,7 +769,7 @@
         <span class="n">bal_div_dplus1</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">bal_div_dplus1</span><span class="p">)</span>
 
         <span class="n">veg_code_val</span> <span class="o">=</span> <span class="n">_veg_code</span><span class="p">(</span><span class="n">vegetation</span><span class="p">)</span>
-        <span class="n">herb</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">veg_code_val</span> <span class="o">&lt;</span> <span class="mi">7</span> <span class="k">else</span> <span class="mi">0</span> 
+        <span class="n">herb</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">veg_code_val</span> <span class="o">&lt;</span> <span class="mi">7</span> <span class="k">else</span> <span class="mi">0</span>
         <span class="n">thinned_recently</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="p">(</span><span class="n">thinned</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">last_thinned</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
 
         <span class="n">ln_delta_d_squared_cm2</span> <span class="o">=</span> <span class="p">(</span>
@@ -775,7 +780,10 @@
             <span class="o">-</span> <span class="mf">0.3809</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">gotland</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># C4</span>
             <span class="o">+</span> <span class="mf">0.9397</span> <span class="o">*</span> <span class="n">herb</span>  <span class="c1"># C5</span>
             <span class="o">+</span> <span class="mf">0.2410</span> <span class="o">*</span> <span class="n">thinned_recently</span>  <span class="c1"># C6</span>
-            <span class="o">+</span> <span class="mf">0.4676</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span> <span class="p">(</span><span class="n">Basal_area_plot</span> <span class="o">+</span><span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">Basal_area_stand</span> <span class="o">+</span><span class="mf">1.0</span><span class="p">)</span> <span class="k">if</span> <span class="n">Basal_area_stand</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">1.0</span><span class="p">)</span>  <span class="c1"># C7</span>
+            <span class="o">+</span> <span class="mf">0.4676</span>
+            <span class="o">*</span> <span class="n">log</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">Basal_area_plot</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">Basal_area_stand</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="k">if</span> <span class="n">Basal_area_stand</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">1.0</span>
+            <span class="p">)</span>  <span class="c1"># C7</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">exp</span><span class="p">(</span><span class="n">ln_delta_d_squared_cm2</span><span class="p">)</span>
 
@@ -785,7 +793,7 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">diameter_cm</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">BA_sum_of_trees_with_larger_diameter</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">BA_Oak</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
+        <span class="n">BA_Oak</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">Basal_area_plot</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">Basal_area_stand</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">altitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -817,7 +825,10 @@
             <span class="o">+</span> <span class="mf">0.2635</span> <span class="o">*</span> <span class="n">rich</span>  <span class="c1"># C8</span>
             <span class="o">+</span> <span class="mf">0.1034</span> <span class="o">*</span> <span class="n">thinned_recently</span>  <span class="c1"># C9</span>
             <span class="o">+</span> <span class="mf">0.3551</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">edge_effect</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># C10</span>
-            <span class="o">+</span> <span class="mf">0.1897</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span> <span class="p">(</span><span class="n">Basal_area_plot</span> <span class="o">+</span><span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">Basal_area_stand</span> <span class="o">+</span><span class="mf">1.0</span><span class="p">)</span> <span class="k">if</span> <span class="n">Basal_area_stand</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">1.0</span><span class="p">)</span>  <span class="c1"># C11</span>
+            <span class="o">+</span> <span class="mf">0.1897</span>
+            <span class="o">*</span> <span class="n">log</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">Basal_area_plot</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">Basal_area_stand</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="k">if</span> <span class="n">Basal_area_stand</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">1.0</span>
+            <span class="p">)</span>  <span class="c1"># C11</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">exp</span><span class="p">(</span><span class="n">ln_delta_d_squared_cm2</span><span class="p">)</span>
 
@@ -826,24 +837,24 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_calculate_squared_diameter_increment_pine_cm2</span><span class="p">(</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">diameter_cm</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">Basal_area_weighted_mean_diameter_cm</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="c1"># Mditot</span>
-        <span class="n">BA_sum_of_trees_with_larger_diameter</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="c1"># Bal</span>
-        <span class="n">BA_Pine</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="c1"># Used for BA_quotient_Pine</span>
-        <span class="n">Basal_area_plot</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="c1"># gry</span>
-        <span class="n">Basal_area_stand</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="c1"># gryf</span>
-        <span class="n">computed_tree_age</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="c1"># a13</span>
-        <span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="c1"># Lat</span>
-        <span class="n">altitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="c1"># alt (for Ts)</span>
-        <span class="n">SIS</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="c1"># sis</span>
-        <span class="n">vegetation</span><span class="p">:</span> <span class="n">VegetationInput</span><span class="p">,</span> <span class="c1"># For rich, fertris</span>
-        <span class="n">uneven_aged</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="c1"># For adjusting age</span>
-        <span class="n">fertilised</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="c1"># For fertris</span>
-        <span class="n">thinned</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="c1"># For Hu0t10, hullt25</span>
+        <span class="n">Basal_area_weighted_mean_diameter_cm</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>  <span class="c1"># Mditot</span>
+        <span class="n">BA_sum_of_trees_with_larger_diameter</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>  <span class="c1"># Bal</span>
+        <span class="n">BA_Pine</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>  <span class="c1"># Used for BA_quotient_Pine</span>
+        <span class="n">Basal_area_plot</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>  <span class="c1"># gry</span>
+        <span class="n">Basal_area_stand</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>  <span class="c1"># gryf</span>
+        <span class="n">computed_tree_age</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>  <span class="c1"># a13</span>
+        <span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>  <span class="c1"># Lat</span>
+        <span class="n">altitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>  <span class="c1"># alt (for Ts)</span>
+        <span class="n">SIS</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>  <span class="c1"># sis</span>
+        <span class="n">vegetation</span><span class="p">:</span> <span class="n">VegetationInput</span><span class="p">,</span>  <span class="c1"># For rich, fertris</span>
+        <span class="n">uneven_aged</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>  <span class="c1"># For adjusting age</span>
+        <span class="n">fertilised</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>  <span class="c1"># For fertris</span>
+        <span class="n">thinned</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>  <span class="c1"># For Hu0t10, hullt25</span>
         <span class="n">last_thinned</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="n">gotland</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">divided_plot</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">edge_effect</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">is_overstorey_tree</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">is_overstorey_tree</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate 5-year sq. diam. increment for Scots Pine (*Pinus sylvestris*) (cm²).&quot;&quot;&quot;</span>
         <span class="n">adj_computed_tree_age</span> <span class="o">=</span> <span class="n">computed_tree_age</span> <span class="o">*</span> <span class="mf">0.9</span> <span class="k">if</span> <span class="n">uneven_aged</span> <span class="k">else</span> <span class="n">computed_tree_age</span>
@@ -851,7 +862,9 @@
         <span class="c1"># So BA_pine_prop = basalAreaPines / gry</span>
         <span class="c1"># ( (gry - basalAreaPines)/gry )^2 = (1 - basalAreaPines/gry)^2</span>
         <span class="n">BA_pine_prop</span> <span class="o">=</span> <span class="n">BA_Pine</span> <span class="o">/</span> <span class="n">Basal_area_plot</span> <span class="k">if</span> <span class="n">Basal_area_plot</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
-        <span class="n">ba_pine_prop_term</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">BA_pine_prop</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="c1"># Matches C# structure for PineCoefficient[7]</span>
+        <span class="n">ba_pine_prop_term</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="mf">1.0</span> <span class="o">-</span> <span class="n">BA_pine_prop</span>
+        <span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>  <span class="c1"># Matches C# structure for PineCoefficient[7]</span>
 
         <span class="n">bal_div_dplus1</span> <span class="o">=</span> <span class="n">BA_sum_of_trees_with_larger_diameter</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span>
         <span class="n">bal_div_dplus1</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">bal_div_dplus1</span><span class="p">)</span>
@@ -860,10 +873,10 @@
         <span class="n">rich</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">veg_code_val</span> <span class="o">&lt;=</span> <span class="mi">9</span> <span class="k">else</span> <span class="mi">0</span>
         <span class="n">fertris</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="p">(</span><span class="n">fertilised</span> <span class="ow">and</span> <span class="n">veg_code_val</span> <span class="o">&lt;</span> <span class="mi">12</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
         <span class="n">thinned_recently</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="p">(</span><span class="n">thinned</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">last_thinned</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
-        <span class="n">thinned_long_ago</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="p">(</span><span class="n">thinned</span> <span class="ow">and</span> <span class="mi">10</span> <span class="o">&lt;</span> <span class="n">last_thinned</span> <span class="o">&lt;</span> <span class="mi">25</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span> <span class="c1"># C# uses &lt;25</span>
-        
-        <span class="n">odin</span> <span class="o">=</span> <span class="n">Odin_temperature_sum</span><span class="p">(</span><span class="n">latitude</span><span class="p">,</span> <span class="n">altitude</span><span class="p">)</span><span class="o">*</span><span class="mf">0.001</span>
-        <span class="n">mditot_term</span> <span class="o">=</span> <span class="n">Basal_area_weighted_mean_diameter_cm</span> <span class="o">/</span> <span class="mf">10.0</span> <span class="c1"># Mditot * 0.1</span>
+        <span class="n">thinned_long_ago</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="p">(</span><span class="n">thinned</span> <span class="ow">and</span> <span class="mi">10</span> <span class="o">&lt;</span> <span class="n">last_thinned</span> <span class="o">&lt;</span> <span class="mi">25</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>  <span class="c1"># C# uses &lt;25</span>
+
+        <span class="n">odin</span> <span class="o">=</span> <span class="n">Odin_temperature_sum</span><span class="p">(</span><span class="n">latitude</span><span class="p">,</span> <span class="n">altitude</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.001</span>
+        <span class="n">mditot_term</span> <span class="o">=</span> <span class="n">Basal_area_weighted_mean_diameter_cm</span> <span class="o">/</span> <span class="mf">10.0</span>  <span class="c1"># Mditot * 0.1</span>
 
         <span class="n">ln_delta_d_squared_cm2</span> <span class="o">=</span> <span class="p">(</span>
             <span class="mf">3.4176</span>  <span class="c1"># C0</span>
@@ -884,7 +897,10 @@
             <span class="o">+</span> <span class="mf">0.0451</span> <span class="o">*</span> <span class="n">thinned_long_ago</span>  <span class="c1"># C15</span>
             <span class="o">+</span> <span class="mf">0.0487</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">divided_plot</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># C16</span>
             <span class="o">+</span> <span class="mf">0.1368</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">edge_effect</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># C17</span>
-            <span class="o">+</span> <span class="mf">0.0842</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span> <span class="p">(</span><span class="n">Basal_area_plot</span> <span class="o">+</span><span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">Basal_area_stand</span> <span class="o">+</span><span class="mf">1.0</span><span class="p">)</span> <span class="k">if</span> <span class="n">Basal_area_stand</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">1.0</span><span class="p">)</span>  <span class="c1"># C18</span>
+            <span class="o">+</span> <span class="mf">0.0842</span>
+            <span class="o">*</span> <span class="n">log</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">Basal_area_plot</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">Basal_area_stand</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="k">if</span> <span class="n">Basal_area_stand</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">1.0</span>
+            <span class="p">)</span>  <span class="c1"># C18</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">exp</span><span class="p">(</span><span class="n">ln_delta_d_squared_cm2</span><span class="p">)</span>
 
@@ -893,26 +909,26 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_calculate_squared_diameter_increment_spruce_cm2</span><span class="p">(</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">diameter_cm</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">Basal_area_weighted_mean_diameter_cm</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="c1"># Mditot</span>
-        <span class="n">SS_diam</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="c1"># Sum of squared diameters (d²) on the plot (cm²). Used for Mgtot.</span>
-        <span class="n">stems</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="c1"># Number of stems per hectare on the plot. Used for Mgtot.</span>
-        <span class="n">BA_sum_of_trees_with_larger_diameter</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="c1"># Bal</span>
-        <span class="n">BA_Spruce</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
-        <span class="n">Basal_area_plot</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="c1"># gry</span>
-        <span class="n">Basal_area_stand</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="c1"># gryf</span>
-        <span class="n">computed_tree_age</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="c1"># a13</span>
-        <span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="c1"># Lat</span>
-        <span class="n">altitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="c1"># alt (for Ts)</span>
-        <span class="n">SIS</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="c1"># sis</span>
-        <span class="n">vegetation</span><span class="p">:</span> <span class="n">VegetationInput</span><span class="p">,</span> <span class="c1"># For rich, fertris</span>
-        <span class="n">uneven_aged</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="c1"># For adjusting age</span>
+        <span class="n">Basal_area_weighted_mean_diameter_cm</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>  <span class="c1"># Mditot</span>
+        <span class="n">SS_diam</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>  <span class="c1"># Sum of squared diameters (d²) on the plot (cm²). Used for Mgtot.</span>
+        <span class="n">stems</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>  <span class="c1"># Number of stems per hectare on the plot. Used for Mgtot.</span>
+        <span class="n">BA_sum_of_trees_with_larger_diameter</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>  <span class="c1"># Bal</span>
+        <span class="n">BA_Spruce</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">Basal_area_plot</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>  <span class="c1"># gry</span>
+        <span class="n">Basal_area_stand</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>  <span class="c1"># gryf</span>
+        <span class="n">computed_tree_age</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>  <span class="c1"># a13</span>
+        <span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>  <span class="c1"># Lat</span>
+        <span class="n">altitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>  <span class="c1"># alt (for Ts)</span>
+        <span class="n">SIS</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>  <span class="c1"># sis</span>
+        <span class="n">vegetation</span><span class="p">:</span> <span class="n">VegetationInput</span><span class="p">,</span>  <span class="c1"># For rich, fertris</span>
+        <span class="n">uneven_aged</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>  <span class="c1"># For adjusting age</span>
         <span class="n">fertilised</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">thinned</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">last_thinned</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="n">gotland</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">divided_plot</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">edge_effect</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">is_overstorey_tree</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">is_overstorey_tree</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate 5-year sq. diam. increment for Norway Spruce (*Picea abies*) (cm²).&quot;&quot;&quot;</span>
         <span class="n">adj_computed_tree_age</span> <span class="o">=</span> <span class="n">computed_tree_age</span> <span class="o">*</span> <span class="mf">0.9</span> <span class="k">if</span> <span class="n">uneven_aged</span> <span class="k">else</span> <span class="n">computed_tree_age</span>
@@ -922,26 +938,28 @@
         <span class="c1"># Mgtot (arithmetic mean diameter) calculation from SS_diam and stems for dif3bal</span>
         <span class="c1"># Mgtot = sqrt(SS_diam / stems) if stems &gt; 0 else 0 (DG in Python)</span>
         <span class="n">mean_geom_diam_dg</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">SS_diam</span> <span class="o">/</span> <span class="n">stems</span><span class="p">)</span> <span class="k">if</span> <span class="n">stems</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
-        
+
         <span class="c1"># C# term: temp1 = Math.Min(_commonData.Mditot - _commonData.Mgtot, 10.0);</span>
         <span class="c1"># C# term: temp = _baldp1 * Math.Pow(temp1/_commonData.Mditot, 3); (This is SpruceCoefficient[4] * term)</span>
         <span class="c1"># Python equivalent for temp1/_commonData.Mditot part:</span>
-        <span class="n">mditot_val</span> <span class="o">=</span> <span class="n">Basal_area_weighted_mean_diameter_cm</span> <span class="c1"># DQ</span>
-        <span class="n">mgtot_val</span> <span class="o">=</span> <span class="n">mean_geom_diam_dg</span> <span class="c1"># DG</span>
-        
+        <span class="n">mditot_val</span> <span class="o">=</span> <span class="n">Basal_area_weighted_mean_diameter_cm</span>  <span class="c1"># DQ</span>
+        <span class="n">mgtot_val</span> <span class="o">=</span> <span class="n">mean_geom_diam_dg</span>  <span class="c1"># DG</span>
+
         <span class="c1"># Python dif3bal term from previous version: ((DQ - DG)/DQ)^3</span>
         <span class="c1"># C# dif3bal_numerator: min(DQ - DG, 10.0)</span>
         <span class="c1"># C# dif3bal structure: BAL/(D+1) * ( (min(DQ-DG,10))/DQ )^3 -- This is different from Python&#39;s previous structure.</span>
         <span class="c1"># The C# formula for SpruceCoefficient[4] is: C4 * _baldp1 * ( ( Min(Mditot-Mgtot,10) / Mditot )^3 )</span>
         <span class="c1"># The C# formula for SpruceCoefficient[9] is: C9 * _baldp1 * ( (gry - BA_Spruce)/gry )</span>
-        
+
         <span class="c1"># Term for C4 (0.4702):</span>
         <span class="c1"># In C#: SpruceCoefficient[4] * _baldp1 * Math.Pow( (Math.Min(Mditot - Mgtot, 10.0)) / Mditot, 3.0 )</span>
         <span class="c1"># Note: The Python code was previously (DQ/10) * ((DQ-DG)/DQ)^3. Re-aligning to C# structure for this term.</span>
         <span class="n">c4_term_factor</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="k">if</span> <span class="n">mditot_val</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">c4_term_factor</span> <span class="o">=</span> <span class="n">bal_div_dplus1</span> <span class="o">*</span> <span class="p">(</span> <span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">mditot_val</span> <span class="o">-</span> <span class="n">mgtot_val</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">))</span> <span class="o">/</span> <span class="n">mditot_val</span> <span class="p">)</span><span class="o">**</span><span class="mi">3</span>
-        
+            <span class="n">c4_term_factor</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">bal_div_dplus1</span> <span class="o">*</span> <span class="p">((</span><span class="nb">min</span><span class="p">(</span><span class="n">mditot_val</span> <span class="o">-</span> <span class="n">mgtot_val</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">))</span> <span class="o">/</span> <span class="n">mditot_val</span><span class="p">)</span> <span class="o">**</span> <span class="mi">3</span>
+            <span class="p">)</span>
+
         <span class="c1"># Term for C9 (0.1625):</span>
         <span class="c1"># In C#: SpruceCoefficient[9] * _baldp1 * ((gry - BA_Spruce)/gry)</span>
         <span class="c1"># Python: Basal_area_weighted_mean_diameter_cm/10 * (1 - BA_quotient_Spruce)</span>
@@ -953,14 +971,12 @@
         <span class="n">rich</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">veg_code_val</span> <span class="o">&lt;=</span> <span class="mi">9</span> <span class="k">else</span> <span class="mi">0</span>
         <span class="n">fertris</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="p">(</span><span class="n">fertilised</span> <span class="ow">and</span> <span class="n">veg_code_val</span> <span class="o">&lt;</span> <span class="mi">12</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
         <span class="n">thinned_recently</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="p">(</span><span class="n">thinned</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">last_thinned</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
-        
-        <span class="n">odin</span> <span class="o">=</span> <span class="n">Odin_temperature_sum</span><span class="p">(</span><span class="n">latitude</span><span class="p">,</span> <span class="n">altitude</span><span class="p">)</span><span class="o">*</span><span class="mf">0.001</span>
-        <span class="n">mditot_squared_term</span> <span class="o">=</span> <span class="p">(</span><span class="n">mditot_val</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.0</span> <span class="c1"># Mditot^2 * 0.001</span>
 
-            
+        <span class="n">odin</span> <span class="o">=</span> <span class="n">Odin_temperature_sum</span><span class="p">(</span><span class="n">latitude</span><span class="p">,</span> <span class="n">altitude</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.001</span>
+        <span class="n">mditot_squared_term</span> <span class="o">=</span> <span class="p">(</span><span class="n">mditot_val</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.0</span>  <span class="c1"># Mditot^2 * 0.001</span>
+
         <span class="c1"># Term for C10 (0.1754): ((gry - BA_Spruce)/gry)^2</span>
-        <span class="n">c10_term_factor</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">ba_spruce_prop</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
-
+        <span class="n">c10_term_factor</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">ba_spruce_prop</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
 
         <span class="c1"># Coefficients for ln(delta_d_squared_Spruce_cm2)</span>
         <span class="c1"># Based on SpruceCoefficient[] in C# and its variable associations</span>
@@ -969,13 +985,13 @@
             <span class="o">+</span> <span class="mf">1.5163</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span>  <span class="c1"># C1</span>
             <span class="o">-</span> <span class="mf">0.1520</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">)</span>  <span class="c1"># C2</span>
             <span class="o">-</span> <span class="mf">0.4024</span> <span class="o">*</span> <span class="n">bal_div_dplus1</span>  <span class="c1"># C3</span>
-            <span class="o">+</span> <span class="mf">0.4702</span> <span class="o">*</span> <span class="n">c4_term_factor</span> <span class="c1"># C4 * its specific term structure from C#</span>
+            <span class="o">+</span> <span class="mf">0.4702</span> <span class="o">*</span> <span class="n">c4_term_factor</span>  <span class="c1"># C4 * its specific term structure from C#</span>
             <span class="o">-</span> <span class="mf">0.7789</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">adj_computed_tree_age</span> <span class="o">+</span> <span class="mf">20.0</span><span class="p">)</span>  <span class="c1"># C5</span>
-            <span class="o">+</span> <span class="mf">0.4034</span> <span class="o">*</span> <span class="n">is_overstorey_tree</span> <span class="c1"># C6 </span>
+            <span class="o">+</span> <span class="mf">0.4034</span> <span class="o">*</span> <span class="n">is_overstorey_tree</span>  <span class="c1"># C6</span>
             <span class="o">+</span> <span class="mf">0.1914</span> <span class="o">*</span> <span class="n">mditot_squared_term</span>  <span class="c1"># C7</span>
             <span class="o">-</span> <span class="mf">0.2342</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">Basal_area_plot</span> <span class="o">+</span> <span class="mf">3.0</span><span class="p">)</span>  <span class="c1"># C8</span>
-            <span class="o">+</span> <span class="mf">0.1625</span> <span class="o">*</span> <span class="n">c9_term_factor</span> <span class="c1"># C9 * its specific term structure from C#</span>
-            <span class="o">+</span> <span class="mf">0.1754</span> <span class="o">*</span> <span class="n">c10_term_factor</span> <span class="c1"># C10 * its specific term</span>
+            <span class="o">+</span> <span class="mf">0.1625</span> <span class="o">*</span> <span class="n">c9_term_factor</span>  <span class="c1"># C9 * its specific term structure from C#</span>
+            <span class="o">+</span> <span class="mf">0.1754</span> <span class="o">*</span> <span class="n">c10_term_factor</span>  <span class="c1"># C10 * its specific term</span>
             <span class="o">-</span> <span class="mf">0.3264</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">gotland</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># C11</span>
             <span class="o">-</span> <span class="mf">0.6923</span> <span class="o">*</span> <span class="n">odin</span>  <span class="c1"># C12 (Ts*0.001)</span>
             <span class="o">+</span> <span class="mf">0.2568</span> <span class="o">*</span> <span class="p">(</span><span class="n">odin</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># C13 (Ts*0.001)^2</span>
@@ -985,7 +1001,10 @@
             <span class="o">+</span> <span class="mf">0.1309</span> <span class="o">*</span> <span class="n">thinned_recently</span>  <span class="c1"># C17</span>
             <span class="o">+</span> <span class="mf">0.0561</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">divided_plot</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># C18</span>
             <span class="o">+</span> <span class="mf">0.1126</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">edge_effect</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># C19</span>
-            <span class="o">+</span> <span class="mf">0.0770</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span> <span class="p">(</span><span class="n">Basal_area_plot</span> <span class="o">+</span><span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">Basal_area_stand</span> <span class="o">+</span><span class="mf">1.0</span><span class="p">)</span> <span class="k">if</span> <span class="n">Basal_area_stand</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">1.0</span><span class="p">)</span>  <span class="c1"># C20</span>
+            <span class="o">+</span> <span class="mf">0.0770</span>
+            <span class="o">*</span> <span class="n">log</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">Basal_area_plot</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">Basal_area_stand</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="k">if</span> <span class="n">Basal_area_stand</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">1.0</span>
+            <span class="p">)</span>  <span class="c1"># C20</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">exp</span><span class="p">(</span><span class="n">ln_delta_d_squared_cm2</span><span class="p">)</span>
 
@@ -1007,7 +1026,7 @@
         <span class="n">adj_computed_tree_age</span> <span class="o">=</span> <span class="n">computed_tree_age</span> <span class="o">*</span> <span class="mf">0.9</span> <span class="k">if</span> <span class="n">uneven_aged</span> <span class="k">else</span> <span class="n">computed_tree_age</span>
         <span class="n">bal_div_dplus1</span> <span class="o">=</span> <span class="n">BA_sum_of_trees_with_larger_diameter</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span>
         <span class="n">bal_div_dplus1</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">bal_div_dplus1</span><span class="p">)</span>
-    
+
         <span class="n">veg_code_val</span> <span class="o">=</span> <span class="n">_veg_code</span><span class="p">(</span><span class="n">vegetation</span><span class="p">)</span>
         <span class="n">herb</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">veg_code_val</span> <span class="o">&lt;</span> <span class="mi">7</span> <span class="k">else</span> <span class="mi">0</span>
         <span class="n">thinned_recently</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="p">(</span><span class="n">thinned</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">last_thinned</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
@@ -1026,7 +1045,6 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">exp</span><span class="p">(</span><span class="n">ln_delta_d_squared_cm2</span><span class="p">)</span>
 
-
     <span class="c1"># ------------------------------------------------------------------</span>
     <span class="c1"># Stand-level models (Mortality, Gmax, BEY2)</span>
     <span class="c1"># These were not the primary subject of the C# comparison but are kept</span>
@@ -1038,12 +1056,12 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">basal_area_mortality_percent_spruce_pine</span><span class="p">(</span>
         <span class="o">*</span><span class="p">,</span>
-        <span class="n">dominant_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
-        <span class="n">H100</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
-        <span class="n">stems</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
-        <span class="n">ThinningProportionBAStart</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
-        <span class="n">ThinningForm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
-        <span class="n">fertilised</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="c1"># Unused in Elfving 2010 final model</span>
+        <span class="n">dominant_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">H100</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">stems</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">ThinningProportionBAStart</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">ThinningForm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">fertilised</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>  <span class="c1"># Unused in Elfving 2010 final model</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Annual mortality (% of BA start) for Pine &amp; Spruce stands. Elfving (2010).&quot;&quot;&quot;</span>
         <span class="c1"># DENS term as per Elfving (2010) paper for Eq 4 is (N * Hdom)^0.5</span>
@@ -1052,7 +1070,7 @@
         <span class="c1"># Reverting to a DENS consistent with Elfving 2010 paper, Eq 4: DENS = (N*Hdom)^0.5</span>
         <span class="c1"># If the Heureka implementation differs, that specific DENS would be needed.</span>
         <span class="c1"># Using the DENS = N * (Hdom_m/10)^2 for now as often cited for Heureka context.</span>
-        
+
         <span class="c1"># DENS_heureka_style = stems * (dominant_height / 10.0)**2 # DENS = N * (Hdom_dm/10)^2</span>
         <span class="c1"># The initial Python code had DENS = (stems * dominant_height**2) / 100_000.0. Let&#39;s keep that for consistency with previous state unless a specific new source for DENS is given.</span>
         <span class="n">DENS</span> <span class="o">=</span> <span class="p">(</span><span class="n">stems</span> <span class="o">*</span> <span class="n">dominant_height</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mf">100_000.0</span>
@@ -1060,9 +1078,9 @@
         <span class="n">mortality_percentage</span> <span class="o">=</span> <span class="p">(</span>
             <span class="o">-</span><span class="mf">0.4093</span>
             <span class="o">+</span> <span class="mf">0.02189</span> <span class="o">*</span> <span class="n">H100</span>
-            <span class="o">+</span> <span class="mf">0.005373</span> <span class="o">*</span> <span class="p">(</span><span class="n">DENS</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> 
-            <span class="o">+</span> <span class="mf">0.3817</span> <span class="o">*</span> <span class="n">dominant_height</span> <span class="o">*</span> <span class="p">(</span><span class="n">ThinningProportionBAStart</span> <span class="o">**</span> <span class="mi">3</span><span class="p">)</span>
-            <span class="o">+</span> <span class="mf">0.01252</span> <span class="o">*</span> <span class="n">dominant_height</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">ThinningForm</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span> 
+            <span class="o">+</span> <span class="mf">0.005373</span> <span class="o">*</span> <span class="p">(</span><span class="n">DENS</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="o">+</span> <span class="mf">0.3817</span> <span class="o">*</span> <span class="n">dominant_height</span> <span class="o">*</span> <span class="p">(</span><span class="n">ThinningProportionBAStart</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
+            <span class="o">+</span> <span class="mf">0.01252</span> <span class="o">*</span> <span class="n">dominant_height</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">ThinningForm</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">mortality_percentage</span><span class="p">)</span></div>
 
@@ -1081,44 +1099,60 @@
         <span class="n">g_max</span> <span class="o">=</span> <span class="p">(</span>
             <span class="o">-</span><span class="mf">89.7</span>
             <span class="o">+</span> <span class="mf">2.47</span> <span class="o">*</span> <span class="n">dominant_height</span>
-            <span class="o">+</span> <span class="mf">0.0212</span> <span class="o">*</span> <span class="p">((</span><span class="n">dominant_height</span> <span class="o">**</span> <span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="n">H100</span> <span class="k">if</span> <span class="n">H100</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span> 
+            <span class="o">+</span> <span class="mf">0.0212</span> <span class="o">*</span> <span class="p">((</span><span class="n">dominant_height</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="n">H100</span> <span class="k">if</span> <span class="n">H100</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
             <span class="o">+</span> <span class="mf">0.834</span> <span class="o">*</span> <span class="n">H100</span>
             <span class="o">+</span> <span class="mf">0.00350</span> <span class="o">*</span> <span class="n">stems</span>
             <span class="o">+</span> <span class="mf">0.890</span> <span class="o">*</span> <span class="n">latitude</span>
         <span class="p">)</span>
-        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">g_max</span><span class="p">)</span> </div>
+        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">g_max</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ElfvingIBM.stand_basal_area_bey2">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.models.html#pyforestry.sweden.models.elfving_ibm.ElfvingIBM.stand_basal_area_bey2">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">stand_basal_area_bey2</span><span class="p">(</span> 
+    <span class="k">def</span><span class="w"> </span><span class="nf">stand_basal_area_bey2</span><span class="p">(</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">vegetation</span><span class="p">:</span> <span class="n">VegetationInput</span><span class="p">,</span>
-        <span class="n">stand_age</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
-        <span class="n">Basal_area_Conifer_m2_ha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
-        <span class="n">Basal_area_Pine_m2_ha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
-        <span class="n">Basal_area_Birch_m2_ha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
-        <span class="n">Basal_area_after_thinning</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
-        <span class="n">Basal_area_before_thinning</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
-        <span class="n">Basal_area_stand</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
-        <span class="n">stems_after_thinning</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
-        <span class="n">peatland</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> 
-        <span class="n">soil_moisture</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
-        <span class="n">SIS100</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
+        <span class="n">stand_age</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">Basal_area_Conifer_m2_ha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">Basal_area_Pine_m2_ha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">Basal_area_Birch_m2_ha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">Basal_area_after_thinning</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">Basal_area_before_thinning</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">Basal_area_stand</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">stems_after_thinning</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">peatland</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">soil_moisture</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">SIS100</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">altitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">ditched</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> 
-        <span class="n">thinned</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> 
-        <span class="n">last_thinned</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
-        <span class="n">spruce_ba_proportion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> 
+        <span class="n">ditched</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">thinned</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">last_thinned</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">spruce_ba_proportion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;5-year stand-level basal area *increment* after thinning (Elfving 2009, BEY2).&quot;&quot;&quot;</span>
         <span class="n">VEG_SCALE</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="mi">1</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">:</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mi">6</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">7</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">:</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mi">9</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">,</span>
-            <span class="mi">10</span><span class="p">:</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">11</span><span class="p">:</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">12</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">13</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">14</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">15</span><span class="p">:</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">16</span><span class="p">:</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">17</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">18</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+            <span class="mi">1</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="mi">2</span><span class="p">:</span> <span class="mf">2.5</span><span class="p">,</span>
+            <span class="mi">3</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="mi">4</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="mi">5</span><span class="p">:</span> <span class="mf">2.5</span><span class="p">,</span>
+            <span class="mi">6</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="mi">7</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="mi">8</span><span class="p">:</span> <span class="mf">2.5</span><span class="p">,</span>
+            <span class="mi">9</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">,</span>
+            <span class="mi">10</span><span class="p">:</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span>
+            <span class="mi">11</span><span class="p">:</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span>
+            <span class="mi">12</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="mi">13</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="mi">14</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span>
+            <span class="mi">15</span><span class="p">:</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span>
+            <span class="mi">16</span><span class="p">:</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span>
+            <span class="mi">17</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span>
+            <span class="mi">18</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
         <span class="p">}</span>
-        <span class="n">vegetation_scaled</span> <span class="o">=</span> <span class="n">VEG_SCALE</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_veg_code</span><span class="p">(</span><span class="n">vegetation</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span> 
+        <span class="n">vegetation_scaled</span> <span class="o">=</span> <span class="n">VEG_SCALE</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_veg_code</span><span class="p">(</span><span class="n">vegetation</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
 
         <span class="n">conifer_ba_proportion_term</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="n">Basal_area_after_thinning</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">stand_age</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -1131,43 +1165,43 @@
         <span class="n">birch_ba_proportion_after_thinning</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="n">Basal_area_after_thinning</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">birch_ba_proportion_after_thinning</span> <span class="o">=</span> <span class="n">Basal_area_Birch_m2_ha</span> <span class="o">/</span> <span class="n">Basal_area_after_thinning</span>
-        
-        <span class="c1"># lngrel = 0 # Not used in Elfving 2009 BEY2 paper&#39;s final model p.50</span>
-        
-        <span class="n">peat_vegetation_term</span> <span class="o">=</span> <span class="n">vegetation_scaled</span> <span class="k">if</span> <span class="n">peatland</span> <span class="k">else</span> <span class="mi">0</span>
-        <span class="n">moist_soil</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">soil_moisture</span> <span class="o">==</span> <span class="mi">4</span> <span class="k">else</span> <span class="mi">0</span> 
-        <span class="n">wet_soil</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">soil_moisture</span> <span class="o">==</span> <span class="mi">5</span> <span class="k">else</span> <span class="mi">0</span>   
 
-        <span class="n">temp_sum</span> <span class="o">=</span> <span class="n">Odin_temperature_sum</span><span class="p">(</span><span class="n">latitude</span><span class="p">,</span> <span class="n">altitude</span><span class="p">)</span><span class="o">*</span><span class="mf">0.001</span>
+        <span class="c1"># lngrel = 0 # Not used in Elfving 2009 BEY2 paper&#39;s final model p.50</span>
+
+        <span class="n">peat_vegetation_term</span> <span class="o">=</span> <span class="n">vegetation_scaled</span> <span class="k">if</span> <span class="n">peatland</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="n">moist_soil</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">soil_moisture</span> <span class="o">==</span> <span class="mi">4</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="n">wet_soil</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">soil_moisture</span> <span class="o">==</span> <span class="mi">5</span> <span class="k">else</span> <span class="mi">0</span>
+
+        <span class="n">temp_sum</span> <span class="o">=</span> <span class="n">Odin_temperature_sum</span><span class="p">(</span><span class="n">latitude</span><span class="p">,</span> <span class="n">altitude</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.001</span>
         <span class="n">cold_climate_factor</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.01</span> <span class="o">*</span> <span class="p">(</span><span class="n">temp_sum</span> <span class="o">-</span> <span class="mi">300</span><span class="p">))</span>
 
-        <span class="n">thinned_recently_flag</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="p">(</span><span class="n">thinned</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">last_thinned</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span> 
-        <span class="n">thinned_long_ago_flag</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="p">(</span><span class="n">thinned</span> <span class="ow">and</span> <span class="mi">10</span> <span class="o">&lt;</span> <span class="n">last_thinned</span> <span class="o">&lt;=</span> <span class="mi">25</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span> 
+        <span class="n">thinned_recently_flag</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="p">(</span><span class="n">thinned</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">last_thinned</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="n">thinned_long_ago_flag</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="p">(</span><span class="n">thinned</span> <span class="ow">and</span> <span class="mi">10</span> <span class="o">&lt;</span> <span class="n">last_thinned</span> <span class="o">&lt;=</span> <span class="mi">25</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
 
         <span class="n">stem_number_quotient</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">if</span> <span class="n">stems_after_thinning</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span> 
+        <span class="k">if</span> <span class="n">stems_after_thinning</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">stem_number_quotient</span> <span class="o">=</span> <span class="n">stems_after_thinning</span> <span class="o">/</span> <span class="p">(</span><span class="n">stems_after_thinning</span> <span class="o">+</span> <span class="mi">80</span><span class="p">)</span>
 
         <span class="n">log_increment</span> <span class="o">=</span> <span class="p">(</span>
             <span class="mf">0.366</span>
-            <span class="o">-</span> <span class="mf">0.5842</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">stand_age</span> <span class="k">if</span> <span class="n">stand_age</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">1</span><span class="p">)</span> 
-            <span class="o">+</span> <span class="mf">8.3740</span> <span class="o">*</span> <span class="n">conifer_ba_proportion_term</span>          
-            <span class="o">-</span> <span class="mf">0.0237</span> <span class="o">*</span> <span class="n">pine_ba_proportion_after_thinning</span> <span class="o">*</span> <span class="n">vegetation_scaled</span> 
-            <span class="o">-</span> <span class="mf">0.3192</span> <span class="o">*</span> <span class="p">(</span><span class="n">birch_ba_proportion_after_thinning</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> 
-            <span class="o">-</span> <span class="mf">10.8034</span> <span class="o">*</span> <span class="n">cold_climate_factor</span> <span class="o">*</span> <span class="n">birch_ba_proportion_after_thinning</span> 
-            <span class="o">+</span> <span class="mf">0.5002</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">Basal_area_after_thinning</span> <span class="k">if</span> <span class="n">Basal_area_after_thinning</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">1</span><span class="p">)</span> 
-            <span class="o">-</span> <span class="mf">0.00632</span> <span class="o">*</span> <span class="n">Basal_area_before_thinning</span>        
-            <span class="o">+</span> <span class="mf">1.376</span> <span class="o">*</span> <span class="n">stem_number_quotient</span>                
-            <span class="o">+</span> <span class="mf">0.0627</span> <span class="o">*</span> <span class="n">vegetation_scaled</span>                  
-            <span class="o">-</span> <span class="mf">0.0244</span> <span class="o">*</span> <span class="n">peat_vegetation_term</span>               
-            <span class="o">-</span> <span class="mf">0.0498</span> <span class="o">*</span> <span class="n">moist_soil</span>                         
-            <span class="o">-</span> <span class="mf">0.1807</span> <span class="o">*</span> <span class="n">wet_soil</span>                           
-            <span class="o">+</span> <span class="mf">0.0109</span> <span class="o">*</span> <span class="n">SIS100</span>                             
-            <span class="o">+</span> <span class="mf">0.0542</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="p">(</span><span class="n">peatland</span> <span class="ow">and</span> <span class="n">ditched</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span> 
-            <span class="o">+</span> <span class="mf">0.1396</span> <span class="o">*</span> <span class="n">thinned_recently_flag</span>              
-            <span class="o">+</span> <span class="mf">0.0567</span> <span class="o">*</span> <span class="n">thinned_long_ago_flag</span>              
-            <span class="o">-</span> <span class="mf">0.06</span> <span class="o">*</span> <span class="n">pine_ba_proportion_after_thinning</span>  
-            <span class="o">-</span> <span class="mf">0.03</span> <span class="o">*</span> <span class="n">spruce_ba_proportion</span> 
+            <span class="o">-</span> <span class="mf">0.5842</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">stand_age</span> <span class="k">if</span> <span class="n">stand_age</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="o">+</span> <span class="mf">8.3740</span> <span class="o">*</span> <span class="n">conifer_ba_proportion_term</span>
+            <span class="o">-</span> <span class="mf">0.0237</span> <span class="o">*</span> <span class="n">pine_ba_proportion_after_thinning</span> <span class="o">*</span> <span class="n">vegetation_scaled</span>
+            <span class="o">-</span> <span class="mf">0.3192</span> <span class="o">*</span> <span class="p">(</span><span class="n">birch_ba_proportion_after_thinning</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="o">-</span> <span class="mf">10.8034</span> <span class="o">*</span> <span class="n">cold_climate_factor</span> <span class="o">*</span> <span class="n">birch_ba_proportion_after_thinning</span>
+            <span class="o">+</span> <span class="mf">0.5002</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">Basal_area_after_thinning</span> <span class="k">if</span> <span class="n">Basal_area_after_thinning</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="o">-</span> <span class="mf">0.00632</span> <span class="o">*</span> <span class="n">Basal_area_before_thinning</span>
+            <span class="o">+</span> <span class="mf">1.376</span> <span class="o">*</span> <span class="n">stem_number_quotient</span>
+            <span class="o">+</span> <span class="mf">0.0627</span> <span class="o">*</span> <span class="n">vegetation_scaled</span>
+            <span class="o">-</span> <span class="mf">0.0244</span> <span class="o">*</span> <span class="n">peat_vegetation_term</span>
+            <span class="o">-</span> <span class="mf">0.0498</span> <span class="o">*</span> <span class="n">moist_soil</span>
+            <span class="o">-</span> <span class="mf">0.1807</span> <span class="o">*</span> <span class="n">wet_soil</span>
+            <span class="o">+</span> <span class="mf">0.0109</span> <span class="o">*</span> <span class="n">SIS100</span>
+            <span class="o">+</span> <span class="mf">0.0542</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="p">(</span><span class="n">peatland</span> <span class="ow">and</span> <span class="n">ditched</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="o">+</span> <span class="mf">0.1396</span> <span class="o">*</span> <span class="n">thinned_recently_flag</span>
+            <span class="o">+</span> <span class="mf">0.0567</span> <span class="o">*</span> <span class="n">thinned_long_ago_flag</span>
+            <span class="o">-</span> <span class="mf">0.06</span> <span class="o">*</span> <span class="n">pine_ba_proportion_after_thinning</span>
+            <span class="o">-</span> <span class="mf">0.03</span> <span class="o">*</span> <span class="n">spruce_ba_proportion</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">exp</span><span class="p">(</span><span class="n">log_increment</span><span class="p">)</span></div>
 </div>

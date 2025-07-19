@@ -386,14 +386,15 @@
                 <article class="bd-article">
                   
   <h1>Source code for pyforestry.sweden.geo.geo</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Point</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyproj</span><span class="w"> </span><span class="kn">import</span> <span class="n">Transformer</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">importlib.resources</span><span class="w"> </span><span class="kn">import</span> <span class="n">files</span><span class="p">,</span> <span class="n">as_file</span>
-
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">importlib.resources</span><span class="w"> </span><span class="kn">import</span> <span class="n">as_file</span><span class="p">,</span> <span class="n">files</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyproj</span><span class="w"> </span><span class="kn">import</span> <span class="n">Transformer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Point</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.sweden.site</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sweden</span>
+
 
 <div class="viewcode-block" id="RetrieveGeoCode">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.geo.html#pyforestry.sweden.geo.geo.RetrieveGeoCode">[docs]</a>
@@ -417,7 +418,11 @@
 <span class="sd">            float: Distance in kilometers to the nearest coastline.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Load the coastline shapefile</span>
-        <span class="k">with</span> <span class="n">as_file</span><span class="p">(</span><span class="n">files</span><span class="p">(</span><span class="s2">&quot;pyforestry.sweden.geo.coastline&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;swedishcoastline_ne_medium_clipped.shp&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">coastline_path</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">as_file</span><span class="p">(</span>
+            <span class="n">files</span><span class="p">(</span><span class="s2">&quot;pyforestry.sweden.geo.coastline&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span>
+                <span class="s2">&quot;swedishcoastline_ne_medium_clipped.shp&quot;</span>
+            <span class="p">)</span>
+        <span class="p">)</span> <span class="k">as</span> <span class="n">coastline_path</span><span class="p">:</span>
             <span class="n">coast_gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">coastline_path</span><span class="p">)</span>
 
         <span class="c1"># Ensure coastline data is in EPSG:4326 for consistency</span>
@@ -439,7 +444,6 @@
         <span class="k">return</span> <span class="n">nearest_distance</span> <span class="o">/</span> <span class="mi">1000</span>  <span class="c1"># Convert meters to kilometers</span></div>
 
 
-
 <div class="viewcode-block" id="RetrieveGeoCode.getClimateCode">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.geo.html#pyforestry.sweden.geo.geo.RetrieveGeoCode.getClimateCode">[docs]</a>
     <span class="nd">@staticmethod</span>
@@ -456,9 +460,11 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            Sweden.ClimateZone | None: The climate zone enum member or None if not found.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="c1"># Load the climate shapefile and reproject to EPSG:3006</span>
-        <span class="k">with</span> <span class="n">as_file</span><span class="p">(</span><span class="n">files</span><span class="p">(</span><span class="s1">&#39;pyforestry.sweden.geo.climate&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;klimat.shp&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">climatezone_path</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">as_file</span><span class="p">(</span>
+            <span class="n">files</span><span class="p">(</span><span class="s2">&quot;pyforestry.sweden.geo.climate&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;klimat.shp&quot;</span><span class="p">)</span>
+        <span class="p">)</span> <span class="k">as</span> <span class="n">climatezone_path</span><span class="p">:</span>
             <span class="n">klimat_gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">climatezone_path</span><span class="p">)</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">epsg</span><span class="o">=</span><span class="mi">3006</span><span class="p">)</span>
 
         <span class="c1"># Transform the input coordinates from the provided epsg to EPSG:3006</span>
@@ -469,12 +475,11 @@
         <span class="c1"># Find the polygon that contains the transformed point</span>
         <span class="n">klimat_polygon</span> <span class="o">=</span> <span class="n">klimat_gdf</span><span class="p">[</span><span class="n">klimat_gdf</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">point_proj</span><span class="p">)]</span>
         <span class="k">if</span> <span class="n">klimat_polygon</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span> <span class="c1"># Return None if no matching zone is found</span>
+            <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># Return None if no matching zone is found</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">climate_zone_code_int</span> <span class="o">=</span> <span class="n">klimat_polygon</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;KLIMZON_&#39;</span><span class="p">]</span>
+            <span class="n">climate_zone_code_int</span> <span class="o">=</span> <span class="n">klimat_polygon</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;KLIMZON_&quot;</span><span class="p">]</span>
             <span class="c1"># Lookup and return the enum member using the code (runtime use)</span>
             <span class="k">return</span> <span class="n">Sweden</span><span class="o">.</span><span class="n">ClimateZone</span><span class="o">.</span><span class="n">from_code</span><span class="p">(</span><span class="n">climate_zone_code_int</span><span class="p">)</span></div>
-
 
 
 <div class="viewcode-block" id="RetrieveGeoCode.getCountyCode">
@@ -495,9 +500,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Load the county shapefile and reproject to EPSG:3006</span>
-        <span class="k">with</span> <span class="n">as_file</span><span class="p">(</span><span class="n">files</span><span class="p">(</span><span class="s1">&#39;pyforestry.sweden.geo.counties&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s1">&#39;rt_dlanskod.shp&#39;</span><span class="p">))</span> <span class="k">as</span> <span class="n">dlanskod_path</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">as_file</span><span class="p">(</span>
+            <span class="n">files</span><span class="p">(</span><span class="s2">&quot;pyforestry.sweden.geo.counties&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;rt_dlanskod.shp&quot;</span><span class="p">)</span>
+        <span class="p">)</span> <span class="k">as</span> <span class="n">dlanskod_path</span><span class="p">:</span>
             <span class="n">dlanskod_gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">dlanskod_path</span><span class="p">)</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">epsg</span><span class="o">=</span><span class="mi">3006</span><span class="p">)</span>
-
 
         <span class="c1"># Transform the input coordinates from the provided epsg to EPSG:3006</span>
         <span class="n">transformer</span> <span class="o">=</span> <span class="n">Transformer</span><span class="o">.</span><span class="n">from_crs</span><span class="p">(</span><span class="n">epsg</span><span class="p">,</span> <span class="mi">3006</span><span class="p">,</span> <span class="n">always_xy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -507,9 +513,9 @@
         <span class="c1"># Find the polygon that contains the transformed point</span>
         <span class="n">dlanskod_polygon</span> <span class="o">=</span> <span class="n">dlanskod_gdf</span><span class="p">[</span><span class="n">dlanskod_gdf</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">point_proj</span><span class="p">)]</span>
         <span class="k">if</span> <span class="n">dlanskod_polygon</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span> <span class="c1"># Return None if no matching polygon</span>
+            <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># Return None if no matching polygon</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">county_code_int</span> <span class="o">=</span> <span class="n">dlanskod_polygon</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;DLANSKOD&#39;</span><span class="p">]</span>
+            <span class="n">county_code_int</span> <span class="o">=</span> <span class="n">dlanskod_polygon</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;DLANSKOD&quot;</span><span class="p">]</span>
             <span class="c1"># Lookup and return the enum member using the code (runtime use)</span>
             <span class="k">return</span> <span class="n">Sweden</span><span class="o">.</span><span class="n">County</span><span class="o">.</span><span class="n">from_code</span><span class="p">(</span><span class="n">county_code_int</span><span class="p">)</span></div>
 </div>

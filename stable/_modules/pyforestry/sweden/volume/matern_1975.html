@@ -392,7 +392,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate the volume of Oak trees based on Matérn (1975).</span>
 
-<span class="sd">    This function estimates the volume of standing Oak trees in Sweden using </span>
+<span class="sd">    This function estimates the volume of standing Oak trees in Sweden using</span>
 <span class="sd">    diameter at breast height and tree height.</span>
 
 <span class="sd">    Parameters:</span>
@@ -403,28 +403,33 @@
 <span class="sd">        float: Volume of the tree (m³).</span>
 
 <span class="sd">    References:</span>
-<span class="sd">        Matérn, B. (1975). &quot;Volymfunktioner för stående träd av ek och bok.&quot; </span>
+<span class="sd">        Matérn, B. (1975). &quot;Volymfunktioner för stående träd av ek och bok.&quot;</span>
 <span class="sd">        Skogshögskolan, institutionen för skoglig matematisk statistik. Rapp. o. Upps. nr 15.</span>
 <span class="sd">        PM for Heureka 2004-01-20 Björn Elfving. Available:</span>
 <span class="sd">        https://www.heurekaslu.org/w/images/9/93/Heureka_prognossystem_(Elfving_rapportutkast).pdf</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">height_m</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="p">:</span>
         <span class="c1"># For trees with height &gt;= 10 m</span>
-        <span class="n">volume</span> <span class="o">=</span> <span class="mf">0.03522</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">height_m</span> <span class="o">+</span> <span class="mf">0.08772</span> <span class="o">*</span> <span class="n">diameter_cm</span> <span class="o">*</span> <span class="n">height_m</span> <span class="o">-</span> <span class="mf">0.04905</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">volume</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="mf">0.03522</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">height_m</span>
+            <span class="o">+</span> <span class="mf">0.08772</span> <span class="o">*</span> <span class="n">diameter_cm</span> <span class="o">*</span> <span class="n">height_m</span>
+            <span class="o">-</span> <span class="mf">0.04905</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># For trees with height &lt; 10 m</span>
         <span class="n">volume</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="mf">0.03522</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">height_m</span> <span class="o">+</span> 
-            <span class="mf">0.08772</span> <span class="o">*</span> <span class="n">diameter_cm</span> <span class="o">*</span> <span class="n">height_m</span> <span class="o">-</span> 
-            <span class="mf">0.04905</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span>
-            <span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="mi">10</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span>
-                <span class="mf">0.01682</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">height_m</span> <span class="o">+</span> 
-                <span class="mf">0.01108</span> <span class="o">*</span> <span class="n">diameter_cm</span> <span class="o">*</span> <span class="n">height_m</span> <span class="o">-</span> 
-                <span class="mf">0.02167</span> <span class="o">*</span> <span class="n">diameter_cm</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> 
-                <span class="mf">0.04905</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="mf">0.03522</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">height_m</span>
+            <span class="o">+</span> <span class="mf">0.08772</span> <span class="o">*</span> <span class="n">diameter_cm</span> <span class="o">*</span> <span class="n">height_m</span>
+            <span class="o">-</span> <span class="mf">0.04905</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="o">+</span> <span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">height_m</span> <span class="o">/</span> <span class="mi">10</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="o">*</span> <span class="p">(</span>
+                <span class="mf">0.01682</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">height_m</span>
+                <span class="o">+</span> <span class="mf">0.01108</span> <span class="o">*</span> <span class="n">diameter_cm</span> <span class="o">*</span> <span class="n">height_m</span>
+                <span class="o">-</span> <span class="mf">0.02167</span> <span class="o">*</span> <span class="n">diameter_cm</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+                <span class="o">+</span> <span class="mf">0.04905</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
             <span class="p">)</span>
         <span class="p">)</span>
-    <span class="k">return</span> <span class="n">volume</span><span class="o">/</span><span class="mi">1000</span></div>
+    <span class="k">return</span> <span class="n">volume</span> <span class="o">/</span> <span class="mi">1000</span></div>
 
 
 
@@ -434,7 +439,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate the volume of Beech trees based on Matérn (1975).</span>
 
-<span class="sd">    This function estimates the volume of standing Beech trees in Sweden using </span>
+<span class="sd">    This function estimates the volume of standing Beech trees in Sweden using</span>
 <span class="sd">    diameter at breast height and tree height.</span>
 
 <span class="sd">    Parameters:</span>
@@ -445,18 +450,18 @@
 <span class="sd">        float: Volume of the tree (m³).</span>
 
 <span class="sd">    References:</span>
-<span class="sd">        Matérn, B. (1975). &quot;Volymfunktioner för stående träd av ek och bok.&quot; </span>
+<span class="sd">        Matérn, B. (1975). &quot;Volymfunktioner för stående träd av ek och bok.&quot;</span>
 <span class="sd">        Skogshögskolan, institutionen för skoglig matematisk statistik. Rapp. o. Upps. nr 15.</span>
 <span class="sd">        PM for Heureka 2004-01-20 Björn Elfving. Available:</span>
 <span class="sd">        https://www.heurekaslu.org/w/images/9/93/Heureka_prognossystem_(Elfving_rapportutkast).pdf</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">volume</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="mf">0.01275</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">height_m</span> <span class="o">+</span>
-        <span class="mf">0.12368</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span>
-        <span class="mf">0.0004701</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span>
-        <span class="mf">0.00622</span> <span class="o">*</span> <span class="n">diameter_cm</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="mf">0.01275</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">height_m</span>
+        <span class="o">+</span> <span class="mf">0.12368</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="o">+</span> <span class="mf">0.0004701</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="o">+</span> <span class="mf">0.00622</span> <span class="o">*</span> <span class="n">diameter_cm</span> <span class="o">*</span> <span class="p">(</span><span class="n">height_m</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
     <span class="p">)</span>
-    <span class="k">return</span> <span class="n">volume</span><span class="o">/</span><span class="mi">1000</span></div>
+    <span class="k">return</span> <span class="n">volume</span> <span class="o">/</span> <span class="mi">1000</span></div>
 
 </pre></div>
 

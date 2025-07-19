@@ -386,22 +386,18 @@
                 <article class="bd-article">
                   
   <h1>Source code for pyforestry.sweden.siteindex.eriksson_1997</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">Age</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">,</span> <span class="n">SiteIndexValue</span><span class="p">,</span> <span class="n">TreeSpecies</span>
-<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Age</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">,</span> <span class="n">SiteIndexValue</span><span class="p">,</span> <span class="n">TreeSpecies</span>
 
 
 <span class="c1"># Type hints added to signature, return type changed to SiteIndexValue</span>
 <div class="viewcode-block" id="eriksson_1997_height_trajectory_sweden_birch">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.eriksson_1997.eriksson_1997_height_trajectory_sweden_birch">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">eriksson_1997_height_trajectory_sweden_birch</span><span class="p">(</span>
-    <span class="n">dominant_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-    <span class="n">age</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">],</span>
-    <span class="n">age2</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">]</span>
+    <span class="n">dominant_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">age</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">],</span> <span class="n">age2</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SiteIndexValue</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Height trajectory for Birch in Sweden based on Eriksson et al. (1997).</span>
@@ -459,10 +455,13 @@
     <span class="c1"># Check for suitability of input ages</span>
     <span class="c1"># Use age_val and age2_val</span>
     <span class="k">if</span> <span class="n">age_val</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="ow">or</span> <span class="n">age2_val</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Suitable for cultivated stands of Birch between breast height ages of 10 and 90.&quot;</span><span class="p">)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;Suitable for cultivated stands of Birch between breast height ages of 10 and 90.&quot;</span>
+        <span class="p">)</span>
     <span class="k">if</span> <span class="n">age_val</span> <span class="o">&gt;</span> <span class="mi">90</span> <span class="ow">or</span> <span class="n">age2_val</span> <span class="o">&gt;</span> <span class="mi">90</span><span class="p">:</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Suitable for cultivated stands of Birch between breast height ages of 10 and 90.&quot;</span><span class="p">)</span>
-
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;Suitable for cultivated stands of Birch between breast height ages of 10 and 90.&quot;</span>
+        <span class="p">)</span>
 
     <span class="c1"># Model parameters</span>
     <span class="n">param_asi</span> <span class="o">=</span> <span class="mi">7</span>
@@ -471,22 +470,27 @@
 
     <span class="c1"># Calculations - use age_val and age2_val</span>
     <span class="n">d</span> <span class="o">=</span> <span class="n">param_beta</span> <span class="o">/</span> <span class="p">(</span><span class="n">param_asi</span><span class="o">**</span><span class="n">param_b2</span><span class="p">)</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(((</span><span class="n">dominant_height</span> <span class="o">-</span> <span class="mf">1.3</span> <span class="o">-</span> <span class="n">d</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">param_beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">dominant_height</span> <span class="o">-</span> <span class="mf">1.3</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">age_val</span><span class="o">**</span><span class="n">param_b2</span><span class="p">)))</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+        <span class="p">((</span><span class="n">dominant_height</span> <span class="o">-</span> <span class="mf">1.3</span> <span class="o">-</span> <span class="n">d</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="o">+</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">param_beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">dominant_height</span> <span class="o">-</span> <span class="mf">1.3</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">age_val</span><span class="o">**</span><span class="n">param_b2</span><span class="p">))</span>
+    <span class="p">)</span>
 
     <span class="c1"># Height at target age - use age_val and age2_val</span>
     <span class="n">height_at_age2</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="p">((</span><span class="n">dominant_height</span> <span class="o">-</span> <span class="mf">1.3</span> <span class="o">+</span> <span class="n">d</span> <span class="o">+</span> <span class="n">r</span><span class="p">)</span> <span class="o">/</span>
-         <span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">param_beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">age2_val</span><span class="o">**-</span><span class="n">param_b2</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">dominant_height</span> <span class="o">-</span> <span class="mf">1.3</span> <span class="o">-</span> <span class="n">d</span> <span class="o">+</span> <span class="n">r</span><span class="p">)))</span>
-        <span class="o">+</span> <span class="mf">1.3</span>
-    <span class="p">)</span>
+        <span class="p">(</span><span class="n">dominant_height</span> <span class="o">-</span> <span class="mf">1.3</span> <span class="o">+</span> <span class="n">d</span> <span class="o">+</span> <span class="n">r</span><span class="p">)</span>
+        <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">param_beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">age2_val</span><span class="o">**-</span><span class="n">param_b2</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">dominant_height</span> <span class="o">-</span> <span class="mf">1.3</span> <span class="o">-</span> <span class="n">d</span> <span class="o">+</span> <span class="n">r</span><span class="p">))</span>
+    <span class="p">)</span> <span class="o">+</span> <span class="mf">1.3</span>
 
     <span class="c1"># Return statement (already correct, uses age2_val implicitly via height_at_age2 calculation)</span>
     <span class="c1"># Use age2_val explicitly for reference_age</span>
     <span class="k">return</span> <span class="n">SiteIndexValue</span><span class="p">(</span>
         <span class="n">value</span><span class="o">=</span><span class="n">height_at_age2</span><span class="p">,</span>
         <span class="n">reference_age</span><span class="o">=</span><span class="n">Age</span><span class="o">.</span><span class="n">DBH</span><span class="p">(</span><span class="n">age2_val</span><span class="p">),</span>
-        <span class="n">species</span><span class="o">=</span><span class="p">{</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">betula_pendula</span><span class="p">,</span> <span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">betula_pubescens</span><span class="p">},</span> <span class="c1"># This represents the genus group Betula</span>
-        <span class="n">fn</span><span class="o">=</span><span class="n">eriksson_1997_height_trajectory_sweden_birch</span>
+        <span class="n">species</span><span class="o">=</span><span class="p">{</span>
+            <span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">betula_pendula</span><span class="p">,</span>
+            <span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">betula_pubescens</span><span class="p">,</span>
+        <span class="p">},</span>  <span class="c1"># This represents the genus group Betula</span>
+        <span class="n">fn</span><span class="o">=</span><span class="n">eriksson_1997_height_trajectory_sweden_birch</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 </pre></div>

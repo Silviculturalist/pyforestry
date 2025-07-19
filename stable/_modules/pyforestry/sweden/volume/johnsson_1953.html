@@ -392,7 +392,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate stem volume for Hybrid Aspen based on Johnsson (1953).</span>
 
-<span class="sd">    This function estimates the stem volume over bark for Hybrid Aspen trees in cubic meters </span>
+<span class="sd">    This function estimates the stem volume over bark for Hybrid Aspen trees in cubic meters</span>
 <span class="sd">    using diameter at breast height and tree height.</span>
 
 <span class="sd">    Parameters:</span>
@@ -405,19 +405,19 @@
 <span class="sd">    References:</span>
 <span class="sd">        Johnsson, H. (1953). &quot;Hybridaspens ungdomsutveckling och ett försök till framtidsprognos.&quot;</span>
 <span class="sd">        Svenska skogsvårdsföreningens tidsskrift. 51:73-96.</span>
-<span class="sd">        </span>
-<span class="sd">        Rytter, L., Stener, L.-G. (2014). &quot;Growth and thinning effects during a rotation period of </span>
-<span class="sd">        hybrid aspen in southern Sweden.&quot; Scandinavian Journal of Forest Research, Vol. 29, Issue 8, </span>
+
+<span class="sd">        Rytter, L., Stener, L.-G. (2014). &quot;Growth and thinning effects during a rotation period of</span>
+<span class="sd">        hybrid aspen in southern Sweden.&quot; Scandinavian Journal of Forest Research, Vol. 29, Issue 8,</span>
 <span class="sd">        pp. 747-756. DOI: https://doi.org/10.1080/02827581.2014.968202</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Calculate volume in dm³</span>
     <span class="n">volume_dm3</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="mf">0.03186</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">height_m</span> <span class="o">+</span>
-        <span class="mf">0.43</span> <span class="o">*</span> <span class="n">height_m</span> <span class="o">+</span>
-        <span class="mf">0.0551</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span>
-        <span class="mf">0.4148</span> <span class="o">*</span> <span class="n">diameter_cm</span>
+        <span class="mf">0.03186</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">height_m</span>
+        <span class="o">+</span> <span class="mf">0.43</span> <span class="o">*</span> <span class="n">height_m</span>
+        <span class="o">+</span> <span class="mf">0.0551</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="o">-</span> <span class="mf">0.4148</span> <span class="o">*</span> <span class="n">diameter_cm</span>
     <span class="p">)</span>
-    
+
     <span class="c1"># Convert volume to m³</span>
     <span class="n">volume_m3</span> <span class="o">=</span> <span class="n">volume_dm3</span> <span class="o">/</span> <span class="mi">1000</span>  <span class="c1"># 1000 dm³ in 1 m³</span>
     <span class="k">return</span> <span class="n">volume_m3</span></div>

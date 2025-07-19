@@ -413,8 +413,9 @@
 <span class="sd">        over_bark (bool): Whether the diameter is measured over bark.</span>
 <span class="sd">        measurement_height_m (float): Height at which the diameter was measured (in meters).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="c1"># Declare the new instance attributes in __slots__</span>
-    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;over_bark&#39;</span><span class="p">,</span> <span class="s1">&#39;measurement_height_m&#39;</span><span class="p">)</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;over_bark&quot;</span><span class="p">,</span> <span class="s2">&quot;measurement_height_m&quot;</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">over_bark</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">measurement_height_m</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.3</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -437,17 +438,17 @@
         <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Diameter must be non-negative.&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">measurement_height_m</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;measurement_height_m must be &gt;= 0 m!&#39;</span><span class="p">)</span>
-        
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;measurement_height_m must be &gt;= 0 m!&quot;</span><span class="p">)</span>
+
         <span class="c1"># Create the instance using the parent&#39;s __new__</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-        
+
         <span class="c1"># Now, these assignments are valid and understood by linters</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">over_bark</span> <span class="o">=</span> <span class="n">over_bark</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">measurement_height_m</span> <span class="o">=</span> <span class="n">measurement_height_m</span>
-        
+
         <span class="k">return</span> <span class="n">obj</span>
-    
+
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -466,8 +467,10 @@
 <span class="sd">            str: String in the format</span>
 <span class="sd">                &quot;Diameter_cm(value, over_bark=..., measurement_height_m=...)&quot;.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Diameter_cm(</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2">, over_bark=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">over_bark</span><span class="si">}</span><span class="s2">, &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;measurement_height_m=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">measurement_height_m</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Diameter_cm(</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2">, over_bark=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">over_bark</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;measurement_height_m=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">measurement_height_m</span><span class="si">}</span><span class="s2">)&quot;</span>
+        <span class="p">)</span></div>
 
 </pre></div>
 

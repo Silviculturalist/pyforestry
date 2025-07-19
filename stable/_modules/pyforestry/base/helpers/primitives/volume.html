@@ -387,12 +387,14 @@
                   
   <h1>Source code for pyforestry.base.helpers.primitives.volume</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClassVar</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Set</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">ClassVar</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="c1"># A type hint for scalars</span>
 <span class="n">Numeric</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+
 
 <div class="viewcode-block" id="AtomicVolume">
 <a class="viewcode-back" href="../../../../../api/pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.AtomicVolume">[docs]</a>
@@ -402,14 +404,15 @@
 <span class="sd">    Represents a single, indivisible volume measurement for a specific species and region.</span>
 <span class="sd">    This is the fundamental building block.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;unit&#39;</span><span class="p">:</span> <span class="s1">&#39;m3&#39;</span><span class="p">})</span>
-    <span class="n">region</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;Sweden&#39;</span>
-    <span class="n">species</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;unknown&#39;</span>
-    <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;m3sk&#39;</span>
+
+    <span class="n">value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;m3&quot;</span><span class="p">})</span>
+    <span class="n">region</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Sweden&quot;</span>
+    <span class="n">species</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;unknown&quot;</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;m3sk&quot;</span>
 
     <span class="c1"># --- (Class constants and validation are the same as before) ---</span>
-    <span class="n">UNIT_CONVERSION</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;m3&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;dm3&#39;</span><span class="p">:</span> <span class="mf">1e-3</span><span class="p">,</span> <span class="s1">&#39;cm3&#39;</span><span class="p">:</span> <span class="mf">1e-6</span><span class="p">}</span>
-    <span class="n">TYPE_REGIONS</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;m3sk&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Sweden&#39;</span><span class="p">,</span> <span class="s1">&#39;Finland&#39;</span><span class="p">,</span> <span class="s1">&#39;Norway&#39;</span><span class="p">]}</span>
+    <span class="n">UNIT_CONVERSION</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;m3&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">&quot;dm3&quot;</span><span class="p">:</span> <span class="mf">1e-3</span><span class="p">,</span> <span class="s2">&quot;cm3&quot;</span><span class="p">:</span> <span class="mf">1e-6</span><span class="p">}</span>
+    <span class="n">TYPE_REGIONS</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;m3sk&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Sweden&quot;</span><span class="p">,</span> <span class="s2">&quot;Finland&quot;</span><span class="p">,</span> <span class="s2">&quot;Norway&quot;</span><span class="p">]}</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -433,7 +436,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">UNIT_CONVERSION</span><span class="p">[</span><span class="n">unit</span><span class="p">]</span></div>
 
-        
+
     <span class="c1"># --- INTELLIGENT ADDITION ---</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">AtomicVolume</span><span class="p">,</span> <span class="n">CompositeVolume</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -445,9 +448,11 @@
             <span class="k">return</span> <span class="bp">NotImplemented</span>
 
         <span class="c1"># Check for compatibility to merge</span>
-        <span class="n">is_compatible</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">type</span> <span class="ow">and</span> 
-                         <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">region</span> <span class="ow">and</span> 
-                         <span class="bp">self</span><span class="o">.</span><span class="n">species</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">species</span><span class="p">)</span>
+        <span class="n">is_compatible</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">type</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">region</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">species</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">species</span>
+        <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">is_compatible</span><span class="p">:</span>
             <span class="c1"># Merge into a new, larger AtomicVolume</span>
@@ -455,23 +460,26 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Incompatible: form a CompositeVolume</span>
             <span class="k">return</span> <span class="n">CompositeVolume</span><span class="p">([</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">])</span>
-            
+
     <span class="c1"># --- (Multiplication/Division are the same) ---</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scalar</span><span class="p">:</span> <span class="n">Numeric</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AtomicVolume</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">scalar</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span> <span class="k">return</span> <span class="bp">NotImplemented</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">scalar</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="bp">NotImplemented</span>
         <span class="k">return</span> <span class="n">AtomicVolume</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="n">scalar</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
-        
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scalar</span><span class="p">:</span> <span class="n">Numeric</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AtomicVolume</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__mul__</span><span class="p">(</span><span class="n">scalar</span><span class="p">)</span>
-        
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__truediv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scalar</span><span class="p">:</span> <span class="n">Numeric</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AtomicVolume</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">scalar</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span> <span class="k">return</span> <span class="bp">NotImplemented</span>
-        <span class="k">if</span> <span class="n">scalar</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">ZeroDivisionError</span><span class="p">(</span><span class="s2">&quot;Cannot divide Volume by zero.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">scalar</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="bp">NotImplemented</span>
+        <span class="k">if</span> <span class="n">scalar</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ZeroDivisionError</span><span class="p">(</span><span class="s2">&quot;Cannot divide Volume by zero.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">AtomicVolume</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">/</span> <span class="n">scalar</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;AtomicVolume(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> m3, type=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">&#39;, species=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="si">}</span><span class="s2">&#39;, region=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="si">}</span><span class="s2">&#39;)&quot;</span>
-    
+
     <span class="c1"># Inside the AtomicVolume class</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -493,10 +501,11 @@
 <span class="sd">    Represents a collection of AtomicVolume objects.</span>
 <span class="sd">    It preserves all underlying information while providing aggregate views.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">volumes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">AtomicVolume</span><span class="p">]):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">AtomicVolume</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">volumes</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;CompositeVolume can only contain AtomicVolume objects.&quot;</span><span class="p">)</span>
-        
+
         <span class="c1"># Enforce that all volumes in a composite must be of the same &#39;type&#39;</span>
         <span class="n">first_type</span> <span class="o">=</span> <span class="n">volumes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">type</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">first_type</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">volumes</span><span class="p">):</span>
@@ -513,9 +522,12 @@
             <span class="c1"># Create a unique key for compatible volumes</span>
             <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">vol</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">vol</span><span class="o">.</span><span class="n">region</span><span class="p">,</span> <span class="n">vol</span><span class="o">.</span><span class="n">species</span><span class="p">)</span>
             <span class="n">registry</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+=</span> <span class="n">vol</span><span class="o">.</span><span class="n">value</span>
-        
+
         <span class="c1"># Reconstruct the minimal list of AtomicVolumes</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">AtomicVolume</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">species</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">species</span><span class="p">),</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">registry</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">AtomicVolume</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">species</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span>
+            <span class="k">for</span> <span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">species</span><span class="p">),</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">registry</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">]</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
@@ -542,7 +554,7 @@
         <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_volumes</span><span class="p">:</span>
             <span class="n">composition</span><span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">species</span><span class="p">]</span> <span class="o">+=</span> <span class="n">v</span><span class="o">.</span><span class="n">value</span>
         <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">composition</span><span class="p">)</span>
-        
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CompositeVolume</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">AtomicVolume</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">CompositeVolume</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_volumes</span> <span class="o">+</span> <span class="p">[</span><span class="n">other</span><span class="p">])</span>
@@ -551,19 +563,22 @@
         <span class="k">return</span> <span class="bp">NotImplemented</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scalar</span><span class="p">:</span> <span class="n">Numeric</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CompositeVolume</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">scalar</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span> <span class="k">return</span> <span class="bp">NotImplemented</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">scalar</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="bp">NotImplemented</span>
         <span class="c1"># Multiply each component volume individually</span>
         <span class="k">return</span> <span class="n">CompositeVolume</span><span class="p">([</span><span class="n">v</span> <span class="o">*</span> <span class="n">scalar</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_volumes</span><span class="p">])</span>
-    
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scalar</span><span class="p">:</span> <span class="n">Numeric</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CompositeVolume</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__mul__</span><span class="p">(</span><span class="n">scalar</span><span class="p">)</span>
-        
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_volumes</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CompositeVolume(total=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> m3, &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;type=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">&#39;, components=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;CompositeVolume(total=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> m3, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;type=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">&#39;, components=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
+        <span class="p">)</span></div>
 
 </pre></div>
 

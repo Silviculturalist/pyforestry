@@ -386,24 +386,22 @@
                 <article class="bd-article">
                   
   <h1>Source code for pyforestry.sweden.siteindex.elfving_kiviste_1997</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">Age</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">,</span> <span class="n">SiteIndexValue</span><span class="p">,</span> <span class="n">TreeSpecies</span>
-<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Age</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">,</span> <span class="n">SiteIndexValue</span><span class="p">,</span> <span class="n">TreeSpecies</span>
 
 
 <div class="viewcode-block" id="elfving_kiviste_1997_height_trajectory_sweden_pine">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.elfving_kiviste_1997.elfving_kiviste_1997_height_trajectory_sweden_pine">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">elfving_kiviste_1997_height_trajectory_sweden_pine</span><span class="p">(</span><span class="n">dominant_height</span> <span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                                                       <span class="n">age</span> <span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span><span class="n">AgeMeasurement</span><span class="p">],</span> 
-                                                       <span class="n">age2</span> <span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SiteIndexValue</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">elfving_kiviste_1997_height_trajectory_sweden_pine</span><span class="p">(</span>
+    <span class="n">dominant_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">age</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">],</span> <span class="n">age2</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SiteIndexValue</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Height trajectory for Scots Pine in Sweden based on Elfving &amp; Kiviste (1997).</span>
 
-<span class="sd">    This function calculates the height of Scots Pine stands in Sweden for a given target age </span>
+<span class="sd">    This function calculates the height of Scots Pine stands in Sweden for a given target age</span>
 <span class="sd">    based on the dominant height at the initial age, using site index equations.</span>
 
 <span class="sd">    Parameters:</span>
@@ -418,7 +416,7 @@
 <span class="sd">        Warning: If the input ages are outside the range of suitability (10 to 80 years).</span>
 
 <span class="sd">    References:</span>
-<span class="sd">        Elfving, B., Kiviste, A. (1997). &quot;Construction of site index equations for Pinus sylvestris L. </span>
+<span class="sd">        Elfving, B., Kiviste, A. (1997). &quot;Construction of site index equations for Pinus sylvestris L.</span>
 <span class="sd">        using permanent plot data in Sweden.&quot; Forest Ecology and Management, Vol. 98, Issue 2, pp. 125-134.</span>
 <span class="sd">        DOI: https://doi.org/10.1016/S0378-1127(97)00077-7</span>
 
@@ -427,7 +425,7 @@
 <span class="sd">        - RMSE: 0.401.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1">#Age Validation</span>
+    <span class="c1"># Age Validation</span>
     <span class="c1"># Check for age (should be a float/int or AgeMeasurement with TOTAL code)</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">):</span>
         <span class="c1"># It&#39;s an AgeMeasurement, check the code</span>
@@ -446,12 +444,15 @@
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Parameter &#39;age2&#39; must be a float/int or an instance of Age.TOTAL.&quot;</span><span class="p">)</span>
     <span class="c1"># If we reach here, it&#39;s either a valid Age.TOTAL or a float/int - proceed</span>
 
-
     <span class="c1"># Check for suitability of input ages</span>
     <span class="k">if</span> <span class="n">age</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="ow">or</span> <span class="n">age2</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Suitable for cultivated stands of Scots Pine between total ages of 10 and 80.&quot;</span><span class="p">)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;Suitable for cultivated stands of Scots Pine between total ages of 10 and 80.&quot;</span>
+        <span class="p">)</span>
     <span class="k">if</span> <span class="n">age</span> <span class="o">&gt;</span> <span class="mi">80</span> <span class="ow">or</span> <span class="n">age2</span> <span class="o">&gt;</span> <span class="mi">80</span><span class="p">:</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Suitable for cultivated stands of Scots Pine between total ages of 10 and 80.&quot;</span><span class="p">)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;Suitable for cultivated stands of Scots Pine between total ages of 10 and 80.&quot;</span>
+        <span class="p">)</span>
 
     <span class="c1"># Parameters based on the model</span>
     <span class="n">param_asi</span> <span class="o">=</span> <span class="mi">25</span>
@@ -460,17 +461,20 @@
 
     <span class="c1"># Calculations</span>
     <span class="n">d</span> <span class="o">=</span> <span class="n">param_beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">param_asi</span><span class="o">**</span><span class="n">param_b2</span><span class="p">)</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(((</span><span class="n">dominant_height</span> <span class="o">-</span> <span class="n">d</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">param_beta</span> <span class="o">*</span> <span class="n">dominant_height</span> <span class="o">*</span> <span class="p">(</span><span class="n">age</span><span class="o">**</span><span class="n">param_b2</span><span class="p">)))</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+        <span class="p">((</span><span class="n">dominant_height</span> <span class="o">-</span> <span class="n">d</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">param_beta</span> <span class="o">*</span> <span class="n">dominant_height</span> <span class="o">*</span> <span class="p">(</span><span class="n">age</span><span class="o">**</span><span class="n">param_b2</span><span class="p">))</span>
+    <span class="p">)</span>
 
     <span class="c1"># Height at target age</span>
-    <span class="n">height_at_age2</span> <span class="o">=</span> <span class="p">((</span><span class="n">dominant_height</span> <span class="o">+</span> <span class="n">d</span> <span class="o">+</span> <span class="n">r</span><span class="p">)</span> <span class="o">/</span>
-                      <span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">param_beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">age2</span><span class="o">**</span><span class="n">param_b2</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">dominant_height</span> <span class="o">-</span> <span class="n">d</span> <span class="o">+</span> <span class="n">r</span><span class="p">)))</span>
+    <span class="n">height_at_age2</span> <span class="o">=</span> <span class="p">(</span><span class="n">dominant_height</span> <span class="o">+</span> <span class="n">d</span> <span class="o">+</span> <span class="n">r</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span>
+        <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">param_beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">age2</span><span class="o">**</span><span class="n">param_b2</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">dominant_height</span> <span class="o">-</span> <span class="n">d</span> <span class="o">+</span> <span class="n">r</span><span class="p">)</span>
+    <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">SiteIndexValue</span><span class="p">(</span>
         <span class="n">value</span><span class="o">=</span><span class="n">height_at_age2</span><span class="p">,</span>
         <span class="n">reference_age</span><span class="o">=</span><span class="n">Age</span><span class="o">.</span><span class="n">TOTAL</span><span class="p">(</span><span class="n">age2</span><span class="p">),</span>
         <span class="n">species</span><span class="o">=</span><span class="p">{</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">pinus_sylvestris</span><span class="p">},</span>
-        <span class="n">fn</span><span class="o">=</span><span class="n">elfving_kiviste_1997_height_trajectory_sweden_pine</span>
+        <span class="n">fn</span><span class="o">=</span><span class="n">elfving_kiviste_1997_height_trajectory_sweden_pine</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 </pre></div>

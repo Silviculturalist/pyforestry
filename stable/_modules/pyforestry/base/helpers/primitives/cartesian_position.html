@@ -393,9 +393,11 @@
 <span class="sd">and utility methods for representation and input standardization.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">cos</span><span class="p">,</span> <span class="n">sin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyproj</span><span class="w"> </span><span class="kn">import</span> <span class="n">CRS</span>
+
 
 <div class="viewcode-block" id="Position">
 <a class="viewcode-back" href="../../../../../api/pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.Position">[docs]</a>
@@ -409,11 +411,8 @@
 <span class="sd">        crs (Optional[CRS]): Coordinate Reference System for interpreting coordinates.</span>
 <span class="sd">        coordinate_system (str): Underlying coordinate system type, always &#39;cartesian&#39;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">X</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                 <span class="n">Y</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                 <span class="n">Z</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
-                 <span class="n">crs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">CRS</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">Y</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">Z</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">crs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">CRS</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize a Position.</span>
 
 <span class="sd">        Args:</span>
@@ -426,7 +425,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">Y</span> <span class="o">=</span> <span class="n">Y</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Z</span> <span class="o">=</span> <span class="n">Z</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">crs</span> <span class="o">=</span> <span class="n">crs</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">coordinate_system</span> <span class="o">=</span> <span class="s1">&#39;cartesian&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coordinate_system</span> <span class="o">=</span> <span class="s2">&quot;cartesian&quot;</span>
 
 <div class="viewcode-block" id="Position.from_polar">
 <a class="viewcode-back" href="../../../../../api/pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.Position.from_polar">[docs]</a>
@@ -447,7 +446,7 @@
         <span class="n">x</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-        
+
         <span class="k">return</span> <span class="n">obj</span></div>
 
 
@@ -459,12 +458,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Position(X=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="si">}</span><span class="s2">, Y=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Y</span><span class="si">}</span><span class="s2">, Z=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Z</span><span class="si">}</span><span class="s2">, crs=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">crs</span><span class="si">}</span><span class="s2">)&quot;</span>
 
-
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_set_position</span><span class="p">(</span><span class="n">pos_in</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s1">&#39;Position&#39;</span><span class="p">,</span>
-                                    <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
-                                    <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
-                                    <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;Position&#39;</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_set_position</span><span class="p">(</span>
+        <span class="n">pos_in</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;Position&quot;</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;Position&quot;</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Standardize input into a Position or return None.</span>
 
 <span class="sd">        Args:</span>

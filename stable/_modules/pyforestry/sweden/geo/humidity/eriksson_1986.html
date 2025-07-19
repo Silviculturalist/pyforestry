@@ -386,15 +386,15 @@
                 <article class="bd-article">
                   
   <h1>Source code for pyforestry.sweden.geo.humidity.eriksson_1986</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">importlib.resources</span><span class="w"> </span><span class="kn">import</span> <span class="n">as_file</span><span class="p">,</span> <span class="n">files</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Point</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">importlib.resources</span><span class="w"> </span><span class="kn">import</span> <span class="n">files</span><span class="p">,</span> <span class="n">as_file</span>
+
 
 <div class="viewcode-block" id="eriksson_1986_humidity">
 <a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.humidity.html#pyforestry.sweden.geo.humidity.eriksson_1986.eriksson_1986_humidity">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">eriksson_1986_humidity</span><span class="p">(</span><span class="n">longitude</span> <span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                           <span class="n">latitude</span> <span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                           <span class="n">epsg</span> <span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">4326</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">eriksson_1986_humidity</span><span class="p">(</span><span class="n">longitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">epsg</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4326</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Estimate humidity during the vegetation period for Swedish sites.</span>
 
@@ -415,15 +415,14 @@
 
     <span class="c1"># Locate the humidity shapefile using importlib.resources in a context manager</span>
     <span class="c1"># This is the corrected section</span>
-    <span class="k">with</span> <span class="n">as_file</span><span class="p">(</span><span class="n">files</span><span class="p">(</span><span class="s2">&quot;pyforestry.sweden.geo.humidity&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;humidity.shp&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">humidity_shapefile_path</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">as_file</span><span class="p">(</span>
+        <span class="n">files</span><span class="p">(</span><span class="s2">&quot;pyforestry.sweden.geo.humidity&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;humidity.shp&quot;</span><span class="p">)</span>
+    <span class="p">)</span> <span class="k">as</span> <span class="n">humidity_shapefile_path</span><span class="p">:</span>
         <span class="c1"># Load the humidity shapefile</span>
         <span class="n">humidity_gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">humidity_shapefile_path</span><span class="p">)</span>
 
     <span class="c1"># Create a GeoDataFrame with the input point</span>
-    <span class="n">point</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">(</span>
-        <span class="n">geometry</span><span class="o">=</span><span class="p">[</span><span class="n">Point</span><span class="p">(</span><span class="n">longitude</span><span class="p">,</span> <span class="n">latitude</span><span class="p">)],</span>
-        <span class="n">crs</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;EPSG:</span><span class="si">{</span><span class="n">epsg</span><span class="si">}</span><span class="s2">&quot;</span>
-    <span class="p">)</span>
+    <span class="n">point</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">(</span><span class="n">geometry</span><span class="o">=</span><span class="p">[</span><span class="n">Point</span><span class="p">(</span><span class="n">longitude</span><span class="p">,</span> <span class="n">latitude</span><span class="p">)],</span> <span class="n">crs</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;EPSG:</span><span class="si">{</span><span class="n">epsg</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="c1"># Reproject the point to match the shapefile CRS if needed</span>
     <span class="k">if</span> <span class="n">epsg</span> <span class="o">!=</span> <span class="mi">4326</span><span class="p">:</span>
@@ -438,7 +437,7 @@
 
     <span class="c1"># Extract the humidity value</span>
     <span class="k">if</span> <span class="s2">&quot;humiditet&quot;</span> <span class="ow">in</span> <span class="n">joined</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">joined</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;humiditet&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">joined</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;humiditet&quot;</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Humidity value could not be determined for the given location.&quot;</span><span class="p">)</span></div>
 

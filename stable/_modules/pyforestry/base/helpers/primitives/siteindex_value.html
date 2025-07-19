@@ -409,8 +409,10 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.tree_species</span><span class="w"> </span><span class="kn">import</span> <span class="n">TreeName</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.primitives</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgeMeasurement</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.tree_species</span><span class="w"> </span><span class="kn">import</span> <span class="n">TreeName</span>
+
 
 <div class="viewcode-block" id="SiteIndexValue">
 <a class="viewcode-back" href="../../../../../api/pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.SiteIndexValue">[docs]</a>
@@ -471,22 +473,26 @@
 
         <span class="c1"># Check type of reference_age</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">reference_age</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;reference_age must be an AgeMeasurement object, not </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">reference_age</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;reference_age must be an AgeMeasurement object, not </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">reference_age</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
         <span class="c1"># --- Validate the species set ---</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">species</span><span class="p">,</span> <span class="nb">set</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;species must be a set, not </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">species</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">species</span><span class="p">:</span> <span class="c1"># Check if the set is empty</span>
-             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;species set cannot be empty.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">species</span><span class="p">:</span>  <span class="c1"># Check if the set is empty</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;species set cannot be empty.&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">species</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">TreeName</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;All items in the species set must be TreeName objects, found </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;All items in the species set must be TreeName objects, found </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Site index value must be non-negative.&quot;</span><span class="p">)</span>
 
         <span class="n">obj</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-        <span class="n">obj</span><span class="o">.</span><span class="n">reference_age</span> <span class="o">=</span> <span class="n">reference_age</span> <span class="c1"># Store the object</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">reference_age</span> <span class="o">=</span> <span class="n">reference_age</span>  <span class="c1"># Store the object</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">species</span> <span class="o">=</span> <span class="n">species</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">fn</span> <span class="o">=</span> <span class="n">fn</span>
         <span class="k">return</span> <span class="n">obj</span>

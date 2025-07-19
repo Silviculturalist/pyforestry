@@ -403,7 +403,8 @@
 <span class="sd">that carries both the QMD value (in centimeters) and an associated precision.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">pi</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span>
+
 
 <div class="viewcode-block" id="QuadraticMeanDiameter">
 <a class="viewcode-back" href="../../../../../api/pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.QuadraticMeanDiameter">[docs]</a>
@@ -419,7 +420,9 @@
 <span class="sd">    Attributes:</span>
 <span class="sd">        precision (float): Uncertainty or precision of the QMD measurement (cm).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="vm">__slots__</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;precision&#39;</span><span class="p">)</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="s2">&quot;precision&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">precision</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new `QuadraticMeanDiameter` instance.</span>

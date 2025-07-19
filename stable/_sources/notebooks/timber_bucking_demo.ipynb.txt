@@ -71,7 +71,7 @@
     }
    ],
    "source": [
-    "timber = SweTimber(species='pinus sylvestris', diameter_cm=18, height_m=25)\n",
+    "timber = SweTimber(species=\"pinus sylvestris\", diameter_cm=18, height_m=25)\n",
     "timber"
    ]
   },
@@ -108,7 +108,9 @@
     }
    ],
    "source": [
-    "pricelist = create_pricelist_from_data(Mellanskog_2013_price_data, species_to_load='pinus sylvestris')\n",
+    "pricelist = create_pricelist_from_data(\n",
+    "    Mellanskog_2013_price_data, species_to_load=\"pinus sylvestris\"\n",
+    ")\n",
     "pricelist.Timber.keys()"
    ]
   },
@@ -146,7 +148,9 @@
    ],
    "source": [
     "optimizer = Nasberg_1985_BranchBound(timber, pricelist, EdgrenNylinder1949)\n",
-    "result = optimizer.calculate_tree_value(min_diam_dead_wood=99, config=BuckingConfig(save_sections=True))\n",
+    "result = optimizer.calculate_tree_value(\n",
+    "    min_diam_dead_wood=99, config=BuckingConfig(save_sections=True)\n",
+    ")\n",
     "result"
    ]
   },
@@ -734,12 +738,12 @@
     "cube = SolutionCube.generate(\n",
     "    pricelist_data=Mellanskog_2013_price_data,\n",
     "    taper_model=EdgrenNylinder1949,\n",
-    "    species_list=['picea abies'],\n",
-    "    dbh_range=(20,22),\n",
-    "    height_range=(15,15.2),\n",
+    "    species_list=[\"picea abies\"],\n",
+    "    dbh_range=(20, 22),\n",
+    "    height_range=(15, 15.2),\n",
     "    dbh_step=2,\n",
     "    height_step=0.2,\n",
-    "    workers=1\n",
+    "    workers=1,\n",
     ")\n",
     "cube.dataset"
    ]
@@ -802,7 +806,7 @@
     }
    ],
    "source": [
-    "cube.lookup(species='picea abies', dbh=20.0, height=15.0)"
+    "cube.lookup(species=\"picea abies\", dbh=20.0, height=15.0)"
    ]
   }
  ],

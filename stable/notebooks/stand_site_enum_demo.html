@@ -408,16 +408,24 @@
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">CircularPlot</span><span class="p">,</span> <span class="n">RepresentationTree</span><span class="p">,</span> <span class="n">Stand</span><span class="p">,</span> <span class="n">parse_tree_species</span>
 
-<span class="n">plot1</span> <span class="o">=</span> <span class="n">CircularPlot</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">radius_m</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">trees</span><span class="o">=</span><span class="p">[</span>
-    <span class="n">RepresentationTree</span><span class="p">(</span><span class="n">species</span><span class="o">=</span><span class="n">parse_tree_species</span><span class="p">(</span><span class="s1">&#39;picea abies&#39;</span><span class="p">),</span> <span class="n">diameter_cm</span><span class="o">=</span><span class="mi">20</span><span class="p">),</span>
-    <span class="n">RepresentationTree</span><span class="p">(</span><span class="n">species</span><span class="o">=</span><span class="n">parse_tree_species</span><span class="p">(</span><span class="s1">&#39;pinus sylvestris&#39;</span><span class="p">),</span> <span class="n">diameter_cm</span><span class="o">=</span><span class="mi">25</span><span class="p">),</span>
-<span class="p">])</span>
-<span class="n">plot2</span> <span class="o">=</span> <span class="n">CircularPlot</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">radius_m</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">trees</span><span class="o">=</span><span class="p">[</span>
-    <span class="n">RepresentationTree</span><span class="p">(</span><span class="n">species</span><span class="o">=</span><span class="n">parse_tree_species</span><span class="p">(</span><span class="s1">&#39;picea abies&#39;</span><span class="p">),</span> <span class="n">diameter_cm</span><span class="o">=</span><span class="mi">30</span><span class="p">),</span>
-<span class="p">])</span>
+<span class="n">plot1</span> <span class="o">=</span> <span class="n">CircularPlot</span><span class="p">(</span>
+    <span class="nb">id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">radius_m</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>
+    <span class="n">trees</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">RepresentationTree</span><span class="p">(</span><span class="n">species</span><span class="o">=</span><span class="n">parse_tree_species</span><span class="p">(</span><span class="s2">&quot;picea abies&quot;</span><span class="p">),</span> <span class="n">diameter_cm</span><span class="o">=</span><span class="mi">20</span><span class="p">),</span>
+        <span class="n">RepresentationTree</span><span class="p">(</span><span class="n">species</span><span class="o">=</span><span class="n">parse_tree_species</span><span class="p">(</span><span class="s2">&quot;pinus sylvestris&quot;</span><span class="p">),</span> <span class="n">diameter_cm</span><span class="o">=</span><span class="mi">25</span><span class="p">),</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+<span class="n">plot2</span> <span class="o">=</span> <span class="n">CircularPlot</span><span class="p">(</span>
+    <span class="nb">id</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">radius_m</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>
+    <span class="n">trees</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">RepresentationTree</span><span class="p">(</span><span class="n">species</span><span class="o">=</span><span class="n">parse_tree_species</span><span class="p">(</span><span class="s2">&quot;picea abies&quot;</span><span class="p">),</span> <span class="n">diameter_cm</span><span class="o">=</span><span class="mi">30</span><span class="p">),</span>
+    <span class="p">],</span>
+<span class="p">)</span>
 <span class="n">stand</span> <span class="o">=</span> <span class="n">Stand</span><span class="p">(</span><span class="n">plots</span><span class="o">=</span><span class="p">[</span><span class="n">plot1</span><span class="p">,</span> <span class="n">plot2</span><span class="p">])</span>
 <span class="n">stand</span><span class="o">.</span><span class="n">BasalArea</span><span class="o">.</span><span class="n">TOTAL</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">stand</span><span class="o">.</span><span class="n">Stems</span><span class="o">.</span><span class="n">TOTAL</span><span class="o">.</span><span class="n">value</span>
-<br/></pre></div>
+</pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -438,7 +446,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.sweden.site.enums</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sweden</span>
 
 <span class="n">enum_code</span><span class="p">(</span><span class="n">Sweden</span><span class="o">.</span><span class="n">SoilMoistureEnum</span><span class="o">.</span><span class="n">DRY</span><span class="p">),</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">Sweden</span><span class="o">.</span><span class="n">County</span><span class="o">.</span><span class="n">UPPSALA</span><span class="p">)</span>
-<br/></pre></div>
+</pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -457,7 +465,7 @@
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.sweden.siteindex.sis.hagglund_lundmark_1979</span><span class="w"> </span><span class="kn">import</span> <span class="n">Hagglund_Lundmark_1979_SIS</span>
 
 <span class="n">sis</span> <span class="o">=</span> <span class="n">Hagglund_Lundmark_1979_SIS</span><span class="p">(</span>
-    <span class="n">species</span><span class="o">=</span><span class="s1">&#39;Picea abies&#39;</span><span class="p">,</span>
+    <span class="n">species</span><span class="o">=</span><span class="s2">&quot;Picea abies&quot;</span><span class="p">,</span>
     <span class="n">latitude</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
     <span class="n">altitude</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
     <span class="n">soil_moisture</span><span class="o">=</span><span class="n">Sweden</span><span class="o">.</span><span class="n">SoilMoistureEnum</span><span class="o">.</span><span class="n">MESIC</span><span class="p">,</span>
@@ -477,7 +485,7 @@
     <span class="n">limes_norrlandicus</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="nb">float</span><span class="p">(</span><span class="n">sis</span><span class="p">)</span>
-<br/></pre></div>
+</pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -498,7 +506,7 @@
 
 <span class="n">RetrieveGeoCode</span><span class="o">.</span><span class="n">getDistanceToCoast</span><span class="p">(</span><span class="mf">14.784528</span><span class="p">,</span> <span class="mf">56.892405</span><span class="p">)</span>
 <span class="n">RetrieveGeoCode</span><span class="o">.</span><span class="n">getClimateCode</span><span class="p">(</span><span class="mf">14.784528</span><span class="p">,</span> <span class="mf">56.892405</span><span class="p">)</span>
-<br/></pre></div>
+</pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -506,8 +514,10 @@
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">calc</span> <span class="o">=</span> <span class="n">Moren_Perttu_radiation_1994</span><span class="p">(</span><span class="n">latitude</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">altitude</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">july_avg_temp</span><span class="o">=</span><span class="mi">17</span><span class="p">,</span> <span class="n">jan_avg_temp</span><span class="o">=-</span><span class="mi">8</span><span class="p">)</span>
-<span class="n">calc</span><span class="o">.</span><span class="n">calculate_temperature_sum_1000m</span><span class="p">(</span><span class="n">threshold_temperature</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span> <span class="n">calc</span><span class="o">.</span><span class="n">get_corrected_temperature_sum</span><span class="p">(</span><span class="n">threshold_temperature</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<br/></pre></div>
+<span class="n">calc</span><span class="o">.</span><span class="n">calculate_temperature_sum_1000m</span><span class="p">(</span><span class="n">threshold_temperature</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span> <span class="n">calc</span><span class="o">.</span><span class="n">get_corrected_temperature_sum</span><span class="p">(</span>
+    <span class="n">threshold_temperature</span><span class="o">=</span><span class="mi">5</span>
+<span class="p">)</span>
+</pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">

@@ -390,20 +390,18 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">Age</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">,</span> <span class="n">SiteIndexValue</span><span class="p">,</span> <span class="n">TreeSpecies</span>
-<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Age</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">,</span> <span class="n">SiteIndexValue</span><span class="p">,</span> <span class="n">TreeSpecies</span>
+
 
 <div class="viewcode-block" id="hagglund_remrod_1977_height_trajectories_lodgepole_pine">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.hagglund_remrod_1977.hagglund_remrod_1977_height_trajectories_lodgepole_pine">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">hagglund_remrod_1977_height_trajectories_lodgepole_pine</span><span class="p">(</span>
-        <span class="n">dominant_height_m</span> <span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">age</span> <span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">],</span>
-        <span class="n">age2</span> <span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SiteIndexValue</span><span class="p">:</span>
+    <span class="n">dominant_height_m</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">age</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">],</span> <span class="n">age2</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SiteIndexValue</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Hägglund and Remröd (1977): Height growth of Lodgepole Pine (Pinus contorta) in Northern Sweden.</span>
-<span class="sd">    </span>
-<span class="sd">    This function computes the height of Lodgepole Pine at a specific age based on dominant height </span>
+
+<span class="sd">    This function computes the height of Lodgepole Pine at a specific age based on dominant height</span>
 <span class="sd">    and initial age. The calculations are adapted from the original Chapman-Richards function.</span>
 
 <span class="sd">    Parameters:</span>
@@ -427,7 +425,7 @@
     <span class="k">if</span> <span class="n">age</span> <span class="o">&lt;</span> <span class="mi">15</span><span class="p">:</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Too young stand, outside of the material.&quot;</span><span class="p">)</span>
 
-    <span class="c1">#Age Validation</span>
+    <span class="c1"># Age Validation</span>
     <span class="c1"># Check for age (should be a float/int or AgeMeasurement with DBH code)</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">):</span>
         <span class="c1"># It&#39;s an AgeMeasurement, check the code</span>
@@ -446,7 +444,6 @@
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Parameter &#39;age2&#39; must be a float/int or an instance of Age.DBH.&quot;</span><span class="p">)</span>
     <span class="c1"># If we reach here, it&#39;s either a valid Age.TOTAL or a float/int - proceed</span>
 
-
     <span class="c1"># Convert dominant height to decimeters and adjust</span>
     <span class="n">dominant_height_dm</span> <span class="o">=</span> <span class="n">dominant_height_m</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">-</span> <span class="mi">13</span>
 
@@ -463,7 +460,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">AI1</span> <span class="o">=</span> <span class="mi">10</span>
         <span class="n">AI2</span> <span class="o">=</span> <span class="mi">800</span>
-        <span class="n">A</span><span class="p">,</span> <span class="n">RK</span><span class="p">,</span> <span class="n">RM2</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="c1">#placeholders</span>
+        <span class="n">A</span><span class="p">,</span> <span class="n">RK</span><span class="p">,</span> <span class="n">RM2</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>  <span class="c1"># placeholders</span>
 
         <span class="k">while</span> <span class="nb">abs</span><span class="p">(</span><span class="n">AI1</span> <span class="o">-</span> <span class="n">AI2</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">AI3</span> <span class="o">=</span> <span class="p">(</span><span class="n">AI1</span> <span class="o">+</span> <span class="n">AI2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
@@ -477,7 +474,7 @@
             <span class="n">RM2</span> <span class="o">=</span> <span class="mf">1.00414</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">RM</span><span class="p">)</span>
 
             <span class="c1"># Calculate difference</span>
-            <span class="n">DIF</span> <span class="o">=</span> <span class="n">dominant_height</span> <span class="o">-</span> <span class="n">A</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">RK</span> <span class="o">*</span> <span class="n">age</span><span class="p">))</span><span class="o">**</span><span class="n">RM2</span>
+            <span class="n">DIF</span> <span class="o">=</span> <span class="n">dominant_height</span> <span class="o">-</span> <span class="n">A</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">RK</span> <span class="o">*</span> <span class="n">age</span><span class="p">))</span> <span class="o">**</span> <span class="n">RM2</span>
 
             <span class="k">if</span> <span class="n">DIF</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">AI2</span> <span class="o">=</span> <span class="n">AI3</span>
@@ -490,7 +487,7 @@
     <span class="n">A</span><span class="p">,</span> <span class="n">RK</span><span class="p">,</span> <span class="n">RM2</span> <span class="o">=</span> <span class="n">subroutine_bonitering</span><span class="p">(</span><span class="n">dominant_height_dm</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span>
 
     <span class="c1"># Compute H50 (height at age 50)</span>
-    <span class="n">H50</span> <span class="o">=</span> <span class="n">A</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">50</span> <span class="o">*</span> <span class="n">RK</span><span class="p">))</span><span class="o">**</span><span class="n">RM2</span> <span class="o">+</span> <span class="mi">13</span>
+    <span class="n">H50</span> <span class="o">=</span> <span class="n">A</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">50</span> <span class="o">*</span> <span class="n">RK</span><span class="p">))</span> <span class="o">**</span> <span class="n">RM2</span> <span class="o">+</span> <span class="mi">13</span>
 
     <span class="k">if</span> <span class="n">H50</span> <span class="o">&gt;</span> <span class="mi">270</span><span class="p">:</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Too high productivity, outside of the material.&quot;</span><span class="p">)</span>
@@ -498,13 +495,13 @@
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Too low productivity, outside of the material.&quot;</span><span class="p">)</span>
 
     <span class="c1"># Compute height at age2</span>
-    <span class="n">height_at_age2</span> <span class="o">=</span> <span class="p">(</span><span class="mi">13</span> <span class="o">+</span> <span class="n">A</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">age2</span> <span class="o">*</span> <span class="n">RK</span><span class="p">))</span><span class="o">**</span><span class="n">RM2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span>
+    <span class="n">height_at_age2</span> <span class="o">=</span> <span class="p">(</span><span class="mi">13</span> <span class="o">+</span> <span class="n">A</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">age2</span> <span class="o">*</span> <span class="n">RK</span><span class="p">))</span> <span class="o">**</span> <span class="n">RM2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span>
 
     <span class="k">return</span> <span class="n">SiteIndexValue</span><span class="p">(</span>
         <span class="n">value</span><span class="o">=</span><span class="n">height_at_age2</span><span class="p">,</span>
         <span class="n">reference_age</span><span class="o">=</span><span class="n">Age</span><span class="o">.</span><span class="n">DBH</span><span class="p">(</span><span class="n">age2</span><span class="p">),</span>
         <span class="n">species</span><span class="o">=</span><span class="p">{</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">pinus_contorta</span><span class="p">},</span>
-        <span class="n">fn</span><span class="o">=</span><span class="n">hagglund_remrod_1977_height_trajectories_lodgepole_pine</span>
+        <span class="n">fn</span><span class="o">=</span><span class="n">hagglund_remrod_1977_height_trajectories_lodgepole_pine</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 </pre></div>
