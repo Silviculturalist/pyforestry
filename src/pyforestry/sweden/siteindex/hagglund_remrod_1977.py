@@ -2,18 +2,16 @@ import warnings
 from math import exp
 from typing import Union
 
-from pyforestry.base.helpers import (
-    Age, AgeMeasurement, SiteIndexValue, TreeSpecies
-)
+from pyforestry.base.helpers import Age, AgeMeasurement, SiteIndexValue, TreeSpecies
+
 
 def hagglund_remrod_1977_height_trajectories_lodgepole_pine(
-        dominant_height_m : float,
-        age : Union[float, AgeMeasurement],
-        age2 : Union[float, AgeMeasurement]) -> SiteIndexValue:
+    dominant_height_m: float, age: Union[float, AgeMeasurement], age2: Union[float, AgeMeasurement]
+) -> SiteIndexValue:
     """
     Hägglund and Remröd (1977): Height growth of Lodgepole Pine (Pinus contorta) in Northern Sweden.
-    
-    This function computes the height of Lodgepole Pine at a specific age based on dominant height 
+
+    This function computes the height of Lodgepole Pine at a specific age based on dominant height
     and initial age. The calculations are adapted from the original Chapman-Richards function.
 
     Parameters:
@@ -37,7 +35,7 @@ def hagglund_remrod_1977_height_trajectories_lodgepole_pine(
     if age < 15:
         warnings.warn("Too young stand, outside of the material.")
 
-    #Age Validation
+    # Age Validation
     # Check for age (should be a float/int or AgeMeasurement with DBH code)
     if isinstance(age, AgeMeasurement):
         # It's an AgeMeasurement, check the code
@@ -56,7 +54,6 @@ def hagglund_remrod_1977_height_trajectories_lodgepole_pine(
         raise TypeError("Parameter 'age2' must be a float/int or an instance of Age.DBH.")
     # If we reach here, it's either a valid Age.TOTAL or a float/int - proceed
 
-
     # Convert dominant height to decimeters and adjust
     dominant_height_dm = dominant_height_m * 10 - 13
 
@@ -73,7 +70,7 @@ def hagglund_remrod_1977_height_trajectories_lodgepole_pine(
         """
         AI1 = 10
         AI2 = 800
-        A, RK, RM2 = 0, 0, 0 #placeholders
+        A, RK, RM2 = 0, 0, 0  # placeholders
 
         while abs(AI1 - AI2) > 1:
             AI3 = (AI1 + AI2) / 2
@@ -87,7 +84,7 @@ def hagglund_remrod_1977_height_trajectories_lodgepole_pine(
             RM2 = 1.00414 / (1 - RM)
 
             # Calculate difference
-            DIF = dominant_height - A * (1 - exp(-RK * age))**RM2
+            DIF = dominant_height - A * (1 - exp(-RK * age)) ** RM2
 
             if DIF <= 0:
                 AI2 = AI3
@@ -100,7 +97,7 @@ def hagglund_remrod_1977_height_trajectories_lodgepole_pine(
     A, RK, RM2 = subroutine_bonitering(dominant_height_dm, age)
 
     # Compute H50 (height at age 50)
-    H50 = A * (1 - exp(-50 * RK))**RM2 + 13
+    H50 = A * (1 - exp(-50 * RK)) ** RM2 + 13
 
     if H50 > 270:
         warnings.warn("Too high productivity, outside of the material.")
@@ -108,11 +105,11 @@ def hagglund_remrod_1977_height_trajectories_lodgepole_pine(
         warnings.warn("Too low productivity, outside of the material.")
 
     # Compute height at age2
-    height_at_age2 = (13 + A * (1 - exp(-age2 * RK))**RM2) / 10
+    height_at_age2 = (13 + A * (1 - exp(-age2 * RK)) ** RM2) / 10
 
     return SiteIndexValue(
         value=height_at_age2,
         reference_age=Age.DBH(age2),
         species={TreeSpecies.Sweden.pinus_contorta},
-        fn=hagglund_remrod_1977_height_trajectories_lodgepole_pine
+        fn=hagglund_remrod_1977_height_trajectories_lodgepole_pine,
     )

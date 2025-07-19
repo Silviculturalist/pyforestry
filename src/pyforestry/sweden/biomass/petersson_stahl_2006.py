@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class PeterssonStahl2006:
     """Functions for below-ground biomass of birch, pine, and spruce in Sweden.
 
@@ -73,7 +74,11 @@ class PeterssonStahl2006:
         Returns:
             float: The natural logarithm of below-ground biomass in grams.
         """
-        return 3.57249 + 11.07427 * (diameter_mm / (diameter_mm + 113)) - 0.05119 * diameter_mm / age_at_breast_height
+        return (
+            3.57249
+            + 11.07427 * (diameter_mm / (diameter_mm + 113))
+            - 0.05119 * diameter_mm / age_at_breast_height
+        )
 
     @staticmethod
     def pine_root_5mm_3(diameter_mm, age_basal_area_weighted, dry_soil):
@@ -87,7 +92,12 @@ class PeterssonStahl2006:
         Returns:
             float: The natural logarithm of below-ground biomass in grams.
         """
-        return 3.50127 + 10.96210 * (diameter_mm / (diameter_mm + 113)) + 0.00250 * age_basal_area_weighted - 0.37595 * dry_soil
+        return (
+            3.50127
+            + 10.96210 * (diameter_mm / (diameter_mm + 113))
+            + 0.00250 * age_basal_area_weighted
+            - 0.37595 * dry_soil
+        )
 
     @staticmethod
     def pine_root_2mm_1(diameter_mm):
@@ -112,7 +122,11 @@ class PeterssonStahl2006:
         Returns:
             float: The natural logarithm of below-ground biomass in grams.
         """
-        return 3.62193 + 11.07117 * (diameter_mm / (diameter_mm + 113)) - 0.05029 * diameter_mm / age_at_breast_height
+        return (
+            3.62193
+            + 11.07117 * (diameter_mm / (diameter_mm + 113))
+            - 0.05029 * diameter_mm / age_at_breast_height
+        )
 
     @staticmethod
     def pine_root_2mm_3(diameter_mm, age_basal_area_weighted, dry_soil):
@@ -126,7 +140,12 @@ class PeterssonStahl2006:
         Returns:
             float: The natural logarithm of below-ground biomass in grams.
         """
-        return 3.56553 + 10.96370 * (diameter_mm / (diameter_mm + 113)) + 0.00236 * age_basal_area_weighted - 0.38089 * dry_soil
+        return (
+            3.56553
+            + 10.96370 * (diameter_mm / (diameter_mm + 113))
+            + 0.00236 * age_basal_area_weighted
+            - 0.38089 * dry_soil
+        )
 
     # Spruce functions
     @staticmethod
@@ -152,7 +171,11 @@ class PeterssonStahl2006:
         Returns:
             float: The natural logarithm of below-ground biomass in grams.
         """
-        return 4.60559 + 10.60542 * (diameter_mm / (diameter_mm + 142)) - 0.02489 * diameter_mm / age_at_breast_height
+        return (
+            4.60559
+            + 10.60542 * (diameter_mm / (diameter_mm + 142))
+            - 0.02489 * diameter_mm / age_at_breast_height
+        )
 
     @staticmethod
     def spruce_root_5mm_3(diameter_mm, age_at_breast_height, basal_area, crown_length, dry_soil):
@@ -169,7 +192,8 @@ class PeterssonStahl2006:
             float: The natural logarithm of below-ground biomass in grams.
         """
         return (
-            4.98414 + 9.89245 * (diameter_mm / (diameter_mm + 142))
+            4.98414
+            + 9.89245 * (diameter_mm / (diameter_mm + 142))
             - 0.03411 * diameter_mm / age_at_breast_height
             - 0.00769 * basal_area
             + 0.00317 * crown_length
@@ -199,10 +223,16 @@ class PeterssonStahl2006:
         Returns:
             float: The natural logarithm of below-ground biomass in grams.
         """
-        return 4.69287 + 10.45700 * (diameter_mm / (diameter_mm + 138)) - 0.03057 * diameter_mm / age_at_breast_height
+        return (
+            4.69287
+            + 10.45700 * (diameter_mm / (diameter_mm + 138))
+            - 0.03057 * diameter_mm / age_at_breast_height
+        )
 
     @staticmethod
-    def spruce_root_2mm_3(diameter_mm, age_basal_area_weighted, basal_area, crown_length, dry_soil):
+    def spruce_root_2mm_3(
+        diameter_mm, age_basal_area_weighted, basal_area, crown_length, dry_soil
+    ):
         """Calculates ln(biomass) for spruce roots >= 2 mm with detailed parameters.
 
         Args:
@@ -216,7 +246,8 @@ class PeterssonStahl2006:
             float: The natural logarithm of below-ground biomass in grams.
         """
         return (
-            5.00171 + 9.89713 * (diameter_mm / (diameter_mm + 138))
+            5.00171
+            + 9.89713 * (diameter_mm / (diameter_mm + 138))
             - 0.03653 * age_basal_area_weighted
             - 0.00636 * basal_area
             + 0.00261 * crown_length
@@ -291,7 +322,9 @@ class PeterssonStahl2006:
         }
 
         if species not in species_map:
-            raise ValueError(f"Invalid species '{species}'. Must be one of 'birch', 'pine', 'spruce'.")
+            raise ValueError(
+                f"Invalid species '{species}'. Must be one of 'birch', 'pine', 'spruce'."
+            )
         if root_detail not in species_map[species]:
             raise ValueError(f"Invalid root_detail '{root_detail}'. Must be 2 or 5.")
 
@@ -302,9 +335,9 @@ class PeterssonStahl2006:
         for func in functions:
             try:
                 # Match arguments dynamically and evaluate the function
-                func_args = func.__code__.co_varnames[:func.__code__.co_argcount]
+                func_args = func.__code__.co_varnames[: func.__code__.co_argcount]
                 args = {key: value for key, value in kwargs.items() if key in func_args}
-                return np.exp(func(**args))/1000 # return kg
+                return np.exp(func(**args)) / 1000  # return kg
             except TypeError:
                 continue
 

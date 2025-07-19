@@ -1,10 +1,10 @@
+from importlib.resources import as_file, files
+
 import geopandas as gpd
 from shapely.geometry import Point
-from importlib.resources import files, as_file
 
-def eriksson_1986_humidity(longitude : float,
-                           latitude : float,
-                           epsg : int=4326):
+
+def eriksson_1986_humidity(longitude: float, latitude: float, epsg: int = 4326):
     """
     Estimate humidity during the vegetation period for Swedish sites.
 
@@ -25,15 +25,14 @@ def eriksson_1986_humidity(longitude : float,
 
     # Locate the humidity shapefile using importlib.resources in a context manager
     # This is the corrected section
-    with as_file(files("pyforestry.sweden.geo.humidity").joinpath("humidity.shp")) as humidity_shapefile_path:
+    with as_file(
+        files("pyforestry.sweden.geo.humidity").joinpath("humidity.shp")
+    ) as humidity_shapefile_path:
         # Load the humidity shapefile
         humidity_gdf = gpd.read_file(humidity_shapefile_path)
 
     # Create a GeoDataFrame with the input point
-    point = gpd.GeoDataFrame(
-        geometry=[Point(longitude, latitude)],
-        crs=f"EPSG:{epsg}"
-    )
+    point = gpd.GeoDataFrame(geometry=[Point(longitude, latitude)], crs=f"EPSG:{epsg}")
 
     # Reproject the point to match the shapefile CRS if needed
     if epsg != 4326:
@@ -48,6 +47,6 @@ def eriksson_1986_humidity(longitude : float,
 
     # Extract the humidity value
     if "humiditet" in joined.columns:
-        return joined.iloc[0]['humiditet']
+        return joined.iloc[0]["humiditet"]
     else:
         raise ValueError("Humidity value could not be determined for the given location.")

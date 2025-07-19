@@ -1,19 +1,15 @@
 # Johansson_1999.py
 
-import warnings
 import math
+import warnings
 from typing import Union
-# Imports added
 
-from pyforestry.base.helpers import (
-    Age, AgeMeasurement, SiteIndexValue, TreeSpecies
-)
+# Imports added
+from pyforestry.base.helpers import Age, AgeMeasurement, SiteIndexValue, TreeSpecies
 
 
 def johansson_1999_height_trajectory_sweden_alnus_glutinosa(
-    dominant_height: float,
-    age: Union[float, AgeMeasurement],
-    age2: Union[float, AgeMeasurement]
+    dominant_height: float, age: Union[float, AgeMeasurement], age2: Union[float, AgeMeasurement]
 ) -> SiteIndexValue:
     """
     Height trajectory for Common Alder (Alnus glutinosa) in Sweden based on Johansson (1999).
@@ -72,25 +68,26 @@ def johansson_1999_height_trajectory_sweden_alnus_glutinosa(
 
     # Calculate parameters
     d = param_beta * (param_asi**param_b2)
-    r = math.sqrt(((dominant_height - d)**2) + (4 * param_beta * dominant_height * (age_val**param_b2)))
+    r = math.sqrt(
+        ((dominant_height - d) ** 2) + (4 * param_beta * dominant_height * (age_val**param_b2))
+    )
 
     # Calculate height at target age
-    height_at_age2 = ((dominant_height + d + r) /
-                      (2 + (4 * param_beta * (age2_val**param_b2)) / (dominant_height - d + r)))
+    height_at_age2 = (dominant_height + d + r) / (
+        2 + (4 * param_beta * (age2_val**param_b2)) / (dominant_height - d + r)
+    )
 
     # Return modified to SiteIndexValue
     return SiteIndexValue(
         value=height_at_age2,
         reference_age=Age.TOTAL(age2_val),
         species={TreeSpecies.Sweden.alnus_glutinosa},
-        fn=johansson_1999_height_trajectory_sweden_alnus_glutinosa
+        fn=johansson_1999_height_trajectory_sweden_alnus_glutinosa,
     )
 
 
 def johansson_1999_height_trajectory_sweden_alnus_incana(
-    dominant_height: float,
-    age: Union[float, AgeMeasurement],
-    age2: Union[float, AgeMeasurement]
+    dominant_height: float, age: Union[float, AgeMeasurement], age2: Union[float, AgeMeasurement]
 ) -> SiteIndexValue:
     """
     Height trajectory for Grey Alder (Alnus incana) in Sweden based on Johansson (1999).
@@ -149,16 +146,19 @@ def johansson_1999_height_trajectory_sweden_alnus_incana(
 
     # Calculate parameters
     d = param_beta * (param_asi**param_b2)
-    r = math.sqrt(((dominant_height - d)**2) + (4 * param_beta * dominant_height * (age_val**param_b2)))
+    r = math.sqrt(
+        ((dominant_height - d) ** 2) + (4 * param_beta * dominant_height * (age_val**param_b2))
+    )
 
     # Calculate height at target age
-    height_at_age2 = ((dominant_height + d + r) /
-                      (2 + (4 * param_beta * (age2_val**param_b2)) / (dominant_height - d + r)))
+    height_at_age2 = (dominant_height + d + r) / (
+        2 + (4 * param_beta * (age2_val**param_b2)) / (dominant_height - d + r)
+    )
 
     # Return modified to SiteIndexValue
     return SiteIndexValue(
         value=height_at_age2,
         reference_age=Age.TOTAL(age2_val),
         species={TreeSpecies.Sweden.alnus_incana},
-        fn=johansson_1999_height_trajectory_sweden_alnus_incana
+        fn=johansson_1999_height_trajectory_sweden_alnus_incana,
     )

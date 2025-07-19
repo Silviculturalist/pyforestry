@@ -1,11 +1,14 @@
 import pytest
-from pyforestry.base.pricelist import create_pricelist_from_data, Pricelist, TimberPricelist
-from pyforestry.base.pricelist.data.mellanskog_2013 import Mellanskog_2013_price_data
+
 from pyforestry.base.helpers.tree_species import TreeSpecies
+from pyforestry.base.pricelist import Pricelist, TimberPricelist, create_pricelist_from_data
+from pyforestry.base.pricelist.data.mellanskog_2013 import Mellanskog_2013_price_data
+
 
 @pytest.fixture(scope="module")
 def pricelist() -> Pricelist:
     return create_pricelist_from_data(Mellanskog_2013_price_data)
+
 
 def test_pulpwood_prices(pricelist):
     # Check pulp prices for correctness
@@ -13,6 +16,7 @@ def test_pulpwood_prices(pricelist):
     assert pricelist.Pulp.getPulpwoodPrice("picea abies") == 265
     assert pricelist.Pulp.getPulpwoodPrice("betula pendula") == 250
     assert pricelist.Pulp.getPulpwoodPrice("NonExistingSpecies") == 200  # default price
+
 
 def test_timber_prices_pine(pricelist):
     # Check timber prices for Pine species, diameter 20, Butt log
@@ -25,6 +29,7 @@ def test_timber_prices_pine(pricelist):
     assert middle_price == 460
     assert top_price == 340
 
+
 def test_timber_prices_spruce(pricelist):
     # Check timber prices for Spruce species, diameter 26
     spruce_pricelist = pricelist.Timber["picea abies"]
@@ -35,6 +40,7 @@ def test_timber_prices_spruce(pricelist):
     assert butt_price == 575
     assert middle_price == 400
     assert top_price == 400
+
 
 def test_timber_prices_spruce2(pricelist):
     # Check timber prices for Spruce species, diameter 26
@@ -47,6 +53,7 @@ def test_timber_prices_spruce2(pricelist):
     assert middle_price == 400
     assert top_price == 400
 
+
 def test_common_attributes(pricelist):
     # Test some common attributes
     assert pricelist.TopDiameter == 5
@@ -55,6 +62,7 @@ def test_common_attributes(pricelist):
     assert pricelist.PulpLogDiameter.Max == 60
     assert pricelist.TimberLogLength.Min == 3.4
     assert pricelist.TimberLogLength.Max == 5.5
+
 
 def test_nonexistent_diameter(pricelist):
     # Prices for non-defined diameter should default to zero
@@ -65,15 +73,16 @@ def test_nonexistent_diameter(pricelist):
     assert default_prices.middle_price == 0
     assert default_prices.top_price == 0
 
+
 def test_price_for_log_part_method(pricelist):
     spruce_pricelist = pricelist.Timber["picea abies"]
 
     # exact match
     assert spruce_pricelist.price_for_log_part(TimberPricelist.LogParts.Butt, 26) == 575
-    
+
     # between classes (floors to nearest lower class, 26)
     assert spruce_pricelist.price_for_log_part(TimberPricelist.LogParts.Butt, 27.9) == 575
-    
+
     # smaller than available classes (returns zero)
     assert spruce_pricelist.price_for_log_part(TimberPricelist.LogParts.Butt, 10) == 0
 

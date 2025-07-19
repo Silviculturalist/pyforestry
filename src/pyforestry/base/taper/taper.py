@@ -1,13 +1,17 @@
-from pyforestry.base.timber import Timber
-from typing import Optional, Union
+from typing import Union
+
 import numpy as np
 import numpy.typing as npt
 
+from pyforestry.base.timber import Timber
+
+
 class Taper:
-    '''
+    """
     General Taper class for subimplementations of different tapers.
-    '''
-    def __init__(self, timber: Timber, taper_subclass_instance: 'Taper'):
+    """
+
+    def __init__(self, timber: Timber, taper_subclass_instance: "Taper"):
         """
         :param timber: A Timber object
         :param taper_subclass_instance: An already-initialized instance of a Taper subclass
@@ -27,10 +31,10 @@ class Taper:
         h = height_m + stump_height_m
         if h < 0 or h > self.timber.height_m:
             return 0.0
-        
+
         # --- CORRECTED CALL: No longer passes self.timber ---
         diam_cm = self.taper.get_diameter_at_height(h)
-        
+
         if diam_cm is None:
             return 0.0
         return diam_cm
@@ -51,7 +55,7 @@ class Taper:
 
         if height_above_ground is None:
             return 0.0
-            
+
         # Return height above stump
         return height_above_ground - stump_height
 
@@ -59,9 +63,12 @@ class Taper:
         """
         Integrate volume (m^3) from h1_m to h2_m above stump.
         """
-        from pyforestry.base.timber import TimberVolumeIntegrator #Local import to break circular dependency
+        from pyforestry.base.timber import (
+            TimberVolumeIntegrator,
+        )  # Local import to break circular dependency
+
         if h2_m <= h1_m:
             return 0.0
-        
+
         # The integrator now works with the stateful taper instance.
         return TimberVolumeIntegrator.integrate_volume(h1_m, h2_m, self)

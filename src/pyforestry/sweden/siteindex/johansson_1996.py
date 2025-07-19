@@ -1,20 +1,18 @@
 # Johansson_1996.py
 
-import warnings
 import math
+import warnings
 from typing import Union
-# Imports added
 
-from pyforestry.base.helpers import (
-    Age, AgeMeasurement, SiteIndexValue, TreeSpecies
-)
+# Imports added
+from pyforestry.base.helpers import Age, AgeMeasurement, SiteIndexValue, TreeSpecies
 
 
 def johansson_1996_height_trajectory_sweden_aspen(
     dominant_height: float,
     age: Union[float, AgeMeasurement],
     age2: Union[float, AgeMeasurement],
-    model1: bool = False
+    model1: bool = False,
 ) -> SiteIndexValue:
     """
     Height trajectory for European Aspen in Sweden based on Johansson (1996).
@@ -70,14 +68,15 @@ def johansson_1996_height_trajectory_sweden_aspen(
 
     # If Model 1 is selected
     if model1:
-        height_at_age2 = dominant_height * (((1 - math.exp(-0.0235 * age2_val)) / (1 - math.exp(-0.0235 * age_val))) ** 1.1568)
+        height_at_age2 = dominant_height * (
+            ((1 - math.exp(-0.0235 * age2_val)) / (1 - math.exp(-0.0235 * age_val))) ** 1.1568
+        )
         return SiteIndexValue(
             value=height_at_age2,
             reference_age=Age.TOTAL(age2_val),
             species={TreeSpecies.Sweden.populus_tremula},
-            fn=johansson_1996_height_trajectory_sweden_aspen
+            fn=johansson_1996_height_trajectory_sweden_aspen,
         )
-
 
     # Default model parameters
     param_asi = 7
@@ -86,16 +85,19 @@ def johansson_1996_height_trajectory_sweden_aspen(
 
     # Calculate parameters
     d = param_beta * (param_asi**param_b2)
-    r = math.sqrt(((dominant_height - d)**2) + (4 * param_beta * dominant_height * (age_val**param_b2)))
+    r = math.sqrt(
+        ((dominant_height - d) ** 2) + (4 * param_beta * dominant_height * (age_val**param_b2))
+    )
 
     # Calculate height at target age
-    height_at_age2 = ((dominant_height + d + r) /
-                      (2 + (4 * param_beta * (age2_val**param_b2)) / (dominant_height - d + r)))
+    height_at_age2 = (dominant_height + d + r) / (
+        2 + (4 * param_beta * (age2_val**param_b2)) / (dominant_height - d + r)
+    )
 
     # Return modified to SiteIndexValue
     return SiteIndexValue(
         value=height_at_age2,
         reference_age=Age.TOTAL(age2_val),
         species={TreeSpecies.Sweden.populus_tremula},
-        fn=johansson_1996_height_trajectory_sweden_aspen
+        fn=johansson_1996_height_trajectory_sweden_aspen,
     )

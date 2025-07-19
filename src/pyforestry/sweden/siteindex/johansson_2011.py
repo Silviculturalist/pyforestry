@@ -3,17 +3,13 @@
 import math
 import warnings
 from typing import Union
-# Imports added
 
-from pyforestry.base.helpers import (
-    Age, AgeMeasurement, SiteIndexValue, TreeSpecies
-)
+# Imports added
+from pyforestry.base.helpers import Age, AgeMeasurement, SiteIndexValue, TreeSpecies
 
 
 def johansson_2011_height_trajectory_sweden_poplar(
-    dominant_height: float,
-    age: Union[float, AgeMeasurement],
-    age2: Union[float, AgeMeasurement]
+    dominant_height: float, age: Union[float, AgeMeasurement], age2: Union[float, AgeMeasurement]
 ) -> SiteIndexValue:
     """
     Height trajectory for Poplar on former farmland in Sweden based on Johansson (2011).
@@ -65,7 +61,9 @@ def johansson_2011_height_trajectory_sweden_poplar(
 
     # Warn if ages exceed suitability
     if age_val > 60 or age2_val > 60:
-        warnings.warn("Suitable for stands of Poplar on former farmland in Sweden under age of 50-60 years.")
+        warnings.warn(
+            "Suitable for stands of Poplar on former farmland in Sweden under age of 50-60 years."
+        )
 
     # Model parameters
     b0 = 2.1405
@@ -78,14 +76,13 @@ def johansson_2011_height_trajectory_sweden_poplar(
 
     # Height at target age
     height_at_age2 = dominant_height * (
-        ((age2_val**b0) * ((age_val**b0) * P + b1)) /
-        ((age_val**b0) * ((age2_val**b0) * P + b1))
+        ((age2_val**b0) * ((age_val**b0) * P + b1)) / ((age_val**b0) * ((age2_val**b0) * P + b1))
     )
 
     # Return modified to SiteIndexValue (Assuming Populus tremula)
     return SiteIndexValue(
         value=height_at_age2,
         reference_age=Age.TOTAL(age2_val),
-        species={TreeSpecies.Sweden.populus_tremula}, 
-        fn=johansson_2011_height_trajectory_sweden_poplar
+        species={TreeSpecies.Sweden.populus_tremula},
+        fn=johansson_2011_height_trajectory_sweden_poplar,
     )

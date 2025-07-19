@@ -1,17 +1,13 @@
-import warnings
 import math
+import warnings
 from typing import Union
 
-from pyforestry.base.helpers import (
-    Age, AgeMeasurement, SiteIndexValue, TreeSpecies
-)
+from pyforestry.base.helpers import Age, AgeMeasurement, SiteIndexValue, TreeSpecies
 
 
 # Type hints added to signature, return type changed to SiteIndexValue
 def eriksson_1997_height_trajectory_sweden_birch(
-    dominant_height: float,
-    age: Union[float, AgeMeasurement],
-    age2: Union[float, AgeMeasurement]
+    dominant_height: float, age: Union[float, AgeMeasurement], age2: Union[float, AgeMeasurement]
 ) -> SiteIndexValue:
     """
     Height trajectory for Birch in Sweden based on Eriksson et al. (1997).
@@ -69,10 +65,13 @@ def eriksson_1997_height_trajectory_sweden_birch(
     # Check for suitability of input ages
     # Use age_val and age2_val
     if age_val < 10 or age2_val < 10:
-        warnings.warn("Suitable for cultivated stands of Birch between breast height ages of 10 and 90.")
+        warnings.warn(
+            "Suitable for cultivated stands of Birch between breast height ages of 10 and 90."
+        )
     if age_val > 90 or age2_val > 90:
-        warnings.warn("Suitable for cultivated stands of Birch between breast height ages of 10 and 90.")
-
+        warnings.warn(
+            "Suitable for cultivated stands of Birch between breast height ages of 10 and 90."
+        )
 
     # Model parameters
     param_asi = 7
@@ -81,20 +80,25 @@ def eriksson_1997_height_trajectory_sweden_birch(
 
     # Calculations - use age_val and age2_val
     d = param_beta / (param_asi**param_b2)
-    r = math.sqrt(((dominant_height - 1.3 - d)**2) + (4 * param_beta * (dominant_height - 1.3) / (age_val**param_b2)))
+    r = math.sqrt(
+        ((dominant_height - 1.3 - d) ** 2)
+        + (4 * param_beta * (dominant_height - 1.3) / (age_val**param_b2))
+    )
 
     # Height at target age - use age_val and age2_val
     height_at_age2 = (
-        ((dominant_height - 1.3 + d + r) /
-         (2 + (4 * param_beta * (age2_val**-param_b2)) / (dominant_height - 1.3 - d + r)))
-        + 1.3
-    )
+        (dominant_height - 1.3 + d + r)
+        / (2 + (4 * param_beta * (age2_val**-param_b2)) / (dominant_height - 1.3 - d + r))
+    ) + 1.3
 
     # Return statement (already correct, uses age2_val implicitly via height_at_age2 calculation)
     # Use age2_val explicitly for reference_age
     return SiteIndexValue(
         value=height_at_age2,
         reference_age=Age.DBH(age2_val),
-        species={TreeSpecies.Sweden.betula_pendula, TreeSpecies.Sweden.betula_pubescens}, # This represents the genus group Betula
-        fn=eriksson_1997_height_trajectory_sweden_birch
+        species={
+            TreeSpecies.Sweden.betula_pendula,
+            TreeSpecies.Sweden.betula_pubescens,
+        },  # This represents the genus group Betula
+        fn=eriksson_1997_height_trajectory_sweden_birch,
     )

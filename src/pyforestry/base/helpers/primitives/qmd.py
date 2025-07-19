@@ -15,7 +15,8 @@ This module provides the `QuadraticMeanDiameter` class, a subclass of float
 that carries both the QMD value (in centimeters) and an associated precision.
 """
 
-from math import sqrt, pi
+from math import pi, sqrt
+
 
 class QuadraticMeanDiameter(float):
     """
@@ -29,7 +30,9 @@ class QuadraticMeanDiameter(float):
     Attributes:
         precision (float): Uncertainty or precision of the QMD measurement (cm).
     """
-    __slots__=('precision')
+
+    __slots__ = "precision"
+
     def __new__(cls, value: float, precision: float = 0.0):
         """
         Create a new `QuadraticMeanDiameter` instance.

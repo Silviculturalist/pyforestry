@@ -21,8 +21,10 @@ was produced when using it in analyses or passing it between functions.
 """
 
 from typing import Callable
-from pyforestry.base.helpers.tree_species import TreeName
+
 from pyforestry.base.helpers.primitives import AgeMeasurement
+from pyforestry.base.helpers.tree_species import TreeName
+
 
 class SiteIndexValue(float):
     """Site index value with associated metadata.
@@ -81,22 +83,26 @@ class SiteIndexValue(float):
 
         # Check type of reference_age
         if not isinstance(reference_age, AgeMeasurement):
-            raise TypeError(f"reference_age must be an AgeMeasurement object, not {type(reference_age)}")
-        
+            raise TypeError(
+                f"reference_age must be an AgeMeasurement object, not {type(reference_age)}"
+            )
+
         # --- Validate the species set ---
         if not isinstance(species, set):
             raise TypeError(f"species must be a set, not {type(species)}")
-        if not species: # Check if the set is empty
-             raise ValueError("species set cannot be empty.")
+        if not species:  # Check if the set is empty
+            raise ValueError("species set cannot be empty.")
         for item in species:
             if not isinstance(item, TreeName):
-                raise TypeError(f"All items in the species set must be TreeName objects, found {type(item)}")
+                raise TypeError(
+                    f"All items in the species set must be TreeName objects, found {type(item)}"
+                )
 
         if value < 0:
             raise ValueError("Site index value must be non-negative.")
 
         obj = super().__new__(cls, value)
-        obj.reference_age = reference_age # Store the object
+        obj.reference_age = reference_age  # Store the object
         obj.species = species
         obj.fn = fn
         return obj

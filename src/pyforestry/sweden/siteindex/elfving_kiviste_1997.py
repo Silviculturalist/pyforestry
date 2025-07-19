@@ -1,19 +1,17 @@
-import warnings
 import math
+import warnings
 from typing import Union
 
-from pyforestry.base.helpers import (
-    Age, AgeMeasurement, SiteIndexValue, TreeSpecies
-)
+from pyforestry.base.helpers import Age, AgeMeasurement, SiteIndexValue, TreeSpecies
 
 
-def elfving_kiviste_1997_height_trajectory_sweden_pine(dominant_height : float,
-                                                       age : Union[float,AgeMeasurement], 
-                                                       age2 :Union[float, AgeMeasurement]) -> SiteIndexValue:
+def elfving_kiviste_1997_height_trajectory_sweden_pine(
+    dominant_height: float, age: Union[float, AgeMeasurement], age2: Union[float, AgeMeasurement]
+) -> SiteIndexValue:
     """
     Height trajectory for Scots Pine in Sweden based on Elfving & Kiviste (1997).
 
-    This function calculates the height of Scots Pine stands in Sweden for a given target age 
+    This function calculates the height of Scots Pine stands in Sweden for a given target age
     based on the dominant height at the initial age, using site index equations.
 
     Parameters:
@@ -28,7 +26,7 @@ def elfving_kiviste_1997_height_trajectory_sweden_pine(dominant_height : float,
         Warning: If the input ages are outside the range of suitability (10 to 80 years).
 
     References:
-        Elfving, B., Kiviste, A. (1997). "Construction of site index equations for Pinus sylvestris L. 
+        Elfving, B., Kiviste, A. (1997). "Construction of site index equations for Pinus sylvestris L.
         using permanent plot data in Sweden." Forest Ecology and Management, Vol. 98, Issue 2, pp. 125-134.
         DOI: https://doi.org/10.1016/S0378-1127(97)00077-7
 
@@ -37,7 +35,7 @@ def elfving_kiviste_1997_height_trajectory_sweden_pine(dominant_height : float,
         - RMSE: 0.401.
     """
 
-    #Age Validation
+    # Age Validation
     # Check for age (should be a float/int or AgeMeasurement with TOTAL code)
     if isinstance(age, AgeMeasurement):
         # It's an AgeMeasurement, check the code
@@ -56,12 +54,15 @@ def elfving_kiviste_1997_height_trajectory_sweden_pine(dominant_height : float,
         raise TypeError("Parameter 'age2' must be a float/int or an instance of Age.TOTAL.")
     # If we reach here, it's either a valid Age.TOTAL or a float/int - proceed
 
-
     # Check for suitability of input ages
     if age < 10 or age2 < 10:
-        warnings.warn("Suitable for cultivated stands of Scots Pine between total ages of 10 and 80.")
+        warnings.warn(
+            "Suitable for cultivated stands of Scots Pine between total ages of 10 and 80."
+        )
     if age > 80 or age2 > 80:
-        warnings.warn("Suitable for cultivated stands of Scots Pine between total ages of 10 and 80.")
+        warnings.warn(
+            "Suitable for cultivated stands of Scots Pine between total ages of 10 and 80."
+        )
 
     # Parameters based on the model
     param_asi = 25
@@ -70,15 +71,18 @@ def elfving_kiviste_1997_height_trajectory_sweden_pine(dominant_height : float,
 
     # Calculations
     d = param_beta * (param_asi**param_b2)
-    r = math.sqrt(((dominant_height - d)**2) + (4 * param_beta * dominant_height * (age**param_b2)))
+    r = math.sqrt(
+        ((dominant_height - d) ** 2) + (4 * param_beta * dominant_height * (age**param_b2))
+    )
 
     # Height at target age
-    height_at_age2 = ((dominant_height + d + r) /
-                      (2 + (4 * param_beta * (age2**param_b2)) / (dominant_height - d + r)))
+    height_at_age2 = (dominant_height + d + r) / (
+        2 + (4 * param_beta * (age2**param_b2)) / (dominant_height - d + r)
+    )
 
     return SiteIndexValue(
         value=height_at_age2,
         reference_age=Age.TOTAL(age2),
         species={TreeSpecies.Sweden.pinus_sylvestris},
-        fn=elfving_kiviste_1997_height_trajectory_sweden_pine
+        fn=elfving_kiviste_1997_height_trajectory_sweden_pine,
     )

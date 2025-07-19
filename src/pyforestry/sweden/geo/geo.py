@@ -1,11 +1,12 @@
-from shapely.geometry import Point
-import geopandas as gpd
-from pyproj import Transformer
-from importlib.resources import files, as_file
-
+from importlib.resources import as_file, files
 from typing import Optional
 
+import geopandas as gpd
+from pyproj import Transformer
+from shapely.geometry import Point
+
 from pyforestry.sweden.site import Sweden
+
 
 class RetrieveGeoCode:
 
@@ -25,7 +26,11 @@ class RetrieveGeoCode:
             float: Distance in kilometers to the nearest coastline.
         """
         # Load the coastline shapefile
-        with as_file(files("pyforestry.sweden.geo.coastline").joinpath("swedishcoastline_ne_medium_clipped.shp")) as coastline_path:
+        with as_file(
+            files("pyforestry.sweden.geo.coastline").joinpath(
+                "swedishcoastline_ne_medium_clipped.shp"
+            )
+        ) as coastline_path:
             coast_gdf = gpd.read_file(coastline_path)
 
         # Ensure coastline data is in EPSG:4326 for consistency
@@ -46,7 +51,6 @@ class RetrieveGeoCode:
 
         return nearest_distance / 1000  # Convert meters to kilometers
 
-
     @staticmethod
     # Use string literal for the type hint
     def getClimateCode(lon, lat, epsg=4326) -> Optional[Sweden.ClimateZone]:
@@ -61,9 +65,11 @@ class RetrieveGeoCode:
         Returns:
             Sweden.ClimateZone | None: The climate zone enum member or None if not found.
         """
-        
+
         # Load the climate shapefile and reproject to EPSG:3006
-        with as_file(files('pyforestry.sweden.geo.climate').joinpath("klimat.shp")) as climatezone_path:
+        with as_file(
+            files("pyforestry.sweden.geo.climate").joinpath("klimat.shp")
+        ) as climatezone_path:
             klimat_gdf = gpd.read_file(climatezone_path).to_crs(epsg=3006)
 
         # Transform the input coordinates from the provided epsg to EPSG:3006
@@ -74,12 +80,11 @@ class RetrieveGeoCode:
         # Find the polygon that contains the transformed point
         klimat_polygon = klimat_gdf[klimat_gdf.contains(point_proj)]
         if klimat_polygon.empty:
-            return None # Return None if no matching zone is found
+            return None  # Return None if no matching zone is found
         else:
-            climate_zone_code_int = klimat_polygon.iloc[0]['KLIMZON_']
+            climate_zone_code_int = klimat_polygon.iloc[0]["KLIMZON_"]
             # Lookup and return the enum member using the code (runtime use)
             return Sweden.ClimateZone.from_code(climate_zone_code_int)
-
 
     @staticmethod
     # Use string literal for the type hint
@@ -97,9 +102,10 @@ class RetrieveGeoCode:
         """
 
         # Load the county shapefile and reproject to EPSG:3006
-        with as_file(files('pyforestry.sweden.geo.counties').joinpath('rt_dlanskod.shp')) as dlanskod_path:
+        with as_file(
+            files("pyforestry.sweden.geo.counties").joinpath("rt_dlanskod.shp")
+        ) as dlanskod_path:
             dlanskod_gdf = gpd.read_file(dlanskod_path).to_crs(epsg=3006)
-
 
         # Transform the input coordinates from the provided epsg to EPSG:3006
         transformer = Transformer.from_crs(epsg, 3006, always_xy=True)
@@ -109,8 +115,8 @@ class RetrieveGeoCode:
         # Find the polygon that contains the transformed point
         dlanskod_polygon = dlanskod_gdf[dlanskod_gdf.contains(point_proj)]
         if dlanskod_polygon.empty:
-            return None # Return None if no matching polygon
+            return None  # Return None if no matching polygon
         else:
-            county_code_int = dlanskod_polygon.iloc[0]['DLANSKOD']
+            county_code_int = dlanskod_polygon.iloc[0]["DLANSKOD"]
             # Lookup and return the enum member using the code (runtime use)
             return Sweden.County.from_code(county_code_int)

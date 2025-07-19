@@ -1,1 +1,1 @@
-from .odin_1983 import Odin_temperature_sum, Moren_Perttu_radiation_1994
+from .odin_1983 import Moren_Perttu_radiation_1994, Odin_temperature_sum

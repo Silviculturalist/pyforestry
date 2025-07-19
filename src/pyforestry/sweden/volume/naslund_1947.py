@@ -1,5 +1,7 @@
 from typing import Optional
+
 from pyforestry.sweden.timber import SweTimber
+
 
 class NaslundVolume:
     @staticmethod
@@ -7,18 +9,18 @@ class NaslundVolume:
         timber.validate()
         if timber.region == "southern":
             if timber.species == "pinus sylvestris":
-                return NaslundVolume._southern_pine_volume(timber)/1000
+                return NaslundVolume._southern_pine_volume(timber) / 1000
             elif timber.species == "picea abies":
-                return NaslundVolume._southern_spruce_volume(timber)/1000
+                return NaslundVolume._southern_spruce_volume(timber) / 1000
             elif timber.species in ["betula", "betula pendula", "betula pubescens"]:
-                return NaslundVolume._southern_birch_volume(timber)/1000
+                return NaslundVolume._southern_birch_volume(timber) / 1000
         elif timber.region == "northern":
             if timber.species == "pinus sylvestris":
-                return NaslundVolume._northern_pine_volume(timber)/1000
+                return NaslundVolume._northern_pine_volume(timber) / 1000
             elif timber.species == "picea abies":
-                return NaslundVolume._northern_spruce_volume(timber)/1000
+                return NaslundVolume._northern_spruce_volume(timber) / 1000
             elif timber.species in ["betula", "betula pendula", "betula pubescens"]:
-                return NaslundVolume._northern_birch_volume(timber)/1000
+                return NaslundVolume._northern_birch_volume(timber) / 1000
         raise NotImplementedError(
             f"Volume calculation for {timber.species} in {timber.region} region is not implemented."
         )
@@ -224,6 +226,7 @@ class NaslundVolume:
                     + 0.004346 * timber.diameter_cm * timber.height_m**2
                 )
 
+
 class NaslundFormFactor:
     @staticmethod
     def calculate(
@@ -304,13 +307,11 @@ class NaslundFormFactor:
                     + 51.62 * (height_m / diameter_cm)
                     - 3.962 * B
                     - 0.9246 * K
-                )/1000
+                ) / 1000
             else:
                 return (
-                    308.97
-                    + 1365.38 * (1 / height_m)
-                    + 93.14 * (height_m / diameter_cm)
-                )/1000
+                    308.97 + 1365.38 * (1 / height_m) + 93.14 * (height_m / diameter_cm)
+                ) / 1000
         else:
             if crown_base_height_m and double_bark_mm:
                 K = ((height_m - crown_base_height_m) / height_m) * 100
@@ -321,13 +322,9 @@ class NaslundFormFactor:
                     + 44.71 * (height_m / diameter_cm)
                     + 1.339 * B
                     - 1.201 * K
-                )/1000
+                ) / 1000
             else:
-                return (
-                    408.49
-                    + 798.46 * (1 / height_m)
-                    + 72.89 * (height_m / diameter_cm)
-                )/1000
+                return (408.49 + 798.46 * (1 / height_m) + 72.89 * (height_m / diameter_cm)) / 1000
 
     @staticmethod
     def _southern_spruce_form_factor(
@@ -345,14 +342,14 @@ class NaslundFormFactor:
                     + 186.94 * (height_m / diameter_cm)
                     - 583.74 * height_m / diameter_cm**2
                     - 0.7854 * K
-                )/1000
+                ) / 1000
             else:
                 return (
                     245.09
                     + 1405.66 * (1 / height_m)
                     + 231.11 * (height_m / diameter_cm)
                     - 628.48 * height_m / diameter_cm**2
-                )/1000
+                ) / 1000
         else:
             if crown_base_height_m:
                 K = ((height_m - crown_base_height_m) / height_m) * 100
@@ -362,14 +359,14 @@ class NaslundFormFactor:
                     + 180.36 * (height_m / diameter_cm)
                     - 551.55 * height_m / diameter_cm**2
                     - 0.7566 * K
-                )/1000
+                ) / 1000
             else:
                 return (
                     245.57
                     + 1369.89 * (1 / height_m)
                     + 219.34 * (height_m / diameter_cm)
                     - 587.65 * height_m / diameter_cm**2
-                )/1000
+                ) / 1000
 
     @staticmethod
     def _southern_birch_form_factor(
@@ -387,14 +384,14 @@ class NaslundFormFactor:
                     + 155.44 * (height_m / diameter_cm)
                     - 462.95 * height_m / diameter_cm**2
                     - 5.864 * B
-                )/1000
+                ) / 1000
             else:
                 return (
                     109.01
                     + 1823.03 * (1 / height_m)
                     + 277.56 * (height_m / diameter_cm)
                     - 844.17 * height_m / diameter_cm**2
-                )/1000
+                ) / 1000
         else:
             if double_bark_mm:
                 B = ((double_bark_mm / 10) / diameter_cm) * 100
@@ -404,14 +401,14 @@ class NaslundFormFactor:
                     + 149.04 * (height_m / diameter_cm)
                     - 406.04 * height_m / diameter_cm**2
                     - 0.9224 * B
-                )/1000
+                ) / 1000
             else:
                 return (
                     237.03
                     + 1266.05 * (1 / height_m)
                     + 162.72 * (height_m / diameter_cm)
                     - 451.26 * height_m / diameter_cm**2
-                )/1000
+                ) / 1000
 
     @staticmethod
     def _northern_pine_form_factor(
@@ -425,34 +422,18 @@ class NaslundFormFactor:
             if crown_base_height_m and double_bark_mm:
                 K = ((height_m - crown_base_height_m) / height_m) * 100
                 B = ((double_bark_mm / 10) / diameter_cm) * 100
-                return (
-                    489.35
-                    + 1296.11 * (1 / height_m)
-                    - 3700 * B
-                    - 0.9310 * K
-                )/1000
+                return (489.35 + 1296.11 * (1 / height_m) - 3700 * B - 0.9310 * K) / 1000
             else:
                 return (
-                    390.81
-                    + 1185.86 * (1 / height_m)
-                    + 35.88 * (height_m / diameter_cm)
-                )/1000
+                    390.81 + 1185.86 * (1 / height_m) + 35.88 * (height_m / diameter_cm)
+                ) / 1000
         else:
             if crown_base_height_m and double_bark_mm:
                 K = ((height_m - crown_base_height_m) / height_m) * 100
                 B = ((double_bark_mm / 10) / diameter_cm) * 100
-                return (
-                    502.22
-                    + 771.5 * (1 / height_m)
-                    + 2.257 * B
-                    - 1.008 * K
-                )/1000
+                return (502.22 + 771.5 * (1 / height_m) + 2.257 * B - 1.008 * K) / 1000
             else:
-                return (
-                    463.55
-                    + 699.14 * (1 / height_m)
-                    + 34.36 * (height_m / diameter_cm)
-                )/1000
+                return (463.55 + 699.14 * (1 / height_m) + 34.36 * (height_m / diameter_cm)) / 1000
 
     @staticmethod
     def _northern_spruce_form_factor(
@@ -470,14 +451,14 @@ class NaslundFormFactor:
                     + 226.83 * (height_m / diameter_cm)
                     - 595.98 * (height_m / diameter_cm**2)
                     - 0.7980 * K
-                )/1000
+                ) / 1000
             else:
                 return (
                     193.84
                     + 1467.46 * (1 / height_m)
                     + 276.26 * (height_m / diameter_cm)
                     - 700.45 * (height_m / diameter_cm**2)
-                )/1000
+                ) / 1000
         else:
             if crown_base_height_m:
                 K = ((height_m - crown_base_height_m) / height_m) * 100
@@ -487,14 +468,14 @@ class NaslundFormFactor:
                     + 199.71 * (height_m / diameter_cm)
                     - 591.81 * (height_m / diameter_cm**2)
                     - 0.7403 * K
-                )/1000
+                ) / 1000
             else:
                 return (
                     221.51
                     + 1431.21 * (1 / height_m)
                     + 244.14 * (height_m / diameter_cm)
                     - 652.09 * (height_m / diameter_cm**2)
-                )/1000
+                ) / 1000
 
     @staticmethod
     def _northern_birch_form_factor(
@@ -514,13 +495,9 @@ class NaslundFormFactor:
                     + 47.35 * (height_m / diameter_cm)
                     - 2.154 * B
                     - 0.4154 * K
-                )/1000
+                ) / 1000
             else:
-                return (
-                    368.17
-                    + 473 * (1 / height_m)
-                    + 63.44 * (height_m / diameter_cm)
-                )/1000
+                return (368.17 + 473 * (1 / height_m) + 63.44 * (height_m / diameter_cm)) / 1000
         else:
             if crown_base_height_m:
                 K = ((height_m - crown_base_height_m) / height_m) * 100
@@ -529,11 +506,6 @@ class NaslundFormFactor:
                     + 423.71 * (1 / height_m)
                     + 47.05 * (height_m / diameter_cm)
                     - 0.3808 * K
-                )/1000
+                ) / 1000
             else:
-                return (
-                    384.88
-                    + 344.14 * (1 / height_m)
-                    + 55.34 * (height_m / diameter_cm)
-                )/1000
-
+                return (384.88 + 344.14 * (1 / height_m) + 55.34 * (height_m / diameter_cm)) / 1000

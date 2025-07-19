@@ -5,9 +5,11 @@ including construction from cartesian or polar inputs, optional CRS support,
 and utility methods for representation and input standardization.
 """
 
-from typing import Optional, Union
 from math import cos, sin
+from typing import Optional, Union
+
 from pyproj import CRS
+
 
 class Position:
     """Container for an (X, Y, Z) coordinate with optional CRS.
@@ -19,11 +21,8 @@ class Position:
         crs (Optional[CRS]): Coordinate Reference System for interpreting coordinates.
         coordinate_system (str): Underlying coordinate system type, always 'cartesian'.
     """
-    def __init__(self,
-                 X: float,
-                 Y: float,
-                 Z: Optional[float] = 0.0,
-                 crs: Optional[CRS] = None):
+
+    def __init__(self, X: float, Y: float, Z: Optional[float] = 0.0, crs: Optional[CRS] = None):
         """Initialize a Position.
 
         Args:
@@ -36,7 +35,7 @@ class Position:
         self.Y = Y
         self.Z = Z
         self.crs = crs
-        self.coordinate_system = 'cartesian'
+        self.coordinate_system = "cartesian"
 
     @classmethod
     def from_polar(cls, r: float, theta: float, z: Optional[float] = 0.0):
@@ -55,7 +54,7 @@ class Position:
         x = r * cos(theta)
         y = r * sin(theta)
         obj = cls(x, y, z, crs=None)
-        
+
         return obj
 
     def __repr__(self):
@@ -66,12 +65,10 @@ class Position:
         """
         return f"Position(X={self.X}, Y={self.Y}, Z={self.Z}, crs={self.crs})"
 
-
     @staticmethod
-    def _set_position(pos_in: Union['Position',
-                                    tuple[float, float],
-                                    tuple[float, float, float],
-                                    None] = None) -> Optional['Position']:
+    def _set_position(
+        pos_in: Union["Position", tuple[float, float], tuple[float, float, float], None] = None
+    ) -> Optional["Position"]:
         """Standardize input into a Position or return None.
 
         Args:

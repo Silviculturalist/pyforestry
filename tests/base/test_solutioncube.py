@@ -1,13 +1,16 @@
+import copy
+
+import numpy as np
 import pytest
 import xarray as xr
-import numpy as np
-import copy
+
+from pyforestry.base.helpers.tree_species import TreeSpecies
+from pyforestry.base.pricelist.data.mellanskog_2013 import Mellanskog_2013_price_data
 
 # Imports from your project
 from pyforestry.base.pricelist.solutioncube import SolutionCube
 from pyforestry.sweden.taper import EdgrenNylinder1949
-from pyforestry.base.pricelist.data.mellanskog_2013 import Mellanskog_2013_price_data
-from pyforestry.base.helpers.tree_species import TreeSpecies
+
 
 @pytest.fixture(scope="module")
 def mini_cube():
@@ -19,7 +22,7 @@ def mini_cube():
     species_list = [TreeSpecies.Sweden.picea_abies.full_name]
     dbh_range = (20, 22)  # Will compute for DBH 20 and 22
     height_range = (15, 15.2)  # Will compute for Height 15.0 and 15.2
-    
+
     # This will generate a cube for just 2x2 = 4 trees.
     cube = SolutionCube.generate(
         pricelist_data=Mellanskog_2013_price_data,
@@ -29,9 +32,10 @@ def mini_cube():
         height_range=height_range,
         dbh_step=2,
         height_step=0.2,
-        workers=1  # No need for parallel processing for just 4 trees
+        workers=1,  # No need for parallel processing for just 4 trees
     )
     return cube
+
 
 def test_generate_cube(mini_cube):
     """
@@ -54,10 +58,11 @@ def test_generate_cube(mini_cube):
     # Check for the expected data variables
     assert "total_value" in mini_cube.dataset.data_vars
     assert "solution_sections" in mini_cube.dataset.data_vars
-    
+
     # Check that metadata attributes were written correctly
     assert "pricelist_hash" in mini_cube.dataset.attrs
     assert mini_cube.dataset.attrs["taper_model"] == "EdgrenNylinder1949"
+
 
 def test_save_load_roundtrip(mini_cube, tmp_path):
     """
@@ -76,6 +81,7 @@ def test_save_load_roundtrip(mini_cube, tmp_path):
     # 3. Verify that the loaded dataset is identical to the original
     # xr.testing.assert_equal is a powerful tool for this
     xr.testing.assert_equal(mini_cube.dataset, loaded_cube.dataset)
+
 
 def test_pricelist_hash_verification(mini_cube, tmp_path):
     """
@@ -97,12 +103,13 @@ def test_pricelist_hash_verification(mini_cube, tmp_path):
     with pytest.raises(ValueError, match="Pricelist hash mismatch!"):
         SolutionCube.load(file_path, pricelist_to_verify=modified_pricelist)
 
+
 def test_lookup(mini_cube):
     """
     Tests the lookup method for both exact and nearest-neighbor matches.
     """
     species = TreeSpecies.Sweden.picea_abies.full_name
-    
+
     # 1. Test an exact coordinate lookup
     value, sections = mini_cube.lookup(species=species, dbh=20.0, height=15.0)
     assert isinstance(value, float)
@@ -116,9 +123,11 @@ def test_lookup(mini_cube):
 
     # Test another nearest-neighbor case
     value_nearest_2, _ = mini_cube.lookup(species=species, dbh=22.4, height=15.3)
-    
+
     # Get the expected value for the corner case (22, 15.2)
-    expected_value = mini_cube.dataset.sel(species=species, dbh=22, height=15.2)["total_value"].item()
+    expected_value = mini_cube.dataset.sel(species=species, dbh=22, height=15.2)[
+        "total_value"
+    ].item()
     assert value_nearest_2 == expected_value
 
     # 3. Test a lookup for a non-existent species

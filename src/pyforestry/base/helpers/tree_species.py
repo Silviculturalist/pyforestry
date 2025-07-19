@@ -267,6 +267,7 @@ class RegionalTreeSpecies:
 # Global Regional Species Namespace
 class TreeSpecies:
     """Namespace exposing regional groups of tree species."""
+
     pass
 
 

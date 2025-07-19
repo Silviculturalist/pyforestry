@@ -1,4 +1,5 @@
 import pytest
+
 from pyforestry.base.helpers import Age, SiteIndexValue, enum_code
 from pyforestry.sweden.site.enums import Sweden
 from pyforestry.sweden.siteindex.sis.hagglund_lundmark_1979 import (

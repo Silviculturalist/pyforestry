@@ -1,8 +1,11 @@
-import pytest
 import math
+
 import numpy as np
-from pyforestry.sweden.timber.swe_timber import SweTimber
+import pytest
+
 from pyforestry.sweden.taper import EdgrenNylinder1949
+from pyforestry.sweden.timber.swe_timber import SweTimber
+
 
 # Fixture: a valid Timber instance for testing.
 @pytest.fixture
@@ -18,8 +21,9 @@ def valid_timber():
         double_bark_mm=1,
         crown_base_height_m=10,
         over_bark=True,
-        region="southern"  # Added required region attribute
+        region="southern",  # Added required region attribute
     )
+
 
 # Fixture: instantiate the taper model with the valid timber.
 @pytest.fixture
@@ -30,31 +34,35 @@ def taper_instance(valid_timber):
     """
     return EdgrenNylinder1949(valid_timber)
 
+
 def test_taper_instance_creation(taper_instance, valid_timber):
     """
     Tests that the taper instance is created correctly, holds the timber object,
     and is of the expected type.
     """
     from pyforestry.base.taper.taper import Taper
+
     assert isinstance(taper_instance, Taper)
     assert taper_instance.timber is valid_timber
     assert math.isclose(taper_instance.timber.height_m, 30)
+
 
 def test_stateful_attributes_on_init(taper_instance):
     """
     Tests that the stateful attributes (base_diameter, inflexion_point, etc.)
     are calculated and stored on the instance during initialization.
     """
-    assert hasattr(taper_instance, 'base_diameter')
+    assert hasattr(taper_instance, "base_diameter")
     assert isinstance(taper_instance.base_diameter, float)
     assert taper_instance.base_diameter > 0
 
-    assert hasattr(taper_instance, 'inflexion_point')
+    assert hasattr(taper_instance, "inflexion_point")
     assert isinstance(taper_instance.inflexion_point, float)
     assert taper_instance.inflexion_point > 0
 
-    assert hasattr(taper_instance, 'constants')
+    assert hasattr(taper_instance, "constants")
     assert isinstance(taper_instance.constants, np.ndarray)
+
 
 def test_get_diameter_at_height_instance_method(taper_instance):
     """
@@ -66,6 +74,7 @@ def test_get_diameter_at_height_instance_method(taper_instance):
     assert isinstance(diameter, float)
     assert diameter > 0
 
+
 def test_get_relative_diameter_instance_method(taper_instance):
     """
     Tests the get_relative_diameter instance method.
@@ -74,6 +83,7 @@ def test_get_relative_diameter_instance_method(taper_instance):
     relative_diam = taper_instance.get_relative_diameter(rel_height)
     assert isinstance(relative_diam, float)
     assert relative_diam > 0
+
 
 def test_get_height_at_diameter(taper_instance):
     """
@@ -90,6 +100,7 @@ def test_get_height_at_diameter(taper_instance):
     calculated_diameter = taper_instance.get_diameter_at_height(height)
     assert math.isclose(calculated_diameter, test_diameter, rel_tol=1e-3)
 
+
 def test_volume_section(taper_instance):
     """
     Tests the volume_section method from the base Taper class,
@@ -99,6 +110,7 @@ def test_volume_section(taper_instance):
     assert isinstance(vol, float)
     assert vol >= 0
 
+
 def test_invalid_timber_raises_error():
     """
     Tests that the constructor raises a ValueError when provided with
@@ -106,9 +118,6 @@ def test_invalid_timber_raises_error():
     """
     with pytest.raises(ValueError, match="Height must be larger than 0 m: {self.height_m}"):
         invalid_timber = SweTimber(
-            species="picea abies",
-            diameter_cm=30,
-            height_m=0,  # Invalid height
-            region="northern"
+            species="picea abies", diameter_cm=30, height_m=0, region="northern"  # Invalid height
         )
         EdgrenNylinder1949(invalid_timber)

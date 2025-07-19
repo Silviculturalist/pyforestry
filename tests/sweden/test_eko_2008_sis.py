@@ -15,4 +15,3 @@ def test_eko_pm_2008_returns_siteindexvalue():
     assert isinstance(si, SiteIndexValue)
     assert si.reference_age == Age.DBH(50)
     assert 0 < float(si) < 50
-

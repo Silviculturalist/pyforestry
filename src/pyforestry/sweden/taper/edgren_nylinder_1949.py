@@ -1,62 +1,75 @@
-from pyforestry.base.taper import Taper
-from pyforestry.sweden.volume.naslund_1947 import NaslundFormFactor
-from pyforestry.sweden.timber.swe_timber import SweTimber
-
+from functools import lru_cache  # to cache results
 
 import numpy as np
 from scipy.optimize import minimize_scalar
-from functools import lru_cache  # to cache results
+
+from pyforestry.base.taper import Taper
+from pyforestry.sweden.timber.swe_timber import SweTimber
+from pyforestry.sweden.volume.naslund_1947 import NaslundFormFactor
+
 
 class EdgrenNylinder1949Consts:
     # --- Define constants at the class level so they are only created ONCE ---
-    _CONST_SPRUCE_NORTH = np.array([
-        [0.5, np.nan, 1.671, 16.104, np.nan, 103.06],
-        [0.55, 0.62, 1.422, 14.883, 286.36, 140.91],
-        [0.6, 1.594, 1.976, 13.784, 151.04, 127.89],
-        [0.65, 3.240, 2.906, 12.906, 102.7, 110.68],
-        [0.7, 6.320, 3.759, 12.099, 76.543, 105.15],
-        [0.75, 13.056, 4.026, 11.321, 59.096, 112.59],
-        [0.8, 32.012, 3.595, 10.540, 45.754, 134.76],
-    ], dtype=float)
+    _CONST_SPRUCE_NORTH = np.array(
+        [
+            [0.5, np.nan, 1.671, 16.104, np.nan, 103.06],
+            [0.55, 0.62, 1.422, 14.883, 286.36, 140.91],
+            [0.6, 1.594, 1.976, 13.784, 151.04, 127.89],
+            [0.65, 3.240, 2.906, 12.906, 102.7, 110.68],
+            [0.7, 6.320, 3.759, 12.099, 76.543, 105.15],
+            [0.75, 13.056, 4.026, 11.321, 59.096, 112.59],
+            [0.8, 32.012, 3.595, 10.540, 45.754, 134.76],
+        ],
+        dtype=float,
+    )
 
-    _CONST_SPRUCE_SOUTH = np.array([
-        [0.5, np.nan, 0.892, 15.765, np.nan, 176.40],
-        [0.55, 0.620, 0.923, 14.818, 287.44, 202.65],
-        [0.6, 1.594, 1.093, 14.032, 148.97, 202.51],
-        [0.65, 3.240, 2.164, 13.479, 99.532, 132.69],
-        [0.7, 6.320, 3.324, 13.040, 72.736, 108.43],
-        [0.75, 13.059, 4.463, 12.775, 54.618, 97.49],
-        [0.8, 33.208, 5.586, 12.578, 40.509, 91.77],
-    ], dtype=float)
+    _CONST_SPRUCE_SOUTH = np.array(
+        [
+            [0.5, np.nan, 0.892, 15.765, np.nan, 176.40],
+            [0.55, 0.620, 0.923, 14.818, 287.44, 202.65],
+            [0.6, 1.594, 1.093, 14.032, 148.97, 202.51],
+            [0.65, 3.240, 2.164, 13.479, 99.532, 132.69],
+            [0.7, 6.320, 3.324, 13.040, 72.736, 108.43],
+            [0.75, 13.059, 4.463, 12.775, 54.618, 97.49],
+            [0.8, 33.208, 5.586, 12.578, 40.509, 91.77],
+        ],
+        dtype=float,
+    )
 
-    _CONST_PINE_NORTH = np.array([
-        [0.5, np.nan, 1.513, 14.233, np.nan, 123.91],
-        [0.55, 0.620, 1.228, 13.321, 311.68, 172.85],
-        [0.6, 1.594, 1.506, 12.657, 160.29, 167.68],
-        [0.65, 3.240, 2.493, 12.177, 106.67, 128.16],
-        [0.7, 6.320, 4.488, 11.880, 77.416, 94.947],
-        [0.75, 13.056, 6.602, 11.759, 57.767, 81.725],
-        [0.8, 32.307, 7.594, 11.753, 42.808, 80.776],
-    ], dtype=float)
+    _CONST_PINE_NORTH = np.array(
+        [
+            [0.5, np.nan, 1.513, 14.233, np.nan, 123.91],
+            [0.55, 0.620, 1.228, 13.321, 311.68, 172.85],
+            [0.6, 1.594, 1.506, 12.657, 160.29, 167.68],
+            [0.65, 3.240, 2.493, 12.177, 106.67, 128.16],
+            [0.7, 6.320, 4.488, 11.880, 77.416, 94.947],
+            [0.75, 13.056, 6.602, 11.759, 57.767, 81.725],
+            [0.8, 32.307, 7.594, 11.753, 42.808, 80.776],
+        ],
+        dtype=float,
+    )
 
-    _CONST_PINE_SOUTH = np.array([
-        [0.5, np.nan, 0.8409, 15.970, np.nan, 183.44],
-        [0.55, 0.620, 0.3694, 14.948, 285.28, 458.59],
-        [0.6, 1.594, 0.4251, 14.214, 147.44, 463.07],
-        [0.65, 3.240, 1.529, 13.646, 98.601, 171.70],
-        [0.7, 6.320, 3.974, 13.240, 71.915, 95.286],
-        [0.75, 13.070, 5.510, 12.951, 54.050, 84.904],
-        [0.8, 33.502, 6.445, 12.755, 39.982, 83.659],
-    ], dtype=float)
+    _CONST_PINE_SOUTH = np.array(
+        [
+            [0.5, np.nan, 0.8409, 15.970, np.nan, 183.44],
+            [0.55, 0.620, 0.3694, 14.948, 285.28, 458.59],
+            [0.6, 1.594, 0.4251, 14.214, 147.44, 463.07],
+            [0.65, 3.240, 1.529, 13.646, 98.601, 171.70],
+            [0.7, 6.320, 3.974, 13.240, 71.915, 95.286],
+            [0.75, 13.070, 5.510, 12.951, 54.050, 84.904],
+            [0.8, 33.502, 6.445, 12.755, 39.982, 83.659],
+        ],
+        dtype=float,
+    )
     # ----------------------------------------------------------------------
 
     @staticmethod
     @lru_cache(maxsize=None)  # <-- ADD THIS DECORATOR TO CACHE RESULTS
     def get_constants(species: str, north: bool, form_factor: float):
         # Species and region logic now refers to the pre-defined constants
-        if north and species == 'picea abies':
+        if north and species == "picea abies":
             constants = EdgrenNylinder1949Consts._CONST_SPRUCE_NORTH
-        elif not north and species == 'picea abies':
+        elif not north and species == "picea abies":
             constants = EdgrenNylinder1949Consts._CONST_SPRUCE_SOUTH
         elif north:  # and species == 'pinus sylvestris': #Other species
             constants = EdgrenNylinder1949Consts._CONST_PINE_NORTH
@@ -125,7 +138,7 @@ class EdgrenNylinder1949(Taper):
         self.validate(self.timber)
 
         # --- All expensive calculations are now done ONCE on initialization ---
-        is_north = (self.timber.region == "northern")
+        is_north = self.timber.region == "northern"
 
         form_factor = NaslundFormFactor.calculate(
             species=self.timber.species,
@@ -152,16 +165,15 @@ class EdgrenNylinder1949(Taper):
         self.constants = EdgrenNylinder1949Consts.get_constants(
             species=self.timber.species, north=is_north, form_factor=form_quotient
         )
-        
+
         # Pre-calculate base diameter
         dbh_relative = self.get_relative_diameter(rel_height=1.3 / self.timber.height_m)
         if dbh_relative is None or dbh_relative <= 0:
             raise ValueError(f"Invalid relative diameter at breast height: {dbh_relative}")
-        
+
         self.base_diameter = 100 * (self.timber.diameter_cm / dbh_relative)
         if self.base_diameter <= 0:
             raise ValueError(f"Invalid base diameter: {self.base_diameter}")
-
 
     @staticmethod
     def validate(timber: SweTimber):
@@ -187,7 +199,7 @@ class EdgrenNylinder1949(Taper):
         # Crown base height should be non-negative and less than total height
         if timber.crown_base_height_m is not None and timber.crown_base_height_m < 0:
             raise ValueError("Timber crown_base_height_m cannot be negative.")
-        
+
         if timber.crown_base_height_m is not None and timber.height_m is not None:
             if timber.crown_base_height_m >= timber.height_m:
                 raise ValueError("Timber crown_base_height_m must be less than timber.height_m.")
@@ -208,7 +220,6 @@ class EdgrenNylinder1949(Taper):
         if not timber.species or not isinstance(timber.species, str):
             raise ValueError("Timber species must be provided as a non-empty string.")
 
-
     def get_relative_diameter(self, rel_height: float) -> float:
         """
         Instance method using pre-calculated parameters from self.
@@ -221,11 +232,11 @@ class EdgrenNylinder1949(Taper):
         if rel_height <= inflexion_point:
             return 100 - const_q * np.log10(1 + 10000 * rel_height)
         elif inflexion_point < rel_height <= 0.6:
-            if (np.isnan(const_Q)):
+            if np.isnan(const_Q):
                 Diameter_inflexion_point = 100 - const_q * np.log10(1 + 10000 * inflexion_point)
                 Diameter_60p_height = const_R * np.log10(1 + (1 - 0.6) * const_Gamma)
-                slope = (Diameter_60p_height-Diameter_inflexion_point)/(0.6-inflexion_point)
-                return Diameter_inflexion_point+slope*(rel_height-inflexion_point)
+                slope = (Diameter_60p_height - Diameter_inflexion_point) / (0.6 - inflexion_point)
+                return Diameter_inflexion_point + slope * (rel_height - inflexion_point)
             else:
                 return const_Q * np.log10(1 + (1 - rel_height) * const_beta)
         elif 0.6 < rel_height < 1:
@@ -246,11 +257,11 @@ class EdgrenNylinder1949(Taper):
 
         if relative_diameter is None or relative_diameter <= 0:
             return 0.0
-            
+
         return (self.base_diameter * relative_diameter) / 100
 
     def get_height_at_diameter(self, diameter: float) -> float:
-        """ Instance method. """
+        """Instance method."""
         if diameter <= 0 or diameter > self.base_diameter:
             print(f"Invalid minDiameter: {diameter}. Must be between 0 and {self.base_diameter}.")
             return 0.0
@@ -262,11 +273,7 @@ class EdgrenNylinder1949(Taper):
                 return abs(0 - diameter)
             return abs(diameter_at_height - diameter)
 
-        result = minimize_scalar(
-            objective,
-            bounds=(0, self.timber.height_m),
-            method='bounded'
-        )
+        result = minimize_scalar(objective, bounds=(0, self.timber.height_m), method="bounded")
         if result.success:
             return result.x
         else:

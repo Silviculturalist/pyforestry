@@ -2,7 +2,7 @@ def agestam_1985_si_translation_pine_to_birch(si_pine):
     """
     Translate SI H100 for Pine to Birch according to Hägglund (1974), from Agestam (1985).
 
-    This function converts the site index (SI) H100 for Pine to Birch, based on 
+    This function converts the site index (SI) H100 for Pine to Birch, based on
     empirical relationships presented by Agestam (1985).
 
     Parameters:
@@ -23,7 +23,7 @@ def agestam_1985_si_translation_spruce_to_birch(si_spruce):
     """
     Translate SI H100 for Spruce to Birch according to Hägglund (1974), from Agestam (1985).
 
-    This function converts the site index (SI) H100 for Spruce to Birch, based on 
+    This function converts the site index (SI) H100 for Spruce to Birch, based on
     empirical relationships presented by Agestam (1985).
 
     Parameters:

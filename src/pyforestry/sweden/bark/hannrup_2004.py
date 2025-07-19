@@ -1,14 +1,14 @@
 import math
 import warnings
 from typing import Union
+
 from pyforestry.base.helpers.primitives import Diameter_cm
 
 # --- Scots Pine Function ---
 
+
 def Hannrup_2004_bark_pinus_sylvestris_sweden(
-    diameter_breast_height_mm: Union[float, Diameter_cm],
-     latitude: float,
-    stem_height_cm: float
+    diameter_breast_height_mm: Union[float, Diameter_cm], latitude: float, stem_height_cm: float
 ) -> float:
     """
     Calculates double bark thickness at a given stem height for Scots Pine in Sweden.
@@ -51,20 +51,28 @@ def Hannrup_2004_bark_pinus_sylvestris_sweden(
     # --- Input Validation ---
     if isinstance(diameter_breast_height_mm, Diameter_cm):
         if diameter_breast_height_mm.measurement_height_m != 1.3:
-             warnings.warn(f"Input 'diameter_breast_height_mm' (Diameter_cm) has measurement height {diameter_breast_height_mm.measurement_height_m}m, model assumes 1.3m.")
+            warnings.warn(
+                f"Input 'diameter_breast_height_mm' (Diameter_cm) has measurement height {diameter_breast_height_mm.measurement_height_m}m, model assumes 1.3m."
+            )
         if not diameter_breast_height_mm.over_bark:
-             raise ValueError("Input 'diameter_breast_height_mm' (Diameter_cm) must be measured over bark.")
-        dbh_mm = float(diameter_breast_height_mm) * 10.0 # Convert cm to mm
+            raise ValueError(
+                "Input 'diameter_breast_height_mm' (Diameter_cm) must be measured over bark."
+            )
+        dbh_mm = float(diameter_breast_height_mm) * 10.0  # Convert cm to mm
     elif isinstance(diameter_breast_height_mm, (float, int)):
         dbh_mm = float(diameter_breast_height_mm)
     else:
-        raise TypeError("Input 'diameter_breast_height_mm' must be a float, int, or Diameter_cm object.")
+        raise TypeError(
+            "Input 'diameter_breast_height_mm' must be a float, int, or Diameter_cm object."
+        )
 
     if dbh_mm < 0:
         raise ValueError("Input 'diameter_breast_height_mm' must be non-negative.")
     # Latitude check (approximate range for Sweden)
-    if not (55.0 <=  latitude <= 70.0):
-        warnings.warn(f"Latitude { latitude} is outside the typical range for Sweden (55-70). Results may be extrapolated.")
+    if not (55.0 <= latitude <= 70.0):
+        warnings.warn(
+            f"Latitude { latitude} is outside the typical range for Sweden (55-70). Results may be extrapolated."
+        )
     if stem_height_cm < 0:
         raise ValueError("Input 'stem_height_cm' must be non-negative.")
 
@@ -74,21 +82,27 @@ def Hannrup_2004_bark_pinus_sylvestris_sweden(
     dbh_b = min(dbh_mm, 590.0)
 
     # Step 2: Calculate breakpoint height (htg in cm)
-    term_lat = 72.1814 + 0.0789 * dbh_b - 0.9868 *  latitude
+    term_lat = 72.1814 + 0.0789 * dbh_b - 0.9868 * latitude
     term_exp_coeff = 0.0078557 - 0.0000132 * dbh_b
 
     if term_lat <= 0:
-        warnings.warn(f"Pine Bark: Term (72.1814 + 0.0789*dbh_b - 0.9868*lat) = {term_lat:.4f} <= 0. Cannot calculate htg. Returning minimum bark.")
+        warnings.warn(
+            f"Pine Bark: Term (72.1814 + 0.0789*dbh_b - 0.9868*lat) = {term_lat:.4f} <= 0. Cannot calculate htg. Returning minimum bark."
+        )
         return 2.0
     if abs(term_exp_coeff) < 1e-9:
-         warnings.warn(f"Pine Bark: Term (0.0078557 - 0.0000132*dbh_b) = {term_exp_coeff:.7f} is close to zero. Cannot reliably calculate htg. Returning minimum bark.")
-         return 2.0
+        warnings.warn(
+            f"Pine Bark: Term (0.0078557 - 0.0000132*dbh_b) = {term_exp_coeff:.7f} is close to zero. Cannot reliably calculate htg. Returning minimum bark."
+        )
+        return 2.0
 
     try:
         htg = -math.log(0.12 / term_lat) / term_exp_coeff
     except (ValueError, ZeroDivisionError) as e:
-         warnings.warn(f"Pine Bark: Math error calculating htg (likely log of non-positive or division by zero): {e}. Returning minimum bark.")
-         return 2.0
+        warnings.warn(
+            f"Pine Bark: Math error calculating htg (likely log of non-positive or division by zero): {e}. Returning minimum bark."
+        )
+        return 2.0
 
     # Step 3 & 4: Calculate double bark thickness (db in mm) based on h vs htg
     h = stem_height_cm
@@ -96,16 +110,20 @@ def Hannrup_2004_bark_pinus_sylvestris_sweden(
 
     if h <= htg:
         try:
-             exponent = -term_exp_coeff * h
-             exponent = max(exponent, -700) # Avoid exp() overflow
-             db_mm = 3.5808 + 0.0109 * dbh_b + term_lat * math.exp(exponent)
+            exponent = -term_exp_coeff * h
+            exponent = max(exponent, -700)  # Avoid exp() overflow
+            db_mm = 3.5808 + 0.0109 * dbh_b + term_lat * math.exp(exponent)
         except OverflowError:
-             warnings.warn(f"Pine Bark: Math OverflowError calculating exp term below htg. h={h}, htg={htg}. Returning minimum bark.")
-             db_mm = 2.0
+            warnings.warn(
+                f"Pine Bark: Math OverflowError calculating exp term below htg. h={h}, htg={htg}. Returning minimum bark."
+            )
+            db_mm = 2.0
         except ValueError as e:
-             warnings.warn(f"Pine Bark: Math ValueError calculating bark below htg: {e}. Returning minimum bark.")
-             db_mm = 2.0
-    else: # h > htg
+            warnings.warn(
+                f"Pine Bark: Math ValueError calculating bark below htg: {e}. Returning minimum bark."
+            )
+            db_mm = 2.0
+    else:  # h > htg
         db_mm = 3.5808 + 0.0109 * dbh_b + 0.12 - 0.005 * (h - htg)
 
     # Step 5: Apply minimum double bark thickness (2 mm)
@@ -113,11 +131,12 @@ def Hannrup_2004_bark_pinus_sylvestris_sweden(
 
     return db_mm_final
 
+
 # --- Norway Spruce Function ---
 
+
 def Hannrup_2004_bark_picea_abies_sweden(
-    diameter_at_height_mm: float,
-    diameter_breast_height_mm: Union[float, Diameter_cm]
+    diameter_at_height_mm: float, diameter_breast_height_mm: Union[float, Diameter_cm]
 ) -> float:
     """
     Calculates double bark thickness for Norway Spruce in Sweden based on diameter.
@@ -158,24 +177,32 @@ def Hannrup_2004_bark_picea_abies_sweden(
     if not isinstance(diameter_at_height_mm, (float, int)):
         raise TypeError("Input 'diameter_at_height_mm' must be a number (float or int).")
     if diameter_at_height_mm < 0:
-         raise ValueError("Input 'diameter_at_height_mm' must be non-negative.")
+        raise ValueError("Input 'diameter_at_height_mm' must be non-negative.")
 
     if isinstance(diameter_breast_height_mm, Diameter_cm):
         if diameter_breast_height_mm.measurement_height_m != 1.3:
-             warnings.warn(f"Input 'diameter_breast_height_mm' (Diameter_cm) has measurement height {diameter_breast_height_mm.measurement_height_m}m, model assumes 1.3m.")
+            warnings.warn(
+                f"Input 'diameter_breast_height_mm' (Diameter_cm) has measurement height {diameter_breast_height_mm.measurement_height_m}m, model assumes 1.3m."
+            )
         if not diameter_breast_height_mm.over_bark:
-             raise ValueError("Input 'diameter_breast_height_mm' (Diameter_cm) must be measured over bark.")
-        dbh_mm = float(diameter_breast_height_mm) * 10.0 # Convert cm to mm
+            raise ValueError(
+                "Input 'diameter_breast_height_mm' (Diameter_cm) must be measured over bark."
+            )
+        dbh_mm = float(diameter_breast_height_mm) * 10.0  # Convert cm to mm
     elif isinstance(diameter_breast_height_mm, (float, int)):
         dbh_mm = float(diameter_breast_height_mm)
     else:
-        raise TypeError("Input 'diameter_breast_height_mm' must be a float, int, or Diameter_cm object.")
+        raise TypeError(
+            "Input 'diameter_breast_height_mm' must be a float, int, or Diameter_cm object."
+        )
 
     if dbh_mm <= 0:
-        raise ValueError("Input 'diameter_breast_height_mm' must be positive for relative diameter calculation.")
+        raise ValueError(
+            "Input 'diameter_breast_height_mm' must be positive for relative diameter calculation."
+        )
 
     # --- Calculation Steps ---
-    dia_mm = float(diameter_at_height_mm) # Ensure float
+    dia_mm = float(diameter_at_height_mm)  # Ensure float
 
     # Step 1: Calculate relative diameter
     # Avoid division by zero (already checked dbh_mm > 0)

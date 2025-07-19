@@ -1,20 +1,23 @@
-import xarray as xr
-import numpy as np
-import pandas as pd
 import hashlib
 import json
 import time
 from datetime import datetime, timezone
-from multiprocessing import Pool, cpu_count
-from typing import Dict, Any, Tuple, Type, Optional
 from functools import partial
+from multiprocessing import Pool, cpu_count
+from typing import Any, Dict, Optional, Tuple, Type
+
+import numpy as np
+import pandas as pd
+import xarray as xr
 from tqdm import tqdm
+
+from pyforestry.base.pricelist.pricelist import create_pricelist_from_data
+from pyforestry.base.taper.taper import Taper
+from pyforestry.base.timber_bucking.nasberg_1985 import BuckingConfig, Nasberg_1985_BranchBound
 
 # Import your project's classes
 from pyforestry.sweden.timber.swe_timber import SweTimber
-from pyforestry.base.pricelist.pricelist import Pricelist, create_pricelist_from_data
-from pyforestry.base.taper.taper import Taper
-from pyforestry.base.timber_bucking.nasberg_1985 import Nasberg_1985_BranchBound, BuckingConfig
+
 
 def _hash_pricelist(price_data: Dict[str, Any]) -> str:
     """Creates a SHA256 hash of a pricelist dictionary for validation."""
@@ -24,7 +27,10 @@ def _hash_pricelist(price_data: Dict[str, Any]) -> str:
     dhash.update(encoded)
     return dhash.hexdigest()
 
-def _worker_buck_one_tree(tree_params: Tuple[str, int, int], pricelist_data: Dict, taper_model_class: Type[Taper]):
+
+def _worker_buck_one_tree(
+    tree_params: Tuple[str, int, int], pricelist_data: Dict, taper_model_class: Type[Taper]
+):
     """
     A top-level function for a single tree optimization.
     This is what each parallel process will execute.
@@ -34,11 +40,16 @@ def _worker_buck_one_tree(tree_params: Tuple[str, int, int], pricelist_data: Dic
 
     try:
         timber = SweTimber(species=species, diameter_cm=dbh_cm, height_m=height_m)
-        pricelist = create_pricelist_from_data(pricelist_data, species,)
+        pricelist = create_pricelist_from_data(
+            pricelist_data,
+            species,
+        )
         optimizer = Nasberg_1985_BranchBound(timber, pricelist, taper_model_class)
-        
+
         # We need the full result to get the sections
-        result = optimizer.calculate_tree_value(min_diam_dead_wood=99,config=BuckingConfig(save_sections=True))
+        result = optimizer.calculate_tree_value(
+            min_diam_dead_wood=99, config=BuckingConfig(save_sections=True)
+        )
 
         if result.sections is None:
             sections_data = []
@@ -46,16 +57,15 @@ def _worker_buck_one_tree(tree_params: Tuple[str, int, int], pricelist_data: Dic
             sections_data = [s.__dict__ for s in result.sections]
 
         sections_json = json.dumps(
-            sections_data,
-            default=lambda o: o.item() if isinstance(o, np.generic) else str(o)
+            sections_data, default=lambda o: o.item() if isinstance(o, np.generic) else str(o)
         )
-        
+
         return {
             "species": species,
             "dbh": dbh_cm,
             "height": height_m,
             "total_value": result.total_value,
-            "solution_sections": sections_json
+            "solution_sections": sections_json,
         }
     except Exception as e:
         # Log or handle errors for specific tree combinations
@@ -65,7 +75,7 @@ def _worker_buck_one_tree(tree_params: Tuple[str, int, int], pricelist_data: Dic
             "dbh": dbh_cm,
             "height": height_m,
             "total_value": np.nan,
-            "solution_sections": '[]'
+            "solution_sections": "[]",
         }
 
 
@@ -76,8 +86,8 @@ class SolutionCube:
         It's recommended to use the `load` classmethod to create instances.
         """
         self.dataset = dataset
-        self.pricelist_hash = dataset.attrs.get('pricelist_hash')
-        self.taper_model = dataset.attrs.get('taper_model')
+        self.pricelist_hash = dataset.attrs.get("pricelist_hash")
+        self.taper_model = dataset.attrs.get("taper_model")
 
     @classmethod
     def generate(
@@ -89,7 +99,7 @@ class SolutionCube:
         height_range: Tuple[float, float],
         dbh_step: int = 2,
         height_step: float = 0.2,
-        workers: int = -1
+        workers: int = -1,
     ):
         """
         Generates the solution cube by running the optimizer in parallel.
@@ -104,16 +114,20 @@ class SolutionCube:
         # Create the grid of all tree parameters to compute
         dbh_coords = np.arange(dbh_range[0], dbh_range[1] + dbh_step, dbh_step)
         height_coords = np.arange(height_range[0], height_range[1] + height_step, height_step)
-        
-        tasks = [
-            (sp, int(dbh), int(h*10)) for sp in species_list for dbh in dbh_coords for h in height_coords
-        ]
 
+        tasks = [
+            (sp, int(dbh), int(h * 10))
+            for sp in species_list
+            for dbh in dbh_coords
+            for h in height_coords
+        ]
 
         print(f"Total trees to process: {len(tasks)}")
 
         # Use a partial function to pass the static pricelist and taper model to the worker
-        worker_func = partial(_worker_buck_one_tree, pricelist_data=pricelist_data, taper_model_class=taper_model)
+        worker_func = partial(
+            _worker_buck_one_tree, pricelist_data=pricelist_data, taper_model_class=taper_model
+        )
 
         # Run the optimizations in parallel
         start_time = time.time()
@@ -122,7 +136,7 @@ class SolutionCube:
             results = tqdm(
                 list(pool.imap_unordered(worker_func, tasks, chunksize=10)),
                 total=len(tasks),
-                desc='Generating Solution Cube'
+                desc="Generating Solution Cube",
             )
         end_time = time.time()
         print(f"\nFinished parallel computation in {end_time - start_time:.2f} seconds.")
@@ -130,17 +144,17 @@ class SolutionCube:
         # --- Structure the results into an xarray Dataset ---
         # Convert flat list of dicts to a DataFrame for easier manipulation
         df = pd.DataFrame(results)
-        df = df.set_index(['species', 'height', 'dbh'])
+        df = df.set_index(["species", "height", "dbh"])
 
         # Convert to an xarray Dataset
         ds = xr.Dataset.from_dataframe(df)
-        
+
         # Add metadata as attributes
-        ds.attrs['pricelist_hash'] = pricelist_hash
-        ds.attrs['taper_model'] = taper_model.__name__
-        ds.attrs['creation_date_utc'] = datetime.now(timezone.utc).isoformat()
-        ds.attrs['dbh_range'] = f"{dbh_range[0]}-{dbh_range[1]} cm"
-        ds.attrs['height_range'] = f"{height_range[0]}-{height_range[1]} m"
+        ds.attrs["pricelist_hash"] = pricelist_hash
+        ds.attrs["taper_model"] = taper_model.__name__
+        ds.attrs["creation_date_utc"] = datetime.now(timezone.utc).isoformat()
+        ds.attrs["dbh_range"] = f"{dbh_range[0]}-{dbh_range[1]} cm"
+        ds.attrs["height_range"] = f"{height_range[0]}-{height_range[1]} m"
 
         print("Successfully created xarray Dataset.")
         return cls(ds)
@@ -156,15 +170,15 @@ class SolutionCube:
         """Loads a solution cube from a netCDF file."""
         print(f"Loading solution cube from {path}...")
         ds = xr.open_dataset(path)
-        
+
         if pricelist_to_verify:
             new_hash = _hash_pricelist(pricelist_to_verify)
-            if ds.attrs.get('pricelist_hash') != new_hash:
+            if ds.attrs.get("pricelist_hash") != new_hash:
                 raise ValueError(
                     "Pricelist hash mismatch! The loaded cube was not generated with the provided pricelist."
                 )
             print("Pricelist hash verified.")
-            
+
         print("Cube loaded successfully.")
         return cls(ds)
 
@@ -175,17 +189,12 @@ class SolutionCube:
         """
         try:
             # .sel is xarray's powerful selection method. 'nearest' finds the closest point.
-            solution = self.dataset.sel(
-                species=species,
-                dbh=dbh,
-                height=height,
-                method='nearest'
-            )
-            
-            total_value = float(solution['total_value'].values)
-            sections_json = str(solution['solution_sections'].values)
+            solution = self.dataset.sel(species=species, dbh=dbh, height=height, method="nearest")
+
+            total_value = float(solution["total_value"].values)
+            sections_json = str(solution["solution_sections"].values)
             sections = json.loads(sections_json)
-            
+
             return total_value, sections
 
         except KeyError:

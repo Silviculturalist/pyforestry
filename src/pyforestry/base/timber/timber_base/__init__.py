@@ -1,4 +1,4 @@
-from .timber_volume_integrator import TimberVolumeIntegrator
 from .timber import Timber
+from .timber_volume_integrator import TimberVolumeIntegrator
 
-__all__ = ['TimberVolumeIntegrator','Timber']
+__all__ = ["TimberVolumeIntegrator", "Timber"]
