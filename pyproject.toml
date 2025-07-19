@@ -77,7 +77,11 @@ addopts = [
 # --- Ruff Configuration ---
 [tool.ruff]
 line-length = 99
+# Exclude Jupyter notebooks from linting and formatting
+exclude = ["docs/source/notebooks/*"]
 # Enable import-sorting, standard lint rules, and bug-finding
+
+[tool.ruff.lint]
 select = ["E", "F", "W", "I", "B"]
 
 # --- Bumpversion Configuration ---
