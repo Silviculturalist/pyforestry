@@ -128,9 +128,9 @@ class TestElfving2003SingleTreeAgeMain:
         params_pine["species"] = TreeSpecies.Sweden.pinus_sylvestris
         age_pine = Elfving2003SingleTreeAge.age(**params_pine)
         if age_pine > 0 and age > 0:  # Ensure valid ages for comparison
-            assert not isclose(
-                age, age_pine, rel_tol=1e-3
-            ), "Contorta age should differ from Sylvestris due to adjustments"
+            assert not isclose(age, age_pine, rel_tol=1e-3), (
+                "Contorta age should differ from Sylvestris due to adjustments"
+            )
 
     def test_group_5_pine_sylvestris_or_larch(self):
         params_pine = DEFAULT_AGE_PARAMS.copy()

@@ -440,7 +440,10 @@ class Elfving2003SingleTreeAge:
         else:
             try:
                 code = int(field_layer)
-                actual_fl_veg = next((m.value for m in Sweden.FieldLayer if m.value.code == code), Sweden.FieldLayer.BILBERRY.value)  # type: ignore
+                actual_fl_veg = next(
+                    (m.value for m in Sweden.FieldLayer if m.value.code == code),
+                    Sweden.FieldLayer.BILBERRY.value,
+                )  # type: ignore
             except (ValueError, TypeError):
                 pass
 
@@ -815,7 +818,28 @@ class Elfving2003SingleTreeAge:
     }
 
     @staticmethod
-    def age(*, diameter: Number, species: str | TreeName, total_stand_age: Optional[Number] = None, SIS: Optional[Number] = None, field_layer: Any = Sweden.FieldLayer.BILBERRY, basal_area_plot_m2_ha: Optional[Number] = None, basal_area_relascope_m2_ha: Optional[Number] = None, altitude_m: Number = 100, latitude: Number = 64, QMD_cm: Optional[Number] = None, stems_ha: Optional[int] = None, is_uneven_aged: Optional[bool] = None, dominant_mean_diameter: Optional[Number] = None, is_standard_tree_hint: Optional[bool] = None, is_undergrowth_tree_hint: Optional[bool] = None, is_gotland: Optional[bool] = None, is_ditched: Optional[bool] = None, is_peat_soil: Optional[bool] = None, is_shade_tolerant_broadleaf_hint: Optional[bool] = None) -> float:  # type: ignore
+    def age(
+        *,
+        diameter: Number,
+        species: str | TreeName,
+        total_stand_age: Optional[Number] = None,
+        SIS: Optional[Number] = None,
+        field_layer: Any = Sweden.FieldLayer.BILBERRY,
+        basal_area_plot_m2_ha: Optional[Number] = None,
+        basal_area_relascope_m2_ha: Optional[Number] = None,
+        altitude_m: Number = 100,
+        latitude: Number = 64,
+        QMD_cm: Optional[Number] = None,
+        stems_ha: Optional[int] = None,
+        is_uneven_aged: Optional[bool] = None,
+        dominant_mean_diameter: Optional[Number] = None,
+        is_standard_tree_hint: Optional[bool] = None,
+        is_undergrowth_tree_hint: Optional[bool] = None,
+        is_gotland: Optional[bool] = None,
+        is_ditched: Optional[bool] = None,
+        is_peat_soil: Optional[bool] = None,
+        is_shade_tolerant_broadleaf_hint: Optional[bool] = None,
+    ) -> float:  # type: ignore
         params = Elfving2003SingleTreeAge._prepare_model_params(
             diameter,
             species,

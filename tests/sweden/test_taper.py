@@ -118,6 +118,9 @@ def test_invalid_timber_raises_error():
     """
     with pytest.raises(ValueError, match="Height must be larger than 0 m: {self.height_m}"):
         invalid_timber = SweTimber(
-            species="picea abies", diameter_cm=30, height_m=0, region="northern"  # Invalid height
+            species="picea abies",
+            diameter_cm=30,
+            height_m=0,
+            region="northern",  # Invalid height
         )
         EdgrenNylinder1949(invalid_timber)

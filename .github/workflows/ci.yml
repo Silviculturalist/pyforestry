@@ -35,6 +35,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install --force-reinstall --no-cache-dir .[dev]
 
+      - name: Check formatting
+        run: ruff format --check
+
       - name: Load coverage threshold
         run: echo "THRESHOLD=$(cat coverage_threshold.txt)" >> $GITHUB_ENV
 

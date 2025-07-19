@@ -71,7 +71,7 @@ def Hannrup_2004_bark_pinus_sylvestris_sweden(
     # Latitude check (approximate range for Sweden)
     if not (55.0 <= latitude <= 70.0):
         warnings.warn(
-            f"Latitude { latitude} is outside the typical range for Sweden (55-70). Results may be extrapolated."
+            f"Latitude {latitude} is outside the typical range for Sweden (55-70). Results may be extrapolated."
         )
     if stem_height_cm < 0:
         raise ValueError("Input 'stem_height_cm' must be non-negative.")
