@@ -106,7 +106,7 @@ jobs:
         run: echo "DOC_THRESHOLD=$(cat docstring_threshold.txt)" >> $GITHUB_ENV
 
       - name: Generate docstring coverage badge
-        run: docstr-coverage src/pyforestry --badge .docstring_coverage.svg --fail-under=$DOC_THRESHOLD | tee docstring.log
+        run: docstr-coverage src/pyforestry --badge .docstring_coverage.svg --fail-under=$DOC_THRESHOLD 2>&1 | tee docstring.log
 
       - name: Update docstring baseline
         run: |
