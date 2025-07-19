@@ -2,6 +2,9 @@
 
 First off, thank you for considering contributing to pyforestry! We welcome contributions from the community. Please take a moment to read and follow our [Code of Conduct](CODE_OF_CONDUCT.md) before getting started.
 
+Our workflow uses a dedicated **`dev`** branch for ongoing work. All feature branches
+should be based on `dev` and pull requests should target `dev`. The `main` branch is reserved for stable releases.
+
 ---
 
 ## Prerequisites
@@ -10,12 +13,12 @@ First off, thank you for considering contributing to pyforestry! We welcome cont
 * **Git** & a **GitHub** account
 * (Optional) A virtual environment tool (e.g., `venv`, `conda`)
 
-1. Clone the repository and switch to the `main` branch:
+1. Clone the repository and switch to the `dev` branch (our default development branch):
 
    ```bash
    git clone https://github.com/Silviculturalist/pyforestry.git
    cd pyforestry
-   git checkout main
+   git checkout dev
    ```
 2. Install core and development dependencies:
 
@@ -89,7 +92,9 @@ coverage report    # summary in terminal
 coverage html      # detailed report in htmlcov/
 ```
 
-We enforce a **50% minimum** coverage threshold on both the project and on new code via GitHub Actions CI and the `codecov.yml` settings.
+Our CI enforces a **50% minimum** coverage threshold. For the `dev` branch we
+strive for **90%** coverage of both tests and docstrings. Releases merged into
+`main` should never drop below **80%**.
 
 ---
 
@@ -113,17 +118,24 @@ Preview the output in `docs/build/html` before submitting a PR.
 
 ## Submitting Changes
 
-1. **Fork** the repo on GitHub and create a new branch from `main` (e.g., `feature/xyz`).
+1. **Fork** the repo on GitHub and create a new branch from `dev` (e.g., `feature/xyz`).
 2. **Implement** your changes, and **add or update tests**.
-3. **Run**:
+3. **Run** the formatters, tests, and documentation build locally:
 
-   * `pre-commit run --all-files`
-   * `pytest`
-   * `coverage html`
-   * `make html -C docs`
+   ```bash
+   ruff check . --fix
+   black .
+   pytest --cov=pyforestry --cov-report=xml --cov-report=html
+   docstr-coverage src/pyforestry
+   make html -C docs
+   ```
 4. **Commit** your changes with clear, concise messages.
-5. **Push** your branch and open a **Pull Request** against `main`.
-6. **Respond** to any review feedback. Once all checks pass and reviewers approve, a maintainer will merge your PR.
+5. **Push** your branch and open a **Pull Request** against `dev`.
+6. Ensure your PR keeps both **test coverage** and **docstring coverage** above **90%** on the `dev` branch. Pull requests dropping below this bar will be asked to add tests or documentation.
+7. **Respond** to any review feedback. Once all checks pass and reviewers approve, a maintainer will merge your PR into `dev`.
+
+> **Note**
+> When `dev` is merged into `main` for a release, coverage on `main` must remain above **80%** for both tests and documentation.
 
 ---
 

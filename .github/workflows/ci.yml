@@ -8,9 +8,9 @@ permissions:
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, dev ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, dev ]
 
 jobs:
   test-and-coverage:
@@ -34,7 +34,15 @@ jobs:
           pip install --force-reinstall --no-cache-dir .[dev]
 
       - name: Run tests with coverage
-        run: pytest --cov=pyforestry --cov-report=xml --cov-report=html --cov-fail-under=50
+        run: |
+          if [[ "$GITHUB_REF" == "refs/heads/dev" || "$GITHUB_BASE_REF" == "dev" ]]; then
+            THRESHOLD=90
+          elif [[ "$GITHUB_REF" == "refs/heads/main" || "$GITHUB_BASE_REF" == "main" ]]; then
+            THRESHOLD=80
+          else
+            THRESHOLD=50
+          fi
+          pytest --cov=pyforestry --cov-report=xml --cov-report=html --cov-fail-under=$THRESHOLD
 
       - name: Upload coverage report artifact
         uses: actions/upload-artifact@v4
@@ -68,8 +76,15 @@ jobs:
 
       - name: Generate docstring coverage badge
         # Scans the pyforestry package for docstrings and creates a badge
-        # Run as a module to avoid PATH issues
-        run: docstr-coverage src/pyforestry --badge .docstring_coverage.svg --fail-under=0
+        run: |
+          if [[ "$GITHUB_REF" == "refs/heads/dev" || "$GITHUB_BASE_REF" == "dev" ]]; then
+            THRESHOLD=90
+          elif [[ "$GITHUB_REF" == "refs/heads/main" || "$GITHUB_BASE_REF" == "main" ]]; then
+            THRESHOLD=80
+          else
+            THRESHOLD=0
+          fi
+          docstr-coverage src/pyforestry --badge .docstring_coverage.svg --fail-under=$THRESHOLD
 
       - name: Commit badge
         # Only commit the new badge on pushes to the main branch
@@ -86,7 +101,7 @@ jobs:
   build-and-deploy-docs:
     runs-on: ubuntu-latest
     needs: test-and-coverage
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev'
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -109,12 +124,33 @@ jobs:
           sphinx-apidoc -f -o docs/source/api src/pyforestry
 
       # MODIFIED STEP: Change to docs directory before building
+      - name: Set docs destination
+        id: dest
+        run: |
+          if [ "$GITHUB_REF" = "refs/heads/main" ]; then
+            echo "dir=stable" >> $GITHUB_OUTPUT
+          else
+            echo "dir=dev" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set DOCS_VERSION env
+        run: |
+          if [ "$GITHUB_REF" = "refs/heads/main" ]; then
+            echo "DOCS_VERSION=stable" >> $GITHUB_ENV
+          else
+            echo "DOCS_VERSION=dev" >> $GITHUB_ENV
+          fi
+
       - name: Build Sphinx docs
         run: make html
         working-directory: ./docs
+
+      - name: Copy versions.json
+        run: cp docs/versions.json docs/build/html/
 
       - name: Deploy docs to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: docs/build/html
+          destination_dir: ${{ steps.dest.outputs.dir }}
