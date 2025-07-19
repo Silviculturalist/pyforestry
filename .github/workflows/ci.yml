@@ -54,8 +54,8 @@ jobs:
             echo "sha=${{ github.event.before }}" >> $GITHUB_OUTPUT
           fi
 
-      - name: Check coverage for new files
-        run: python scripts/check_new_file_coverage.py ${{ steps.base.outputs.sha }}
+      - name: Check coverage for changed files
+        run: python scripts/check_changed_file_coverage.py ${{ steps.base.outputs.sha }}
 
       - name: Update coverage baseline
         run: |
