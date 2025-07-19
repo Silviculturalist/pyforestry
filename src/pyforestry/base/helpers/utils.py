@@ -1,3 +1,5 @@
+"""Miscellaneous helper utilities."""
+
 from typing import Union
 
 
