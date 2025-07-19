@@ -1,0 +1,1122 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="pyforestry.sweden.bark package" href="pyforestry.sweden.bark.html" /><link rel="prev" title="pyforestry.base.timber_bucking package" href="pyforestry.base.timber_bucking.html" />
+
+    <!-- Generated with Sphinx 8.1.3 and Furo 2025.07.19 -->
+        <title>pyforestry.sweden package - pyforestry documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=25af2a20" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #2b2b2b;
+  --color-code-foreground: #f8f8f2;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #2b2b2b;
+  --color-code-foreground: #f8f8f2;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">pyforestry  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <span class="sidebar-brand-text">pyforestry  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">pyforestry</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of pyforestry</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current has-children"><a class="reference internal" href="pyforestry.html">pyforestry package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of pyforestry package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.base.html">pyforestry.base package</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of pyforestry.base package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="pyforestry.base.helpers.html">pyforestry.base.helpers package</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of pyforestry.base.helpers package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="pyforestry.base.helpers.primitives.html">pyforestry.base.helpers.primitives package</a></li>
+</ul>
+</li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="pyforestry.base.pricelist.html">pyforestry.base.pricelist package</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of pyforestry.base.pricelist package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="pyforestry.base.pricelist.data.html">pyforestry.base.pricelist.data package</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.base.taper.html">pyforestry.base.taper package</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="pyforestry.base.timber.html">pyforestry.base.timber package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of pyforestry.base.timber package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="pyforestry.base.timber.timber_base.html">pyforestry.base.timber.timber_base package</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.base.timber_bucking.html">pyforestry.base.timber_bucking package</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current has-children current-page"><a class="current reference internal" href="#">pyforestry.sweden package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of pyforestry.sweden package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.bark.html">pyforestry.sweden.bark package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html">pyforestry.sweden.biomass package</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="pyforestry.sweden.geo.html">pyforestry.sweden.geo package</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of pyforestry.sweden.geo package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="pyforestry.sweden.geo.climate.html">pyforestry.sweden.geo.climate package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="pyforestry.sweden.geo.coastline.html">pyforestry.sweden.geo.coastline package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="pyforestry.sweden.geo.counties.html">pyforestry.sweden.geo.counties package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="pyforestry.sweden.geo.humidity.html">pyforestry.sweden.geo.humidity package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="pyforestry.sweden.geo.temperature.html">pyforestry.sweden.geo.temperature package</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.helpers.html">pyforestry.sweden.helpers package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.misc.html">pyforestry.sweden.misc package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.models.html">pyforestry.sweden.models package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html">pyforestry.sweden.site package</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="pyforestry.sweden.siteindex.html">pyforestry.sweden.siteindex package</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of pyforestry.sweden.siteindex package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="pyforestry.sweden.siteindex.sis.html">pyforestry.sweden.siteindex.sis package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="pyforestry.sweden.siteindex.translate.html">pyforestry.sweden.siteindex.translate package</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.taper.html">pyforestry.sweden.taper package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.timber.html">pyforestry.sweden.timber package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html">pyforestry.sweden.volume package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/tree_species_intro.html">Tree species basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/timber_bucking_demo.html">Timber bucking demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/stand_site_enum_demo.html">Stand metrics and site enums</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/marklund_swetimber_demo.html">Marklund biomass with SweTimber</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../_sources/api/pyforestry.sweden.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="pyforestry-sweden-package">
+<h1>pyforestry.sweden package<a class="headerlink" href="#pyforestry-sweden-package" title="Link to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pyforestry.sweden.bark.html">pyforestry.sweden.bark package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.bark.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.bark.html#module-pyforestry.sweden.bark.hannrup_2004">pyforestry.sweden.bark.hannrup_2004 module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.bark.html#pyforestry.sweden.bark.hannrup_2004.Hannrup_2004_bark_picea_abies_sweden"><code class="docutils literal notranslate"><span class="pre">Hannrup_2004_bark_picea_abies_sweden()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.bark.html#pyforestry.sweden.bark.hannrup_2004.Hannrup_2004_bark_pinus_sylvestris_sweden"><code class="docutils literal notranslate"><span class="pre">Hannrup_2004_bark_pinus_sylvestris_sweden()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.bark.html#module-pyforestry.sweden.bark">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyforestry.sweden.biomass.html">pyforestry.sweden.biomass package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.biomass.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.biomass.html#module-pyforestry.sweden.biomass.marklund_1988">pyforestry.sweden.biomass.marklund_1988 module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988"><code class="docutils literal notranslate"><span class="pre">Marklund_1988()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B1"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_B1()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B10"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_B10()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B11"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_B11()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B12"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_B12()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B13"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_B13()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B14"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_B14()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B15"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_B15()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B2"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_B2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B3"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_B3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B4"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_B4()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B5"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_B5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B6"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_B6()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B7"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_B7()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B8"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_B8()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B9"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_B9()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S1"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_S1()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S10"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_S10()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S11"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_S11()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S12"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_S12()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S13"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_S13()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S14"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_S14()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S15"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_S15()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S2"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_S2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S3"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_S3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S4"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_S4()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S5"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_S5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S6"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_S6()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S7"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_S7()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S8"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_S8()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S9"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_S9()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T1"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_T1()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T10"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_T10()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T11"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_T11()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T12"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_T12()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T13"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_T13()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T14"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_T14()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T15"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_T15()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T16"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_T16()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T17"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_T17()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T18"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_T18()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T19"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_T19()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T2"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_T2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T20"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_T20()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T21"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_T21()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T22"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_T22()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T23"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_T23()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T24"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_T24()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T25"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_T25()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T26"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_T26()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T27"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_T27()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T3"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_T3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T4"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_T4()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T5"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_T5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T6"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_T6()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T7"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_T7()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T8"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_T8()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T9"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_T9()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.biomass.html#module-pyforestry.sweden.biomass.petersson_stahl_2006">pyforestry.sweden.biomass.petersson_stahl_2006 module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.below_ground_biomass"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.below_ground_biomass()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.birch_root_2mm"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.birch_root_2mm()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.birch_root_5mm"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.birch_root_5mm()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.pine_root_2mm_1"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.pine_root_2mm_1()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.pine_root_2mm_2"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.pine_root_2mm_2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.pine_root_2mm_3"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.pine_root_2mm_3()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.pine_root_5mm_1"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.pine_root_5mm_1()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.pine_root_5mm_2"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.pine_root_5mm_2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.pine_root_5mm_3"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.pine_root_5mm_3()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.spruce_root_2mm_1"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.spruce_root_2mm_1()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.spruce_root_2mm_2"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.spruce_root_2mm_2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.spruce_root_2mm_3"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.spruce_root_2mm_3()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.spruce_root_5mm_1"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.spruce_root_5mm_1()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.spruce_root_5mm_2"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.spruce_root_5mm_2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.spruce_root_5mm_3"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.spruce_root_5mm_3()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.biomass.html#module-pyforestry.sweden.biomass">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.Marklund_1988"><code class="docutils literal notranslate"><span class="pre">Marklund_1988()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.PeterssonStahl2006"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.PeterssonStahl2006.below_ground_biomass"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.below_ground_biomass()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.PeterssonStahl2006.birch_root_2mm"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.birch_root_2mm()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.PeterssonStahl2006.birch_root_5mm"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.birch_root_5mm()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.PeterssonStahl2006.pine_root_2mm_1"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.pine_root_2mm_1()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.PeterssonStahl2006.pine_root_2mm_2"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.pine_root_2mm_2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.PeterssonStahl2006.pine_root_2mm_3"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.pine_root_2mm_3()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.PeterssonStahl2006.pine_root_5mm_1"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.pine_root_5mm_1()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.PeterssonStahl2006.pine_root_5mm_2"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.pine_root_5mm_2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.PeterssonStahl2006.pine_root_5mm_3"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.pine_root_5mm_3()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.PeterssonStahl2006.spruce_root_2mm_1"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.spruce_root_2mm_1()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.PeterssonStahl2006.spruce_root_2mm_2"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.spruce_root_2mm_2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.PeterssonStahl2006.spruce_root_2mm_3"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.spruce_root_2mm_3()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.PeterssonStahl2006.spruce_root_5mm_1"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.spruce_root_5mm_1()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.PeterssonStahl2006.spruce_root_5mm_2"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.spruce_root_5mm_2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.PeterssonStahl2006.spruce_root_5mm_3"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.spruce_root_5mm_3()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyforestry.sweden.geo.html">pyforestry.sweden.geo package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.geo.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.geo.climate.html">pyforestry.sweden.geo.climate package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.climate.html#module-pyforestry.sweden.geo.climate">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.geo.coastline.html">pyforestry.sweden.geo.coastline package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.coastline.html#module-pyforestry.sweden.geo.coastline">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.geo.counties.html">pyforestry.sweden.geo.counties package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.counties.html#module-pyforestry.sweden.geo.counties">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.geo.humidity.html">pyforestry.sweden.geo.humidity package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.humidity.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.humidity.html#module-pyforestry.sweden.geo.humidity.eriksson_1986">pyforestry.sweden.geo.humidity.eriksson_1986 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.humidity.html#module-pyforestry.sweden.geo.humidity">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.geo.temperature.html">pyforestry.sweden.geo.temperature package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.temperature.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.temperature.html#module-pyforestry.sweden.geo.temperature.odin_1983">pyforestry.sweden.geo.temperature.odin_1983 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.temperature.html#module-pyforestry.sweden.geo.temperature">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.geo.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.geo.html#module-pyforestry.sweden.geo.geo">pyforestry.sweden.geo.geo module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.geo.html#pyforestry.sweden.geo.geo.RetrieveGeoCode"><code class="docutils literal notranslate"><span class="pre">RetrieveGeoCode</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.html#pyforestry.sweden.geo.geo.RetrieveGeoCode.getClimateCode"><code class="docutils literal notranslate"><span class="pre">RetrieveGeoCode.getClimateCode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.html#pyforestry.sweden.geo.geo.RetrieveGeoCode.getCountyCode"><code class="docutils literal notranslate"><span class="pre">RetrieveGeoCode.getCountyCode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.html#pyforestry.sweden.geo.geo.RetrieveGeoCode.getDistanceToCoast"><code class="docutils literal notranslate"><span class="pre">RetrieveGeoCode.getDistanceToCoast()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.geo.html#module-pyforestry.sweden.geo">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyforestry.sweden.helpers.html">pyforestry.sweden.helpers package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.helpers.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.helpers.html#module-pyforestry.sweden.helpers.tree_species_extension">pyforestry.sweden.helpers.tree_species_extension module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.helpers.html#module-pyforestry.sweden.helpers">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyforestry.sweden.misc.html">pyforestry.sweden.misc package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.misc.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.misc.html#module-pyforestry.sweden.misc.elfving_2003">pyforestry.sweden.misc.elfving_2003 module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.misc.html#pyforestry.sweden.misc.elfving_2003.Elfving2003SingleTreeAge"><code class="docutils literal notranslate"><span class="pre">Elfving2003SingleTreeAge</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.misc.html#pyforestry.sweden.misc.elfving_2003.Elfving2003SingleTreeAge.GROUP_PINE_CONTORTA"><code class="docutils literal notranslate"><span class="pre">Elfving2003SingleTreeAge.GROUP_PINE_CONTORTA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.misc.html#pyforestry.sweden.misc.elfving_2003.Elfving2003SingleTreeAge.age"><code class="docutils literal notranslate"><span class="pre">Elfving2003SingleTreeAge.age()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.misc.html#pyforestry.sweden.misc.elfving_2003.Lind2003MeanDiameterCodominantTrees"><code class="docutils literal notranslate"><span class="pre">Lind2003MeanDiameterCodominantTrees</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.misc.html#pyforestry.sweden.misc.elfving_2003.Lind2003MeanDiameterCodominantTrees.estimate"><code class="docutils literal notranslate"><span class="pre">Lind2003MeanDiameterCodominantTrees.estimate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.misc.html#module-pyforestry.sweden.misc.nfi_age_to_bh">pyforestry.sweden.misc.nfi_age_to_bh module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.misc.html#module-pyforestry.sweden.misc">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyforestry.sweden.models.html">pyforestry.sweden.models package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.models.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.models.html#module-pyforestry.sweden.models.elfving_hagglund_1975">pyforestry.sweden.models.elfving_hagglund_1975 module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.models.html#pyforestry.sweden.models.elfving_hagglund_1975.ElfvingHagglundInitialStand"><code class="docutils literal notranslate"><span class="pre">ElfvingHagglundInitialStand</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.models.html#pyforestry.sweden.models.elfving_hagglund_1975.ElfvingHagglundInitialStand.estimate_basal_area_young_pine_north"><code class="docutils literal notranslate"><span class="pre">ElfvingHagglundInitialStand.estimate_basal_area_young_pine_north()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.models.html#pyforestry.sweden.models.elfving_hagglund_1975.ElfvingHagglundInitialStand.estimate_basal_area_young_pine_south"><code class="docutils literal notranslate"><span class="pre">ElfvingHagglundInitialStand.estimate_basal_area_young_pine_south()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.models.html#pyforestry.sweden.models.elfving_hagglund_1975.ElfvingHagglundInitialStand.estimate_basal_area_young_spruce_north"><code class="docutils literal notranslate"><span class="pre">ElfvingHagglundInitialStand.estimate_basal_area_young_spruce_north()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.models.html#pyforestry.sweden.models.elfving_hagglund_1975.ElfvingHagglundInitialStand.estimate_basal_area_young_spruce_south"><code class="docutils literal notranslate"><span class="pre">ElfvingHagglundInitialStand.estimate_basal_area_young_spruce_south()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.models.html#pyforestry.sweden.models.elfving_hagglund_1975.ElfvingHagglundInitialStand.estimate_initial_spruce_stand"><code class="docutils literal notranslate"><span class="pre">ElfvingHagglundInitialStand.estimate_initial_spruce_stand()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.models.html#pyforestry.sweden.models.elfving_hagglund_1975.ElfvingHagglundInitialStand.estimate_stems_young_pine_north"><code class="docutils literal notranslate"><span class="pre">ElfvingHagglundInitialStand.estimate_stems_young_pine_north()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.models.html#pyforestry.sweden.models.elfving_hagglund_1975.ElfvingHagglundInitialStand.estimate_stems_young_pine_south"><code class="docutils literal notranslate"><span class="pre">ElfvingHagglundInitialStand.estimate_stems_young_pine_south()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.models.html#pyforestry.sweden.models.elfving_hagglund_1975.ElfvingHagglundInitialStand.estimate_stems_young_spruce_north"><code class="docutils literal notranslate"><span class="pre">ElfvingHagglundInitialStand.estimate_stems_young_spruce_north()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.models.html#pyforestry.sweden.models.elfving_hagglund_1975.ElfvingHagglundInitialStand.estimate_stems_young_spruce_south"><code class="docutils literal notranslate"><span class="pre">ElfvingHagglundInitialStand.estimate_stems_young_spruce_south()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.models.html#module-pyforestry.sweden.models.elfving_ibm">pyforestry.sweden.models.elfving_ibm module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.models.html#pyforestry.sweden.models.elfving_ibm.ElfvingIBM"><code class="docutils literal notranslate"><span class="pre">ElfvingIBM</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.models.html#pyforestry.sweden.models.elfving_ibm.ElfvingIBM.basal_area_mortality_percent_spruce_pine"><code class="docutils literal notranslate"><span class="pre">ElfvingIBM.basal_area_mortality_percent_spruce_pine()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.models.html#pyforestry.sweden.models.elfving_ibm.ElfvingIBM.calculate_five_year_diameter_increment_cm"><code class="docutils literal notranslate"><span class="pre">ElfvingIBM.calculate_five_year_diameter_increment_cm()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.models.html#pyforestry.sweden.models.elfving_ibm.ElfvingIBM.gmax_spruce_pine"><code class="docutils literal notranslate"><span class="pre">ElfvingIBM.gmax_spruce_pine()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.models.html#pyforestry.sweden.models.elfving_ibm.ElfvingIBM.stand_basal_area_bey2"><code class="docutils literal notranslate"><span class="pre">ElfvingIBM.stand_basal_area_bey2()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.models.html#module-pyforestry.sweden.models">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyforestry.sweden.site.html">pyforestry.sweden.site package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.site.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.site.html#module-pyforestry.sweden.site.enums">pyforestry.sweden.site.enums module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.Sweden"><code class="docutils literal notranslate"><span class="pre">Sweden</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.Sweden.BottomLayer"><code class="docutils literal notranslate"><span class="pre">Sweden.BottomLayer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.Sweden.ClimateZone"><code class="docutils literal notranslate"><span class="pre">Sweden.ClimateZone</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.Sweden.County"><code class="docutils literal notranslate"><span class="pre">Sweden.County</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.Sweden.FieldLayer"><code class="docutils literal notranslate"><span class="pre">Sweden.FieldLayer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.Sweden.PeatHumification"><code class="docutils literal notranslate"><span class="pre">Sweden.PeatHumification</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.Sweden.SoilDepth"><code class="docutils literal notranslate"><span class="pre">Sweden.SoilDepth</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.Sweden.SoilMoistureEnum"><code class="docutils literal notranslate"><span class="pre">Sweden.SoilMoistureEnum</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.Sweden.SoilTextureSediment"><code class="docutils literal notranslate"><span class="pre">Sweden.SoilTextureSediment</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.Sweden.SoilTextureTill"><code class="docutils literal notranslate"><span class="pre">Sweden.SoilTextureTill</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.Sweden.SoilWater"><code class="docutils literal notranslate"><span class="pre">Sweden.SoilWater</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenBottomLayer"><code class="docutils literal notranslate"><span class="pre">SwedenBottomLayer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenBottomLayer.BOGMOSS_TYPE"><code class="docutils literal notranslate"><span class="pre">SwedenBottomLayer.BOGMOSS_TYPE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenBottomLayer.FRESH_MOSS"><code class="docutils literal notranslate"><span class="pre">SwedenBottomLayer.FRESH_MOSS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenBottomLayer.LICHEN_RICH"><code class="docutils literal notranslate"><span class="pre">SwedenBottomLayer.LICHEN_RICH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenBottomLayer.LICHEN_RICH_BOGMOSS"><code class="docutils literal notranslate"><span class="pre">SwedenBottomLayer.LICHEN_RICH_BOGMOSS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenBottomLayer.LICHEN_TYPE"><code class="docutils literal notranslate"><span class="pre">SwedenBottomLayer.LICHEN_TYPE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenBottomLayer.SWAMP_MOSS"><code class="docutils literal notranslate"><span class="pre">SwedenBottomLayer.SWAMP_MOSS</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenClimateZone"><code class="docutils literal notranslate"><span class="pre">SwedenClimateZone</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenClimateZone.K1"><code class="docutils literal notranslate"><span class="pre">SwedenClimateZone.K1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenClimateZone.K2"><code class="docutils literal notranslate"><span class="pre">SwedenClimateZone.K2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenClimateZone.K3"><code class="docutils literal notranslate"><span class="pre">SwedenClimateZone.K3</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenClimateZone.M1"><code class="docutils literal notranslate"><span class="pre">SwedenClimateZone.M1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenClimateZone.M2"><code class="docutils literal notranslate"><span class="pre">SwedenClimateZone.M2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenClimateZone.M3"><code class="docutils literal notranslate"><span class="pre">SwedenClimateZone.M3</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenClimateZone.from_code"><code class="docutils literal notranslate"><span class="pre">SwedenClimateZone.from_code()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty"><code class="docutils literal notranslate"><span class="pre">SwedenCounty</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.ALVSBORG_DALSLANDS"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.ALVSBORG_DALSLANDS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.ALVSBORG_VASTERGOTLANDS"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.ALVSBORG_VASTERGOTLANDS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.BLEKINGE"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.BLEKINGE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.GAVLEBORG_HALSINGLANDS"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.GAVLEBORG_HALSINGLANDS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.GAVLEBORG_OVRIGA"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.GAVLEBORG_OVRIGA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.GOTLAND"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.GOTLAND</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.HALLAND"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.HALLAND</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.JAMTLAND_HARJEDALENS"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.JAMTLAND_HARJEDALENS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.JAMTLAND_JAMTLANDS"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.JAMTLAND_JAMTLANDS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.JONKOPING"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.JONKOPING</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.KALMAR"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.KALMAR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.KOPPARBERG_OVRIGA"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.KOPPARBERG_OVRIGA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.KOPPARBERG_SALEN_IDRE"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.KOPPARBERG_SALEN_IDRE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.KRISTIANSTAD"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.KRISTIANSTAD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.KRONOBERG"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.KRONOBERG</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.MALMOHUS"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.MALMOHUS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.NORRBOTTENS_KUSTLAND"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.NORRBOTTENS_KUSTLAND</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.NORRBOTTENS_LAPPMARK"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.NORRBOTTENS_LAPPMARK</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.OREBRO"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.OREBRO</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.OSTERGOTLAND"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.OSTERGOTLAND</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.SKARABORG"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.SKARABORG</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.SODERMANLAND"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.SODERMANLAND</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.STOCKHOLM"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.STOCKHOLM</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.UPPSALA"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.UPPSALA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.VARMLAND"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.VARMLAND</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.VASTERBOTTENS_KUSTLAND"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.VASTERBOTTENS_KUSTLAND</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.VASTERBOTTENS_LAPPMARK"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.VASTERBOTTENS_LAPPMARK</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.VASTERNORRLAND_ANGERMANLANDS"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.VASTERNORRLAND_ANGERMANLANDS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.VASTERNORRLAND_MEDELPADS"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.VASTERNORRLAND_MEDELPADS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.VASTMANLAND"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.VASTMANLAND</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.VASTRA_GOTALANDS"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.VASTRA_GOTALANDS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenCounty.from_code"><code class="docutils literal notranslate"><span class="pre">SwedenCounty.from_code()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenFieldLayer"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenFieldLayer.BILBERRY"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.BILBERRY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenFieldLayer.BROADLEAVED_GRASS"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.BROADLEAVED_GRASS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenFieldLayer.CROWBERRY"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.CROWBERRY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenFieldLayer.HIGH_HERB_WITHOUT_SHRUBS"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.HIGH_HERB_WITHOUT_SHRUBS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenFieldLayer.HIGH_HERB_WITH_SHRUBS_BLUEBERRY"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.HIGH_HERB_WITH_SHRUBS_BLUEBERRY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenFieldLayer.HIGH_HERB_WITH_SHRUBS_LINGON"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.HIGH_HERB_WITH_SHRUBS_LINGON</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenFieldLayer.HORSETAIL"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.HORSETAIL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenFieldLayer.LICHEN_DOMINANT"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.LICHEN_DOMINANT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenFieldLayer.LICHEN_FREQUENT"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.LICHEN_FREQUENT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenFieldLayer.LINGONBERRY"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.LINGONBERRY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenFieldLayer.LOW_HERB_WITHOUT_SHRUBS"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.LOW_HERB_WITHOUT_SHRUBS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenFieldLayer.LOW_HERB_WITH_SHRUBS_BLUEBERRY"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.LOW_HERB_WITH_SHRUBS_BLUEBERRY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenFieldLayer.LOW_HERB_WITH_SHRUBS_LINGON"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.LOW_HERB_WITH_SHRUBS_LINGON</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenFieldLayer.NO_FIELD_LAYER"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.NO_FIELD_LAYER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenFieldLayer.POOR_SHRUB"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.POOR_SHRUB</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenFieldLayer.SEDGE_HIGH"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.SEDGE_HIGH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenFieldLayer.SEDGE_LOW"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.SEDGE_LOW</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenFieldLayer.THINLEAVED_GRASS"><code class="docutils literal notranslate"><span class="pre">SwedenFieldLayer.THINLEAVED_GRASS</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenPeatHumification"><code class="docutils literal notranslate"><span class="pre">SwedenPeatHumification</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenPeatHumification.HIGH"><code class="docutils literal notranslate"><span class="pre">SwedenPeatHumification.HIGH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenPeatHumification.LOW"><code class="docutils literal notranslate"><span class="pre">SwedenPeatHumification.LOW</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenPeatHumification.MEDIUM"><code class="docutils literal notranslate"><span class="pre">SwedenPeatHumification.MEDIUM</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenPeatHumification.NONE"><code class="docutils literal notranslate"><span class="pre">SwedenPeatHumification.NONE</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilDepth"><code class="docutils literal notranslate"><span class="pre">SwedenSoilDepth</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilDepth.DEEP"><code class="docutils literal notranslate"><span class="pre">SwedenSoilDepth.DEEP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilDepth.OUTCROP"><code class="docutils literal notranslate"><span class="pre">SwedenSoilDepth.OUTCROP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilDepth.RATHER_SHALLOW"><code class="docutils literal notranslate"><span class="pre">SwedenSoilDepth.RATHER_SHALLOW</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilDepth.SHALLOW"><code class="docutils literal notranslate"><span class="pre">SwedenSoilDepth.SHALLOW</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilDepth.VARYING"><code class="docutils literal notranslate"><span class="pre">SwedenSoilDepth.VARYING</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilMoisture"><code class="docutils literal notranslate"><span class="pre">SwedenSoilMoisture</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilMoisture.DRY"><code class="docutils literal notranslate"><span class="pre">SwedenSoilMoisture.DRY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilMoisture.MESIC"><code class="docutils literal notranslate"><span class="pre">SwedenSoilMoisture.MESIC</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilMoisture.MESIC_MOIST"><code class="docutils literal notranslate"><span class="pre">SwedenSoilMoisture.MESIC_MOIST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilMoisture.MOIST"><code class="docutils literal notranslate"><span class="pre">SwedenSoilMoisture.MOIST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilMoisture.WET"><code class="docutils literal notranslate"><span class="pre">SwedenSoilMoisture.WET</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilTextureSediment"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureSediment</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilTextureSediment.BOULDER"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureSediment.BOULDER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilTextureSediment.CLAY"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureSediment.CLAY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilTextureSediment.COARSE_SAND"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureSediment.COARSE_SAND</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilTextureSediment.COARSE_SILT"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureSediment.COARSE_SILT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilTextureSediment.FINE_SAND"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureSediment.FINE_SAND</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilTextureSediment.FINE_SILT"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureSediment.FINE_SILT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilTextureSediment.GRAVEL"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureSediment.GRAVEL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilTextureSediment.MEDIUM_SAND"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureSediment.MEDIUM_SAND</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilTextureSediment.PEAT"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureSediment.PEAT</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilTextureTill"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureTill</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilTextureTill.BOULDER"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureTill.BOULDER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilTextureTill.CLAY"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureTill.CLAY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilTextureTill.COARSE_SILTY"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureTill.COARSE_SILTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilTextureTill.FINE_SILTY"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureTill.FINE_SILTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilTextureTill.GRAVEL"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureTill.GRAVEL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilTextureTill.PEAT"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureTill.PEAT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilTextureTill.SANDY"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureTill.SANDY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilTextureTill.SANDY_MOIG"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureTill.SANDY_MOIG</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilTextureTill.SILTY_SAND"><code class="docutils literal notranslate"><span class="pre">SwedenSoilTextureTill.SILTY_SAND</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilWater"><code class="docutils literal notranslate"><span class="pre">SwedenSoilWater</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilWater.LONGER_PERIODS"><code class="docutils literal notranslate"><span class="pre">SwedenSoilWater.LONGER_PERIODS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilWater.SELDOM_NEVER"><code class="docutils literal notranslate"><span class="pre">SwedenSoilWater.SELDOM_NEVER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilWater.SHORTER_PERIODS"><code class="docutils literal notranslate"><span class="pre">SwedenSoilWater.SHORTER_PERIODS</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.site.html#module-pyforestry.sweden.site.sweden_site_primitives">pyforestry.sweden.site.sweden_site_primitives module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.BottomLayerType"><code class="docutils literal notranslate"><span class="pre">BottomLayerType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.BottomLayerType.code"><code class="docutils literal notranslate"><span class="pre">BottomLayerType.code</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.BottomLayerType.english_name"><code class="docutils literal notranslate"><span class="pre">BottomLayerType.english_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.BottomLayerType.swedish_name"><code class="docutils literal notranslate"><span class="pre">BottomLayerType.swedish_name</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.ClimateZoneData"><code class="docutils literal notranslate"><span class="pre">ClimateZoneData</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.ClimateZoneData.code"><code class="docutils literal notranslate"><span class="pre">ClimateZoneData.code</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.ClimateZoneData.description"><code class="docutils literal notranslate"><span class="pre">ClimateZoneData.description</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.ClimateZoneData.label"><code class="docutils literal notranslate"><span class="pre">ClimateZoneData.label</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.CountyData"><code class="docutils literal notranslate"><span class="pre">CountyData</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.CountyData.code"><code class="docutils literal notranslate"><span class="pre">CountyData.code</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.CountyData.label"><code class="docutils literal notranslate"><span class="pre">CountyData.label</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.PeatHumificationCat"><code class="docutils literal notranslate"><span class="pre">PeatHumificationCat</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.PeatHumificationCat.code"><code class="docutils literal notranslate"><span class="pre">PeatHumificationCat.code</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.PeatHumificationCat.english_description"><code class="docutils literal notranslate"><span class="pre">PeatHumificationCat.english_description</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.PeatHumificationCat.swedish_description"><code class="docutils literal notranslate"><span class="pre">PeatHumificationCat.swedish_description</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.SoilDepthCat"><code class="docutils literal notranslate"><span class="pre">SoilDepthCat</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.SoilDepthCat.code"><code class="docutils literal notranslate"><span class="pre">SoilDepthCat.code</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.SoilDepthCat.english_description"><code class="docutils literal notranslate"><span class="pre">SoilDepthCat.english_description</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.SoilDepthCat.swedish_description"><code class="docutils literal notranslate"><span class="pre">SoilDepthCat.swedish_description</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.SoilMoistureData"><code class="docutils literal notranslate"><span class="pre">SoilMoistureData</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.SoilMoistureData.code"><code class="docutils literal notranslate"><span class="pre">SoilMoistureData.code</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.SoilMoistureData.english_description"><code class="docutils literal notranslate"><span class="pre">SoilMoistureData.english_description</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.SoilMoistureData.swedish_description"><code class="docutils literal notranslate"><span class="pre">SoilMoistureData.swedish_description</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.SoilTextureCategory"><code class="docutils literal notranslate"><span class="pre">SoilTextureCategory</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.SoilTextureCategory.code"><code class="docutils literal notranslate"><span class="pre">SoilTextureCategory.code</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.SoilTextureCategory.english_name"><code class="docutils literal notranslate"><span class="pre">SoilTextureCategory.english_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.SoilTextureCategory.short_name"><code class="docutils literal notranslate"><span class="pre">SoilTextureCategory.short_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.SoilTextureCategory.swedish_name"><code class="docutils literal notranslate"><span class="pre">SoilTextureCategory.swedish_name</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.SoilWaterCat"><code class="docutils literal notranslate"><span class="pre">SoilWaterCat</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.SoilWaterCat.code"><code class="docutils literal notranslate"><span class="pre">SoilWaterCat.code</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.SoilWaterCat.english_description"><code class="docutils literal notranslate"><span class="pre">SoilWaterCat.english_description</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.SoilWaterCat.swedish_description"><code class="docutils literal notranslate"><span class="pre">SoilWaterCat.swedish_description</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.Vegetation"><code class="docutils literal notranslate"><span class="pre">Vegetation</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.Vegetation.code"><code class="docutils literal notranslate"><span class="pre">Vegetation.code</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.Vegetation.english_name"><code class="docutils literal notranslate"><span class="pre">Vegetation.english_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.Vegetation.index"><code class="docutils literal notranslate"><span class="pre">Vegetation.index</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.sweden_site_primitives.Vegetation.swedish_name"><code class="docutils literal notranslate"><span class="pre">Vegetation.swedish_name</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.site.html#module-pyforestry.sweden.site.swedish_site">pyforestry.sweden.site.swedish_site module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.swedish_site.SwedishSite"><code class="docutils literal notranslate"><span class="pre">SwedishSite</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.swedish_site.SwedishSite.altitude"><code class="docutils literal notranslate"><span class="pre">SwedishSite.altitude</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.swedish_site.SwedishSite.aspect"><code class="docutils literal notranslate"><span class="pre">SwedishSite.aspect</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.swedish_site.SwedishSite.bottom_layer"><code class="docutils literal notranslate"><span class="pre">SwedishSite.bottom_layer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.swedish_site.SwedishSite.climate_zone"><code class="docutils literal notranslate"><span class="pre">SwedishSite.climate_zone</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.swedish_site.SwedishSite.county"><code class="docutils literal notranslate"><span class="pre">SwedishSite.county</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.swedish_site.SwedishSite.distance_to_coast"><code class="docutils literal notranslate"><span class="pre">SwedishSite.distance_to_coast</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.swedish_site.SwedishSite.ditched"><code class="docutils literal notranslate"><span class="pre">SwedishSite.ditched</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.swedish_site.SwedishSite.field_layer"><code class="docutils literal notranslate"><span class="pre">SwedishSite.field_layer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.swedish_site.SwedishSite.humidity"><code class="docutils literal notranslate"><span class="pre">SwedishSite.humidity</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.swedish_site.SwedishSite.incline_percent"><code class="docutils literal notranslate"><span class="pre">SwedishSite.incline_percent</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.swedish_site.SwedishSite.latitude"><code class="docutils literal notranslate"><span class="pre">SwedishSite.latitude</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.swedish_site.SwedishSite.longitude"><code class="docutils literal notranslate"><span class="pre">SwedishSite.longitude</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.swedish_site.SwedishSite.n_of_limes_norrlandicus"><code class="docutils literal notranslate"><span class="pre">SwedishSite.n_of_limes_norrlandicus</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.swedish_site.SwedishSite.sis_birch_50"><code class="docutils literal notranslate"><span class="pre">SwedishSite.sis_birch_50</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.swedish_site.SwedishSite.sis_pine_100"><code class="docutils literal notranslate"><span class="pre">SwedishSite.sis_pine_100</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.swedish_site.SwedishSite.sis_spruce_100"><code class="docutils literal notranslate"><span class="pre">SwedishSite.sis_spruce_100</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.swedish_site.SwedishSite.soil_depth"><code class="docutils literal notranslate"><span class="pre">SwedishSite.soil_depth</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.swedish_site.SwedishSite.soil_moisture"><code class="docutils literal notranslate"><span class="pre">SwedishSite.soil_moisture</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.swedish_site.SwedishSite.soil_texture"><code class="docutils literal notranslate"><span class="pre">SwedishSite.soil_texture</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.swedish_site.SwedishSite.soil_water"><code class="docutils literal notranslate"><span class="pre">SwedishSite.soil_water</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.swedish_site.SwedishSite.temperature_sum_odin1983"><code class="docutils literal notranslate"><span class="pre">SwedishSite.temperature_sum_odin1983</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.site.html#module-pyforestry.sweden.site">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.Sweden"><code class="docutils literal notranslate"><span class="pre">Sweden</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.Sweden.BottomLayer"><code class="docutils literal notranslate"><span class="pre">Sweden.BottomLayer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.Sweden.ClimateZone"><code class="docutils literal notranslate"><span class="pre">Sweden.ClimateZone</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.Sweden.County"><code class="docutils literal notranslate"><span class="pre">Sweden.County</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.Sweden.FieldLayer"><code class="docutils literal notranslate"><span class="pre">Sweden.FieldLayer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.Sweden.PeatHumification"><code class="docutils literal notranslate"><span class="pre">Sweden.PeatHumification</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.Sweden.SoilDepth"><code class="docutils literal notranslate"><span class="pre">Sweden.SoilDepth</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.Sweden.SoilMoistureEnum"><code class="docutils literal notranslate"><span class="pre">Sweden.SoilMoistureEnum</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.Sweden.SoilTextureSediment"><code class="docutils literal notranslate"><span class="pre">Sweden.SoilTextureSediment</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.Sweden.SoilTextureTill"><code class="docutils literal notranslate"><span class="pre">Sweden.SoilTextureTill</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.Sweden.SoilWater"><code class="docutils literal notranslate"><span class="pre">Sweden.SoilWater</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyforestry.sweden.siteindex.html">pyforestry.sweden.siteindex package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.siteindex.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.sis.html">pyforestry.sweden.siteindex.sis package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.sis.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.sis.html#module-pyforestry.sweden.siteindex.sis.eko_2008">pyforestry.sweden.siteindex.sis.eko_2008 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.sis.html#module-pyforestry.sweden.siteindex.sis.hagglund_lundmark_1979">pyforestry.sweden.siteindex.sis.hagglund_lundmark_1979 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.sis.html#module-pyforestry.sweden.siteindex.sis.tegnhammar_1992">pyforestry.sweden.siteindex.sis.tegnhammar_1992 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.sis.html#module-pyforestry.sweden.siteindex.sis.tegnhammar_1992_adjusted_spruce_si_by_stand_variables">pyforestry.sweden.siteindex.sis.tegnhammar_1992_adjusted_spruce_si_by_stand_variables module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.sis.html#module-pyforestry.sweden.siteindex.sis">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.translate.html">pyforestry.sweden.siteindex.translate package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.translate.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.translate.html#module-pyforestry.sweden.siteindex.translate.agestam_1985">pyforestry.sweden.siteindex.translate.agestam_1985 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.translate.html#module-pyforestry.sweden.siteindex.translate.hagglund_1981_si_to_productivity">pyforestry.sweden.siteindex.translate.hagglund_1981_si_to_productivity module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.translate.html#module-pyforestry.sweden.siteindex.translate.leijon_1979">pyforestry.sweden.siteindex.translate.leijon_1979 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.translate.html#module-pyforestry.sweden.siteindex.translate">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.siteindex.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.siteindex.html#module-pyforestry.sweden.siteindex.elfving_kiviste_1997">pyforestry.sweden.siteindex.elfving_kiviste_1997 module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.elfving_kiviste_1997.elfving_kiviste_1997_height_trajectory_sweden_pine"><code class="docutils literal notranslate"><span class="pre">elfving_kiviste_1997_height_trajectory_sweden_pine()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.siteindex.html#module-pyforestry.sweden.siteindex.eriksson_1997">pyforestry.sweden.siteindex.eriksson_1997 module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.eriksson_1997.eriksson_1997_height_trajectory_sweden_birch"><code class="docutils literal notranslate"><span class="pre">eriksson_1997_height_trajectory_sweden_birch()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.siteindex.html#module-pyforestry.sweden.siteindex.hagglund_1970">pyforestry.sweden.siteindex.hagglund_1970 module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.hagglund_1970.HagglundPineModel"><code class="docutils literal notranslate"><span class="pre">HagglundPineModel</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.hagglund_1970.HagglundPineModel.sweden"><code class="docutils literal notranslate"><span class="pre">HagglundPineModel.sweden()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.hagglund_1970.HagglundPineRegeneration"><code class="docutils literal notranslate"><span class="pre">HagglundPineRegeneration</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.hagglund_1970.HagglundPineRegeneration.CULTURE"><code class="docutils literal notranslate"><span class="pre">HagglundPineRegeneration.CULTURE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.hagglund_1970.HagglundPineRegeneration.NATURAL"><code class="docutils literal notranslate"><span class="pre">HagglundPineRegeneration.NATURAL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.hagglund_1970.HagglundPineRegeneration.UNKNOWN"><code class="docutils literal notranslate"><span class="pre">HagglundPineRegeneration.UNKNOWN</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.hagglund_1970.HagglundSpruceModel"><code class="docutils literal notranslate"><span class="pre">HagglundSpruceModel</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.hagglund_1970.HagglundSpruceModel.northern_sweden"><code class="docutils literal notranslate"><span class="pre">HagglundSpruceModel.northern_sweden()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.hagglund_1970.HagglundSpruceModel.southern_sweden"><code class="docutils literal notranslate"><span class="pre">HagglundSpruceModel.southern_sweden()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.hagglund_1970.Hagglund_1970"><code class="docutils literal notranslate"><span class="pre">Hagglund_1970</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.hagglund_1970.Hagglund_1970.height_trajectory"><code class="docutils literal notranslate"><span class="pre">Hagglund_1970.height_trajectory</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.hagglund_1970.Hagglund_1970.regeneration"><code class="docutils literal notranslate"><span class="pre">Hagglund_1970.regeneration</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.hagglund_1970.Hagglund_1970.time_to_breast_height"><code class="docutils literal notranslate"><span class="pre">Hagglund_1970.time_to_breast_height</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.hagglund_1970.HeightTrajectoryWrapper"><code class="docutils literal notranslate"><span class="pre">HeightTrajectoryWrapper</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.hagglund_1970.TimeToBreastHeightWrapper"><code class="docutils literal notranslate"><span class="pre">TimeToBreastHeightWrapper</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.siteindex.html#module-pyforestry.sweden.siteindex.hagglund_remrod_1977">pyforestry.sweden.siteindex.hagglund_remrod_1977 module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.hagglund_remrod_1977.hagglund_remrod_1977_height_trajectories_lodgepole_pine"><code class="docutils literal notranslate"><span class="pre">hagglund_remrod_1977_height_trajectories_lodgepole_pine()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.siteindex.html#module-pyforestry.sweden.siteindex.johansson_1996">pyforestry.sweden.siteindex.johansson_1996 module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.johansson_1996.johansson_1996_height_trajectory_sweden_aspen"><code class="docutils literal notranslate"><span class="pre">johansson_1996_height_trajectory_sweden_aspen()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.siteindex.html#module-pyforestry.sweden.siteindex.johansson_1999">pyforestry.sweden.siteindex.johansson_1999 module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.johansson_1999.johansson_1999_height_trajectory_sweden_alnus_glutinosa"><code class="docutils literal notranslate"><span class="pre">johansson_1999_height_trajectory_sweden_alnus_glutinosa()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.johansson_1999.johansson_1999_height_trajectory_sweden_alnus_incana"><code class="docutils literal notranslate"><span class="pre">johansson_1999_height_trajectory_sweden_alnus_incana()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.siteindex.html#module-pyforestry.sweden.siteindex.johansson_2011">pyforestry.sweden.siteindex.johansson_2011 module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.johansson_2011.johansson_2011_height_trajectory_sweden_poplar"><code class="docutils literal notranslate"><span class="pre">johansson_2011_height_trajectory_sweden_poplar()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.siteindex.html#module-pyforestry.sweden.siteindex.johansson_2013">pyforestry.sweden.siteindex.johansson_2013 module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.johansson_2013.johansson_2013_height_trajectory_sweden_beech"><code class="docutils literal notranslate"><span class="pre">johansson_2013_height_trajectory_sweden_beech()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.johansson_2013.johansson_2013_height_trajectory_sweden_hybrid_aspen"><code class="docutils literal notranslate"><span class="pre">johansson_2013_height_trajectory_sweden_hybrid_aspen()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.johansson_2013.johansson_2013_height_trajectory_sweden_larch"><code class="docutils literal notranslate"><span class="pre">johansson_2013_height_trajectory_sweden_larch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.johansson_2013.johansson_2013_height_trajectory_sweden_oak"><code class="docutils literal notranslate"><span class="pre">johansson_2013_height_trajectory_sweden_oak()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.siteindex.html#module-pyforestry.sweden.siteindex">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.Hagglund_1970"><code class="docutils literal notranslate"><span class="pre">Hagglund_1970</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.Hagglund_1970.height_trajectory"><code class="docutils literal notranslate"><span class="pre">Hagglund_1970.height_trajectory</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.Hagglund_1970.regeneration"><code class="docutils literal notranslate"><span class="pre">Hagglund_1970.regeneration</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.Hagglund_1970.time_to_breast_height"><code class="docutils literal notranslate"><span class="pre">Hagglund_1970.time_to_breast_height</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.elfving_kiviste_1997_height_trajectory_sweden_pine"><code class="docutils literal notranslate"><span class="pre">elfving_kiviste_1997_height_trajectory_sweden_pine()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.eriksson_1997_height_trajectory_sweden_birch"><code class="docutils literal notranslate"><span class="pre">eriksson_1997_height_trajectory_sweden_birch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.hagglund_remrod_1977_height_trajectories_lodgepole_pine"><code class="docutils literal notranslate"><span class="pre">hagglund_remrod_1977_height_trajectories_lodgepole_pine()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.johansson_1996_height_trajectory_sweden_aspen"><code class="docutils literal notranslate"><span class="pre">johansson_1996_height_trajectory_sweden_aspen()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.johansson_1999_height_trajectory_sweden_alnus_glutinosa"><code class="docutils literal notranslate"><span class="pre">johansson_1999_height_trajectory_sweden_alnus_glutinosa()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.johansson_1999_height_trajectory_sweden_alnus_incana"><code class="docutils literal notranslate"><span class="pre">johansson_1999_height_trajectory_sweden_alnus_incana()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.johansson_2011_height_trajectory_sweden_poplar"><code class="docutils literal notranslate"><span class="pre">johansson_2011_height_trajectory_sweden_poplar()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.johansson_2013_height_trajectory_sweden_beech"><code class="docutils literal notranslate"><span class="pre">johansson_2013_height_trajectory_sweden_beech()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.johansson_2013_height_trajectory_sweden_hybrid_aspen"><code class="docutils literal notranslate"><span class="pre">johansson_2013_height_trajectory_sweden_hybrid_aspen()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.johansson_2013_height_trajectory_sweden_larch"><code class="docutils literal notranslate"><span class="pre">johansson_2013_height_trajectory_sweden_larch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.siteindex.html#pyforestry.sweden.siteindex.johansson_2013_height_trajectory_sweden_oak"><code class="docutils literal notranslate"><span class="pre">johansson_2013_height_trajectory_sweden_oak()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyforestry.sweden.taper.html">pyforestry.sweden.taper package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.taper.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.taper.html#module-pyforestry.sweden.taper.edgren_nylinder_1949">pyforestry.sweden.taper.edgren_nylinder_1949 module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.taper.html#pyforestry.sweden.taper.edgren_nylinder_1949.EdgrenNylinder1949"><code class="docutils literal notranslate"><span class="pre">EdgrenNylinder1949</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.taper.html#pyforestry.sweden.taper.edgren_nylinder_1949.EdgrenNylinder1949.get_diameter_at_height"><code class="docutils literal notranslate"><span class="pre">EdgrenNylinder1949.get_diameter_at_height()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.taper.html#pyforestry.sweden.taper.edgren_nylinder_1949.EdgrenNylinder1949.get_height_at_diameter"><code class="docutils literal notranslate"><span class="pre">EdgrenNylinder1949.get_height_at_diameter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.taper.html#pyforestry.sweden.taper.edgren_nylinder_1949.EdgrenNylinder1949.get_relative_diameter"><code class="docutils literal notranslate"><span class="pre">EdgrenNylinder1949.get_relative_diameter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.taper.html#pyforestry.sweden.taper.edgren_nylinder_1949.EdgrenNylinder1949.validate"><code class="docutils literal notranslate"><span class="pre">EdgrenNylinder1949.validate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.taper.html#pyforestry.sweden.taper.edgren_nylinder_1949.EdgrenNylinder1949Consts"><code class="docutils literal notranslate"><span class="pre">EdgrenNylinder1949Consts</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.taper.html#pyforestry.sweden.taper.edgren_nylinder_1949.EdgrenNylinder1949Consts.get_constants"><code class="docutils literal notranslate"><span class="pre">EdgrenNylinder1949Consts.get_constants()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.taper.html#pyforestry.sweden.taper.edgren_nylinder_1949.EdgrenNylinder1949Consts.get_inflexion_point"><code class="docutils literal notranslate"><span class="pre">EdgrenNylinder1949Consts.get_inflexion_point()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.taper.html#pyforestry.sweden.taper.edgren_nylinder_1949.Pettersson1949_consts"><code class="docutils literal notranslate"><span class="pre">Pettersson1949_consts</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.taper.html#pyforestry.sweden.taper.edgren_nylinder_1949.Pettersson1949_consts.form_quotient"><code class="docutils literal notranslate"><span class="pre">Pettersson1949_consts.form_quotient()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.taper.html#module-pyforestry.sweden.taper">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.taper.html#pyforestry.sweden.taper.EdgrenNylinder1949"><code class="docutils literal notranslate"><span class="pre">EdgrenNylinder1949</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.taper.html#pyforestry.sweden.taper.EdgrenNylinder1949.get_diameter_at_height"><code class="docutils literal notranslate"><span class="pre">EdgrenNylinder1949.get_diameter_at_height()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.taper.html#pyforestry.sweden.taper.EdgrenNylinder1949.get_height_at_diameter"><code class="docutils literal notranslate"><span class="pre">EdgrenNylinder1949.get_height_at_diameter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.taper.html#pyforestry.sweden.taper.EdgrenNylinder1949.get_relative_diameter"><code class="docutils literal notranslate"><span class="pre">EdgrenNylinder1949.get_relative_diameter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.taper.html#pyforestry.sweden.taper.EdgrenNylinder1949.validate"><code class="docutils literal notranslate"><span class="pre">EdgrenNylinder1949.validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyforestry.sweden.timber.html">pyforestry.sweden.timber package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.timber.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.timber.html#module-pyforestry.sweden.timber.swe_timber">pyforestry.sweden.timber.swe_timber module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.timber.html#pyforestry.sweden.timber.swe_timber.SweTimber"><code class="docutils literal notranslate"><span class="pre">SweTimber</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.timber.html#pyforestry.sweden.timber.swe_timber.SweTimber.getvolume"><code class="docutils literal notranslate"><span class="pre">SweTimber.getvolume()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.timber.html#pyforestry.sweden.timber.swe_timber.SweTimber.validate"><code class="docutils literal notranslate"><span class="pre">SweTimber.validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.timber.html#module-pyforestry.sweden.timber">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.timber.html#pyforestry.sweden.timber.SweTimber"><code class="docutils literal notranslate"><span class="pre">SweTimber</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.timber.html#pyforestry.sweden.timber.SweTimber.getvolume"><code class="docutils literal notranslate"><span class="pre">SweTimber.getvolume()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.timber.html#pyforestry.sweden.timber.SweTimber.validate"><code class="docutils literal notranslate"><span class="pre">SweTimber.validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyforestry.sweden.volume.html">pyforestry.sweden.volume package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.volume.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.volume.html#module-pyforestry.sweden.volume.andersson_1954">pyforestry.sweden.volume.andersson_1954 module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.andersson_1954.andersson_1954_volume_small_trees_birch_height_above_4_m"><code class="docutils literal notranslate"><span class="pre">andersson_1954_volume_small_trees_birch_height_above_4_m()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.andersson_1954.andersson_1954_volume_small_trees_birch_under_diameter_5_cm"><code class="docutils literal notranslate"><span class="pre">andersson_1954_volume_small_trees_birch_under_diameter_5_cm()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.andersson_1954.andersson_1954_volume_small_trees_pine"><code class="docutils literal notranslate"><span class="pre">andersson_1954_volume_small_trees_pine()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.andersson_1954.andersson_1954_volume_small_trees_spruce"><code class="docutils literal notranslate"><span class="pre">andersson_1954_volume_small_trees_spruce()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.volume.html#module-pyforestry.sweden.volume.brandel_1990">pyforestry.sweden.volume.brandel_1990 module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.brandel_1990.BrandelVolume"><code class="docutils literal notranslate"><span class="pre">BrandelVolume</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.brandel_1990.BrandelVolume.BirchSouthWithLatitudeCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.BirchSouthWithLatitudeCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.brandel_1990.BrandelVolume.BirchSouthWithLatitudeConstant"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.BirchSouthWithLatitudeConstant</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.brandel_1990.BrandelVolume.NorthBirchCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.NorthBirchCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.brandel_1990.BrandelVolume.NorthBirchUbCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.NorthBirchUbCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.brandel_1990.BrandelVolume.NorthPineCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.NorthPineCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.brandel_1990.BrandelVolume.NorthPineUbCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.NorthPineUbCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.brandel_1990.BrandelVolume.NorthSpruceCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.NorthSpruceCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.brandel_1990.BrandelVolume.NorthSpruceUbCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.NorthSpruceUbCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.brandel_1990.BrandelVolume.PineNorthWithLatitudeCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.PineNorthWithLatitudeCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.brandel_1990.BrandelVolume.PineNorthWithLatitudeConstant"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.PineNorthWithLatitudeConstant</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.brandel_1990.BrandelVolume.PineSouthWithLatitudeCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.PineSouthWithLatitudeCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.brandel_1990.BrandelVolume.PineSouthWithLatitudeConstant"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.PineSouthWithLatitudeConstant</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.brandel_1990.BrandelVolume.SouthBirchCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SouthBirchCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.brandel_1990.BrandelVolume.SouthBirchUbCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SouthBirchUbCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.brandel_1990.BrandelVolume.SouthPineCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SouthPineCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.brandel_1990.BrandelVolume.SouthPineUbCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SouthPineUbCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.brandel_1990.BrandelVolume.SouthSpruceCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SouthSpruceCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.brandel_1990.BrandelVolume.SouthSpruceUbCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SouthSpruceUbCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.brandel_1990.BrandelVolume.SpruceNorthWithLatitudeAndAltitudeCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SpruceNorthWithLatitudeAndAltitudeCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.brandel_1990.BrandelVolume.SpruceNorthWithLatitudeAndAltitudeConstant"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SpruceNorthWithLatitudeAndAltitudeConstant</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.brandel_1990.BrandelVolume.SpruceSouthWithfieldlayerTypeCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SpruceSouthWithfieldlayerTypeCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.brandel_1990.BrandelVolume.SpruceSouthWithfieldlayerTypeConstant"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SpruceSouthWithfieldlayerTypeConstant</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.brandel_1990.BrandelVolume.fieldlayerTypeToIndex"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.fieldlayerTypeToIndex</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.brandel_1990.BrandelVolume.get_coefficients"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.get_coefficients()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.brandel_1990.BrandelVolume.get_volume"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.get_volume()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.brandel_1990.BrandelVolume.get_volume_log"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.get_volume_log()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.volume.html#module-pyforestry.sweden.volume.carbonnier_1954">pyforestry.sweden.volume.carbonnier_1954 module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.carbonnier_1954.carbonnier_1954_volume_larch"><code class="docutils literal notranslate"><span class="pre">carbonnier_1954_volume_larch()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.volume.html#module-pyforestry.sweden.volume.eriksson_1973">pyforestry.sweden.volume.eriksson_1973 module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.eriksson_1973.Eriksson_1973_volume_aspen_Sweden"><code class="docutils literal notranslate"><span class="pre">Eriksson_1973_volume_aspen_Sweden()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.eriksson_1973.Eriksson_1973_volume_lodgepole_pine_Sweden"><code class="docutils literal notranslate"><span class="pre">Eriksson_1973_volume_lodgepole_pine_Sweden()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.volume.html#module-pyforestry.sweden.volume.johnsson_1953">pyforestry.sweden.volume.johnsson_1953 module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.johnsson_1953.johnsson_1953_volume_hybrid_aspen"><code class="docutils literal notranslate"><span class="pre">johnsson_1953_volume_hybrid_aspen()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.volume.html#module-pyforestry.sweden.volume.matern_1975">pyforestry.sweden.volume.matern_1975 module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.matern_1975.matern_1975_volume_sweden_beech"><code class="docutils literal notranslate"><span class="pre">matern_1975_volume_sweden_beech()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.matern_1975.matern_1975_volume_sweden_oak"><code class="docutils literal notranslate"><span class="pre">matern_1975_volume_sweden_oak()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.volume.html#module-pyforestry.sweden.volume.naslund_1947">pyforestry.sweden.volume.naslund_1947 module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.naslund_1947.NaslundFormFactor"><code class="docutils literal notranslate"><span class="pre">NaslundFormFactor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.naslund_1947.NaslundFormFactor.calculate"><code class="docutils literal notranslate"><span class="pre">NaslundFormFactor.calculate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.naslund_1947.NaslundVolume"><code class="docutils literal notranslate"><span class="pre">NaslundVolume</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.naslund_1947.NaslundVolume.calculate"><code class="docutils literal notranslate"><span class="pre">NaslundVolume.calculate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.sweden.volume.html#module-pyforestry.sweden.volume">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.BrandelVolume"><code class="docutils literal notranslate"><span class="pre">BrandelVolume</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.BrandelVolume.BirchSouthWithLatitudeCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.BirchSouthWithLatitudeCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.BrandelVolume.BirchSouthWithLatitudeConstant"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.BirchSouthWithLatitudeConstant</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.BrandelVolume.NorthBirchCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.NorthBirchCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.BrandelVolume.NorthBirchUbCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.NorthBirchUbCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.BrandelVolume.NorthPineCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.NorthPineCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.BrandelVolume.NorthPineUbCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.NorthPineUbCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.BrandelVolume.NorthSpruceCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.NorthSpruceCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.BrandelVolume.NorthSpruceUbCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.NorthSpruceUbCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.BrandelVolume.PineNorthWithLatitudeCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.PineNorthWithLatitudeCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.BrandelVolume.PineNorthWithLatitudeConstant"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.PineNorthWithLatitudeConstant</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.BrandelVolume.PineSouthWithLatitudeCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.PineSouthWithLatitudeCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.BrandelVolume.PineSouthWithLatitudeConstant"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.PineSouthWithLatitudeConstant</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.BrandelVolume.SouthBirchCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SouthBirchCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.BrandelVolume.SouthBirchUbCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SouthBirchUbCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.BrandelVolume.SouthPineCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SouthPineCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.BrandelVolume.SouthPineUbCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SouthPineUbCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.BrandelVolume.SouthSpruceCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SouthSpruceCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.BrandelVolume.SouthSpruceUbCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SouthSpruceUbCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.BrandelVolume.SpruceNorthWithLatitudeAndAltitudeCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SpruceNorthWithLatitudeAndAltitudeCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.BrandelVolume.SpruceNorthWithLatitudeAndAltitudeConstant"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SpruceNorthWithLatitudeAndAltitudeConstant</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.BrandelVolume.SpruceSouthWithfieldlayerTypeCoeff"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SpruceSouthWithfieldlayerTypeCoeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.BrandelVolume.SpruceSouthWithfieldlayerTypeConstant"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.SpruceSouthWithfieldlayerTypeConstant</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.BrandelVolume.fieldlayerTypeToIndex"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.fieldlayerTypeToIndex</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.BrandelVolume.get_coefficients"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.get_coefficients()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.BrandelVolume.get_volume"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.get_volume()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.BrandelVolume.get_volume_log"><code class="docutils literal notranslate"><span class="pre">BrandelVolume.get_volume_log()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.Eriksson_1973_volume_aspen_Sweden"><code class="docutils literal notranslate"><span class="pre">Eriksson_1973_volume_aspen_Sweden()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.Eriksson_1973_volume_lodgepole_pine_Sweden"><code class="docutils literal notranslate"><span class="pre">Eriksson_1973_volume_lodgepole_pine_Sweden()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.NaslundFormFactor"><code class="docutils literal notranslate"><span class="pre">NaslundFormFactor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.NaslundFormFactor.calculate"><code class="docutils literal notranslate"><span class="pre">NaslundFormFactor.calculate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.NaslundVolume"><code class="docutils literal notranslate"><span class="pre">NaslundVolume</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.NaslundVolume.calculate"><code class="docutils literal notranslate"><span class="pre">NaslundVolume.calculate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.andersson_1954_volume_small_trees_birch_height_above_4_m"><code class="docutils literal notranslate"><span class="pre">andersson_1954_volume_small_trees_birch_height_above_4_m()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.andersson_1954_volume_small_trees_birch_under_diameter_5_cm"><code class="docutils literal notranslate"><span class="pre">andersson_1954_volume_small_trees_birch_under_diameter_5_cm()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.andersson_1954_volume_small_trees_pine"><code class="docutils literal notranslate"><span class="pre">andersson_1954_volume_small_trees_pine()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.andersson_1954_volume_small_trees_spruce"><code class="docutils literal notranslate"><span class="pre">andersson_1954_volume_small_trees_spruce()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.carbonnier_1954_volume_larch"><code class="docutils literal notranslate"><span class="pre">carbonnier_1954_volume_larch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.johnsson_1953_volume_hybrid_aspen"><code class="docutils literal notranslate"><span class="pre">johnsson_1953_volume_hybrid_aspen()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.matern_1975_volume_sweden_beech"><code class="docutils literal notranslate"><span class="pre">matern_1975_volume_sweden_beech()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.volume.html#pyforestry.sweden.volume.matern_1975_volume_sweden_oak"><code class="docutils literal notranslate"><span class="pre">matern_1975_volume_sweden_oak()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="module-pyforestry.sweden">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pyforestry.sweden" title="Link to this heading">¶</a></h2>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="pyforestry.sweden.bark.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">pyforestry.sweden.bark package</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="pyforestry.base.timber_bucking.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">pyforestry.base.timber_bucking package</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">pyforestry.sweden package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#module-pyforestry.sweden">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    </body>
+</html>

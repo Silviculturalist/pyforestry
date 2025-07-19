@@ -1,0 +1,148 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "3ff92474",
+   "metadata": {},
+   "source": [
+    "# Marklund biomass with SweTimber"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "9bff725c",
+   "metadata": {},
+   "source": [
+    "This notebook demonstrates how to combine the `SweTimber` helper class with the `Marklund_1988` biomass wrapper."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "37d2ffeb",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-07-17T18:03:35.353553Z",
+     "iopub.status.busy": "2025-07-17T18:03:35.352973Z",
+     "iopub.status.idle": "2025-07-17T18:03:35.914466Z",
+     "shell.execute_reply": "2025-07-17T18:03:35.913836Z"
+    }
+   },
+   "outputs": [],
+   "source": [
+    "from pyforestry.sweden.biomass import Marklund_1988\n",
+    "from pyforestry.sweden.timber import SweTimber"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "6a209940",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-07-17T18:03:35.921121Z",
+     "iopub.status.busy": "2025-07-17T18:03:35.920570Z",
+     "iopub.status.idle": "2025-07-17T18:03:35.923701Z",
+     "shell.execute_reply": "2025-07-17T18:03:35.923173Z"
+    }
+   },
+   "outputs": [],
+   "source": [
+    "# Construct a SweTimber instance\n",
+    "pine = SweTimber(\n",
+    "    species=\"pinus sylvestris\",\n",
+    "    diameter_cm=25,\n",
+    "    height_m=15,\n",
+    "    double_bark_mm=15,\n",
+    "    crown_base_height_m=7\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "57346a71",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-07-17T18:03:35.925448Z",
+     "iopub.status.busy": "2025-07-17T18:03:35.925041Z",
+     "iopub.status.idle": "2025-07-17T18:03:35.940899Z",
+     "shell.execute_reply": "2025-07-17T18:03:35.940317Z"
+    }
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "{'stem': np.float64(138.17212824703805),\n",
+       " 'stem_wood': np.float64(125.74493189426362),\n",
+       " 'stem_bark': np.float64(10.572288353477234),\n",
+       " 'living_branches': np.float64(7.419433610116955),\n",
+       " 'needles': np.float64(3.5667312294648026),\n",
+       " 'dead_branches': np.float64(1.0440901553242214),\n",
+       " 'stump_root_system': np.float64(13.045246317168706),\n",
+       " 'stump': np.float64(25.30894605743497)}"
+      ]
+     },
+     "execution_count": 3,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Calculate biomass for all components\n",
+    "Marklund_1988(pine)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "13cf03af",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-07-17T18:03:35.945584Z",
+     "iopub.status.busy": "2025-07-17T18:03:35.945087Z",
+     "iopub.status.idle": "2025-07-17T18:03:35.953445Z",
+     "shell.execute_reply": "2025-07-17T18:03:35.952871Z"
+    }
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "np.float64(138.17212824703805)"
+      ]
+     },
+     "execution_count": 4,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Retrieve only the stem biomass\n",
+    "Marklund_1988(pine, component=\"stem\")"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.11.12"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

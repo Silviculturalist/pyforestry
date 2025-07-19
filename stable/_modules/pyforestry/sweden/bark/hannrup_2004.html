@@ -1,0 +1,522 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../../../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../../genindex.html" /><link rel="search" title="Search" href="../../../../search.html" />
+
+    <!-- Generated with Sphinx 8.1.3 and Furo 2025.07.19 -->
+        <title>pyforestry.sweden.bark.hannrup_2004 - pyforestry documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=25af2a20" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #2b2b2b;
+  --color-code-foreground: #f8f8f2;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #2b2b2b;
+  --color-code-foreground: #f8f8f2;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../../index.html"><div class="brand">pyforestry  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../../index.html">
+  
+  <span class="sidebar-brand-text">pyforestry  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../api/modules.html">pyforestry</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of pyforestry</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../api/pyforestry.html">pyforestry package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of pyforestry package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../../api/pyforestry.base.html">pyforestry.base package</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of pyforestry.base package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../../../api/pyforestry.base.helpers.html">pyforestry.base.helpers package</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of pyforestry.base.helpers package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/pyforestry.base.helpers.primitives.html">pyforestry.base.helpers.primitives package</a></li>
+</ul>
+</li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../../../api/pyforestry.base.pricelist.html">pyforestry.base.pricelist package</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of pyforestry.base.pricelist package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/pyforestry.base.pricelist.data.html">pyforestry.base.pricelist.data package</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/pyforestry.base.taper.html">pyforestry.base.taper package</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../../../api/pyforestry.base.timber.html">pyforestry.base.timber package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of pyforestry.base.timber package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/pyforestry.base.timber.timber_base.html">pyforestry.base.timber.timber_base package</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/pyforestry.base.timber_bucking.html">pyforestry.base.timber_bucking package</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../../api/pyforestry.sweden.html">pyforestry.sweden package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of pyforestry.sweden package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/pyforestry.sweden.bark.html">pyforestry.sweden.bark package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/pyforestry.sweden.biomass.html">pyforestry.sweden.biomass package</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../../../api/pyforestry.sweden.geo.html">pyforestry.sweden.geo package</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of pyforestry.sweden.geo package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/pyforestry.sweden.geo.climate.html">pyforestry.sweden.geo.climate package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/pyforestry.sweden.geo.coastline.html">pyforestry.sweden.geo.coastline package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/pyforestry.sweden.geo.counties.html">pyforestry.sweden.geo.counties package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/pyforestry.sweden.geo.humidity.html">pyforestry.sweden.geo.humidity package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/pyforestry.sweden.geo.temperature.html">pyforestry.sweden.geo.temperature package</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/pyforestry.sweden.helpers.html">pyforestry.sweden.helpers package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/pyforestry.sweden.misc.html">pyforestry.sweden.misc package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/pyforestry.sweden.models.html">pyforestry.sweden.models package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/pyforestry.sweden.site.html">pyforestry.sweden.site package</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../../../api/pyforestry.sweden.siteindex.html">pyforestry.sweden.siteindex package</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of pyforestry.sweden.siteindex package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/pyforestry.sweden.siteindex.sis.html">pyforestry.sweden.siteindex.sis package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/pyforestry.sweden.siteindex.translate.html">pyforestry.sweden.siteindex.translate package</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/pyforestry.sweden.taper.html">pyforestry.sweden.taper package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/pyforestry.sweden.timber.html">pyforestry.sweden.timber package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/pyforestry.sweden.volume.html">pyforestry.sweden.volume package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../notebooks/tree_species_intro.html">Tree species basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../notebooks/timber_bucking_demo.html">Timber bucking demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../notebooks/stand_site_enum_demo.html">Stand metrics and site enums</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../notebooks/marklund_swetimber_demo.html">Marklund biomass with SweTimber</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <h1>Source code for pyforestry.sweden.bark.hannrup_2004</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.primitives</span><span class="w"> </span><span class="kn">import</span> <span class="n">Diameter_cm</span>
+
+<span class="c1"># --- Scots Pine Function ---</span>
+
+<div class="viewcode-block" id="Hannrup_2004_bark_pinus_sylvestris_sweden">
+<a class="viewcode-back" href="../../../../api/pyforestry.sweden.bark.html#pyforestry.sweden.bark.hannrup_2004.Hannrup_2004_bark_pinus_sylvestris_sweden">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">Hannrup_2004_bark_pinus_sylvestris_sweden</span><span class="p">(</span>
+    <span class="n">diameter_breast_height_mm</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Diameter_cm</span><span class="p">],</span>
+     <span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">stem_height_cm</span><span class="p">:</span> <span class="nb">float</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates double bark thickness at a given stem height for Scots Pine in Sweden.</span>
+
+<span class="sd">    Based on the &quot;Sf_tall&quot; function presented in Skogforsk Arbetsrapport 575-2004.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        diameter_breast_height_mm (Union[float, Diameter_cm]): Diameter at breast</span>
+<span class="sd">            height (1.3m) over bark, in millimeters. If Diameter_cm is passed,</span>
+<span class="sd">            it will be converted to mm. Diameters over 590mm are capped at 590mm</span>
+<span class="sd">            internally for the calculation.</span>
+<span class="sd">        latitude (float): Latitude in decimal degrees (e.g., 63.82).</span>
+<span class="sd">        stem_height_cm (float): The height along the stem (from ground level)</span>
+<span class="sd">            where bark thickness is desired, in centimeters.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        float: Estimated double bark thickness at the specified `stem_height_cm`,</span>
+<span class="sd">               in millimeters. Minimum value returned is 2 mm.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If inputs are outside reasonable ranges (e.g., negative diameter,</span>
+<span class="sd">                    invalid latitude, negative stem height).</span>
+<span class="sd">        TypeError: If diameter input type is invalid.</span>
+
+<span class="sd">    References:</span>
+<span class="sd">        Hannrup, Björn. (2004). Funktioner för skattning av barkens tjocklek hos</span>
+<span class="sd">        tall och gran vid avverkning med skördare [Functions for estimating bark</span>
+<span class="sd">        thickness of Scots pine and Norway spruce at harvester felling].</span>
+<span class="sd">        Arbetsrapport 575. Skogforsk. Uppsala Science Park, Sweden. 34 pp.</span>
+<span class="sd">        ISSN: 1404-305X.</span>
+<span class="sd">        Available Online [2025-04-17]: https://www.skogforsk.se/contentassets/960ad964391d489785f97f9eaeeaf174/arbetsrapport-575-2004.pdf</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">        - This function calculates bark thickness at any point along the stem height,</span>
+<span class="sd">          not just at breast height.</span>
+<span class="sd">        - It requires latitude as an input.</span>
+<span class="sd">        - The function returns DOUBLE bark thickness in MILLIMETERS.</span>
+<span class="sd">        - Only applicable to Pinus sylvestris in Sweden.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># --- Input Validation ---</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">diameter_breast_height_mm</span><span class="p">,</span> <span class="n">Diameter_cm</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">diameter_breast_height_mm</span><span class="o">.</span><span class="n">measurement_height_m</span> <span class="o">!=</span> <span class="mf">1.3</span><span class="p">:</span>
+             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input &#39;diameter_breast_height_mm&#39; (Diameter_cm) has measurement height </span><span class="si">{</span><span class="n">diameter_breast_height_mm</span><span class="o">.</span><span class="n">measurement_height_m</span><span class="si">}</span><span class="s2">m, model assumes 1.3m.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">diameter_breast_height_mm</span><span class="o">.</span><span class="n">over_bark</span><span class="p">:</span>
+             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input &#39;diameter_breast_height_mm&#39; (Diameter_cm) must be measured over bark.&quot;</span><span class="p">)</span>
+        <span class="n">dbh_mm</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">diameter_breast_height_mm</span><span class="p">)</span> <span class="o">*</span> <span class="mf">10.0</span> <span class="c1"># Convert cm to mm</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">diameter_breast_height_mm</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+        <span class="n">dbh_mm</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">diameter_breast_height_mm</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Input &#39;diameter_breast_height_mm&#39; must be a float, int, or Diameter_cm object.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">dbh_mm</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input &#39;diameter_breast_height_mm&#39; must be non-negative.&quot;</span><span class="p">)</span>
+    <span class="c1"># Latitude check (approximate range for Sweden)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mf">55.0</span> <span class="o">&lt;=</span>  <span class="n">latitude</span> <span class="o">&lt;=</span> <span class="mf">70.0</span><span class="p">):</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Latitude </span><span class="si">{</span><span class="w"> </span><span class="n">latitude</span><span class="si">}</span><span class="s2"> is outside the typical range for Sweden (55-70). Results may be extrapolated.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">stem_height_cm</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input &#39;stem_height_cm&#39; must be non-negative.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># --- Calculation Steps ---</span>
+
+    <span class="c1"># Step 1: Cap DBH at 590 mm</span>
+    <span class="n">dbh_b</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">dbh_mm</span><span class="p">,</span> <span class="mf">590.0</span><span class="p">)</span>
+
+    <span class="c1"># Step 2: Calculate breakpoint height (htg in cm)</span>
+    <span class="n">term_lat</span> <span class="o">=</span> <span class="mf">72.1814</span> <span class="o">+</span> <span class="mf">0.0789</span> <span class="o">*</span> <span class="n">dbh_b</span> <span class="o">-</span> <span class="mf">0.9868</span> <span class="o">*</span>  <span class="n">latitude</span>
+    <span class="n">term_exp_coeff</span> <span class="o">=</span> <span class="mf">0.0078557</span> <span class="o">-</span> <span class="mf">0.0000132</span> <span class="o">*</span> <span class="n">dbh_b</span>
+
+    <span class="k">if</span> <span class="n">term_lat</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pine Bark: Term (72.1814 + 0.0789*dbh_b - 0.9868*lat) = </span><span class="si">{</span><span class="n">term_lat</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> &lt;= 0. Cannot calculate htg. Returning minimum bark.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mf">2.0</span>
+    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">term_exp_coeff</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-9</span><span class="p">:</span>
+         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pine Bark: Term (0.0078557 - 0.0000132*dbh_b) = </span><span class="si">{</span><span class="n">term_exp_coeff</span><span class="si">:</span><span class="s2">.7f</span><span class="si">}</span><span class="s2"> is close to zero. Cannot reliably calculate htg. Returning minimum bark.&quot;</span><span class="p">)</span>
+         <span class="k">return</span> <span class="mf">2.0</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">htg</span> <span class="o">=</span> <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">0.12</span> <span class="o">/</span> <span class="n">term_lat</span><span class="p">)</span> <span class="o">/</span> <span class="n">term_exp_coeff</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">ZeroDivisionError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pine Bark: Math error calculating htg (likely log of non-positive or division by zero): </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">. Returning minimum bark.&quot;</span><span class="p">)</span>
+         <span class="k">return</span> <span class="mf">2.0</span>
+
+    <span class="c1"># Step 3 &amp; 4: Calculate double bark thickness (db in mm) based on h vs htg</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">stem_height_cm</span>
+    <span class="n">db_mm</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+    <span class="k">if</span> <span class="n">h</span> <span class="o">&lt;=</span> <span class="n">htg</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+             <span class="n">exponent</span> <span class="o">=</span> <span class="o">-</span><span class="n">term_exp_coeff</span> <span class="o">*</span> <span class="n">h</span>
+             <span class="n">exponent</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">exponent</span><span class="p">,</span> <span class="o">-</span><span class="mi">700</span><span class="p">)</span> <span class="c1"># Avoid exp() overflow</span>
+             <span class="n">db_mm</span> <span class="o">=</span> <span class="mf">3.5808</span> <span class="o">+</span> <span class="mf">0.0109</span> <span class="o">*</span> <span class="n">dbh_b</span> <span class="o">+</span> <span class="n">term_lat</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">exponent</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">OverflowError</span><span class="p">:</span>
+             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pine Bark: Math OverflowError calculating exp term below htg. h=</span><span class="si">{</span><span class="n">h</span><span class="si">}</span><span class="s2">, htg=</span><span class="si">{</span><span class="n">htg</span><span class="si">}</span><span class="s2">. Returning minimum bark.&quot;</span><span class="p">)</span>
+             <span class="n">db_mm</span> <span class="o">=</span> <span class="mf">2.0</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pine Bark: Math ValueError calculating bark below htg: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">. Returning minimum bark.&quot;</span><span class="p">)</span>
+             <span class="n">db_mm</span> <span class="o">=</span> <span class="mf">2.0</span>
+    <span class="k">else</span><span class="p">:</span> <span class="c1"># h &gt; htg</span>
+        <span class="n">db_mm</span> <span class="o">=</span> <span class="mf">3.5808</span> <span class="o">+</span> <span class="mf">0.0109</span> <span class="o">*</span> <span class="n">dbh_b</span> <span class="o">+</span> <span class="mf">0.12</span> <span class="o">-</span> <span class="mf">0.005</span> <span class="o">*</span> <span class="p">(</span><span class="n">h</span> <span class="o">-</span> <span class="n">htg</span><span class="p">)</span>
+
+    <span class="c1"># Step 5: Apply minimum double bark thickness (2 mm)</span>
+    <span class="n">db_mm_final</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">db_mm</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">db_mm_final</span></div>
+
+
+<span class="c1"># --- Norway Spruce Function ---</span>
+
+<div class="viewcode-block" id="Hannrup_2004_bark_picea_abies_sweden">
+<a class="viewcode-back" href="../../../../api/pyforestry.sweden.bark.html#pyforestry.sweden.bark.hannrup_2004.Hannrup_2004_bark_picea_abies_sweden">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">Hannrup_2004_bark_picea_abies_sweden</span><span class="p">(</span>
+    <span class="n">diameter_at_height_mm</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">diameter_breast_height_mm</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Diameter_cm</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates double bark thickness for Norway Spruce in Sweden based on diameter.</span>
+
+<span class="sd">    Based on the function presented in Skogforsk Arbetsrapport 575-2004.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        diameter_at_height_mm (float): Diameter over bark at the point of interest</span>
+<span class="sd">            along the stem, in millimeters.</span>
+<span class="sd">        diameter_breast_height_mm (Union[float, Diameter_cm]): Diameter at breast</span>
+<span class="sd">            height (1.3m) over bark, in millimeters. Must be in the same units</span>
+<span class="sd">            as diameter_at_height_mm. If Diameter_cm is passed, it&#39;s converted to mm.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        float: Estimated double bark thickness at the point corresponding to</span>
+<span class="sd">               `diameter_at_height_mm`, in millimeters. Minimum value is 2 mm.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If inputs are non-positive or dbh is zero.</span>
+<span class="sd">        TypeError: If diameter input types are invalid.</span>
+
+<span class="sd">    References:</span>
+<span class="sd">        Hannrup, Björn. (2004). Funktioner för skattning av barkens tjocklek hos</span>
+<span class="sd">        tall och gran vid avverkning med skördare [Functions for estimating bark</span>
+<span class="sd">        thickness of Scots pine and Norway spruce at harvester felling].</span>
+<span class="sd">        Arbetsrapport 575. Skogforsk. Uppsala Science Park, Sweden. 34 pp.</span>
+<span class="sd">        ISSN: 1404-305X.</span>
+<span class="sd">        Available Online [2025-04-17]: https://www.skogforsk.se/contentassets/960ad964391d489785f97f9eaeeaf174/arbetsrapport-575-2004.pdf</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">        - This function calculates bark thickness based on the diameter at a given</span>
+<span class="sd">          point relative to the breast height diameter. It does not directly use</span>
+<span class="sd">          stem height or latitude.</span>
+<span class="sd">        - The function returns DOUBLE bark thickness in MILLIMETERS.</span>
+<span class="sd">        - Only applicable to Picea abies in Sweden.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># --- Input Validation ---</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">diameter_at_height_mm</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Input &#39;diameter_at_height_mm&#39; must be a number (float or int).&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">diameter_at_height_mm</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input &#39;diameter_at_height_mm&#39; must be non-negative.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">diameter_breast_height_mm</span><span class="p">,</span> <span class="n">Diameter_cm</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">diameter_breast_height_mm</span><span class="o">.</span><span class="n">measurement_height_m</span> <span class="o">!=</span> <span class="mf">1.3</span><span class="p">:</span>
+             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input &#39;diameter_breast_height_mm&#39; (Diameter_cm) has measurement height </span><span class="si">{</span><span class="n">diameter_breast_height_mm</span><span class="o">.</span><span class="n">measurement_height_m</span><span class="si">}</span><span class="s2">m, model assumes 1.3m.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">diameter_breast_height_mm</span><span class="o">.</span><span class="n">over_bark</span><span class="p">:</span>
+             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input &#39;diameter_breast_height_mm&#39; (Diameter_cm) must be measured over bark.&quot;</span><span class="p">)</span>
+        <span class="n">dbh_mm</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">diameter_breast_height_mm</span><span class="p">)</span> <span class="o">*</span> <span class="mf">10.0</span> <span class="c1"># Convert cm to mm</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">diameter_breast_height_mm</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+        <span class="n">dbh_mm</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">diameter_breast_height_mm</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Input &#39;diameter_breast_height_mm&#39; must be a float, int, or Diameter_cm object.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">dbh_mm</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input &#39;diameter_breast_height_mm&#39; must be positive for relative diameter calculation.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># --- Calculation Steps ---</span>
+    <span class="n">dia_mm</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">diameter_at_height_mm</span><span class="p">)</span> <span class="c1"># Ensure float</span>
+
+    <span class="c1"># Step 1: Calculate relative diameter</span>
+    <span class="c1"># Avoid division by zero (already checked dbh_mm &gt; 0)</span>
+    <span class="n">reldia</span> <span class="o">=</span> <span class="n">dia_mm</span> <span class="o">/</span> <span class="n">dbh_mm</span>
+
+    <span class="c1"># Step 2: Calculate double bark thickness (db in mm)</span>
+    <span class="n">db_mm</span> <span class="o">=</span> <span class="mf">0.46146</span> <span class="o">+</span> <span class="mf">0.01386</span> <span class="o">*</span> <span class="n">dbh_mm</span> <span class="o">+</span> <span class="mf">0.03571</span> <span class="o">*</span> <span class="n">dbh_mm</span> <span class="o">*</span> <span class="n">reldia</span>
+
+    <span class="c1"># Step 3: Apply minimum double bark thickness (2 mm)</span>
+    <span class="n">db_mm_final</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">db_mm</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">db_mm_final</span></div>
+
+</pre></div>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    </body>
+</html>
