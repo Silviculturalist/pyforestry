@@ -90,7 +90,9 @@ select = ["E", "F", "W", "I", "B"]
 [tool.bumpversion]
 # Bump the version in this file only. The search pattern allows flexible spacing
 # around the equals sign so the command can locate the current value.
-files = ["pyproject.toml"]
+current_version = "0.0.1"
+
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
 search = '^version\s*=\s*"{current_version}"'
 replace = 'version = "{new_version}"'
-current_version = "0.0.1"
