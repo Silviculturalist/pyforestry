@@ -27,7 +27,7 @@ should be based on `dev` and pull requests should target `dev`. The `main` branc
    pip install -e .[dev]
    ```
 
-   This installs both runtime requirements and dev tools including **pytest**, **pytest-cov**, **docstr-coverage**, **coverage**, **black**, **ruff**, **sphinx**, **furo**, and **myst-parser**.
+   This installs both runtime requirements and dev tools including **pytest**, **pytest-cov**, **docstr-coverage**, **coverage**, **black**, **ruff**, **sphinx**, **pydata-sphinx-theme**, and **myst-parser**.
 
 ---
 
@@ -103,7 +103,7 @@ Releases merged into `main` must not decrease coverage.
 
 ## Documentation
 
-We use **Sphinx** (with **nbsphinx**, **myst-parser**, and the **furo** theme) to build documentation. Install docs dependencies (also listed in `requirements.txt`):
+We use **Sphinx** (with **nbsphinx**, **myst-parser**, and the **pydata-sphinx-theme** theme) to build documentation. Install docs dependencies (also listed in `requirements.txt`):
 
 ```bash
 pip install -r requirements.txt

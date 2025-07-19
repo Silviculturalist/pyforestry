@@ -51,16 +51,15 @@ nbsphinx_execute = "always"
 nbsphinx_allow_errors = False
 
 # -- Options for HTML output -------------------------------------------------
-html_theme = "furo"  # or 'sphinx_rtd_theme', etc.
+html_theme = "pydata_sphinx_theme"
 html_static_path = ["_static"]
 
 # Configure version switcher so users can toggle between dev/stable docs.
 DOCS_VERSION = os.environ.get("DOCS_VERSION", "dev")
 html_theme_options = {
-    "versioning": {
-        "current_version": DOCS_VERSION,
-        # ``versions.json`` lives at the root of the GitHub Pages site
-        "version_switcher": "https://silviculturalist.github.io/pyforestry/versions.json",
-        "docset_name": "pyforestry",
-    }
+    "navbar_end": ["theme-switcher", "version-switcher"],
+    "switcher": {
+        "version_match": DOCS_VERSION,
+        "json_url": "https://silviculturalist.github.io/pyforestry/versions.json",
+    },
 }
