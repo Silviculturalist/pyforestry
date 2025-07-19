@@ -5,31 +5,31 @@
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="pyforestry.sweden.volume package" href="pyforestry.sweden.volume.html" /><link rel="prev" title="pyforestry.sweden.taper package" href="pyforestry.sweden.taper.html" />
 
-    <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
+    <!-- Generated with Sphinx 8.1.3 and Furo 2025.07.19 -->
         <title>pyforestry.sweden.timber package - pyforestry documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=25af2a20" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
     
     
 
 
 <style>
   body {
-    --color-code-background: #f8f8f8;
-  --color-code-foreground: black;
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
   
   }
   @media not print {
     body[data-theme="dark"] {
-      --color-code-background: #202020;
-  --color-code-foreground: #d0d0d0;
+      --color-code-background: #2b2b2b;
+  --color-code-foreground: #f8f8f2;
   
     }
     @media (prefers-color-scheme: dark) {
       body:not([data-theme="light"]) {
-        --color-code-background: #202020;
-  --color-code-foreground: #d0d0d0;
+        --color-code-background: #2b2b2b;
+  --color-code-foreground: #f8f8f2;
   
       }
     }
@@ -189,7 +189,6 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
   
-  
   <span class="sidebar-brand-text">pyforestry  documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
@@ -299,19 +298,22 @@
 </section>
 <section id="module-pyforestry.sweden.timber.swe_timber">
 <span id="pyforestry-sweden-timber-swe-timber-module"></span><h2>pyforestry.sweden.timber.swe_timber module<a class="headerlink" href="#module-pyforestry.sweden.timber.swe_timber" title="Link to this heading">¶</a></h2>
+<p>Timber class with Swedish volume model integrations.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pyforestry.sweden.timber.swe_timber.SweTimber">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.timber.swe_timber.</span></span><span class="sig-name descname"><span class="pre">SweTimber</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double_bark_mm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crown_base_height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">over_bark</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'southern'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swedish_site</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.swedish_site.SwedishSite" title="pyforestry.sweden.site.swedish_site.SwedishSite"><span class="pre">SwedishSite</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/timber/swe_timber.html#SweTimber"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.timber.swe_timber.SweTimber" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="pyforestry.base.timber.timber_base.html#pyforestry.base.timber.timber_base.timber.Timber" title="pyforestry.base.timber.timber_base.timber.Timber"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timber</span></code></a></p>
+<p>Timber record with access to Swedish volume models.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pyforestry.sweden.timber.swe_timber.SweTimber.getvolume">
 <span class="sig-name descname"><span class="pre">getvolume</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/timber/swe_timber.html#SweTimber.getvolume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.timber.swe_timber.SweTimber.getvolume" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return stem volume based on species and tree size.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyforestry.sweden.timber.swe_timber.SweTimber.validate">
 <span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/timber/swe_timber.html#SweTimber.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.timber.swe_timber.SweTimber.validate" title="Link to this definition">¶</a></dt>
-<dd><p>Validate that the provided tree attributes are sensible.</p>
+<dd><p>Verify that provided parameters are within valid ranges.</p>
 </dd></dl>
 
 </dd></dl>
@@ -319,19 +321,22 @@
 </section>
 <section id="module-pyforestry.sweden.timber">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pyforestry.sweden.timber" title="Link to this heading">¶</a></h2>
+<p>Entry points for Swedish timber functionality.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pyforestry.sweden.timber.SweTimber">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.timber.</span></span><span class="sig-name descname"><span class="pre">SweTimber</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double_bark_mm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crown_base_height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">over_bark</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'southern'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swedish_site</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.swedish_site.SwedishSite" title="pyforestry.sweden.site.swedish_site.SwedishSite"><span class="pre">SwedishSite</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/timber/swe_timber.html#SweTimber"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.timber.SweTimber" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="pyforestry.base.timber.timber_base.html#pyforestry.base.timber.timber_base.timber.Timber" title="pyforestry.base.timber.timber_base.timber.Timber"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timber</span></code></a></p>
+<p>Timber record with access to Swedish volume models.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pyforestry.sweden.timber.SweTimber.getvolume">
 <span class="sig-name descname"><span class="pre">getvolume</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/timber/swe_timber.html#SweTimber.getvolume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.timber.SweTimber.getvolume" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return stem volume based on species and tree size.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyforestry.sweden.timber.SweTimber.validate">
 <span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/timber/swe_timber.html#SweTimber.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.timber.SweTimber.validate" title="Link to this definition">¶</a></dt>
-<dd><p>Validate that the provided tree attributes are sensible.</p>
+<dd><p>Verify that provided parameters are within valid ranges.</p>
 </dd></dl>
 
 </dd></dl>
@@ -426,7 +431,7 @@
 </div><script src="../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     </body>
 </html>

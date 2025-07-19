@@ -4,31 +4,31 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../../genindex.html" /><link rel="search" title="Search" href="../../../../search.html" />
 
-    <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
+    <!-- Generated with Sphinx 8.1.3 and Furo 2025.07.19 -->
         <title>pyforestry.sweden.timber.swe_timber - pyforestry documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=354aac6f" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?v=302659d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=25af2a20" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
     
     
 
 
 <style>
   body {
-    --color-code-background: #f8f8f8;
-  --color-code-foreground: black;
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
   
   }
   @media not print {
     body[data-theme="dark"] {
-      --color-code-background: #202020;
-  --color-code-foreground: #d0d0d0;
+      --color-code-background: #2b2b2b;
+  --color-code-foreground: #f8f8f2;
   
     }
     @media (prefers-color-scheme: dark) {
       body:not([data-theme="light"]) {
-        --color-code-background: #202020;
-  --color-code-foreground: #d0d0d0;
+        --color-code-background: #2b2b2b;
+  --color-code-foreground: #f8f8f2;
   
       }
     }
@@ -188,7 +188,6 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../../index.html">
   
-  
   <span class="sidebar-brand-text">pyforestry  documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../../../search.html" role="search">
@@ -286,26 +285,33 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for pyforestry.sweden.timber.swe_timber</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+<span></span><span class="sd">&quot;&quot;&quot;Timber class with Swedish volume model integrations.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.timber</span><span class="w"> </span><span class="kn">import</span> <span class="n">Timber</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.sweden.volume</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">BrandelVolume</span><span class="p">,</span> 
-    <span class="n">carbonnier_1954_volume_larch</span><span class="p">,</span>
-    <span class="n">andersson_1954_volume_small_trees_birch_height_above_4_m</span><span class="p">,</span>
-    <span class="n">andersson_1954_volume_small_trees_pine</span><span class="p">,</span>
-    <span class="n">andersson_1954_volume_small_trees_spruce</span><span class="p">,</span>
-    <span class="n">andersson_1954_volume_small_trees_birch_under_diameter_5_cm</span><span class="p">,</span>
-    <span class="n">Eriksson_1973_volume_aspen_Sweden</span><span class="p">,</span>
-    <span class="n">Eriksson_1973_volume_lodgepole_pine_Sweden</span><span class="p">,</span>
-    <span class="n">matern_1975_volume_sweden_beech</span><span class="p">,</span>
-    <span class="n">matern_1975_volume_sweden_oak</span>    
-<span class="p">)</span>
+
 <span class="c1"># Import SwedishSite and its region-specific namespace.</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.sweden.site</span><span class="w"> </span><span class="kn">import</span> <span class="n">SwedishSite</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.sweden.volume</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BrandelVolume</span><span class="p">,</span>
+    <span class="n">Eriksson_1973_volume_aspen_Sweden</span><span class="p">,</span>
+    <span class="n">Eriksson_1973_volume_lodgepole_pine_Sweden</span><span class="p">,</span>
+    <span class="n">andersson_1954_volume_small_trees_birch_height_above_4_m</span><span class="p">,</span>
+    <span class="n">andersson_1954_volume_small_trees_birch_under_diameter_5_cm</span><span class="p">,</span>
+    <span class="n">andersson_1954_volume_small_trees_pine</span><span class="p">,</span>
+    <span class="n">andersson_1954_volume_small_trees_spruce</span><span class="p">,</span>
+    <span class="n">carbonnier_1954_volume_larch</span><span class="p">,</span>
+    <span class="n">matern_1975_volume_sweden_beech</span><span class="p">,</span>
+    <span class="n">matern_1975_volume_sweden_oak</span><span class="p">,</span>
+<span class="p">)</span>
+
 
 <div class="viewcode-block" id="SweTimber">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.timber.html#pyforestry.sweden.timber.swe_timber.SweTimber">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SweTimber</span><span class="p">(</span><span class="n">Timber</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Timber record with access to Swedish volume models.&quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">species</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -317,8 +323,9 @@
         <span class="n">region</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;southern&quot;</span><span class="p">,</span>  <span class="c1"># Default to &quot;southern&quot;; can be &quot;northern&quot;</span>
         <span class="n">latitude</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="c1"># Optionally, supply a SwedishSite with additional region‐specific parameters.</span>
-        <span class="n">swedish_site</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SwedishSite</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">swedish_site</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SwedishSite</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Instantiate a timber record and infer missing fields.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">species</span> <span class="o">=</span> <span class="n">species</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span> <span class="o">=</span> <span class="n">diameter_cm</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">height_m</span> <span class="o">=</span> <span class="n">height_m</span>
@@ -330,9 +337,9 @@
 
         <span class="c1"># If no latitude is provided, set one based on region.</span>
         <span class="k">if</span> <span class="n">latitude</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="o">==</span> <span class="s1">&#39;northern&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="o">==</span> <span class="s2">&quot;northern&quot;</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">latitude</span> <span class="o">=</span> <span class="mi">64</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="o">==</span> <span class="s1">&#39;southern&#39;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="o">==</span> <span class="s2">&quot;southern&quot;</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">latitude</span> <span class="o">=</span> <span class="mi">58</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Region must be &#39;northern&#39; or &#39;southern&#39;.&quot;</span><span class="p">)</span>
@@ -347,17 +354,22 @@
 <div class="viewcode-block" id="SweTimber.validate">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.timber.html#pyforestry.sweden.timber.swe_timber.SweTimber.validate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verify that provided parameters are within valid ranges.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_m</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Height must be larger than 0 m: </span><span class="si">{self.height_m}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Height must be larger than 0 m: </span><span class="si">{self.height_m}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Diameter must be larger or equal to 0 cm: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">crown_base_height_m</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_m</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> 
-            <span class="bp">self</span><span class="o">.</span><span class="n">crown_base_height_m</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Crown base height (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">crown_base_height_m</span><span class="si">}</span><span class="s1"> m) cannot be higher than tree height: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="si">}</span><span class="s1"> m&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">crown_base_height_m</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_m</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">crown_base_height_m</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_m</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Crown base height (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">crown_base_height_m</span><span class="si">}</span><span class="s2"> m) cannot be higher than tree height: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="si">}</span><span class="s2"> m&quot;</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stump_height_m</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Stump height must be larger or equal to 0 m: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stump_height_m</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stump height must be larger or equal to 0 m: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stump_height_m</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;northern&quot;</span><span class="p">,</span> <span class="s2">&quot;southern&quot;</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Region must be &#39;northern&#39; or &#39;southern&#39;.&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">species</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span>
@@ -367,23 +379,26 @@
             <span class="s2">&quot;betula pendula&quot;</span><span class="p">,</span>
             <span class="s2">&quot;betula pubescens&quot;</span><span class="p">,</span>
         <span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Species must be one of: pinus sylvestris, picea abies, betula, betula pendula, betula pubescens.&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Species must be one of: pinus sylvestris, picea abies, betula, betula pendula, betula pubescens.&quot;</span>
+            <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SweTimber.getvolume">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.timber.html#pyforestry.sweden.timber.swe_timber.SweTimber.getvolume">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">getvolume</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return stem volume based on species and tree size.&quot;&quot;&quot;</span>
         <span class="c1"># Return 0 if diameter is negative (as in C# code)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="mi">0</span>
 
         <span class="c1"># Define smallTree condition: a small tree is one with diameter &lt; 4.5 cm or height &lt; 7 m.</span>
-        <span class="n">small_tree</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span> <span class="o">&lt;</span> <span class="mf">4.5</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_m</span> <span class="o">&lt;</span> <span class="mi">7</span><span class="p">)</span>
+        <span class="n">small_tree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span> <span class="o">&lt;</span> <span class="mf">4.5</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_m</span> <span class="o">&lt;</span> <span class="mi">7</span>
 
         <span class="n">sp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">species</span>  <span class="c1"># species is already lower-case</span>
 
         <span class="c1"># Larch</span>
-        <span class="k">if</span> <span class="n">sp</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;larix&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">sp</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;larix&quot;</span><span class="p">):</span>
             <span class="c1"># In the C# code, for Larch we always call the Larch volume function.</span>
             <span class="c1"># Here we mimic that by using one volume function for larix.</span>
             <span class="c1"># We assume that if the diameter is large (&gt;50 cm) we use the Brandel model,</span>
@@ -391,155 +406,163 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">swedish_site</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">vol</span> <span class="o">=</span> <span class="n">BrandelVolume</span><span class="o">.</span><span class="n">get_volume</span><span class="p">(</span>
-                        <span class="n">species</span><span class="o">=</span><span class="s1">&#39;pinus sylvestris&#39;</span><span class="p">,</span>  <span class="c1"># For larix, the model uses southern pine parameters.</span>
+                        <span class="n">species</span><span class="o">=</span><span class="s2">&quot;pinus sylvestris&quot;</span><span class="p">,</span>  <span class="c1"># For larix, the model uses southern pine parameters.</span>
                         <span class="n">diameter_cm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span>
                         <span class="n">height_m</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="p">,</span>
                         <span class="n">latitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">swedish_site</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span>
                         <span class="n">altitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">swedish_site</span><span class="o">.</span><span class="n">altitude</span><span class="p">,</span>
                         <span class="n">field_layer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">swedish_site</span><span class="o">.</span><span class="n">field_layer</span><span class="o">.</span><span class="n">code</span><span class="p">,</span>
-                        <span class="n">over_bark</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">over_bark</span>
+                        <span class="n">over_bark</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">over_bark</span><span class="p">,</span>
                     <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">vol</span> <span class="o">=</span> <span class="n">BrandelVolume</span><span class="o">.</span><span class="n">get_volume</span><span class="p">(</span>
-                        <span class="n">species</span><span class="o">=</span><span class="s1">&#39;pinus sylvestris&#39;</span><span class="p">,</span>
+                        <span class="n">species</span><span class="o">=</span><span class="s2">&quot;pinus sylvestris&quot;</span><span class="p">,</span>
                         <span class="n">diameter_cm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span>
                         <span class="n">height_m</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="p">,</span>
                         <span class="n">latitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span>
-                        <span class="n">altitude</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;altitude&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-                        <span class="n">field_layer</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;field_layer&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-                        <span class="n">over_bark</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">over_bark</span>
+                        <span class="n">altitude</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;altitude&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                        <span class="n">field_layer</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;field_layer&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                        <span class="n">over_bark</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">over_bark</span><span class="p">,</span>
                     <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">vol</span> <span class="o">=</span> <span class="n">carbonnier_1954_volume_larch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="p">)</span>
 
         <span class="c1"># Pine (excluding larix sibirica)</span>
-        <span class="k">elif</span> <span class="n">sp</span> <span class="o">==</span> <span class="s1">&#39;pinus sylvestris&#39;</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">small_tree</span><span class="p">:</span>
-                    <span class="n">vol</span> <span class="o">=</span> <span class="n">andersson_1954_volume_small_trees_pine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">sp</span> <span class="o">==</span> <span class="s2">&quot;pinus sylvestris&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">small_tree</span><span class="p">:</span>
+                <span class="n">vol</span> <span class="o">=</span> <span class="n">andersson_1954_volume_small_trees_pine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">swedish_site</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">vol</span> <span class="o">=</span> <span class="n">BrandelVolume</span><span class="o">.</span><span class="n">get_volume</span><span class="p">(</span>
+                        <span class="n">species</span><span class="o">=</span><span class="s2">&quot;pinus sylvestris&quot;</span><span class="p">,</span>
+                        <span class="n">diameter_cm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span>
+                        <span class="n">height_m</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="p">,</span>
+                        <span class="n">latitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">swedish_site</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span>
+                        <span class="n">altitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">swedish_site</span><span class="o">.</span><span class="n">altitude</span><span class="p">,</span>
+                        <span class="n">field_layer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">swedish_site</span><span class="o">.</span><span class="n">field_layer</span><span class="o">.</span><span class="n">code</span><span class="p">,</span>
+                        <span class="n">over_bark</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">over_bark</span><span class="p">,</span>
+                    <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">swedish_site</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                        <span class="n">vol</span> <span class="o">=</span> <span class="n">BrandelVolume</span><span class="o">.</span><span class="n">get_volume</span><span class="p">(</span>
-                            <span class="n">species</span><span class="o">=</span><span class="s1">&#39;pinus sylvestris&#39;</span><span class="p">,</span>
-                            <span class="n">diameter_cm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span>
-                            <span class="n">height_m</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="p">,</span>
-                            <span class="n">latitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">swedish_site</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span>
-                            <span class="n">altitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">swedish_site</span><span class="o">.</span><span class="n">altitude</span><span class="p">,</span>
-                            <span class="n">field_layer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">swedish_site</span><span class="o">.</span><span class="n">field_layer</span><span class="o">.</span><span class="n">code</span><span class="p">,</span>
-                            <span class="n">over_bark</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">over_bark</span>
-                        <span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">vol</span> <span class="o">=</span> <span class="n">BrandelVolume</span><span class="o">.</span><span class="n">get_volume</span><span class="p">(</span>
-                            <span class="n">species</span><span class="o">=</span><span class="s1">&#39;pinus sylvestris&#39;</span><span class="p">,</span>
-                            <span class="n">diameter_cm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span>
-                            <span class="n">height_m</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="p">,</span>
-                            <span class="n">latitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span>
-                            <span class="n">altitude</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;altitude&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-                            <span class="n">field_layer</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;field_layer&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-                            <span class="n">over_bark</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">over_bark</span>
-                        <span class="p">)</span>
+                    <span class="n">vol</span> <span class="o">=</span> <span class="n">BrandelVolume</span><span class="o">.</span><span class="n">get_volume</span><span class="p">(</span>
+                        <span class="n">species</span><span class="o">=</span><span class="s2">&quot;pinus sylvestris&quot;</span><span class="p">,</span>
+                        <span class="n">diameter_cm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span>
+                        <span class="n">height_m</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="p">,</span>
+                        <span class="n">latitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span>
+                        <span class="n">altitude</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;altitude&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                        <span class="n">field_layer</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;field_layer&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                        <span class="n">over_bark</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">over_bark</span><span class="p">,</span>
+                    <span class="p">)</span>
 
         <span class="c1"># Spruce</span>
-        <span class="k">elif</span> <span class="n">sp</span> <span class="o">==</span> <span class="s1">&#39;picea abies&#39;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">sp</span> <span class="o">==</span> <span class="s2">&quot;picea abies&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">small_tree</span><span class="p">:</span>
                 <span class="n">vol</span> <span class="o">=</span> <span class="n">andersson_1954_volume_small_trees_spruce</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">swedish_site</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">vol</span> <span class="o">=</span> <span class="n">BrandelVolume</span><span class="o">.</span><span class="n">get_volume</span><span class="p">(</span>
-                        <span class="n">species</span><span class="o">=</span><span class="s1">&#39;picea abies&#39;</span><span class="p">,</span>
+                        <span class="n">species</span><span class="o">=</span><span class="s2">&quot;picea abies&quot;</span><span class="p">,</span>
                         <span class="n">diameter_cm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span>
                         <span class="n">height_m</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="p">,</span>
                         <span class="n">latitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">swedish_site</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span>
                         <span class="n">altitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">swedish_site</span><span class="o">.</span><span class="n">altitude</span><span class="p">,</span>
                         <span class="n">field_layer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">swedish_site</span><span class="o">.</span><span class="n">field_layer</span><span class="o">.</span><span class="n">code</span><span class="p">,</span>
-                        <span class="n">over_bark</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">over_bark</span>
+                        <span class="n">over_bark</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">over_bark</span><span class="p">,</span>
                     <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">vol</span> <span class="o">=</span> <span class="n">BrandelVolume</span><span class="o">.</span><span class="n">get_volume</span><span class="p">(</span>
-                        <span class="n">species</span><span class="o">=</span><span class="s1">&#39;picea abies&#39;</span><span class="p">,</span>
+                        <span class="n">species</span><span class="o">=</span><span class="s2">&quot;picea abies&quot;</span><span class="p">,</span>
                         <span class="n">diameter_cm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span>
                         <span class="n">height_m</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="p">,</span>
                         <span class="n">latitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span>
-                        <span class="n">altitude</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;altitude&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-                        <span class="n">field_layer</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;field_layer&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-                        <span class="n">over_bark</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">over_bark</span>
+                        <span class="n">altitude</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;altitude&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                        <span class="n">field_layer</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;field_layer&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                        <span class="n">over_bark</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">over_bark</span><span class="p">,</span>
                     <span class="p">)</span>
 
         <span class="c1"># Birch</span>
-        <span class="k">elif</span> <span class="n">sp</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;betula&#39;</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="n">sp</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;betula&quot;</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">small_tree</span><span class="p">:</span>
                 <span class="c1"># Use different Andersson_1954 functions based on tree height.</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_m</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">:</span>
-                    <span class="n">vol</span> <span class="o">=</span> <span class="n">andersson_1954_volume_small_trees_birch_height_above_4_m</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="p">)</span>
+                    <span class="n">vol</span> <span class="o">=</span> <span class="n">andersson_1954_volume_small_trees_birch_height_above_4_m</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_m</span>
+                    <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">vol</span> <span class="o">=</span> <span class="n">andersson_1954_volume_small_trees_birch_under_diameter_5_cm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="p">)</span>
+                    <span class="n">vol</span> <span class="o">=</span> <span class="n">andersson_1954_volume_small_trees_birch_under_diameter_5_cm</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_m</span>
+                    <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">swedish_site</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">vol</span> <span class="o">=</span> <span class="n">BrandelVolume</span><span class="o">.</span><span class="n">get_volume</span><span class="p">(</span>
-                        <span class="n">species</span><span class="o">=</span><span class="s1">&#39;betula&#39;</span><span class="p">,</span>
+                        <span class="n">species</span><span class="o">=</span><span class="s2">&quot;betula&quot;</span><span class="p">,</span>
                         <span class="n">diameter_cm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span>
                         <span class="n">height_m</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="p">,</span>
                         <span class="n">latitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">swedish_site</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span>
                         <span class="n">altitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">swedish_site</span><span class="o">.</span><span class="n">altitude</span><span class="p">,</span>
                         <span class="n">field_layer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">swedish_site</span><span class="o">.</span><span class="n">field_layer</span><span class="o">.</span><span class="n">code</span><span class="p">,</span>
-                        <span class="n">over_bark</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">over_bark</span>
+                        <span class="n">over_bark</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">over_bark</span><span class="p">,</span>
                     <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">vol</span> <span class="o">=</span> <span class="n">BrandelVolume</span><span class="o">.</span><span class="n">get_volume</span><span class="p">(</span>
-                        <span class="n">species</span><span class="o">=</span><span class="s1">&#39;betula&#39;</span><span class="p">,</span>
+                        <span class="n">species</span><span class="o">=</span><span class="s2">&quot;betula&quot;</span><span class="p">,</span>
                         <span class="n">diameter_cm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span>
                         <span class="n">height_m</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="p">,</span>
                         <span class="n">latitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span>
-                        <span class="n">altitude</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;altitude&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-                        <span class="n">field_layer</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;field_layer&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-                        <span class="n">over_bark</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">over_bark</span>
+                        <span class="n">altitude</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;altitude&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                        <span class="n">field_layer</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;field_layer&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                        <span class="n">over_bark</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">over_bark</span><span class="p">,</span>
                     <span class="p">)</span>
 
         <span class="c1"># Aspen (and related species)</span>
-        <span class="k">elif</span> <span class="n">sp</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;fraxinus excelsior&#39;</span><span class="p">,</span> <span class="s1">&#39;populus tremula&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">sp</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;alnus&#39;</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="n">sp</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;fraxinus excelsior&quot;</span><span class="p">,</span> <span class="s2">&quot;populus tremula&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">sp</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;alnus&quot;</span><span class="p">):</span>
             <span class="n">vol</span> <span class="o">=</span> <span class="n">Eriksson_1973_volume_aspen_Sweden</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="p">)</span>
 
         <span class="c1"># Lodgepole pine (Contorta)</span>
-        <span class="k">elif</span> <span class="n">sp</span> <span class="o">==</span> <span class="s1">&#39;pinus contorta&#39;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">sp</span> <span class="o">==</span> <span class="s2">&quot;pinus contorta&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">small_tree</span><span class="p">:</span>
                 <span class="n">vol</span> <span class="o">=</span> <span class="n">andersson_1954_volume_small_trees_pine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">vol</span> <span class="o">=</span> <span class="n">Eriksson_1973_volume_lodgepole_pine_Sweden</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="p">)</span>
 
         <span class="c1"># Beech</span>
-        <span class="k">elif</span> <span class="n">sp</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;fagus sylvatica&#39;</span><span class="p">,</span> <span class="s1">&#39;carpinus betulus&#39;</span><span class="p">]:</span>
+        <span class="k">elif</span> <span class="n">sp</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;fagus sylvatica&quot;</span><span class="p">,</span> <span class="s2">&quot;carpinus betulus&quot;</span><span class="p">]:</span>
             <span class="n">vol</span> <span class="o">=</span> <span class="n">matern_1975_volume_sweden_beech</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="p">)</span>
 
         <span class="c1"># Oak</span>
-        <span class="k">elif</span> <span class="n">sp</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;quercus&#39;</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="n">sp</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;quercus&quot;</span><span class="p">):</span>
             <span class="n">vol</span> <span class="o">=</span> <span class="n">matern_1975_volume_sweden_oak</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="p">)</span>
 
         <span class="c1"># Default fallback: use Birch model</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">small_tree</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_m</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">:</span>
-                    <span class="n">vol</span> <span class="o">=</span> <span class="n">andersson_1954_volume_small_trees_birch_height_above_4_m</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="p">)</span>
+                    <span class="n">vol</span> <span class="o">=</span> <span class="n">andersson_1954_volume_small_trees_birch_height_above_4_m</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_m</span>
+                    <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">vol</span> <span class="o">=</span> <span class="n">andersson_1954_volume_small_trees_birch_under_diameter_5_cm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="p">)</span>
+                    <span class="n">vol</span> <span class="o">=</span> <span class="n">andersson_1954_volume_small_trees_birch_under_diameter_5_cm</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_m</span>
+                    <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">swedish_site</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">vol</span> <span class="o">=</span> <span class="n">BrandelVolume</span><span class="o">.</span><span class="n">get_volume</span><span class="p">(</span>
-                        <span class="n">species</span><span class="o">=</span><span class="s1">&#39;betula&#39;</span><span class="p">,</span>
+                        <span class="n">species</span><span class="o">=</span><span class="s2">&quot;betula&quot;</span><span class="p">,</span>
                         <span class="n">diameter_cm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span>
                         <span class="n">height_m</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="p">,</span>
                         <span class="n">latitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">swedish_site</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span>
                         <span class="n">altitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">swedish_site</span><span class="o">.</span><span class="n">altitude</span><span class="p">,</span>
                         <span class="n">field_layer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">swedish_site</span><span class="o">.</span><span class="n">field_layer</span><span class="o">.</span><span class="n">code</span><span class="p">,</span>
-                        <span class="n">over_bark</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">over_bark</span>
+                        <span class="n">over_bark</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">over_bark</span><span class="p">,</span>
                     <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">vol</span> <span class="o">=</span> <span class="n">BrandelVolume</span><span class="o">.</span><span class="n">get_volume</span><span class="p">(</span>
-                        <span class="n">species</span><span class="o">=</span><span class="s1">&#39;betula&#39;</span><span class="p">,</span>
+                        <span class="n">species</span><span class="o">=</span><span class="s2">&quot;betula&quot;</span><span class="p">,</span>
                         <span class="n">diameter_cm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span>
                         <span class="n">height_m</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="p">,</span>
                         <span class="n">latitude</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span>
-                        <span class="n">altitude</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;altitude&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-                        <span class="n">field_layer</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;field_layer&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-                        <span class="n">over_bark</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">over_bark</span>
+                        <span class="n">altitude</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;altitude&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                        <span class="n">field_layer</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;field_layer&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                        <span class="n">over_bark</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">over_bark</span><span class="p">,</span>
                     <span class="p">)</span>
         <span class="k">return</span> <span class="n">vol</span></div>
 </div>
@@ -579,7 +602,7 @@
 </div><script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../../../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     </body>
 </html>
