@@ -1,48 +1,54 @@
-[![CI](https://github.com/Silviculturalist/pyforestry/actions/workflows/ci.yml/badge.svg?event=push)](https://github.com/Silviculturalist/pyforestry/actions/workflows/ci.yml) [![codecov](https://codecov.io/gh/Silviculturalist/pyforestry/branch/main/graph/badge.svg?token=2C3Z6NXHA4)](https://codecov.io/gh/Silviculturalist/pyforestry) ![Docstring Coverage](.docstring_coverage.svg)
+# pyforestry
 
-## Documentation: [Available](https://silviculturalist.github.io/pyforestry/)
+[![CI](https://github.com/Silviculturalist/pyforestry/actions/workflows/ci.yml/badge.svg?event=push)](https://github.com/Silviculturalist/pyforestry/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/Silviculturalist/pyforestry/branch/main/graph/badge.svg?token=2C3Z6NXHA4)](https://codecov.io/gh/Silviculturalist/pyforestry)
+![Docstring Coverage](.docstring_coverage.svg)
+
+## Documentation
+[Available online](https://silviculturalist.github.io/pyforestry/)
 
 This package is currently under *very early* development.
-Use at your own risk. 
+Use at your own risk. Any corrections, comments, and suggestions are greatly appreciated.
 
-Any corrections, comments, suggestions are greatly appreciated.
+`pyforestry` is a Python toolkit for forest science. It collects a variety of growth and yield models
+and provides modern data structures for working with tree and stand information. By standardising
+units and variable names across models we aim to make comparisons and validations straightforward.
 
-## Introduction
-
-
-`pyforestry` is a Python package for forest science, providing a standardized, open-source collection of models and functions. Many forest simulators are difficult to replicate, incur a language barrier, are hard to access, and use inconsistent units and variable names. By standardizing these components in a modern framework, we can easily swap out data, functions, and simulation models, or run them side-by-side for validation and comparison.
+## Features
+- Object oriented helpers for trees, stands and circular plots
+- Site index and climate utilities for Swedish forestry
+- Timber pricing, taper and bucking functions
+- Example notebooks and small reference datasets
 
 ## Installation
-
-You can install the latest development version of `pyforestry` directly from GitHub using `pip`.
+Install the latest development version directly from GitHub:
 
 ```bash
-pip install git+[https://github.com/](https://github.com/)<Silviculturalist>/pyforestry.git
+pip install git+https://github.com/Silviculturalist/pyforestry.git
 ```
 
-## Goal
-The goal of this GitHub repository is to be a center to:
+For development work clone the repository and install with the optional `dev` dependencies:
 
--   Digitalise legacy forest science functions and models.
--   Review, discuss, validate, and update these functions in an open, collaborative environment.
--   Maintain robust version control and clear, accessible documentation.
+```bash
+git clone https://github.com/Silviculturalist/pyforestry.git
+cd pyforestry
+pip install -e .[dev]
+```
 
-We are developing object-oriented structures for trees, stands, sites, and treatments, allowing pyforestry to grow into a stand-alone simulator. As the project progresses, we envision it becoming part of a larger ecosystem of open-source tools for forest science, with standardized variable names and a shared philosophy, welcoming contributions from all over the world.
+## Quick example
+```python
+from pyforestry.base.helpers import CircularPlot, RepresentationTree, Stand, parse_tree_species
 
-## Why pyforestry?
+plot = CircularPlot(id=1, radius_m=5.0, trees=[
+    RepresentationTree(species=parse_tree_species("picea abies"), diameter_cm=20),
+])
+stand = Stand(plots=[plot])
+print(stand.BasalArea.TOTAL.value)
+```
 
-This package aims to remedy several issues found in earlier stand simulators:
--   Modern Documentation: Python docstrings, combined with tools like Sphinx, create documentation that is structured, discoverable, and integrated with the code.
--   Open-Source Collaboration: Issues can be identified, discussed, and solved transparently by the community through GitHub.
--   No "Black Boxes": The user has full control and visibility over all processes and calculations.
--   Future-Proof: By using a popular, modern language and open standards, the material is less at risk of becoming obsolete due to technical issues.
--   Trust and Transparency: Trust in the collection is built and maintained through its open-source nature.
+## Contributing
+Please see the [contributing guidelines](CONTRIBUTING.md) for tips on setting up your development
+environment and submitting pull requests.
 
-# What's included?
-
-The package includes:
-
--   Tutorials and Examples: Jupyter Notebooks and other guides demonstrating usage.
--   Modules and Functions: A growing collection of functions for forest growth and yield.
--   Documentation: Every function and class is documented with examples. The documentation is available online and searchable.
--   Data: So far, mostly older published datasets for testing and validation.
+## License
+`pyforestry` is distributed under the terms of the [MIT License](LICENSE).
