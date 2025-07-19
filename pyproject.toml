@@ -37,16 +37,16 @@ all = [
 #Dev dependencies for writing documentation and testing.
 dev = [
   "pytest",
-  "pytest-cov",          # ← measure coverage
-  "docstr-coverage",     # <- docstring coverage
-  "coverage",            # ← coverage engine
+  "pytest-cov",          # measure coverage
+  "docstr-coverage",     # docstring coverage
+  "coverage",            # coverage engine
   "black",
   "ruff",
   "build",
   "twine",
-  "sphinx",              # ← docs tool
-  "furo",                # ← a popular Sphinx theme
-  "myst-parser",         # ← if you want Markdown support
+  "sphinx",              # docs tool
+  "furo",                # a popular Sphinx theme
+  "myst-parser",         # if you want Markdown support
 ]
 
 # ----- setuptools‑specific bits -----
@@ -85,3 +85,9 @@ target-version = ['py312']
 line-length = 99
 # Enable import-sorting, standard lint rules, and bug-finding
 select = ["E", "F", "W", "I", "B"]
+
+[tool.bump-my-version]
+files = ["pyproject.toml"]
+search = '^version = "{current_version}"'
+replace = 'version = "{new_version}"'
+current_version = "0.35.0"
