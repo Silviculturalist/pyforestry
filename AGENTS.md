@@ -26,4 +26,12 @@
    ```
    The coverage threshold is enforced in `codecov.yml` (50%).
 
+3. For pull requests targeting `dev`, ensure all changed or new Python files have
+   **at least 90%** test coverage and **90%** docstring coverage:
+   ```bash
+   python scripts/check_changed_file_coverage.py $(git merge-base HEAD origin/dev)
+   ```
+   The CI workflow runs the same script and will fail if any modified file falls
+   below these levels.
+
 Only finish a task when all steps above succeed.
