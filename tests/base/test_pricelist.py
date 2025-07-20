@@ -2,7 +2,7 @@ import pytest
 
 from pyforestry.base.helpers.tree_species import TreeSpecies
 from pyforestry.base.pricelist import Pricelist, TimberPricelist, create_pricelist_from_data
-from pyforestry.base.pricelist.data.mellanskog_2013 import Mellanskog_2013_price_data
+from pyforestry.sweden.pricelist.data.mellanskog_2013 import Mellanskog_2013_price_data
 
 
 @pytest.fixture(scope="module")
