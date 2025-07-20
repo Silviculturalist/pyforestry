@@ -8,7 +8,7 @@ from typing import Any, Iterator, List, Optional, Type
 import matplotlib.pyplot as plt
 import numpy as np
 
-from pyforestry.base.pricelist.pricelist import *
+from pyforestry.base.pricelist import Pricelist
 from pyforestry.base.taper import Taper
 from pyforestry.base.timber import Timber
 
@@ -104,7 +104,6 @@ class BuckingResult(Mapping):
 
                 # Add start and end points explicitly for a smooth fill
                 if section_x[0] > section.start_point:
-                    start_y = np.interp(section.start_point, taper_x, taper_y)
                     section_x = np.insert(section_x, 0, section.start_point)
                     section_y = np.insert(
                         section_y,
@@ -137,7 +136,9 @@ class BuckingResult(Mapping):
                 ax.text(
                     midpoint,
                     section.top_diameter / 2,
-                    f"{section.top_diameter:.1f} cm\n{length:.2f} m\n Vol {section.volume * 1000:.0f} $dm^3$\n {section.value:.0f} :-",
+                    f"{section.top_diameter:.1f} cm\n{length:.2f} "
+                    f"m\n Vol {section.volume * 1000:.0f} "
+                    f"$dm^3$\n {section.value:.0f} :-",
                     ha="center",
                     va="center",
                     fontsize=8,

@@ -175,7 +175,8 @@ class SolutionCube:
             new_hash = _hash_pricelist(pricelist_to_verify)
             if ds.attrs.get("pricelist_hash") != new_hash:
                 raise ValueError(
-                    "Pricelist hash mismatch! The loaded cube was not generated with the provided pricelist."
+                    "Pricelist hash mismatch! "
+                    "The loaded cube was not generated with the provided pricelist."
                 )
             print("Pricelist hash verified.")
 

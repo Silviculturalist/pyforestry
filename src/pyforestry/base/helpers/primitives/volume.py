@@ -82,7 +82,12 @@ class AtomicVolume:
         return AtomicVolume(self.value / scalar, self.region, self.species, self.type)
 
     def __repr__(self):
-        return f"AtomicVolume({self.value:.2f} m3, type='{self.type}', species='{self.species}', region='{self.region}')"
+        return (
+            f"AtomicVolume({self.value:.2f} m3, "
+            f"type='{self.type!r}', "
+            f"species='{self.species!r}', "
+            f"region='{self.region!r}')"
+        )
 
     # Inside the AtomicVolume class
 
