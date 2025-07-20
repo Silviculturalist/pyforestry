@@ -1,3 +1,5 @@
+"""Allometric biomass functions from Marklund (1988)."""
+
 import inspect
 from typing import Optional
 
@@ -7,10 +9,12 @@ from pyforestry.base.timber import Timber
 
 
 def Marklund_1988_T1(diameter_cm):
+    """Stem biomass for Scots pine using only diameter (model T1)."""
     return np.exp(-2.3388 + 11.3264 * (diameter_cm / (diameter_cm + 13)))
 
 
 def Marklund_1988_T2(diameter_cm, height_m):
+    """Stem biomass for Scots pine from diameter and height (model T2)."""
     return np.exp(
         -2.6768
         + 7.5939 * (diameter_cm / (diameter_cm + 13))
@@ -20,6 +24,7 @@ def Marklund_1988_T2(diameter_cm, height_m):
 
 
 def Marklund_1988_T3(diameter_cm, height_m, double_bark_mm, age):
+    """Stem biomass for Scots pine using bark thickness and age (model T3)."""
     return np.exp(
         -2.6232
         + 7.7318 * (diameter_cm / (diameter_cm + 13))
@@ -39,6 +44,7 @@ def Marklund_1988_T4(
     form_quotient3=None,
     altitude_m=None,
 ):
+    """Comprehensive Scots pine stem model including site factors (T4)."""
     if form_quotient5 is not None and form_quotient3 is not None:
         print("Either form_quotient5 or form_quotient3 can be supplied. Not both.")
         print("form_quotient5 taking precedence.")
@@ -62,10 +68,12 @@ MarklundPineStem = sorted(MarklundPineStem, key=lambda f: f.__code__.co_argcount
 
 # Stem wood functions
 def Marklund_1988_T5(diameter_cm):
+    """Scots pine stem wood biomass from diameter (T5)."""
     return np.exp(-2.2184 + 11.4219 * (diameter_cm / (diameter_cm + 14)))
 
 
 def Marklund_1988_T6(diameter_cm, height_m):
+    """Scots pine stem wood from diameter and height (T6)."""
     return np.exp(
         -2.6864
         + 7.6066 * (diameter_cm / (diameter_cm + 14))
@@ -75,6 +83,7 @@ def Marklund_1988_T6(diameter_cm, height_m):
 
 
 def Marklund_1988_T7(diameter_cm, height_m, double_bark_mm, age):
+    """Scots pine stem wood with bark thickness and age (T7)."""
     return np.exp(
         -2.5325
         + 7.8936 * (diameter_cm / (diameter_cm + 14))
@@ -94,6 +103,7 @@ def Marklund_1988_T8(
     form_quotient3=None,
     altitude_m=None,
 ):
+    """Most detailed Scots pine stem wood model (T8)."""
     if form_quotient5 is not None and form_quotient3 is not None:
         print("Either form_quotient5 or form_quotient3 can be supplied. Not both.")
         print("form_quotient5 taking precedence.")
@@ -119,16 +129,19 @@ MarklundPineStemWood = sorted(
 
 # Stem bark functions
 def Marklund_1988_T9(diameter_cm):
+    """Scots pine stem bark biomass from diameter (T9)."""
     return np.exp(-2.9748 + 8.8489 * (diameter_cm / (diameter_cm + 16)))
 
 
 def Marklund_1988_T10(diameter_cm, height_m):
+    """Scots pine stem bark using diameter and height (T10)."""
     return np.exp(
         -3.2765 + 7.2482 * (diameter_cm / (diameter_cm + 16)) + 0.4487 * np.log(height_m)
     )
 
 
 def Marklund_1988_T11(diameter_cm, height_m, relative_bark_thickness):
+    """Scots pine stem bark with relative bark thickness (T11)."""
     return np.exp(
         -3.6065
         + 7.0834 * (diameter_cm / (diameter_cm + 16))
@@ -138,6 +151,7 @@ def Marklund_1988_T11(diameter_cm, height_m, relative_bark_thickness):
 
 
 def Marklund_1988_T12(diameter_cm, height_m, crown_base_height_m, relative_bark_thickness):
+    """Detailed stem bark model with crown ratio (T12)."""
     return np.exp(
         -3.5076
         + 7.5295 * (diameter_cm / (diameter_cm + 16))
@@ -153,16 +167,19 @@ MarklundPineBark = sorted(MarklundPineBark, key=lambda f: f.__code__.co_argcount
 
 # Living branches functions
 def Marklund_1988_T13(diameter_cm):
+    """Living branches of Scots pine from diameter (T13)."""
     return np.exp(-2.9580 + 7.7428 * (diameter_cm / (diameter_cm + 18)))
 
 
 def Marklund_1988_T14(diameter_cm, height_m):
+    """Living branches using diameter and height (T14)."""
     return np.exp(
         -3.0331 + 6.7610 * (diameter_cm / (diameter_cm + 18)) + 0.6565 * np.log(height_m)
     )
 
 
 def Marklund_1988_T15(diameter_cm, height_m, crown_base_height_m):
+    """Living branches model with crown base height (T15)."""
     return np.exp(
         -3.1398
         + 6.6698 * (diameter_cm / (diameter_cm + 18))
@@ -179,16 +196,19 @@ MarklundPineLivingBranches = sorted(
 
 # Needles functions
 def Marklund_1988_T16(diameter_cm):
+    """Scots pine needle biomass from diameter (T16)."""
     return np.exp(-3.5285 + 6.5301 * (diameter_cm / (diameter_cm + 20)))
 
 
 def Marklund_1988_T17(diameter_cm, height_m):
+    """Needle biomass using diameter and height (T17)."""
     return np.exp(
         -3.6531 + 5.9425 * (diameter_cm / (diameter_cm + 20)) + 0.8165 * np.log(height_m)
     )
 
 
 def Marklund_1988_T18(diameter_cm, height_m, crown_base_height_m):
+    """Needle biomass including crown base height (T18)."""
     return np.exp(
         -3.7941
         + 5.8956 * (diameter_cm / (diameter_cm + 20))
@@ -205,16 +225,19 @@ MarklundPineNeedles = sorted(
 
 # Dead branches functions
 def Marklund_1988_T19(diameter_cm):
+    """Dead branches of Scots pine from diameter (T19)."""
     return np.exp(-4.3352 + 5.8210 * (diameter_cm / (diameter_cm + 23)))
 
 
 def Marklund_1988_T20(diameter_cm, height_m):
+    """Dead branches using diameter and height (T20)."""
     return np.exp(
         -4.4668 + 5.3836 * (diameter_cm / (diameter_cm + 23)) + 0.9584 * np.log(height_m)
     )
 
 
 def Marklund_1988_T21(diameter_cm, height_m, crown_base_height_m):
+    """Dead branches model with crown base height (T21)."""
     return np.exp(
         -4.5368
         + 5.4689 * (diameter_cm / (diameter_cm + 23))
@@ -231,16 +254,19 @@ MarklundPineDeadBranches = sorted(
 
 # Stump-root system functions
 def Marklund_1988_T22(diameter_cm):
+    """Stump-root biomass for Scots pine from diameter (T22)."""
     return np.exp(-2.2114 + 7.5246 * (diameter_cm / (diameter_cm + 19)))
 
 
 def Marklund_1988_T23(diameter_cm, height_m):
+    """Stump-root biomass using diameter and height (T23)."""
     return np.exp(
         -2.3323 + 6.4935 * (diameter_cm / (diameter_cm + 19)) + 0.6055 * np.log(height_m)
     )
 
 
 def Marklund_1988_T24(diameter_cm, height_m, crown_base_height_m):
+    """Stump-root biomass with crown base height (T24)."""
     return np.exp(
         -2.4008
         + 6.5480 * (diameter_cm / (diameter_cm + 19))
@@ -257,16 +283,19 @@ MarklundPineStumpRootSystem = sorted(
 
 # Stump functions
 def Marklund_1988_T25(diameter_cm):
+    """Scots pine stump biomass from diameter (T25)."""
     return np.exp(-3.1444 + 8.4027 * (diameter_cm / (diameter_cm + 15)))
 
 
 def Marklund_1988_T26(diameter_cm, height_m):
+    """Stump biomass using diameter and height (T26)."""
     return np.exp(
         -3.2571 + 7.3144 * (diameter_cm / (diameter_cm + 15)) + 0.7078 * np.log(height_m)
     )
 
 
 def Marklund_1988_T27(diameter_cm, height_m, relative_bark_thickness):
+    """Stump biomass with relative bark thickness (T27)."""
     return np.exp(
         -3.3738
         + 7.1416 * (diameter_cm / (diameter_cm + 15))
@@ -281,10 +310,12 @@ MarklundPineStump = sorted(MarklundPineStump, key=lambda f: f.__code__.co_argcou
 
 # Norway Spruce Stem functions
 def Marklund_1988_S1(diameter_cm):
+    """Norway spruce stem biomass from diameter (S1)."""
     return np.exp(-2.3450 + 11.1111 * (diameter_cm / (diameter_cm + 12)))
 
 
 def Marklund_1988_S2(diameter_cm, height_m):
+    """Norway spruce stem biomass using diameter and height (S2)."""
     return np.exp(
         -2.7190
         + 7.8497 * (diameter_cm / (diameter_cm + 12))
@@ -294,6 +325,7 @@ def Marklund_1988_S2(diameter_cm, height_m):
 
 
 def Marklund_1988_S3(diameter_cm, height_m, double_bark_mm, age):
+    """Stem biomass with bark thickness and age for spruce (S3)."""
     return np.exp(
         -2.5490
         + 7.7334 * (diameter_cm / (diameter_cm + 12))
@@ -310,16 +342,19 @@ MarklundSpruceStem = sorted(MarklundSpruceStem, key=lambda f: f.__code__.co_argc
 
 # Norway Spruce Living branches functions
 def Marklund_1988_S4(diameter_cm):
+    """Living branches of spruce from diameter (S4)."""
     return np.exp(-2.8470 + 8.6120 * (diameter_cm / (diameter_cm + 12)))
 
 
 def Marklund_1988_S5(diameter_cm, height_m):
+    """Living branches using diameter and height (S5)."""
     return np.exp(
         -2.9892 + 7.1881 * (diameter_cm / (diameter_cm + 12)) + 0.7534 * np.log(height_m)
     )
 
 
 def Marklund_1988_S6(diameter_cm, height_m, crown_base_height_m):
+    """Living branches with crown base height for spruce (S6)."""
     return np.exp(
         -3.1020
         + 7.0834 * (diameter_cm / (diameter_cm + 12))
@@ -336,16 +371,19 @@ MarklundSpruceLivingBranches = sorted(
 
 # Norway Spruce Dead branches functions
 def Marklund_1988_S7(diameter_cm):
+    """Dead branches of spruce from diameter (S7)."""
     return np.exp(-4.3352 + 5.8210 * (diameter_cm / (diameter_cm + 23)))
 
 
 def Marklund_1988_S8(diameter_cm, height_m):
+    """Dead branches using diameter and height (S8)."""
     return np.exp(
         -4.4668 + 5.3836 * (diameter_cm / (diameter_cm + 23)) + 0.9584 * np.log(height_m)
     )
 
 
 def Marklund_1988_S9(diameter_cm, height_m, crown_base_height_m):
+    """Dead branches model with crown base height for spruce (S9)."""
     return np.exp(
         -4.5368
         + 5.4689 * (diameter_cm / (diameter_cm + 23))
@@ -362,16 +400,19 @@ MarklundSpruceDeadBranches = sorted(
 
 # Norway Spruce Stump-root system functions
 def Marklund_1988_S10(diameter_cm):
+    """Spruce stump-root biomass from diameter (S10)."""
     return np.exp(-2.2114 + 7.5246 * (diameter_cm / (diameter_cm + 19)))
 
 
 def Marklund_1988_S11(diameter_cm, height_m):
+    """Spruce stump-root biomass using diameter and height (S11)."""
     return np.exp(
         -2.3323 + 6.4935 * (diameter_cm / (diameter_cm + 19)) + 0.6055 * np.log(height_m)
     )
 
 
 def Marklund_1988_S12(diameter_cm, height_m, crown_base_height_m):
+    """Stump-root biomass with crown base height for spruce (S12)."""
     return np.exp(
         -2.4008
         + 6.5480 * (diameter_cm / (diameter_cm + 19))
@@ -388,16 +429,19 @@ MarklundSpruceStumpRootSystem = sorted(
 
 # Norway Spruce Stump functions
 def Marklund_1988_S13(diameter_cm):
+    """Spruce stump biomass from diameter (S13)."""
     return np.exp(-3.1444 + 8.4027 * (diameter_cm / (diameter_cm + 15)))
 
 
 def Marklund_1988_S14(diameter_cm, height_m):
+    """Spruce stump biomass using diameter and height (S14)."""
     return np.exp(
         -3.2571 + 7.3144 * (diameter_cm / (diameter_cm + 15)) + 0.7078 * np.log(height_m)
     )
 
 
 def Marklund_1988_S15(diameter_cm, height_m, relative_bark_thickness):
+    """Spruce stump biomass with relative bark thickness (S15)."""
     return np.exp(
         -3.3738
         + 7.1416 * (diameter_cm / (diameter_cm + 15))
@@ -414,10 +458,12 @@ MarklundSpruceStump = sorted(
 
 # Birch Stem functions
 def Marklund_1988_B1(diameter_cm):
+    """Birch stem biomass from diameter (B1)."""
     return np.exp(-2.3450 + 11.1111 * (diameter_cm / (diameter_cm + 12)))
 
 
 def Marklund_1988_B2(diameter_cm, height_m):
+    """Birch stem biomass using diameter and height (B2)."""
     return np.exp(
         -2.7190
         + 7.8497 * (diameter_cm / (diameter_cm + 12))
@@ -427,6 +473,7 @@ def Marklund_1988_B2(diameter_cm, height_m):
 
 
 def Marklund_1988_B3(diameter_cm, height_m, double_bark_mm, age):
+    """Stem biomass with bark thickness and age for birch (B3)."""
     return np.exp(
         -2.5490
         + 7.7334 * (diameter_cm / (diameter_cm + 12))
@@ -443,16 +490,19 @@ MarklundBirchStem = sorted(MarklundBirchStem, key=lambda f: f.__code__.co_argcou
 
 # Birch Living branches functions
 def Marklund_1988_B4(diameter_cm):
+    """Birch living branches from diameter (B4)."""
     return np.exp(-2.8470 + 8.6120 * (diameter_cm / (diameter_cm + 12)))
 
 
 def Marklund_1988_B5(diameter_cm, height_m):
+    """Living branches using diameter and height (B5)."""
     return np.exp(
         -2.9892 + 7.1881 * (diameter_cm / (diameter_cm + 12)) + 0.7534 * np.log(height_m)
     )
 
 
 def Marklund_1988_B6(diameter_cm, height_m, crown_base_height_m):
+    """Living branches model with crown base height for birch (B6)."""
     return np.exp(
         -3.1020
         + 7.0834 * (diameter_cm / (diameter_cm + 12))
@@ -469,16 +519,19 @@ MarklundBirchLivingBranches = sorted(
 
 # Birch Dead branches functions
 def Marklund_1988_B7(diameter_cm):
+    """Birch dead branches from diameter (B7)."""
     return np.exp(-4.3352 + 5.8210 * (diameter_cm / (diameter_cm + 23)))
 
 
 def Marklund_1988_B8(diameter_cm, height_m):
+    """Dead branches using diameter and height (B8)."""
     return np.exp(
         -4.4668 + 5.3836 * (diameter_cm / (diameter_cm + 23)) + 0.9584 * np.log(height_m)
     )
 
 
 def Marklund_1988_B9(diameter_cm, height_m, crown_base_height_m):
+    """Dead branches model with crown base height for birch (B9)."""
     return np.exp(
         -4.5368
         + 5.4689 * (diameter_cm / (diameter_cm + 23))
@@ -495,16 +548,19 @@ MarklundBirchDeadBranches = sorted(
 
 # Birch Stump-root system functions
 def Marklund_1988_B10(diameter_cm):
+    """Birch stump-root biomass from diameter (B10)."""
     return np.exp(-2.2114 + 7.5246 * (diameter_cm / (diameter_cm + 19)))
 
 
 def Marklund_1988_B11(diameter_cm, height_m):
+    """Stump-root biomass using diameter and height (B11)."""
     return np.exp(
         -2.3323 + 6.4935 * (diameter_cm / (diameter_cm + 19)) + 0.6055 * np.log(height_m)
     )
 
 
 def Marklund_1988_B12(diameter_cm, height_m, crown_base_height_m):
+    """Stump-root biomass with crown base height (B12)."""
     return np.exp(
         -2.4008
         + 6.5480 * (diameter_cm / (diameter_cm + 19))
@@ -521,16 +577,19 @@ MarklundBirchStumpRootSystem = sorted(
 
 # Birch Stump functions
 def Marklund_1988_B13(diameter_cm):
+    """Birch stump biomass from diameter (B13)."""
     return np.exp(-3.1444 + 8.4027 * (diameter_cm / (diameter_cm + 15)))
 
 
 def Marklund_1988_B14(diameter_cm, height_m):
+    """Birch stump biomass using diameter and height (B14)."""
     return np.exp(
         -3.2571 + 7.3144 * (diameter_cm / (diameter_cm + 15)) + 0.7078 * np.log(height_m)
     )
 
 
 def Marklund_1988_B15(diameter_cm, height_m, relative_bark_thickness):
+    """Stump biomass with relative bark thickness for birch (B15)."""
     return np.exp(
         -3.3738
         + 7.1416 * (diameter_cm / (diameter_cm + 15))
