@@ -84,9 +84,9 @@ class AtomicVolume:
     def __repr__(self):
         return (
             f"AtomicVolume({self.value:.2f} m3, "
-            f"type='{self.type!r}', "
-            f"species='{self.species!r}', "
-            f"region='{self.region!r}')"
+            f"type={self.type!r}, "
+            f"species={self.species!r}, "
+            f"region={self.region!r})"
         )
 
     # Inside the AtomicVolume class
@@ -183,5 +183,5 @@ class CompositeVolume:
     def __repr__(self) -> str:
         return (
             f"CompositeVolume(total={self.value:.2f} m3, "
-            f"type='{self.type}', components={len(self)})"
+            f"type={self.type!r}, components={len(self)})"
         )
