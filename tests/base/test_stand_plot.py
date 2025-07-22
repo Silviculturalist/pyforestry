@@ -428,3 +428,29 @@ def test_thin_by_rule_and_polygon():
 
     assert len(stand.plots[0].trees) == 1
     assert stand.plots[0].trees[0].uid == 2
+
+
+def test_circularplot_repr():
+    """__repr__ should include id and area."""
+    plot = CircularPlot(id=99, radius_m=5.0)
+    rep = repr(plot)
+    assert "id=99" in rep
+    assert "area_m2" in rep
+
+
+def test_circularplot_invalid_id():
+    """Creating a plot without an id should raise ``ValueError``."""
+    with pytest.raises(ValueError):
+        CircularPlot(id=None, radius_m=1.0)
+
+
+def test_circularplot_occlusion_out_of_bounds():
+    """Occlusion must fall inside the interval [0, 1)."""
+    with pytest.raises(ValueError):
+        CircularPlot(id=1, radius_m=1.0, occlusion=1.5)
+
+
+def test_circularplot_radius_area_mismatch():
+    """Mismatch between radius and area should raise ``ValueError``."""
+    with pytest.raises(ValueError):
+        CircularPlot(id=1, radius_m=1.0, area_m2=100.0)

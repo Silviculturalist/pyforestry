@@ -1,4 +1,5 @@
-# Näsberg (1985) branch-and-bound algorithm.
+"""Implementation of the Näsberg (1985) branch-and-bound bucking algorithm."""
+
 import math
 from collections.abc import Mapping
 from dataclasses import dataclass, field
@@ -65,19 +66,21 @@ class BuckingResult(Mapping):
 
     # -------- Mapping protocol so the object behaves like a dict ----------
     def __getitem__(self, key: str) -> Any:
-        # raises KeyError exactly like a dict if attribute absent
+        """Return the attribute ``key`` or raise ``KeyError`` like a ``dict``."""
         if hasattr(self, key):
             return getattr(self, key)
         raise KeyError(key)
 
     def __iter__(self) -> Iterator[str]:
-        # iterate over field names, same order as dataclass defines
+        """Iterate over attribute names in dataclass order."""
         return iter(self.__dict__)
 
     def __len__(self) -> int:
+        """Return the number of stored attributes."""
         return len(self.__dict__)
 
     def plot(self):
+        """Plot a simple representation of the bucking result."""
         if self.sections:
             fig, ax = plt.subplots(figsize=(10, 6))
 
@@ -229,16 +232,19 @@ class _TreeCache:
     """Internal cache to avoid recomputing diameters and heights."""
 
     def __init__(self):
+        """Initialise empty diameter and height caches."""
         self._diameters = {}
         self._heights = {}
 
     def diameter(self, taper: Taper, height: int) -> float:
+        """Return the diameter at ``height`` (dm) caching the result."""
         if height not in self._diameters:
             # --- CORRECTED CALL: Now uses the taper instance directly ---
             self._diameters[height] = taper.get_diameter_at_height(height / 10.0)
         return self._diameters[height]
 
     def height(self, taper: Taper, target: float) -> int:
+        """Return the height (dm) at ``target`` diameter, using a cache."""
         if target not in self._heights:
             # --- CORRECTED CALL: Now uses the taper instance directly ---
             self._heights[target] = int(taper.get_height_at_diameter(target) * 10)
@@ -255,6 +261,7 @@ class Nasberg_1985_BranchBound:
     def __init__(
         self, timber: Timber, pricelist: Pricelist, taper_class: Optional[Type[Taper]] = None
     ):
+        """Initialise the optimizer with timber data and pricing information."""
         self._timber = timber
         self._species = timber.species
         self._taper_class = taper_class or Taper
@@ -302,6 +309,7 @@ class Nasberg_1985_BranchBound:
         }
 
     def _build_value_table(self) -> np.ndarray:
+        """Pre-compute log values for quick lookups during optimisation."""
         max_diam = self._maxDiameterTimberLog
         tv = np.zeros((max_diam + 1, len(self._moduler), 4))
         tp = self._timber_prices
@@ -325,6 +333,7 @@ class Nasberg_1985_BranchBound:
     def calculate_tree_value(
         self, *, min_diam_dead_wood: float, config: BuckingConfig = BuckingConfig()
     ) -> BuckingResult:
+        """Run the branch-and-bound optimisation and return the result."""
         height_m = self._timber.height_m
         taper = self._taper_class(self._timber)
         cache = _TreeCache()
@@ -393,6 +402,7 @@ class Nasberg_1985_BranchBound:
         i_top = int((h_top - HSTUB) * 10 - 1e-7)
 
         def qual(i):
+            """Return the quality class index for position ``i``."""
             if i <= i_butt:
                 return QualityType.ButtLog
             if i <= i_mid:
@@ -609,12 +619,14 @@ class Nasberg_1985_BranchBound:
 
     @staticmethod
     def _merge_sections(a: CrossCutSection, b: CrossCutSection) -> CrossCutSection:
+        """Return a new section combining ``a`` and ``b`` using volume weights."""
         total_vol = a.volume + b.volume
 
         new_start = min(a.start_point, b.start_point)
         new_end = max(a.end_point, b.end_point)
 
         def w_avg(attr):
+            """Weighted average of attribute ``attr`` across both sections."""
             return ((getattr(a, attr) * a.volume) + (getattr(b, attr) * b.volume)) / total_vol
 
         return CrossCutSection(

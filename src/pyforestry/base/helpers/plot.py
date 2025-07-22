@@ -1,3 +1,5 @@
+"""Objects describing a collection of trees recorded on a plot."""
+
 from math import pi, sqrt
 from typing import List, Optional, Union
 
@@ -46,6 +48,28 @@ class CircularPlot:
         AngleCount: Optional[List[AngleCount]] = None,
         trees: Optional[List[RepresentationTree]] = None,
     ):
+        """Create a new :class:`CircularPlot` instance.
+
+        Parameters
+        ----------
+        id
+            Identifier for the plot.
+        occlusion
+            Portion ``[0,1)`` of the plot that lies outside the stand.
+        position
+            Coordinates of the plot centre if known.
+        radius_m
+            Radius of the plot in metres.
+        area_m2
+            Plot area in square metres.
+        site
+            Optional reference to a :class:`SiteBase` object.
+        AngleCount
+            Optional list of :class:`AngleCount` tally objects.
+        trees
+            Collection of :class:`RepresentationTree` objects describing the
+            recorded trees.
+        """
         if id is None:
             raise ValueError("Plot must be given an ID (integer or string).")
 
@@ -94,6 +118,7 @@ class CircularPlot:
         return self.area_m2 / 10_000.0
 
     def __repr__(self):
+        """Return a concise string representation of the plot."""
         return (
             f"Plot(id={self.id}, radius_m={getattr(self, 'radius_m', None)}, "
             f"area_m2={self.area_m2:.2f}, #trees={len(self.trees)})"

@@ -1,6 +1,5 @@
-# ------------------------------------------------------------------------------
-# Tree classes
-# ------------------------------------------------------------------------------
+"""Classes for representing individual and aggregated tree records."""
+
 from typing import Optional, Union
 
 from .primitives import Age, Diameter_cm, Position
@@ -43,6 +42,23 @@ class SingleTree(Tree):
         height_m: Optional[float] = None,
         uid: Optional[Union[int, str]] = None,
     ):
+        """Create a SingleTree instance with optional attributes.
+
+        Parameters
+        ----------
+        position : Position | tuple | None, optional
+            Tree location in a coordinate system.
+        species : TreeName | str | None, optional
+            Species identifier or name string.
+        age : Age | float | None, optional
+            Age value or ``Age`` enumeration.
+        diameter_cm : Diameter_cm | float | None, optional
+            Diameter at breast height in centimetres.
+        height_m : float | None, optional
+            Tree height in metres.
+        uid : int | str | None, optional
+            Optional unique identifier for the tree.
+        """
         self.position = Position._set_position(position)
 
         # Convert string species → TreeSpecies if parseable
@@ -62,8 +78,9 @@ class SingleTree(Tree):
         self.uid = uid
 
     def __repr__(self):
+        """Return ``repr(self)`` including main attribute values."""
         return (
-            f"SingleTree(species={self.species}, age={self.age}, "
+            f"SingleTree(species={self.species!r}, age={self.age}, "
             f"diameter_cm={self.diameter_cm}, height_m={self.height_m}, "
             f"position={self.position}, uid={self.uid})"
         )
@@ -100,6 +117,25 @@ class RepresentationTree(Tree):
         weight: float = 1.0,
         uid: Optional[Union[int, str]] = None,
     ):
+        """Create a record that represents multiple identical trees.
+
+        Parameters
+        ----------
+        position : Position | tuple | None, optional
+            Location for the group of trees.
+        species : TreeName | str | None, optional
+            Species identifier for the trees.
+        age : Age | float | None, optional
+            Age value shared by all trees.
+        diameter_cm : Diameter_cm | float | None, optional
+            Diameter at breast height in centimetres.
+        height_m : float | None, optional
+            Height in metres for the trees.
+        weight : float, optional
+            Number of stems this record represents. Defaults to ``1.0``.
+        uid : int | str | None, optional
+            Optional unique identifier for the record.
+        """
         self.position = Position._set_position(position)
 
         if isinstance(species, str):
@@ -114,6 +150,7 @@ class RepresentationTree(Tree):
         self.uid = uid
 
     def __repr__(self):
+        """Return ``repr(self)`` summarizing key attribute values."""
         return (
             f"RepresentationTree(species={self.species}, age={self.age}, "
             f"diameter_cm={self.diameter_cm}, height_m={self.height_m}, "
