@@ -1,6 +1,6 @@
 import pytest
 
-from pyforestry.base.helpers.primitives import *
+from pyforestry.base.helpers.primitives import Age, AgeMeasurement, SiteIndexValue
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies, parse_tree_species
 from pyforestry.sweden.siteindex import eriksson_1997_height_trajectory_sweden_birch
 

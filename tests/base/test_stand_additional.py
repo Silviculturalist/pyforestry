@@ -3,15 +3,15 @@ import math
 from pyforestry.base.helpers import (
     AngleCount,
     CircularPlot,
-    RepresentationTree,
     Stand,
+    Tree,
     parse_tree_species,
 )
 
 
 def test_repr_methods():
     """Ensure __repr__ methods provide simple strings."""
-    plot = CircularPlot(id=1, radius_m=5.0, trees=[RepresentationTree(diameter_cm=25.0)])
+    plot = CircularPlot(id=1, radius_m=5.0, trees=[Tree(diameter_cm=25.0)])
     stand = Stand(plots=[plot])
 
     # Stand.__repr__ should contain area and number of plots

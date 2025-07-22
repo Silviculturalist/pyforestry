@@ -18,11 +18,14 @@ def eriksson_1997_height_trajectory_sweden_birch(
 
     Parameters:
         dominant_height (float): Dominant height of the stand (meters).
-        age (Union[float, AgeMeasurement]): Age of the stand at breast height (years). Must be float/int or Age.DBH.
-        age2 (Union[float, AgeMeasurement]): Target age at breast height (years). Must be float/int or Age.DBH.
+        age (Union[float, AgeMeasurement]): Age of the stand at breast height (years).
+            Must be float/int or Age.DBH.
+        age2 (Union[float, AgeMeasurement]): Target age at breast height (years).
+            Must be float/int or Age.DBH.
 
     Returns:
-        SiteIndexValue: Estimated dominant height (meters) at age2 wrapped in a SiteIndexValue object.
+        SiteIndexValue: Estimated dominant height (meters) at age2
+            wrapped in a SiteIndexValue object.
 
     Raises:
         Warning: If the input ages are outside the range of suitability (10 to 90 years).
@@ -30,12 +33,14 @@ def eriksson_1997_height_trajectory_sweden_birch(
 
     References:
         Eriksson, H., Johansson, U., Kiviste, A. (1997).
-        "A site-index model for pure and mixed stands of Betula pendula and Betula pubescens in Sweden."
+        "A site-index model for pure and mixed stands of
+        Betula pendula and Betula pubescens in Sweden."
         Scandinavian Journal of Forest Research, 12:2, pp. 149-156.
         DOI: https://doi.org/10.1080/02827589709355396
 
     Notes:
-        - Suitable for Birch stands of cultivated origin between ages 10 and 90 years (breast height age).
+        - Suitable for Birch stands of cultivated origin between ages 10 and 90 years (age at
+            breast height).
         - Requires breast height age (Age.DBH).
     """
 
@@ -66,11 +71,13 @@ def eriksson_1997_height_trajectory_sweden_birch(
     # Use age_val and age2_val
     if age_val < 10 or age2_val < 10:
         warnings.warn(
-            "Suitable for cultivated stands of Birch between breast height ages of 10 and 90."
+            "Suitable for cultivated stands of Birch between breast height ages of 10 and 90.",
+            stacklevel=2,
         )
     if age_val > 90 or age2_val > 90:
         warnings.warn(
-            "Suitable for cultivated stands of Birch between breast height ages of 10 and 90."
+            "Suitable for cultivated stands of Birch between breast height ages of 10 and 90.",
+            stacklevel=2,
         )
 
     # Model parameters

@@ -22,7 +22,8 @@ class NaslundVolume:
             elif timber.species in ["betula", "betula pendula", "betula pubescens"]:
                 return NaslundVolume._northern_birch_volume(timber) / 1000
         raise NotImplementedError(
-            f"Volume calculation for {timber.species} in {timber.region} region is not implemented."
+            f"Volume calculation for {timber.species} in {timber.region} region ",
+            "is not implemented.",
         )
 
     @staticmethod
@@ -255,7 +256,8 @@ class NaslundFormFactor:
             "betula pubescens",
         ]:
             raise ValueError(
-                "Species must be one of: pinus sylvestris, picea abies, betula, betula pendula, betula pubescens."
+                "Species must be one of: pinus sylvestris, picea abies, "
+                "betula, betula pendula, betula pubescens."
             )
 
         if region == "southern":

@@ -19,8 +19,10 @@ def johansson_2011_height_trajectory_sweden_poplar(
 
     Parameters:
         dominant_height (float): Dominant height of the stand (meters).
-        age (Union[float, AgeMeasurement]): Total age of the stand (years). Must be float/int or Age.TOTAL.
-        age2 (Union[float, AgeMeasurement]): Target age for output height (years). Must be float/int or Age.TOTAL.
+        age (Union[float, AgeMeasurement]): Total age of the stand (years).
+            Must be float/int or Age.TOTAL.
+        age2 (Union[float, AgeMeasurement]): Target age for output height (years).
+            Must be float/int or Age.TOTAL.
 
     Returns:
         SiteIndexValue: Dominant height at age2 (meters) wrapped in a SiteIndexValue object.
@@ -62,7 +64,8 @@ def johansson_2011_height_trajectory_sweden_poplar(
     # Warn if ages exceed suitability
     if age_val > 60 or age2_val > 60:
         warnings.warn(
-            "Suitable for stands of Poplar on former farmland in Sweden under age of 50-60 years."
+            "Suitable for stands of Poplar on former farmland in Sweden under age of 50-60 years.",
+            stacklevel=2,
         )
 
     # Model parameters

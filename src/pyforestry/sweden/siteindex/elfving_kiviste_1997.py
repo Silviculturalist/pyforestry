@@ -26,8 +26,9 @@ def elfving_kiviste_1997_height_trajectory_sweden_pine(
         Warning: If the input ages are outside the range of suitability (10 to 80 years).
 
     References:
-        Elfving, B., Kiviste, A. (1997). "Construction of site index equations for Pinus sylvestris L.
-        using permanent plot data in Sweden." Forest Ecology and Management, Vol. 98, Issue 2, pp. 125-134.
+        Elfving, B., Kiviste, A. (1997). "Construction of site index equations
+        for Pinus sylvestris L. using permanent plot data in Sweden."
+        Forest Ecology and Management, Vol. 98, Issue 2, pp. 125-134.
         DOI: https://doi.org/10.1016/S0378-1127(97)00077-7
 
     Notes:
@@ -57,11 +58,13 @@ def elfving_kiviste_1997_height_trajectory_sweden_pine(
     # Check for suitability of input ages
     if age < 10 or age2 < 10:
         warnings.warn(
-            "Suitable for cultivated stands of Scots Pine between total ages of 10 and 80."
+            "Suitable for cultivated stands of Scots Pine between total ages of 10 and 80.",
+            stacklevel=2,
         )
     if age > 80 or age2 > 80:
         warnings.warn(
-            "Suitable for cultivated stands of Scots Pine between total ages of 10 and 80."
+            "Suitable for cultivated stands of Scots Pine between total ages of 10 and 80.",
+            stacklevel=2,
         )
 
     # Parameters based on the model

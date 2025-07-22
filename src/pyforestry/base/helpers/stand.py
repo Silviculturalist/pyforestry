@@ -20,7 +20,7 @@ from shapely.geometry.base import BaseGeometry
 from pyforestry.base.helpers import (
     AngleCountAggregator,
     CircularPlot,
-    RepresentationTree,
+    Tree,
     TreeName,
     parse_tree_species,
 )
@@ -314,7 +314,7 @@ class Stand:
             )
 
             # Group trees by species
-            trees_by_sp: Dict[TreeName, List[RepresentationTree]] = {}
+            trees_by_sp: Dict[TreeName, List[Tree]] = {}
             for tr in plot.trees:
                 sp = getattr(tr, "species", None)
                 if sp is None:
@@ -614,7 +614,7 @@ class Stand:
     def thin_trees(
         self,
         uids: Optional[List[Any]] = None,
-        rule: Optional[Callable[[RepresentationTree], bool]] = None,
+        rule: Optional[Callable[[Tree], bool]] = None,
         polygon: Optional[Polygon] = None,
     ) -> None:
         """Remove trees from the stand based on various criteria.

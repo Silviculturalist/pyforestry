@@ -4,14 +4,14 @@ This notebook shows how to work with circular plots, site enums, and site index 
 
 
 ```python
-from pyforestry.base.helpers import CircularPlot, RepresentationTree, Stand, parse_tree_species
+from pyforestry.base.helpers import CircularPlot, Tree, Stand, parse_tree_species
 
 plot1 = CircularPlot(id=1, radius_m=5.0, trees=[
-    RepresentationTree(species=parse_tree_species('picea abies'), diameter_cm=20),
-    RepresentationTree(species=parse_tree_species('pinus sylvestris'), diameter_cm=25),
+    Tree(species=parse_tree_species('picea abies'), diameter_cm=20),
+    Tree(species=parse_tree_species('pinus sylvestris'), diameter_cm=25),
 ])
 plot2 = CircularPlot(id=2, radius_m=5.0, trees=[
-    RepresentationTree(species=parse_tree_species('picea abies'), diameter_cm=30),
+    Tree(species=parse_tree_species('picea abies'), diameter_cm=30),
 ])
 stand = Stand(plots=[plot1, plot2])
 stand.BasalArea.TOTAL.value, stand.Stems.TOTAL.value

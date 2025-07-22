@@ -18,24 +18,30 @@ def johansson_1996_height_trajectory_sweden_aspen(
     Height trajectory for European Aspen in Sweden based on Johansson (1996).
 
     This function calculates the height trajectory of European Aspen (Populus tremula L.)
-    stands in Sweden, either based on the recommended site index model or an alternative model (Model 1).
+    stands in Sweden, either based on the recommended site index model or
+    an alternative model (Model 1).
 
     Parameters:
         dominant_height (float): Dominant height of the stand (meters).
-        age (Union[float, AgeMeasurement]): Total age of the stand (years). Must be float/int or Age.TOTAL.
-        age2 (Union[float, AgeMeasurement]): Target age for output height (years). Must be float/int or Age.TOTAL.
-        model1 (bool): If True, uses Model 1 from Johansson (1996); otherwise, uses the default model. Defaults to False.
+        age (Union[float, AgeMeasurement]): Total age of the stand (years).
+            Must be float/int or Age.TOTAL.
+        age2 (Union[float, AgeMeasurement]): Target age for output height (years).
+            Must be float/int or Age.TOTAL.
+        model1 (bool): If True, uses Model 1 from Johansson (1996); otherwise, uses
+            the default model. Defaults to False.
 
     Returns:
         SiteIndexValue: Dominant height at age2 (meters) wrapped in a SiteIndexValue object.
 
     Raises:
-        Warning: If `age` or `age2` exceed 60 years, as the model is suitable for stands under 60 years.
+        Warning: If `age` or `age2` exceed 60 years, as the model is suitable
+            for stands under 60 years.
         TypeError: If age or age2 are not float/int or AgeMeasurement with Age.TOTAL code.
 
     References:
-        Johansson, T. (1996). "Site Index Curves for European Aspen (Populus tremula L.) Growing on Forest Land
-        of Different Soils in Sweden." Silva Fennica 30(4): 437-458. DOI: https://doi.org/10.14214/sf.a8503
+        Johansson, T. (1996). "Site Index Curves for European Aspen (Populus tremula L.)
+        Growing on Forest Land of Different Soils in Sweden." Silva Fennica 30(4): 437-458.
+        DOI: https://doi.org/10.14214/sf.a8503
 
     Notes:
         - The function is suitable for stands of Aspen under 60 years of age.
@@ -64,7 +70,7 @@ def johansson_1996_height_trajectory_sweden_aspen(
 
     # Warn if ages exceed suitability
     if age_val > 60 or age2_val > 60:
-        warnings.warn("Suitable for stands of Aspen under age of 60.")
+        warnings.warn("Suitable for stands of Aspen under age of 60.", stacklevel=2)
 
     # If Model 1 is selected
     if model1:

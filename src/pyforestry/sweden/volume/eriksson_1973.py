@@ -10,7 +10,8 @@ def Eriksson_1973_volume_aspen_Sweden(diameter_cm: float, height_m: float) -> fl
         float: Calculated volume in m³.
 
     Reference:
-        Eriksson, H. (1973). Volymfunktioner för stående träd av ask, asp, klibbal och contortatall.
+        Eriksson, H. (1973). Volymfunktioner för stående träd av ask, asp,
+        klibbal och contortatall.
         Skogshögskolan, institutionen för skogsproduktion. Rapp. o. Upps. nr 26.
     """
     # Calculate diameter squared (cm²)
@@ -41,7 +42,8 @@ def Eriksson_1973_volume_lodgepole_pine_Sweden(diameter_cm: float, height_m: flo
         float: Calculated volume in m³.
 
     Reference:
-        Eriksson, H. (1973). Volymfunktioner för stående träd av ask, asp, klibbal och contortatall.
+        Eriksson, H. (1973). Volymfunktioner för stående träd av ask, asp,
+        klibbal och contortatall.
         Skogshögskolan, institutionen för skogsproduktion. Rapp. o. Upps. nr 26.
     """
 

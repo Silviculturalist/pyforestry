@@ -24,7 +24,7 @@ Number = Union[int, float, SupportsFloat]
 
 __all__ = [
     "Lind2003MeanDiameterCodominantTrees",
-    "Elfving2003SingleTreeAge",
+    "Elfving2003TreeAge",
 ]
 
 
@@ -167,12 +167,8 @@ class _ModelParams:  # Simplified for brevity, ensure all fields from previous v
         else:
             self.log_inverted_relascope_ba_plus_1 = None
 
-        self.is_rich_site_flag = Elfving2003SingleTreeAge._is_rich_site(
-            self.field_layer_vegetation
-        )
-        self.is_poor_site_flag = Elfving2003SingleTreeAge._is_poor_site(
-            self.field_layer_vegetation
-        )
+        self.is_rich_site_flag = Elfving2003TreeAge._is_rich_site(self.field_layer_vegetation)
+        self.is_poor_site_flag = Elfving2003TreeAge._is_poor_site(self.field_layer_vegetation)
         self.is_spruce_flag = 1 if self.species_obj == TreeSpecies.Sweden.picea_abies else 0
         self.is_pine_flag = 1 if self.species_obj == TreeSpecies.Sweden.pinus_sylvestris else 0
 
@@ -228,7 +224,7 @@ class _ModelParams:  # Simplified for brevity, ensure all fields from previous v
         self.is_peat_soil_flag = 1 if self.is_peat_soil_override else 0
 
 
-class Elfving2003SingleTreeAge:
+class Elfving2003TreeAge:
     _BIAS = {
         2: 0.028,
         3: 0.062,
@@ -490,7 +486,7 @@ class Elfving2003SingleTreeAge:
             # Contorta logic in C# implies it's for even-aged with known age.
             # If age is None, it would fall into C#'s UnevenAgedWithoutStandAge (Group 3) where Contorta is not special.
             if params.processed_total_stand_age is not None:
-                return Elfving2003SingleTreeAge.GROUP_PINE_CONTORTA
+                return Elfving2003TreeAge.GROUP_PINE_CONTORTA
             else:  # No age, Contorta handled by Group 3 as any other pine
                 return 3
 
@@ -840,7 +836,7 @@ class Elfving2003SingleTreeAge:
         is_peat_soil: Optional[bool] = None,
         is_shade_tolerant_broadleaf_hint: Optional[bool] = None,
     ) -> float:  # type: ignore
-        params = Elfving2003SingleTreeAge._prepare_model_params(
+        params = Elfving2003TreeAge._prepare_model_params(
             diameter,
             species,
             total_stand_age,
@@ -861,16 +857,13 @@ class Elfving2003SingleTreeAge:
             is_peat_soil,
             is_shade_tolerant_broadleaf_hint,
         )
-        group = Elfving2003SingleTreeAge._determine_calculation_group(params)
-        if (
-            group not in Elfving2003SingleTreeAge._COEFFS
-            or group not in Elfving2003SingleTreeAge._BIAS
-        ):
+        group = Elfving2003TreeAge._determine_calculation_group(params)
+        if group not in Elfving2003TreeAge._COEFFS or group not in Elfving2003TreeAge._BIAS:
             raise NotImplementedError(f"Coeffs/bias for group {group} undefined.")
         coeffs, bias, calculator = (
-            Elfving2003SingleTreeAge._COEFFS[group],
-            Elfving2003SingleTreeAge._BIAS[group],
-            Elfving2003SingleTreeAge._GROUP_CALCULATORS.get(group),
+            Elfving2003TreeAge._COEFFS[group],
+            Elfving2003TreeAge._BIAS[group],
+            Elfving2003TreeAge._GROUP_CALCULATORS.get(group),
         )
         if calculator is None:
             raise NotImplementedError(f"Calculator for group {group} undefined.")
@@ -895,10 +888,10 @@ class Elfving2003SingleTreeAge:
 
     @staticmethod
     def _is_rich_site(fi: Any) -> int:
-        co = Elfving2003SingleTreeAge._get_vegetation_code(fi)
+        co = Elfving2003TreeAge._get_vegetation_code(fi)
         return 1 if co and (1 <= co <= 9 or co == 12) else 0
 
     @staticmethod
     def _is_poor_site(fi: Any) -> int:
-        co = Elfving2003SingleTreeAge._get_vegetation_code(fi)
+        co = Elfving2003TreeAge._get_vegetation_code(fi)
         return 1 if co and co > 13 else 0

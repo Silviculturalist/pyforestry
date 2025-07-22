@@ -6,8 +6,8 @@ from typing import List, Optional, Union
 from pyforestry.base.helpers import (
     AngleCount,
     Position,
-    RepresentationTree,
     SiteBase,
+    Tree,
 )
 
 # ------------------------------------------------------------------------------
@@ -33,7 +33,7 @@ class CircularPlot:
         The area of the plot in m² (if known). Must supply either radius_m or area_m2.
     site : SiteBase | None
         Reference to a site object, if any.
-    trees : list[RepresentationTree]
+    trees : list[Tree]
         The trees recorded on this plot (each possibly representing multiple stems).
     """
 
@@ -46,7 +46,7 @@ class CircularPlot:
         area_m2: Optional[float] = None,
         site: Optional[SiteBase] = None,
         AngleCount: Optional[List[AngleCount]] = None,
-        trees: Optional[List[RepresentationTree]] = None,
+        trees: Optional[List[Tree]] = None,
     ):
         """Create a new :class:`CircularPlot` instance.
 
@@ -67,7 +67,7 @@ class CircularPlot:
         AngleCount
             Optional list of :class:`AngleCount` tally objects.
         trees
-            Collection of :class:`RepresentationTree` objects describing the
+            Collection of :class:`Tree` objects describing the
             recorded trees.
         """
         if id is None:
