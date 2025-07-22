@@ -8,7 +8,7 @@ from typing import Any, Iterator, List, Optional, Type
 import matplotlib.pyplot as plt
 import numpy as np
 
-from pyforestry.base.pricelist import Pricelist
+from pyforestry.base.pricelist import Pricelist, TimberPricelist
 from pyforestry.base.taper import Taper
 from pyforestry.base.timber import Timber
 
