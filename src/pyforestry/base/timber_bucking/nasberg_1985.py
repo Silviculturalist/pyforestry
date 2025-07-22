@@ -331,9 +331,10 @@ class Nasberg_1985_BranchBound:
 
     # ---------------------------------------------------------------------
     def calculate_tree_value(
-        self, *, min_diam_dead_wood: float, config: BuckingConfig = BuckingConfig()
+        self, *, min_diam_dead_wood: float, config: BuckingConfig | None = None
     ) -> BuckingResult:
         """Run the branch-and-bound optimisation and return the result."""
+        config = config or BuckingConfig()
         height_m = self._timber.height_m
         taper = self._taper_class(self._timber)
         cache = _TreeCache()
@@ -474,7 +475,7 @@ class Nasberg_1985_BranchBound:
 
                 if config.use_downgrading:
                     # loop small (<=3) – negligible
-                    for k, i in enumerate(idxs):
+                    for k, _ in enumerate(idxs):
                         w = self._timber_prices.getTimberWeight(part_vec[k])
                         pp, fp, cp = (
                             w.pulpwoodPercentage / 100.0,
