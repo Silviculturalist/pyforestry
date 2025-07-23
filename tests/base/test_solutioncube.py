@@ -5,10 +5,10 @@ import pytest
 import xarray as xr
 
 from pyforestry.base.helpers.tree_species import TreeSpecies
-from pyforestry.base.pricelist.data.mellanskog_2013 import Mellanskog_2013_price_data
 
 # Imports from your project
 from pyforestry.base.pricelist.solutioncube import SolutionCube
+from pyforestry.sweden.pricelist.data.mellanskog_2013 import Mellanskog_2013_price_data
 from pyforestry.sweden.taper import EdgrenNylinder1949
 
 

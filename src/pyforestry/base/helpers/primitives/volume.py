@@ -1,3 +1,11 @@
+"""Utility classes for working with tree volume measurements.
+
+This module defines :class:`AtomicVolume` and :class:`CompositeVolume` which are
+lightweight containers for storing volumes of timber. They offer convenience
+methods for converting between units and for combining compatible volumes while
+preserving important metadata such as region and tree species.
+"""
+
 from __future__ import annotations
 
 from collections import defaultdict
@@ -24,7 +32,8 @@ class AtomicVolume:
     UNIT_CONVERSION: ClassVar[Dict[str, float]] = {"m3": 1.0, "dm3": 1e-3, "cm3": 1e-6}
     TYPE_REGIONS: ClassVar[Dict[str, List[str]]] = {"m3sk": ["Sweden", "Finland", "Norway"]}
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
+        """Validate the created volume."""
         if self.value < 0:
             raise ValueError("Volume value must be non-negative.")
         allowed_regions = self.TYPE_REGIONS.get(self.type)
@@ -34,11 +43,13 @@ class AtomicVolume:
     # --- (Factory and conversion methods are the same) ---
     @classmethod
     def from_unit(cls, value: float, unit: str, **kwargs) -> AtomicVolume:
+        """Create an :class:`AtomicVolume` from ``value`` expressed in ``unit``."""
         if unit not in cls.UNIT_CONVERSION:
             raise ValueError(f"Unit '{unit}' not recognized.")
         return cls(value=(value * cls.UNIT_CONVERSION[unit]), **kwargs)
 
     def to(self, unit: str) -> float:
+        """Return the numeric value converted to ``unit``."""
         return self.value / self.UNIT_CONVERSION[unit]
 
     # --- INTELLIGENT ADDITION ---
@@ -67,22 +78,31 @@ class AtomicVolume:
 
     # --- (Multiplication/Division are the same) ---
     def __mul__(self, scalar: Numeric) -> AtomicVolume:
+        """Return a new volume scaled by ``scalar``."""
         if not isinstance(scalar, (int, float)):
             return NotImplemented
         return AtomicVolume(self.value * scalar, self.region, self.species, self.type)
 
     def __rmul__(self, scalar: Numeric) -> AtomicVolume:
+        """Support ``scalar * volume`` multiplication."""
         return self.__mul__(scalar)
 
     def __truediv__(self, scalar: Numeric) -> AtomicVolume:
+        """Return a new volume divided by ``scalar``."""
         if not isinstance(scalar, (int, float)):
             return NotImplemented
         if scalar == 0:
             raise ZeroDivisionError("Cannot divide Volume by zero.")
         return AtomicVolume(self.value / scalar, self.region, self.species, self.type)
 
-    def __repr__(self):
-        return f"AtomicVolume({self.value:.2f} m3, type='{self.type}', species='{self.species}', region='{self.region}')"
+    def __repr__(self) -> str:
+        """Return ``repr(self)`` with value formatted to two decimals."""
+        return (
+            f"AtomicVolume({self.value:.2f} m3, "
+            f"type={self.type!r}, "
+            f"species={self.species!r}, "
+            f"region={self.region!r})"
+        )
 
     # Inside the AtomicVolume class
 
@@ -98,12 +118,10 @@ class AtomicVolume:
 
 
 class CompositeVolume:
-    """
-    Represents a collection of AtomicVolume objects.
-    It preserves all underlying information while providing aggregate views.
-    """
+    """Container for multiple :class:`AtomicVolume` instances."""
 
     def __init__(self, volumes: List[AtomicVolume]):
+        """Create a new composite from ``volumes``."""
         if not all(isinstance(v, AtomicVolume) for v in volumes):
             raise TypeError("CompositeVolume can only contain AtomicVolume objects.")
 
@@ -157,26 +175,32 @@ class CompositeVolume:
         return dict(composition)
 
     def __add__(self, other: Any) -> CompositeVolume:
+        """Return a new composite containing ``other`` in addition to ``self``."""
         if isinstance(other, AtomicVolume):
             return CompositeVolume(self._volumes + [other])
         elif isinstance(other, CompositeVolume):
             return CompositeVolume(self._volumes + other._volumes)
-        return NotImplemented
+        else:
+            return NotImplemented
 
     def __mul__(self, scalar: Numeric) -> CompositeVolume:
+        """Scale all component volumes by ``scalar``."""
         if not isinstance(scalar, (int, float)):
             return NotImplemented
         # Multiply each component volume individually
         return CompositeVolume([v * scalar for v in self._volumes])
 
     def __rmul__(self, scalar: Numeric) -> CompositeVolume:
+        """Support ``scalar * composite`` multiplication."""
         return self.__mul__(scalar)
 
     def __len__(self) -> int:
+        """Return the number of atomic volumes in the composite."""
         return len(self._volumes)
 
     def __repr__(self) -> str:
+        """Return a concise representation useful for debugging."""
         return (
             f"CompositeVolume(total={self.value:.2f} m3, "
-            f"type='{self.type}', components={len(self)})"
+            f"type={self.type!r}, components={len(self)})"
         )

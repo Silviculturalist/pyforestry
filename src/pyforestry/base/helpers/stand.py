@@ -1,6 +1,9 @@
-# ------------------------------------------------------------------------------
-# Stand: a collection of plots and/or a polygon
-# ------------------------------------------------------------------------------
+"""Utilities for working with forest stands.
+
+This module defines :class:`Stand`, representing a collection of sample plots and
+an optional boundary polygon, along with the :class:`StandMetricAccessor` helper
+used to access aggregated stand metrics such as basal area or stem count.
+"""
 
 import statistics
 from dataclasses import dataclass, field
@@ -17,7 +20,7 @@ from shapely.geometry.base import BaseGeometry
 from pyforestry.base.helpers import (
     AngleCountAggregator,
     CircularPlot,
-    RepresentationTree,
+    Tree,
     TreeName,
     parse_tree_species,
 )
@@ -47,6 +50,16 @@ class StandMetricAccessor:
     """
 
     def __init__(self, stand: "Stand", metric_name: str):
+        """Create a new accessor bound to ``stand`` for ``metric_name``.
+
+        Parameters
+        ----------
+        stand:
+            The :class:`Stand` instance this accessor reads values from.
+        metric_name:
+            Name of the metric (``"BasalArea"``, ``"Stems"``, ``"QMD"``) that
+            this accessor should retrieve.
+        """
         self._stand = stand
         self._metric_name = metric_name
 
@@ -108,6 +121,7 @@ class StandMetricAccessor:
         return getattr(total_obj, "precision", 0.0)
 
     def __repr__(self):
+        """Return a concise representation for debugging."""
         return f"<StandMetricAccessor metric={self._metric_name}>"
 
 
@@ -139,6 +153,15 @@ class Stand:
     use_angle_count: bool = field(default=False, init=False)
 
     def __post_init__(self) -> None:
+        """Initialize derived attributes and pre-compute metric estimates.
+
+        * If ``polygon`` is provided, its area is projected to a suitable UTM
+          system and used to fill ``area_ha`` (or validated against the supplied
+          value).
+        * If the stand contains plots with :class:`~pyforestry.base.helpers.AngleCount`
+          records, the aggregated basal area and stem estimates are calculated
+          immediately and the stand is marked as using angle-count data.
+        """
         # If a polygon is given, compute its area in hectares after projecting
         if self.polygon:
             gdf = gpd.GeoDataFrame({"geometry": [self.polygon]}, crs=self.crs)
@@ -291,7 +314,7 @@ class Stand:
             )
 
             # Group trees by species
-            trees_by_sp: Dict[TreeName, List[RepresentationTree]] = {}
+            trees_by_sp: Dict[TreeName, List[Tree]] = {}
             for tr in plot.trees:
                 sp = getattr(tr, "species", None)
                 if sp is None:
@@ -302,7 +325,7 @@ class Stand:
 
             # For each species in this plot, compute the adjusted stems/ha and BA/ha
             for sp, trlist in trees_by_sp.items():
-                stems_count = sum(t.weight for t in trlist)
+                stems_count = sum(t.weight_n for t in trlist)
                 # Adjusted stems/ha: divide by the effective area
                 stems_ha = stems_count / effective_area_ha
 
@@ -311,7 +334,7 @@ class Stand:
                 for t in trlist:
                     d_cm = float(t.diameter_cm) if t.diameter_cm is not None else 0.0
                     r_m = (d_cm / 100.0) / 2.0
-                    ba_sum += pi * (r_m**2) * t.weight
+                    ba_sum += pi * (r_m**2) * t.weight_n
                 # Adjusted BA/ha: divide by effective area.
                 ba_ha = ba_sum / effective_area_ha
 
@@ -359,6 +382,7 @@ class Stand:
         self._metric_estimates["BasalArea"] = {k: v for k, v in ba_dict.items()}
 
     def __repr__(self):
+        """Return a short textual description of the stand."""
         return f"Stand(area_ha={self.area_ha}, n_plots={len(self.plots)})"
 
     def get_dominant_height(self) -> Optional[TopHeightMeasurement]:
@@ -590,7 +614,7 @@ class Stand:
     def thin_trees(
         self,
         uids: Optional[List[Any]] = None,
-        rule: Optional[Callable[[RepresentationTree], bool]] = None,
+        rule: Optional[Callable[[Tree], bool]] = None,
         polygon: Optional[Polygon] = None,
     ) -> None:
         """Remove trees from the stand based on various criteria.

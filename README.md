@@ -37,10 +37,10 @@ pip install -e .[dev]
 
 ## Quick example
 ```python
-from pyforestry.base.helpers import CircularPlot, RepresentationTree, Stand, parse_tree_species
+from pyforestry.base.helpers import CircularPlot, Tree, Stand, parse_tree_species
 
 plot = CircularPlot(id=1, radius_m=5.0, trees=[
-    RepresentationTree(species=parse_tree_species("picea abies"), diameter_cm=20),
+    Tree(species=parse_tree_species("picea abies"), diameter_cm=20),
 ])
 stand = Stand(plots=[plot])
 print(stand.BasalArea.TOTAL.value)

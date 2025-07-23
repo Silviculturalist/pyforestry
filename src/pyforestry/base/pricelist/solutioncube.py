@@ -1,3 +1,5 @@
+"""Utilities for generating and querying precomputed bucking solutions."""
+
 import hashlib
 import json
 import time
@@ -80,6 +82,8 @@ def _worker_buck_one_tree(
 
 
 class SolutionCube:
+    """Container for precomputed bucking solutions."""
+
     def __init__(self, dataset: xr.Dataset):
         """
         Initializes the SolutionCube with a loaded xarray Dataset.
@@ -175,7 +179,8 @@ class SolutionCube:
             new_hash = _hash_pricelist(pricelist_to_verify)
             if ds.attrs.get("pricelist_hash") != new_hash:
                 raise ValueError(
-                    "Pricelist hash mismatch! The loaded cube was not generated with the provided pricelist."
+                    "Pricelist hash mismatch! "
+                    "The loaded cube was not generated with the provided pricelist."
                 )
             print("Pricelist hash verified.")
 

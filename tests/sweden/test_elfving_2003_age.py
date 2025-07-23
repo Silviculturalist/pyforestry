@@ -3,7 +3,7 @@ from math import isclose
 import pytest
 
 from pyforestry.base.helpers.tree_species import TreeSpecies
-from pyforestry.sweden.misc.elfving_2003 import Elfving2003SingleTreeAge
+from pyforestry.sweden.misc.elfving_2003 import Elfving2003TreeAge
 from pyforestry.sweden.site import Sweden
 
 # These are chosen to be generally valid for many groups.
@@ -30,44 +30,38 @@ DEFAULT_AGE_PARAMS = {
 }
 
 
-class TestElfving2003SingleTreeAgeHelpers:
+class TestElfving2003TreeAgeHelpers:
     def test_is_rich_site(self):
         assert (
-            Elfving2003SingleTreeAge._is_rich_site(Sweden.FieldLayer.HIGH_HERB_WITHOUT_SHRUBS) == 1
+            Elfving2003TreeAge._is_rich_site(Sweden.FieldLayer.HIGH_HERB_WITHOUT_SHRUBS) == 1
         )  # code 1
-        assert (
-            Elfving2003SingleTreeAge._is_rich_site(5) == 1
-        )  # code 5 (Low-herb with shrubs/bilberry)
-        assert Elfving2003SingleTreeAge._is_rich_site(12) == 1  # code 12 (Horsetail)
-        assert Elfving2003SingleTreeAge._is_rich_site(Sweden.FieldLayer.BILBERRY) == 0  # code 13
-        assert (
-            Elfving2003SingleTreeAge._is_rich_site(Sweden.FieldLayer.LICHEN_DOMINANT) == 0
-        )  # code 18
-        assert Elfving2003SingleTreeAge._is_rich_site(None) == 0
-        assert Elfving2003SingleTreeAge._is_rich_site(2) == 1
+        assert Elfving2003TreeAge._is_rich_site(5) == 1  # code 5 (Low-herb with shrubs/bilberry)
+        assert Elfving2003TreeAge._is_rich_site(12) == 1  # code 12 (Horsetail)
+        assert Elfving2003TreeAge._is_rich_site(Sweden.FieldLayer.BILBERRY) == 0  # code 13
+        assert Elfving2003TreeAge._is_rich_site(Sweden.FieldLayer.LICHEN_DOMINANT) == 0  # code 18
+        assert Elfving2003TreeAge._is_rich_site(None) == 0
+        assert Elfving2003TreeAge._is_rich_site(2) == 1
 
     def test_is_poor_site(self):
+        assert Elfving2003TreeAge._is_poor_site(Sweden.FieldLayer.LICHEN_DOMINANT) == 1  # code 18
+        assert Elfving2003TreeAge._is_poor_site(14) == 1  # Lingonberry
+        assert Elfving2003TreeAge._is_poor_site(Sweden.FieldLayer.BILBERRY) == 0  # code 13
         assert (
-            Elfving2003SingleTreeAge._is_poor_site(Sweden.FieldLayer.LICHEN_DOMINANT) == 1
-        )  # code 18
-        assert Elfving2003SingleTreeAge._is_poor_site(14) == 1  # Lingonberry
-        assert Elfving2003SingleTreeAge._is_poor_site(Sweden.FieldLayer.BILBERRY) == 0  # code 13
-        assert (
-            Elfving2003SingleTreeAge._is_poor_site(Sweden.FieldLayer.HIGH_HERB_WITHOUT_SHRUBS) == 0
+            Elfving2003TreeAge._is_poor_site(Sweden.FieldLayer.HIGH_HERB_WITHOUT_SHRUBS) == 0
         )  # code 1
-        assert Elfving2003SingleTreeAge._is_poor_site(None) == 0
-        assert Elfving2003SingleTreeAge._is_poor_site(15) == 1
+        assert Elfving2003TreeAge._is_poor_site(None) == 0
+        assert Elfving2003TreeAge._is_poor_site(15) == 1
 
 
-class TestElfving2003SingleTreeAgeMain:
+class TestElfving2003TreeAgeMain:
     def test_invalid_diameter_raises_value_error(self):
         params = DEFAULT_AGE_PARAMS.copy()
         params["diameter"] = 0
         with pytest.raises(ValueError, match="diameter .* must be > 0 cm"):
-            Elfving2003SingleTreeAge.age(**params)
+            Elfving2003TreeAge.age(**params)
         params["diameter"] = -10
         with pytest.raises(ValueError, match="diameter .* must be > 0 cm"):
-            Elfving2003SingleTreeAge.age(**params)
+            Elfving2003TreeAge.age(**params)
 
     def test_age_implausible_result_raises_arithmetic_error(self):
         # This requires finding inputs that lead to extreme age values.
@@ -84,7 +78,7 @@ class TestElfving2003SingleTreeAgeMain:
         params = DEFAULT_AGE_PARAMS.copy()
         params["is_standard_tree_hint"] = True
         params["species"] = TreeSpecies.Sweden.pinus_sylvestris  # Standard can be any species
-        age = Elfving2003SingleTreeAge.age(**params)
+        age = Elfving2003TreeAge.age(**params)
         assert 0 < age < 1000
 
     def test_group_4_uneven_aged_with_age(self):
@@ -92,7 +86,7 @@ class TestElfving2003SingleTreeAgeMain:
         params["is_uneven_aged"] = True
         params["total_stand_age"] = 70  # Ensure age is present
         params["species"] = TreeSpecies.Sweden.picea_abies  # Example
-        age = Elfving2003SingleTreeAge.age(**params)
+        age = Elfving2003TreeAge.age(**params)
         assert 0 < age < 1000
 
     def test_group_3_even_aged_no_stand_age(self):
@@ -102,31 +96,32 @@ class TestElfving2003SingleTreeAgeMain:
         # Group 3 requires QMD (for reld) and relascope BA (for lngfp1)
         params["QMD_cm"] = 20
         params["basal_area_relascope_m2_ha"] = 22
-        age = Elfving2003SingleTreeAge.age(**params)
+        age = Elfving2003TreeAge.age(**params)
         assert 0 < age < 1000
 
     def test_group_2_even_aged_with_stand_age(self):
         params = DEFAULT_AGE_PARAMS.copy()
         params["total_stand_age"] = 60
-        # Make it a species not specifically handled by 5,6,7,8,51 to force Group 2 (e.g. an unknown conifer)
+        # Make it a species not specifically handled by 5,6,7,8,51 to force
+        # Group 2 (e.g. an unknown conifer)
         # Or ensure it's not standard/uneven and is_contorta is false.
         # The current _determine_calculation_group prioritizes 2 if age is present and not 9 or 4.
         params["species"] = TreeSpecies.Sweden.taxus_baccata
         params["is_uneven_aged"] = False
         params["is_standard_tree_hint"] = False
-        age = Elfving2003SingleTreeAge.age(**params)
+        age = Elfving2003TreeAge.age(**params)
         assert 0 < age < 1000
 
     def test_group_51_pinus_contorta(self):
         params = DEFAULT_AGE_PARAMS.copy()
         params["species"] = TreeSpecies.Sweden.pinus_contorta
         params["total_stand_age"] = 80  # Needs age for Contorta specific logic path
-        age = Elfving2003SingleTreeAge.age(**params)
+        age = Elfving2003TreeAge.age(**params)
         assert 0 < age < 1000
         # Add another test to see if age is different from regular pine due to adjustments
         params_pine = params.copy()
         params_pine["species"] = TreeSpecies.Sweden.pinus_sylvestris
-        age_pine = Elfving2003SingleTreeAge.age(**params_pine)
+        age_pine = Elfving2003TreeAge.age(**params_pine)
         if age_pine > 0 and age > 0:  # Ensure valid ages for comparison
             assert not isclose(age, age_pine, rel_tol=1e-3), (
                 "Contorta age should differ from Sylvestris due to adjustments"
@@ -135,24 +130,24 @@ class TestElfving2003SingleTreeAgeMain:
     def test_group_5_pine_sylvestris_or_larch(self):
         params_pine = DEFAULT_AGE_PARAMS.copy()
         params_pine["species"] = TreeSpecies.Sweden.pinus_sylvestris
-        age_pine = Elfving2003SingleTreeAge.age(**params_pine)
+        age_pine = Elfving2003TreeAge.age(**params_pine)
         assert 0 < age_pine < 1000
 
         params_larch = DEFAULT_AGE_PARAMS.copy()
         params_larch["species"] = TreeSpecies.Sweden.larix_decidua
-        age_larch = Elfving2003SingleTreeAge.age(**params_larch)
+        age_larch = Elfving2003TreeAge.age(**params_larch)
         assert 0 < age_larch < 1000
 
     def test_group_6_spruce(self):
         params = DEFAULT_AGE_PARAMS.copy()
         params["species"] = TreeSpecies.Sweden.picea_abies
-        age = Elfving2003SingleTreeAge.age(**params)
+        age = Elfving2003TreeAge.age(**params)
         assert 0 < age < 1000
 
     def test_group_7_birch(self):
         params = DEFAULT_AGE_PARAMS.copy()
         params["species"] = TreeSpecies.Sweden.betula_pendula
-        age = Elfving2003SingleTreeAge.age(**params)
+        age = Elfving2003TreeAge.age(**params)
         assert 0 < age < 1000
 
     def test_group_8_other_deciduous_shade_tolerant(self):
@@ -160,23 +155,24 @@ class TestElfving2003SingleTreeAgeMain:
         params["species"] = TreeSpecies.Sweden.carpinus_betulus  # Example shade-tolerant
         # is_shade_tolerant_broadleaf_hint could be False to test auto-detection
         params["is_shade_tolerant_broadleaf_hint"] = None
-        age = Elfving2003SingleTreeAge.age(**params)
+        age = Elfving2003TreeAge.age(**params)
         assert 0 < age < 1000
 
         # Test with hint
         params["is_shade_tolerant_broadleaf_hint"] = True
-        age_hinted = Elfving2003SingleTreeAge.age(**params)
+        age_hinted = Elfving2003TreeAge.age(**params)
         assert 0 < age_hinted < 1000
         # If the model is sensitive, age and age_hinted might be slightly different
         # if auto-detection differs from hint, or identical if same flag results.
 
     def test_group_8_other_deciduous_light_demanding_as_fallback(self):
         params = DEFAULT_AGE_PARAMS.copy()
-        # A deciduous species not Birch and not explicitly shade-tolerant for this test's definition
+        # A deciduous species not Birch and not explicitly shade-tolerant
+        # for this test's definition
         params["species"] = (
             TreeSpecies.Sweden.quercus_robur
         )  # Quercus is bokek, but if not Birch, will fall to G8.
-        age = Elfving2003SingleTreeAge.age(**params)
+        age = Elfving2003TreeAge.age(**params)
         assert 0 < age < 1000
 
     # --- Specific Flag Tests ---
@@ -190,7 +186,7 @@ class TestElfving2003SingleTreeAgeMain:
         params_dict["field_layer"] = Sweden.FieldLayer.HIGH_HERB_WITHOUT_SHRUBS  # code 1
         params_dict["species"] = TreeSpecies.Sweden.carpinus_betulus  # Shade-tolerant
 
-        mp = Elfving2003SingleTreeAge._prepare_model_params(
+        mp = Elfving2003TreeAge._prepare_model_params(
             diameter=params_dict["diameter"],
             species_input=params_dict["species"],
             total_stand_age=params_dict["total_stand_age"],
@@ -236,17 +232,17 @@ class TestElfving2003SingleTreeAgeMain:
         # Test missing QMD_cm for Group 3
         temp_qmd = params_g3.pop("QMD_cm", None)  # remove QMD
         with pytest.raises(ValueError, match="G3: diameter_qmd_ratio"):
-            Elfving2003SingleTreeAge.age(**params_g3)
+            Elfving2003TreeAge.age(**params_g3)
         params_g3["QMD_cm"] = temp_qmd  # add it back
 
         # Test missing SIS for Group 3
         temp_sis = params_g3.pop("SIS", None)
         with pytest.raises(ValueError, match="G3: diameter_qmd_ratio"):
-            Elfving2003SingleTreeAge.age(**params_g3)
+            Elfving2003TreeAge.age(**params_g3)
         params_g3["SIS"] = temp_sis
 
         # Test missing basal_area_relascope_m2_ha for Group 3 (lngfp1)
         temp_ba_rel = params_g3.pop("basal_area_relascope_m2_ha", None)
         with pytest.raises(ValueError, match="G3: diameter_qmd_ratio"):
-            Elfving2003SingleTreeAge.age(**params_g3)
+            Elfving2003TreeAge.age(**params_g3)
         params_g3["basal_area_relascope_m2_ha"] = temp_ba_rel

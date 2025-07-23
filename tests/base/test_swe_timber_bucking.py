@@ -1,8 +1,8 @@
 import pytest
 
 from pyforestry.base.pricelist import create_pricelist_from_data
-from pyforestry.base.pricelist.data.mellanskog_2013 import Mellanskog_2013_price_data
 from pyforestry.base.timber_bucking.nasberg_1985 import BuckingConfig, Nasberg_1985_BranchBound
+from pyforestry.sweden.pricelist.data.mellanskog_2013 import Mellanskog_2013_price_data
 from pyforestry.sweden.taper import EdgrenNylinder1949
 from pyforestry.sweden.timber.swe_timber import SweTimber
 

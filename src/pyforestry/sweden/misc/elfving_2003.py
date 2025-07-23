@@ -24,7 +24,7 @@ Number = Union[int, float, SupportsFloat]
 
 __all__ = [
     "Lind2003MeanDiameterCodominantTrees",
-    "Elfving2003SingleTreeAge",
+    "Elfving2003TreeAge",
 ]
 
 
@@ -32,7 +32,7 @@ __all__ = [
 # Stand-level helper - Lind (2003) dominant-mean diameter (md)
 # =============================================================================
 class Lind2003MeanDiameterCodominantTrees:
-    """Dominant-mean diameter (``md``) of co-dominant trees [cm]."""
+    """Mean diameter (``md``) of co-dominant trees [cm]."""
 
     _C0, _C1, _C2, _C3, _C4, _C5 = (-0.92313, 1.00322, -0.00701, -4.00529, 0.01859, -1.88177)
     _BIAS = 0.036
@@ -41,6 +41,7 @@ class Lind2003MeanDiameterCodominantTrees:
     def estimate(
         *, total_stand_age: Number, stand_density_gf: Number, site_index: Number
     ) -> float:
+        """Estimate mean diameter for co-dominant trees."""
         age, gf, si = float(total_stand_age), float(stand_density_gf), float(site_index)
         if not (age > 0 and si > 0 and gf > 0):
             raise ValueError("total_stand_age, stand_density_gf, and site_index must all be > 0.")
@@ -64,6 +65,8 @@ class Lind2003MeanDiameterCodominantTrees:
 # =============================================================================
 @dataclass
 class _ModelParams:  # Simplified for brevity, ensure all fields from previous version are here
+    """Container for intermediate variables used in :class:`Elfving2003TreeAge`."""
+
     d_cm: float
     species_obj: TreeName
     altitude_m: float
@@ -108,6 +111,7 @@ class _ModelParams:  # Simplified for brevity, ensure all fields from previous v
     is_sma_flag: int = field(init=False)
 
     def __post_init__(self):
+        """Compute derived attributes and validate inputs."""
         if self.d_cm <= 0:
             raise ValueError("diameter (d_cm) must be > 0 cm")
         self.log_d_cm = log(self.d_cm)
@@ -167,12 +171,8 @@ class _ModelParams:  # Simplified for brevity, ensure all fields from previous v
         else:
             self.log_inverted_relascope_ba_plus_1 = None
 
-        self.is_rich_site_flag = Elfving2003SingleTreeAge._is_rich_site(
-            self.field_layer_vegetation
-        )
-        self.is_poor_site_flag = Elfving2003SingleTreeAge._is_poor_site(
-            self.field_layer_vegetation
-        )
+        self.is_rich_site_flag = Elfving2003TreeAge._is_rich_site(self.field_layer_vegetation)
+        self.is_poor_site_flag = Elfving2003TreeAge._is_poor_site(self.field_layer_vegetation)
         self.is_spruce_flag = 1 if self.species_obj == TreeSpecies.Sweden.picea_abies else 0
         self.is_pine_flag = 1 if self.species_obj == TreeSpecies.Sweden.pinus_sylvestris else 0
 
@@ -228,7 +228,9 @@ class _ModelParams:  # Simplified for brevity, ensure all fields from previous v
         self.is_peat_soil_flag = 1 if self.is_peat_soil_override else 0
 
 
-class Elfving2003SingleTreeAge:
+class Elfving2003TreeAge:
+    """Estimate single-tree age using models from Elfving (2003)."""
+
     _BIAS = {
         2: 0.028,
         3: 0.062,
@@ -393,6 +395,7 @@ class Elfving2003SingleTreeAge:
         is_peat_soil_override: Optional[bool],
         is_shade_tolerant_broadleaf_override: Optional[bool],
     ) -> _ModelParams:
+        """Normalise inputs and build a :class:`_ModelParams` instance."""
         species_obj = parse_tree_species(species_input)  # type: ignore
         if not isinstance(species_obj, TreeName):
             raise TypeError(f"parse_tree_species expected TreeName, got {type(species_obj)}")  # type: ignore
@@ -476,6 +479,7 @@ class Elfving2003SingleTreeAge:
 
     @staticmethod
     def _determine_calculation_group(params: _ModelParams) -> int:
+        """Select calculation group based on tree and stand attributes."""
         if (
             params.is_standard_override
             if params.is_standard_override is not None
@@ -490,7 +494,7 @@ class Elfving2003SingleTreeAge:
             # Contorta logic in C# implies it's for even-aged with known age.
             # If age is None, it would fall into C#'s UnevenAgedWithoutStandAge (Group 3) where Contorta is not special.
             if params.processed_total_stand_age is not None:
-                return Elfving2003SingleTreeAge.GROUP_PINE_CONTORTA
+                return Elfving2003TreeAge.GROUP_PINE_CONTORTA
             else:  # No age, Contorta handled by Group 3 as any other pine
                 return 3
 
@@ -533,6 +537,7 @@ class Elfving2003SingleTreeAge:
 
     @staticmethod
     def _calculate_ln_a13_group_pine_contorta(p: _ModelParams, c: Tuple[float, ...]) -> float:
+        """Compute ln(age at 1.3 m) for Contorta pines."""
         # C# ContortaTreeAge logic
         adjusted_bald_val = (
             p.processed_total_stand_age - 2.0 if p.processed_total_stand_age is not None else None
@@ -600,6 +605,7 @@ class Elfving2003SingleTreeAge:
 
     @staticmethod
     def _calculate_ln_a13_group2(p: _ModelParams, c: Tuple[float, ...]) -> float:
+        """Calculate ln(Age1.3) for group 2 (even-aged stands with age)."""
         # Coeffs: const,lnd,d,dfrel,lnbald,tall,ljuslov,SIS,SIGRAN,ts,ts2,ost,sma,LIKALD,lng,gotland,rich,poor
         if p.processed_total_stand_age is None or p.processed_total_stand_age <= 0:
             raise ValueError("G2: positive total_stand_age.")
@@ -636,6 +642,7 @@ class Elfving2003SingleTreeAge:
 
     @staticmethod
     def _calculate_ln_a13_group3(p: _ModelParams, c: Tuple[float, ...]) -> float:
+        """Calculate ln(Age1.3) for group 3 (uneven aged without age)."""
         # C# CoeffFunction8 order: const,logD,d/QMD,(d/QMD)2,ln(Gf+1),SIS,SIGRAN,SID2GT,rich,poor,ljuslov,tall,bokek,TS,ost,sma,gotland,dike,torv
         # Python _COEFF_3_TOTAL_WO_AGE is ordered as per C#.
         if p.diameter_qmd_ratio is None:
@@ -675,6 +682,7 @@ class Elfving2003SingleTreeAge:
 
     @staticmethod
     def _calculate_ln_a13_group4(p: _ModelParams, c: Tuple[float, ...]) -> float:
+        """Calculate ln(Age1.3) for group 4 (uneven aged with age)."""
         # C# CoeffFunction6 order: const,d,logD,d/Dm,bald,logBald,lnG,SIS,SIGRAN,SID,rich,poor,ljuslov,bokek,TS,TS2,gotland,ditch
         # Python _COEFF_4_UNEVEN is ordered like this.
         if p.processed_total_stand_age is None or p.processed_total_stand_age <= 0:
@@ -709,6 +717,7 @@ class Elfving2003SingleTreeAge:
 
     @staticmethod
     def _calculate_ln_a13_group5(p: _ModelParams, c: Tuple[float, ...]) -> float:  # Pine
+        """Calculate ln(Age1.3) for group 5 (pine)."""
         # C# Coeffs: const, d, logD, d/Dm, bald, logBald, logG
         # Python _COEFF_5_PINE is ordered like this.
         if p.processed_total_stand_age is None or p.processed_total_stand_age <= 0:
@@ -729,6 +738,7 @@ class Elfving2003SingleTreeAge:
 
     @staticmethod
     def _calculate_ln_a13_group6(p: _ModelParams, c: Tuple[float, ...]) -> float:  # Spruce
+        """Calculate ln(Age1.3) for group 6 (spruce)."""
         # C# Coeffs: const, d, logD, d/QMD, logBald, logG
         # Python _COEFF_6_SPRUCE is ordered like this.
         if p.processed_total_stand_age is None or p.processed_total_stand_age <= 0:
@@ -748,6 +758,7 @@ class Elfving2003SingleTreeAge:
 
     @staticmethod
     def _calculate_ln_a13_group7(p: _ModelParams, c: Tuple[float, ...]) -> float:  # Birch
+        """Calculate ln(Age1.3) for group 7 (birch)."""
         # C# Coeffs: const, d, logD, d/QMD, logBald, log(Gf+1), SIS, rich
         # Python _COEFF_7_BIRCH is ordered like this.
         if p.processed_total_stand_age is None or p.processed_total_stand_age <= 0:
@@ -773,6 +784,7 @@ class Elfving2003SingleTreeAge:
     def _calculate_ln_a13_group8(
         p: _ModelParams, c: Tuple[float, ...]
     ) -> float:  # Other Deciduous
+        """Calculate ln(Age1.3) for group 8 (other deciduous species)."""
         # C# Coeffs: const, logD, d/Dm, logBald, slov, ljuslov
         # Python _COEFF_8_DECID is ordered like this.
         if p.processed_total_stand_age is None or p.processed_total_stand_age <= 0:
@@ -790,6 +802,7 @@ class Elfving2003SingleTreeAge:
 
     @staticmethod
     def _calculate_ln_a13_group9(p: _ModelParams, c: Tuple[float, ...]) -> float:  # Standards
+        """Calculate ln(Age1.3) for group 9 (standard trees)."""
         # C# Coeffs: const, d, logD, bald, sis, ljuslov
         # Python _COEFF_9_STD is ordered like this.
         if p.processed_total_stand_age is None:
@@ -840,7 +853,8 @@ class Elfving2003SingleTreeAge:
         is_peat_soil: Optional[bool] = None,
         is_shade_tolerant_broadleaf_hint: Optional[bool] = None,
     ) -> float:  # type: ignore
-        params = Elfving2003SingleTreeAge._prepare_model_params(
+        """Return tree age at breast height given tree and site attributes."""
+        params = Elfving2003TreeAge._prepare_model_params(
             diameter,
             species,
             total_stand_age,
@@ -861,16 +875,13 @@ class Elfving2003SingleTreeAge:
             is_peat_soil,
             is_shade_tolerant_broadleaf_hint,
         )
-        group = Elfving2003SingleTreeAge._determine_calculation_group(params)
-        if (
-            group not in Elfving2003SingleTreeAge._COEFFS
-            or group not in Elfving2003SingleTreeAge._BIAS
-        ):
+        group = Elfving2003TreeAge._determine_calculation_group(params)
+        if group not in Elfving2003TreeAge._COEFFS or group not in Elfving2003TreeAge._BIAS:
             raise NotImplementedError(f"Coeffs/bias for group {group} undefined.")
         coeffs, bias, calculator = (
-            Elfving2003SingleTreeAge._COEFFS[group],
-            Elfving2003SingleTreeAge._BIAS[group],
-            Elfving2003SingleTreeAge._GROUP_CALCULATORS.get(group),
+            Elfving2003TreeAge._COEFFS[group],
+            Elfving2003TreeAge._BIAS[group],
+            Elfving2003TreeAge._GROUP_CALCULATORS.get(group),
         )
         if calculator is None:
             raise NotImplementedError(f"Calculator for group {group} undefined.")
@@ -882,6 +893,7 @@ class Elfving2003SingleTreeAge:
 
     @staticmethod
     def _get_vegetation_code(fi: Any) -> Optional[int]:
+        """Return vegetation code from input or ``None`` if unavailable."""
         if fi is None:
             return None
         if isinstance(fi, Sweden.FieldLayer):
@@ -895,10 +907,12 @@ class Elfving2003SingleTreeAge:
 
     @staticmethod
     def _is_rich_site(fi: Any) -> int:
-        co = Elfving2003SingleTreeAge._get_vegetation_code(fi)
+        """Return ``1`` if vegetation indicates a rich site else ``0``."""
+        co = Elfving2003TreeAge._get_vegetation_code(fi)
         return 1 if co and (1 <= co <= 9 or co == 12) else 0
 
     @staticmethod
     def _is_poor_site(fi: Any) -> int:
-        co = Elfving2003SingleTreeAge._get_vegetation_code(fi)
+        """Return ``1`` if vegetation indicates a poor site else ``0``."""
+        co = Elfving2003TreeAge._get_vegetation_code(fi)
         return 1 if co and co > 13 else 0

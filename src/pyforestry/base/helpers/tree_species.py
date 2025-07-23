@@ -32,10 +32,12 @@ class TreeName:
 
     @property
     def full_name(self) -> str:
+        """Return the lowercase ``"genus species"`` representation."""
         return f"{self.genus.name.lower()} {self.species_name.lower()}"
 
     @property
     def tree_type(self) -> str:
+        """Return ``"Coniferous"`` or ``"Deciduous"`` based on the genus."""
         return get_tree_type_by_genus(self.genus.name.lower())
 
 
@@ -44,6 +46,7 @@ class TreeName:
 
 
 def get_tree_type_by_genus(genus: str) -> str:
+    """Return the tree type (``"Coniferous"`` or ``"Deciduous"``) for ``genus``."""
     DECIDUOUS_LIST = {
         "betula",
         "alnus",
@@ -213,20 +216,25 @@ class RegionalGenusGroup:
     """
 
     def __init__(self, genus: str, species: List[TreeName]):
+        """Initialize with a genus name and its species list."""
         self.genus = genus
         self.species = species
 
     def __iter__(self) -> Iterator[TreeName]:
+        """Iterate over the contained :class:`TreeName` objects."""
         return iter(self.species)
 
     def __contains__(self, item: Any) -> bool:
+        """Return ``True`` if ``item`` is one of the contained species."""
         return item in self.species
 
     def __repr__(self) -> str:
+        """Return the ``repr`` string for debugging."""
         return f"RegionalGenusGroup({self.genus}: {self.species})"
 
     @property
     def full_name(self) -> str:
+        """Return the genus name in lower case."""
         return self.genus.lower()
 
 
@@ -241,6 +249,7 @@ class RegionalTreeSpecies:
     """
 
     def __init__(self, region: str, allowed_species: List[TreeName]):
+        """Store ``region`` and build lookups for the allowed species."""
         self.region = region
         # Dictionary of individual species using keys like "picea_abies"
         self._species: Dict[str, TreeName] = {}
@@ -255,6 +264,7 @@ class RegionalTreeSpecies:
             self._by_genus.setdefault(genus_key, []).append(sp)
 
     def __getattr__(self, attr: str) -> Any:
+        """Lookup a genus group or individual species by attribute name."""
         # First check if the attribute matches a genus group.
         if attr in self._by_genus:
             return RegionalGenusGroup(attr, self._by_genus[attr])

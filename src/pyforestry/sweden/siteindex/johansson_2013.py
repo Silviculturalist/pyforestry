@@ -1,4 +1,4 @@
-# Johansson_2013.py
+"""Height growth models from FAKTA SKOG (Johansson et al., 2013)."""
 
 import math
 import warnings
@@ -16,8 +16,10 @@ def johansson_2013_height_trajectory_sweden_beech(
 
     Parameters:
         dominant_height (float): Dominant height of the stand (meters).
-        age (Union[float, AgeMeasurement]): Total age of the stand (years). Must be float/int or Age.TOTAL.
-        age2 (Union[float, AgeMeasurement]): Target age for output height (years). Must be float/int or Age.TOTAL.
+        age (Union[float, AgeMeasurement]): Total age of the stand (years).
+            Must be float/int or Age.TOTAL.
+        age2 (Union[float, AgeMeasurement]): Target age for output height (years).
+            Must be float/int or Age.TOTAL.
 
     Returns:
         SiteIndexValue: Dominant height at age2 (meters) wrapped in a SiteIndexValue object.
@@ -55,9 +57,15 @@ def johansson_2013_height_trajectory_sweden_beech(
 
     # Age range warning
     if age_val < 20 or age2_val < 20:
-        warnings.warn("Suitable for cultivated stands of Beech between total ages of 20 and 150.")
+        warnings.warn(
+            "Suitable for cultivated stands of Beech between total ages of 20 and 150.",
+            stacklevel=2,
+        )
     if age_val > 150 or age2_val > 150:
-        warnings.warn("Suitable for cultivated stands of Beech between total ages of 20 and 150.")
+        warnings.warn(
+            "Suitable for cultivated stands of Beech between total ages of 20 and 150.",
+            stacklevel=2,
+        )
 
     # Model parameters
     param_asi = 15
@@ -90,8 +98,10 @@ def johansson_2013_height_trajectory_sweden_hybrid_aspen(
 
     Parameters:
         dominant_height (float): Dominant height of the stand (meters).
-        age (Union[float, AgeMeasurement]): Total age of the stand (years). Must be float/int or Age.TOTAL.
-        age2 (Union[float, AgeMeasurement]): Target age for output height (years). Must be float/int or Age.TOTAL.
+        age (Union[float, AgeMeasurement]): Total age of the stand (years).
+            Must be float/int or Age.TOTAL.
+        age2 (Union[float, AgeMeasurement]): Target age for output height (years).
+            Must be float/int or Age.TOTAL.
 
     Returns:
         SiteIndexValue: Dominant height at age2 (meters) wrapped in a SiteIndexValue object.
@@ -129,7 +139,7 @@ def johansson_2013_height_trajectory_sweden_hybrid_aspen(
 
     # Age range warning
     if age_val > 50 or age2_val > 50:
-        warnings.warn("Suitable for stands of Hybrid Aspen under age of 50.")
+        warnings.warn("Suitable for stands of Hybrid Aspen under age of 50.", stacklevel=2)
 
     # Model parameters
     b0 = 2.0381
@@ -160,8 +170,10 @@ def johansson_2013_height_trajectory_sweden_larch(
 
     Parameters:
         dominant_height (float): Dominant height of the stand (meters).
-        age (Union[float, AgeMeasurement]): Total age of the stand (years). Must be float/int or Age.TOTAL.
-        age2 (Union[float, AgeMeasurement]): Target age for output height (years). Must be float/int or Age.TOTAL.
+        age (Union[float, AgeMeasurement]): Total age of the stand (years).
+            Must be float/int or Age.TOTAL.
+        age2 (Union[float, AgeMeasurement]): Target age for output height (years).
+            Must be float/int or Age.TOTAL.
 
     Returns:
         SiteIndexValue: Dominant height at age2 (meters) wrapped in a SiteIndexValue object.
@@ -200,9 +212,15 @@ def johansson_2013_height_trajectory_sweden_larch(
 
     # Age range warning
     if age_val < 10 or age2_val < 10:
-        warnings.warn("Suitable for cultivated stands of Larch between total ages of 10 and 100.")
+        warnings.warn(
+            "Suitable for cultivated stands of Larch between total ages of 10 and 100.",
+            stacklevel=2,
+        )
     if age_val > 100 or age2_val > 100:
-        warnings.warn("Suitable for cultivated stands of Larch between total ages of 10 and 100.")
+        warnings.warn(
+            "Suitable for cultivated stands of Larch between total ages of 10 and 100.",
+            stacklevel=2,
+        )
 
     # Model parameters
     param_asi = 17.97
@@ -235,8 +253,10 @@ def johansson_2013_height_trajectory_sweden_oak(
 
     Parameters:
         dominant_height (float): Dominant height of the stand (meters).
-        age (Union[float, AgeMeasurement]): Total age of the stand (years). Must be float/int or Age.TOTAL.
-        age2 (Union[float, AgeMeasurement]): Target age for output height (years). Must be float/int or Age.TOTAL.
+        age (Union[float, AgeMeasurement]): Total age of the stand (years).
+            Must be float/int or Age.TOTAL.
+        age2 (Union[float, AgeMeasurement]): Target age for output height (years).
+            Must be float/int or Age.TOTAL.
 
     Returns:
         SiteIndexValue: Dominant height at age2 (meters) wrapped in a SiteIndexValue object.
@@ -275,9 +295,13 @@ def johansson_2013_height_trajectory_sweden_oak(
 
     # Age range warning
     if age_val < 20 or age2_val < 20:
-        warnings.warn("Suitable for cultivated stands of Oak between total ages of 20 and 150.")
+        warnings.warn(
+            "Suitable for cultivated stands of Oak between total ages of 20 and 150.", stacklevel=2
+        )
     if age_val > 150 or age2_val > 150:
-        warnings.warn("Suitable for cultivated stands of Oak between total ages of 20 and 150.")
+        warnings.warn(
+            "Suitable for cultivated stands of Oak between total ages of 20 and 150.", stacklevel=2
+        )
 
     # Model parameters
     param_asi = 1000
