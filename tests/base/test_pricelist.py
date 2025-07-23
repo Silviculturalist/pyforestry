@@ -1,8 +1,14 @@
 import pytest
 
+import pyforestry.base.pricelist as pricelist_pkg
 from pyforestry.base.helpers.tree_species import TreeSpecies
 from pyforestry.base.pricelist import Pricelist, TimberPricelist, create_pricelist_from_data
 from pyforestry.sweden.pricelist.data.mellanskog_2013 import Mellanskog_2013_price_data
+
+
+def test_reexports():
+    assert pricelist_pkg.Pricelist is Pricelist
+    assert hasattr(pricelist_pkg, "SolutionCube")
 
 
 @pytest.fixture(scope="module")
