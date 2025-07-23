@@ -1,3 +1,5 @@
+"""Branch-and-bound timber bucking algorithm from Näslund (1985)."""
+
 from math import pi
 from typing import Optional, Type
 

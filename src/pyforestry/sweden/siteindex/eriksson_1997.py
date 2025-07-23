@@ -1,3 +1,5 @@
+"""Site index function for birch from Eriksson et al. (1997)."""
+
 import math
 import warnings
 from typing import Union

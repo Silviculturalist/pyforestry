@@ -1,3 +1,6 @@
+"""Tree volume functions from Eriksson (1973)."""
+
+
 def Eriksson_1973_volume_aspen_Sweden(diameter_cm: float, height_m: float) -> float:
     """
     Calculates the volume of a Ash, Aspen, Alnus glutinosa tree in m³ according to Eriksson (1973).

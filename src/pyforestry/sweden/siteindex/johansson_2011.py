@@ -1,4 +1,4 @@
-# Johansson_2011.py
+"""Site index model for poplar on farmland from Johansson (2011)."""
 
 import math
 import warnings

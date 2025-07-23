@@ -1,3 +1,5 @@
+"""Height trajectory models for lodgepole pine from Hägglund and Remröd (1977)."""
+
 import warnings
 from math import exp
 from typing import Union

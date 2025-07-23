@@ -1,3 +1,5 @@
+"""Site index functions from Elfving & Kiviste (1997)."""
+
 import math
 import warnings
 from typing import Union

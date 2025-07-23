@@ -1,4 +1,4 @@
-# Johansson_1999.py
+"""Site index functions for alder based on Johansson (1999)."""
 
 import math
 import warnings

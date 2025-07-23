@@ -1,3 +1,6 @@
+"""Volume equation for hybrid aspen from Johnsson (1953)."""
+
+
 def johnsson_1953_volume_hybrid_aspen(diameter_cm, height_m):
     """
     Calculate stem volume for Hybrid Aspen based on Johnsson (1953).

@@ -1,4 +1,4 @@
-# Johansson_1996.py
+"""Height growth model for European aspen based on Johansson (1996)."""
 
 import math
 import warnings

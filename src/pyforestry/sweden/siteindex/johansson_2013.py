@@ -1,4 +1,4 @@
-# Johansson_2013.py
+"""Height growth models from FAKTA SKOG (Johansson et al., 2013)."""
 
 import math
 import warnings
