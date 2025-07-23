@@ -1,254 +1,19 @@
-"""Implementation of the Näsberg (1985) branch-and-bound bucking algorithm."""
+from math import pi
+from typing import Optional, Type
 
-import math
-from collections.abc import Mapping
-from dataclasses import dataclass, field
-from enum import IntEnum
-from typing import Any, Iterator, List, Optional, Type
-
-import matplotlib.pyplot as plt
 import numpy as np
 
 from pyforestry.base.pricelist import Pricelist, TimberPricelist
 from pyforestry.base.taper import Taper
 from pyforestry.base.timber import Timber
 
-
-class QualityType(IntEnum):
-    Undefined = 0
-    ButtLog = 1  # Special
-    MiddleLog = 2  # OS
-    TopLog = 3  # Kvint
-    Pulp = 4
-    LogCull = 5
-    Fuelwood = 6
-
-
-@dataclass
-class CrossCutSection:
-    """Container for one log section in the final cutting solution."""
-
-    start_point: int  # Index in decimeters from the stump
-    end_point: int  # Index in decimeters from the stump
-    volume: float  # Volume (e.g., m3 f ub) for that section
-    top_diameter: float  # Diameter (cm) of the top of this log
-    value: float  # Monetary value (e.g. in SEK) contributed by this section
-    species_group: str  # For example, "Pine", "Spruce", etc.
-    timber_proportion: float = 0.0
-    pulp_proportion: float = 0.0
-    cull_proportion: float = 0.0
-    fuelwood_proportion: float = 0.0
-    quality: QualityType = QualityType.Undefined
-
-
-@dataclass
-class BuckingResult(Mapping):
-    """Encapsulates the output of the cross-cutting process."""
-
-    species_group: str  # The species group.
-    total_value: float  # The total value in e.g. SEK
-    top_proportion: float  # Proportion of volume above final cut
-    dead_wood_proportion: float  # Proportion of volume considered dead wood
-    high_stump_volume_proportion: float  # Proportion of total volume cut off as high stump
-    high_stump_value_proportion: float  # Proportion of value that is in the high stump
-    last_cut_relative_height: float  # Proportion of total height where final cut occurs
-    volume_per_quality: List[float]  # Breakout of volumes by quality
-    timber_price_by_quality: List[float]  # Per-cubic-meter average timber price by quality
-    vol_fub_5cm: float  # Volume under bark, 5 cm top
-    vol_sk_ub: float  # Total volume under bark for entire stem
-    DBH_cm: float  # Diameter at breast height 1.3 m
-    height_m: float  # Total tree height.
-    stump_height_m: float  # Tree stump height.
-    diameter_stump_cm: float  # Diameter at stump (cm).
-    taperDiams_cm: List[float]  # Taper Diameters for plotting.
-    taperHeights_m: List[float]  # Taper Heights for plotting.
-    sections: List[CrossCutSection] = field(default_factory=list)
-
-    # -------- Mapping protocol so the object behaves like a dict ----------
-    def __getitem__(self, key: str) -> Any:
-        """Return the attribute ``key`` or raise ``KeyError`` like a ``dict``."""
-        if hasattr(self, key):
-            return getattr(self, key)
-        raise KeyError(key)
-
-    def __iter__(self) -> Iterator[str]:
-        """Iterate over attribute names in dataclass order."""
-        return iter(self.__dict__)
-
-    def __len__(self) -> int:
-        """Return the number of stored attributes."""
-        return len(self.__dict__)
-
-    def plot(self):
-        """Plot a simple representation of the bucking result."""
-        if self.sections:
-            fig, ax = plt.subplots(figsize=(10, 6))
-
-            # Prepare points for taper line plot (subtract stump height to align axis)
-            taper_heights = np.array(self.taperHeights_m, dtype=float)
-            taper_diams = np.array(self.taperDiams_cm, dtype=float)
-            taper_x = (taper_heights - self.stump_height_m) * 10
-            taper_y = taper_diams
-
-            # Plot taper line
-            ax.plot(taper_x, taper_y, linestyle="-", color="black", label="Taper")
-
-            # Plot filled sections under taper curve
-            for section in self.sections:
-                # Mask taper points within each section range
-                mask = (taper_x >= section.start_point) & (taper_x <= section.end_point)
-                section_x = taper_x[mask]
-                section_y = taper_y[mask]
-
-                # If there are no points within the range, interpolate
-                if len(section_x) == 0:
-                    section_x = np.array([section.start_point, section.end_point])
-                    section_y = np.interp(section_x, taper_x, taper_y)
-
-                # Add start and end points explicitly for a smooth fill
-                if section_x[0] > section.start_point:
-                    section_x = np.insert(section_x, 0, section.start_point)
-                    section_y = np.insert(
-                        section_y,
-                        0,
-                        start_diameter := (
-                            start_diameter
-                            if (start_diameter := np.interp(section.start_point, taper_x, taper_y))
-                            > 0
-                            else 0
-                        ),
-                    )
-                if section_x[-1] < section.end_point:
-                    section_x = np.append(section_x, section.end_point)
-                    section_y = np.append(
-                        section_y,
-                        end_diameter := (
-                            end_diameter
-                            if (end_diameter := np.interp(section.end_point, taper_x, taper_y)) > 0
-                            else 0
-                        ),
-                    )
-
-                # Fill area under taper curve for this section
-                ax.fill_between(section_x, 0, section_y, alpha=0.3)
-
-                # Add text info (length)
-                length = (section.end_point - section.start_point) / 10
-                midpoint = (section.start_point + section.end_point) / 2
-
-                ax.text(
-                    midpoint,
-                    section.top_diameter / 2,
-                    f"{section.top_diameter:.1f} cm\n{length:.2f} "
-                    f"m\n Vol {section.volume * 1000:.0f} "
-                    f"$dm^3$\n {section.value:.0f} :-",
-                    ha="center",
-                    va="center",
-                    fontsize=8,
-                )
-
-            # Plot taper line (superfluous or hinder overflow of colored areas?)
-            ax.plot(taper_x, taper_y, linestyle="-", color="black")
-
-            # Vertical lines at section boundaries
-            for section in self.sections:
-                p = section.end_point
-                ax.axvline(x=p, color="grey", linestyle="--", alpha=0.7)
-                # Interpolate to get the y-value of the taper curve at x = p
-                y_value = np.interp(p, taper_x, taper_y)
-
-                # Add the label rotated 90 degrees
-                ax.text(
-                    p - 2, y_value + 0.5, f"{p}", ha="center", va="bottom", rotation=90, fontsize=9
-                )
-
-            # DBH marker
-            ax.scatter(
-                (1.3 - self.stump_height_m) * 10,
-                self.DBH_cm,
-                color="red",
-                label="Diameter @ 1.3 m",
-            )
-
-            ax.set_xlabel("Distance from stump (dm)")
-            ax.set_ylabel("Diameter (cm)")
-            ax.set_title("Bucking Result Log Profile")
-            ax.set_xlim(left=0)  # Prevent automatic axis expansion
-            ax.set_ylim(bottom=0)  # Prevent automatic axis expansion
-
-            leg = ax.legend(loc="upper right")
-            leg.get_frame().set_alpha(1)  # Set the background transparency
-
-            textstr = "\n".join(
-                (
-                    f"Species Group: {self.species_group}",
-                    f"DBH: {self.DBH_cm:.1f} cm",
-                    f"Height: {self.height_m:.1f} m",
-                    f"Stump Height: {self.stump_height_m:.1f} m",
-                    f"Stump Diameter: {self.diameter_stump_cm:.1f} cm",
-                    f"Vol fub 5cm: {self.vol_fub_5cm:.3f} m³",
-                )
-            )
-
-            # Get legend bounding box
-            fig.canvas.draw()
-
-            # Set your textbox position slightly offset from the legend to avoid overlap
-            legend_x0, legend_y0, _, _ = (
-                ax.get_legend().get_window_extent().transformed(ax.transAxes.inverted()).bounds
-            )
-
-            # Set textbox slightly below legend
-            textbox_x = legend_x0  # Slightly left of legend
-            textbox_y = legend_y0 - 0.02  # Slightly below legend
-
-            # Positioning text box in upper-right, slightly offset from legend
-            ax.text(
-                textbox_x,
-                textbox_y,
-                textstr,
-                transform=ax.transAxes,
-                fontsize=9,
-                verticalalignment="top",
-                horizontalalignment="left",
-                bbox=dict(boxstyle="round", facecolor="white", alpha=1),
-            )
-
-            plt.tight_layout()
-            plt.show()
-        else:
-            raise ValueError("No sections available for plotting.")
-
-
-@dataclass(frozen=True)
-class BuckingConfig:
-    timber_price_factor: float = 1.0
-    pulp_price_factor: float = 1.0
-    use_downgrading: bool = False
-    save_sections: bool = False
-
-
-class _TreeCache:
-    """Internal cache to avoid recomputing diameters and heights."""
-
-    def __init__(self):
-        """Initialise empty diameter and height caches."""
-        self._diameters = {}
-        self._heights = {}
-
-    def diameter(self, taper: Taper, height: int) -> float:
-        """Return the diameter at ``height`` (dm) caching the result."""
-        if height not in self._diameters:
-            # --- CORRECTED CALL: Now uses the taper instance directly ---
-            self._diameters[height] = taper.get_diameter_at_height(height / 10.0)
-        return self._diameters[height]
-
-    def height(self, taper: Taper, target: float) -> int:
-        """Return the height (dm) at ``target`` diameter, using a cache."""
-        if target not in self._heights:
-            # --- CORRECTED CALL: Now uses the taper instance directly ---
-            self._heights[target] = int(taper.get_height_at_diameter(target) * 10)
-        return self._heights[target]
+from ..helpers.bucking import (
+    BuckingConfig,
+    BuckingResult,
+    CrossCutSection,
+    QualityType,
+    _TreeCache,
+)
 
 
 # -------------------------------------------------------------------------
@@ -322,7 +87,7 @@ class Nasberg_1985_BranchBound:
                 vf = 1.0
                 if tp.volume_type == "m3to":
                     r = (d / 100) * 0.5
-                    vf = math.pi * r * r * (dm / 10)
+                    vf = pi * r * r * (dm / 10)
                 for p in (0, 1, 2):
                     base = tp[d].price_for_log_part(p)
                     corr = tp.length_corrections.get_length_correction(d, p, dm)

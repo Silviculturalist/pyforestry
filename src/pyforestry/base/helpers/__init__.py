@@ -26,11 +26,11 @@ from .plot import CircularPlot
 from .stand import Stand, StandMetricAccessor
 from .utils import enum_code
 from .bucking import (
-    BuckingConfigBase,
-    BuckingResultBase,
-    CrossCutSectionBase,
+    BuckingConfig,
+    BuckingResult,
+    CrossCutSection,
     QualityType,
-    TreeCacheBase,
+    _TreeCache,
 )
 
 # isort: on
@@ -71,9 +71,9 @@ __all__ = [
     "StandMetricAccessor",
     "SiteBase",
     "enum_code",
-    "CrossCutSectionBase",
-    "BuckingResultBase",
-    "BuckingConfigBase",
-    "TreeCacheBase",
+    "CrossCutSection",
+    "BuckingResult",
+    "BuckingConfig",
+    "_TreeCache",
     "QualityType",
 ]

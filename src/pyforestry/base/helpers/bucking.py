@@ -13,6 +13,13 @@ import numpy as np
 from pyforestry.base.taper import Taper
 
 
+class Bucker:
+    """Simple base class for bucking implementations."""
+
+    def __init__(self) -> None:
+        """Initialize a new bucker instance."""
+
+
 class QualityType(IntEnum):
     """Possible quality classes for bucked logs."""
 
@@ -26,7 +33,7 @@ class QualityType(IntEnum):
 
 
 @dataclass
-class CrossCutSectionBase:
+class CrossCutSection:
     """Container for one section in a cutting solution."""
 
     start_point: int
@@ -43,7 +50,7 @@ class CrossCutSectionBase:
 
 
 @dataclass(frozen=True)
-class BuckingConfigBase:
+class BuckingConfig:
     """Settings that modify bucking algorithm behaviour."""
 
     timber_price_factor: float = 1.0
@@ -52,7 +59,7 @@ class BuckingConfigBase:
     save_sections: bool = False
 
 
-class TreeCacheBase:
+class _TreeCache:
     """Cache for tree taper calculations."""
 
     def __init__(self) -> None:
@@ -74,7 +81,7 @@ class TreeCacheBase:
 
 
 @dataclass
-class BuckingResultBase(Mapping):
+class BuckingResult(Mapping):
     """Encapsulates the output of a bucking algorithm."""
 
     species_group: str
@@ -94,7 +101,7 @@ class BuckingResultBase(Mapping):
     diameter_stump_cm: float
     taperDiams_cm: List[float]
     taperHeights_m: List[float]
-    sections: List[CrossCutSectionBase] | None = field(default_factory=list)
+    sections: List[CrossCutSection] | None = field(default_factory=list)
 
     def __getitem__(self, key: str) -> Any:
         """Return attribute ``key`` or raise ``KeyError``."""
