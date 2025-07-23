@@ -82,16 +82,16 @@ def test_stand_metric_calculations():
         id=1,
         radius_m=5.0,
         trees=[
-            Tree(species=sp_picea, diameter_cm=25, weight=2),
-            Tree(species=sp_pinus, diameter_cm=30, weight=1),
+            Tree(species=sp_picea, diameter_cm=25, weight_n=2),
+            Tree(species=sp_pinus, diameter_cm=30, weight_n=1),
         ],
     )
     pl2 = CircularPlot(
         id=2,
         radius_m=5.0,
         trees=[
-            Tree(species=sp_picea, diameter_cm=20, weight=1),
-            Tree(species=sp_pinus, diameter_cm=35, weight=2),
+            Tree(species=sp_picea, diameter_cm=20, weight_n=1),
+            Tree(species=sp_pinus, diameter_cm=35, weight_n=2),
         ],
     )
     st = Stand(plots=[pl1, pl2])
@@ -129,7 +129,7 @@ def test_representation_tree_defaults():
     assert tr.species is None
     assert tr.diameter_cm is None
     assert tr.height_m is None
-    assert tr.weight == 1.0
+    assert tr.weight_n == 1.0
 
 
 def test_representation_tree_with_string_species():
@@ -345,7 +345,7 @@ def test_random_plots_on_stand():
                     species=TreeSpecies.Sweden.pinus_sylvestris,
                     diameter_cm=d_pinus,
                     height_m=h_pinus,
-                    weight=1.0,
+                    weight_n=1.0,
                 )
             )
         for _ in range(n_picea):
@@ -354,7 +354,7 @@ def test_random_plots_on_stand():
                     species=TreeSpecies.Sweden.picea_abies,
                     diameter_cm=d_picea,
                     height_m=h_picea,
-                    weight=1.0,
+                    weight_n=1.0,
                 )
             )
         plot.trees = trees

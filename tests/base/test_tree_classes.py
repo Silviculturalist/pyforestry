@@ -20,7 +20,7 @@ def test_single_tree_init_and_repr():
 
 def test_representation_tree_parsing_and_weight():
     sp = parse_tree_species("pinus sylvestris")
-    rep_tree = Tree((3, 4), sp, weight=2.5)
-    assert rep_tree.weight == 2.5
+    rep_tree = Tree((3, 4), sp, weight_n=2.5)
+    assert rep_tree.weight_n == 2.5
     assert rep_tree.position.X == 3
     assert "Tree" in repr(rep_tree)
