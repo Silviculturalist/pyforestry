@@ -325,7 +325,7 @@ class Stand:
 
             # For each species in this plot, compute the adjusted stems/ha and BA/ha
             for sp, trlist in trees_by_sp.items():
-                stems_count = sum(t.weight for t in trlist)
+                stems_count = sum(t.weight_n for t in trlist)
                 # Adjusted stems/ha: divide by the effective area
                 stems_ha = stems_count / effective_area_ha
 
@@ -334,7 +334,7 @@ class Stand:
                 for t in trlist:
                     d_cm = float(t.diameter_cm) if t.diameter_cm is not None else 0.0
                     r_m = (d_cm / 100.0) / 2.0
-                    ba_sum += pi * (r_m**2) * t.weight
+                    ba_sum += pi * (r_m**2) * t.weight_n
                 # Adjusted BA/ha: divide by effective area.
                 ba_ha = ba_sum / effective_area_ha
 
