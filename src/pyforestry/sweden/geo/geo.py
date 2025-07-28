@@ -1,3 +1,5 @@
+"""Simple geographic utilities using Swedish shapefiles."""
+
 from importlib.resources import as_file, files
 from typing import Optional
 
@@ -9,6 +11,8 @@ from pyforestry.sweden.site import Sweden
 
 
 class RetrieveGeoCode:
+    """Helper methods for querying Swedish geographic data."""
+
     @staticmethod
     def getDistanceToCoast(lon, lat, epsg=4326):
         """

@@ -1,3 +1,5 @@
+"""Humidity lookup helper based on Eriksson (1986) data."""
+
 from importlib.resources import as_file, files
 
 import geopandas as gpd
