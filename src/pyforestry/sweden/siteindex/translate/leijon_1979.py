@@ -1,3 +1,5 @@
+"""Site index translations between pine and spruce from Leijon (1979)."""
+
 import warnings
 
 from numpy import exp, log

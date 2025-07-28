@@ -1,3 +1,6 @@
+"""Utility functions translating site index between species."""
+
+
 def agestam_1985_si_translation_pine_to_birch(si_pine):
     """
     Translate SI H100 for Pine to Birch according to Hägglund (1974), from Agestam (1985).
