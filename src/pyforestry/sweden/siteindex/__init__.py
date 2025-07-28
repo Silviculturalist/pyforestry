@@ -14,8 +14,8 @@ from .johansson_2013 import (
     johansson_2013_height_trajectory_sweden_larch,
     johansson_2013_height_trajectory_sweden_oak,
 )
-from .sis import *
-from .translate import *
+from .sis import *  # noqa: F401,F403
+from .translate import *  # noqa: F401,F403
 
 __all__ = [
     "johansson_2011_height_trajectory_sweden_poplar",
