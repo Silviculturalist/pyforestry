@@ -1,6 +1,35 @@
 from __future__ import annotations
 
-# COMMENT: is_overstorey_tree is a bool without criteria in Heureka. It is designated on instantiation.
+from math import exp, log, sqrt  # Only math is required - keep NumPy-free.
+from typing import Callable, Union
+
+from pyforestry.base.helpers.tree_species import TreeName, parse_tree_species  # Species
+from pyforestry.sweden.geo.temperature.odin_1983 import Odin_temperature_sum
+
+# -----------------------------------------------------------------------------
+# pyforestry helper imports - *only* those required for typing / enum coercion.
+# -----------------------------------------------------------------------------
+from pyforestry.sweden.site.swedish_site import Sweden  # Field layer enum, etc.
+
+# Type alias for vegetation codes so we can accept either the enum *or* an int.
+VegetationInput = Union[int, Sweden.FieldLayer]
+
+
+def _veg_code(vegetation: VegetationInput) -> int:
+    """Return the integer vegetation *code* from either an int or enum value.
+
+    Args:
+        vegetation (VegetationInput): NFI field-layer vegetation code (1-18)
+            or the corresponding :class:`Sweden.FieldLayer` enum member.
+
+    Returns:
+        int: The integer vegetation code.
+    """
+    return vegetation if isinstance(vegetation, int) else vegetation.value.code
+
+
+# COMMENT: is_overstorey_tree is a bool without criteria in Heureka.
+# It is designated on instantiation.
 # is_overstorey_tree is valid for 1) overstorey tree, 2) retention trees, 3) seed trees.
 
 """Elfving-based individual tree, stand growth and mortality model (IBM)
@@ -65,33 +94,6 @@ Example
 >>> print(f"5-year basal area increment (m2): {ba_inc_m2:.4f}")
 
 """
-
-from math import exp, log, sqrt  # Only math is required - keep NumPy-free.
-from typing import Callable, Union
-
-from pyforestry.base.helpers.tree_species import TreeName, parse_tree_species  # Species
-from pyforestry.sweden.geo.temperature.odin_1983 import Odin_temperature_sum
-
-# -----------------------------------------------------------------------------
-# pyforestry helper imports - *only* those required for typing / enum coercion.
-# -----------------------------------------------------------------------------
-from pyforestry.sweden.site.swedish_site import Sweden  # Field layer enum, etc.
-
-# Type alias for vegetation codes so we can accept either the enum *or* an int.
-VegetationInput = Union[int, Sweden.FieldLayer]
-
-
-def _veg_code(vegetation: VegetationInput) -> int:
-    """Return the integer vegetation *code* from either an int or enum value.
-
-    Args:
-        vegetation (VegetationInput): NFI field-layer vegetation code (1-18)
-            or the corresponding :class:`Sweden.FieldLayer` enum member.
-
-    Returns:
-        int: The integer vegetation code.
-    """
-    return vegetation if isinstance(vegetation, int) else vegetation.value.code
 
 
 class ElfvingIBM:
@@ -551,20 +553,25 @@ class ElfvingIBM:
         mean_geom_diam_dg = sqrt(SS_diam / stems) if stems > 0 else 0.0
 
         # C# term: temp1 = Math.Min(_commonData.Mditot - _commonData.Mgtot, 10.0);
-        # C# term: temp = _baldp1 * Math.Pow(temp1/_commonData.Mditot, 3); (This is SpruceCoefficient[4] * term)
+        # C# term: temp = _baldp1 * Math.Pow(temp1/_commonData.Mditot, 3);
+        # (This is SpruceCoefficient[4] * term)
         # Python equivalent for temp1/_commonData.Mditot part:
         mditot_val = Basal_area_weighted_mean_diameter_cm  # DQ
         mgtot_val = mean_geom_diam_dg  # DG
 
         # Python dif3bal term from previous version: ((DQ - DG)/DQ)^3
         # C# dif3bal_numerator: min(DQ - DG, 10.0)
-        # C# dif3bal structure: BAL/(D+1) * ( (min(DQ-DG,10))/DQ )^3 -- This is different from Python's previous structure.
-        # The C# formula for SpruceCoefficient[4] is: C4 * _baldp1 * ( ( Min(Mditot-Mgtot,10) / Mditot )^3 )
+        # C# dif3bal structure: BAL/(D+1) * ( (min(DQ-DG,10))/DQ )^3 -- T
+        # This is different from Python's previous structure.
+        # The C# formula for SpruceCoefficient[4] is:
+        # C4 * _baldp1 * ( ( Min(Mditot-Mgtot,10) / Mditot )^3 )
         # The C# formula for SpruceCoefficient[9] is: C9 * _baldp1 * ( (gry - BA_Spruce)/gry )
 
         # Term for C4 (0.4702):
-        # In C#: SpruceCoefficient[4] * _baldp1 * Math.Pow( (Math.Min(Mditot - Mgtot, 10.0)) / Mditot, 3.0 )
-        # Note: The Python code was previously (DQ/10) * ((DQ-DG)/DQ)^3. Re-aligning to C# structure for this term.
+        # In C#: SpruceCoefficient[4] *
+        # _baldp1 * Math.Pow( (Math.Min(Mditot - Mgtot, 10.0)) / Mditot, 3.0 )
+        # Note: The Python code was previously (DQ/10) * ((DQ-DG)/DQ)^3.
+        # Re-aligning to C# structure for this term.
         c4_term_factor = 0.0
         if mditot_val > 0:
             c4_term_factor = (
@@ -681,7 +688,9 @@ class ElfvingIBM:
         # Using the DENS = N * (Hdom_m/10)^2 for now as often cited for Heureka context.
 
         # DENS_heureka_style = stems * (dominant_height / 10.0)**2 # DENS = N * (Hdom_dm/10)^2
-        # The initial Python code had DENS = (stems * dominant_height**2) / 100_000.0. Let's keep that for consistency with previous state unless a specific new source for DENS is given.
+        # The initial Python code had DENS = (stems * dominant_height**2) / 100_000.0.
+        # Let's keep that for consistency with previous state unless
+        # a specific new source for DENS is given.
         DENS = (stems * dominant_height**2) / 100_000.0
 
         mortality_percentage = (

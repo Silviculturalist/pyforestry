@@ -36,7 +36,8 @@ class RetrieveGeoCode:
         if coast_gdf.crs is None or coast_gdf.crs.to_epsg() != 4326:
             coast_gdf = coast_gdf.to_crs(epsg=4326)
 
-        # Transform the input coordinates from the provided epsg to the internal metric CRS (EPSG:3857)
+        # Transform the input coordinates from the provided
+        # epsg to the internal metric CRS (EPSG:3857)
         transformer = Transformer.from_crs(epsg, 3857, always_xy=True)
         lon_metric, lat_metric = transformer.transform(float(lon), float(lat))
         point_metric = Point(lon_metric, lat_metric)

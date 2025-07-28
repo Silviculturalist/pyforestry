@@ -129,7 +129,8 @@ class Moren_Perttu_radiation_1994:
         """
         if self.july_avg_temp is None or self.jan_avg_temp is None:
             raise ValueError(
-                "July and January average temperatures must be provided during initialization to calculate continentality."
+                "July and January average temperatures must be provided during "
+                "initialization to calculate continentality."
             )
 
         if not (0 < self.latitude < 90):
@@ -306,7 +307,8 @@ class Moren_Perttu_radiation_1994:
 
     @staticmethod
     def get_ratio_global_to_extraterrestrial_radiation_clear_sky(day_number, region):
-        # Using D1 = -0.000403 for North, (105,273) based on user's implied coefficient from test result
+        # Using D1 = -0.000403 for North, (105,273) based on user's implied coefficient
+        # from test result
         coeffs_D = {
             "North": {
                 (0, 104): {"D0": 0.521, "D1": 0.002681},

@@ -52,7 +52,9 @@ def Hannrup_2004_bark_pinus_sylvestris_sweden(
     if isinstance(diameter_breast_height_mm, Diameter_cm):
         if diameter_breast_height_mm.measurement_height_m != 1.3:
             warnings.warn(
-                f"Input 'diameter_breast_height_mm' (Diameter_cm) has measurement height {diameter_breast_height_mm.measurement_height_m}m, model assumes 1.3m."
+                "Input 'diameter_breast_height_mm' (Diameter_cm) has measurement"
+                f"height {diameter_breast_height_mm.measurement_height_m}m, model assumes 1.3m.",
+                stacklevel=2,
             )
         if not diameter_breast_height_mm.over_bark:
             raise ValueError(
@@ -71,7 +73,9 @@ def Hannrup_2004_bark_pinus_sylvestris_sweden(
     # Latitude check (approximate range for Sweden)
     if not (55.0 <= latitude <= 70.0):
         warnings.warn(
-            f"Latitude {latitude} is outside the typical range for Sweden (55-70). Results may be extrapolated."
+            f"Latitude {latitude} is outside the typical range for Sweden (55-70)."
+            "Results may be extrapolated.",
+            stacklevel=2,
         )
     if stem_height_cm < 0:
         raise ValueError("Input 'stem_height_cm' must be non-negative.")
@@ -87,12 +91,16 @@ def Hannrup_2004_bark_pinus_sylvestris_sweden(
 
     if term_lat <= 0:
         warnings.warn(
-            f"Pine Bark: Term (72.1814 + 0.0789*dbh_b - 0.9868*lat) = {term_lat:.4f} <= 0. Cannot calculate htg. Returning minimum bark."
+            f"Pine Bark: Term (72.1814 + 0.0789*dbh_b - 0.9868*lat) = {term_lat:.4f} <= 0. "
+            "Cannot calculate htg. Returning minimum bark.",
+            stacklevel=2,
         )
         return 2.0
     if abs(term_exp_coeff) < 1e-9:
         warnings.warn(
-            f"Pine Bark: Term (0.0078557 - 0.0000132*dbh_b) = {term_exp_coeff:.7f} is close to zero. Cannot reliably calculate htg. Returning minimum bark."
+            f"Pine Bark: Term (0.0078557 - 0.0000132*dbh_b) = {term_exp_coeff:.7f} is close "
+            "to zero. Cannot reliably calculate htg. Returning minimum bark.",
+            stacklevel=2,
         )
         return 2.0
 
@@ -100,7 +108,9 @@ def Hannrup_2004_bark_pinus_sylvestris_sweden(
         htg = -math.log(0.12 / term_lat) / term_exp_coeff
     except (ValueError, ZeroDivisionError) as e:
         warnings.warn(
-            f"Pine Bark: Math error calculating htg (likely log of non-positive or division by zero): {e}. Returning minimum bark."
+            "Pine Bark: Math error calculating htg (likely log of non-positive or division "
+            f"by zero): {e}. Returning minimum bark.",
+            stacklevel=2,
         )
         return 2.0
 
@@ -115,12 +125,16 @@ def Hannrup_2004_bark_pinus_sylvestris_sweden(
             db_mm = 3.5808 + 0.0109 * dbh_b + term_lat * math.exp(exponent)
         except OverflowError:
             warnings.warn(
-                f"Pine Bark: Math OverflowError calculating exp term below htg. h={h}, htg={htg}. Returning minimum bark."
+                f"Pine Bark: Math OverflowError calculating exp term below htg. h={h}, htg={htg}. "
+                "Returning minimum bark.",
+                stacklevel=2,
             )
             db_mm = 2.0
         except ValueError as e:
             warnings.warn(
-                f"Pine Bark: Math ValueError calculating bark below htg: {e}. Returning minimum bark."
+                f"Pine Bark: Math ValueError calculating bark below htg: {e}. Returning minimum "
+                "bark.",
+                stacklevel=2,
             )
             db_mm = 2.0
     else:  # h > htg
@@ -182,7 +196,10 @@ def Hannrup_2004_bark_picea_abies_sweden(
     if isinstance(diameter_breast_height_mm, Diameter_cm):
         if diameter_breast_height_mm.measurement_height_m != 1.3:
             warnings.warn(
-                f"Input 'diameter_breast_height_mm' (Diameter_cm) has measurement height {diameter_breast_height_mm.measurement_height_m}m, model assumes 1.3m."
+                "Input 'diameter_breast_height_mm' (Diameter_cm) has "
+                f"measurement height {diameter_breast_height_mm.measurement_height_m}m, "
+                "model assumes 1.3m.",
+                stacklevel=2,
             )
         if not diameter_breast_height_mm.over_bark:
             raise ValueError(

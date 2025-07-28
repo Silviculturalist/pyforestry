@@ -1,12 +1,5 @@
 from __future__ import annotations
 
-"""swedish_forest_models.py
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Python translations of two classical Swedish stand / tree models.
-Coefficient orders and basal area scaling have been revised to address
-implausible age calculations.
-"""
-
 from dataclasses import dataclass, field
 from math import exp, log, pi, sqrt
 from typing import Any, Callable, Optional, SupportsFloat, Tuple, Union
@@ -125,7 +118,8 @@ class _ModelParams:  # Simplified for brevity, ensure all fields from previous v
         else:
             self.inverted_sis = None
 
-        # Initial Dm calculation (will be used unless overridden or P.Contorta logic recalculates it)
+        # Initial Dm calculation (will be used unless overridden or P.Contorta logic recalculates
+        #  it)
         if self.dominant_mean_diameter_override is not None:
             self.dominant_mean_diameter = float(self.dominant_mean_diameter_override)
         elif (
@@ -249,16 +243,22 @@ class Elfving2003TreeAge:
     _COEFF_2_TOTAL_W_AGE = (
         -1.46921,  # const
         0.29889,  # ln d (term for p.log_d_cm)
-        -0.01132,  # d (term for p.d_cm) -> NOTE C# variable order often d then logD. Python functions use log_d_cm then d_cm for c[1], c[2]
+        -0.01132,  # d (term for p.d_cm) -> NOTE C# variable order often d then logD. Python
+        # functions use log_d_cm then d_cm for c[1], c[2]
         # For consistency, calculation functions will be explicit.
-        # For now, assuming Python functions' variable order is fixed, coeff tuples must match that.
+        # For now, assuming Python functions' variable order is fixed,
+        # coeff tuples must match that.
         # Let's fix tuples based on C# Variable Order and adjust calc functions.
-        # C# Coeff order: const, d, logD, d/Dm, bald, logBald, lnG, SIS, SIGRAN, SID, rich, poor, ljuslov, bokek, TS, TS2, gotland, ditch
+        # C# Coeff order: const, d, logD, d/Dm, bald, logBald, lnG, SIS, SIGRAN, SID, rich, poor,
+        # ljuslov, bokek, TS, TS2, gotland, ditch
         # This C# order is for CoeffFunction6 (UnevenAgedWithStandAge)
         # For Group 2 (EvenAgedWithStandAge), the original paper is the source.
-        # Based on Python function for G2: lnd, d, dfrel, lnbald, tall, ljuslov, SIS, SIGRAN, ts, ts2, ost, sma, LIKALD, lng, gotland, rich, poor
-        # So _COEFF_2_TOTAL_W_AGE should map to this. The C# source doesn't have a direct "Function2".
-        # The provided _COEFF_2_TOTAL_W_AGE tuple from the problem seems to map to this variable order.
+        # Based on Python function for G2: lnd, d, dfrel, lnbald, tall, ljuslov, SIS, SIGRAN, ts,
+        # ts2, ost, sma, LIKALD, lng, gotland, rich, poor
+        # So _COEFF_2_TOTAL_W_AGE should map to this. The C# source doesn't have a direct
+        # "Function2".
+        # The provided _COEFF_2_TOTAL_W_AGE tuple from the problem seems to map to this variable
+        # order.
         -0.01132,  # d
         0.25943,  # dfrel (d/md)
         1.01901,  # ln bald (total_stand_age)
@@ -268,7 +268,8 @@ class Elfving2003TreeAge:
         -0.00372,  # SIGRAN (SI Spruce interaction)
         0.33497,  # ts (temperature sum)
         -0.15507,  # ts2 (ts squared)
-        0.56842,  # ost (Original paper: this is index 11 if const is 0. Corresponds to Elfving ost)
+        0.56842,  # ost (Original paper: this is index 11 if const is 0.
+        # Corresponds to Elfving ost)
         -0.21026,  # sma (Original paper: index 12. Corresponds to Elfving sma)
         -0.03118,  # LIKALD (Original paper: index 13)
         0.04492,  # ln g (log of plot basal area)
@@ -276,13 +277,15 @@ class Elfving2003TreeAge:
         -0.13876,  # rich (rich site flag)
         0.06144,  # poor (poor site flag)
     )
-    _COEFF_3_TOTAL_WO_AGE = (  # C# CoeffFunction8: const,logD,d/QMD, (d/QMD)2,ln(Gf+1),SIS,SIGRAN,SID2GT,rich,poor,ljuslov,tall,bokek,TS,ost,sma,gotland,dike,torv
+    _COEFF_3_TOTAL_WO_AGE = (  # C# CoeffFunction8: const,logD,d/QMD, (d/QMD)2,ln(Gf+1),SIS,SIGRAN,
+        # SID2GT,rich,poor,ljuslov,tall,bokek,TS,ost,sma,gotland,dike,torv
         2.25519,  # const
         1.21082,  # ln d
         -1.51153,  # reld (d/QMD)
         0.39625,  # (reld)^2
         -0.18216,  # tall (pine flag)      -- C# order: lngfp1 then SIS...
-        0.14160,  # bokek (beech/oak flag) -- This tuple needs to exactly match C# sequence if calc func assumes it.
+        0.14160,  # bokek (beech/oak flag) -- This tuple needs to exactly match C# sequence if
+        # calc func assumes it.
         -0.12756,  # ljuslov
         -0.02778,  # SIS
         -0.00471,  # SIGRAN
@@ -297,7 +300,8 @@ class Elfving2003TreeAge:
         -0.09185,  # Dike
         0.14096,  # Torv
     )
-    _COEFF_4_UNEVEN = (  # C# CoeffFunction6: const,d,logD,d/Dm,bald,logBald,lnG,SIS,SIGRAN,SID,rich,poor,ljuslov,bokek,TS,TS2,gotland,ditch
+    _COEFF_4_UNEVEN = (  # C# CoeffFunction6: const,d,logD,d/Dm,bald,logBald,lnG,SIS,SIGRAN,SID,
+        # rich,poor,ljuslov,bokek,TS,TS2,gotland,ditch
         0.41811,  # const
         -0.01803,  # d
         0.55719,  # ln d
@@ -492,7 +496,8 @@ class Elfving2003TreeAge:
         # If not standard and not explicitly uneven_aged:
         if params.is_contorta_pine_flag:  # Check Contorta before general age-based routing
             # Contorta logic in C# implies it's for even-aged with known age.
-            # If age is None, it would fall into C#'s UnevenAgedWithoutStandAge (Group 3) where Contorta is not special.
+            # If age is None, it would fall into C#'s UnevenAgedWithoutStandAge (Group 3)
+            # where Contorta is not special.
             if params.processed_total_stand_age is not None:
                 return Elfving2003TreeAge.GROUP_PINE_CONTORTA
             else:  # No age, Contorta handled by Group 3 as any other pine
@@ -606,7 +611,8 @@ class Elfving2003TreeAge:
     @staticmethod
     def _calculate_ln_a13_group2(p: _ModelParams, c: Tuple[float, ...]) -> float:
         """Calculate ln(Age1.3) for group 2 (even-aged stands with age)."""
-        # Coeffs: const,lnd,d,dfrel,lnbald,tall,ljuslov,SIS,SIGRAN,ts,ts2,ost,sma,LIKALD,lng,gotland,rich,poor
+        # Coeffs: const,lnd,d,dfrel,lnbald,tall,ljuslov,SIS,SIGRAN,ts,ts2,ost,
+        # sma,LIKALD,lng,gotland,rich,poor
         if p.processed_total_stand_age is None or p.processed_total_stand_age <= 0:
             raise ValueError("G2: positive total_stand_age.")
         if p.dfrel_ratio is None:
@@ -615,7 +621,8 @@ class Elfving2003TreeAge:
             raise ValueError("G2: sis (H100 Spruce).")
         if p.log_processed_basal_area_plot is None:
             raise ValueError("G2: log_processed_basal_area_plot (ln g).")
-        # Python func variable order: lnd,d,dfrel,lnbald,tall,ljuslov,SIS,SIGRAN,ts,ts2,ost,sma,LIKALD,lng,gotland,rich,poor
+        # Python func variable order: lnd,d,dfrel,lnbald,tall,ljuslov,SIS,SIGRAN,ts,ts2,ost,
+        # sma,LIKALD,lng,gotland,rich,poor
         # _COEFF_2_TOTAL_W_AGE is assumed to map to this.
         return (
             c[0]  # const
@@ -643,7 +650,8 @@ class Elfving2003TreeAge:
     @staticmethod
     def _calculate_ln_a13_group3(p: _ModelParams, c: Tuple[float, ...]) -> float:
         """Calculate ln(Age1.3) for group 3 (uneven aged without age)."""
-        # C# CoeffFunction8 order: const,logD,d/QMD,(d/QMD)2,ln(Gf+1),SIS,SIGRAN,SID2GT,rich,poor,ljuslov,tall,bokek,TS,ost,sma,gotland,dike,torv
+        # C# CoeffFunction8 order: const,logD,d/QMD,(d/QMD)2,ln(Gf+1),SIS,SIGRAN,SID2GT,rich,poor,
+        # ljuslov,tall,bokek,TS,ost,sma,gotland,dike,torv
         # Python _COEFF_3_TOTAL_WO_AGE is ordered as per C#.
         if p.diameter_qmd_ratio is None:
             raise ValueError("G3: diameter_qmd_ratio (reld for d/QMD).")
@@ -659,8 +667,10 @@ class Elfving2003TreeAge:
             + c[3] * (p.diameter_qmd_ratio**2)  # (reld)^2
             +
             # Order from C# CoeffFunction8 in TreeAge.cs (after (d/QMD)^2) is:
-            # lngfp1 (c13_py), SIS (c7_py), SIGRAN (c8_py), SID2GT (c9_py), rich (c15_py), poor (c16_py),
-            # ljuslov (c6_py), tall (c4_py), bokek (c5_py), TS (c10_py), ost (c11_py), sma (c12_py),
+            # lngfp1 (c13_py), SIS (c7_py), SIGRAN (c8_py), SID2GT (c9_py), rich (c15_py),
+            # poor (c16_py),
+            # ljuslov (c6_py), tall (c4_py), bokek (c5_py), TS (c10_py), ost (c11_py),
+            # sma (c12_py),
             # gotland (c14_py), dike (c17_py), torv (c18_py)
             # The Python _COEFF_3_TOTAL_WO_AGE tuple matches this order.
             c[4] * p.is_pine_flag  # tall
@@ -683,7 +693,8 @@ class Elfving2003TreeAge:
     @staticmethod
     def _calculate_ln_a13_group4(p: _ModelParams, c: Tuple[float, ...]) -> float:
         """Calculate ln(Age1.3) for group 4 (uneven aged with age)."""
-        # C# CoeffFunction6 order: const,d,logD,d/Dm,bald,logBald,lnG,SIS,SIGRAN,SID,rich,poor,ljuslov,bokek,TS,TS2,gotland,ditch
+        # C# CoeffFunction6 order: const,d,logD,d/Dm,bald,logBald,lnG,SIS,SIGRAN,SID,rich,poor,
+        # ljuslov,bokek,TS,TS2,gotland,ditch
         # Python _COEFF_4_UNEVEN is ordered like this.
         if p.processed_total_stand_age is None or p.processed_total_stand_age <= 0:
             raise ValueError("G4: positive total_stand_age.")
@@ -710,8 +721,8 @@ class Elfving2003TreeAge:
             + c[13] * p.is_bokek_flag  # bokek
             + c[14] * p.temperature_sum  # ts
             + c[15] * p.temperature_sum**2  # ts²
-            + c[16]
-            * p.is_gotland_flag  # CORRECTED from c[17] * p.is_gotland_flag, C# uses c[16] for gotland
+            + c[16] * p.is_gotland_flag  # CORRECTED from c[17] * p.is_gotland_flag,
+            # C# uses c[16] for gotland
             + c[17] * p.is_ditched_flag  # dike
         )
 

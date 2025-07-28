@@ -75,7 +75,8 @@ class SweTimber(Timber):
             and self.crown_base_height_m >= self.height_m
         ):
             raise ValueError(
-                f"Crown base height ({self.crown_base_height_m} m) cannot be higher than tree height: {self.height_m} m"
+                f"Crown base height ({self.crown_base_height_m} m) cannot be higher than "
+                f"tree height: {self.height_m} m"
             )
         if self.stump_height_m < 0:
             raise ValueError(f"Stump height must be larger or equal to 0 m: {self.stump_height_m}")
@@ -89,7 +90,8 @@ class SweTimber(Timber):
             "betula pubescens",
         ]:
             raise ValueError(
-                "Species must be one of: pinus sylvestris, picea abies, betula, betula pendula, betula pubescens."
+                "Species must be one of: pinus sylvestris, picea abies, betula, "
+                "betula pendula, betula pubescens."
             )
 
     def getvolume(self):
@@ -112,7 +114,7 @@ class SweTimber(Timber):
             if self.diameter_cm > 50:
                 if self.swedish_site is not None:
                     vol = BrandelVolume.get_volume(
-                        species="pinus sylvestris",  # For larix, the model uses southern pine parameters.
+                        species="pinus sylvestris",  # For larix, uses southern pine parameters.
                         diameter_cm=self.diameter_cm,
                         height_m=self.height_m,
                         latitude=self.swedish_site.latitude,
