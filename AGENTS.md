@@ -34,4 +34,7 @@
    The CI workflow runs the same script and will fail if any modified file falls
    below these levels.
 
+4. Do not create superfluous test files. Aim to keep test code neatly organised 
+   by subject. Always check to see if there already is a file with relevant tests.  
+
 Only finish a task when all steps above succeed.
