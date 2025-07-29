@@ -98,6 +98,17 @@ should improve them.  The thresholds will gradually rise as the project
 matures, with a long-term goal of **90%** test and documentation coverage.
 Releases merged into `main` must not decrease coverage.
 
+### Validate Changed File Coverage
+
+After running tests, verify that modified modules retain high coverage:
+
+```bash
+python scripts/check_changed_file_coverage.py $(git merge-base HEAD origin/dev)
+```
+
+If any listed file is below **90%** test or docstring coverage, add more tests or
+documentation before submitting your pull request.
+
 ---
 
 ## Documentation

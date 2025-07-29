@@ -1,6 +1,6 @@
 import pytest
 
-from pyforestry.base.helpers import Age
+from pyforestry.base.helpers import Age, SiteIndexValue, TreeSpecies
 from pyforestry.sweden.siteindex.elfving_kiviste_1997 import (
     elfving_kiviste_1997_height_trajectory_sweden_pine,
 )
@@ -74,3 +74,41 @@ def test_warning_out_of_range(fn, age, age2):
     with pytest.warns(UserWarning):
         res = fn(15.0, age, age2)
     assert float(res) > 0
+
+
+def test_eriksson_type_errors():
+    """Verify type checks for DBH ages."""
+    with pytest.raises(TypeError):
+        eriksson_1997_height_trajectory_sweden_birch(15.0, Age.TOTAL(20), Age.DBH(40))
+    with pytest.raises(TypeError):
+        eriksson_1997_height_trajectory_sweden_birch(15.0, Age.DBH(20), Age.TOTAL(40))
+
+
+@pytest.mark.parametrize(
+    "age,age2",
+    [
+        (Age.DBH(5), Age.DBH(20)),
+        (Age.DBH(20), Age.DBH(95)),
+    ],
+)
+def test_eriksson_warning_age_range(age, age2):
+    with pytest.warns(UserWarning):
+        res = eriksson_1997_height_trajectory_sweden_birch(15.0, age, age2)
+    assert float(res) > 0
+
+
+def test_eriksson_siteindexvalue_contents():
+    result = eriksson_1997_height_trajectory_sweden_birch(
+        18.0,
+        Age.DBH(40),
+        Age.DBH(60),
+    )
+
+    assert isinstance(result, SiteIndexValue)
+    assert float(result) == pytest.approx(21.8470492, rel=1e-7)
+    assert result.reference_age == Age.DBH(60)
+    assert result.species == {
+        TreeSpecies.Sweden.betula_pendula,
+        TreeSpecies.Sweden.betula_pubescens,
+    }
+    assert result.fn is eriksson_1997_height_trajectory_sweden_birch

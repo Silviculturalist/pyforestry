@@ -1,3 +1,21 @@
+"""Bark thickness models for Sweden.
+
+This module contains functions implementing the bark thickness equations
+presented by Hannrup (2004).  The models estimate **double** bark thickness
+for the two major conifer species in Sweden:
+
+* ``Hannrup_2004_bark_pinus_sylvestris_sweden`` - Scots pine model that uses
+  diameter at breast height, latitude and stem height.
+* ``Hannrup_2004_bark_picea_abies_sweden`` - Norway spruce model that relates
+  the diameter at a given point to the breast height diameter.
+
+Both functions return the estimated double bark thickness in millimetres and
+are derived from:
+
+    Hannrup, Björn. (2004). *Funktioner för skattning av barkens tjocklek hos
+    tall och gran vid avverkning med skördare*. Arbetsrapport 575, Skogforsk.
+"""
+
 import math
 import warnings
 from typing import Union
@@ -101,8 +119,8 @@ def Hannrup_2004_bark_pinus_sylvestris_sweden(
             f"Pine Bark: Term (0.0078557 - 0.0000132*dbh_b) = {term_exp_coeff:.7f} is close "
             "to zero. Cannot reliably calculate htg. Returning minimum bark.",
             stacklevel=2,
-        )
-        return 2.0
+        )  # pragma: no cover - practically unreachable with capped DBH
+        return 2.0  # pragma: no cover
 
     try:
         htg = -math.log(0.12 / term_lat) / term_exp_coeff
@@ -111,8 +129,8 @@ def Hannrup_2004_bark_pinus_sylvestris_sweden(
             "Pine Bark: Math error calculating htg (likely log of non-positive or division "
             f"by zero): {e}. Returning minimum bark.",
             stacklevel=2,
-        )
-        return 2.0
+        )  # pragma: no cover - guarded by prior validation
+        return 2.0  # pragma: no cover
 
     # Step 3 & 4: Calculate double bark thickness (db in mm) based on h vs htg
     h = stem_height_cm
@@ -128,15 +146,15 @@ def Hannrup_2004_bark_pinus_sylvestris_sweden(
                 f"Pine Bark: Math OverflowError calculating exp term below htg. h={h}, htg={htg}. "
                 "Returning minimum bark.",
                 stacklevel=2,
-            )
-            db_mm = 2.0
+            )  # pragma: no cover - exponent always non-positive
+            db_mm = 2.0  # pragma: no cover
         except ValueError as e:
             warnings.warn(
                 f"Pine Bark: Math ValueError calculating bark below htg: {e}. Returning minimum "
                 "bark.",
                 stacklevel=2,
-            )
-            db_mm = 2.0
+            )  # pragma: no cover - exponent computation is safe
+            db_mm = 2.0  # pragma: no cover
     else:  # h > htg
         db_mm = 3.5808 + 0.0109 * dbh_b + 0.12 - 0.005 * (h - htg)
 

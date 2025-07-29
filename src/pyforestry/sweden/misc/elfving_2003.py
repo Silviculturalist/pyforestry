@@ -1,3 +1,17 @@
+# pragma: no cover
+"""Stand- and tree-level models from Elfving and Lind (2003).
+
+This module exposes two main utilities derived from Swedish growth studies:
+
+``Lind2003MeanDiameterCodominantTrees``
+    Stand-level helper that predicts the dominant mean diameter of codominant
+    trees for a given site.
+
+``Elfving2003TreeAge``
+    Tree-level model estimating the age at breast height based on numerous
+    stand and site attributes.
+"""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field

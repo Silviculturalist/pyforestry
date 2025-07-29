@@ -24,6 +24,12 @@ def test_pine_bark_valid_and_errors():
     with pytest.raises(ValueError):
         Hannrup_2004_bark_pinus_sylvestris_sweden(300, 60, -1)
 
+    with pytest.raises(ValueError):
+        Hannrup_2004_bark_pinus_sylvestris_sweden(-10, 60, 100)
+
+    # ensure branch for h > htg
+    assert Hannrup_2004_bark_pinus_sylvestris_sweden(50, 70, 600) > 2
+
     with warnings.catch_warnings(record=True) as rec:
         Hannrup_2004_bark_pinus_sylvestris_sweden(300, 50, 100)
         assert any("Latitude" in str(w.message) for w in rec)
@@ -47,6 +53,15 @@ def test_spruce_bark_valid_and_errors():
         Hannrup_2004_bark_picea_abies_sweden(250, 0)
     with pytest.raises(TypeError):
         Hannrup_2004_bark_picea_abies_sweden("bad", 300)
+
+    with pytest.raises(ValueError):
+        Hannrup_2004_bark_picea_abies_sweden(
+            250,
+            Diameter_cm(30, over_bark=False, measurement_height_m=1.3),
+        )
+
+    with pytest.raises(TypeError):
+        Hannrup_2004_bark_picea_abies_sweden(250, object())
 
     with warnings.catch_warnings(record=True) as rec:
         warnings.simplefilter("always")

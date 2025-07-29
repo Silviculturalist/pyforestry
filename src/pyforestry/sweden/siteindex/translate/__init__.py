@@ -1,3 +1,5 @@
+"""Re-exports of translation functions for Swedish site index."""
+
 from .agestam_1985 import (
     agestam_1985_si_translation_pine_to_birch,
     agestam_1985_si_translation_spruce_to_birch,
