@@ -22,26 +22,26 @@ __all__ = [
     "Eriksson_1973_volume_lodgepole_pine_Sweden",
 ]
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover - imported only for type checking
     # imports only exist for the type checker—they are stripped at runtime
-    from .andersson_1954 import (
-        andersson_1954_volume_small_trees_birch_height_above_4_m,
-        andersson_1954_volume_small_trees_birch_under_diameter_5_cm,
-        andersson_1954_volume_small_trees_pine,
-        andersson_1954_volume_small_trees_spruce,
+    from .andersson_1954 import (  # pragma: no cover - typing only
+        andersson_1954_volume_small_trees_birch_height_above_4_m,  # pragma: no cover
+        andersson_1954_volume_small_trees_birch_under_diameter_5_cm,  # pragma: no cover
+        andersson_1954_volume_small_trees_pine,  # pragma: no cover
+        andersson_1954_volume_small_trees_spruce,  # pragma: no cover
     )
-    from .brandel_1990 import BrandelVolume
-    from .carbonnier_1954 import carbonnier_1954_volume_larch
-    from .eriksson_1973 import (
-        Eriksson_1973_volume_aspen_Sweden,
-        Eriksson_1973_volume_lodgepole_pine_Sweden,
+    from .brandel_1990 import BrandelVolume  # pragma: no cover
+    from .carbonnier_1954 import carbonnier_1954_volume_larch  # pragma: no cover
+    from .eriksson_1973 import (  # pragma: no cover
+        Eriksson_1973_volume_aspen_Sweden,  # pragma: no cover
+        Eriksson_1973_volume_lodgepole_pine_Sweden,  # pragma: no cover
     )
-    from .johnsson_1953 import johnsson_1953_volume_hybrid_aspen
-    from .matern_1975 import (
-        matern_1975_volume_sweden_beech,
-        matern_1975_volume_sweden_oak,
+    from .johnsson_1953 import johnsson_1953_volume_hybrid_aspen  # pragma: no cover
+    from .matern_1975 import (  # pragma: no cover
+        matern_1975_volume_sweden_beech,  # pragma: no cover
+        matern_1975_volume_sweden_oak,  # pragma: no cover
     )
-    from .naslund_1947 import NaslundFormFactor, NaslundVolume
+    from .naslund_1947 import NaslundFormFactor, NaslundVolume  # pragma: no cover
 
 # Map of public name → submodule
 _name_to_module: typing.Dict[str, str] = {

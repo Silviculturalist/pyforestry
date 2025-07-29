@@ -1,3 +1,5 @@
+import math
+
 import pytest
 
 from pyforestry.sweden.timber import SweTimber
@@ -10,6 +12,7 @@ from pyforestry.sweden.volume import (
     andersson_1954_volume_small_trees_birch_height_above_4_m,
     carbonnier_1954_volume_larch,
     matern_1975_volume_sweden_beech,
+    matern_1975_volume_sweden_oak,
 )
 
 
@@ -118,3 +121,45 @@ def test_eriksson_1973_volume_lodgepole():
     vol = Eriksson_1973_volume_lodgepole_pine_Sweden(30, 20)
     assert isinstance(vol, float)
     assert vol > 0
+
+
+def test_matern_1975_oak_large_tree():
+    diameter = 35
+    height = 15
+    expected = (
+        0.03522 * diameter**2 * height + 0.08772 * diameter * height - 0.04905 * diameter**2
+    ) / 1000
+    result = matern_1975_volume_sweden_oak(diameter, height)
+    assert math.isclose(result, expected, rel_tol=1e-9)
+
+
+def test_matern_1975_oak_small_tree():
+    diameter = 35
+    height = 8
+    expected = (
+        0.03522 * diameter**2 * height
+        + 0.08772 * diameter * height
+        - 0.04905 * diameter**2
+        + ((1 - (height / 10)) ** 2)
+        * (
+            0.01682 * diameter**2 * height
+            + 0.01108 * diameter * height
+            - 0.02167 * diameter * (height**2)
+            + 0.04905 * diameter**2
+        )
+    ) / 1000
+    result = matern_1975_volume_sweden_oak(diameter, height)
+    assert math.isclose(result, expected, rel_tol=1e-9)
+
+
+def test_matern_1975_beech_exact():
+    diameter = 35
+    height = 25
+    expected = (
+        0.01275 * diameter**2 * height
+        + 0.12368 * diameter**2
+        + 0.0004701 * diameter**2 * height**2
+        + 0.00622 * diameter * height**2
+    ) / 1000
+    result = matern_1975_volume_sweden_beech(diameter, height)
+    assert math.isclose(result, expected, rel_tol=1e-9)
