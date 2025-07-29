@@ -3,6 +3,7 @@ import warnings
 import pytest
 
 from pyforestry.base.helpers.primitives import Diameter_cm
+from pyforestry.sweden.bark import hannrup_2004
 from pyforestry.sweden.bark.hannrup_2004 import (
     Hannrup_2004_bark_picea_abies_sweden,
     Hannrup_2004_bark_pinus_sylvestris_sweden,
@@ -70,3 +71,27 @@ def test_spruce_bark_valid_and_errors():
             Diameter_cm(30, over_bark=True, measurement_height_m=1.5),
         )
         assert any("measurement height" in str(w.message) for w in rec)
+
+
+def test_pine_bark_overflow(monkeypatch):
+    """Overflow during exp calculation should trigger fallback to 2 mm."""
+    monkeypatch.setattr(
+        hannrup_2004.math, "exp", lambda x: (_ for _ in ()).throw(OverflowError("boom"))
+    )
+    with warnings.catch_warnings(record=True) as rec:
+        warnings.simplefilter("always")
+        out = Hannrup_2004_bark_pinus_sylvestris_sweden(300, 60, 100)
+    assert out == 2.0
+    assert any("OverflowError" in str(w.message) for w in rec)
+
+
+def test_pine_bark_valueerror(monkeypatch):
+    """ValueError during exp calculation should trigger fallback to 2 mm."""
+    monkeypatch.setattr(
+        hannrup_2004.math, "exp", lambda x: (_ for _ in ()).throw(ValueError("bad"))
+    )
+    with warnings.catch_warnings(record=True) as rec:
+        warnings.simplefilter("always")
+        out = Hannrup_2004_bark_pinus_sylvestris_sweden(300, 60, 100)
+    assert out == 2.0
+    assert any("ValueError" in str(w.message) for w in rec)

@@ -450,3 +450,41 @@ def test_circularplot_radius_area_mismatch():
     """Mismatch between radius and area should raise ``ValueError``."""
     with pytest.raises(ValueError):
         CircularPlot(id=1, radius_m=1.0, area_m2=100.0)
+
+
+def test_angle_count_length_mismatch():
+    """AngleCount init should validate lengths of species and value lists."""
+    sp = parse_tree_species("picea abies")
+    with pytest.raises(ValueError, match="Length mismatch"):
+        AngleCount(ba_factor=1.0, value=[1.0], species=[sp, sp], point_id="P1")
+
+
+def test_angle_count_merge_baf_mismatch():
+    """Merging records with different basal area factors should fail."""
+    sp = parse_tree_species("picea abies")
+    ac1 = AngleCount(ba_factor=1.0, value=[1], species=[sp], point_id="P1")
+    ac2 = AngleCount(ba_factor=2.0, value=[1], species=[sp], point_id="P1")
+    aggregator = AngleCountAggregator(records=[ac1, ac2])
+    with pytest.raises(ValueError, match="Inconsistent BAF"):
+        aggregator.merge_by_point_id()
+
+
+def test_angle_count_aggregate_empty():
+    """Aggregating with no records should return empty dictionaries."""
+    aggregator = AngleCountAggregator(records=[])
+    ba, stems = aggregator.aggregate_stand_metrics()
+    assert ba == {}
+    assert stems == {}
+
+
+def test_diameter_negative_height():
+    """Negative measurement height should raise an error."""
+    with pytest.raises(ValueError, match="measurement_height_m must be >= 0"):
+        Diameter_cm(10, measurement_height_m=-0.1)
+
+
+def test_stand_polygon_invalid():
+    """Invalid polygons should be rejected during Stand initialization."""
+    invalid_poly = Polygon([(0, 0), (1, 1), (0, 1), (1, 0), (0, 0)])
+    with pytest.raises(ValueError, match="Polygon is not valid"):
+        Stand(polygon=invalid_poly, crs=CRS("EPSG:4326"))

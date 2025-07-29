@@ -67,3 +67,20 @@ def test_enum_code_direct_attributes():
 def test_enum_code_primitives():
     assert enum_code(3) == 3
     assert enum_code("hi") == "hi"
+
+
+@dataclass
+class InnerPlain:
+    x: int
+
+
+@dataclass
+class OuterPlain:
+    value: InnerPlain
+
+
+def test_enum_code_no_code_or_label():
+    inner = InnerPlain(1)
+    outer = OuterPlain(inner)
+    assert enum_code(outer) is outer
+    assert enum_code(inner) is inner

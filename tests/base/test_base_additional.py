@@ -124,3 +124,13 @@ def test_tree_species_parse_invalid():
 def test_get_tree_type_by_genus_unknown():
     with pytest.raises(ValueError):
         get_tree_type_by_genus("mystery")
+
+
+def test_parse_tree_species_error_message():
+    with pytest.raises(ValueError, match="Could not find species matching"):
+        parse_tree_species("nope nope")
+
+
+def test_get_tree_type_unknown_message():
+    with pytest.raises(ValueError, match="Unknown tree type"):
+        get_tree_type_by_genus("mysteryus")
