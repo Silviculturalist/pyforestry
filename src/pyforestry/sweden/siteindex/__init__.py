@@ -1,3 +1,5 @@
+"""Convenience re-exports for Swedish site index functions."""
+
 from .elfving_kiviste_1997 import elfving_kiviste_1997_height_trajectory_sweden_pine
 from .eriksson_1997 import eriksson_1997_height_trajectory_sweden_birch
 from .hagglund_1970 import Hagglund_1970

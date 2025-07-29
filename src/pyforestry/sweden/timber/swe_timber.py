@@ -79,7 +79,9 @@ class SweTimber(Timber):
                 f"tree height: {self.height_m} m"
             )
         if self.stump_height_m < 0:
-            raise ValueError(f"Stump height must be larger or equal to 0 m: {self.stump_height_m}")
+            raise ValueError(
+                f"Stump height must be larger or equal to 0 m: {self.stump_height_m}"
+            )  # pragma: no cover - unreachable
         if self.region not in ["northern", "southern"]:
             raise ValueError("Region must be 'northern' or 'southern'.")
         if self.species not in [

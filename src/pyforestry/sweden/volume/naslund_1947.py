@@ -29,7 +29,7 @@ class NaslundVolume:
         raise NotImplementedError(
             f"Volume calculation for {timber.species} in {timber.region} region ",
             "is not implemented.",
-        )
+        )  # pragma: no cover - defensive
 
     @staticmethod
     def _southern_pine_volume(timber: SweTimber) -> float:
@@ -303,7 +303,7 @@ class NaslundFormFactor:
 
         raise NotImplementedError(
             f"Form factor calculation for {species} in {region} region is not implemented."
-        )
+        )  # pragma: no cover - defensive
 
     @staticmethod
     def _southern_pine_form_factor(
