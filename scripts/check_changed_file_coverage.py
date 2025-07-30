@@ -45,6 +45,14 @@ def load_coverage_rates(xml_path: str) -> dict[str, float]:
         filename = elem.get("filename")
         if filename:
             path = Path(filename).as_posix()
+            # When the package is installed normally, coverage records
+            # files inside ``site-packages``. Map those paths back to the
+            # ``src/`` layout used in this repository so that filenames
+            # match ``git`` paths and coverage can be checked correctly.
+            if not path.startswith("src/"):
+                if "pyforestry" in path:
+                    _, tail = path.split("pyforestry", 1)
+                    path = f"src/pyforestry{tail}"
             try:
                 rates[path] = float(elem.get("line-rate", "0"))
             except ValueError:
