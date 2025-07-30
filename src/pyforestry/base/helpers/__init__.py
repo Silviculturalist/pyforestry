@@ -63,8 +63,6 @@ __all__ = [
     "AngleCount",
     "AngleCountAggregator",
     "Tree",
-    "Tree",
-    "Tree",
     # Base components
     "CircularPlot",
     "Stand",
