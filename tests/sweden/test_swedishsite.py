@@ -2,6 +2,7 @@ import pytest
 
 from pyforestry.sweden.geo import RetrieveGeoCode
 from pyforestry.sweden.site import Sweden, SwedishSite
+from pyforestry.sweden.site.enums import SwedenCounty
 
 
 @pytest.fixture(autouse=True)
@@ -57,3 +58,29 @@ def test_full_inputs_compute_sis():
     assert site.sis_spruce_100 is not None
     assert site.sis_birch_50 is not None
     assert site.n_of_limes_norrlandicus is True
+
+
+def test_invalid_county_returns_none():
+    assert SwedenCounty.from_code(999) is None
+
+
+def test_geocode_failures(monkeypatch):
+    def boom(*args, **kwargs):
+        raise RuntimeError("boom")
+
+    monkeypatch.setattr(RetrieveGeoCode, "getCountyCode", boom)
+    monkeypatch.setattr(RetrieveGeoCode, "getClimateCode", boom)
+
+    site = SwedishSite(latitude=60.0, longitude=18.0)
+    assert site.county is None
+    assert site.climate_zone is None
+
+
+def test_distance_to_coast_failure(monkeypatch):
+    def boom(*args, **kwargs):
+        raise RuntimeError("boom")
+
+    monkeypatch.setattr(RetrieveGeoCode, "getDistanceToCoast", boom)
+
+    site = SwedishSite(latitude=60.0, longitude=18.0)
+    assert site.distance_to_coast is None

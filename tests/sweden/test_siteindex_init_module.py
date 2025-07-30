@@ -1,5 +1,7 @@
 import importlib
 
+import pytest
+
 from pyforestry.sweden.siteindex import (
     elfving_kiviste_1997_height_trajectory_sweden_pine,
     eriksson_1997_height_trajectory_sweden_birch,
@@ -78,3 +80,9 @@ def test_translate_init_reexports():
     for name, fn in expected.items():
         assert name in mod.__all__
         assert getattr(mod, name) is fn
+
+
+def test_site_attribute_error():
+    mod = importlib.import_module("pyforestry.sweden.site")
+    with pytest.raises(AttributeError):
+        _ = mod.NonExistent

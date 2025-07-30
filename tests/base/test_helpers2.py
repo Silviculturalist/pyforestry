@@ -1,10 +1,11 @@
 import pytest
 
-from pyforestry.base.helpers import CircularPlot
+from pyforestry.base.helpers import AngleCount, CircularPlot
 from pyforestry.base.helpers.bucking import BuckingResult
 from pyforestry.base.helpers.primitives import (
     AtomicVolume,
     CompositeVolume,
+    Diameter_cm,
     TopHeightDefinition,
     TopHeightMeasurement,
 )
@@ -81,3 +82,18 @@ def test_parse_tree_species_roundtrip():
     assert sp.full_name == "picea abies"
     again = parse_tree_species(sp)
     assert again is sp
+
+
+def test_diameter_repr_and_value():
+    diam = Diameter_cm(25.5, over_bark=False, measurement_height_m=1.3)
+    assert diam.value == 25.5
+    assert repr(diam) == "Diameter_cm(25.5, over_bark=False, measurement_height_m=1.3)"
+
+
+def test_anglecount_update_series_new_species():
+    sp1 = parse_tree_species("picea abies")
+    ac = AngleCount(ba_factor=1.0, value=[2], species=[sp1])
+    sp2 = parse_tree_species("pinus sylvestris")
+    ac.update_series(sp2)
+    assert len(ac.species) == 2
+    assert ac.value[ac.species.index(sp2)] == 1

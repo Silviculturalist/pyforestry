@@ -59,6 +59,18 @@ def test_enum_code_climate_zone_like():
     assert enum_code(obj) == "bar"
 
 
+def test_enum_code_climate_zone_dataclass():
+    """enum_code should return the label for a dataclass named ClimateZoneData."""
+
+    @dataclass
+    class ClimateZoneData:
+        code: int
+        label: str
+
+    obj = ClimateZoneData(1, "qux")
+    assert enum_code(obj) == "qux"
+
+
 def test_enum_code_direct_attributes():
     assert enum_code(ObjWithCode(7)) == 7
     assert enum_code(ObjWithLabel("baz")) == "baz"

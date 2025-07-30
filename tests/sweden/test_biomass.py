@@ -1,3 +1,4 @@
+import numpy as np
 import pytest
 
 from pyforestry.sweden.biomass import Marklund_1988, PeterssonStahl2006
@@ -49,6 +50,31 @@ def test_marklund_1988_spruce_stem_only():
     assert val == pytest.approx(99.42837, rel=1e-5)
 
 
+def test_marklund_1988_invalid_species():
+    """Unknown species should raise ``ValueError``."""
+    with pytest.raises(ValueError):
+        Marklund_1988(species="invalid")
+
+
+def test_marklund_1988_invalid_component():
+    """Invalid biomass component should raise ``ValueError``."""
+    with pytest.raises(ValueError):
+        Marklund_1988(species="picea abies", component="invalid", diameter_cm=20)
+
+
+def test_marklund_1988_timber_component():
+    """Passing a ``SweTimber`` instance should work for component calls."""
+    pine = SweTimber(
+        species="pinus sylvestris",
+        diameter_cm=25,
+        height_m=18,
+        crown_base_height_m=9,
+    )
+    val = Marklund_1988(pine, component="stem")
+    assert isinstance(val, float)
+    assert val == pytest.approx(169.7327, rel=1e-4)
+
+
 def test_petersson_stahl_known_examples():
     birch = PeterssonStahl2006.below_ground_biomass("birch", 5, diameter_cm=30)
     pine = PeterssonStahl2006.below_ground_biomass(
@@ -58,3 +84,26 @@ def test_petersson_stahl_known_examples():
     assert birch == pytest.approx(120.2875, rel=1e-4)
     assert pine == pytest.approx(60.65037, rel=1e-4)
     assert spruce == pytest.approx(47.35046, rel=1e-4)
+
+
+def test_petersson_stahl_invalid_species():
+    with pytest.raises(ValueError):
+        PeterssonStahl2006.below_ground_biomass("invalid", 5, diameter_cm=20)
+
+
+def test_petersson_stahl_invalid_root_detail():
+    with pytest.raises(ValueError):
+        PeterssonStahl2006.below_ground_biomass("birch", 3, diameter_cm=20)
+
+
+def test_petersson_stahl_second_model(monkeypatch):
+    def fail_first(*args, **kwargs):
+        raise TypeError
+
+    monkeypatch.setattr(PeterssonStahl2006, "pine_root_5mm_1", fail_first)
+
+    result = PeterssonStahl2006.below_ground_biomass(
+        "pine", 5, diameter_cm=25, age_at_breast_height=40
+    )
+    expected = np.exp(PeterssonStahl2006.pine_root_5mm_2(25 * 10, 40)) / 1000
+    assert result == pytest.approx(expected)

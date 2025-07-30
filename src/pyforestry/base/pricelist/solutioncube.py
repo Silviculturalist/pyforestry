@@ -208,3 +208,22 @@ class SolutionCube:
         except Exception as e:
             print(f"An error occurred during lookup: {e}")
             return 0.0, []
+
+    def lookup_timber_pricelist(self, species: str) -> Tuple[float, list]:
+        """Return an arbitrary timber value for ``species`` or warn if missing."""
+
+        try:
+            if species not in self.dataset.coords["species"].values:
+                raise KeyError
+
+            # Use the first dbh/height combination as a representative value
+            dbh = float(self.dataset.coords["dbh"].values[0])
+            height = float(self.dataset.coords["height"].values[0])
+            return self.lookup(species, dbh, height)
+
+        except KeyError:
+            print(f"Warning: Species '{species}' not found in the solution cube.")
+            return 0.0, []
+        except Exception as e:
+            print(f"An error occurred during lookup: {e}")
+            return 0.0, []

@@ -80,3 +80,20 @@ def test_generate_custom_pool(monkeypatch):
     assert isinstance(cube.dataset, xr.Dataset)
     assert cube.dataset.dims["dbh"] == 1
     assert cube.dataset.attrs["taper_model"] == "object"
+
+
+def test_lookup_timber_pricelist_unknown_species(capsys):
+    ds = xr.Dataset(
+        {
+            "total_value": (("species", "height", "dbh"), [[[1.0]]]),
+            "solution_sections": (("species", "height", "dbh"), [[["[]"]]]),
+        },
+        coords={"species": ["known"], "height": [1.0], "dbh": [10]},
+    )
+    cube = sc.SolutionCube(ds)
+
+    value, sections = cube.lookup_timber_pricelist("unknown-species")
+    captured = capsys.readouterr()
+    assert value == 0.0
+    assert sections == []
+    assert "not found" in captured.out.lower()

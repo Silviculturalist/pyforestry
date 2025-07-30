@@ -69,6 +69,10 @@ class AngleCount:
             self.species.append(sp)
             self.value.append(count)
 
+    def update_series(self, sp: TreeName) -> None:
+        """Increment count for ``sp`` by one, adding a new entry if needed."""
+        self.add_observation(sp, 1.0)
+
 
 class AngleCountAggregator:
     """Aggregate multiple AngleCount samples into stand metrics.

@@ -207,4 +207,49 @@ def test_thin_trees_polygon_only():
     assert "QMD" not in stand._metric_estimates
 
 
-exec("\n" * 431 + "return_none = None", {}, {})
+def test_estimate_top_height_statistics_error():
+    """Mixed plot areas trigger StatisticsError and return None."""
+    plots = [
+        CircularPlot(id=1, radius_m=5.0, trees=[Tree(diameter_cm=10)]),
+        CircularPlot(id=2, radius_m=6.0, trees=[Tree(diameter_cm=10, height_m=15)]),
+        CircularPlot(id=3, radius_m=7.0, trees=[Tree(diameter_cm=10)]),
+    ]
+    stand = Stand(plots=plots)
+    estimator = getattr(stand, "estimate_top_height", stand.get_dominant_height)
+    assert estimator() is None
+
+
+def test_estimate_top_height_no_contributing_plots():
+    """All plots skipped when top trees lack heights."""
+    sp = parse_tree_species("picea abies")
+    p1 = CircularPlot(
+        id=1,
+        radius_m=5.0,
+        trees=[Tree(species=sp, diameter_cm=30), Tree(species=sp, diameter_cm=20, height_m=10)],
+    )
+    p2 = CircularPlot(
+        id=2,
+        radius_m=5.0,
+        trees=[Tree(species=sp, diameter_cm=40), Tree(species=sp, diameter_cm=15, height_m=12)],
+    )
+    stand = Stand(plots=[p1, p2])
+    estimator = getattr(stand, "estimate_top_height", stand.get_dominant_height)
+    assert estimator() is None
+
+
+def test_estimate_top_height_after_polygon_thin():
+    """Polygon thinning removing all trees yields None."""
+    sp = parse_tree_species("picea abies")
+    p = CircularPlot(
+        id=1,
+        radius_m=10,
+        trees=[
+            Tree(species=sp, diameter_cm=30, height_m=20, position=(0, 0)),
+            Tree(species=sp, diameter_cm=20, height_m=18, position=(1, 1)),
+        ],
+    )
+    stand = Stand(plots=[p])
+    poly = Polygon([(-1, -1), (-1, 2), (2, 2), (2, -1)])
+    stand.thin_trees(polygon=poly)
+    estimator = getattr(stand, "estimate_top_height", stand.get_dominant_height)
+    assert estimator() is None

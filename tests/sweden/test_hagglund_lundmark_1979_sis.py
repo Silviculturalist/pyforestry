@@ -294,3 +294,263 @@ def test_spruce_on_peat_branch():
     sis = Hagglund_Lundmark_1979_SIS(**params)
     assert isinstance(sis, SiteIndexValue)
     assert 0 < float(sis) < 50
+
+
+def test_dry_soil_swamp_adjustment_no_warning(capsys):
+    params = _common_params()
+    params.update(
+        species="Picea abies",
+        soil_moisture=Sweden.SoilMoistureEnum.DRY,
+        ground_layer=Sweden.BottomLayer.SWAMP_MOSS,
+        peat=False,
+    )
+    sis = Hagglund_Lundmark_1979_SIS(**params)
+    out, _ = capsys.readouterr()
+    assert "Warning: No coverage for Spruce" not in out
+    assert isinstance(sis, SiteIndexValue)
+
+
+@pytest.mark.parametrize(
+    "soil_moisture,vegetation,ground_layer,lateral_water,soil_depth",
+    [
+        (
+            Sweden.SoilMoistureEnum.MESIC,
+            Sweden.FieldLayer.SEDGE_HIGH,
+            Sweden.BottomLayer.BOGMOSS_TYPE,
+            Sweden.SoilWater.SELDOM_NEVER,
+            Sweden.SoilDepth.DEEP,
+        ),
+        (
+            Sweden.SoilMoistureEnum.MESIC,
+            Sweden.FieldLayer.SEDGE_HIGH,
+            Sweden.BottomLayer.LICHEN_TYPE,
+            Sweden.SoilWater.SELDOM_NEVER,
+            Sweden.SoilDepth.DEEP,
+        ),
+        (
+            Sweden.SoilMoistureEnum.MESIC,
+            Sweden.FieldLayer.BROADLEAVED_GRASS,
+            Sweden.BottomLayer.FRESH_MOSS,
+            Sweden.SoilWater.SELDOM_NEVER,
+            Sweden.SoilDepth.DEEP,
+        ),
+        (
+            Sweden.SoilMoistureEnum.MESIC,
+            Sweden.FieldLayer.BROADLEAVED_GRASS,
+            Sweden.BottomLayer.FRESH_MOSS,
+            Sweden.SoilWater.SELDOM_NEVER,
+            Sweden.SoilDepth.SHALLOW,
+        ),
+        (
+            Sweden.SoilMoistureEnum.MOIST,
+            Sweden.FieldLayer.LOW_HERB_WITHOUT_SHRUBS,
+            Sweden.BottomLayer.FRESH_MOSS,
+            Sweden.SoilWater.SELDOM_NEVER,
+            Sweden.SoilDepth.DEEP,
+        ),
+    ],
+)
+def test_pine_branches(
+    soil_moisture,
+    vegetation,
+    ground_layer,
+    lateral_water,
+    soil_depth,
+):
+    params = _common_params()
+    params.update(
+        species="Pinus sylvestris",
+        peat=False,
+        soil_moisture=soil_moisture,
+        vegetation=vegetation,
+        ground_layer=ground_layer,
+        lateral_water=lateral_water,
+        soil_depth=soil_depth,
+        soil_texture=Sweden.SoilTextureTill.SANDY,
+    )
+    sis = Hagglund_Lundmark_1979_SIS(**params)
+    assert isinstance(sis, SiteIndexValue)
+    assert 0 < float(sis) < 50
+
+
+def test_invalid_coast_bool(capsys):
+    params = _common_params()
+    params.update(coast="no", species="Picea abies", peat=False)
+    sis = Hagglund_Lundmark_1979_SIS(**params)
+    out, _ = capsys.readouterr()
+    assert "coast must be a bool: True or False" in out
+    assert isinstance(sis, SiteIndexValue)
+
+
+def test_invalid_limes_bool(capsys):
+    params = _common_params()
+    params.update(limes_norrlandicus="no", species="Picea abies", peat=False)
+    sis = Hagglund_Lundmark_1979_SIS(**params)
+    out, _ = capsys.readouterr()
+    assert "limes_norrlandicus must be a bool: True or False" in out
+    assert isinstance(sis, SiteIndexValue)
+
+
+def test_mineral_soil_texture_zero():
+    params = _common_params()
+    params.update(species="Pinus sylvestris", peat=False, soil_texture=0)
+    sis = Hagglund_Lundmark_1979_SIS(**params)
+    assert isinstance(sis, SiteIndexValue)
+    assert 0 < float(sis) < 50
+
+
+def test_spruce_missing_texture_replacement():
+    params1 = _common_params()
+    params1.update(
+        species="Picea abies",
+        peat=False,
+        soil_texture=0,
+        soil_depth=Sweden.SoilDepth.DEEP,
+    )
+    sis_missing = Hagglund_Lundmark_1979_SIS(**params1)
+
+    params2 = _common_params()
+    params2.update(
+        species="Picea abies",
+        peat=False,
+        soil_texture=Sweden.SoilTextureTill.BOULDER,
+        soil_depth=Sweden.SoilDepth.SHALLOW,
+    )
+    sis_replaced = Hagglund_Lundmark_1979_SIS(**params2)
+
+    assert float(sis_missing) == pytest.approx(float(sis_replaced), rel=1e-6)
+
+
+def test_spruce_lichen_reclassification():
+    params1 = _common_params()
+    params1.update(
+        species="Picea abies",
+        peat=False,
+        soil_moisture=Sweden.SoilMoistureEnum.MOIST,
+        ground_layer=Sweden.BottomLayer.LICHEN_TYPE,
+        vegetation=Sweden.FieldLayer.BILBERRY,
+    )
+    sis_auto = Hagglund_Lundmark_1979_SIS(**params1)
+
+    params2 = _common_params()
+    params2.update(
+        species="Picea abies",
+        peat=False,
+        soil_moisture=Sweden.SoilMoistureEnum.MOIST,
+        ground_layer=Sweden.BottomLayer.SWAMP_MOSS,
+        vegetation=Sweden.FieldLayer.HORSETAIL,
+    )
+    sis_manual = Hagglund_Lundmark_1979_SIS(**params2)
+
+    assert float(sis_auto) == pytest.approx(float(sis_manual), rel=1e-6)
+
+
+def test_spruce_wet_no_lateral_water_adjustment():
+    params1 = _common_params()
+    params1.update(
+        species="Picea abies",
+        peat=False,
+        soil_moisture=Sweden.SoilMoistureEnum.WET,
+        lateral_water=Sweden.SoilWater.SELDOM_NEVER,
+    )
+    sis_wet = Hagglund_Lundmark_1979_SIS(**params1)
+
+    params2 = _common_params()
+    params2.update(
+        species="Picea abies",
+        peat=False,
+        soil_moisture=Sweden.SoilMoistureEnum.MOIST,
+        lateral_water=Sweden.SoilWater.LONGER_PERIODS,
+        ground_layer=Sweden.BottomLayer.SWAMP_MOSS,
+    )
+    sis_moist = Hagglund_Lundmark_1979_SIS(**params2)
+
+    assert float(sis_wet) == pytest.approx(0.7 * float(sis_moist), rel=1e-6)
+
+
+def test_spruce_gravel_texture_branch():
+    params1 = _common_params()
+    params1.update(
+        species="Picea abies",
+        peat=False,
+        soil_depth=Sweden.SoilDepth.SHALLOW,
+        soil_texture=Sweden.SoilTextureTill.SANDY,
+        lateral_water=Sweden.SoilWater.LONGER_PERIODS,
+    )
+    sis_gravel = Hagglund_Lundmark_1979_SIS(**params1)
+
+    params2 = _common_params()
+    params2.update(
+        species="Picea abies",
+        peat=False,
+        soil_depth=Sweden.SoilDepth.SHALLOW,
+        soil_texture=Sweden.SoilTextureTill.GRAVEL,
+        lateral_water=Sweden.SoilWater.LONGER_PERIODS,
+    )
+    sis_manual = Hagglund_Lundmark_1979_SIS(**params2)
+
+    assert float(sis_gravel) == pytest.approx(float(sis_manual), rel=1e-6)
+
+
+def test_spruce_change_to_pine_deepsoil():
+    params_k3 = _common_params()
+    params_k3.update(
+        species="Picea abies",
+        peat=False,
+        soil_texture=Sweden.SoilTextureTill.BOULDER,
+        soil_depth=Sweden.SoilDepth.DEEP,
+        lateral_water=Sweden.SoilWater.SELDOM_NEVER,
+        ground_layer=Sweden.BottomLayer.LICHEN_TYPE,
+        vegetation=Sweden.FieldLayer.HIGH_HERB_WITHOUT_SHRUBS,
+        climate_code=Sweden.ClimateZone.K3,
+    )
+    sis_k3 = Hagglund_Lundmark_1979_SIS(**params_k3)
+
+    params_k1 = params_k3.copy()
+    params_k1["climate_code"] = Sweden.ClimateZone.K1
+    sis_k1 = Hagglund_Lundmark_1979_SIS(**params_k1)
+
+    assert float(sis_k3) > float(sis_k1)
+
+
+def test_pine_on_peat_without_adjustments():
+    params1 = _common_params()
+    params1.update(
+        species="Pinus sylvestris",
+        peat=True,
+        soil_texture=Sweden.SoilTextureTill.PEAT,
+        lateral_water=Sweden.SoilWater.LONGER_PERIODS,
+        soil_moisture=Sweden.SoilMoistureEnum.MOIST,
+        ground_layer=Sweden.BottomLayer.SWAMP_MOSS,
+        nfi_adjustments=False,
+        coast=False,
+        limes_norrlandicus=True,
+    )
+    sis_no_adj = Hagglund_Lundmark_1979_SIS(**params1)
+
+    params1["nfi_adjustments"] = True
+    sis_adj = Hagglund_Lundmark_1979_SIS(**params1)
+
+    assert sis_no_adj != sis_adj
+
+
+def test_pine_latitude_altitude_extremes():
+    params = _common_params()
+    params.update(
+        species="Pinus sylvestris",
+        peat=False,
+        soil_moisture=Sweden.SoilMoistureEnum.MOIST,
+        vegetation=Sweden.FieldLayer.HIGH_HERB_WITHOUT_SHRUBS,
+        ground_layer=Sweden.BottomLayer.FRESH_MOSS,
+        soil_depth=Sweden.SoilDepth.DEEP,
+        soil_texture=Sweden.SoilTextureTill.SANDY,
+        lateral_water=Sweden.SoilWater.SELDOM_NEVER,
+        altitude=0.0,
+        latitude=55.2,
+    )
+    low = Hagglund_Lundmark_1979_SIS(**params)
+
+    params.update(altitude=2110.0, latitude=69.0)
+    high = Hagglund_Lundmark_1979_SIS(**params)
+
+    assert low != high
