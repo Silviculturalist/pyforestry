@@ -84,3 +84,51 @@ def test_distance_to_coast_failure(monkeypatch):
 
     site = SwedishSite(latitude=60.0, longitude=18.0)
     assert site.distance_to_coast is None
+
+
+class _FailFloat(float):
+    def __gt__(self, other):  # pragma: no cover - trivial
+        raise RuntimeError("boom")
+
+
+def test_latitude_comparison_failure(monkeypatch):
+    site = SwedishSite(latitude=_FailFloat(61), longitude=18.0)
+    assert site.n_of_limes_norrlandicus is None
+
+
+def test_temperature_and_humidity_errors(monkeypatch):
+    def boom(*_a, **_kw):
+        raise ValueError("x")
+
+    monkeypatch.setattr("pyforestry.sweden.site.swedish_site.Odin_temperature_sum", boom)
+    monkeypatch.setattr("pyforestry.sweden.site.swedish_site.eriksson_1986_humidity", boom)
+
+    site = SwedishSite(latitude=60.0, longitude=18.0, altitude=100.0)
+    assert site.temperature_sum_odin1983 is None
+    assert site.humidity is None
+
+
+def test_site_index_failures(monkeypatch):
+    def boom(*_a, **_kw):
+        raise ValueError("x")
+
+    monkeypatch.setattr("pyforestry.sweden.site.swedish_site.Hagglund_Lundmark_1979_SIS", boom)
+    monkeypatch.setattr("pyforestry.sweden.site.swedish_site.eko_pm_2008_estimate_si_birch", boom)
+
+    site = SwedishSite(
+        latitude=61.0,
+        longitude=18.0,
+        altitude=100.0,
+        field_layer=Sweden.FieldLayer.BILBERRY,
+        bottom_layer=Sweden.BottomLayer.FRESH_MOSS,
+        soil_texture=Sweden.SoilTextureTill.SANDY,
+        soil_moisture=Sweden.SoilMoistureEnum.MESIC,
+        soil_depth=Sweden.SoilDepth.DEEP,
+        soil_water=Sweden.SoilWater.SELDOM_NEVER,
+        aspect=0.0,
+        incline_percent=5.0,
+        ditched=False,
+    )
+    assert site.sis_spruce_100 is None
+    assert site.sis_pine_100 is None
+    assert site.sis_birch_50 is None

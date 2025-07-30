@@ -63,3 +63,103 @@ def test_zero_h100_raises():
             100,
             Sweden.County.VASTERBOTTENS_LAPPMARK,
         )
+
+
+def test_branch_selection_middle_low_veg():
+    si = _make_si(30)
+    prod = hagglund_1981_SI_to_productivity(
+        si,
+        TreeSpecies.Sweden.picea_abies,
+        Sweden.FieldLayer.THINLEAVED_GRASS,
+        50,
+        Sweden.County.VARMLAND,
+    )
+    assert math.isclose(prod, 11.795708953846153, rel_tol=1e-12)
+
+
+def test_branch_selection_middle_high_veg():
+    si = _make_si(25)
+    prod = hagglund_1981_SI_to_productivity(
+        si,
+        TreeSpecies.Sweden.picea_abies,
+        Sweden.FieldLayer.BILBERRY,
+        50,
+        Sweden.County.VARMLAND,
+    )
+    assert math.isclose(prod, 6.543171123076923, rel_tol=1e-12)
+
+
+def test_branch_selection_north_low_veg():
+    si = _make_si(28)
+    prod = hagglund_1981_SI_to_productivity(
+        si,
+        TreeSpecies.Sweden.picea_abies,
+        Sweden.FieldLayer.BROADLEAVED_GRASS,
+        50,
+        Sweden.County.VASTERBOTTENS_LAPPMARK,
+    )
+    assert math.isclose(prod, 7.069962648, rel_tol=1e-12)
+
+
+def test_branch_selection_southern():
+    si = _make_si(28)
+    prod = hagglund_1981_SI_to_productivity(
+        si,
+        TreeSpecies.Sweden.picea_abies,
+        Sweden.FieldLayer.BILBERRY,
+        50,
+        Sweden.County.SKARABORG,
+    )
+    assert math.isclose(prod, 10.019285878153845, rel_tol=1e-12)
+
+
+def test_pine_low_altitude():
+    si = SiteIndexValue(22, Age.TOTAL(100), {TreeSpecies.Sweden.pinus_sylvestris}, lambda: None)
+    prod = hagglund_1981_SI_to_productivity(
+        si,
+        TreeSpecies.Sweden.pinus_sylvestris,
+        Sweden.FieldLayer.LINGONBERRY,
+        150,
+        Sweden.County.NORRBOTTENS_KUSTLAND,
+    )
+    assert math.isclose(prod, 5.071651248, rel_tol=1e-12)
+
+
+def test_invalid_types_raise():
+    si = _make_si(28)
+    with pytest.raises(TypeError):
+        hagglund_1981_SI_to_productivity(
+            si,
+            "spruce",  # type: ignore[arg-type]
+            Sweden.FieldLayer.BILBERRY,
+            100,
+            Sweden.County.VASTERBOTTENS_LAPPMARK,
+        )
+    with pytest.raises(TypeError):
+        hagglund_1981_SI_to_productivity(
+            si,
+            TreeSpecies.Sweden.picea_abies,
+            "bad",  # type: ignore[arg-type]
+            100,
+            Sweden.County.VASTERBOTTENS_LAPPMARK,
+        )
+    with pytest.raises(TypeError):
+        hagglund_1981_SI_to_productivity(
+            si,
+            TreeSpecies.Sweden.picea_abies,
+            Sweden.FieldLayer.BILBERRY,
+            100,
+            "nope",  # type: ignore[arg-type]
+        )
+
+
+def test_unrecognized_species_raises():
+    si = _make_si(25)
+    with pytest.raises(TypeError):
+        hagglund_1981_SI_to_productivity(
+            si,
+            TreeSpecies.Sweden.fagus_sylvatica,
+            Sweden.FieldLayer.BILBERRY,
+            50,
+            Sweden.County.SKARABORG,
+        )

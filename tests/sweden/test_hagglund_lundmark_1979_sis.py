@@ -3,6 +3,7 @@ import pytest
 
 from pyforestry.base.helpers import Age, SiteIndexValue, enum_code
 from pyforestry.sweden.site.enums import Sweden
+from pyforestry.sweden.siteindex.sis import hagglund_lundmark_1979 as hlm
 from pyforestry.sweden.siteindex.sis.hagglund_lundmark_1979 import (
     Hagglund_Lundmark_1979_SIS,
 )
@@ -554,3 +555,71 @@ def test_pine_latitude_altitude_extremes():
     high = Hagglund_Lundmark_1979_SIS(**params)
 
     assert low != high
+
+
+def test_nfi_adjustments_sets_flags():
+    params1 = _common_params()
+    params1.update(
+        species="Picea abies",
+        peat=False,
+        nfi_adjustments=True,
+        coast=False,
+        limes_norrlandicus=False,
+    )
+    sis_auto = Hagglund_Lundmark_1979_SIS(**params1)
+
+    params2 = params1.copy()
+    params2.update(coast=True, limes_norrlandicus=True)
+    sis_manual = Hagglund_Lundmark_1979_SIS(**params2)
+
+    assert float(sis_auto) == pytest.approx(float(sis_manual), rel=1e-6)
+
+
+def test_spruce_negative_sis_raises(monkeypatch):
+    monkeypatch.setattr(hlm, "exp", lambda x: -1.0)
+    params = _common_params()
+    params.update(species="Picea abies", peat=False)
+    with pytest.raises(ValueError, match="SIS estimated < 0"):
+        hlm.NFI_SIS_SPRUCE(**params)
+
+
+def test_pine_excessive_sis_raises(monkeypatch):
+    monkeypatch.setattr(hlm, "exp", lambda x: 1e6)
+    params = _common_params()
+    params.update(species="Pinus sylvestris", peat=False)
+    with pytest.raises(ValueError, match="SIS estimated > 50"):
+        hlm.NFI_SIS_PINE(**params)
+
+
+def test_invalid_soil_moisture_spruce_raises():
+    params = _common_params()
+    params.update(species="Picea abies", peat=False, soil_moisture=6)
+    with pytest.raises(ValueError, match="No SIS method found"):
+        hlm.NFI_SIS_SPRUCE(**params)
+
+
+def test_invalid_soil_moisture_pine_raises():
+    params = _common_params()
+    params.update(species="Pinus sylvestris", peat=False, soil_moisture=0)
+    with pytest.raises(ValueError, match="No SIS method found"):
+        hlm.NFI_SIS_PINE(**params)
+
+
+def test_pine_adjustment_floor(monkeypatch):
+    monkeypatch.setattr(hlm, "exp", lambda x: 1.0)
+    params = _common_params()
+    params.update(
+        species="Pinus sylvestris",
+        peat=False,
+        soil_moisture=Sweden.SoilMoistureEnum.MESIC,
+        vegetation=Sweden.FieldLayer.BILBERRY,
+        ground_layer=Sweden.BottomLayer.SWAMP_MOSS,
+    )
+    params_low = params.copy()
+    params_low.update(altitude=0.0)
+    sis_low = Hagglund_Lundmark_1979_SIS(**params_low)
+    params_high = params.copy()
+    params_high.update(altitude=100.0)
+    sis_high = Hagglund_Lundmark_1979_SIS(**params_high)
+
+    assert float(sis_low) == pytest.approx(float(sis_high), rel=1e-6)
