@@ -1,3 +1,5 @@
+"""Height trajectory models for lodgepole pine from Hägglund and Remröd (1977)."""
+
 import warnings
 from math import exp
 from typing import Union
@@ -9,7 +11,8 @@ def hagglund_remrod_1977_height_trajectories_lodgepole_pine(
     dominant_height_m: float, age: Union[float, AgeMeasurement], age2: Union[float, AgeMeasurement]
 ) -> SiteIndexValue:
     """
-    Hägglund and Remröd (1977): Height growth of Lodgepole Pine (Pinus contorta) in Northern Sweden.
+    Hägglund and Remröd (1977): Height growth of Lodgepole Pine
+    (Pinus contorta) in Northern Sweden.
 
     This function computes the height of Lodgepole Pine at a specific age based on dominant height
     and initial age. The calculations are adapted from the original Chapman-Richards function.
@@ -31,9 +34,9 @@ def hagglund_remrod_1977_height_trajectories_lodgepole_pine(
     """
 
     if age > 60:
-        warnings.warn("Too old stand, outside of the material.")
+        warnings.warn("Too old stand, outside of the material.", stacklevel=2)
     if age < 15:
-        warnings.warn("Too young stand, outside of the material.")
+        warnings.warn("Too young stand, outside of the material.", stacklevel=2)
 
     # Age Validation
     # Check for age (should be a float/int or AgeMeasurement with DBH code)
@@ -100,9 +103,9 @@ def hagglund_remrod_1977_height_trajectories_lodgepole_pine(
     H50 = A * (1 - exp(-50 * RK)) ** RM2 + 13
 
     if H50 > 270:
-        warnings.warn("Too high productivity, outside of the material.")
+        warnings.warn("Too high productivity, outside of the material.", stacklevel=2)
     elif H50 < 140:
-        warnings.warn("Too low productivity, outside of the material.")
+        warnings.warn("Too low productivity, outside of the material.", stacklevel=2)
 
     # Compute height at age2
     height_at_age2 = (13 + A * (1 - exp(-age2 * RK)) ** RM2) / 10

@@ -12,10 +12,10 @@ from pyforestry.base.helpers import (
     CircularPlot,
     Diameter_cm,
     Position,
-    RepresentationTree,
     Stand,
     StandBasalArea,
     Stems,
+    Tree,
     TreeSpecies,
     parse_tree_species,
 )
@@ -82,16 +82,16 @@ def test_stand_metric_calculations():
         id=1,
         radius_m=5.0,
         trees=[
-            RepresentationTree(species=sp_picea, diameter_cm=25, weight=2),
-            RepresentationTree(species=sp_pinus, diameter_cm=30, weight=1),
+            Tree(species=sp_picea, diameter_cm=25, weight_n=2),
+            Tree(species=sp_pinus, diameter_cm=30, weight_n=1),
         ],
     )
     pl2 = CircularPlot(
         id=2,
         radius_m=5.0,
         trees=[
-            RepresentationTree(species=sp_picea, diameter_cm=20, weight=1),
-            RepresentationTree(species=sp_pinus, diameter_cm=35, weight=2),
+            Tree(species=sp_picea, diameter_cm=20, weight_n=1),
+            Tree(species=sp_pinus, diameter_cm=35, weight_n=2),
         ],
     )
     st = Stand(plots=[pl1, pl2])
@@ -124,17 +124,17 @@ def test_CircularPlot_area_ha_property():
 
 
 def test_representation_tree_defaults():
-    """Check default values for RepresentationTree."""
-    tr = RepresentationTree()
+    """Check default values for Tree."""
+    tr = Tree()
     assert tr.species is None
     assert tr.diameter_cm is None
     assert tr.height_m is None
-    assert tr.weight == 1.0
+    assert tr.weight_n == 1.0
 
 
 def test_representation_tree_with_string_species():
     """Check that a string species is parsed to a TreeName."""
-    tr = RepresentationTree(species="picea abies", diameter_cm=25.0)
+    tr = Tree(species="picea abies", diameter_cm=25.0)
     assert tr.species is not None
     assert tr.species.genus.name == "Picea"
     assert tr.species.species_name == "abies"
@@ -229,9 +229,9 @@ def test_volume_conversion():
 def test_get_dominant_height():
     sp = parse_tree_species("picea abies")
     # Create three trees with heights.
-    tree1 = RepresentationTree(species=sp, diameter_cm=30, height_m=20)
-    tree2 = RepresentationTree(species=sp, diameter_cm=35, height_m=22)
-    tree3 = RepresentationTree(species=sp, diameter_cm=25, height_m=18)
+    tree1 = Tree(species=sp, diameter_cm=30, height_m=20)
+    tree2 = Tree(species=sp, diameter_cm=35, height_m=22)
+    tree3 = Tree(species=sp, diameter_cm=25, height_m=18)
     # Two plots with the same area (radius_m=10)
     plot1 = CircularPlot(id=1, radius_m=10, trees=[tree1, tree2])
     plot2 = CircularPlot(id=2, radius_m=10, trees=[tree1, tree3])
@@ -272,15 +272,11 @@ def test_qmd_recomputes_after_append_plot():
     """QMD values should update when a new plot is added."""
     sp = parse_tree_species("picea abies")
 
-    plot1 = CircularPlot(
-        id=1, radius_m=5.0, trees=[RepresentationTree(species=sp, diameter_cm=20)]
-    )
+    plot1 = CircularPlot(id=1, radius_m=5.0, trees=[Tree(species=sp, diameter_cm=20)])
     stand = Stand(plots=[plot1])
     initial_qmd = stand.QMD.TOTAL.value
 
-    plot2 = CircularPlot(
-        id=2, radius_m=5.0, trees=[RepresentationTree(species=sp, diameter_cm=40)]
-    )
+    plot2 = CircularPlot(id=2, radius_m=5.0, trees=[Tree(species=sp, diameter_cm=40)])
     stand.append_plot(plot2)
 
     updated_qmd = stand.QMD.TOTAL.value
@@ -288,7 +284,7 @@ def test_qmd_recomputes_after_append_plot():
     assert not math.isclose(initial_qmd, updated_qmd)
 
 
-# --- Test H-T estimator with RepresentationTrees ---
+# --- Test H-T estimator with Trees ---
 
 
 # Use the existing diameter-height relation from the bias function:
@@ -341,24 +337,24 @@ def test_random_plots_on_stand():
         n_pinus = int(round(density_pinus * effective_area_ha))
         n_picea = int(round(density_picea * effective_area_ha))
 
-        # Create RepresentationTree objects for each species.
+        # Create Tree objects for each species.
         trees = []
         for _ in range(n_pinus):
             trees.append(
-                RepresentationTree(
+                Tree(
                     species=TreeSpecies.Sweden.pinus_sylvestris,
                     diameter_cm=d_pinus,
                     height_m=h_pinus,
-                    weight=1.0,
+                    weight_n=1.0,
                 )
             )
         for _ in range(n_picea):
             trees.append(
-                RepresentationTree(
+                Tree(
                     species=TreeSpecies.Sweden.picea_abies,
                     diameter_cm=d_picea,
                     height_m=h_picea,
-                    weight=1.0,
+                    weight_n=1.0,
                 )
             )
         plot.trees = trees
@@ -405,8 +401,8 @@ def test_random_plots_on_stand():
 
 def test_thin_by_uid():
     sp = parse_tree_species("picea abies")
-    t1 = RepresentationTree(species=sp, diameter_cm=20, uid="A")
-    t2 = RepresentationTree(species=sp, diameter_cm=25, uid="B")
+    t1 = Tree(species=sp, diameter_cm=20, uid="A")
+    t2 = Tree(species=sp, diameter_cm=25, uid="B")
     plot = CircularPlot(id=1, radius_m=5, trees=[t1, t2])
     stand = Stand(plots=[plot])
 
@@ -418,8 +414,8 @@ def test_thin_by_uid():
 
 def test_thin_by_rule_and_polygon():
     sp = parse_tree_species("picea abies")
-    inside = RepresentationTree(species=sp, diameter_cm=30, position=Position(0, 0), uid=1)
-    outside = RepresentationTree(species=sp, diameter_cm=30, position=Position(100, 0), uid=2)
+    inside = Tree(species=sp, diameter_cm=30, position=Position(0, 0), uid=1)
+    outside = Tree(species=sp, diameter_cm=30, position=Position(100, 0), uid=2)
     plot = CircularPlot(id=1, radius_m=5, trees=[inside, outside])
     stand = Stand(plots=[plot])
 
@@ -428,3 +424,67 @@ def test_thin_by_rule_and_polygon():
 
     assert len(stand.plots[0].trees) == 1
     assert stand.plots[0].trees[0].uid == 2
+
+
+def test_circularplot_repr():
+    """__repr__ should include id and area."""
+    plot = CircularPlot(id=99, radius_m=5.0)
+    rep = repr(plot)
+    assert "id=99" in rep
+    assert "area_m2" in rep
+
+
+def test_circularplot_invalid_id():
+    """Creating a plot without an id should raise ``ValueError``."""
+    with pytest.raises(ValueError):
+        CircularPlot(id=None, radius_m=1.0)
+
+
+def test_circularplot_occlusion_out_of_bounds():
+    """Occlusion must fall inside the interval [0, 1)."""
+    with pytest.raises(ValueError):
+        CircularPlot(id=1, radius_m=1.0, occlusion=1.5)
+
+
+def test_circularplot_radius_area_mismatch():
+    """Mismatch between radius and area should raise ``ValueError``."""
+    with pytest.raises(ValueError):
+        CircularPlot(id=1, radius_m=1.0, area_m2=100.0)
+
+
+def test_angle_count_length_mismatch():
+    """AngleCount init should validate lengths of species and value lists."""
+    sp = parse_tree_species("picea abies")
+    with pytest.raises(ValueError, match="Length mismatch"):
+        AngleCount(ba_factor=1.0, value=[1.0], species=[sp, sp], point_id="P1")
+
+
+def test_angle_count_merge_baf_mismatch():
+    """Merging records with different basal area factors should fail."""
+    sp = parse_tree_species("picea abies")
+    ac1 = AngleCount(ba_factor=1.0, value=[1], species=[sp], point_id="P1")
+    ac2 = AngleCount(ba_factor=2.0, value=[1], species=[sp], point_id="P1")
+    aggregator = AngleCountAggregator(records=[ac1, ac2])
+    with pytest.raises(ValueError, match="Inconsistent BAF"):
+        aggregator.merge_by_point_id()
+
+
+def test_angle_count_aggregate_empty():
+    """Aggregating with no records should return empty dictionaries."""
+    aggregator = AngleCountAggregator(records=[])
+    ba, stems = aggregator.aggregate_stand_metrics()
+    assert ba == {}
+    assert stems == {}
+
+
+def test_diameter_negative_height():
+    """Negative measurement height should raise an error."""
+    with pytest.raises(ValueError, match="measurement_height_m must be >= 0"):
+        Diameter_cm(10, measurement_height_m=-0.1)
+
+
+def test_stand_polygon_invalid():
+    """Invalid polygons should be rejected during Stand initialization."""
+    invalid_poly = Polygon([(0, 0), (1, 1), (0, 1), (1, 0), (0, 0)])
+    with pytest.raises(ValueError, match="Polygon is not valid"):
+        Stand(polygon=invalid_poly, crs=CRS("EPSG:4326"))

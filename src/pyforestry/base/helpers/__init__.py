@@ -20,11 +20,18 @@ from .tree_species import (
 
 # From Primitives.py
 from .primitives import *  # noqa: F401,F403
-from .tree import Tree, SingleTree, RepresentationTree
+from .tree import Tree
 from .bitterlich_angle_count import AngleCount, AngleCountAggregator
 from .plot import CircularPlot
 from .stand import Stand, StandMetricAccessor
 from .utils import enum_code
+from .bucking import (
+    BuckingConfig,
+    BuckingResult,
+    CrossCutSection,
+    QualityType,
+    _TreeCache,
+)
 
 # isort: on
 
@@ -56,12 +63,15 @@ __all__ = [
     "AngleCount",
     "AngleCountAggregator",
     "Tree",
-    "SingleTree",
-    "RepresentationTree",
     # Base components
     "CircularPlot",
     "Stand",
     "StandMetricAccessor",
     "SiteBase",
     "enum_code",
+    "CrossCutSection",
+    "BuckingResult",
+    "BuckingConfig",
+    "_TreeCache",
+    "QualityType",
 ]

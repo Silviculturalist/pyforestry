@@ -105,3 +105,87 @@ def test_addition_with_incompatible_types_raises_value_error():
 
     # Check that the error message from CompositeVolume.__init__ is correct
     assert str(exc_info.value) == "All volumes in a composite must have the same 'type'."
+
+
+def test_atomic_volume_negative_value_error():
+    """AtomicVolume should reject negative values."""
+
+    with pytest.raises(ValueError):
+        AtomicVolume(value=-1)
+
+
+def test_atomic_volume_invalid_region_for_type():
+    """A region not allowed for the volume type should raise an error."""
+
+    with pytest.raises(ValueError):
+        AtomicVolume(value=1, region="Germany", type="m3sk")
+
+
+def test_atomic_volume_math_operations():
+    """Multiplication and division helpers return new scaled volumes."""
+
+    v = AtomicVolume(value=10, region="Sweden", type="m3sk")
+    assert (v * 2).value == 20
+    assert (2 * v).value == 20
+    assert (v / 2).value == 5
+
+
+def test_composite_volume_scalar_multiplication():
+    """CompositeVolume should scale all components by a scalar."""
+
+    v1 = AtomicVolume(10, region="Sweden", type="m3sk")
+    v2 = AtomicVolume(5, region="Sweden", type="m3sk")
+    comp = CompositeVolume([v1, v2])
+
+    scaled = comp * 2
+    assert isinstance(scaled, CompositeVolume)
+    assert scaled.value == 30
+
+    scaled_rmul = 2 * comp
+    assert scaled_rmul.value == 30
+
+
+def test_atomic_volume_divide_by_zero():
+    """Division by zero should raise ``ZeroDivisionError``."""
+
+    with pytest.raises(ZeroDivisionError):
+        AtomicVolume(value=10) / 0
+
+
+def test_atomic_volume_from_unit_invalid_unit():
+    """Unknown units should raise ``ValueError``."""
+
+    with pytest.raises(ValueError):
+        AtomicVolume.from_unit(1, "unknown")
+
+
+def test_atomic_volume_invalid_operand_add():
+    """Adding a non-volume via ``__add__`` returns ``NotImplemented``."""
+
+    assert AtomicVolume.__add__(AtomicVolume(1), 1) is NotImplemented
+
+
+def test_atomic_volume_invalid_scalar_mul():
+    """Non-numeric multiplication should return ``NotImplemented``."""
+
+    assert AtomicVolume.__mul__(AtomicVolume(1), "a") is NotImplemented
+
+
+def test_composite_volume_addition_cases():
+    """CompositeVolume should handle adding volumes and other composites."""
+
+    v1 = AtomicVolume(1)
+    v2 = AtomicVolume(2)
+    v3 = AtomicVolume(3)
+    comp = CompositeVolume([v1, v2])
+
+    new_comp = comp + v3
+    assert isinstance(new_comp, CompositeVolume)
+    assert new_comp.value == 6
+    assert len(new_comp) == 1
+
+    comp2 = CompositeVolume([v3])
+    merged = comp + comp2
+    assert isinstance(merged, CompositeVolume)
+    assert merged.value == 6
+    assert len(merged) == 1

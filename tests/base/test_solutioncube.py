@@ -5,10 +5,10 @@ import pytest
 import xarray as xr
 
 from pyforestry.base.helpers.tree_species import TreeSpecies
-from pyforestry.base.pricelist.data.mellanskog_2013 import Mellanskog_2013_price_data
 
 # Imports from your project
 from pyforestry.base.pricelist.solutioncube import SolutionCube
+from pyforestry.sweden.pricelist.data.mellanskog_2013 import Mellanskog_2013_price_data
 from pyforestry.sweden.taper import EdgrenNylinder1949
 
 
@@ -134,3 +134,18 @@ def test_lookup(mini_cube):
     value_bad, sections_bad = mini_cube.lookup(species="non_existent_species", dbh=20, height=15)
     assert value_bad == 0.0
     assert sections_bad == []
+
+
+def test_lookup_handles_invalid_json():
+    """lookup should return defaults if JSON decoding fails."""
+    ds = xr.Dataset(
+        {
+            "total_value": (("species", "height", "dbh"), [[[1.0]]]),
+            "solution_sections": (("species", "height", "dbh"), [[["[invalid"]]]),
+        },
+        coords={"species": ["sp"], "height": [1.0], "dbh": [10]},
+    )
+    cube = SolutionCube(ds)
+    value, sections = cube.lookup("sp", 10, 1.0)
+    assert value == 0.0
+    assert sections == []

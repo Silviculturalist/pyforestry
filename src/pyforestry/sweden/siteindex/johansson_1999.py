@@ -1,4 +1,4 @@
-# Johansson_1999.py
+"""Site index functions for alder based on Johansson (1999)."""
 
 import math
 import warnings
@@ -19,14 +19,17 @@ def johansson_1999_height_trajectory_sweden_alnus_glutinosa(
 
     Parameters:
         dominant_height (float): Dominant height of the stand (meters).
-        age (Union[float, AgeMeasurement]): Total age of the stand (years). Must be float/int or Age.TOTAL.
-        age2 (Union[float, AgeMeasurement]): Target age for output height (years). Must be float/int or Age.TOTAL.
+        age (Union[float, AgeMeasurement]): Total age of the stand (years).
+            Must be float/int or Age.TOTAL.
+        age2 (Union[float, AgeMeasurement]): Target age for output height (years).
+            Must be float/int or Age.TOTAL.
 
     Returns:
         SiteIndexValue: Dominant height at age2 (meters) wrapped in a SiteIndexValue object.
 
     Raises:
-        Warning: If the input ages exceed 100 years, as the model is suitable for stands under 100 years.
+        Warning: If the input ages exceed 100 years, as the model is
+            suitable for stands under 100 years.
         TypeError: If age or age2 are not float/int or AgeMeasurement with Age.TOTAL code.
 
     References:
@@ -59,7 +62,7 @@ def johansson_1999_height_trajectory_sweden_alnus_glutinosa(
 
     # Warn if ages exceed suitability
     if age_val > 100 or age2_val > 100:
-        warnings.warn("Suitable for stands of Common Alder under age of 100.")
+        warnings.warn("Suitable for stands of Common Alder under age of 100.", stacklevel=2)
 
     # Model parameters
     param_asi = 7
@@ -97,14 +100,17 @@ def johansson_1999_height_trajectory_sweden_alnus_incana(
 
     Parameters:
         dominant_height (float): Dominant height of the stand (meters).
-        age (Union[float, AgeMeasurement]): Total age of the stand (years). Must be float/int or Age.TOTAL.
-        age2 (Union[float, AgeMeasurement]): Target age for output height (years). Must be float/int or Age.TOTAL.
+        age (Union[float, AgeMeasurement]): Total age of the stand (years).
+            Must be float/int or Age.TOTAL.
+        age2 (Union[float, AgeMeasurement]): Target age for output height (years).
+            Must be float/int or Age.TOTAL.
 
     Returns:
         SiteIndexValue: Dominant height at age2 (meters) wrapped in a SiteIndexValue object.
 
     Raises:
-        Warning: If the input ages exceed 70 years, as the model is suitable for stands under 70 years.
+        Warning: If the input ages exceed 70 years, as the model is
+            suitable for stands under 70 years.
         TypeError: If age or age2 are not float/int or AgeMeasurement with Age.TOTAL code.
 
     References:
@@ -137,7 +143,7 @@ def johansson_1999_height_trajectory_sweden_alnus_incana(
 
     # Warn if ages exceed suitability
     if age_val > 70 or age2_val > 70:
-        warnings.warn("Suitable for stands of Grey Alder under age of 70.")
+        warnings.warn("Suitable for stands of Grey Alder under age of 70.", stacklevel=2)
 
     # Model parameters
     param_asi = 7

@@ -3,6 +3,9 @@ import pytest
 from pyforestry.base.helpers.tree_species import (
     ALNUS_GLUTINOSA,
     ALNUS_INCANA,
+    RegionalGenusGroup,
+    TreeGenus,
+    TreeName,
     TreeSpecies,
     parse_tree_species,
 )
@@ -42,3 +45,13 @@ def test_regional_genus_group_membership():
 
 def test_parse_tree_species():
     assert parse_tree_species("pInus sylvestris") == TreeSpecies.Sweden.pinus_sylvestris
+
+
+def test_regional_genus_group_repr():
+    genus = TreeGenus(name="Testus", code="TEST")
+    sp1 = TreeName(genus=genus, species_name="alpha", code="ALP")
+    sp2 = TreeName(genus=genus, species_name="beta", code="BET")
+    group = RegionalGenusGroup(genus.name, [sp1, sp2])
+    out = repr(group)
+    assert out.startswith("RegionalGenusGroup(Testus:")
+    assert "alpha" in out and "beta" in out

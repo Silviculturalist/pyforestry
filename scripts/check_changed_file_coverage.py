@@ -18,6 +18,7 @@ from __future__ import annotations
 import subprocess
 import sys
 import xml.etree.ElementTree as ET
+from pathlib import Path
 
 
 def list_changed_files(base_ref: str) -> list[str]:
@@ -28,7 +29,12 @@ def list_changed_files(base_ref: str) -> list[str]:
         text=True,
         check=True,
     )
-    return [f for f in result.stdout.splitlines() if f.startswith("src/") and f.endswith(".py")]
+    changed: list[str] = []
+    for raw in result.stdout.splitlines():
+        path = Path(raw).as_posix()
+        if path.startswith("src/") and path.endswith(".py"):
+            changed.append(path)
+    return changed
 
 
 def load_coverage_rates(xml_path: str) -> dict[str, float]:
@@ -38,10 +44,19 @@ def load_coverage_rates(xml_path: str) -> dict[str, float]:
     for elem in tree.findall(".//class"):
         filename = elem.get("filename")
         if filename:
+            path = Path(filename).as_posix()
+            # When the package is installed normally, coverage records
+            # files inside ``site-packages``. Map those paths back to the
+            # ``src/`` layout used in this repository so that filenames
+            # match ``git`` paths and coverage can be checked correctly.
+            if not path.startswith("src/"):
+                if "pyforestry" in path:
+                    _, tail = path.split("pyforestry", 1)
+                    path = f"src/pyforestry{tail}"
             try:
-                rates[filename] = float(elem.get("line-rate", "0"))
+                rates[path] = float(elem.get("line-rate", "0"))
             except ValueError:
-                rates[filename] = 0.0
+                rates[path] = 0.0
     return rates
 
 

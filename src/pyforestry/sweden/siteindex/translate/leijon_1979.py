@@ -1,3 +1,5 @@
+"""Site index translations between pine and spruce from Leijon (1979)."""
+
 import warnings
 
 from numpy import exp, log
@@ -8,7 +10,10 @@ def Leijon_Pine_to_Spruce(H100_Pine):
     Leijon 1979 function 7.2.
     """
     if H100_Pine < 8 or H100_Pine > 30:
-        warnings.warn("SI Pine may be outside underlying material")
+        warnings.warn(
+            "SI Pine may be outside underlying material",
+            stacklevel=2,
+        )
 
     return (
         exp(
@@ -25,7 +30,10 @@ def Leijon_Spruce_to_Pine(H100_Spruce):
     Leijon 1979 function 7.1.
     """
     if H100_Spruce < 8 or H100_Spruce > 33:
-        warnings.warn("SI Spruce may be outside underlying material.")
+        warnings.warn(
+            "SI Spruce may be outside underlying material.",
+            stacklevel=2,
+        )
 
     return (
         exp(
