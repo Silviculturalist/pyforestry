@@ -1,4 +1,17 @@
-# Version 0.90 2024-06-17
+# Version 0.91 2024-07-30
+
+"""Hägglund & Lundmark (1979) site index estimation models.
+
+This module implements routines for estimating H100 (height at age 100) for
+Norway spruce and Scots pine stands in Sweden using the stand factor models
+described by Hägglund and Lundmark (1979).
+
+The original equations are reproduced together with various corrections used in
+the Swedish National Forest Inventory (NFI). The public entry point is
+``Hagglund_Lundmark_1979_SIS`` which dispatches to species specific helper
+functions.
+"""
+
 from __future__ import annotations
 
 # Estimate Site Index H100 for Spruce in Sweden by stand factors.

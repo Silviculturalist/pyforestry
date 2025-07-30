@@ -1,4 +1,11 @@
-# codefolder/MaximumAnnualIncrement.py (Modification)
+"""Translate H100 site index values to expected productivity.
+
+This module implements the smoothed equations from Hägglund (1981) to convert
+H100 estimates to mean annual volume growth at the time of culmination. The
+function :func:`hagglund_1981_SI_to_productivity` is the public entry point and
+accepts enumerated inputs for vegetation type, county and tree species.
+"""
+
 from pyforestry.base.helpers.primitives import SiteIndexValue
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies
 from pyforestry.sweden.site.enums import Sweden
