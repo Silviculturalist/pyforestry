@@ -198,83 +198,86 @@ def NFI_SIS_SPRUCE(**kwargs) -> float:
         9: 2.0,
     }.get(New_SoilTexture, 2.2)
 
-    if changeToPine and peat:
-        FGRAN = 5.03077 - 0.03627 * (latitude - 60.0)
-        if nfi_adjustments:  # Always apply close to coast and norrland for same as NFI results.
-            FGRAN -= 0.000000901 * (altitude**2)
-        else:
-            FGRAN -= (
-                0.000000901 * (altitude**2) * ~coast * limes_norrlandicus
-            )  # Ordinary routine. No effect near coast north of Limes Norrlandicus.
-        if New_LateralWater == 3:
-            FGRAN += 0.09195
-        if ditched:
-            FGRAN += 0.13622
-        if 2 <= New_GroundLayer <= 5:  # Lichen-rich types, sphagnum and swamp-mosses.
-            FGRAN -= 0.1497
-        if New_Vegetation < 7:  # herb type.
-            FGRAN += 0.22273
-        if New_Vegetation == 13:  # bilberry type
-            FGRAN += 0.13997
-        if New_Vegetation in [7, 8, 9, 14]:  # no field layer, grasses and cowberry.
-            FGRAN += 0.13377
+    # This cannot exist, check with NFI
+    # First clause is changeToPine and peat, which are set together.
+    # Later clauses check changeToPine and combinations of New_soil_Moisture which **is not**  1, which is also set at the same time.
+    # if changeToPine and peat:
+    #    FGRAN = 5.03077 - 0.03627 * (latitude - 60.0)
+    #    if nfi_adjustments:  # Always apply close to coast and norrland for same as NFI results.
+    #        FGRAN -= 0.000000901 * (altitude**2)
+    #    else:
+    #        FGRAN -= (
+    #            0.000000901 * (altitude**2) * ~coast * limes_norrlandicus
+    #        )  # Ordinary routine. No effect near coast north of Limes Norrlandicus.
+    #    if New_LateralWater == 3:
+    #        FGRAN += 0.09195
+    #    if ditched:
+    #        FGRAN += 0.13622
+    #    if 2 <= New_GroundLayer <= 5:  # Lichen-rich types, sphagnum and swamp-mosses.
+    #        FGRAN -= 0.1497
+    #    if New_Vegetation < 7:  # herb type.
+    #        FGRAN += 0.22273
+    #    if New_Vegetation == 13:  # bilberry type
+    #        FGRAN += 0.13997
+    #    if New_Vegetation in [7, 8, 9, 14]:  # no field layer, grasses and cowberry.
+    #        FGRAN += 0.13377
 
-    elif changeToPine and New_SoilMoisture == 2 and New_Vegetation > 9 and New_GroundLayer > 3:
-        FGRAN = (
-            5.30943
-            - 0.01716 * (latitude - 60.0 + abs(latitude - 60.0))
-            - 0.0039 * (latitude - 60.0 - abs(latitude - 60.0))
-            - 0.000000678 * (altitude**2)
-            - 0.01243 * (SoilTextureIndex**2)
-        )
-        if New_LateralWater == 3:
-            FGRAN += 0.0488
-        if New_Vegetation == 13:  # bilberry
-            FGRAN += 0.09429
-        if New_Vegetation == 14:  # cowberry
-            FGRAN += 0.06167
-        if New_SoilDepth == deepsoil:
-            FGRAN += 0.1158
-        if New_Vegetation == 16:  # poor shrubs..
-            FGRAN -= 0.07775
+    #    elif changeToPine and New_SoilMoisture == 2 and New_Vegetation > 9 and New_GroundLayer > 3:
+    #        FGRAN = (
+    #            5.30943
+    #            - 0.01716 * (latitude - 60.0 + abs(latitude - 60.0))
+    #            - 0.0039 * (latitude - 60.0 - abs(latitude - 60.0))
+    #            - 0.000000678 * (altitude**2)
+    #            - 0.01243 * (SoilTextureIndex**2)
+    #        )
+    #        if New_LateralWater == 3:
+    #            FGRAN += 0.0488
+    #        if New_Vegetation == 13:  # bilberry
+    #            FGRAN += 0.09429
+    #        if New_Vegetation == 14:  # cowberry
+    #            FGRAN += 0.06167
+    #        if New_SoilDepth == deepsoil:
+    #            FGRAN += 0.1158
+    #        if New_Vegetation == 16:  # poor shrubs..
+    #            FGRAN -= 0.07775
+    #
+    #    elif changeToPine and New_SoilMoisture == 2 and New_Vegetation > 9 and New_GroundLayer <= 3:
+    #        FGRAN = 5.21803 - 0.01193 * (latitude - 60.0 + abs(latitude - 60.0))
+    #        if New_LateralWater in [1, 2]:
+    #            FGRAN -= 0.000000593 * (altitude**2)
+    #        if New_LateralWater == 3:
+    #            FGRAN -= 0.000000355 * (altitude**2)
+    #        if New_SoilDepth == deepsoil:
+    #            FGRAN += 0.12454
+    #        if (
+    #            incline_percent <= 10.0 and New_LateralWater == 1
+    #        ):  # if incline and seldom/never lateral groundwater..
+    #            FGRAN -= 0.06329
+    #        if (
+    #            altitude >= 350
+    #            and incline_percent > 10.0
+    #            and (aspect in range(0, 113) or aspect > 337)
+    #        ):
+    #            FGRAN -= 0.07189
+    #        if New_GroundLayer == 1:
+    #            FGRAN -= 0.06842
+    #
+    #    elif changeToPine and New_SoilMoisture == 2 and New_Vegetation <= 9:
+    #        FGRAN = (
+    #            5.34912
+    #            - 0.02037 * (latitude - 60.0 + abs(latitude - 60.0))
+    #            - 0.000000481 * (altitude**2)
+    #        )
+    #        if New_SoilDepth == deepsoil:
+    #            FGRAN += 0.11574
+    #        if climate_code == "M2":  # and 14 <= Dlan <= 31: # S. sv.
+    #            FGRAN -= 0.16403
+    #        if New_Vegetation in [4, 5, 8, 9]:
+    #            FGRAN += 0.08376
+    #        if New_Vegetation in [1, 2]:
+    #            FGRAN += 0.12296
 
-    elif changeToPine and New_SoilMoisture == 2 and New_Vegetation > 9 and New_GroundLayer <= 3:
-        FGRAN = 5.21803 - 0.01193 * (latitude - 60.0 + abs(latitude - 60.0))
-        if New_LateralWater in [1, 2]:
-            FGRAN -= 0.000000593 * (altitude**2)
-        if New_LateralWater == 3:
-            FGRAN -= 0.000000355 * (altitude**2)
-        if New_SoilDepth == deepsoil:
-            FGRAN += 0.12454
-        if (
-            incline_percent <= 10.0 and New_LateralWater == 1
-        ):  # if incline and seldom/never lateral groundwater..
-            FGRAN -= 0.06329
-        if (
-            altitude >= 350
-            and incline_percent > 10.0
-            and (aspect in range(0, 113) or aspect > 337)
-        ):
-            FGRAN -= 0.07189
-        if New_GroundLayer == 1:
-            FGRAN -= 0.06842
-
-    elif changeToPine and New_SoilMoisture == 2 and New_Vegetation <= 9:
-        FGRAN = (
-            5.34912
-            - 0.02037 * (latitude - 60.0 + abs(latitude - 60.0))
-            - 0.000000481 * (altitude**2)
-        )
-        if New_SoilDepth == deepsoil:
-            FGRAN += 0.11574
-        if climate_code == "M2":  # and 14 <= Dlan <= 31: # S. sv.
-            FGRAN -= 0.16403
-        if New_Vegetation in [4, 5, 8, 9]:
-            FGRAN += 0.08376
-        if New_Vegetation in [1, 2]:
-            FGRAN += 0.12296
-
-    elif changeToPine and New_SoilMoisture == 1:
+    if changeToPine and New_SoilMoisture == 1:
         FGRAN = (
             5.44789
             - 0.01566 * (latitude - 60.0 + abs(latitude - 60.0))
@@ -294,26 +297,26 @@ def NFI_SIS_SPRUCE(**kwargs) -> float:
         if New_GroundLayer >= 4 and New_Vegetation in [7, 9, 13]:
             FGRAN += 0.0488
 
-    elif changeToPine and New_SoilMoisture in [3, 4, 5]:
-        FGRAN = (
-            5.46782
-            - 0.02013 * (latitude - 60.0 + abs(latitude - 60.0))
-            - 0.01074 * (SoilTextureIndex**2)
-        )
-        if New_LateralWater in [1, 2]:
-            FGRAN -= 0.01517 * 0.0001 * (altitude**2)
-        if New_LateralWater == 3:
-            FGRAN -= 0.00747 * 0.0001 * (altitude**2)
-        if New_Vegetation <= 6:
-            FGRAN += 0.11585
-        if New_Vegetation in [10, 11, 12]:
-            FGRAN -= 0.22358
-        if New_Vegetation in [7, 8, 9, 13, 14]:
-            FGRAN += 0.0770
-        if New_Vegetation in [15, 16]:
-            FGRAN -= 0.0726
-        if ground_layer in [2, 3, 4, 5]:
-            FGRAN -= 0.0730
+    # elif changeToPine and New_SoilMoisture in [3, 4, 5]:
+    #    FGRAN = (
+    #        5.46782
+    #        - 0.02013 * (latitude - 60.0 + abs(latitude - 60.0))
+    #        - 0.01074 * (SoilTextureIndex**2)
+    #    )
+    #    if New_LateralWater in [1, 2]:
+    #        FGRAN -= 0.01517 * 0.0001 * (altitude**2)
+    #    if New_LateralWater == 3:
+    #        FGRAN -= 0.00747 * 0.0001 * (altitude**2)
+    #    if New_Vegetation <= 6:
+    #        FGRAN += 0.11585
+    #    if New_Vegetation in [10, 11, 12]:
+    #        FGRAN -= 0.22358
+    #    if New_Vegetation in [7, 8, 9, 13, 14]:
+    #        FGRAN += 0.0770
+    #    if New_Vegetation in [15, 16]:
+    #        FGRAN -= 0.0726
+    #    if ground_layer in [2, 3, 4, 5]:
+    #        FGRAN -= 0.0730
 
     elif peat:
         FGRAN = (
