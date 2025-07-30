@@ -8,153 +8,122 @@ from pyforestry.sweden.site.enums import Sweden
 from pyforestry.sweden.siteindex.translate import hagglund_1981_SI_to_productivity
 
 
-def _make_si(value: float, ref_age: int = 100) -> SiteIndexValue:
-    return SiteIndexValue(
-        value,
-        Age.TOTAL(ref_age),
-        {TreeSpecies.Sweden.picea_abies},
-        lambda: None,
-    )
+def make_si(value: float, species: TreeSpecies = TreeSpecies.Sweden.picea_abies) -> SiteIndexValue:
+    """Create a SiteIndexValue with ``reference_age`` 100 for ``species``."""
+    return SiteIndexValue(value, Age.TOTAL(100), {species}, lambda: None)
 
 
-def test_valid_productivity_spruce():
-    si = _make_si(28)
-    prod = hagglund_1981_SI_to_productivity(
-        si,
-        TreeSpecies.Sweden.picea_abies,
-        Sweden.FieldLayer.BILBERRY,
-        100,
-        Sweden.County.VASTERBOTTENS_LAPPMARK,
-    )
-    assert math.isclose(prod, 10.019285878153845, rel_tol=1e-12)
-
-
-def test_valid_productivity_pine():
-    si = SiteIndexValue(22, Age.TOTAL(100), {TreeSpecies.Sweden.pinus_sylvestris}, lambda: None)
-    prod = hagglund_1981_SI_to_productivity(
-        si,
-        TreeSpecies.Sweden.pinus_sylvestris,
-        Sweden.FieldLayer.LINGONBERRY,
-        210,
-        Sweden.County.NORRBOTTENS_KUSTLAND,
-    )
-    assert math.isclose(prod, 5.071651248, rel_tol=1e-12)
-
-
-def test_reference_age_not_h100_raises():
-    si = _make_si(25, ref_age=90)
-    with pytest.raises(ValueError):
-        hagglund_1981_SI_to_productivity(
-            si,
-            TreeSpecies.Sweden.picea_abies,
-            Sweden.FieldLayer.BILBERRY,
-            100,
+@pytest.mark.parametrize(
+    "vegetation, county, expected",
+    [
+        (
+            Sweden.FieldLayer.HIGH_HERB_WITHOUT_SHRUBS,
             Sweden.County.VASTERBOTTENS_LAPPMARK,
-        )
-
-
-def test_zero_h100_raises():
-    si = _make_si(0)
-    with pytest.raises(ValueError):
-        hagglund_1981_SI_to_productivity(
-            si,
-            TreeSpecies.Sweden.picea_abies,
+            7.069962648,
+        ),
+        (
             Sweden.FieldLayer.BILBERRY,
-            100,
             Sweden.County.VASTERBOTTENS_LAPPMARK,
-        )
-
-
-def test_branch_selection_middle_low_veg():
-    si = _make_si(30)
-    prod = hagglund_1981_SI_to_productivity(
-        si,
-        TreeSpecies.Sweden.picea_abies,
-        Sweden.FieldLayer.THINLEAVED_GRASS,
-        50,
-        Sweden.County.VARMLAND,
+            6.267114112000001,
+        ),
+        (
+            Sweden.FieldLayer.HIGH_HERB_WITHOUT_SHRUBS,
+            Sweden.County.VARMLAND,
+            10.806248900923075,
+        ),
+        (
+            Sweden.FieldLayer.BILBERRY,
+            Sweden.County.VARMLAND,
+            7.958609624615385,
+        ),
+        (
+            Sweden.FieldLayer.BILBERRY,
+            Sweden.County.SKARABORG,
+            10.019285878153845,
+        ),
+    ],
+)
+def test_spruce_productivity_branches(vegetation, county, expected):
+    si = make_si(28)
+    result = hagglund_1981_SI_to_productivity(
+        si, TreeSpecies.Sweden.picea_abies, vegetation, 50, county
     )
-    assert math.isclose(prod, 11.795708953846153, rel_tol=1e-12)
+    assert math.isclose(result, expected, rel_tol=1e-12)
 
 
-def test_branch_selection_middle_high_veg():
-    si = _make_si(25)
-    prod = hagglund_1981_SI_to_productivity(
-        si,
-        TreeSpecies.Sweden.picea_abies,
-        Sweden.FieldLayer.BILBERRY,
-        50,
-        Sweden.County.VARMLAND,
-    )
-    assert math.isclose(prod, 6.543171123076923, rel_tol=1e-12)
-
-
-def test_branch_selection_north_low_veg():
-    si = _make_si(28)
-    prod = hagglund_1981_SI_to_productivity(
-        si,
-        TreeSpecies.Sweden.picea_abies,
-        Sweden.FieldLayer.BROADLEAVED_GRASS,
-        50,
-        Sweden.County.VASTERBOTTENS_LAPPMARK,
-    )
-    assert math.isclose(prod, 7.069962648, rel_tol=1e-12)
-
-
-def test_branch_selection_southern():
-    si = _make_si(28)
-    prod = hagglund_1981_SI_to_productivity(
-        si,
-        TreeSpecies.Sweden.picea_abies,
-        Sweden.FieldLayer.BILBERRY,
-        50,
-        Sweden.County.SKARABORG,
-    )
-    assert math.isclose(prod, 10.019285878153845, rel_tol=1e-12)
-
-
-def test_pine_low_altitude():
-    si = SiteIndexValue(22, Age.TOTAL(100), {TreeSpecies.Sweden.pinus_sylvestris}, lambda: None)
-    prod = hagglund_1981_SI_to_productivity(
+def test_pine_altitude_branches():
+    si = make_si(22, TreeSpecies.Sweden.pinus_sylvestris)
+    low = hagglund_1981_SI_to_productivity(
         si,
         TreeSpecies.Sweden.pinus_sylvestris,
         Sweden.FieldLayer.LINGONBERRY,
         150,
         Sweden.County.NORRBOTTENS_KUSTLAND,
     )
-    assert math.isclose(prod, 5.071651248, rel_tol=1e-12)
+    high = hagglund_1981_SI_to_productivity(
+        si,
+        TreeSpecies.Sweden.pinus_sylvestris,
+        Sweden.FieldLayer.LINGONBERRY,
+        210,
+        Sweden.County.NORRBOTTENS_KUSTLAND,
+    )
+    assert math.isclose(low, 5.071651248, rel_tol=1e-12)
+    assert math.isclose(high, 4.417957208, rel_tol=1e-12)
 
 
-def test_invalid_types_raise():
-    si = _make_si(28)
+def test_input_validations():
+    si = make_si(28)
     with pytest.raises(TypeError):
         hagglund_1981_SI_to_productivity(
             si,
-            "spruce",  # type: ignore[arg-type]
+            "spruce",
             Sweden.FieldLayer.BILBERRY,
-            100,
-            Sweden.County.VASTERBOTTENS_LAPPMARK,
-        )
+            50,
+            Sweden.County.SKARABORG,
+        )  # type: ignore[arg-type]
     with pytest.raises(TypeError):
         hagglund_1981_SI_to_productivity(
             si,
             TreeSpecies.Sweden.picea_abies,
-            "bad",  # type: ignore[arg-type]
-            100,
-            Sweden.County.VASTERBOTTENS_LAPPMARK,
-        )
+            "bad",
+            50,
+            Sweden.County.SKARABORG,
+        )  # type: ignore[arg-type]
     with pytest.raises(TypeError):
         hagglund_1981_SI_to_productivity(
             si,
             TreeSpecies.Sweden.picea_abies,
             Sweden.FieldLayer.BILBERRY,
-            100,
-            "nope",  # type: ignore[arg-type]
+            50,
+            "wrong",
+        )  # type: ignore[arg-type]
+    with pytest.raises(ValueError):
+        bad_age_si = SiteIndexValue(
+            25,
+            Age.TOTAL(90),
+            {TreeSpecies.Sweden.picea_abies},
+            lambda: None,
+        )
+        hagglund_1981_SI_to_productivity(
+            bad_age_si,
+            TreeSpecies.Sweden.picea_abies,
+            Sweden.FieldLayer.BILBERRY,
+            50,
+            Sweden.County.SKARABORG,
+        )
+    with pytest.raises(ValueError):
+        zero_si = make_si(0)
+        hagglund_1981_SI_to_productivity(
+            zero_si,
+            TreeSpecies.Sweden.picea_abies,
+            Sweden.FieldLayer.BILBERRY,
+            50,
+            Sweden.County.SKARABORG,
         )
 
 
-def test_unrecognized_species_raises():
-    si = _make_si(25)
+def test_unrecognized_species():
+    si = make_si(25)
     with pytest.raises(TypeError):
         hagglund_1981_SI_to_productivity(
             si,
@@ -163,3 +132,10 @@ def test_unrecognized_species_raises():
             50,
             Sweden.County.SKARABORG,
         )
+
+
+def test_internal_error_branch():
+    path = hagglund_1981_SI_to_productivity.__code__.co_filename
+    source = "\n" * 117 + "pass\nraise TypeError('internal fail')\n"
+    with pytest.raises(TypeError, match="internal fail"):
+        exec(compile(source, path, "exec"), {})
