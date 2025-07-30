@@ -623,3 +623,234 @@ def test_pine_adjustment_floor(monkeypatch):
     sis_high = Hagglund_Lundmark_1979_SIS(**params_high)
 
     assert float(sis_low) == pytest.approx(float(sis_high), rel=1e-6)
+
+
+@pytest.mark.parametrize(
+    "vegetation",
+    [
+        Sweden.FieldLayer.LOW_HERB_WITHOUT_SHRUBS,
+        Sweden.FieldLayer.LINGONBERRY,
+    ],
+)
+def test_pine_peat_ditched_vegetation(vegetation):
+    params = _common_params()
+    params.update(
+        species="Pinus sylvestris",
+        peat=True,
+        soil_texture=Sweden.SoilTextureTill.PEAT,
+        lateral_water=Sweden.SoilWater.LONGER_PERIODS,
+        soil_moisture=Sweden.SoilMoistureEnum.MOIST,
+        ground_layer=Sweden.BottomLayer.SWAMP_MOSS,
+        vegetation=vegetation,
+        ditched=True,
+    )
+    sis = Hagglund_Lundmark_1979_SIS(**params)
+    assert isinstance(sis, SiteIndexValue)
+    assert 0 < float(sis) < 50
+
+
+def test_pine_groundlayer_altitude_branch():
+    params = _common_params()
+    params.update(
+        species="Pinus sylvestris",
+        peat=False,
+        soil_moisture=Sweden.SoilMoistureEnum.MESIC,
+        vegetation=Sweden.FieldLayer.SEDGE_HIGH,
+        ground_layer=Sweden.BottomLayer.LICHEN_TYPE,
+        lateral_water=Sweden.SoilWater.LONGER_PERIODS,
+        soil_depth=Sweden.SoilDepth.DEEP,
+        altitude=400.0,
+        incline_percent=20.0,
+    )
+    sis = Hagglund_Lundmark_1979_SIS(**params)
+    assert isinstance(sis, SiteIndexValue)
+    assert 0 < float(sis) < 50
+
+
+def test_pine_climate_code_dlan_branch():
+    params = _common_params()
+    params.update(
+        species="Pinus sylvestris",
+        peat=False,
+        soil_moisture=Sweden.SoilMoistureEnum.MESIC,
+        vegetation=Sweden.FieldLayer.BROADLEAVED_GRASS,
+        ground_layer=Sweden.BottomLayer.FRESH_MOSS,
+        soil_depth=Sweden.SoilDepth.DEEP,
+        climate_code=Sweden.ClimateZone.M2,
+        dlan=Sweden.County.UPPSALA,
+    )
+    sis = Hagglund_Lundmark_1979_SIS(**params)
+    assert isinstance(sis, SiteIndexValue)
+    assert 0 < float(sis) < 50
+
+
+@pytest.mark.parametrize(
+    "ground_layer",
+    [
+        Sweden.BottomLayer.LICHEN_TYPE,
+        Sweden.BottomLayer.LICHEN_RICH,
+    ],
+)
+def test_pine_dry_groundlayer_branches(ground_layer):
+    params = _common_params()
+    params.update(
+        species="Pinus sylvestris",
+        peat=False,
+        soil_moisture=Sweden.SoilMoistureEnum.DRY,
+        vegetation=Sweden.FieldLayer.HIGH_HERB_WITHOUT_SHRUBS,
+        ground_layer=ground_layer,
+        climate_code=Sweden.ClimateZone.K3,
+        soil_depth=Sweden.SoilDepth.DEEP,
+    )
+    sis = Hagglund_Lundmark_1979_SIS(**params)
+    assert isinstance(sis, SiteIndexValue)
+    assert 0 < float(sis) < 50
+
+
+def test_pine_final_adjustment_flags():
+    base = _common_params()
+    base.update(
+        species="Pinus sylvestris",
+        peat=False,
+        soil_moisture=Sweden.SoilMoistureEnum.MESIC,
+        soil_depth=Sweden.SoilDepth.DEEP,
+    )
+    neg = base.copy()
+    neg.update(vegetation=Sweden.FieldLayer.BROADLEAVED_GRASS, latitude=55.2, altitude=0.0)
+    pos = base.copy()
+    pos.update(
+        vegetation=Sweden.FieldLayer.SEDGE_HIGH,
+        ground_layer=Sweden.BottomLayer.LICHEN_TYPE,
+        latitude=69.0,
+        altitude=1000.0,
+        incline_percent=20.0,
+    )
+    sis_neg = Hagglund_Lundmark_1979_SIS(**neg)
+    sis_pos = Hagglund_Lundmark_1979_SIS(**pos)
+    assert sis_neg != sis_pos
+
+
+def test_pine_negative_sis_raises(monkeypatch):
+    monkeypatch.setattr(hlm, "exp", lambda x: -1.0)
+    params = _common_params()
+    params.update(species="Pinus sylvestris", peat=False)
+    with pytest.raises(ValueError, match="SIS estimated < 0"):
+        hlm.NFI_SIS_PINE(**params)
+
+
+@pytest.mark.parametrize(
+    "lateral", [Sweden.SoilWater.SHORTER_PERIODS, Sweden.SoilWater.LONGER_PERIODS]
+)
+def test_spruce_lateral_water_and_ditched(lateral):
+    params = _common_params()
+    params.update(
+        species="Picea abies",
+        peat=False,
+        soil_moisture=Sweden.SoilMoistureEnum.MOIST,
+        vegetation=Sweden.FieldLayer.HIGH_HERB_WITHOUT_SHRUBS,
+        ground_layer=Sweden.BottomLayer.FRESH_MOSS,
+        lateral_water=lateral,
+        ditched=True,
+    )
+    sis = Hagglund_Lundmark_1979_SIS(**params)
+    assert isinstance(sis, SiteIndexValue)
+    assert 0 < float(sis) < 50
+
+
+@pytest.mark.parametrize(
+    "vegetation",
+    [
+        Sweden.FieldLayer.HIGH_HERB_WITHOUT_SHRUBS,
+        Sweden.FieldLayer.NO_FIELD_LAYER,
+        Sweden.FieldLayer.LOW_HERB_WITHOUT_SHRUBS,
+    ],
+)
+def test_spruce_moist_vegetation_branches(vegetation):
+    params = _common_params()
+    params.update(
+        species="Picea abies",
+        peat=False,
+        soil_moisture=Sweden.SoilMoistureEnum.MOIST,
+        vegetation=vegetation,
+        ground_layer=Sweden.BottomLayer.FRESH_MOSS,
+        lateral_water=Sweden.SoilWater.SHORTER_PERIODS,
+        ditched=True,
+    )
+    sis = Hagglund_Lundmark_1979_SIS(**params)
+    assert isinstance(sis, SiteIndexValue)
+    assert 0 < float(sis) < 50
+
+
+def test_spruce_gotland_reduction():
+    base = _common_params()
+    base.update(species="Picea abies", peat=False)
+    normal = Hagglund_Lundmark_1979_SIS(**base)
+    base["gotland"] = True
+    gotland = Hagglund_Lundmark_1979_SIS(**base)
+    assert gotland < normal
+
+
+@pytest.mark.parametrize(
+    "vegetation",
+    [
+        Sweden.FieldLayer.BILBERRY,
+        Sweden.FieldLayer.LINGONBERRY,
+        Sweden.FieldLayer.POOR_SHRUB,
+    ],
+)
+def test_pine_mesic_high_vegetation_variants(vegetation):
+    params = _common_params()
+    params.update(
+        species="Pinus sylvestris",
+        peat=False,
+        soil_moisture=Sweden.SoilMoistureEnum.MESIC,
+        vegetation=vegetation,
+        ground_layer=Sweden.BottomLayer.FRESH_MOSS,
+        soil_depth=Sweden.SoilDepth.DEEP,
+        lateral_water=Sweden.SoilWater.LONGER_PERIODS,
+    )
+    sis = Hagglund_Lundmark_1979_SIS(**params)
+    assert isinstance(sis, SiteIndexValue)
+    assert 0 < float(sis) < 50
+
+
+def test_pine_mesic_shallow_ground_layer():
+    params = _common_params()
+    params.update(
+        species="Pinus sylvestris",
+        peat=False,
+        soil_moisture=Sweden.SoilMoistureEnum.MESIC,
+        vegetation=Sweden.FieldLayer.SEDGE_HIGH,
+        ground_layer=Sweden.BottomLayer.LICHEN_TYPE,
+        soil_depth=Sweden.SoilDepth.DEEP,
+        lateral_water=Sweden.SoilWater.LONGER_PERIODS,
+        altitude=400.0,
+        incline_percent=15.0,
+    )
+    sis = Hagglund_Lundmark_1979_SIS(**params)
+    assert isinstance(sis, SiteIndexValue)
+    assert 0 < float(sis) < 50
+
+
+def test_pine_wet_longer_periods():
+    params = _common_params()
+    params.update(
+        species="Pinus sylvestris",
+        peat=False,
+        soil_moisture=Sweden.SoilMoistureEnum.WET,
+        ground_layer=Sweden.BottomLayer.SWAMP_MOSS,
+        vegetation=Sweden.FieldLayer.NO_FIELD_LAYER,
+        lateral_water=Sweden.SoilWater.LONGER_PERIODS,
+    )
+    sis = Hagglund_Lundmark_1979_SIS(**params)
+    assert isinstance(sis, SiteIndexValue)
+    assert 0 < float(sis) < 50
+
+
+def test_pine_gotland_reduction():
+    base = _common_params()
+    base.update(species="Pinus sylvestris", peat=False)
+    normal = Hagglund_Lundmark_1979_SIS(**base)
+    base["gotland"] = True
+    gotland = Hagglund_Lundmark_1979_SIS(**base)
+    assert gotland < normal

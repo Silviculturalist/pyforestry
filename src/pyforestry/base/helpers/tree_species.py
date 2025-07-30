@@ -8,7 +8,7 @@ given region.  For example ``TreeSpecies.Sweden.pinus_sylvestris`` returns the
 """
 
 from dataclasses import dataclass
-from typing import Any, Dict, Iterator, List, Union
+from typing import Any, ClassVar, Dict, Iterator, List, Union
 
 # --------------------------------------------------------------------
 # Global Taxonomy: Genera and Species (renamed to TreeName)
@@ -278,7 +278,7 @@ class RegionalTreeSpecies:
 class TreeSpecies:
     """Namespace exposing regional groups of tree species."""
 
-    pass
+    Sweden: ClassVar["RegionalTreeSpecies"]
 
 
 def parse_tree_species(species_str: Union[str, TreeName]) -> TreeName:
