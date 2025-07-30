@@ -98,8 +98,6 @@ def NFI_SIS_SPRUCE(**kwargs) -> float:
     climate_code = enum_code(kwargs.get("climate_code"))
     lateral_water = enum_code(kwargs.get("lateral_water"))
     soil_depth = enum_code(kwargs.get("soil_depth"))
-    incline_percent = kwargs.get("incline_percent")
-    aspect = kwargs.get("aspect")
     ditched = kwargs.get("ditched")
     peat = kwargs.get("peat")
     gotland = kwargs.get("gotland")
@@ -200,7 +198,8 @@ def NFI_SIS_SPRUCE(**kwargs) -> float:
 
     # This cannot exist, check with NFI
     # First clause is changeToPine and peat, which are set together.
-    # Later clauses check changeToPine and combinations of New_soil_Moisture which **is not**  1, which is also set at the same time.
+    # Later clauses check changeToPine and combinations of New_soil_Moisture which **is not**
+    # 1, which is also set at the same time.
     # if changeToPine and peat:
     #    FGRAN = 5.03077 - 0.03627 * (latitude - 60.0)
     #    if nfi_adjustments:  # Always apply close to coast and norrland for same as NFI results.
@@ -222,7 +221,8 @@ def NFI_SIS_SPRUCE(**kwargs) -> float:
     #    if New_Vegetation in [7, 8, 9, 14]:  # no field layer, grasses and cowberry.
     #        FGRAN += 0.13377
 
-    #    elif changeToPine and New_SoilMoisture == 2 and New_Vegetation > 9 and New_GroundLayer > 3:
+    #    elif changeToPine and New_SoilMoisture == 2 and ...
+    #       New_Vegetation > 9 and New_GroundLayer > 3:
     #        FGRAN = (
     #            5.30943
     #            - 0.01716 * (latitude - 60.0 + abs(latitude - 60.0))
@@ -241,7 +241,8 @@ def NFI_SIS_SPRUCE(**kwargs) -> float:
     #        if New_Vegetation == 16:  # poor shrubs..
     #            FGRAN -= 0.07775
     #
-    #    elif changeToPine and New_SoilMoisture == 2 and New_Vegetation > 9 and New_GroundLayer <= 3:
+    #    elif changeToPine and New_SoilMoisture == 2 and New_Vegetation > 9 ...
+    #        and New_GroundLayer <= 3:
     #        FGRAN = 5.21803 - 0.01193 * (latitude - 60.0 + abs(latitude - 60.0))
     #        if New_LateralWater in [1, 2]:
     #            FGRAN -= 0.000000593 * (altitude**2)
