@@ -374,3 +374,178 @@ def test_numeric_si_requires_dominant_species():
             longitude=15,
             altitude=200,
         )
+
+
+def _si_spruce():
+    return SiteIndexValue(
+        25,
+        Age.TOTAL(100),
+        {TreeSpecies.Sweden.picea_abies},
+        Hagglund_1970.height_trajectory.picea_abies.northern_sweden,
+    )
+
+
+def _si_pine():
+    return SiteIndexValue(
+        25,
+        Age.TOTAL(100),
+        {TreeSpecies.Sweden.pinus_sylvestris},
+        Hagglund_1970.height_trajectory.pinus_sylvestris.sweden,
+    )
+
+
+def test_validate_site_index_type_error():
+    with pytest.raises(TypeError):
+        Petersson1999._validate_site_index(5)
+
+
+def test_validate_site_index_pine():
+    si = _si_pine()
+    assert Petersson1999._validate_site_index(si) is TreeSpecies.Sweden.pinus_sylvestris
+
+
+def test_si_numeric_invalid_dominant_species():
+    with pytest.raises(ValueError):
+        Petersson1999.biomass(
+            TreeSpecies.Sweden.picea_abies,
+            Diameter_cm(20),
+            18,
+            Age.DBH(40),
+            25.0,
+            five_years_radial_increment_mm=4,
+            peat=False,
+            latitude=60,
+            longitude=15,
+            altitude=200,
+            dominant_species=TreeSpecies.Sweden.betula_pendula,
+        )
+
+
+@pytest.mark.parametrize(
+    "func,si",
+    [
+        (Petersson1999.spruce, _si_spruce()),
+        (Petersson1999.pine, _si_spruce()),
+        (Petersson1999.birch, _si_spruce()),
+    ],
+)
+def test_measurement_height_warning(func, si):
+    with pytest.warns(UserWarning):
+        func(
+            Diameter_cm(20, measurement_height_m=1.4),
+            18,
+            Age.DBH(40),
+            si,
+            five_years_radial_increment_mm=4,
+            peat=False,
+            latitude=60,
+            longitude=15,
+            altitude=200,
+        )
+
+
+@pytest.mark.parametrize(
+    "func,si",
+    [
+        (Petersson1999.spruce, _si_spruce()),
+        (Petersson1999.pine, _si_spruce()),
+        (Petersson1999.birch, _si_spruce()),
+    ],
+)
+def test_diameter_over_bark_required(func, si):
+    with pytest.raises(ValueError):
+        func(
+            Diameter_cm(20, over_bark=False),
+            18,
+            Age.DBH(40),
+            si,
+            five_years_radial_increment_mm=4,
+            peat=False,
+            latitude=60,
+            longitude=15,
+            altitude=200,
+        )
+
+
+@pytest.mark.parametrize(
+    "func,si",
+    [
+        (Petersson1999.spruce, _si_spruce()),
+        (Petersson1999.pine, _si_spruce()),
+        (Petersson1999.birch, _si_spruce()),
+    ],
+)
+def test_age_measurement_code_check(func, si):
+    with pytest.raises(TypeError):
+        func(
+            Diameter_cm(20),
+            18,
+            Age.TOTAL(40),
+            si,
+            five_years_radial_increment_mm=4,
+            peat=False,
+            latitude=60,
+            longitude=15,
+            altitude=200,
+        )
+
+
+def test_age_as_float():
+    si = _si_spruce()
+    result = Petersson1999.spruce(
+        20.0,
+        18,
+        40.0,
+        si,
+        five_years_radial_increment_mm=4,
+        peat=False,
+        latitude=60,
+        longitude=15,
+        altitude=200,
+    )
+    expected = spruce_expected(
+        diameter_cm=20.0,
+        height_m=18,
+        age_at_breast_height=40.0,
+        SI=si,
+        five_years_radial_increment_mm=4,
+        peat=False,
+        latitude=60,
+        longitude=15,
+        altitude=200,
+        dominant_species=TreeSpecies.Sweden.picea_abies,
+    )
+    for k, v in expected.items():
+        assert result[k] == pytest.approx(v)
+
+
+def test_species_type_check():
+    with pytest.raises(TypeError):
+        Petersson1999.biomass(
+            1,
+            Diameter_cm(20),
+            18,
+            Age.DBH(40),
+            _si_spruce(),
+            five_years_radial_increment_mm=4,
+            peat=False,
+            latitude=60,
+            longitude=15,
+            altitude=200,
+        )
+
+
+def test_unsupported_species():
+    with pytest.raises(ValueError):
+        Petersson1999.biomass(
+            TreeSpecies.Sweden.quercus_robur,
+            Diameter_cm(20),
+            18,
+            Age.DBH(40),
+            _si_spruce(),
+            five_years_radial_increment_mm=4,
+            peat=False,
+            latitude=60,
+            longitude=15,
+            altitude=200,
+        )
