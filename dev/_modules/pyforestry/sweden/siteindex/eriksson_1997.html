@@ -137,6 +137,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../notebooks/tree_species_intro.html">
     Tree species basics
   </a>
@@ -156,13 +163,23 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
     Marklund biomass with SweTimber
   </a>
 </li>
 
+                </ul>
+            </li>
+            
   </ul>
 </nav></div>
       
@@ -257,6 +274,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../api/modules.html">
     pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../helpers_overview.html">
+    Helpers Overview
   </a>
 </li>
 
@@ -386,7 +410,9 @@
                 <article class="bd-article">
                   
   <h1>Source code for pyforestry.sweden.siteindex.eriksson_1997</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span></span><span class="sd">&quot;&quot;&quot;Site index function for birch from Eriksson et al. (1997).&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
 
@@ -408,11 +434,14 @@
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        dominant_height (float): Dominant height of the stand (meters).</span>
-<span class="sd">        age (Union[float, AgeMeasurement]): Age of the stand at breast height (years). Must be float/int or Age.DBH.</span>
-<span class="sd">        age2 (Union[float, AgeMeasurement]): Target age at breast height (years). Must be float/int or Age.DBH.</span>
+<span class="sd">        age (Union[float, AgeMeasurement]): Age of the stand at breast height (years).</span>
+<span class="sd">            Must be float/int or Age.DBH.</span>
+<span class="sd">        age2 (Union[float, AgeMeasurement]): Target age at breast height (years).</span>
+<span class="sd">            Must be float/int or Age.DBH.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        SiteIndexValue: Estimated dominant height (meters) at age2 wrapped in a SiteIndexValue object.</span>
+<span class="sd">        SiteIndexValue: Estimated dominant height (meters) at age2</span>
+<span class="sd">            wrapped in a SiteIndexValue object.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        Warning: If the input ages are outside the range of suitability (10 to 90 years).</span>
@@ -420,12 +449,14 @@
 
 <span class="sd">    References:</span>
 <span class="sd">        Eriksson, H., Johansson, U., Kiviste, A. (1997).</span>
-<span class="sd">        &quot;A site-index model for pure and mixed stands of Betula pendula and Betula pubescens in Sweden.&quot;</span>
+<span class="sd">        &quot;A site-index model for pure and mixed stands of</span>
+<span class="sd">        Betula pendula and Betula pubescens in Sweden.&quot;</span>
 <span class="sd">        Scandinavian Journal of Forest Research, 12:2, pp. 149-156.</span>
 <span class="sd">        DOI: https://doi.org/10.1080/02827589709355396</span>
 
 <span class="sd">    Notes:</span>
-<span class="sd">        - Suitable for Birch stands of cultivated origin between ages 10 and 90 years (breast height age).</span>
+<span class="sd">        - Suitable for Birch stands of cultivated origin between ages 10 and 90 years (age at</span>
+<span class="sd">            breast height).</span>
 <span class="sd">        - Requires breast height age (Age.DBH).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -456,11 +487,13 @@
     <span class="c1"># Use age_val and age2_val</span>
     <span class="k">if</span> <span class="n">age_val</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="ow">or</span> <span class="n">age2_val</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="s2">&quot;Suitable for cultivated stands of Birch between breast height ages of 10 and 90.&quot;</span>
+            <span class="s2">&quot;Suitable for cultivated stands of Birch between breast height ages of 10 and 90.&quot;</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="k">if</span> <span class="n">age_val</span> <span class="o">&gt;</span> <span class="mi">90</span> <span class="ow">or</span> <span class="n">age2_val</span> <span class="o">&gt;</span> <span class="mi">90</span><span class="p">:</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="s2">&quot;Suitable for cultivated stands of Birch between breast height ages of 10 and 90.&quot;</span>
+            <span class="s2">&quot;Suitable for cultivated stands of Birch between breast height ages of 10 and 90.&quot;</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
         <span class="p">)</span>
 
     <span class="c1"># Model parameters</span>

@@ -137,6 +137,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../notebooks/tree_species_intro.html">
     Tree species basics
   </a>
@@ -156,13 +163,23 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
     Marklund biomass with SweTimber
   </a>
 </li>
 
+                </ul>
+            </li>
+            
   </ul>
 </nav></div>
       
@@ -257,6 +274,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../api/modules.html">
     pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../helpers_overview.html">
+    Helpers Overview
   </a>
 </li>
 
@@ -386,7 +410,7 @@
                 <article class="bd-article">
                   
   <h1>Source code for pyforestry.sweden.siteindex.johansson_1999</h1><div class="highlight"><pre>
-<span></span><span class="c1"># Johansson_1999.py</span>
+<span></span><span class="sd">&quot;&quot;&quot;Site index functions for alder based on Johansson (1999).&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
@@ -409,14 +433,17 @@
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        dominant_height (float): Dominant height of the stand (meters).</span>
-<span class="sd">        age (Union[float, AgeMeasurement]): Total age of the stand (years). Must be float/int or Age.TOTAL.</span>
-<span class="sd">        age2 (Union[float, AgeMeasurement]): Target age for output height (years). Must be float/int or Age.TOTAL.</span>
+<span class="sd">        age (Union[float, AgeMeasurement]): Total age of the stand (years).</span>
+<span class="sd">            Must be float/int or Age.TOTAL.</span>
+<span class="sd">        age2 (Union[float, AgeMeasurement]): Target age for output height (years).</span>
+<span class="sd">            Must be float/int or Age.TOTAL.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        SiteIndexValue: Dominant height at age2 (meters) wrapped in a SiteIndexValue object.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        Warning: If the input ages exceed 100 years, as the model is suitable for stands under 100 years.</span>
+<span class="sd">        Warning: If the input ages exceed 100 years, as the model is</span>
+<span class="sd">            suitable for stands under 100 years.</span>
 <span class="sd">        TypeError: If age or age2 are not float/int or AgeMeasurement with Age.TOTAL code.</span>
 
 <span class="sd">    References:</span>
@@ -449,7 +476,7 @@
 
     <span class="c1"># Warn if ages exceed suitability</span>
     <span class="k">if</span> <span class="n">age_val</span> <span class="o">&gt;</span> <span class="mi">100</span> <span class="ow">or</span> <span class="n">age2_val</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Suitable for stands of Common Alder under age of 100.&quot;</span><span class="p">)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Suitable for stands of Common Alder under age of 100.&quot;</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
     <span class="c1"># Model parameters</span>
     <span class="n">param_asi</span> <span class="o">=</span> <span class="mi">7</span>
@@ -490,14 +517,17 @@
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        dominant_height (float): Dominant height of the stand (meters).</span>
-<span class="sd">        age (Union[float, AgeMeasurement]): Total age of the stand (years). Must be float/int or Age.TOTAL.</span>
-<span class="sd">        age2 (Union[float, AgeMeasurement]): Target age for output height (years). Must be float/int or Age.TOTAL.</span>
+<span class="sd">        age (Union[float, AgeMeasurement]): Total age of the stand (years).</span>
+<span class="sd">            Must be float/int or Age.TOTAL.</span>
+<span class="sd">        age2 (Union[float, AgeMeasurement]): Target age for output height (years).</span>
+<span class="sd">            Must be float/int or Age.TOTAL.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        SiteIndexValue: Dominant height at age2 (meters) wrapped in a SiteIndexValue object.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        Warning: If the input ages exceed 70 years, as the model is suitable for stands under 70 years.</span>
+<span class="sd">        Warning: If the input ages exceed 70 years, as the model is</span>
+<span class="sd">            suitable for stands under 70 years.</span>
 <span class="sd">        TypeError: If age or age2 are not float/int or AgeMeasurement with Age.TOTAL code.</span>
 
 <span class="sd">    References:</span>
@@ -530,7 +560,7 @@
 
     <span class="c1"># Warn if ages exceed suitability</span>
     <span class="k">if</span> <span class="n">age_val</span> <span class="o">&gt;</span> <span class="mi">70</span> <span class="ow">or</span> <span class="n">age2_val</span> <span class="o">&gt;</span> <span class="mi">70</span><span class="p">:</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Suitable for stands of Grey Alder under age of 70.&quot;</span><span class="p">)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Suitable for stands of Grey Alder under age of 70.&quot;</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
     <span class="c1"># Model parameters</span>
     <span class="n">param_asi</span> <span class="o">=</span> <span class="mi">7</span>

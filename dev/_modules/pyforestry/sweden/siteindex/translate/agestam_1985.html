@@ -137,6 +137,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../../notebooks/tree_species_intro.html">
     Tree species basics
   </a>
@@ -156,13 +163,23 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../../../notebooks/marklund_swetimber_demo.html">
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../notebooks/marklund_swetimber_demo.html">
     Marklund biomass with SweTimber
   </a>
 </li>
 
+                </ul>
+            </li>
+            
   </ul>
 </nav></div>
       
@@ -257,6 +274,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../../api/modules.html">
     pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../helpers_overview.html">
+    Helpers Overview
   </a>
 </li>
 
@@ -386,9 +410,12 @@
                 <article class="bd-article">
                   
   <h1>Source code for pyforestry.sweden.siteindex.translate.agestam_1985</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Utility functions translating site index between species.&quot;&quot;&quot;</span>
+
+
 <div class="viewcode-block" id="agestam_1985_si_translation_pine_to_birch">
 <a class="viewcode-back" href="../../../../../api/pyforestry.sweden.siteindex.translate.html#pyforestry.sweden.siteindex.translate.agestam_1985.agestam_1985_si_translation_pine_to_birch">[docs]</a>
-<span></span><span class="k">def</span><span class="w"> </span><span class="nf">agestam_1985_si_translation_pine_to_birch</span><span class="p">(</span><span class="n">si_pine</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">agestam_1985_si_translation_pine_to_birch</span><span class="p">(</span><span class="n">si_pine</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Translate SI H100 for Pine to Birch according to Hägglund (1974), from Agestam (1985).</span>
 
@@ -402,8 +429,9 @@
 <span class="sd">        float: Site index (SI) H100 for Birch in meters.</span>
 
 <span class="sd">    Reference:</span>
-<span class="sd">        Agestam, E. (1985). &quot;A growth simulator for mixed stands of pine, spruce, and birch in Sweden.&quot;</span>
-<span class="sd">        Diss. Swedish University of Agricultural Sciences. Report no. 15. Dept. of Forest Yield Research.</span>
+<span class="sd">        Agestam, E. (1985). &quot;A growth simulator for mixed stands of pine, spruce, and birch in</span>
+<span class="sd">        Sweden.&quot; Diss. Swedish University of Agricultural Sciences.</span>
+<span class="sd">        Report no. 15. Dept. of Forest Yield Research.</span>
 <span class="sd">        ISBN 91-576-2528-x. Garpenberg, Sweden; page 79.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">((</span><span class="mf">0.736</span> <span class="o">*</span> <span class="p">(</span><span class="n">si_pine</span> <span class="o">*</span> <span class="mi">10</span><span class="p">))</span> <span class="o">-</span> <span class="mf">21.1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span></div>
@@ -426,8 +454,9 @@
 <span class="sd">        float: Site index (SI) H100 for Birch in meters.</span>
 
 <span class="sd">    Reference:</span>
-<span class="sd">        Agestam, E. (1985). &quot;A growth simulator for mixed stands of pine, spruce, and birch in Sweden.&quot;</span>
-<span class="sd">        Diss. Swedish University of Agricultural Sciences. Report no. 15. Dept. of Forest Yield Research.</span>
+<span class="sd">        Agestam, E. (1985). &quot;A growth simulator for mixed stands of pine, spruce, and birch in</span>
+<span class="sd">        Sweden.&quot; Diss. Swedish University of Agricultural Sciences.</span>
+<span class="sd">        Report no. 15. Dept. of Forest Yield Research.</span>
 <span class="sd">        ISBN 91-576-2528-x. Garpenberg, Sweden; page 79.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">((</span><span class="mf">0.382</span> <span class="o">*</span> <span class="p">(</span><span class="n">si_spruce</span> <span class="o">*</span> <span class="mi">10</span><span class="p">))</span> <span class="o">+</span> <span class="mf">75.8</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span></div>

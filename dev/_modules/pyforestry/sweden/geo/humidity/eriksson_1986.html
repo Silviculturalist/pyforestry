@@ -137,6 +137,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../../notebooks/tree_species_intro.html">
     Tree species basics
   </a>
@@ -156,13 +163,23 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../../../notebooks/marklund_swetimber_demo.html">
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../notebooks/marklund_swetimber_demo.html">
     Marklund biomass with SweTimber
   </a>
 </li>
 
+                </ul>
+            </li>
+            
   </ul>
 </nav></div>
       
@@ -257,6 +274,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../../api/modules.html">
     pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../helpers_overview.html">
+    Helpers Overview
   </a>
 </li>
 
@@ -386,20 +410,24 @@
                 <article class="bd-article">
                   
   <h1>Source code for pyforestry.sweden.geo.humidity.eriksson_1986</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">importlib.resources</span><span class="w"> </span><span class="kn">import</span> <span class="n">as_file</span><span class="p">,</span> <span class="n">files</span>
+<span></span><span class="sd">&quot;&quot;&quot;Humidity lookup helper based on Eriksson (1986) data.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">importlib.resources</span><span class="w"> </span><span class="kn">import</span> <span class="n">as_file</span><span class="p">,</span> <span class="n">files</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Point</span>
 
 
 <div class="viewcode-block" id="eriksson_1986_humidity">
-<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.humidity.html#pyforestry.sweden.geo.humidity.eriksson_1986.eriksson_1986_humidity">[docs]</a>
+<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.humidity.html#pyforestry.sweden.geo.eriksson_1986_humidity">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">eriksson_1986_humidity</span><span class="p">(</span><span class="n">longitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">epsg</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4326</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Estimate humidity during the vegetation period for Swedish sites.</span>
 
-<span class="sd">    Source: Eriksson, B. (1986). &quot;Nederbörds- och humiditetsklimatet i Sverige under vegetationsperiod.&quot;</span>
-<span class="sd">            Sveriges Meteorologiska och Hydrologiska Institut (SMHI), rapporter i meteorologi och klimatologi (RMK) 46.</span>
+<span class="sd">    Source: Eriksson, B. (1986). &quot;Nederbörds- och humiditetsklimatet i Sverige under</span>
+<span class="sd">            vegetationsperiod.&quot;</span>
+<span class="sd">            Sveriges Meteorologiska och Hydrologiska Institut (SMHI), rapporter i meteorologi och</span>
+<span class="sd">            klimatologi (RMK) 46.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        latitude (float): Latitude in degrees.</span>

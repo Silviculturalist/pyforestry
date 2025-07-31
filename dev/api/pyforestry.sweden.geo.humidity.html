@@ -140,6 +140,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../notebooks/tree_species_intro.html">
     Tree species basics
   </a>
@@ -159,13 +166,23 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../notebooks/marklund_swetimber_demo.html">
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/marklund_swetimber_demo.html">
     Marklund biomass with SweTimber
   </a>
 </li>
 
+                </ul>
+            </li>
+            
   </ul>
 </nav></div>
       
@@ -267,6 +284,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../notebooks/tree_species_intro.html">
     Tree species basics
   </a>
@@ -347,10 +371,7 @@
 <li class="toctree-l4"><a class="reference internal" href="pyforestry.base.helpers.primitives.html">pyforestry.base.helpers.primitives package</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.base.pricelist.html">pyforestry.base.pricelist package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="pyforestry.base.pricelist.data.html">pyforestry.base.pricelist.data package</a></li>
-</ul>
-</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.pricelist.html">pyforestry.base.pricelist package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyforestry.base.taper.html">pyforestry.base.taper package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.base.timber.html">pyforestry.base.timber package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="pyforestry.base.timber.timber_base.html">pyforestry.base.timber.timber_base package</a></li>
@@ -373,6 +394,10 @@
 <li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.helpers.html">pyforestry.sweden.helpers package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.misc.html">pyforestry.sweden.misc package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.models.html">pyforestry.sweden.models package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.pricelist.html">pyforestry.sweden.pricelist package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.pricelist.data.html">pyforestry.sweden.pricelist.data package</a></li>
+</ul>
+</details></li>
 <li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html">pyforestry.sweden.site package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.siteindex.html">pyforestry.sweden.siteindex package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.sis.html">pyforestry.sweden.siteindex.sis package</a></li>
@@ -462,12 +487,15 @@
 </section>
 <section id="module-pyforestry.sweden.geo.humidity.eriksson_1986">
 <span id="pyforestry-sweden-geo-humidity-eriksson-1986-module"></span><h2>pyforestry.sweden.geo.humidity.eriksson_1986 module<a class="headerlink" href="#module-pyforestry.sweden.geo.humidity.eriksson_1986" title="Link to this heading">#</a></h2>
+<p>Humidity lookup helper based on Eriksson (1986) data.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.geo.humidity.eriksson_1986.eriksson_1986_humidity">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.geo.humidity.eriksson_1986.</span></span><span class="sig-name descname"><span class="pre">eriksson_1986_humidity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">longitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4326</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/geo/humidity/eriksson_1986.html#eriksson_1986_humidity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.geo.humidity.eriksson_1986.eriksson_1986_humidity" title="Link to this definition">#</a></dt>
 <dd><p>Estimate humidity during the vegetation period for Swedish sites.</p>
 <dl class="simple">
-<dt>Source: Eriksson, B. (1986). “Nederbörds- och humiditetsklimatet i Sverige under vegetationsperiod.”</dt><dd><p>Sveriges Meteorologiska och Hydrologiska Institut (SMHI), rapporter i meteorologi och klimatologi (RMK) 46.</p>
+<dt>Source: Eriksson, B. (1986). “Nederbörds- och humiditetsklimatet i Sverige under</dt><dd><p>vegetationsperiod.”
+Sveriges Meteorologiska och Hydrologiska Institut (SMHI), rapporter i meteorologi och
+klimatologi (RMK) 46.</p>
 </dd>
 </dl>
 <dl class="field-list simple">
@@ -490,6 +518,34 @@
 </section>
 <section id="module-pyforestry.sweden.geo.humidity">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pyforestry.sweden.geo.humidity" title="Link to this heading">#</a></h2>
+<p>Interface for humidity lookups used by Swedish site models.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.sweden.geo.humidity.eriksson_1986_humidity">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.geo.humidity.</span></span><span class="sig-name descname"><span class="pre">eriksson_1986_humidity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">longitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4326</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/geo/humidity/eriksson_1986.html#eriksson_1986_humidity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.geo.humidity.eriksson_1986_humidity" title="Link to this definition">#</a></dt>
+<dd><p>Estimate humidity during the vegetation period for Swedish sites.</p>
+<dl class="simple">
+<dt>Source: Eriksson, B. (1986). “Nederbörds- och humiditetsklimatet i Sverige under</dt><dd><p>vegetationsperiod.”
+Sveriges Meteorologiska och Hydrologiska Institut (SMHI), rapporter i meteorologi och
+klimatologi (RMK) 46.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>latitude</strong> (<em>float</em>) – Latitude in degrees.</p></li>
+<li><p><strong>longitude</strong> (<em>float</em>) – Longitude in degrees.</p></li>
+<li><p><strong>epsg</strong> (<em>int</em>) – Reference system. Default is 4326 (WGS84). For SWEREF99TM, use 3006.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Humidity during the vegetation period (mm).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 
@@ -545,7 +601,10 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.geo.humidity.eriksson_1986.eriksson_1986_humidity"><code class="docutils literal notranslate"><span class="pre">eriksson_1986_humidity()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.sweden.geo.humidity">Module contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.sweden.geo.humidity">Module contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.geo.humidity.eriksson_1986_humidity"><code class="docutils literal notranslate"><span class="pre">eriksson_1986_humidity()</span></code></a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 

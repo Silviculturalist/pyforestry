@@ -137,6 +137,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../notebooks/tree_species_intro.html">
     Tree species basics
   </a>
@@ -156,13 +163,23 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
     Marklund biomass with SweTimber
   </a>
 </li>
 
+                </ul>
+            </li>
+            
   </ul>
 </nav></div>
       
@@ -257,6 +274,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../api/modules.html">
     pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../helpers_overview.html">
+    Helpers Overview
   </a>
 </li>
 
@@ -386,7 +410,9 @@
                 <article class="bd-article">
                   
   <h1>Source code for pyforestry.sweden.geo.geo</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">importlib.resources</span><span class="w"> </span><span class="kn">import</span> <span class="n">as_file</span><span class="p">,</span> <span class="n">files</span>
+<span></span><span class="sd">&quot;&quot;&quot;Simple geographic utilities using Swedish shapefiles.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">importlib.resources</span><span class="w"> </span><span class="kn">import</span> <span class="n">as_file</span><span class="p">,</span> <span class="n">files</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
@@ -399,6 +425,8 @@
 <div class="viewcode-block" id="RetrieveGeoCode">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.geo.html#pyforestry.sweden.geo.geo.RetrieveGeoCode">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RetrieveGeoCode</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper methods for querying Swedish geographic data.&quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="RetrieveGeoCode.getDistanceToCoast">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.geo.html#pyforestry.sweden.geo.geo.RetrieveGeoCode.getDistanceToCoast">[docs]</a>
     <span class="nd">@staticmethod</span>
@@ -428,7 +456,8 @@
         <span class="k">if</span> <span class="n">coast_gdf</span><span class="o">.</span><span class="n">crs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">coast_gdf</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">to_epsg</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">4326</span><span class="p">:</span>
             <span class="n">coast_gdf</span> <span class="o">=</span> <span class="n">coast_gdf</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">epsg</span><span class="o">=</span><span class="mi">4326</span><span class="p">)</span>
 
-        <span class="c1"># Transform the input coordinates from the provided epsg to the internal metric CRS (EPSG:3857)</span>
+        <span class="c1"># Transform the input coordinates from the provided</span>
+        <span class="c1"># epsg to the internal metric CRS (EPSG:3857)</span>
         <span class="n">transformer</span> <span class="o">=</span> <span class="n">Transformer</span><span class="o">.</span><span class="n">from_crs</span><span class="p">(</span><span class="n">epsg</span><span class="p">,</span> <span class="mi">3857</span><span class="p">,</span> <span class="n">always_xy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">lon_metric</span><span class="p">,</span> <span class="n">lat_metric</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">lon</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">lat</span><span class="p">))</span>
         <span class="n">point_metric</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="n">lon_metric</span><span class="p">,</span> <span class="n">lat_metric</span><span class="p">)</span>
