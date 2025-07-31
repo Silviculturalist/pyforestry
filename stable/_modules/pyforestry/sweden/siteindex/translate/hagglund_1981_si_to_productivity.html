@@ -44,7 +44,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyforestry/sweden/siteindex/translate/hagglund_1981_si_to_productivity';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'stable';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             false;
@@ -137,6 +137,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../../notebooks/tree_species_intro.html">
     Tree species basics
   </a>
@@ -156,13 +163,23 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../../../notebooks/marklund_swetimber_demo.html">
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../notebooks/marklund_swetimber_demo.html">
     Marklund biomass with SweTimber
   </a>
 </li>
 
+                </ul>
+            </li>
+            
   </ul>
 </nav></div>
       
@@ -257,6 +274,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../../api/modules.html">
     pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../helpers_overview.html">
+    Helpers Overview
   </a>
 </li>
 
@@ -386,7 +410,14 @@
                 <article class="bd-article">
                   
   <h1>Source code for pyforestry.sweden.siteindex.translate.hagglund_1981_si_to_productivity</h1><div class="highlight"><pre>
-<span></span><span class="c1"># codefolder/MaximumAnnualIncrement.py (Modification)</span>
+<span></span><span class="sd">&quot;&quot;&quot;Translate H100 site index values to expected productivity.</span>
+
+<span class="sd">This module implements the smoothed equations from Hägglund (1981) to convert</span>
+<span class="sd">H100 estimates to mean annual volume growth at the time of culmination. The</span>
+<span class="sd">function :func:`hagglund_1981_SI_to_productivity` is the public entry point and</span>
+<span class="sd">accepts enumerated inputs for vegetation type, county and tree species.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.primitives</span><span class="w"> </span><span class="kn">import</span> <span class="n">SiteIndexValue</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.tree_species</span><span class="w"> </span><span class="kn">import</span> <span class="n">TreeName</span><span class="p">,</span> <span class="n">TreeSpecies</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.sweden.site.enums</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sweden</span>
@@ -465,7 +496,6 @@
 
     <span class="c1"># --- rest of the function remains the same ---</span>
     <span class="n">veg_code</span> <span class="o">=</span> <span class="n">vegetation</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span>
-    <span class="n">county_code</span> <span class="o">=</span> <span class="n">county</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span>  <span class="c1"># Get the integer code from the enum</span>
 
     <span class="n">F1</span> <span class="o">=</span> <span class="mf">0.72</span> <span class="o">+</span> <span class="p">(</span><span class="n">H100</span> <span class="o">/</span> <span class="mi">130</span><span class="p">)</span>
     <span class="n">F2</span> <span class="o">=</span> <span class="mf">0.70</span> <span class="o">+</span> <span class="p">(</span><span class="n">H100</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span>
@@ -473,15 +503,15 @@
 
     <span class="c1"># Determine function based on species, county code, vegetation code, and altitude</span>
     <span class="k">if</span> <span class="n">main_species</span> <span class="o">==</span> <span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">picea_abies</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">county_code</span> <span class="ow">in</span> <span class="n">NORTHERN_COUNTY_CODES</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">county</span> <span class="ow">in</span> <span class="n">NORTHERN_COUNTY_CODES</span><span class="p">:</span>
             <span class="n">fun</span> <span class="o">=</span> <span class="s2">&quot;d&quot;</span> <span class="k">if</span> <span class="n">veg_code</span> <span class="o">&lt;=</span> <span class="mi">9</span> <span class="k">else</span> <span class="s2">&quot;e&quot;</span>
-        <span class="k">elif</span> <span class="n">county_code</span> <span class="ow">in</span> <span class="n">MIDDLE_COUNTY_CODES</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">county</span> <span class="ow">in</span> <span class="n">MIDDLE_COUNTY_CODES</span><span class="p">:</span>
             <span class="n">fun</span> <span class="o">=</span> <span class="s2">&quot;b&quot;</span> <span class="k">if</span> <span class="n">veg_code</span> <span class="o">&lt;=</span> <span class="mi">9</span> <span class="k">else</span> <span class="s2">&quot;c&quot;</span>
         <span class="k">else</span><span class="p">:</span>  <span class="c1"># Southern Sweden assumed otherwise</span>
             <span class="n">fun</span> <span class="o">=</span> <span class="s2">&quot;a&quot;</span>
     <span class="k">elif</span> <span class="n">main_species</span> <span class="o">==</span> <span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">pinus_sylvestris</span><span class="p">:</span>
         <span class="c1"># For Pine: Northern Sweden with altitude &gt;= 200 meters</span>
-        <span class="n">fun</span> <span class="o">=</span> <span class="s2">&quot;g&quot;</span> <span class="k">if</span> <span class="n">county_code</span> <span class="ow">in</span> <span class="n">NORTHERN_COUNTY_CODES</span> <span class="ow">and</span> <span class="n">altitude</span> <span class="o">&gt;=</span> <span class="mi">200</span> <span class="k">else</span> <span class="s2">&quot;f&quot;</span>
+        <span class="n">fun</span> <span class="o">=</span> <span class="s2">&quot;g&quot;</span> <span class="k">if</span> <span class="n">county</span> <span class="ow">in</span> <span class="n">NORTHERN_COUNTY_CODES</span> <span class="ow">and</span> <span class="n">altitude</span> <span class="o">&gt;=</span> <span class="mi">200</span> <span class="k">else</span> <span class="s2">&quot;f&quot;</span>
 
     <span class="k">if</span> <span class="n">fun</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Use county label in error message for clarity</span>

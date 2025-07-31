@@ -44,7 +44,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyforestry/sweden/volume/johnsson_1953';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'stable';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             false;
@@ -137,6 +137,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../notebooks/tree_species_intro.html">
     Tree species basics
   </a>
@@ -156,13 +163,23 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
     Marklund biomass with SweTimber
   </a>
 </li>
 
+                </ul>
+            </li>
+            
   </ul>
 </nav></div>
       
@@ -257,6 +274,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../api/modules.html">
     pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../helpers_overview.html">
+    Helpers Overview
   </a>
 </li>
 
@@ -386,9 +410,12 @@
                 <article class="bd-article">
                   
   <h1>Source code for pyforestry.sweden.volume.johnsson_1953</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Volume equation for hybrid aspen from Johnsson (1953).&quot;&quot;&quot;</span>
+
+
 <div class="viewcode-block" id="johnsson_1953_volume_hybrid_aspen">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.volume.html#pyforestry.sweden.volume.johnsson_1953.johnsson_1953_volume_hybrid_aspen">[docs]</a>
-<span></span><span class="k">def</span><span class="w"> </span><span class="nf">johnsson_1953_volume_hybrid_aspen</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">johnsson_1953_volume_hybrid_aspen</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate stem volume for Hybrid Aspen based on Johnsson (1953).</span>
 
@@ -407,8 +434,8 @@
 <span class="sd">        Svenska skogsvårdsföreningens tidsskrift. 51:73-96.</span>
 
 <span class="sd">        Rytter, L., Stener, L.-G. (2014). &quot;Growth and thinning effects during a rotation period of</span>
-<span class="sd">        hybrid aspen in southern Sweden.&quot; Scandinavian Journal of Forest Research, Vol. 29, Issue 8,</span>
-<span class="sd">        pp. 747-756. DOI: https://doi.org/10.1080/02827581.2014.968202</span>
+<span class="sd">        hybrid aspen in southern Sweden.&quot; Scandinavian Journal of Forest Research, Vol. 29,</span>
+<span class="sd">        Issue 8, pp. 747-756. DOI: https://doi.org/10.1080/02827581.2014.968202</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Calculate volume in dm³</span>
     <span class="n">volume_dm3</span> <span class="o">=</span> <span class="p">(</span>

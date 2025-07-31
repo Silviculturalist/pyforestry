@@ -44,7 +44,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyforestry/sweden/siteindex/elfving_kiviste_1997';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'stable';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             false;
@@ -137,6 +137,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../notebooks/tree_species_intro.html">
     Tree species basics
   </a>
@@ -156,13 +163,23 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
     Marklund biomass with SweTimber
   </a>
 </li>
 
+                </ul>
+            </li>
+            
   </ul>
 </nav></div>
       
@@ -257,6 +274,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../api/modules.html">
     pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../helpers_overview.html">
+    Helpers Overview
   </a>
 </li>
 
@@ -386,7 +410,9 @@
                 <article class="bd-article">
                   
   <h1>Source code for pyforestry.sweden.siteindex.elfving_kiviste_1997</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span></span><span class="sd">&quot;&quot;&quot;Site index functions from Elfving &amp; Kiviste (1997).&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
 
@@ -416,8 +442,9 @@
 <span class="sd">        Warning: If the input ages are outside the range of suitability (10 to 80 years).</span>
 
 <span class="sd">    References:</span>
-<span class="sd">        Elfving, B., Kiviste, A. (1997). &quot;Construction of site index equations for Pinus sylvestris L.</span>
-<span class="sd">        using permanent plot data in Sweden.&quot; Forest Ecology and Management, Vol. 98, Issue 2, pp. 125-134.</span>
+<span class="sd">        Elfving, B., Kiviste, A. (1997). &quot;Construction of site index equations</span>
+<span class="sd">        for Pinus sylvestris L. using permanent plot data in Sweden.&quot;</span>
+<span class="sd">        Forest Ecology and Management, Vol. 98, Issue 2, pp. 125-134.</span>
 <span class="sd">        DOI: https://doi.org/10.1016/S0378-1127(97)00077-7</span>
 
 <span class="sd">    Notes:</span>
@@ -447,11 +474,13 @@
     <span class="c1"># Check for suitability of input ages</span>
     <span class="k">if</span> <span class="n">age</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="ow">or</span> <span class="n">age2</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="s2">&quot;Suitable for cultivated stands of Scots Pine between total ages of 10 and 80.&quot;</span>
+            <span class="s2">&quot;Suitable for cultivated stands of Scots Pine between total ages of 10 and 80.&quot;</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="k">if</span> <span class="n">age</span> <span class="o">&gt;</span> <span class="mi">80</span> <span class="ow">or</span> <span class="n">age2</span> <span class="o">&gt;</span> <span class="mi">80</span><span class="p">:</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="s2">&quot;Suitable for cultivated stands of Scots Pine between total ages of 10 and 80.&quot;</span>
+            <span class="s2">&quot;Suitable for cultivated stands of Scots Pine between total ages of 10 and 80.&quot;</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
         <span class="p">)</span>
 
     <span class="c1"># Parameters based on the model</span>

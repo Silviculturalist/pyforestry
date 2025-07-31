@@ -44,7 +44,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyforestry/sweden/siteindex/sis/hagglund_lundmark_1979';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'stable';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             false;
@@ -137,6 +137,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../../notebooks/tree_species_intro.html">
     Tree species basics
   </a>
@@ -156,13 +163,23 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../../../notebooks/marklund_swetimber_demo.html">
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../notebooks/marklund_swetimber_demo.html">
     Marklund biomass with SweTimber
   </a>
 </li>
 
+                </ul>
+            </li>
+            
   </ul>
 </nav></div>
       
@@ -257,6 +274,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../../api/modules.html">
     pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../helpers_overview.html">
+    Helpers Overview
   </a>
 </li>
 
@@ -386,7 +410,20 @@
                 <article class="bd-article">
                   
   <h1>Source code for pyforestry.sweden.siteindex.sis.hagglund_lundmark_1979</h1><div class="highlight"><pre>
-<span></span><span class="c1"># Version 0.90 2024-06-17</span>
+<span></span><span class="c1"># Version 0.91 2024-07-30</span>
+
+<span class="sd">&quot;&quot;&quot;Hägglund &amp; Lundmark (1979) site index estimation models.</span>
+
+<span class="sd">This module implements routines for estimating H100 (height at age 100) for</span>
+<span class="sd">Norway spruce and Scots pine stands in Sweden using the stand factor models</span>
+<span class="sd">described by Hägglund and Lundmark (1979).</span>
+
+<span class="sd">The original equations are reproduced together with various corrections used in</span>
+<span class="sd">the Swedish National Forest Inventory (NFI). The public entry point is</span>
+<span class="sd">``Hagglund_Lundmark_1979_SIS`` which dispatches to species specific helper</span>
+<span class="sd">functions.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="c1"># Estimate Site Index H100 for Spruce in Sweden by stand factors.</span>
@@ -488,8 +525,6 @@
     <span class="n">climate_code</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;climate_code&quot;</span><span class="p">))</span>
     <span class="n">lateral_water</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;lateral_water&quot;</span><span class="p">))</span>
     <span class="n">soil_depth</span> <span class="o">=</span> <span class="n">enum_code</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;soil_depth&quot;</span><span class="p">))</span>
-    <span class="n">incline_percent</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;incline_percent&quot;</span><span class="p">)</span>
-    <span class="n">aspect</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;aspect&quot;</span><span class="p">)</span>
     <span class="n">ditched</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ditched&quot;</span><span class="p">)</span>
     <span class="n">peat</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;peat&quot;</span><span class="p">)</span>
     <span class="n">gotland</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;gotland&quot;</span><span class="p">)</span>
@@ -588,83 +623,89 @@
         <span class="mi">9</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
     <span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">New_SoilTexture</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">changeToPine</span> <span class="ow">and</span> <span class="n">peat</span><span class="p">:</span>
-        <span class="n">FGRAN</span> <span class="o">=</span> <span class="mf">5.03077</span> <span class="o">-</span> <span class="mf">0.03627</span> <span class="o">*</span> <span class="p">(</span><span class="n">latitude</span> <span class="o">-</span> <span class="mf">60.0</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">nfi_adjustments</span><span class="p">:</span>  <span class="c1"># Always apply close to coast and norrland for same as NFI results.</span>
-            <span class="n">FGRAN</span> <span class="o">-=</span> <span class="mf">0.000000901</span> <span class="o">*</span> <span class="p">(</span><span class="n">altitude</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">FGRAN</span> <span class="o">-=</span> <span class="p">(</span>
-                <span class="mf">0.000000901</span> <span class="o">*</span> <span class="p">(</span><span class="n">altitude</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="o">~</span><span class="n">coast</span> <span class="o">*</span> <span class="n">limes_norrlandicus</span>
-            <span class="p">)</span>  <span class="c1"># Ordinary routine. No effect near coast north of Limes Norrlandicus.</span>
-        <span class="k">if</span> <span class="n">New_LateralWater</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="n">FGRAN</span> <span class="o">+=</span> <span class="mf">0.09195</span>
-        <span class="k">if</span> <span class="n">ditched</span><span class="p">:</span>
-            <span class="n">FGRAN</span> <span class="o">+=</span> <span class="mf">0.13622</span>
-        <span class="k">if</span> <span class="mi">2</span> <span class="o">&lt;=</span> <span class="n">New_GroundLayer</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">:</span>  <span class="c1"># Lichen-rich types, sphagnum and swamp-mosses.</span>
-            <span class="n">FGRAN</span> <span class="o">-=</span> <span class="mf">0.1497</span>
-        <span class="k">if</span> <span class="n">New_Vegetation</span> <span class="o">&lt;</span> <span class="mi">7</span><span class="p">:</span>  <span class="c1"># herb type.</span>
-            <span class="n">FGRAN</span> <span class="o">+=</span> <span class="mf">0.22273</span>
-        <span class="k">if</span> <span class="n">New_Vegetation</span> <span class="o">==</span> <span class="mi">13</span><span class="p">:</span>  <span class="c1"># bilberry type</span>
-            <span class="n">FGRAN</span> <span class="o">+=</span> <span class="mf">0.13997</span>
-        <span class="k">if</span> <span class="n">New_Vegetation</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">14</span><span class="p">]:</span>  <span class="c1"># no field layer, grasses and cowberry.</span>
-            <span class="n">FGRAN</span> <span class="o">+=</span> <span class="mf">0.13377</span>
+    <span class="c1"># This cannot exist, check with NFI</span>
+    <span class="c1"># First clause is changeToPine and peat, which are set together.</span>
+    <span class="c1"># Later clauses check changeToPine and combinations of New_soil_Moisture which **is not**</span>
+    <span class="c1"># 1, which is also set at the same time.</span>
+    <span class="c1"># if changeToPine and peat:</span>
+    <span class="c1">#    FGRAN = 5.03077 - 0.03627 * (latitude - 60.0)</span>
+    <span class="c1">#    if nfi_adjustments:  # Always apply close to coast and norrland for same as NFI results.</span>
+    <span class="c1">#        FGRAN -= 0.000000901 * (altitude**2)</span>
+    <span class="c1">#    else:</span>
+    <span class="c1">#        FGRAN -= (</span>
+    <span class="c1">#            0.000000901 * (altitude**2) * ~coast * limes_norrlandicus</span>
+    <span class="c1">#        )  # Ordinary routine. No effect near coast north of Limes Norrlandicus.</span>
+    <span class="c1">#    if New_LateralWater == 3:</span>
+    <span class="c1">#        FGRAN += 0.09195</span>
+    <span class="c1">#    if ditched:</span>
+    <span class="c1">#        FGRAN += 0.13622</span>
+    <span class="c1">#    if 2 &lt;= New_GroundLayer &lt;= 5:  # Lichen-rich types, sphagnum and swamp-mosses.</span>
+    <span class="c1">#        FGRAN -= 0.1497</span>
+    <span class="c1">#    if New_Vegetation &lt; 7:  # herb type.</span>
+    <span class="c1">#        FGRAN += 0.22273</span>
+    <span class="c1">#    if New_Vegetation == 13:  # bilberry type</span>
+    <span class="c1">#        FGRAN += 0.13997</span>
+    <span class="c1">#    if New_Vegetation in [7, 8, 9, 14]:  # no field layer, grasses and cowberry.</span>
+    <span class="c1">#        FGRAN += 0.13377</span>
 
-    <span class="k">elif</span> <span class="n">changeToPine</span> <span class="ow">and</span> <span class="n">New_SoilMoisture</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">New_Vegetation</span> <span class="o">&gt;</span> <span class="mi">9</span> <span class="ow">and</span> <span class="n">New_GroundLayer</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="n">FGRAN</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="mf">5.30943</span>
-            <span class="o">-</span> <span class="mf">0.01716</span> <span class="o">*</span> <span class="p">(</span><span class="n">latitude</span> <span class="o">-</span> <span class="mf">60.0</span> <span class="o">+</span> <span class="nb">abs</span><span class="p">(</span><span class="n">latitude</span> <span class="o">-</span> <span class="mf">60.0</span><span class="p">))</span>
-            <span class="o">-</span> <span class="mf">0.0039</span> <span class="o">*</span> <span class="p">(</span><span class="n">latitude</span> <span class="o">-</span> <span class="mf">60.0</span> <span class="o">-</span> <span class="nb">abs</span><span class="p">(</span><span class="n">latitude</span> <span class="o">-</span> <span class="mf">60.0</span><span class="p">))</span>
-            <span class="o">-</span> <span class="mf">0.000000678</span> <span class="o">*</span> <span class="p">(</span><span class="n">altitude</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-            <span class="o">-</span> <span class="mf">0.01243</span> <span class="o">*</span> <span class="p">(</span><span class="n">SoilTextureIndex</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-        <span class="p">)</span>
-        <span class="k">if</span> <span class="n">New_LateralWater</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="n">FGRAN</span> <span class="o">+=</span> <span class="mf">0.0488</span>
-        <span class="k">if</span> <span class="n">New_Vegetation</span> <span class="o">==</span> <span class="mi">13</span><span class="p">:</span>  <span class="c1"># bilberry</span>
-            <span class="n">FGRAN</span> <span class="o">+=</span> <span class="mf">0.09429</span>
-        <span class="k">if</span> <span class="n">New_Vegetation</span> <span class="o">==</span> <span class="mi">14</span><span class="p">:</span>  <span class="c1"># cowberry</span>
-            <span class="n">FGRAN</span> <span class="o">+=</span> <span class="mf">0.06167</span>
-        <span class="k">if</span> <span class="n">New_SoilDepth</span> <span class="o">==</span> <span class="n">deepsoil</span><span class="p">:</span>
-            <span class="n">FGRAN</span> <span class="o">+=</span> <span class="mf">0.1158</span>
-        <span class="k">if</span> <span class="n">New_Vegetation</span> <span class="o">==</span> <span class="mi">16</span><span class="p">:</span>  <span class="c1"># poor shrubs..</span>
-            <span class="n">FGRAN</span> <span class="o">-=</span> <span class="mf">0.07775</span>
+    <span class="c1">#    elif changeToPine and New_SoilMoisture == 2 and ...</span>
+    <span class="c1">#       New_Vegetation &gt; 9 and New_GroundLayer &gt; 3:</span>
+    <span class="c1">#        FGRAN = (</span>
+    <span class="c1">#            5.30943</span>
+    <span class="c1">#            - 0.01716 * (latitude - 60.0 + abs(latitude - 60.0))</span>
+    <span class="c1">#            - 0.0039 * (latitude - 60.0 - abs(latitude - 60.0))</span>
+    <span class="c1">#            - 0.000000678 * (altitude**2)</span>
+    <span class="c1">#            - 0.01243 * (SoilTextureIndex**2)</span>
+    <span class="c1">#        )</span>
+    <span class="c1">#        if New_LateralWater == 3:</span>
+    <span class="c1">#            FGRAN += 0.0488</span>
+    <span class="c1">#        if New_Vegetation == 13:  # bilberry</span>
+    <span class="c1">#            FGRAN += 0.09429</span>
+    <span class="c1">#        if New_Vegetation == 14:  # cowberry</span>
+    <span class="c1">#            FGRAN += 0.06167</span>
+    <span class="c1">#        if New_SoilDepth == deepsoil:</span>
+    <span class="c1">#            FGRAN += 0.1158</span>
+    <span class="c1">#        if New_Vegetation == 16:  # poor shrubs..</span>
+    <span class="c1">#            FGRAN -= 0.07775</span>
+    <span class="c1">#</span>
+    <span class="c1">#    elif changeToPine and New_SoilMoisture == 2 and New_Vegetation &gt; 9 ...</span>
+    <span class="c1">#        and New_GroundLayer &lt;= 3:</span>
+    <span class="c1">#        FGRAN = 5.21803 - 0.01193 * (latitude - 60.0 + abs(latitude - 60.0))</span>
+    <span class="c1">#        if New_LateralWater in [1, 2]:</span>
+    <span class="c1">#            FGRAN -= 0.000000593 * (altitude**2)</span>
+    <span class="c1">#        if New_LateralWater == 3:</span>
+    <span class="c1">#            FGRAN -= 0.000000355 * (altitude**2)</span>
+    <span class="c1">#        if New_SoilDepth == deepsoil:</span>
+    <span class="c1">#            FGRAN += 0.12454</span>
+    <span class="c1">#        if (</span>
+    <span class="c1">#            incline_percent &lt;= 10.0 and New_LateralWater == 1</span>
+    <span class="c1">#        ):  # if incline and seldom/never lateral groundwater..</span>
+    <span class="c1">#            FGRAN -= 0.06329</span>
+    <span class="c1">#        if (</span>
+    <span class="c1">#            altitude &gt;= 350</span>
+    <span class="c1">#            and incline_percent &gt; 10.0</span>
+    <span class="c1">#            and (aspect in range(0, 113) or aspect &gt; 337)</span>
+    <span class="c1">#        ):</span>
+    <span class="c1">#            FGRAN -= 0.07189</span>
+    <span class="c1">#        if New_GroundLayer == 1:</span>
+    <span class="c1">#            FGRAN -= 0.06842</span>
+    <span class="c1">#</span>
+    <span class="c1">#    elif changeToPine and New_SoilMoisture == 2 and New_Vegetation &lt;= 9:</span>
+    <span class="c1">#        FGRAN = (</span>
+    <span class="c1">#            5.34912</span>
+    <span class="c1">#            - 0.02037 * (latitude - 60.0 + abs(latitude - 60.0))</span>
+    <span class="c1">#            - 0.000000481 * (altitude**2)</span>
+    <span class="c1">#        )</span>
+    <span class="c1">#        if New_SoilDepth == deepsoil:</span>
+    <span class="c1">#            FGRAN += 0.11574</span>
+    <span class="c1">#        if climate_code == &quot;M2&quot;:  # and 14 &lt;= Dlan &lt;= 31: # S. sv.</span>
+    <span class="c1">#            FGRAN -= 0.16403</span>
+    <span class="c1">#        if New_Vegetation in [4, 5, 8, 9]:</span>
+    <span class="c1">#            FGRAN += 0.08376</span>
+    <span class="c1">#        if New_Vegetation in [1, 2]:</span>
+    <span class="c1">#            FGRAN += 0.12296</span>
 
-    <span class="k">elif</span> <span class="n">changeToPine</span> <span class="ow">and</span> <span class="n">New_SoilMoisture</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">New_Vegetation</span> <span class="o">&gt;</span> <span class="mi">9</span> <span class="ow">and</span> <span class="n">New_GroundLayer</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="n">FGRAN</span> <span class="o">=</span> <span class="mf">5.21803</span> <span class="o">-</span> <span class="mf">0.01193</span> <span class="o">*</span> <span class="p">(</span><span class="n">latitude</span> <span class="o">-</span> <span class="mf">60.0</span> <span class="o">+</span> <span class="nb">abs</span><span class="p">(</span><span class="n">latitude</span> <span class="o">-</span> <span class="mf">60.0</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">New_LateralWater</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
-            <span class="n">FGRAN</span> <span class="o">-=</span> <span class="mf">0.000000593</span> <span class="o">*</span> <span class="p">(</span><span class="n">altitude</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">New_LateralWater</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="n">FGRAN</span> <span class="o">-=</span> <span class="mf">0.000000355</span> <span class="o">*</span> <span class="p">(</span><span class="n">altitude</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">New_SoilDepth</span> <span class="o">==</span> <span class="n">deepsoil</span><span class="p">:</span>
-            <span class="n">FGRAN</span> <span class="o">+=</span> <span class="mf">0.12454</span>
-        <span class="k">if</span> <span class="p">(</span>
-            <span class="n">incline_percent</span> <span class="o">&lt;=</span> <span class="mf">10.0</span> <span class="ow">and</span> <span class="n">New_LateralWater</span> <span class="o">==</span> <span class="mi">1</span>
-        <span class="p">):</span>  <span class="c1"># if incline and seldom/never lateral groundwater..</span>
-            <span class="n">FGRAN</span> <span class="o">-=</span> <span class="mf">0.06329</span>
-        <span class="k">if</span> <span class="p">(</span>
-            <span class="n">altitude</span> <span class="o">&gt;=</span> <span class="mi">350</span>
-            <span class="ow">and</span> <span class="n">incline_percent</span> <span class="o">&gt;</span> <span class="mf">10.0</span>
-            <span class="ow">and</span> <span class="p">(</span><span class="n">aspect</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">113</span><span class="p">)</span> <span class="ow">or</span> <span class="n">aspect</span> <span class="o">&gt;</span> <span class="mi">337</span><span class="p">)</span>
-        <span class="p">):</span>
-            <span class="n">FGRAN</span> <span class="o">-=</span> <span class="mf">0.07189</span>
-        <span class="k">if</span> <span class="n">New_GroundLayer</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">FGRAN</span> <span class="o">-=</span> <span class="mf">0.06842</span>
-
-    <span class="k">elif</span> <span class="n">changeToPine</span> <span class="ow">and</span> <span class="n">New_SoilMoisture</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">New_Vegetation</span> <span class="o">&lt;=</span> <span class="mi">9</span><span class="p">:</span>
-        <span class="n">FGRAN</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="mf">5.34912</span>
-            <span class="o">-</span> <span class="mf">0.02037</span> <span class="o">*</span> <span class="p">(</span><span class="n">latitude</span> <span class="o">-</span> <span class="mf">60.0</span> <span class="o">+</span> <span class="nb">abs</span><span class="p">(</span><span class="n">latitude</span> <span class="o">-</span> <span class="mf">60.0</span><span class="p">))</span>
-            <span class="o">-</span> <span class="mf">0.000000481</span> <span class="o">*</span> <span class="p">(</span><span class="n">altitude</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-        <span class="p">)</span>
-        <span class="k">if</span> <span class="n">New_SoilDepth</span> <span class="o">==</span> <span class="n">deepsoil</span><span class="p">:</span>
-            <span class="n">FGRAN</span> <span class="o">+=</span> <span class="mf">0.11574</span>
-        <span class="k">if</span> <span class="n">climate_code</span> <span class="o">==</span> <span class="s2">&quot;M2&quot;</span><span class="p">:</span>  <span class="c1"># and 14 &lt;= Dlan &lt;= 31: # S. sv.</span>
-            <span class="n">FGRAN</span> <span class="o">-=</span> <span class="mf">0.16403</span>
-        <span class="k">if</span> <span class="n">New_Vegetation</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">]:</span>
-            <span class="n">FGRAN</span> <span class="o">+=</span> <span class="mf">0.08376</span>
-        <span class="k">if</span> <span class="n">New_Vegetation</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
-            <span class="n">FGRAN</span> <span class="o">+=</span> <span class="mf">0.12296</span>
-
-    <span class="k">elif</span> <span class="n">changeToPine</span> <span class="ow">and</span> <span class="n">New_SoilMoisture</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">changeToPine</span> <span class="ow">and</span> <span class="n">New_SoilMoisture</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">FGRAN</span> <span class="o">=</span> <span class="p">(</span>
             <span class="mf">5.44789</span>
             <span class="o">-</span> <span class="mf">0.01566</span> <span class="o">*</span> <span class="p">(</span><span class="n">latitude</span> <span class="o">-</span> <span class="mf">60.0</span> <span class="o">+</span> <span class="nb">abs</span><span class="p">(</span><span class="n">latitude</span> <span class="o">-</span> <span class="mf">60.0</span><span class="p">))</span>
@@ -684,26 +725,26 @@
         <span class="k">if</span> <span class="n">New_GroundLayer</span> <span class="o">&gt;=</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">New_Vegetation</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">13</span><span class="p">]:</span>
             <span class="n">FGRAN</span> <span class="o">+=</span> <span class="mf">0.0488</span>
 
-    <span class="k">elif</span> <span class="n">changeToPine</span> <span class="ow">and</span> <span class="n">New_SoilMoisture</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]:</span>
-        <span class="n">FGRAN</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="mf">5.46782</span>
-            <span class="o">-</span> <span class="mf">0.02013</span> <span class="o">*</span> <span class="p">(</span><span class="n">latitude</span> <span class="o">-</span> <span class="mf">60.0</span> <span class="o">+</span> <span class="nb">abs</span><span class="p">(</span><span class="n">latitude</span> <span class="o">-</span> <span class="mf">60.0</span><span class="p">))</span>
-            <span class="o">-</span> <span class="mf">0.01074</span> <span class="o">*</span> <span class="p">(</span><span class="n">SoilTextureIndex</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-        <span class="p">)</span>
-        <span class="k">if</span> <span class="n">New_LateralWater</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
-            <span class="n">FGRAN</span> <span class="o">-=</span> <span class="mf">0.01517</span> <span class="o">*</span> <span class="mf">0.0001</span> <span class="o">*</span> <span class="p">(</span><span class="n">altitude</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">New_LateralWater</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="n">FGRAN</span> <span class="o">-=</span> <span class="mf">0.00747</span> <span class="o">*</span> <span class="mf">0.0001</span> <span class="o">*</span> <span class="p">(</span><span class="n">altitude</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">New_Vegetation</span> <span class="o">&lt;=</span> <span class="mi">6</span><span class="p">:</span>
-            <span class="n">FGRAN</span> <span class="o">+=</span> <span class="mf">0.11585</span>
-        <span class="k">if</span> <span class="n">New_Vegetation</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">]:</span>
-            <span class="n">FGRAN</span> <span class="o">-=</span> <span class="mf">0.22358</span>
-        <span class="k">if</span> <span class="n">New_Vegetation</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">]:</span>
-            <span class="n">FGRAN</span> <span class="o">+=</span> <span class="mf">0.0770</span>
-        <span class="k">if</span> <span class="n">New_Vegetation</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mi">16</span><span class="p">]:</span>
-            <span class="n">FGRAN</span> <span class="o">-=</span> <span class="mf">0.0726</span>
-        <span class="k">if</span> <span class="n">ground_layer</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]:</span>
-            <span class="n">FGRAN</span> <span class="o">-=</span> <span class="mf">0.0730</span>
+    <span class="c1"># elif changeToPine and New_SoilMoisture in [3, 4, 5]:</span>
+    <span class="c1">#    FGRAN = (</span>
+    <span class="c1">#        5.46782</span>
+    <span class="c1">#        - 0.02013 * (latitude - 60.0 + abs(latitude - 60.0))</span>
+    <span class="c1">#        - 0.01074 * (SoilTextureIndex**2)</span>
+    <span class="c1">#    )</span>
+    <span class="c1">#    if New_LateralWater in [1, 2]:</span>
+    <span class="c1">#        FGRAN -= 0.01517 * 0.0001 * (altitude**2)</span>
+    <span class="c1">#    if New_LateralWater == 3:</span>
+    <span class="c1">#        FGRAN -= 0.00747 * 0.0001 * (altitude**2)</span>
+    <span class="c1">#    if New_Vegetation &lt;= 6:</span>
+    <span class="c1">#        FGRAN += 0.11585</span>
+    <span class="c1">#    if New_Vegetation in [10, 11, 12]:</span>
+    <span class="c1">#        FGRAN -= 0.22358</span>
+    <span class="c1">#    if New_Vegetation in [7, 8, 9, 13, 14]:</span>
+    <span class="c1">#        FGRAN += 0.0770</span>
+    <span class="c1">#    if New_Vegetation in [15, 16]:</span>
+    <span class="c1">#        FGRAN -= 0.0726</span>
+    <span class="c1">#    if ground_layer in [2, 3, 4, 5]:</span>
+    <span class="c1">#        FGRAN -= 0.0730</span>
 
     <span class="k">elif</span> <span class="n">peat</span><span class="p">:</span>
         <span class="n">FGRAN</span> <span class="o">=</span> <span class="p">(</span>

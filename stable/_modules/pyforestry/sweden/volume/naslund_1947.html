@@ -44,7 +44,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyforestry/sweden/volume/naslund_1947';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'stable';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             false;
@@ -137,6 +137,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../notebooks/tree_species_intro.html">
     Tree species basics
   </a>
@@ -156,13 +163,23 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
     Marklund biomass with SweTimber
   </a>
 </li>
 
+                </ul>
+            </li>
+            
   </ul>
 </nav></div>
       
@@ -257,6 +274,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../api/modules.html">
     pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../helpers_overview.html">
+    Helpers Overview
   </a>
 </li>
 
@@ -386,7 +410,9 @@
                 <article class="bd-article">
                   
   <h1>Source code for pyforestry.sweden.volume.naslund_1947</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+<span></span><span class="sd">&quot;&quot;&quot;Volume and form factor equations from Näslund (1947).&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.sweden.timber</span><span class="w"> </span><span class="kn">import</span> <span class="n">SweTimber</span>
 
@@ -394,10 +420,13 @@
 <div class="viewcode-block" id="NaslundVolume">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.volume.html#pyforestry.sweden.volume.naslund_1947.NaslundVolume">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">NaslundVolume</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stem volume equations for southern and northern Sweden.&quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="NaslundVolume.calculate">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.volume.html#pyforestry.sweden.volume.naslund_1947.NaslundVolume.calculate">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">calculate</span><span class="p">(</span><span class="n">timber</span><span class="p">:</span> <span class="n">SweTimber</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return stem volume in cubic metres.&quot;&quot;&quot;</span>
         <span class="n">timber</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">timber</span><span class="o">.</span><span class="n">region</span> <span class="o">==</span> <span class="s2">&quot;southern&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">timber</span><span class="o">.</span><span class="n">species</span> <span class="o">==</span> <span class="s2">&quot;pinus sylvestris&quot;</span><span class="p">:</span>
@@ -414,12 +443,14 @@
             <span class="k">elif</span> <span class="n">timber</span><span class="o">.</span><span class="n">species</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;betula&quot;</span><span class="p">,</span> <span class="s2">&quot;betula pendula&quot;</span><span class="p">,</span> <span class="s2">&quot;betula pubescens&quot;</span><span class="p">]:</span>
                 <span class="k">return</span> <span class="n">NaslundVolume</span><span class="o">.</span><span class="n">_northern_birch_volume</span><span class="p">(</span><span class="n">timber</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Volume calculation for </span><span class="si">{</span><span class="n">timber</span><span class="o">.</span><span class="n">species</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">timber</span><span class="o">.</span><span class="n">region</span><span class="si">}</span><span class="s2"> region is not implemented.&quot;</span>
-        <span class="p">)</span></div>
+            <span class="sa">f</span><span class="s2">&quot;Volume calculation for </span><span class="si">{</span><span class="n">timber</span><span class="o">.</span><span class="n">species</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">timber</span><span class="o">.</span><span class="n">region</span><span class="si">}</span><span class="s2"> region &quot;</span><span class="p">,</span>
+            <span class="s2">&quot;is not implemented.&quot;</span><span class="p">,</span>
+        <span class="p">)</span>  <span class="c1"># pragma: no cover - defensive</span></div>
 
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_southern_pine_volume</span><span class="p">(</span><span class="n">timber</span><span class="p">:</span> <span class="n">SweTimber</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Southern Sweden pine volume in dm³.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">timber</span><span class="o">.</span><span class="n">over_bark</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">timber</span><span class="o">.</span><span class="n">crown_base_height_m</span> <span class="ow">and</span> <span class="n">timber</span><span class="o">.</span><span class="n">double_bark_mm</span><span class="p">:</span>
                 <span class="k">return</span> <span class="p">(</span>
@@ -453,6 +484,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_southern_spruce_volume</span><span class="p">(</span><span class="n">timber</span><span class="p">:</span> <span class="n">SweTimber</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Southern Sweden spruce volume in dm³.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">timber</span><span class="o">.</span><span class="n">over_bark</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">timber</span><span class="o">.</span><span class="n">crown_base_height_m</span><span class="p">:</span>
                 <span class="k">return</span> <span class="p">(</span>
@@ -488,6 +520,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_southern_birch_volume</span><span class="p">(</span><span class="n">timber</span><span class="p">:</span> <span class="n">SweTimber</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Southern Sweden birch volume in dm³.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">timber</span><span class="o">.</span><span class="n">over_bark</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">timber</span><span class="o">.</span><span class="n">double_bark_mm</span><span class="p">:</span>
                 <span class="k">return</span> <span class="p">(</span>
@@ -523,6 +556,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_northern_pine_volume</span><span class="p">(</span><span class="n">timber</span><span class="p">:</span> <span class="n">SweTimber</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Northern Sweden pine volume in dm³.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">timber</span><span class="o">.</span><span class="n">over_bark</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">timber</span><span class="o">.</span><span class="n">crown_base_height_m</span> <span class="ow">and</span> <span class="n">timber</span><span class="o">.</span><span class="n">double_bark_mm</span><span class="p">:</span>
                 <span class="k">return</span> <span class="p">(</span>
@@ -554,6 +588,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_northern_spruce_volume</span><span class="p">(</span><span class="n">timber</span><span class="p">:</span> <span class="n">SweTimber</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Northern Sweden spruce volume in dm³.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">timber</span><span class="o">.</span><span class="n">over_bark</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">timber</span><span class="o">.</span><span class="n">crown_base_height_m</span><span class="p">:</span>
                 <span class="k">return</span> <span class="p">(</span>
@@ -589,6 +624,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_northern_birch_volume</span><span class="p">(</span><span class="n">timber</span><span class="p">:</span> <span class="n">SweTimber</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Northern Sweden birch volume in dm³.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">timber</span><span class="o">.</span><span class="n">over_bark</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">timber</span><span class="o">.</span><span class="n">crown_base_height_m</span> <span class="ow">and</span> <span class="n">timber</span><span class="o">.</span><span class="n">double_bark_mm</span><span class="p">:</span>
                 <span class="k">return</span> <span class="p">(</span>
@@ -624,6 +660,8 @@
 <div class="viewcode-block" id="NaslundFormFactor">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.volume.html#pyforestry.sweden.volume.naslund_1947.NaslundFormFactor">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">NaslundFormFactor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Form factor equations paired with :class:`NaslundVolume`.&quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="NaslundFormFactor.calculate">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.volume.html#pyforestry.sweden.volume.naslund_1947.NaslundFormFactor.calculate">[docs]</a>
     <span class="nd">@staticmethod</span>
@@ -636,6 +674,7 @@
         <span class="n">over_bark</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">region</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;southern&quot;</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return form factor given tree characteristics.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">diameter_cm</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Diameter must be larger than 5 cm.&quot;</span><span class="p">)</span>
 
@@ -653,7 +692,8 @@
             <span class="s2">&quot;betula pubescens&quot;</span><span class="p">,</span>
         <span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Species must be one of: pinus sylvestris, picea abies, betula, betula pendula, betula pubescens.&quot;</span>
+                <span class="s2">&quot;Species must be one of: pinus sylvestris, picea abies, &quot;</span>
+                <span class="s2">&quot;betula, betula pendula, betula pubescens.&quot;</span>
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">region</span> <span class="o">==</span> <span class="s2">&quot;southern&quot;</span><span class="p">:</span>
@@ -685,7 +725,7 @@
 
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;Form factor calculation for </span><span class="si">{</span><span class="n">species</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">region</span><span class="si">}</span><span class="s2"> region is not implemented.&quot;</span>
-        <span class="p">)</span></div>
+        <span class="p">)</span>  <span class="c1"># pragma: no cover - defensive</span></div>
 
 
     <span class="nd">@staticmethod</span>
@@ -696,6 +736,7 @@
         <span class="n">crown_base_height_m</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
         <span class="n">over_bark</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Southern Sweden pine form factor.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">over_bark</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">crown_base_height_m</span> <span class="ow">and</span> <span class="n">double_bark_mm</span><span class="p">:</span>
                 <span class="n">K</span> <span class="o">=</span> <span class="p">((</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">)</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
@@ -732,6 +773,7 @@
         <span class="n">crown_base_height_m</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
         <span class="n">over_bark</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Southern Sweden spruce form factor.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">over_bark</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">crown_base_height_m</span><span class="p">:</span>
                 <span class="n">K</span> <span class="o">=</span> <span class="p">((</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">)</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
@@ -774,6 +816,7 @@
         <span class="n">double_bark_mm</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
         <span class="n">over_bark</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Southern Sweden birch form factor.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">over_bark</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">double_bark_mm</span><span class="p">:</span>
                 <span class="n">B</span> <span class="o">=</span> <span class="p">((</span><span class="n">double_bark_mm</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span> <span class="o">/</span> <span class="n">diameter_cm</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
@@ -817,6 +860,7 @@
         <span class="n">crown_base_height_m</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
         <span class="n">over_bark</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Northern Sweden pine form factor.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">over_bark</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">crown_base_height_m</span> <span class="ow">and</span> <span class="n">double_bark_mm</span><span class="p">:</span>
                 <span class="n">K</span> <span class="o">=</span> <span class="p">((</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">)</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
@@ -841,6 +885,7 @@
         <span class="n">crown_base_height_m</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
         <span class="n">over_bark</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Northern Sweden spruce form factor.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">over_bark</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">crown_base_height_m</span><span class="p">:</span>
                 <span class="n">K</span> <span class="o">=</span> <span class="p">((</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">)</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
@@ -884,6 +929,7 @@
         <span class="n">crown_base_height_m</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
         <span class="n">over_bark</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Northern Sweden birch form factor.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">over_bark</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">crown_base_height_m</span> <span class="ow">and</span> <span class="n">double_bark_mm</span><span class="p">:</span>
                 <span class="n">K</span> <span class="o">=</span> <span class="p">((</span><span class="n">height_m</span> <span class="o">-</span> <span class="n">crown_base_height_m</span><span class="p">)</span> <span class="o">/</span> <span class="n">height_m</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>

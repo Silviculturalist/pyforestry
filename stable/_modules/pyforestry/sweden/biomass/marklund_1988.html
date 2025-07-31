@@ -44,7 +44,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyforestry/sweden/biomass/marklund_1988';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'stable';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             false;
@@ -137,6 +137,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../notebooks/tree_species_intro.html">
     Tree species basics
   </a>
@@ -156,13 +163,23 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
     Marklund biomass with SweTimber
   </a>
 </li>
 
+                </ul>
+            </li>
+            
   </ul>
 </nav></div>
       
@@ -257,6 +274,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../api/modules.html">
     pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../helpers_overview.html">
+    Helpers Overview
   </a>
 </li>
 
@@ -386,7 +410,9 @@
                 <article class="bd-article">
                   
   <h1>Source code for pyforestry.sweden.biomass.marklund_1988</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span></span><span class="sd">&quot;&quot;&quot;Allometric biomass functions from Marklund (1988).&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -397,6 +423,7 @@
 <div class="viewcode-block" id="Marklund_1988_T1">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T1">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T1</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stem biomass for Scots pine using only diameter (model T1).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.3388</span> <span class="o">+</span> <span class="mf">11.3264</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">13</span><span class="p">)))</span></div>
 
 
@@ -404,6 +431,7 @@
 <div class="viewcode-block" id="Marklund_1988_T2">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T2">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T2</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stem biomass for Scots pine from diameter and height (model T2).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">2.6768</span>
         <span class="o">+</span> <span class="mf">7.5939</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">13</span><span class="p">))</span>
@@ -416,6 +444,7 @@
 <div class="viewcode-block" id="Marklund_1988_T3">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T3">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T3</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">double_bark_mm</span><span class="p">,</span> <span class="n">age</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stem biomass for Scots pine using bark thickness and age (model T3).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">2.6232</span>
         <span class="o">+</span> <span class="mf">7.7318</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">13</span><span class="p">))</span>
@@ -438,6 +467,7 @@
     <span class="n">form_quotient3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">altitude_m</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Comprehensive Scots pine stem model including site factors (T4).&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">form_quotient5</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">form_quotient3</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Either form_quotient5 or form_quotient3 can be supplied. Not both.&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;form_quotient5 taking precedence.&quot;</span><span class="p">)</span>
@@ -464,6 +494,7 @@
 <div class="viewcode-block" id="Marklund_1988_T5">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T5">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T5</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scots pine stem wood biomass from diameter (T5).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.2184</span> <span class="o">+</span> <span class="mf">11.4219</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">14</span><span class="p">)))</span></div>
 
 
@@ -471,6 +502,7 @@
 <div class="viewcode-block" id="Marklund_1988_T6">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T6">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T6</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scots pine stem wood from diameter and height (T6).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">2.6864</span>
         <span class="o">+</span> <span class="mf">7.6066</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">14</span><span class="p">))</span>
@@ -483,6 +515,7 @@
 <div class="viewcode-block" id="Marklund_1988_T7">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T7">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T7</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">double_bark_mm</span><span class="p">,</span> <span class="n">age</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scots pine stem wood with bark thickness and age (T7).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">2.5325</span>
         <span class="o">+</span> <span class="mf">7.8936</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">14</span><span class="p">))</span>
@@ -505,6 +538,7 @@
     <span class="n">form_quotient3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">altitude_m</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Most detailed Scots pine stem wood model (T8).&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">form_quotient5</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">form_quotient3</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Either form_quotient5 or form_quotient3 can be supplied. Not both.&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;form_quotient5 taking precedence.&quot;</span><span class="p">)</span>
@@ -533,6 +567,7 @@
 <div class="viewcode-block" id="Marklund_1988_T9">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T9">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T9</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scots pine stem bark biomass from diameter (T9).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.9748</span> <span class="o">+</span> <span class="mf">8.8489</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">16</span><span class="p">)))</span></div>
 
 
@@ -540,6 +575,7 @@
 <div class="viewcode-block" id="Marklund_1988_T10">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T10">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T10</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scots pine stem bark using diameter and height (T10).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">3.2765</span> <span class="o">+</span> <span class="mf">7.2482</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">16</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.4487</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
     <span class="p">)</span></div>
@@ -549,6 +585,7 @@
 <div class="viewcode-block" id="Marklund_1988_T11">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T11">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T11</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">relative_bark_thickness</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scots pine stem bark with relative bark thickness (T11).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">3.6065</span>
         <span class="o">+</span> <span class="mf">7.0834</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">16</span><span class="p">))</span>
@@ -561,6 +598,7 @@
 <div class="viewcode-block" id="Marklund_1988_T12">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T12">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T12</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">crown_base_height_m</span><span class="p">,</span> <span class="n">relative_bark_thickness</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Detailed stem bark model with crown ratio (T12).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">3.5076</span>
         <span class="o">+</span> <span class="mf">7.5295</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">16</span><span class="p">))</span>
@@ -579,6 +617,7 @@
 <div class="viewcode-block" id="Marklund_1988_T13">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T13">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T13</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Living branches of Scots pine from diameter (T13).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.9580</span> <span class="o">+</span> <span class="mf">7.7428</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">18</span><span class="p">)))</span></div>
 
 
@@ -586,6 +625,7 @@
 <div class="viewcode-block" id="Marklund_1988_T14">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T14">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T14</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Living branches using diameter and height (T14).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">3.0331</span> <span class="o">+</span> <span class="mf">6.7610</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">18</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.6565</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
     <span class="p">)</span></div>
@@ -595,6 +635,7 @@
 <div class="viewcode-block" id="Marklund_1988_T15">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T15">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T15</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">crown_base_height_m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Living branches model with crown base height (T15).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">3.1398</span>
         <span class="o">+</span> <span class="mf">6.6698</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">18</span><span class="p">))</span>
@@ -614,6 +655,7 @@
 <div class="viewcode-block" id="Marklund_1988_T16">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T16">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T16</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scots pine needle biomass from diameter (T16).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">3.5285</span> <span class="o">+</span> <span class="mf">6.5301</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">20</span><span class="p">)))</span></div>
 
 
@@ -621,6 +663,7 @@
 <div class="viewcode-block" id="Marklund_1988_T17">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T17">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T17</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Needle biomass using diameter and height (T17).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">3.6531</span> <span class="o">+</span> <span class="mf">5.9425</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">20</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.8165</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
     <span class="p">)</span></div>
@@ -630,6 +673,7 @@
 <div class="viewcode-block" id="Marklund_1988_T18">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T18">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T18</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">crown_base_height_m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Needle biomass including crown base height (T18).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">3.7941</span>
         <span class="o">+</span> <span class="mf">5.8956</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">20</span><span class="p">))</span>
@@ -649,6 +693,7 @@
 <div class="viewcode-block" id="Marklund_1988_T19">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T19">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T19</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Dead branches of Scots pine from diameter (T19).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">4.3352</span> <span class="o">+</span> <span class="mf">5.8210</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">23</span><span class="p">)))</span></div>
 
 
@@ -656,6 +701,7 @@
 <div class="viewcode-block" id="Marklund_1988_T20">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T20">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T20</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Dead branches using diameter and height (T20).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">4.4668</span> <span class="o">+</span> <span class="mf">5.3836</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">23</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.9584</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
     <span class="p">)</span></div>
@@ -665,6 +711,7 @@
 <div class="viewcode-block" id="Marklund_1988_T21">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T21">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T21</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">crown_base_height_m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Dead branches model with crown base height (T21).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">4.5368</span>
         <span class="o">+</span> <span class="mf">5.4689</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">23</span><span class="p">))</span>
@@ -684,6 +731,7 @@
 <div class="viewcode-block" id="Marklund_1988_T22">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T22">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T22</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stump-root biomass for Scots pine from diameter (T22).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.2114</span> <span class="o">+</span> <span class="mf">7.5246</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">19</span><span class="p">)))</span></div>
 
 
@@ -691,6 +739,7 @@
 <div class="viewcode-block" id="Marklund_1988_T23">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T23">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T23</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stump-root biomass using diameter and height (T23).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">2.3323</span> <span class="o">+</span> <span class="mf">6.4935</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">19</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.6055</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
     <span class="p">)</span></div>
@@ -700,6 +749,7 @@
 <div class="viewcode-block" id="Marklund_1988_T24">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T24">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T24</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">crown_base_height_m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stump-root biomass with crown base height (T24).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">2.4008</span>
         <span class="o">+</span> <span class="mf">6.5480</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">19</span><span class="p">))</span>
@@ -719,6 +769,7 @@
 <div class="viewcode-block" id="Marklund_1988_T25">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T25">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T25</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scots pine stump biomass from diameter (T25).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">3.1444</span> <span class="o">+</span> <span class="mf">8.4027</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">15</span><span class="p">)))</span></div>
 
 
@@ -726,6 +777,7 @@
 <div class="viewcode-block" id="Marklund_1988_T26">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T26">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T26</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stump biomass using diameter and height (T26).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">3.2571</span> <span class="o">+</span> <span class="mf">7.3144</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">15</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.7078</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
     <span class="p">)</span></div>
@@ -735,6 +787,7 @@
 <div class="viewcode-block" id="Marklund_1988_T27">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T27">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_T27</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">relative_bark_thickness</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stump biomass with relative bark thickness (T27).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">3.3738</span>
         <span class="o">+</span> <span class="mf">7.1416</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">15</span><span class="p">))</span>
@@ -752,6 +805,7 @@
 <div class="viewcode-block" id="Marklund_1988_S1">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S1">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_S1</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Norway spruce stem biomass from diameter (S1).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.3450</span> <span class="o">+</span> <span class="mf">11.1111</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">)))</span></div>
 
 
@@ -759,6 +813,7 @@
 <div class="viewcode-block" id="Marklund_1988_S2">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S2">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_S2</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Norway spruce stem biomass using diameter and height (S2).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">2.7190</span>
         <span class="o">+</span> <span class="mf">7.8497</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">))</span>
@@ -771,6 +826,7 @@
 <div class="viewcode-block" id="Marklund_1988_S3">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S3">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_S3</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">double_bark_mm</span><span class="p">,</span> <span class="n">age</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stem biomass with bark thickness and age for spruce (S3).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">2.5490</span>
         <span class="o">+</span> <span class="mf">7.7334</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">))</span>
@@ -790,6 +846,7 @@
 <div class="viewcode-block" id="Marklund_1988_S4">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S4">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_S4</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Living branches of spruce from diameter (S4).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.8470</span> <span class="o">+</span> <span class="mf">8.6120</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">)))</span></div>
 
 
@@ -797,6 +854,7 @@
 <div class="viewcode-block" id="Marklund_1988_S5">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S5">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_S5</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Living branches using diameter and height (S5).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">2.9892</span> <span class="o">+</span> <span class="mf">7.1881</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.7534</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
     <span class="p">)</span></div>
@@ -806,6 +864,7 @@
 <div class="viewcode-block" id="Marklund_1988_S6">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S6">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_S6</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">crown_base_height_m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Living branches with crown base height for spruce (S6).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">3.1020</span>
         <span class="o">+</span> <span class="mf">7.0834</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">))</span>
@@ -825,6 +884,7 @@
 <div class="viewcode-block" id="Marklund_1988_S7">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S7">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_S7</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Dead branches of spruce from diameter (S7).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">4.3352</span> <span class="o">+</span> <span class="mf">5.8210</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">23</span><span class="p">)))</span></div>
 
 
@@ -832,6 +892,7 @@
 <div class="viewcode-block" id="Marklund_1988_S8">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S8">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_S8</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Dead branches using diameter and height (S8).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">4.4668</span> <span class="o">+</span> <span class="mf">5.3836</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">23</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.9584</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
     <span class="p">)</span></div>
@@ -841,6 +902,7 @@
 <div class="viewcode-block" id="Marklund_1988_S9">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S9">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_S9</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">crown_base_height_m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Dead branches model with crown base height for spruce (S9).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">4.5368</span>
         <span class="o">+</span> <span class="mf">5.4689</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">23</span><span class="p">))</span>
@@ -860,6 +922,7 @@
 <div class="viewcode-block" id="Marklund_1988_S10">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S10">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_S10</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Spruce stump-root biomass from diameter (S10).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.2114</span> <span class="o">+</span> <span class="mf">7.5246</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">19</span><span class="p">)))</span></div>
 
 
@@ -867,6 +930,7 @@
 <div class="viewcode-block" id="Marklund_1988_S11">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S11">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_S11</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Spruce stump-root biomass using diameter and height (S11).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">2.3323</span> <span class="o">+</span> <span class="mf">6.4935</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">19</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.6055</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
     <span class="p">)</span></div>
@@ -876,6 +940,7 @@
 <div class="viewcode-block" id="Marklund_1988_S12">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S12">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_S12</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">crown_base_height_m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stump-root biomass with crown base height for spruce (S12).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">2.4008</span>
         <span class="o">+</span> <span class="mf">6.5480</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">19</span><span class="p">))</span>
@@ -895,6 +960,7 @@
 <div class="viewcode-block" id="Marklund_1988_S13">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S13">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_S13</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Spruce stump biomass from diameter (S13).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">3.1444</span> <span class="o">+</span> <span class="mf">8.4027</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">15</span><span class="p">)))</span></div>
 
 
@@ -902,6 +968,7 @@
 <div class="viewcode-block" id="Marklund_1988_S14">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S14">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_S14</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Spruce stump biomass using diameter and height (S14).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">3.2571</span> <span class="o">+</span> <span class="mf">7.3144</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">15</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.7078</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
     <span class="p">)</span></div>
@@ -911,6 +978,7 @@
 <div class="viewcode-block" id="Marklund_1988_S15">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S15">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_S15</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">relative_bark_thickness</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Spruce stump biomass with relative bark thickness (S15).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">3.3738</span>
         <span class="o">+</span> <span class="mf">7.1416</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">15</span><span class="p">))</span>
@@ -930,6 +998,7 @@
 <div class="viewcode-block" id="Marklund_1988_B1">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B1">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_B1</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Birch stem biomass from diameter (B1).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.3450</span> <span class="o">+</span> <span class="mf">11.1111</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">)))</span></div>
 
 
@@ -937,6 +1006,7 @@
 <div class="viewcode-block" id="Marklund_1988_B2">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B2">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_B2</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Birch stem biomass using diameter and height (B2).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">2.7190</span>
         <span class="o">+</span> <span class="mf">7.8497</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">))</span>
@@ -949,6 +1019,7 @@
 <div class="viewcode-block" id="Marklund_1988_B3">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B3">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_B3</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">double_bark_mm</span><span class="p">,</span> <span class="n">age</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stem biomass with bark thickness and age for birch (B3).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">2.5490</span>
         <span class="o">+</span> <span class="mf">7.7334</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">))</span>
@@ -968,6 +1039,7 @@
 <div class="viewcode-block" id="Marklund_1988_B4">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B4">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_B4</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Birch living branches from diameter (B4).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.8470</span> <span class="o">+</span> <span class="mf">8.6120</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">)))</span></div>
 
 
@@ -975,6 +1047,7 @@
 <div class="viewcode-block" id="Marklund_1988_B5">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B5">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_B5</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Living branches using diameter and height (B5).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">2.9892</span> <span class="o">+</span> <span class="mf">7.1881</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.7534</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
     <span class="p">)</span></div>
@@ -984,6 +1057,7 @@
 <div class="viewcode-block" id="Marklund_1988_B6">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B6">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_B6</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">crown_base_height_m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Living branches model with crown base height for birch (B6).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">3.1020</span>
         <span class="o">+</span> <span class="mf">7.0834</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">12</span><span class="p">))</span>
@@ -1003,6 +1077,7 @@
 <div class="viewcode-block" id="Marklund_1988_B7">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B7">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_B7</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Birch dead branches from diameter (B7).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">4.3352</span> <span class="o">+</span> <span class="mf">5.8210</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">23</span><span class="p">)))</span></div>
 
 
@@ -1010,6 +1085,7 @@
 <div class="viewcode-block" id="Marklund_1988_B8">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B8">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_B8</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Dead branches using diameter and height (B8).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">4.4668</span> <span class="o">+</span> <span class="mf">5.3836</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">23</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.9584</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
     <span class="p">)</span></div>
@@ -1019,6 +1095,7 @@
 <div class="viewcode-block" id="Marklund_1988_B9">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B9">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_B9</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">crown_base_height_m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Dead branches model with crown base height for birch (B9).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">4.5368</span>
         <span class="o">+</span> <span class="mf">5.4689</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">23</span><span class="p">))</span>
@@ -1038,6 +1115,7 @@
 <div class="viewcode-block" id="Marklund_1988_B10">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B10">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_B10</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Birch stump-root biomass from diameter (B10).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2.2114</span> <span class="o">+</span> <span class="mf">7.5246</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">19</span><span class="p">)))</span></div>
 
 
@@ -1045,6 +1123,7 @@
 <div class="viewcode-block" id="Marklund_1988_B11">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B11">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_B11</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stump-root biomass using diameter and height (B11).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">2.3323</span> <span class="o">+</span> <span class="mf">6.4935</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">19</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.6055</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
     <span class="p">)</span></div>
@@ -1054,6 +1133,7 @@
 <div class="viewcode-block" id="Marklund_1988_B12">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B12">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_B12</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">crown_base_height_m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stump-root biomass with crown base height (B12).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">2.4008</span>
         <span class="o">+</span> <span class="mf">6.5480</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">19</span><span class="p">))</span>
@@ -1073,6 +1153,7 @@
 <div class="viewcode-block" id="Marklund_1988_B13">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B13">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_B13</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Birch stump biomass from diameter (B13).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">3.1444</span> <span class="o">+</span> <span class="mf">8.4027</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">15</span><span class="p">)))</span></div>
 
 
@@ -1080,6 +1161,7 @@
 <div class="viewcode-block" id="Marklund_1988_B14">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B14">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_B14</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Birch stump biomass using diameter and height (B14).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">3.2571</span> <span class="o">+</span> <span class="mf">7.3144</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">15</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.7078</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span>
     <span class="p">)</span></div>
@@ -1089,6 +1171,7 @@
 <div class="viewcode-block" id="Marklund_1988_B15">
 <a class="viewcode-back" href="../../../../api/pyforestry.sweden.biomass.html#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B15">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Marklund_1988_B15</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="n">height_m</span><span class="p">,</span> <span class="n">relative_bark_thickness</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stump biomass with relative bark thickness for birch (B15).&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
         <span class="o">-</span><span class="mf">3.3738</span>
         <span class="o">+</span> <span class="mf">7.1416</span> <span class="o">*</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">/</span> <span class="p">(</span><span class="n">diameter_cm</span> <span class="o">+</span> <span class="mi">15</span><span class="p">))</span>

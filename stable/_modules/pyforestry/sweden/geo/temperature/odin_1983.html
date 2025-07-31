@@ -44,7 +44,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyforestry/sweden/geo/temperature/odin_1983';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'stable';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             false;
@@ -137,6 +137,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../../notebooks/tree_species_intro.html">
     Tree species basics
   </a>
@@ -156,13 +163,23 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../../../notebooks/marklund_swetimber_demo.html">
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../notebooks/marklund_swetimber_demo.html">
     Marklund biomass with SweTimber
   </a>
 </li>
 
+                </ul>
+            </li>
+            
   </ul>
 </nav></div>
       
@@ -257,6 +274,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../../api/modules.html">
     pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../helpers_overview.html">
+    Helpers Overview
   </a>
 </li>
 
@@ -386,12 +410,14 @@
                 <article class="bd-article">
                   
   <h1>Source code for pyforestry.sweden.geo.temperature.odin_1983</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span></span><span class="sd">&quot;&quot;&quot;Implementation of Swedish temperature and radiation models.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
 
 <div class="viewcode-block" id="Odin_temperature_sum">
-<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.temperature.odin_1983.Odin_temperature_sum">[docs]</a>
+<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.Odin_temperature_sum">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">Odin_temperature_sum</span><span class="p">(</span><span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">altitude_m</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Estimate annual temperature sum above 5°C.</span>
@@ -424,7 +450,7 @@
 
 
 <div class="viewcode-block" id="Moren_Perttu_radiation_1994">
-<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994">[docs]</a>
+<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.Moren_Perttu_radiation_1994">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Moren_Perttu_radiation_1994</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -450,6 +476,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_helper_GS1000</span><span class="p">(</span><span class="n">latitude</span><span class="p">,</span> <span class="n">altitude</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate growing season duration at 1000 m elevation.&quot;&quot;&quot;</span>
         <span class="n">B0</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;B0&quot;</span><span class="p">]</span>
         <span class="n">B1</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;B1&quot;</span><span class="p">]</span>
         <span class="n">B2</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;B2&quot;</span><span class="p">]</span>
@@ -458,6 +485,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_helper_TS1000</span><span class="p">(</span><span class="n">latitude</span><span class="p">,</span> <span class="n">altitude</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate temperature sum at 1000 m elevation.&quot;&quot;&quot;</span>
         <span class="n">A0</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;A0&quot;</span><span class="p">]</span>
         <span class="n">A1</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;A1&quot;</span><span class="p">]</span>
         <span class="n">A2</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;A2&quot;</span><span class="p">]</span>
@@ -465,6 +493,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_helper_1500</span><span class="p">(</span><span class="n">latitude</span><span class="p">,</span> <span class="n">altitude</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generic polynomial helper used for 1500 m models.&quot;&quot;&quot;</span>
         <span class="n">x0</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;x0&quot;</span><span class="p">]</span>
         <span class="n">x1</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;x1&quot;</span><span class="p">]</span>
         <span class="n">x2</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;x2&quot;</span><span class="p">]</span>
@@ -482,6 +511,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_helper_global_radiation_clear_day_ratio</span><span class="p">(</span><span class="n">day_number</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Ratio of global to extraterrestrial radiation for clear sky.&quot;&quot;&quot;</span>
         <span class="n">D0</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;D0&quot;</span><span class="p">]</span>
         <span class="n">D1</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;D1&quot;</span><span class="p">]</span>
         <span class="n">D2</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;D2&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
@@ -489,6 +519,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_helper_global_radiation_avg_day_ratio</span><span class="p">(</span><span class="n">day_number</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Ratio of global to extraterrestrial radiation for average sky.&quot;&quot;&quot;</span>
         <span class="n">E0</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;E0&quot;</span><span class="p">]</span>
         <span class="n">E1</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;E1&quot;</span><span class="p">]</span>
         <span class="n">E2</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;E2&quot;</span><span class="p">]</span>
@@ -506,13 +537,14 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_helper_global_radiation_sum_growing_season</span><span class="p">(</span><span class="n">latitude</span><span class="p">,</span> <span class="n">altitude</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute total radiation during the growing season.&quot;&quot;&quot;</span>
         <span class="n">F0</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;F0&quot;</span><span class="p">]</span>
         <span class="n">F1</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;F1&quot;</span><span class="p">]</span>
         <span class="n">F2</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;F2&quot;</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">F0</span> <span class="o">+</span> <span class="n">F1</span> <span class="o">*</span> <span class="n">latitude</span> <span class="o">+</span> <span class="n">F2</span> <span class="o">*</span> <span class="n">altitude</span>
 
 <div class="viewcode-block" id="Moren_Perttu_radiation_1994.get_gorczynski_continentality_index">
-<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.get_gorczynski_continentality_index">[docs]</a>
+<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.Moren_Perttu_radiation_1994.get_gorczynski_continentality_index">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_gorczynski_continentality_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># Renamed for clarity as a &quot;getter&quot;</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculates the Gorczynski continentality index using instance data.</span>
@@ -524,7 +556,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">july_avg_temp</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">jan_avg_temp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;July and January average temperatures must be provided during initialization to calculate continentality.&quot;</span>
+                <span class="s2">&quot;July and January average temperatures must be provided during &quot;</span>
+                <span class="s2">&quot;initialization to calculate continentality.&quot;</span>
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">latitude</span> <span class="o">&lt;</span> <span class="mi">90</span><span class="p">):</span>
@@ -537,8 +570,9 @@
 
 
 <div class="viewcode-block" id="Moren_Perttu_radiation_1994.calculate_temperature_sum_1000m">
-<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.calculate_temperature_sum_1000m">[docs]</a>
+<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.Moren_Perttu_radiation_1994.calculate_temperature_sum_1000m">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">calculate_temperature_sum_1000m</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold_temperature</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Temperature sum for the 1000 m model.&quot;&quot;&quot;</span>
         <span class="n">coeffs_A</span> <span class="o">=</span> <span class="p">{</span>
             <span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;A0&quot;</span><span class="p">:</span> <span class="mf">8279.3</span><span class="p">,</span> <span class="s2">&quot;A1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">98.115</span><span class="p">,</span> <span class="s2">&quot;A2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.131</span><span class="p">},</span>
             <span class="mi">3</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;A0&quot;</span><span class="p">:</span> <span class="mf">6126.4</span><span class="p">,</span> <span class="s2">&quot;A1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">73.813</span><span class="p">,</span> <span class="s2">&quot;A2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.951</span><span class="p">},</span>
@@ -555,8 +589,9 @@
 
 
 <div class="viewcode-block" id="Moren_Perttu_radiation_1994.calculate_growing_season_duration_1000m">
-<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.calculate_growing_season_duration_1000m">[docs]</a>
+<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.Moren_Perttu_radiation_1994.calculate_growing_season_duration_1000m">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">calculate_growing_season_duration_1000m</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold_temperature</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Growing season duration for the 1000 m model.&quot;&quot;&quot;</span>
         <span class="n">coeffs_B</span> <span class="o">=</span> <span class="p">{</span>
             <span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;B0&quot;</span><span class="p">:</span> <span class="mf">894.2</span><span class="p">,</span> <span class="s2">&quot;B1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">10.678</span><span class="p">,</span> <span class="s2">&quot;B2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.780</span><span class="p">,</span> <span class="s2">&quot;B3&quot;</span><span class="p">:</span> <span class="mf">0.01147</span><span class="p">},</span>
             <span class="mi">3</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;B0&quot;</span><span class="p">:</span> <span class="mf">695.7</span><span class="p">,</span> <span class="s2">&quot;B1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">8.050</span><span class="p">,</span> <span class="s2">&quot;B2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.432</span><span class="p">,</span> <span class="s2">&quot;B3&quot;</span><span class="p">:</span> <span class="mf">0.00600</span><span class="p">},</span>
@@ -573,8 +608,9 @@
 
 
 <div class="viewcode-block" id="Moren_Perttu_radiation_1994.calculate_temperature_sum_1500m">
-<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.calculate_temperature_sum_1500m">[docs]</a>
+<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.Moren_Perttu_radiation_1994.calculate_temperature_sum_1500m">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">calculate_temperature_sum_1500m</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold_temperature</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Temperature sum for the 1500 m model.&quot;&quot;&quot;</span>
         <span class="n">coeffs_a</span> <span class="o">=</span> <span class="p">{</span>
             <span class="mi">0</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;x0&quot;</span><span class="p">:</span> <span class="mf">8116.4</span><span class="p">,</span>
@@ -633,8 +669,9 @@
 
 
 <div class="viewcode-block" id="Moren_Perttu_radiation_1994.calculate_growing_season_duration_1500m">
-<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.calculate_growing_season_duration_1500m">[docs]</a>
+<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.Moren_Perttu_radiation_1994.calculate_growing_season_duration_1500m">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">calculate_growing_season_duration_1500m</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold_temperature</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Growing season duration for the 1500 m model.&quot;&quot;&quot;</span>
         <span class="n">coeffs_b</span> <span class="o">=</span> <span class="p">{</span>  <span class="c1"># From Table 3b [cite: 136]</span>
             <span class="mi">0</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;x0&quot;</span><span class="p">:</span> <span class="mf">1339.7</span><span class="p">,</span>
@@ -693,8 +730,9 @@
 
 
 <div class="viewcode-block" id="Moren_Perttu_radiation_1994.get_corrected_temperature_sum">
-<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.get_corrected_temperature_sum">[docs]</a>
+<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.Moren_Perttu_radiation_1994.get_corrected_temperature_sum">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_corrected_temperature_sum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold_temperature</span><span class="p">,</span> <span class="n">for_1500m_model</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply continentality correction to the temperature sum.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">for_1500m_model</span><span class="p">:</span>
             <span class="n">base_ts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_temperature_sum_1500m</span><span class="p">(</span><span class="n">threshold_temperature</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -716,10 +754,12 @@
 
 
 <div class="viewcode-block" id="Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_clear_sky">
-<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_clear_sky">[docs]</a>
+<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_clear_sky">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_ratio_global_to_extraterrestrial_radiation_clear_sky</span><span class="p">(</span><span class="n">day_number</span><span class="p">,</span> <span class="n">region</span><span class="p">):</span>
-        <span class="c1"># Using D1 = -0.000403 for North, (105,273) based on user&#39;s implied coefficient from test result</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return radiation ratio for clear-sky conditions.&quot;&quot;&quot;</span>
+        <span class="c1"># Using D1 = -0.000403 for North, (105,273) based on user&#39;s implied coefficient</span>
+        <span class="c1"># from test result</span>
         <span class="n">coeffs_D</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;North&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">104</span><span class="p">):</span> <span class="p">{</span><span class="s2">&quot;D0&quot;</span><span class="p">:</span> <span class="mf">0.521</span><span class="p">,</span> <span class="s2">&quot;D1&quot;</span><span class="p">:</span> <span class="mf">0.002681</span><span class="p">},</span>
@@ -757,9 +797,10 @@
 
 
 <div class="viewcode-block" id="Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_average_sky">
-<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_average_sky">[docs]</a>
+<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_average_sky">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_ratio_global_to_extraterrestrial_radiation_average_sky</span><span class="p">(</span><span class="n">day_number</span><span class="p">,</span> <span class="n">region</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return radiation ratio for average-sky conditions.&quot;&quot;&quot;</span>
         <span class="n">coeffs_E</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;North&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;E0&quot;</span><span class="p">:</span> <span class="mf">0.338</span><span class="p">,</span>
@@ -779,8 +820,9 @@
 
 
 <div class="viewcode-block" id="Moren_Perttu_radiation_1994.calculate_global_radiation_sum_growing_season">
-<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.calculate_global_radiation_sum_growing_season">[docs]</a>
+<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.Moren_Perttu_radiation_1994.calculate_global_radiation_sum_growing_season">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">calculate_global_radiation_sum_growing_season</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold_temperature</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Total global radiation during the growing season.&quot;&quot;&quot;</span>
         <span class="n">coeffs_F</span> <span class="o">=</span> <span class="p">{</span>
             <span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;F0&quot;</span><span class="p">:</span> <span class="mf">6.9712</span><span class="p">,</span> <span class="s2">&quot;F1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.0667</span><span class="p">,</span> <span class="s2">&quot;F2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.00070</span><span class="p">},</span>  <span class="c1"># Table 7 [cite: 183]</span>
             <span class="mi">3</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;F0&quot;</span><span class="p">:</span> <span class="mf">7.1453</span><span class="p">,</span> <span class="s2">&quot;F1&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.0731</span><span class="p">,</span> <span class="s2">&quot;F2&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.00073</span><span class="p">},</span>
@@ -797,9 +839,10 @@
 
 
 <div class="viewcode-block" id="Moren_Perttu_radiation_1994.get_growing_season_start_day">
-<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.get_growing_season_start_day">[docs]</a>
+<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.geo.temperature.html#pyforestry.sweden.geo.Moren_Perttu_radiation_1994.get_growing_season_start_day">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_growing_season_start_day</span><span class="p">(</span><span class="n">latitude_deg</span><span class="p">,</span> <span class="n">altitude_m</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Julian day number when the growing season starts.&quot;&quot;&quot;</span>
         <span class="n">start_day</span> <span class="o">=</span> <span class="p">(</span>
             <span class="o">-</span><span class="mf">35.760</span>
             <span class="o">+</span> <span class="mf">2.489</span> <span class="o">*</span> <span class="n">latitude_deg</span>

@@ -45,7 +45,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/pyforestry.sweden.biomass';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'stable';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             false;
@@ -140,6 +140,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../notebooks/tree_species_intro.html">
     Tree species basics
   </a>
@@ -159,13 +166,23 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../notebooks/marklund_swetimber_demo.html">
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/marklund_swetimber_demo.html">
     Marklund biomass with SweTimber
   </a>
 </li>
 
+                </ul>
+            </li>
+            
   </ul>
 </nav></div>
       
@@ -267,6 +284,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../notebooks/tree_species_intro.html">
     Tree species basics
   </a>
@@ -347,10 +371,7 @@
 <li class="toctree-l4"><a class="reference internal" href="pyforestry.base.helpers.primitives.html">pyforestry.base.helpers.primitives package</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.base.pricelist.html">pyforestry.base.pricelist package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="pyforestry.base.pricelist.data.html">pyforestry.base.pricelist.data package</a></li>
-</ul>
-</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.pricelist.html">pyforestry.base.pricelist package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyforestry.base.taper.html">pyforestry.base.taper package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.base.timber.html">pyforestry.base.timber package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="pyforestry.base.timber.timber_base.html">pyforestry.base.timber.timber_base package</a></li>
@@ -373,6 +394,10 @@
 <li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.helpers.html">pyforestry.sweden.helpers package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.misc.html">pyforestry.sweden.misc package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.models.html">pyforestry.sweden.models package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.pricelist.html">pyforestry.sweden.pricelist package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.pricelist.data.html">pyforestry.sweden.pricelist.data package</a></li>
+</ul>
+</details></li>
 <li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html">pyforestry.sweden.site package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.siteindex.html">pyforestry.sweden.siteindex package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.sis.html">pyforestry.sweden.siteindex.sis package</a></li>
@@ -459,6 +484,7 @@
 </section>
 <section id="module-pyforestry.sweden.biomass.marklund_1988">
 <span id="pyforestry-sweden-biomass-marklund-1988-module"></span><h2>pyforestry.sweden.biomass.marklund_1988 module<a class="headerlink" href="#module-pyforestry.sweden.biomass.marklund_1988" title="Link to this heading">#</a></h2>
+<p>Allometric biomass functions from Marklund (1988).</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timber</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.timber.timber_base.html#pyforestry.base.timber.timber_base.timber.Timber" title="pyforestry.base.timber.timber_base.timber.Timber"><span class="pre">Timber</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988" title="Link to this definition">#</a></dt>
@@ -529,287 +555,344 @@ Dept. of Forest Survey. Swedish University of Agricultural Sciences. Umeå.
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B1">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_B1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_B1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B1" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Birch stem biomass from diameter (B1).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B10">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_B10</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_B10"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B10" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Birch stump-root biomass from diameter (B10).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B11">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_B11</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_B11"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B11" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Stump-root biomass using diameter and height (B11).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B12">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_B12</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crown_base_height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_B12"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B12" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Stump-root biomass with crown base height (B12).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B13">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_B13</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_B13"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B13" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Birch stump biomass from diameter (B13).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B14">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_B14</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_B14"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B14" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Birch stump biomass using diameter and height (B14).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B15">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_B15</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relative_bark_thickness</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_B15"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B15" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Stump biomass with relative bark thickness for birch (B15).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B2">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_B2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_B2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B2" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Birch stem biomass using diameter and height (B2).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B3">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_B3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double_bark_mm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">age</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_B3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B3" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Stem biomass with bark thickness and age for birch (B3).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B4">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_B4</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_B4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B4" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Birch living branches from diameter (B4).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B5">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_B5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_B5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B5" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Living branches using diameter and height (B5).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B6">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_B6</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crown_base_height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_B6"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B6" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Living branches model with crown base height for birch (B6).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B7">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_B7</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_B7"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B7" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Birch dead branches from diameter (B7).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B8">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_B8</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_B8"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B8" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Dead branches using diameter and height (B8).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B9">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_B9</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crown_base_height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_B9"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_B9" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Dead branches model with crown base height for birch (B9).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S1">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_S1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_S1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S1" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Norway spruce stem biomass from diameter (S1).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S10">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_S10</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_S10"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S10" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Spruce stump-root biomass from diameter (S10).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S11">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_S11</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_S11"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S11" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Spruce stump-root biomass using diameter and height (S11).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S12">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_S12</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crown_base_height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_S12"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S12" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Stump-root biomass with crown base height for spruce (S12).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S13">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_S13</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_S13"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S13" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Spruce stump biomass from diameter (S13).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S14">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_S14</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_S14"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S14" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Spruce stump biomass using diameter and height (S14).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S15">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_S15</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relative_bark_thickness</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_S15"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S15" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Spruce stump biomass with relative bark thickness (S15).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S2">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_S2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_S2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S2" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Norway spruce stem biomass using diameter and height (S2).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S3">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_S3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double_bark_mm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">age</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_S3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S3" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Stem biomass with bark thickness and age for spruce (S3).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S4">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_S4</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_S4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S4" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Living branches of spruce from diameter (S4).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S5">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_S5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_S5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S5" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Living branches using diameter and height (S5).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S6">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_S6</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crown_base_height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_S6"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S6" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Living branches with crown base height for spruce (S6).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S7">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_S7</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_S7"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S7" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Dead branches of spruce from diameter (S7).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S8">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_S8</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_S8"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S8" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Dead branches using diameter and height (S8).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S9">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_S9</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crown_base_height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_S9"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_S9" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Dead branches model with crown base height for spruce (S9).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T1">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_T1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_T1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T1" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Stem biomass for Scots pine using only diameter (model T1).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T10">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_T10</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_T10"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T10" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Scots pine stem bark using diameter and height (T10).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T11">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_T11</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relative_bark_thickness</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_T11"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T11" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Scots pine stem bark with relative bark thickness (T11).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T12">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_T12</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crown_base_height_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relative_bark_thickness</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_T12"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T12" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Detailed stem bark model with crown ratio (T12).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T13">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_T13</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_T13"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T13" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Living branches of Scots pine from diameter (T13).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T14">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_T14</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_T14"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T14" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Living branches using diameter and height (T14).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T15">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_T15</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crown_base_height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_T15"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T15" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Living branches model with crown base height (T15).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T16">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_T16</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_T16"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T16" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Scots pine needle biomass from diameter (T16).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T17">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_T17</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_T17"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T17" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Needle biomass using diameter and height (T17).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T18">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_T18</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crown_base_height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_T18"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T18" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Needle biomass including crown base height (T18).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T19">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_T19</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_T19"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T19" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Dead branches of Scots pine from diameter (T19).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T2">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_T2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_T2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T2" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Stem biomass for Scots pine from diameter and height (model T2).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T20">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_T20</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_T20"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T20" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Dead branches using diameter and height (T20).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T21">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_T21</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crown_base_height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_T21"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T21" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Dead branches model with crown base height (T21).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T22">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_T22</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_T22"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T22" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Stump-root biomass for Scots pine from diameter (T22).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T23">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_T23</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_T23"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T23" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Stump-root biomass using diameter and height (T23).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T24">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_T24</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crown_base_height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_T24"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T24" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Stump-root biomass with crown base height (T24).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T25">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_T25</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_T25"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T25" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Scots pine stump biomass from diameter (T25).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T26">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_T26</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_T26"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T26" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Stump biomass using diameter and height (T26).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T27">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_T27</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relative_bark_thickness</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_T27"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T27" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Stump biomass with relative bark thickness (T27).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T3">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_T3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double_bark_mm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">age</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_T3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T3" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Stem biomass for Scots pine using bark thickness and age (model T3).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T4">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_T4</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double_bark_mm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">age</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">form_quotient5</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">form_quotient3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude_m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_T4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T4" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Comprehensive Scots pine stem model including site factors (T4).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T5">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_T5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_T5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T5" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Scots pine stem wood biomass from diameter (T5).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T6">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_T6</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_T6"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T6" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Scots pine stem wood from diameter and height (T6).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T7">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_T7</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double_bark_mm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">age</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_T7"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T7" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Scots pine stem wood with bark thickness and age (T7).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T8">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_T8</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double_bark_mm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">age</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">form_quotient5</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">form_quotient3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude_m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_T8"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T8" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Most detailed Scots pine stem wood model (T8).</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T9">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.marklund_1988.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988_T9</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988_T9"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T9" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Scots pine stem bark biomass from diameter (T9).</p>
+</dd></dl>
 
 </section>
 <section id="module-pyforestry.sweden.biomass.petersson_stahl_2006">

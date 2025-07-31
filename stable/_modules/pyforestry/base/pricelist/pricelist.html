@@ -44,7 +44,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyforestry/base/pricelist/pricelist';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'stable';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             false;
@@ -137,6 +137,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../notebooks/tree_species_intro.html">
     Tree species basics
   </a>
@@ -156,13 +163,23 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
     Marklund biomass with SweTimber
   </a>
 </li>
 
+                </ul>
+            </li>
+            
   </ul>
 </nav></div>
       
@@ -257,6 +274,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../api/modules.html">
     pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../helpers_overview.html">
+    Helpers Overview
   </a>
 </li>
 
@@ -625,7 +649,7 @@
 
 
 <div class="viewcode-block" id="Pricelist">
-<a class="viewcode-back" href="../../../../api/pyforestry.base.pricelist.html#pyforestry.base.pricelist.pricelist.Pricelist">[docs]</a>
+<a class="viewcode-back" href="../../../../api/pyforestry.sweden.pricelist.html#pyforestry.base.pricelist.pricelist.Pricelist">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Pricelist</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Holds the combined pulpwood, timber, etc. prices and constraints.&quot;&quot;&quot;</span>
 
@@ -641,7 +665,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">TimberLogLength</span> <span class="o">=</span> <span class="n">LengthRange</span><span class="p">(</span><span class="mi">31</span><span class="p">,</span> <span class="mi">55</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Pricelist.load_from_dict">
-<a class="viewcode-back" href="../../../../api/pyforestry.base.pricelist.html#pyforestry.base.pricelist.pricelist.Pricelist.load_from_dict">[docs]</a>
+<a class="viewcode-back" href="../../../../api/pyforestry.sweden.pricelist.html#pyforestry.base.pricelist.pricelist.Pricelist.load_from_dict">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">load_from_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">price_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads and configures the entire pricelist from a dictionary.&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
@@ -699,7 +723,7 @@
 
 
 <div class="viewcode-block" id="create_pricelist_from_data">
-<a class="viewcode-back" href="../../../../api/pyforestry.base.pricelist.html#pyforestry.base.pricelist.pricelist.create_pricelist_from_data">[docs]</a>
+<a class="viewcode-back" href="../../../../api/pyforestry.sweden.pricelist.html#pyforestry.base.pricelist.pricelist.create_pricelist_from_data">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">create_pricelist_from_data</span><span class="p">(</span>
     <span class="n">price_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">species_to_load</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pricelist</span><span class="p">:</span>

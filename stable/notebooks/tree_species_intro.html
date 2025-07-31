@@ -48,7 +48,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/tree_species_intro';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'stable';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             false;
@@ -56,7 +56,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Timber bucking demo" href="timber_bucking_demo.html" />
-    <link rel="prev" title="pyforestry.sweden.volume package" href="../api/pyforestry.sweden.volume.html" />
+    <link rel="prev" title="Helpers Overview" href="../helpers_overview.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -142,6 +142,13 @@
 </li>
 
 
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
 <li class="nav-item current active">
   <a class="nav-link nav-internal" href="#">
     Tree species basics
@@ -162,13 +169,23 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="marklund_swetimber_demo.html">
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="marklund_swetimber_demo.html">
     Marklund biomass with SweTimber
   </a>
 </li>
 
+                </ul>
+            </li>
+            
   </ul>
 </nav></div>
       
@@ -265,6 +282,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../api/modules.html">
     pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../helpers_overview.html">
+    Helpers Overview
   </a>
 </li>
 
@@ -438,20 +462,18 @@ TreeName(genus=TreeGenus(name=&#39;Pinus&#39;, code=&#39;PINUS&#39;), species_na
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">pinus</span><span class="o">.</span><span class="n">full_name</span>
-<span class="nb">list</span><span class="p">(</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">pinus</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">pinus</span><span class="o">.</span><span class="n">full_name</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">pinus</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[TreeName(genus=TreeGenus(name=&#39;Pinus&#39;, code=&#39;PINUS&#39;), species_name=&#39;sylvestris&#39;, code=&#39;PSYL&#39;),
- TreeName(genus=TreeGenus(name=&#39;Pinus&#39;, code=&#39;PINUS&#39;), species_name=&#39;contorta&#39;, code=&#39;PCON&#39;),
- TreeName(genus=TreeGenus(name=&#39;Pinus&#39;, code=&#39;PINUS&#39;), species_name=&#39;mugo&#39;, code=&#39;PMUG&#39;)]
+pinus
+[TreeName(genus=TreeGenus(name=&#39;Pinus&#39;, code=&#39;PINUS&#39;), species_name=&#39;sylvestris&#39;, code=&#39;PSYL&#39;), TreeName(genus=TreeGenus(name=&#39;Pinus&#39;, code=&#39;PINUS&#39;), species_name=&#39;contorta&#39;, code=&#39;PCON&#39;), TreeName(genus=TreeGenus(name=&#39;Pinus&#39;, code=&#39;PINUS&#39;), species_name=&#39;mugo&#39;, code=&#39;PMUG&#39;)]
 </pre></div></div>
 </div>
 <p>Strings can be converted to <code class="docutils literal notranslate"><span class="pre">TreeName</span></code> objects using <code class="docutils literal notranslate"><span class="pre">parse_tree_species()</span></code>.</p>
@@ -459,17 +481,17 @@ TreeName(genus=TreeGenus(name=&#39;Pinus&#39;, code=&#39;PINUS&#39;), species_na
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">parse_tree_species</span><span class="p">(</span><span class="s2">&quot;Pinus sylvestris&quot;</span><span class="p">)</span>
-<span class="n">parse_tree_species</span><span class="p">(</span><span class="s2">&quot;pInus sylvestris&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">pinus_sylvestris</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">parse_tree_species</span><span class="p">(</span><span class="s2">&quot;Pinus sylvestris&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">parse_tree_species</span><span class="p">(</span><span class="s2">&quot;pInus sylvestris&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">pinus_sylvestris</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
+TreeName(genus=TreeGenus(name=&#39;Pinus&#39;, code=&#39;PINUS&#39;), species_name=&#39;sylvestris&#39;, code=&#39;PSYL&#39;)
 True
 </pre></div></div>
 </div>
@@ -524,12 +546,12 @@ True
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../api/pyforestry.sweden.volume.html"
+       href="../helpers_overview.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">pyforestry.sweden.volume package</p>
+        <p class="prev-next-title">Helpers Overview</p>
       </div>
     </a>
     <a class="right-next"

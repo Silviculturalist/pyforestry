@@ -44,7 +44,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyforestry/base/helpers/tree';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'stable';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             false;
@@ -137,6 +137,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../notebooks/tree_species_intro.html">
     Tree species basics
   </a>
@@ -156,13 +163,23 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
     Marklund biomass with SweTimber
   </a>
 </li>
 
+                </ul>
+            </li>
+            
   </ul>
 </nav></div>
       
@@ -257,6 +274,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../api/modules.html">
     pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../helpers_overview.html">
+    Helpers Overview
   </a>
 </li>
 
@@ -386,9 +410,8 @@
                 <article class="bd-article">
                   
   <h1>Source code for pyforestry.base.helpers.tree</h1><div class="highlight"><pre>
-<span></span><span class="c1"># ------------------------------------------------------------------------------</span>
-<span class="c1"># Tree classes</span>
-<span class="c1"># ------------------------------------------------------------------------------</span>
+<span></span><span class="sd">&quot;&quot;&quot;Classes for representing individual and aggregated tree records.&quot;&quot;&quot;</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.primitives</span><span class="w"> </span><span class="kn">import</span> <span class="n">Age</span><span class="p">,</span> <span class="n">Diameter_cm</span><span class="p">,</span> <span class="n">Position</span>
@@ -398,18 +421,6 @@
 <div class="viewcode-block" id="Tree">
 <a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.tree.Tree">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Tree</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Base class for all tree objects. You can expand this to include common fields/methods</span>
-<span class="sd">    that should exist on any type of tree.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">pass</span></div>
-
-
-
-<div class="viewcode-block" id="SingleTree">
-<a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.tree.SingleTree">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">SingleTree</span><span class="p">(</span><span class="n">Tree</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A spatially explicit single tree: (x, y, [z]) in a coordinate system + attributes.</span>
 
@@ -425,6 +436,10 @@
 <span class="sd">        The diameter (cm) if known. If a float is passed, it can be coerced to a Diameter_cm.</span>
 <span class="sd">    height_m : float | None</span>
 <span class="sd">        The height (m) of the tree if known.</span>
+<span class="sd">    weight_n : float</span>
+<span class="sd">        Number of trees represented by Tree object. Defaults to 1.0.</span>
+<span class="sd">    uid : int | None</span>
+<span class="sd">        A unique identifier for the Tree object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
@@ -434,8 +449,28 @@
         <span class="n">age</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Age</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">diameter_cm</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Diameter_cm</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">height_m</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">weight_n</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="n">uid</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a Tree instance with optional attributes.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        position : Position | tuple | None, optional</span>
+<span class="sd">            Tree location in a coordinate system.</span>
+<span class="sd">        species : TreeName | str | None, optional</span>
+<span class="sd">            Species identifier or name string.</span>
+<span class="sd">        age : Age | float | None, optional</span>
+<span class="sd">            Age value or ``Age`` enumeration.</span>
+<span class="sd">        diameter_cm : Diameter_cm | float | None, optional</span>
+<span class="sd">            Diameter at breast height in centimetres.</span>
+<span class="sd">        height_m : float | None, optional</span>
+<span class="sd">            Tree height in metres.</span>
+<span class="sd">        weight_n : float</span>
+<span class="sd">            Number of trees represented by Tree object. Defaults to 1.0.</span>
+<span class="sd">        uid : int | str | None, optional</span>
+<span class="sd">            Optional unique identifier for the tree.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">Position</span><span class="o">.</span><span class="n">_set_position</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
 
         <span class="c1"># Convert string species → TreeSpecies if parseable</span>
@@ -453,67 +488,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span> <span class="o">=</span> <span class="n">diameter_cm</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">height_m</span> <span class="o">=</span> <span class="n">height_m</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">uid</span> <span class="o">=</span> <span class="n">uid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight_n</span> <span class="o">=</span> <span class="n">weight_n</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return ``repr(self)`` including main attribute values.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;SingleTree(species=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="si">}</span><span class="s2">, age=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">age</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Tree(species=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="si">!r}</span><span class="s2">, age=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">age</span><span class="si">}</span><span class="s2">, &quot;</span>
             <span class="sa">f</span><span class="s2">&quot;diameter_cm=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="si">}</span><span class="s2">, height_m=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="si">}</span><span class="s2">, &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;position=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="si">}</span><span class="s2">, uid=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">uid</span><span class="si">}</span><span class="s2">)&quot;</span>
-        <span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="RepresentationTree">
-<a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.tree.RepresentationTree">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">RepresentationTree</span><span class="p">(</span><span class="n">Tree</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A &quot;multiplicity&quot; tree, i.e. a single record that represents multiple identical trees</span>
-<span class="sd">    on a plot (spatially implicit or partially explicit).</span>
-
-<span class="sd">    Attributes:</span>
-<span class="sd">    -----------</span>
-<span class="sd">    position : Position | tuple[float,float] | tuple[float,float,float] | None</span>
-<span class="sd">        Location if relevant (often None or the plot center).</span>
-<span class="sd">    species : TreeName | str | None</span>
-<span class="sd">        Species of the tree(s).</span>
-<span class="sd">    age : Age | float | None</span>
-<span class="sd">        Age of the tree(s).</span>
-<span class="sd">    diameter_cm : Diameter_cm | float | None</span>
-<span class="sd">        Diameter of the tree(s).</span>
-<span class="sd">    height_m : float | None</span>
-<span class="sd">        Height of the tree(s).</span>
-<span class="sd">    weight : float</span>
-<span class="sd">        Number of stems represented by this single record (e.g. 1, or 5).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">position</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Position</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">,</span> <span class="kc">None</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">species</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">TreeName</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">age</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Age</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">diameter_cm</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Diameter_cm</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">height_m</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
-        <span class="n">uid</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">Position</span><span class="o">.</span><span class="n">_set_position</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">species</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">species</span> <span class="o">=</span> <span class="n">parse_tree_species</span><span class="p">(</span><span class="n">species</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">species</span> <span class="o">=</span> <span class="n">species</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="n">age</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span> <span class="o">=</span> <span class="n">diameter_cm</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">height_m</span> <span class="o">=</span> <span class="n">height_m</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">weight</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">uid</span> <span class="o">=</span> <span class="n">uid</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;RepresentationTree(species=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="si">}</span><span class="s2">, age=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">age</span><span class="si">}</span><span class="s2">, &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;diameter_cm=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter_cm</span><span class="si">}</span><span class="s2">, height_m=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">height_m</span><span class="si">}</span><span class="s2">, &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;weight=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="si">}</span><span class="s2">, uid=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">uid</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;position=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="si">}</span><span class="s2">, weight_n=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_n</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;uid=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">uid</span><span class="si">}</span><span class="s2">)&quot;</span>
         <span class="p">)</span></div>
 
 </pre></div>

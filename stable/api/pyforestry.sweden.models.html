@@ -45,14 +45,14 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/pyforestry.sweden.models';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'stable';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             false;
         </script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="pyforestry.sweden.site package" href="pyforestry.sweden.site.html" />
+    <link rel="next" title="pyforestry.sweden.pricelist package" href="pyforestry.sweden.pricelist.html" />
     <link rel="prev" title="pyforestry.sweden.misc package" href="pyforestry.sweden.misc.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -140,6 +140,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../notebooks/tree_species_intro.html">
     Tree species basics
   </a>
@@ -159,13 +166,23 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../notebooks/marklund_swetimber_demo.html">
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/marklund_swetimber_demo.html">
     Marklund biomass with SweTimber
   </a>
 </li>
 
+                </ul>
+            </li>
+            
   </ul>
 </nav></div>
       
@@ -267,6 +284,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../notebooks/tree_species_intro.html">
     Tree species basics
   </a>
@@ -347,10 +371,7 @@
 <li class="toctree-l4"><a class="reference internal" href="pyforestry.base.helpers.primitives.html">pyforestry.base.helpers.primitives package</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.base.pricelist.html">pyforestry.base.pricelist package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="pyforestry.base.pricelist.data.html">pyforestry.base.pricelist.data package</a></li>
-</ul>
-</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.pricelist.html">pyforestry.base.pricelist package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyforestry.base.taper.html">pyforestry.base.taper package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.base.timber.html">pyforestry.base.timber package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="pyforestry.base.timber.timber_base.html">pyforestry.base.timber.timber_base package</a></li>
@@ -373,6 +394,10 @@
 <li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.helpers.html">pyforestry.sweden.helpers package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.misc.html">pyforestry.sweden.misc package</a></li>
 <li class="toctree-l3 current active"><a class="current reference internal" href="#">pyforestry.sweden.models package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.pricelist.html">pyforestry.sweden.pricelist package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.pricelist.data.html">pyforestry.sweden.pricelist.data package</a></li>
+</ul>
+</details></li>
 <li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html">pyforestry.sweden.site package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.siteindex.html">pyforestry.sweden.siteindex package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.sis.html">pyforestry.sweden.siteindex.sis package</a></li>
@@ -590,7 +615,8 @@ Based on Function 6.4, Elfving &amp; Hägglund (1975), p. 53.</p>
 <li><p><strong>even_aged</strong> – True if the stand is considered even-aged or somewhat uneven-aged.</p></li>
 <li><p><strong>stand_density_factor</strong> – A factor related to target density (0.1 to 1.0).</p></li>
 <li><p><strong>pct</strong> – True if pre-commercial thinning has occurred.</p></li>
-<li><p><strong>spatial_distribution</strong> – Code indicating spatial distribution (1=even, 2=somewhat uneven, 3=grouped).</p></li>
+<li><p><strong>spatial_distribution</strong> – Code indicating spatial distribution (1=even, 2=somewhat uneven,
+3=grouped).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -639,10 +665,12 @@ Based on Function 5.2, Elfving &amp; Hägglund (1975), p. 53.</p>
 <li><p><strong>latitude</strong> – Latitude (used if age needs calculation).</p></li>
 <li><p><strong>site_index</strong> – Site index H100 (m).</p></li>
 <li><p><strong>dominant_height</strong> – Dominant height (m).</p></li>
-<li><p><strong>age_at_breast_height</strong> – Age at breast height. If None, it attempts calculation (Not Implemented Yet).</p></li>
+<li><p><strong>age_at_breast_height</strong> – Age at breast height.
+If None, it attempts calculation (Not Implemented Yet).</p></li>
 <li><p><strong>stand_density_factor</strong> – Stand density factor (0.1-1.0).</p></li>
 <li><p><strong>pct</strong> – True if pre-commercial thinning has occurred.</p></li>
-<li><p><strong>regeneration</strong> – Method of establishment (“culture”, “natural regeneration”, “unknown”). Used if age needs calculation.</p></li>
+<li><p><strong>regeneration</strong> – Method of establishment (“culture”, “natural regeneration”, “unknown”).
+Used if age needs calculation.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -698,76 +726,6 @@ Based on Function 5.4, Elfving &amp; Hägglund (1975), p. 53.</p>
 </dd></dl>
 
 </section>
-<section id="module-pyforestry.sweden.models.elfving_ibm">
-<span id="pyforestry-sweden-models-elfving-ibm-module"></span><h2>pyforestry.sweden.models.elfving_ibm module<a class="headerlink" href="#module-pyforestry.sweden.models.elfving_ibm" title="Link to this heading">#</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="pyforestry.sweden.models.elfving_ibm.ElfvingIBM">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.models.elfving_ibm.</span></span><span class="sig-name descname"><span class="pre">ElfvingIBM</span></span><a class="reference internal" href="../_modules/pyforestry/sweden/models/elfving_ibm.html#ElfvingIBM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.models.elfving_ibm.ElfvingIBM" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Container class for Elfving (2003-2010) growth &amp; mortality equations.</p>
-<p>Individual tree growth models predict the 5-year increment in squared
-diameter (cm²), which is then used to derive diameter increment or
-basal area increment. Stand-level models predict mortality or BA development.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="pyforestry.sweden.models.elfving_ibm.ElfvingIBM.basal_area_mortality_percent_spruce_pine">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">basal_area_mortality_percent_spruce_pine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dominant_height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">H100</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stems</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ThinningProportionBAStart</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ThinningForm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fertilised</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/models/elfving_ibm.html#ElfvingIBM.basal_area_mortality_percent_spruce_pine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.models.elfving_ibm.ElfvingIBM.basal_area_mortality_percent_spruce_pine" title="Link to this definition">#</a></dt>
-<dd><p>Annual mortality (% of BA start) for Pine &amp; Spruce stands. Elfving (2010).</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pyforestry.sweden.models.elfving_ibm.ElfvingIBM.calculate_five_year_diameter_increment_cm">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calculate_five_year_diameter_increment_cm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/models/elfving_ibm.html#ElfvingIBM.calculate_five_year_diameter_increment_cm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.models.elfving_ibm.ElfvingIBM.calculate_five_year_diameter_increment_cm" title="Link to this definition">#</a></dt>
-<dd><p>Calculate 5-year diameter increment (cm) for a specific tree species.</p>
-<p>This method first calculates the 5-year increment in squared diameter (cm²)
-using species-specific Elfving equations, and then derives the
-diameter increment.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>species</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><em>TreeName</em></a><em>]</em>) – The tree species.</p></li>
-<li><p><strong>diameter_cm</strong> (<em>float</em>) – Initial diameter at breast-height (1.3m) of the
-subject tree, in centimeters (cm).</p></li>
-<li><p><strong>**kwargs</strong> – Additional keyword arguments required by the specific
-underlying growth function. Refer to the docstrings of the
-<cite>_calculate_squared_diameter_increment_&lt;species_group&gt;_cm2()</cite>
-methods for details.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>Predicted 5-year diameter increment for the subject tree (cm).</dt><dd><p>Can be negative if the tree shrinks. Minimum increment is
--diameter_cm (tree diameter becomes 0).</p>
-</dd>
-</dl>
-</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>NotImplementedError</strong> – If no equation is implemented for the species.</p></li>
-<li><p><strong>ValueError</strong> – If incompatible arguments are provided in underlying functions.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pyforestry.sweden.models.elfving_ibm.ElfvingIBM.gmax_spruce_pine">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">gmax_spruce_pine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dominant_height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">H100</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stems</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/models/elfving_ibm.html#ElfvingIBM.gmax_spruce_pine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.models.elfving_ibm.ElfvingIBM.gmax_spruce_pine" title="Link to this definition">#</a></dt>
-<dd><p>Maximum potential basal-area (Gmax) for Spruce &amp; Pine stands. Elfving (2010).</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pyforestry.sweden.models.elfving_ibm.ElfvingIBM.stand_basal_area_bey2">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stand_basal_area_bey2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vegetation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenFieldLayer" title="pyforestry.sweden.site.enums.SwedenFieldLayer"><span class="pre">SwedenFieldLayer</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">stand_age</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Basal_area_Conifer_m2_ha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Basal_area_Pine_m2_ha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Basal_area_Birch_m2_ha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Basal_area_after_thinning</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Basal_area_before_thinning</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Basal_area_stand</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stems_after_thinning</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peatland</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">soil_moisture</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SIS100</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ditched</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thinned</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_thinned</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spruce_ba_proportion</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/models/elfving_ibm.html#ElfvingIBM.stand_basal_area_bey2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.models.elfving_ibm.ElfvingIBM.stand_basal_area_bey2" title="Link to this definition">#</a></dt>
-<dd><p>5-year stand-level basal area <em>increment</em> after thinning (Elfving 2009, BEY2).</p>
-</dd></dl>
-
-</dd></dl>
-
-</section>
 <section id="module-pyforestry.sweden.models">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pyforestry.sweden.models" title="Link to this heading">#</a></h2>
 </section>
@@ -793,11 +751,11 @@ methods for details.</p></li>
       </div>
     </a>
     <a class="right-next"
-       href="pyforestry.sweden.site.html"
+       href="pyforestry.sweden.pricelist.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">pyforestry.sweden.site package</p>
+        <p class="prev-next-title">pyforestry.sweden.pricelist package</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -832,16 +790,6 @@ methods for details.</p></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.models.elfving_hagglund_1975.ElfvingHagglundInitialStand.estimate_stems_young_pine_south"><code class="docutils literal notranslate"><span class="pre">ElfvingHagglundInitialStand.estimate_stems_young_pine_south()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.models.elfving_hagglund_1975.ElfvingHagglundInitialStand.estimate_stems_young_spruce_north"><code class="docutils literal notranslate"><span class="pre">ElfvingHagglundInitialStand.estimate_stems_young_spruce_north()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.models.elfving_hagglund_1975.ElfvingHagglundInitialStand.estimate_stems_young_spruce_south"><code class="docutils literal notranslate"><span class="pre">ElfvingHagglundInitialStand.estimate_stems_young_spruce_south()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.sweden.models.elfving_ibm">pyforestry.sweden.models.elfving_ibm module</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.models.elfving_ibm.ElfvingIBM"><code class="docutils literal notranslate"><span class="pre">ElfvingIBM</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.models.elfving_ibm.ElfvingIBM.basal_area_mortality_percent_spruce_pine"><code class="docutils literal notranslate"><span class="pre">ElfvingIBM.basal_area_mortality_percent_spruce_pine()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.models.elfving_ibm.ElfvingIBM.calculate_five_year_diameter_increment_cm"><code class="docutils literal notranslate"><span class="pre">ElfvingIBM.calculate_five_year_diameter_increment_cm()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.models.elfving_ibm.ElfvingIBM.gmax_spruce_pine"><code class="docutils literal notranslate"><span class="pre">ElfvingIBM.gmax_spruce_pine()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.models.elfving_ibm.ElfvingIBM.stand_basal_area_bey2"><code class="docutils literal notranslate"><span class="pre">ElfvingIBM.stand_basal_area_bey2()</span></code></a></li>
 </ul>
 </li>
 </ul>

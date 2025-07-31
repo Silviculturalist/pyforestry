@@ -45,7 +45,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/pyforestry.sweden.bark';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'stable';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             false;
@@ -140,6 +140,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../notebooks/tree_species_intro.html">
     Tree species basics
   </a>
@@ -159,13 +166,23 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../notebooks/marklund_swetimber_demo.html">
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/marklund_swetimber_demo.html">
     Marklund biomass with SweTimber
   </a>
 </li>
 
+                </ul>
+            </li>
+            
   </ul>
 </nav></div>
       
@@ -267,6 +284,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../notebooks/tree_species_intro.html">
     Tree species basics
   </a>
@@ -347,10 +371,7 @@
 <li class="toctree-l4"><a class="reference internal" href="pyforestry.base.helpers.primitives.html">pyforestry.base.helpers.primitives package</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.base.pricelist.html">pyforestry.base.pricelist package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="pyforestry.base.pricelist.data.html">pyforestry.base.pricelist.data package</a></li>
-</ul>
-</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.pricelist.html">pyforestry.base.pricelist package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyforestry.base.taper.html">pyforestry.base.taper package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.base.timber.html">pyforestry.base.timber package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="pyforestry.base.timber.timber_base.html">pyforestry.base.timber.timber_base package</a></li>
@@ -373,6 +394,10 @@
 <li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.helpers.html">pyforestry.sweden.helpers package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.misc.html">pyforestry.sweden.misc package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.models.html">pyforestry.sweden.models package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.pricelist.html">pyforestry.sweden.pricelist package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.pricelist.data.html">pyforestry.sweden.pricelist.data package</a></li>
+</ul>
+</details></li>
 <li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html">pyforestry.sweden.site package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.siteindex.html">pyforestry.sweden.siteindex package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.sis.html">pyforestry.sweden.siteindex.sis package</a></li>
@@ -459,6 +484,22 @@
 </section>
 <section id="module-pyforestry.sweden.bark.hannrup_2004">
 <span id="pyforestry-sweden-bark-hannrup-2004-module"></span><h2>pyforestry.sweden.bark.hannrup_2004 module<a class="headerlink" href="#module-pyforestry.sweden.bark.hannrup_2004" title="Link to this heading">#</a></h2>
+<p>Bark thickness models for Sweden.</p>
+<p>This module contains functions implementing the bark thickness equations
+presented by Hannrup (2004).  The models estimate <strong>double</strong> bark thickness
+for the two major conifer species in Sweden:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Hannrup_2004_bark_pinus_sylvestris_sweden</span></code> - Scots pine model that uses
+diameter at breast height, latitude and stem height.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Hannrup_2004_bark_picea_abies_sweden</span></code> - Norway spruce model that relates
+the diameter at a given point to the breast height diameter.</p></li>
+</ul>
+<p>Both functions return the estimated double bark thickness in millimetres and
+are derived from:</p>
+<blockquote>
+<div><p>Hannrup, Björn. (2004). <em>Funktioner för skattning av barkens tjocklek hos
+tall och gran vid avverkning med skördare</em>. Arbetsrapport 575, Skogforsk.</p>
+</div></blockquote>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.bark.hannrup_2004.Hannrup_2004_bark_picea_abies_sweden">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.bark.hannrup_2004.</span></span><span class="sig-name descname"><span class="pre">Hannrup_2004_bark_picea_abies_sweden</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_at_height_mm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diameter_breast_height_mm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.diameter_cm.Diameter_cm" title="pyforestry.base.helpers.primitives.diameter_cm.Diameter_cm"><span class="pre">Diameter_cm</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/bark/hannrup_2004.html#Hannrup_2004_bark_picea_abies_sweden"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.bark.hannrup_2004.Hannrup_2004_bark_picea_abies_sweden" title="Link to this definition">#</a></dt>
@@ -563,6 +604,108 @@ not just at breast height.</p></li>
 </section>
 <section id="module-pyforestry.sweden.bark">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pyforestry.sweden.bark" title="Link to this heading">#</a></h2>
+<p>Public interface for bark thickness models for Swedish species.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.sweden.bark.Hannrup_2004_bark_picea_abies_sweden">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.bark.</span></span><span class="sig-name descname"><span class="pre">Hannrup_2004_bark_picea_abies_sweden</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_at_height_mm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diameter_breast_height_mm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.diameter_cm.Diameter_cm" title="pyforestry.base.helpers.primitives.diameter_cm.Diameter_cm"><span class="pre">Diameter_cm</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/bark/hannrup_2004.html#Hannrup_2004_bark_picea_abies_sweden"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.bark.Hannrup_2004_bark_picea_abies_sweden" title="Link to this definition">#</a></dt>
+<dd><p>Calculates double bark thickness for Norway Spruce in Sweden based on diameter.</p>
+<p>Based on the function presented in Skogforsk Arbetsrapport 575-2004.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diameter_at_height_mm</strong> (<em>float</em>) – Diameter over bark at the point of interest
+along the stem, in millimeters.</p></li>
+<li><p><strong>diameter_breast_height_mm</strong> (<em>Union</em><em>[</em><em>float</em><em>, </em><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.Diameter_cm" title="pyforestry.base.helpers.Diameter_cm"><em>Diameter_cm</em></a><em>]</em>) – Diameter at breast
+height (1.3m) over bark, in millimeters. Must be in the same units
+as diameter_at_height_mm. If Diameter_cm is passed, it’s converted to mm.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Estimated double bark thickness at the point corresponding to</dt><dd><p><cite>diameter_at_height_mm</cite>, in millimeters. Minimum value is 2 mm.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If inputs are non-positive or dbh is zero.</p></li>
+<li><p><strong>TypeError</strong> – If diameter input types are invalid.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<p>Hannrup, Björn. (2004). Funktioner för skattning av barkens tjocklek hos
+tall och gran vid avverkning med skördare [Functions for estimating bark
+thickness of Scots pine and Norway spruce at harvester felling].
+Arbetsrapport 575. Skogforsk. Uppsala Science Park, Sweden. 34 pp.
+ISSN: 1404-305X.
+Available Online [2025-04-17]: <a class="reference external" href="https://www.skogforsk.se/contentassets/960ad964391d489785f97f9eaeeaf174/arbetsrapport-575-2004.pdf">https://www.skogforsk.se/contentassets/960ad964391d489785f97f9eaeeaf174/arbetsrapport-575-2004.pdf</a></p>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>This function calculates bark thickness based on the diameter at a given
+point relative to the breast height diameter. It does not directly use
+stem height or latitude.</p></li>
+<li><p>The function returns DOUBLE bark thickness in MILLIMETERS.</p></li>
+<li><p>Only applicable to Picea abies in Sweden.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.sweden.bark.Hannrup_2004_bark_pinus_sylvestris_sweden">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.bark.</span></span><span class="sig-name descname"><span class="pre">Hannrup_2004_bark_pinus_sylvestris_sweden</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_breast_height_mm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.diameter_cm.Diameter_cm" title="pyforestry.base.helpers.primitives.diameter_cm.Diameter_cm"><span class="pre">Diameter_cm</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stem_height_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/bark/hannrup_2004.html#Hannrup_2004_bark_pinus_sylvestris_sweden"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.bark.Hannrup_2004_bark_pinus_sylvestris_sweden" title="Link to this definition">#</a></dt>
+<dd><p>Calculates double bark thickness at a given stem height for Scots Pine in Sweden.</p>
+<p>Based on the “Sf_tall” function presented in Skogforsk Arbetsrapport 575-2004.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diameter_breast_height_mm</strong> (<em>Union</em><em>[</em><em>float</em><em>, </em><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.Diameter_cm" title="pyforestry.base.helpers.Diameter_cm"><em>Diameter_cm</em></a><em>]</em>) – Diameter at breast
+height (1.3m) over bark, in millimeters. If Diameter_cm is passed,
+it will be converted to mm. Diameters over 590mm are capped at 590mm
+internally for the calculation.</p></li>
+<li><p><strong>latitude</strong> (<em>float</em>) – Latitude in decimal degrees (e.g., 63.82).</p></li>
+<li><p><strong>stem_height_cm</strong> (<em>float</em>) – The height along the stem (from ground level)
+where bark thickness is desired, in centimeters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Estimated double bark thickness at the specified <cite>stem_height_cm</cite>,</dt><dd><p>in millimeters. Minimum value returned is 2 mm.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If inputs are outside reasonable ranges (e.g., negative diameter,
+    invalid latitude, negative stem height).</p></li>
+<li><p><strong>TypeError</strong> – If diameter input type is invalid.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<p>Hannrup, Björn. (2004). Funktioner för skattning av barkens tjocklek hos
+tall och gran vid avverkning med skördare [Functions for estimating bark
+thickness of Scots pine and Norway spruce at harvester felling].
+Arbetsrapport 575. Skogforsk. Uppsala Science Park, Sweden. 34 pp.
+ISSN: 1404-305X.
+Available Online [2025-04-17]: <a class="reference external" href="https://www.skogforsk.se/contentassets/960ad964391d489785f97f9eaeeaf174/arbetsrapport-575-2004.pdf">https://www.skogforsk.se/contentassets/960ad964391d489785f97f9eaeeaf174/arbetsrapport-575-2004.pdf</a></p>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>This function calculates bark thickness at any point along the stem height,
+not just at breast height.</p></li>
+<li><p>It requires latitude as an input.</p></li>
+<li><p>The function returns DOUBLE bark thickness in MILLIMETERS.</p></li>
+<li><p>Only applicable to Pinus sylvestris in Sweden.</p></li>
+</ul>
+</dd></dl>
+
 </section>
 </section>
 
@@ -619,7 +762,11 @@ not just at breast height.</p></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.bark.hannrup_2004.Hannrup_2004_bark_pinus_sylvestris_sweden"><code class="docutils literal notranslate"><span class="pre">Hannrup_2004_bark_pinus_sylvestris_sweden()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.sweden.bark">Module contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.sweden.bark">Module contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.bark.Hannrup_2004_bark_picea_abies_sweden"><code class="docutils literal notranslate"><span class="pre">Hannrup_2004_bark_picea_abies_sweden()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.bark.Hannrup_2004_bark_pinus_sylvestris_sweden"><code class="docutils literal notranslate"><span class="pre">Hannrup_2004_bark_pinus_sylvestris_sweden()</span></code></a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 

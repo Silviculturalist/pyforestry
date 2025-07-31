@@ -45,7 +45,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/pyforestry.sweden.geo.temperature';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
-        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'stable';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             false;
@@ -140,6 +140,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../notebooks/tree_species_intro.html">
     Tree species basics
   </a>
@@ -159,13 +166,23 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../notebooks/marklund_swetimber_demo.html">
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/marklund_swetimber_demo.html">
     Marklund biomass with SweTimber
   </a>
 </li>
 
+                </ul>
+            </li>
+            
   </ul>
 </nav></div>
       
@@ -267,6 +284,13 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../notebooks/tree_species_intro.html">
     Tree species basics
   </a>
@@ -347,10 +371,7 @@
 <li class="toctree-l4"><a class="reference internal" href="pyforestry.base.helpers.primitives.html">pyforestry.base.helpers.primitives package</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.base.pricelist.html">pyforestry.base.pricelist package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="pyforestry.base.pricelist.data.html">pyforestry.base.pricelist.data package</a></li>
-</ul>
-</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.pricelist.html">pyforestry.base.pricelist package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyforestry.base.taper.html">pyforestry.base.taper package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.base.timber.html">pyforestry.base.timber package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="pyforestry.base.timber.timber_base.html">pyforestry.base.timber.timber_base package</a></li>
@@ -373,6 +394,10 @@
 <li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.helpers.html">pyforestry.sweden.helpers package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.misc.html">pyforestry.sweden.misc package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.models.html">pyforestry.sweden.models package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.pricelist.html">pyforestry.sweden.pricelist package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.pricelist.data.html">pyforestry.sweden.pricelist.data package</a></li>
+</ul>
+</details></li>
 <li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html">pyforestry.sweden.site package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.siteindex.html">pyforestry.sweden.siteindex package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.sis.html">pyforestry.sweden.siteindex.sis package</a></li>
@@ -462,6 +487,7 @@
 </section>
 <section id="module-pyforestry.sweden.geo.temperature.odin_1983">
 <span id="pyforestry-sweden-geo-temperature-odin-1983-module"></span><h2>pyforestry.sweden.geo.temperature.odin_1983 module<a class="headerlink" href="#module-pyforestry.sweden.geo.temperature.odin_1983" title="Link to this heading">#</a></h2>
+<p>Implementation of Swedish temperature and radiation models.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.geo.temperature.odin_1983.</span></span><span class="sig-name descname"><span class="pre">Moren_Perttu_radiation_1994</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">latitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">july_avg_temp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jan_avg_temp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/geo/temperature/odin_1983.html#Moren_Perttu_radiation_1994"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994" title="Link to this definition">#</a></dt>
@@ -469,32 +495,38 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.calculate_global_radiation_sum_growing_season">
 <span class="sig-name descname"><span class="pre">calculate_global_radiation_sum_growing_season</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold_temperature</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/geo/temperature/odin_1983.html#Moren_Perttu_radiation_1994.calculate_global_radiation_sum_growing_season"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.calculate_global_radiation_sum_growing_season" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Total global radiation during the growing season.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.calculate_growing_season_duration_1000m">
 <span class="sig-name descname"><span class="pre">calculate_growing_season_duration_1000m</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold_temperature</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/geo/temperature/odin_1983.html#Moren_Perttu_radiation_1994.calculate_growing_season_duration_1000m"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.calculate_growing_season_duration_1000m" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Growing season duration for the 1000 m model.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.calculate_growing_season_duration_1500m">
 <span class="sig-name descname"><span class="pre">calculate_growing_season_duration_1500m</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold_temperature</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/geo/temperature/odin_1983.html#Moren_Perttu_radiation_1994.calculate_growing_season_duration_1500m"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.calculate_growing_season_duration_1500m" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Growing season duration for the 1500 m model.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.calculate_temperature_sum_1000m">
 <span class="sig-name descname"><span class="pre">calculate_temperature_sum_1000m</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold_temperature</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/geo/temperature/odin_1983.html#Moren_Perttu_radiation_1994.calculate_temperature_sum_1000m"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.calculate_temperature_sum_1000m" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Temperature sum for the 1000 m model.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.calculate_temperature_sum_1500m">
 <span class="sig-name descname"><span class="pre">calculate_temperature_sum_1500m</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold_temperature</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/geo/temperature/odin_1983.html#Moren_Perttu_radiation_1994.calculate_temperature_sum_1500m"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.calculate_temperature_sum_1500m" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Temperature sum for the 1500 m model.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.get_corrected_temperature_sum">
 <span class="sig-name descname"><span class="pre">get_corrected_temperature_sum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold_temperature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">for_1500m_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/geo/temperature/odin_1983.html#Moren_Perttu_radiation_1994.get_corrected_temperature_sum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.get_corrected_temperature_sum" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Apply continentality correction to the temperature sum.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.get_gorczynski_continentality_index">
@@ -513,17 +545,20 @@ Tmax is July average temp, Tmin is January average temp.
 <dl class="py method">
 <dt class="sig sig-object py" id="pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.get_growing_season_start_day">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_growing_season_start_day</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">latitude_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/geo/temperature/odin_1983.html#Moren_Perttu_radiation_1994.get_growing_season_start_day"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.get_growing_season_start_day" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Julian day number when the growing season starts.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_average_sky">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_ratio_global_to_extraterrestrial_radiation_average_sky</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">day_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/geo/temperature/odin_1983.html#Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_average_sky"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_average_sky" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Return radiation ratio for average-sky conditions.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_clear_sky">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_ratio_global_to_extraterrestrial_radiation_clear_sky</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">day_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/geo/temperature/odin_1983.html#Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_clear_sky"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.geo.temperature.odin_1983.Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_clear_sky" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Return radiation ratio for clear-sky conditions.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -558,6 +593,109 @@ Reports in Forest Ecology and Forest Soils, 45, p.45.</p>
 </section>
 <section id="module-pyforestry.sweden.geo.temperature">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pyforestry.sweden.geo.temperature" title="Link to this heading">#</a></h2>
+<p>Temperature related helpers.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.geo.temperature.</span></span><span class="sig-name descname"><span class="pre">Moren_Perttu_radiation_1994</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">latitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">july_avg_temp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jan_avg_temp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/geo/temperature/odin_1983.html#Moren_Perttu_radiation_1994"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994.calculate_global_radiation_sum_growing_season">
+<span class="sig-name descname"><span class="pre">calculate_global_radiation_sum_growing_season</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold_temperature</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/geo/temperature/odin_1983.html#Moren_Perttu_radiation_1994.calculate_global_radiation_sum_growing_season"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994.calculate_global_radiation_sum_growing_season" title="Link to this definition">#</a></dt>
+<dd><p>Total global radiation during the growing season.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994.calculate_growing_season_duration_1000m">
+<span class="sig-name descname"><span class="pre">calculate_growing_season_duration_1000m</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold_temperature</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/geo/temperature/odin_1983.html#Moren_Perttu_radiation_1994.calculate_growing_season_duration_1000m"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994.calculate_growing_season_duration_1000m" title="Link to this definition">#</a></dt>
+<dd><p>Growing season duration for the 1000 m model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994.calculate_growing_season_duration_1500m">
+<span class="sig-name descname"><span class="pre">calculate_growing_season_duration_1500m</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold_temperature</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/geo/temperature/odin_1983.html#Moren_Perttu_radiation_1994.calculate_growing_season_duration_1500m"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994.calculate_growing_season_duration_1500m" title="Link to this definition">#</a></dt>
+<dd><p>Growing season duration for the 1500 m model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994.calculate_temperature_sum_1000m">
+<span class="sig-name descname"><span class="pre">calculate_temperature_sum_1000m</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold_temperature</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/geo/temperature/odin_1983.html#Moren_Perttu_radiation_1994.calculate_temperature_sum_1000m"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994.calculate_temperature_sum_1000m" title="Link to this definition">#</a></dt>
+<dd><p>Temperature sum for the 1000 m model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994.calculate_temperature_sum_1500m">
+<span class="sig-name descname"><span class="pre">calculate_temperature_sum_1500m</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold_temperature</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/geo/temperature/odin_1983.html#Moren_Perttu_radiation_1994.calculate_temperature_sum_1500m"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994.calculate_temperature_sum_1500m" title="Link to this definition">#</a></dt>
+<dd><p>Temperature sum for the 1500 m model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994.get_corrected_temperature_sum">
+<span class="sig-name descname"><span class="pre">get_corrected_temperature_sum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold_temperature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">for_1500m_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/geo/temperature/odin_1983.html#Moren_Perttu_radiation_1994.get_corrected_temperature_sum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994.get_corrected_temperature_sum" title="Link to this definition">#</a></dt>
+<dd><p>Apply continentality correction to the temperature sum.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994.get_gorczynski_continentality_index">
+<span class="sig-name descname"><span class="pre">get_gorczynski_continentality_index</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/geo/temperature/odin_1983.html#Moren_Perttu_radiation_1994.get_gorczynski_continentality_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994.get_gorczynski_continentality_index" title="Link to this definition">#</a></dt>
+<dd><p>Calculates the Gorczynski continentality index using instance data.
+Tmax is July average temp, Tmin is January average temp.
+:returns: Continentality index C.
+:rtype: float</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If July or January temperatures are not set in the instance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994.get_growing_season_start_day">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_growing_season_start_day</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">latitude_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/geo/temperature/odin_1983.html#Moren_Perttu_radiation_1994.get_growing_season_start_day"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994.get_growing_season_start_day" title="Link to this definition">#</a></dt>
+<dd><p>Julian day number when the growing season starts.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_average_sky">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_ratio_global_to_extraterrestrial_radiation_average_sky</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">day_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/geo/temperature/odin_1983.html#Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_average_sky"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_average_sky" title="Link to this definition">#</a></dt>
+<dd><p>Return radiation ratio for average-sky conditions.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_clear_sky">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_ratio_global_to_extraterrestrial_radiation_clear_sky</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">day_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/geo/temperature/odin_1983.html#Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_clear_sky"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_clear_sky" title="Link to this definition">#</a></dt>
+<dd><p>Return radiation ratio for clear-sky conditions.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.sweden.geo.temperature.Odin_temperature_sum">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.geo.temperature.</span></span><span class="sig-name descname"><span class="pre">Odin_temperature_sum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">latitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/geo/temperature/odin_1983.html#Odin_temperature_sum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.geo.temperature.Odin_temperature_sum" title="Link to this definition">#</a></dt>
+<dd><p>Estimate annual temperature sum above 5°C.</p>
+<p>This function calculates the annual temperature sum (in degree-days) above 5 degrees Celsius
+based on latitude and altitude. It uses an empirical model developed by Odin, Eriksson,
+and Perttu (1983).</p>
+<dl class="simple">
+<dt>Source:</dt><dd><p>Odin, Eriksson &amp; Perttu (1983). “Temperature Climate Maps for Swedish Forestry.”
+Reports in Forest Ecology and Forest Soils, 45, p.45.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>latitude</strong> (<em>float</em>) – Decimal latitude (degrees north).</p></li>
+<li><p><strong>altitude_m</strong> (<em>float</em>) – Altitude in meters above sea level.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Estimated annual temperature sum &gt; 5 degrees Celsius.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 
@@ -626,7 +764,23 @@ Reports in Forest Ecology and Forest Soils, 45, p.45.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.geo.temperature.odin_1983.Odin_temperature_sum"><code class="docutils literal notranslate"><span class="pre">Odin_temperature_sum()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.sweden.geo.temperature">Module contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.sweden.geo.temperature">Module contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994"><code class="docutils literal notranslate"><span class="pre">Moren_Perttu_radiation_1994</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994.calculate_global_radiation_sum_growing_season"><code class="docutils literal notranslate"><span class="pre">Moren_Perttu_radiation_1994.calculate_global_radiation_sum_growing_season()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994.calculate_growing_season_duration_1000m"><code class="docutils literal notranslate"><span class="pre">Moren_Perttu_radiation_1994.calculate_growing_season_duration_1000m()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994.calculate_growing_season_duration_1500m"><code class="docutils literal notranslate"><span class="pre">Moren_Perttu_radiation_1994.calculate_growing_season_duration_1500m()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994.calculate_temperature_sum_1000m"><code class="docutils literal notranslate"><span class="pre">Moren_Perttu_radiation_1994.calculate_temperature_sum_1000m()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994.calculate_temperature_sum_1500m"><code class="docutils literal notranslate"><span class="pre">Moren_Perttu_radiation_1994.calculate_temperature_sum_1500m()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994.get_corrected_temperature_sum"><code class="docutils literal notranslate"><span class="pre">Moren_Perttu_radiation_1994.get_corrected_temperature_sum()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994.get_gorczynski_continentality_index"><code class="docutils literal notranslate"><span class="pre">Moren_Perttu_radiation_1994.get_gorczynski_continentality_index()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994.get_growing_season_start_day"><code class="docutils literal notranslate"><span class="pre">Moren_Perttu_radiation_1994.get_growing_season_start_day()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_average_sky"><code class="docutils literal notranslate"><span class="pre">Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_average_sky()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.geo.temperature.Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_clear_sky"><code class="docutils literal notranslate"><span class="pre">Moren_Perttu_radiation_1994.get_ratio_global_to_extraterrestrial_radiation_clear_sky()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.geo.temperature.Odin_temperature_sum"><code class="docutils literal notranslate"><span class="pre">Odin_temperature_sum()</span></code></a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
