@@ -1,3 +1,5 @@
+"""Utilities for generating and querying precomputed bucking solutions."""
+
 import hashlib
 import json
 import time
@@ -80,6 +82,8 @@ def _worker_buck_one_tree(
 
 
 class SolutionCube:
+    """Container for precomputed bucking solutions."""
+
     def __init__(self, dataset: xr.Dataset):
         """
         Initializes the SolutionCube with a loaded xarray Dataset.
@@ -175,7 +179,8 @@ class SolutionCube:
             new_hash = _hash_pricelist(pricelist_to_verify)
             if ds.attrs.get("pricelist_hash") != new_hash:
                 raise ValueError(
-                    "Pricelist hash mismatch! The loaded cube was not generated with the provided pricelist."
+                    "Pricelist hash mismatch! "
+                    "The loaded cube was not generated with the provided pricelist."
                 )
             print("Pricelist hash verified.")
 
@@ -196,6 +201,25 @@ class SolutionCube:
             sections = json.loads(sections_json)
 
             return total_value, sections
+
+        except KeyError:
+            print(f"Warning: Species '{species}' not found in the solution cube.")
+            return 0.0, []
+        except Exception as e:
+            print(f"An error occurred during lookup: {e}")
+            return 0.0, []
+
+    def lookup_timber_pricelist(self, species: str) -> Tuple[float, list]:
+        """Return an arbitrary timber value for ``species`` or warn if missing."""
+
+        try:
+            if species not in self.dataset.coords["species"].values:
+                raise KeyError
+
+            # Use the first dbh/height combination as a representative value
+            dbh = float(self.dataset.coords["dbh"].values[0])
+            height = float(self.dataset.coords["height"].values[0])
+            return self.lookup(species, dbh, height)
 
         except KeyError:
             print(f"Warning: Species '{species}' not found in the solution cube.")

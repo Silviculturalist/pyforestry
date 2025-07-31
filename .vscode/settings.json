@@ -1,11 +1,19 @@
 {
-    // Format Python with Ruff on save
-    "[python]": {
-        "editor.defaultFormatter": "charliermarsh.ruff",
-        "editor.formatOnSave": true,
-        // Also run Ruff’s auto-fixes on save
-        "editor.codeActionsOnSave": {
-            "source.fixAll.ruff": "always"
-        }
-    }
+  // — Use Pylance for Python intelligence
+  "python.languageServer": "Pylance",
+
+  // — Enable Ruff as a linter
+  "ruff.enable": true,
+  "ruff.lint.enable": true,
+  // — Run all available fixes (including Ruff’s) on save
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "always",        // run any fixer your extensions provide
+    "source.fixAll.ruff": "always"    // specifically run Ruff’s autofixes
+  },
+
+  // — Python‑only formatting settings
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true   // format with Ruff every time you save a .py
+  }
 }

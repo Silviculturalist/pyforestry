@@ -1,0 +1,47 @@
+name: Enforce PR base branch
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  ensure-base:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR base
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const base = context.payload.pull_request.base.ref;
+            const head = context.payload.pull_request.head.ref;
+            const prNumber = context.payload.pull_request.number;
+
+            if (base === 'main' && head !== 'dev') {
+              await github.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body: [
+                  '👋 Hi there!',
+                  '',
+                  'This PR targets `main` but its source branch is not `dev`.',
+                  'Please open pull requests against `dev` to keep `main` reserved for releases.',
+                  '',
+                  'The base branch has been automatically changed to `dev`.'
+                ].join('\n')
+              });
+
+              await github.pulls.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: prNumber,
+                base: 'dev'
+              });
+
+              throw new Error('PR must target `dev`, not `main`.');
+            }
+

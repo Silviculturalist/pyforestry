@@ -8,6 +8,7 @@ pyforestry Documentation
    :caption: Contents:
 
    api/modules
+   helpers_overview
    notebooks/tree_species_intro
    notebooks/timber_bucking_demo
    notebooks/stand_site_enum_demo

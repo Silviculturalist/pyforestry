@@ -54,8 +54,8 @@ jobs:
             echo "sha=${{ github.event.before }}" >> $GITHUB_OUTPUT
           fi
 
-      - name: Check coverage for new files
-        run: python scripts/check_new_file_coverage.py ${{ steps.base.outputs.sha }}
+      - name: Check coverage for changed files
+        run: python scripts/check_changed_file_coverage.py ${{ steps.base.outputs.sha }}
 
       - name: Update coverage baseline
         run: |
@@ -65,6 +65,14 @@ jobs:
           if [ "$NEW" -gt "$CUR" ]; then
             echo "$NEW" > coverage_threshold.txt
           fi
+
+      - name: Sync branch
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev'
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          # merge remote into local
+          git pull origin ${{ github.ref_name }}
 
       - name: Commit updated baseline
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev'

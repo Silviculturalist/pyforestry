@@ -98,6 +98,17 @@ should improve them.  The thresholds will gradually rise as the project
 matures, with a long-term goal of **90%** test and documentation coverage.
 Releases merged into `main` must not decrease coverage.
 
+### Validate Changed File Coverage
+
+After running tests, verify that modified modules retain high coverage:
+
+```bash
+python scripts/check_changed_file_coverage.py $(git merge-base HEAD origin/dev)
+```
+
+If any listed file is below **90%** test or docstring coverage, add more tests or
+documentation before submitting your pull request.
+
 ---
 
 ## Documentation
@@ -129,8 +140,11 @@ Preview the output in `docs/build/html` before submitting a PR.
    ruff format .
    pytest --cov=pyforestry --cov-report=xml --cov-report=html
    docstr-coverage src/pyforestry
+   python scripts/check_changed_file_coverage.py $(git merge-base HEAD origin/dev)
    make html -C docs
    ```
+   The coverage script ensures any changed modules maintain at least
+   90% test and docstring coverage before opening a pull request.
 4. **Commit** your changes with clear, concise messages.
 5. **Push** your branch and open a **Pull Request** against `dev`.
 6. Ensure your PR does not decrease the values in `coverage_threshold.txt` or

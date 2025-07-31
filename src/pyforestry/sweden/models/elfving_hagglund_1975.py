@@ -54,7 +54,10 @@ class ElfvingHagglundInitialStand:
     def _validate_broadleaves(broadleaves_percent: float):
         """Validates broadleaf percentage."""
         if broadleaves_percent > 40:
-            warnings.warn("Broadleaves percentage > 40%, potentially outside of material range.")
+            warnings.warn(
+                "Broadleaves percentage > 40%, potentially outside of material range.",
+                stacklevel=2,
+            )
         if not (0 <= broadleaves_percent <= 100):
             raise ValueError("broadleaves_percent_of_basal_area must be between 0 and 100.")
 
@@ -76,7 +79,8 @@ class ElfvingHagglundInitialStand:
         expected_ref_age = Age.TOTAL(100)
         if site_index.reference_age != expected_ref_age:
             raise ValueError(
-                f"Site index reference age must be {expected_ref_age}, got {site_index.reference_age}."
+                f"Site index reference age must be {expected_ref_age}, "
+                f"got {site_index.reference_age}."
             )
 
         # Check function source (heuristic check on function's module/name)
@@ -91,7 +95,8 @@ class ElfvingHagglundInitialStand:
             or "HagglundPineModel" in fn_qualname
         ):
             warnings.warn(
-                f"Site index function '{fn_qualname}' might not be from Hagglund_1970 model."
+                f"Site index function '{fn_qualname}' might not be from Hagglund_1970 model.",
+                stacklevel=2,
             )
 
         # Check species: Must be a set containing only the expected species
@@ -103,7 +108,8 @@ class ElfvingHagglundInitialStand:
         if site_index.species != expected_species_set:
             species_names = ", ".join([sp.full_name for sp in site_index.species])
             raise ValueError(
-                f"Site index species must be {{{expected_species.full_name}}}, got {{{species_names}}}."
+                f"Site index species must be {{{expected_species.full_name}}}, "
+                f"got {{{species_names}}}."
             )
 
     # =========================================================================
@@ -216,7 +222,8 @@ class ElfvingHagglundInitialStand:
 
     @staticmethod
     def estimate_stems_young_pine_south(
-        latitude: float,  # Although named southern, latitude is still needed if age needs calculation
+        latitude: float,  # Although named southern, latitude is still needed if age
+        # needs calculation
         site_index: SiteIndexValue,  # H100
         dominant_height: float,
         age_at_breast_height: Optional[
@@ -234,10 +241,12 @@ class ElfvingHagglundInitialStand:
             latitude: Latitude (used if age needs calculation).
             site_index: Site index H100 (m).
             dominant_height: Dominant height (m).
-            age_at_breast_height: Age at breast height. If None, it attempts calculation (Not Implemented Yet).
+            age_at_breast_height: Age at breast height.
+                If None, it attempts calculation (Not Implemented Yet).
             stand_density_factor: Stand density factor (0.1-1.0).
             pct: True if pre-commercial thinning has occurred.
-            regeneration: Method of establishment ("culture", "natural regeneration", "unknown"). Used if age needs calculation.
+            regeneration: Method of establishment ("culture", "natural regeneration", "unknown").
+                Used if age needs calculation.
 
         Returns:
             Estimated number of stems per hectare (>2.5cm DBH).
@@ -260,14 +269,18 @@ class ElfvingHagglundInitialStand:
             # try:
             #     target_h = float(dominant_height)
             #     # Define function to minimize: Hagglund_height(age) - target_h
-            #     # Note: Need the correct Hagglund pine function (not implemented in provided Hagglund_1970.py)
-            #     # age_val = brentq(lambda age_bh: Hagglund_1970_pine_height(..., age=Age.DBH(age_bh), ...) - target_h, 1, 200)
+            #     # Note: Need the correct Hagglund pine function
+            #   (not implemented in provided Hagglund_1970.py)
+            #     # age_val = brentq(lambda age_bh: Hagglund_1970_pine_height(...,
+            #   age=Age.DBH(age_bh), ...) - target_h, 1, 200)
             #     # age_at_breast_height = Age.DBH(age_val)
-            #     raise NotImplementedError("Age calculation from height for Pine (Hagglund 1974) is not implemented.")
+            #     raise NotImplementedError("Age calculation from height for Pine (Hagglund 1974)
+            #   is not implemented.")
             # except Exception as e:
             #     raise ValueError(f"Could not calculate age at breast height: {e}")
             raise NotImplementedError(
-                "Automatic calculation of age_at_breast_height for Pine is not implemented. Please provide age."
+                "Automatic calculation of age_at_breast_height for Pine is not implemented. "
+                "Please provide age."
             )
         elif (
             not isinstance(age_at_breast_height, AgeMeasurement)
@@ -313,7 +326,8 @@ class ElfvingHagglundInitialStand:
         Returns:
             Estimated number of stems per hectare (>2.5cm DBH).
         """
-        # Note: R code for S Spruce stems (5.4) seems identical to N Spruce stems (5.3) except for PCT and uneven_aged flags.
+        # Note: R code for S Spruce stems (5.4) seems identical to N Spruce stems (5.3)
+        # except for PCT and uneven_aged flags.
         # Replicating 5.4 formula as written in the R code:
         ElfvingHagglundInitialStand._validate_broadleaves(broadleaves_percent_ba)
         if not (0.1 <= stand_density_factor <= 1.0):
@@ -603,7 +617,8 @@ class ElfvingHagglundInitialStand:
 
         ba_val = (
             exp(
-                1.280  # Note: R code shows +1.280, paper/previous Python showed different. Using R code's value.
+                1.280  # Note: R code shows +1.280, paper/previous Python showed different.
+                # Using R code's value.
                 - 0.089 * log(alt_norm)
                 + 0.283 * log(stand_dens_orig)
                 + 0.370 * log(stems_val)
@@ -656,7 +671,8 @@ class ElfvingHagglundInitialStand:
         Returns:
             Estimated basal area (m²/ha).
         """
-        # Note: R code for S Spruce BA (6.4) seems identical to N Spruce BA (6.3) except for arguments.
+        # Note: R code for S Spruce BA (6.4) seems identical to N Spruce BA (6.3)
+        # except for arguments.
         # Replicating 6.4 formula as written in the R code:
         ElfvingHagglundInitialStand._validate_broadleaves(broadleaves_percent_ba)
         if not isinstance(dominant_height, float):
@@ -739,7 +755,8 @@ class ElfvingHagglundInitialStand:
             even_aged: True if the stand is considered even-aged or somewhat uneven-aged.
             stand_density_factor: A factor related to target density (0.1 to 1.0).
             pct: True if pre-commercial thinning has occurred.
-            spatial_distribution: Code indicating spatial distribution (1=even, 2=somewhat uneven, 3=grouped).
+            spatial_distribution: Code indicating spatial distribution (1=even, 2=somewhat uneven,
+                3=grouped).
 
         Returns:
             A tuple containing:

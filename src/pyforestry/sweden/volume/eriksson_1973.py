@@ -1,3 +1,6 @@
+"""Tree volume functions from Eriksson (1973)."""
+
+
 def Eriksson_1973_volume_aspen_Sweden(diameter_cm: float, height_m: float) -> float:
     """
     Calculates the volume of a Ash, Aspen, Alnus glutinosa tree in m³ according to Eriksson (1973).
@@ -10,7 +13,8 @@ def Eriksson_1973_volume_aspen_Sweden(diameter_cm: float, height_m: float) -> fl
         float: Calculated volume in m³.
 
     Reference:
-        Eriksson, H. (1973). Volymfunktioner för stående träd av ask, asp, klibbal och contortatall.
+        Eriksson, H. (1973). Volymfunktioner för stående träd av ask, asp,
+        klibbal och contortatall.
         Skogshögskolan, institutionen för skogsproduktion. Rapp. o. Upps. nr 26.
     """
     # Calculate diameter squared (cm²)
@@ -41,7 +45,8 @@ def Eriksson_1973_volume_lodgepole_pine_Sweden(diameter_cm: float, height_m: flo
         float: Calculated volume in m³.
 
     Reference:
-        Eriksson, H. (1973). Volymfunktioner för stående träd av ask, asp, klibbal och contortatall.
+        Eriksson, H. (1973). Volymfunktioner för stående träd av ask, asp,
+        klibbal och contortatall.
         Skogshögskolan, institutionen för skogsproduktion. Rapp. o. Upps. nr 26.
     """
 

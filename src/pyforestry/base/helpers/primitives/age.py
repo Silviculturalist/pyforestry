@@ -1,3 +1,5 @@
+"""Primitive data types for representing stand age measurements."""
+
 from enum import Enum
 
 
@@ -112,5 +114,6 @@ class AgeMeasurement(float):
         return NotImplemented
 
     def __ne__(self, other):
+        """Return the inverse result of :py:meth:`__eq__`."""
         equal = self.__eq__(other)
         return NotImplemented if equal is NotImplemented else not equal

@@ -1,4 +1,11 @@
-# codefolder/MaximumAnnualIncrement.py (Modification)
+"""Translate H100 site index values to expected productivity.
+
+This module implements the smoothed equations from Hägglund (1981) to convert
+H100 estimates to mean annual volume growth at the time of culmination. The
+function :func:`hagglund_1981_SI_to_productivity` is the public entry point and
+accepts enumerated inputs for vegetation type, county and tree species.
+"""
+
 from pyforestry.base.helpers.primitives import SiteIndexValue
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies
 from pyforestry.sweden.site.enums import Sweden
@@ -75,7 +82,6 @@ def hagglund_1981_SI_to_productivity(
 
     # --- rest of the function remains the same ---
     veg_code = vegetation.value.code
-    county_code = county.value.code  # Get the integer code from the enum
 
     F1 = 0.72 + (H100 / 130)
     F2 = 0.70 + (H100 / 100)
@@ -83,15 +89,15 @@ def hagglund_1981_SI_to_productivity(
 
     # Determine function based on species, county code, vegetation code, and altitude
     if main_species == TreeSpecies.Sweden.picea_abies:
-        if county_code in NORTHERN_COUNTY_CODES:
+        if county in NORTHERN_COUNTY_CODES:
             fun = "d" if veg_code <= 9 else "e"
-        elif county_code in MIDDLE_COUNTY_CODES:
+        elif county in MIDDLE_COUNTY_CODES:
             fun = "b" if veg_code <= 9 else "c"
         else:  # Southern Sweden assumed otherwise
             fun = "a"
     elif main_species == TreeSpecies.Sweden.pinus_sylvestris:
         # For Pine: Northern Sweden with altitude >= 200 meters
-        fun = "g" if county_code in NORTHERN_COUNTY_CODES and altitude >= 200 else "f"
+        fun = "g" if county in NORTHERN_COUNTY_CODES and altitude >= 200 else "f"
 
     if fun is None:
         # Use county label in error message for clarity

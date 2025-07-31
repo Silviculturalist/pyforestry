@@ -1,3 +1,5 @@
+"""Humidity lookup helper based on Eriksson (1986) data."""
+
 from importlib.resources import as_file, files
 
 import geopandas as gpd
@@ -8,8 +10,10 @@ def eriksson_1986_humidity(longitude: float, latitude: float, epsg: int = 4326):
     """
     Estimate humidity during the vegetation period for Swedish sites.
 
-    Source: Eriksson, B. (1986). "Nederbörds- och humiditetsklimatet i Sverige under vegetationsperiod."
-            Sveriges Meteorologiska och Hydrologiska Institut (SMHI), rapporter i meteorologi och klimatologi (RMK) 46.
+    Source: Eriksson, B. (1986). "Nederbörds- och humiditetsklimatet i Sverige under
+            vegetationsperiod."
+            Sveriges Meteorologiska och Hydrologiska Institut (SMHI), rapporter i meteorologi och
+            klimatologi (RMK) 46.
 
     Args:
         latitude (float): Latitude in degrees.

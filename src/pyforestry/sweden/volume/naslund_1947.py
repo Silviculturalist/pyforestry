@@ -1,11 +1,16 @@
+"""Volume and form factor equations from Näslund (1947)."""
+
 from typing import Optional
 
 from pyforestry.sweden.timber import SweTimber
 
 
 class NaslundVolume:
+    """Stem volume equations for southern and northern Sweden."""
+
     @staticmethod
     def calculate(timber: SweTimber) -> float:
+        """Return stem volume in cubic metres."""
         timber.validate()
         if timber.region == "southern":
             if timber.species == "pinus sylvestris":
@@ -22,11 +27,13 @@ class NaslundVolume:
             elif timber.species in ["betula", "betula pendula", "betula pubescens"]:
                 return NaslundVolume._northern_birch_volume(timber) / 1000
         raise NotImplementedError(
-            f"Volume calculation for {timber.species} in {timber.region} region is not implemented."
-        )
+            f"Volume calculation for {timber.species} in {timber.region} region ",
+            "is not implemented.",
+        )  # pragma: no cover - defensive
 
     @staticmethod
     def _southern_pine_volume(timber: SweTimber) -> float:
+        """Southern Sweden pine volume in dm³."""
         if timber.over_bark:
             if timber.crown_base_height_m and timber.double_bark_mm:
                 return (
@@ -60,6 +67,7 @@ class NaslundVolume:
 
     @staticmethod
     def _southern_spruce_volume(timber: SweTimber) -> float:
+        """Southern Sweden spruce volume in dm³."""
         if timber.over_bark:
             if timber.crown_base_height_m:
                 return (
@@ -95,6 +103,7 @@ class NaslundVolume:
 
     @staticmethod
     def _southern_birch_volume(timber: SweTimber) -> float:
+        """Southern Sweden birch volume in dm³."""
         if timber.over_bark:
             if timber.double_bark_mm:
                 return (
@@ -130,6 +139,7 @@ class NaslundVolume:
 
     @staticmethod
     def _northern_pine_volume(timber: SweTimber) -> float:
+        """Northern Sweden pine volume in dm³."""
         if timber.over_bark:
             if timber.crown_base_height_m and timber.double_bark_mm:
                 return (
@@ -161,6 +171,7 @@ class NaslundVolume:
 
     @staticmethod
     def _northern_spruce_volume(timber: SweTimber) -> float:
+        """Northern Sweden spruce volume in dm³."""
         if timber.over_bark:
             if timber.crown_base_height_m:
                 return (
@@ -196,6 +207,7 @@ class NaslundVolume:
 
     @staticmethod
     def _northern_birch_volume(timber: SweTimber) -> float:
+        """Northern Sweden birch volume in dm³."""
         if timber.over_bark:
             if timber.crown_base_height_m and timber.double_bark_mm:
                 return (
@@ -228,6 +240,8 @@ class NaslundVolume:
 
 
 class NaslundFormFactor:
+    """Form factor equations paired with :class:`NaslundVolume`."""
+
     @staticmethod
     def calculate(
         species: str,
@@ -238,6 +252,7 @@ class NaslundFormFactor:
         over_bark: bool = True,
         region: str = "southern",
     ) -> float:
+        """Return form factor given tree characteristics."""
         if diameter_cm < 5:
             raise ValueError("Diameter must be larger than 5 cm.")
 
@@ -255,7 +270,8 @@ class NaslundFormFactor:
             "betula pubescens",
         ]:
             raise ValueError(
-                "Species must be one of: pinus sylvestris, picea abies, betula, betula pendula, betula pubescens."
+                "Species must be one of: pinus sylvestris, picea abies, "
+                "betula, betula pendula, betula pubescens."
             )
 
         if region == "southern":
@@ -287,7 +303,7 @@ class NaslundFormFactor:
 
         raise NotImplementedError(
             f"Form factor calculation for {species} in {region} region is not implemented."
-        )
+        )  # pragma: no cover - defensive
 
     @staticmethod
     def _southern_pine_form_factor(
@@ -297,6 +313,7 @@ class NaslundFormFactor:
         crown_base_height_m: Optional[float],
         over_bark: bool,
     ) -> float:
+        """Southern Sweden pine form factor."""
         if over_bark:
             if crown_base_height_m and double_bark_mm:
                 K = ((height_m - crown_base_height_m) / height_m) * 100
@@ -333,6 +350,7 @@ class NaslundFormFactor:
         crown_base_height_m: Optional[float],
         over_bark: bool,
     ) -> float:
+        """Southern Sweden spruce form factor."""
         if over_bark:
             if crown_base_height_m:
                 K = ((height_m - crown_base_height_m) / height_m) * 100
@@ -375,6 +393,7 @@ class NaslundFormFactor:
         double_bark_mm: Optional[float],
         over_bark: bool,
     ) -> float:
+        """Southern Sweden birch form factor."""
         if over_bark:
             if double_bark_mm:
                 B = ((double_bark_mm / 10) / diameter_cm) * 100
@@ -418,6 +437,7 @@ class NaslundFormFactor:
         crown_base_height_m: Optional[float],
         over_bark: bool,
     ) -> float:
+        """Northern Sweden pine form factor."""
         if over_bark:
             if crown_base_height_m and double_bark_mm:
                 K = ((height_m - crown_base_height_m) / height_m) * 100
@@ -442,6 +462,7 @@ class NaslundFormFactor:
         crown_base_height_m: Optional[float],
         over_bark: bool,
     ) -> float:
+        """Northern Sweden spruce form factor."""
         if over_bark:
             if crown_base_height_m:
                 K = ((height_m - crown_base_height_m) / height_m) * 100
@@ -485,6 +506,7 @@ class NaslundFormFactor:
         crown_base_height_m: Optional[float],
         over_bark: bool,
     ) -> float:
+        """Northern Sweden birch form factor."""
         if over_bark:
             if crown_base_height_m and double_bark_mm:
                 K = ((height_m - crown_base_height_m) / height_m) * 100

@@ -1,3 +1,5 @@
+"""Simple geographic utilities using Swedish shapefiles."""
+
 from importlib.resources import as_file, files
 from typing import Optional
 
@@ -9,6 +11,8 @@ from pyforestry.sweden.site import Sweden
 
 
 class RetrieveGeoCode:
+    """Helper methods for querying Swedish geographic data."""
+
     @staticmethod
     def getDistanceToCoast(lon, lat, epsg=4326):
         """
@@ -36,7 +40,8 @@ class RetrieveGeoCode:
         if coast_gdf.crs is None or coast_gdf.crs.to_epsg() != 4326:
             coast_gdf = coast_gdf.to_crs(epsg=4326)
 
-        # Transform the input coordinates from the provided epsg to the internal metric CRS (EPSG:3857)
+        # Transform the input coordinates from the provided
+        # epsg to the internal metric CRS (EPSG:3857)
         transformer = Transformer.from_crs(epsg, 3857, always_xy=True)
         lon_metric, lat_metric = transformer.transform(float(lon), float(lat))
         point_metric = Point(lon_metric, lat_metric)

@@ -1,3 +1,5 @@
+"""Implementation of Swedish temperature and radiation models."""
+
 import math
 from typing import Optional
 
@@ -57,6 +59,7 @@ class Moren_Perttu_radiation_1994:
 
     @staticmethod
     def _helper_GS1000(latitude, altitude, **kwargs):
+        """Calculate growing season duration at 1000 m elevation."""
         B0 = kwargs["B0"]
         B1 = kwargs["B1"]
         B2 = kwargs["B2"]
@@ -65,6 +68,7 @@ class Moren_Perttu_radiation_1994:
 
     @staticmethod
     def _helper_TS1000(latitude, altitude, **kwargs):
+        """Calculate temperature sum at 1000 m elevation."""
         A0 = kwargs["A0"]
         A1 = kwargs["A1"]
         A2 = kwargs["A2"]
@@ -72,6 +76,7 @@ class Moren_Perttu_radiation_1994:
 
     @staticmethod
     def _helper_1500(latitude, altitude, **kwargs):
+        """Generic polynomial helper used for 1500 m models."""
         x0 = kwargs["x0"]
         x1 = kwargs["x1"]
         x2 = kwargs["x2"]
@@ -89,6 +94,7 @@ class Moren_Perttu_radiation_1994:
 
     @staticmethod
     def _helper_global_radiation_clear_day_ratio(day_number, **kwargs):
+        """Ratio of global to extraterrestrial radiation for clear sky."""
         D0 = kwargs["D0"]
         D1 = kwargs["D1"]
         D2 = kwargs.get("D2", 0.0)
@@ -96,6 +102,7 @@ class Moren_Perttu_radiation_1994:
 
     @staticmethod
     def _helper_global_radiation_avg_day_ratio(day_number, **kwargs):
+        """Ratio of global to extraterrestrial radiation for average sky."""
         E0 = kwargs["E0"]
         E1 = kwargs["E1"]
         E2 = kwargs["E2"]
@@ -113,6 +120,7 @@ class Moren_Perttu_radiation_1994:
 
     @staticmethod
     def _helper_global_radiation_sum_growing_season(latitude, altitude, **kwargs):
+        """Compute total radiation during the growing season."""
         F0 = kwargs["F0"]
         F1 = kwargs["F1"]
         F2 = kwargs["F2"]
@@ -129,7 +137,8 @@ class Moren_Perttu_radiation_1994:
         """
         if self.july_avg_temp is None or self.jan_avg_temp is None:
             raise ValueError(
-                "July and January average temperatures must be provided during initialization to calculate continentality."
+                "July and January average temperatures must be provided during "
+                "initialization to calculate continentality."
             )
 
         if not (0 < self.latitude < 90):
@@ -141,6 +150,7 @@ class Moren_Perttu_radiation_1994:
         )
 
     def calculate_temperature_sum_1000m(self, threshold_temperature):
+        """Temperature sum for the 1000 m model."""
         coeffs_A = {
             0: {"A0": 8279.3, "A1": -98.115, "A2": -1.131},
             3: {"A0": 6126.4, "A1": -73.813, "A2": -0.951},
@@ -156,6 +166,7 @@ class Moren_Perttu_radiation_1994:
         )
 
     def calculate_growing_season_duration_1000m(self, threshold_temperature):
+        """Growing season duration for the 1000 m model."""
         coeffs_B = {
             0: {"B0": 894.2, "B1": -10.678, "B2": -0.780, "B3": 0.01147},
             3: {"B0": 695.7, "B1": -8.050, "B2": -0.432, "B3": 0.00600},
@@ -171,6 +182,7 @@ class Moren_Perttu_radiation_1994:
         )
 
     def calculate_temperature_sum_1500m(self, threshold_temperature):
+        """Temperature sum for the 1500 m model."""
         coeffs_a = {
             0: {
                 "x0": 8116.4,
@@ -228,6 +240,7 @@ class Moren_Perttu_radiation_1994:
         )
 
     def calculate_growing_season_duration_1500m(self, threshold_temperature):
+        """Growing season duration for the 1500 m model."""
         coeffs_b = {  # From Table 3b [cite: 136]
             0: {
                 "x0": 1339.7,
@@ -285,6 +298,7 @@ class Moren_Perttu_radiation_1994:
         )
 
     def get_corrected_temperature_sum(self, threshold_temperature, for_1500m_model=False):
+        """Apply continentality correction to the temperature sum."""
         if for_1500m_model:
             base_ts = self.calculate_temperature_sum_1500m(threshold_temperature)
         else:
@@ -306,7 +320,9 @@ class Moren_Perttu_radiation_1994:
 
     @staticmethod
     def get_ratio_global_to_extraterrestrial_radiation_clear_sky(day_number, region):
-        # Using D1 = -0.000403 for North, (105,273) based on user's implied coefficient from test result
+        """Return radiation ratio for clear-sky conditions."""
+        # Using D1 = -0.000403 for North, (105,273) based on user's implied coefficient
+        # from test result
         coeffs_D = {
             "North": {
                 (0, 104): {"D0": 0.521, "D1": 0.002681},
@@ -344,6 +360,7 @@ class Moren_Perttu_radiation_1994:
 
     @staticmethod
     def get_ratio_global_to_extraterrestrial_radiation_average_sky(day_number, region):
+        """Return radiation ratio for average-sky conditions."""
         coeffs_E = {
             "North": {
                 "E0": 0.338,
@@ -362,6 +379,7 @@ class Moren_Perttu_radiation_1994:
         )
 
     def calculate_global_radiation_sum_growing_season(self, threshold_temperature):
+        """Total global radiation during the growing season."""
         coeffs_F = {
             0: {"F0": 6.9712, "F1": -0.0667, "F2": -0.00070},  # Table 7 [cite: 183]
             3: {"F0": 7.1453, "F1": -0.0731, "F2": -0.00073},
@@ -378,6 +396,7 @@ class Moren_Perttu_radiation_1994:
 
     @staticmethod
     def get_growing_season_start_day(latitude_deg, altitude_m):
+        """Julian day number when the growing season starts."""
         start_day = (
             -35.760
             + 2.489 * latitude_deg

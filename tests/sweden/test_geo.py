@@ -155,7 +155,8 @@ def calculate_average_slope_factor(
     """
     Calculates the average DIRECT BEAM radiation slope factor over the growing season.
     This is Rb = sum(cos_theta_on_slope * I_direct_normal) / sum(cos_Z * I_direct_normal)
-    Assuming I_direct_normal is constant and cancels, it's sum(cos_theta_on_slope) / sum(cos_Z_on_horizontal)
+    Assuming I_direct_normal is constant and cancels,
+    it's sum(cos_theta_on_slope) / sum(cos_Z_on_horizontal)
     """
     beta_rad = math.radians(slope_inclination_deg)
     slope_az_N_clockwise_rad = math.radians(slope_azimuth_deg)
@@ -218,10 +219,12 @@ def test_figure13_slope_factor_sample_points(
 
     # Note: The assertion compares a DIRECT factor to a GLOBAL factor from Table 8.
     # Differences are expected. The tolerance might need to be large or the test re-evaluated.
-    # For now, let's keep the original expected values and tolerance to see the magnitude of difference.
+    # For now, let's keep the original expected values
+    # and tolerance to see the magnitude of difference.
     print(f"\nTesting: Lat={lat}, Slope={slope_deg}°, Azimuth={slope_az_name}({slope_az_deg}°)")
     print(
-        f"Calculated DIRECT factor: {factor * 100:.2f}%, Expected GLOBAL (Table 8): {expected_factor_approx_percent:.1f}%"
+        f"Calculated DIRECT factor: {factor * 100:.2f}%, "
+        f"Expected GLOBAL (Table 8): {expected_factor_approx_percent:.1f}%"
     )
 
     assert factor * 100 == pytest.approx(
@@ -302,13 +305,13 @@ if __name__ == "__main__":
     print("To run pytest: open terminal in this directory and run `pytest`")
     print("Generating and plotting Figure 13 recreation (using direct-beam only slope factor)...")
     generate_and_plot_figure13_data()
-    print("\nNote: The recreation of Figure 13 now uses a DIRECT-BEAM-ONLY slope factor,")
-    print("      as per the paper's description for Figure 13's methodology.")
+    print("\nNote: The recreation of Figure 13 now uses a DIRECT-BEAM-ONLY slope factor, ")
+    print("as per the paper's description for Figure 13's methodology.")
     print(
-        "      Approximations for solar declination and growing season (alt 0m assumed) are still used."
+        "Approximations for solar declination and growing season (alt 0 m assumed) are still used."
     )
     print(
-        "      The plotted Y-axis now represents: Direct beam on slope / Direct beam on horizontal (%)."
+        "The plotted Y-axis now represents: Direct beam on slope / Direct beam on horizontal (%)."
     )
 
 
