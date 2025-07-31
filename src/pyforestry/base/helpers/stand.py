@@ -6,9 +6,10 @@ used to access aggregated stand metrics such as basal area or stem count.
 """
 
 import statistics
+import warnings
 from dataclasses import dataclass, field
 from math import isclose, pi, sqrt
-from typing import Any, Callable, Dict, List, Optional, Union, cast
+from typing import Any, Callable, Dict, List, Optional, Set, Union, cast
 
 import geopandas as gpd
 import numpy as np
@@ -664,3 +665,66 @@ class Stand:
         self._compute_ht_estimates()
         if "QMD" in self._metric_estimates:
             del self._metric_estimates["QMD"]
+
+    def attach_simulation_ruleset(
+        self,
+        ruleset: "SimulationRuleset",
+        species_remap: Optional[Dict[TreeName, TreeName]] = None,
+    ) -> None:
+        """Attach a :class:`~pyforestry.base.simulation.SimulationRuleset`.
+
+        Species in the stand are validated against each module in ``ruleset``.
+        For the ingrowth module, unsupported species trigger a warning and are
+        assumed to produce no ingrowth. For growth, mortality and calamity
+        modules a warning is emitted if a species is not supported; a mapping in
+        ``species_remap`` can be supplied to translate unsupported species to a
+        supported one.
+
+        Parameters
+        ----------
+        ruleset:
+            The ruleset to attach to the stand.
+        species_remap:
+            Optional mapping from species present in the stand to alternative
+            species understood by the ruleset modules.
+        """
+
+        species_remap = species_remap or {}
+
+        present_species: Set[TreeName] = set()
+        for plot in self.plots:
+            for tr in plot.trees:
+                sp = getattr(tr, "species", None)
+                if sp is None:
+                    continue
+                if isinstance(sp, str):
+                    sp = parse_tree_species(sp)
+                present_species.add(sp)
+
+        # Validate ingrowth module support
+        for sp in present_species:
+            mapped = species_remap.get(sp, sp)
+            if not ruleset.ingrowth.supports(mapped):
+                warnings.warn(
+                    f"Ingrowth module does not support {mapped.full_name}; ingrowth set to zero.",
+                    UserWarning,
+                    stacklevel=2,
+                )
+
+        other_modules = [ruleset.growth, ruleset.mortality]
+        if ruleset.calamity is not None:
+            other_modules.append(ruleset.calamity)
+
+        for sp in present_species:
+            mapped = species_remap.get(sp, sp)
+            for mod in other_modules:
+                if not mod.supports(mapped):
+                    warnings.warn(
+                        f"{mod.__class__.__name__} does not support "
+                        f"{mapped.full_name} (from {sp.full_name}). "
+                        "Provide species_remap to map unsupported species.",
+                        UserWarning,
+                        stacklevel=2,
+                    )
+
+        self.simulation_ruleset = ruleset
