@@ -30,7 +30,20 @@ class Petersson1999:
 
     @staticmethod
     def _validate_site_index(si: SiteIndexValue) -> TreeName:
-        """Validate that ``si`` references pine or spruce at age 100."""
+        """Validate a :class:`SiteIndexValue`.
+
+        Args:
+            si: Site index to validate.
+
+        Returns:
+            TreeName: Dominant species referenced by ``si``.
+
+        Raises:
+            TypeError: If ``si`` is not a :class:`SiteIndexValue`.
+            ValueError: If ``si`` does not reference pine or spruce at age
+                ``Age.TOTAL(100)`` or its function is not from
+                ``Hagglund_1970``.
+        """
 
         if not isinstance(si, SiteIndexValue):
             raise TypeError("SI must be a SiteIndexValue")
@@ -52,7 +65,19 @@ class Petersson1999:
         si: SiteIndexValue | float,
         dominant_species: TreeName | str | None,
     ) -> tuple[TreeName, float]:
-        """Return dominant species and numeric site index."""
+        """Resolve dominant species from ``SI`` and return its value.
+
+        Args:
+            si: Site index as an object or numeric value.
+            dominant_species: Species used when ``si`` is numeric.
+
+        Returns:
+            tuple[TreeName, float]: Dominant species and numeric site index.
+
+        Raises:
+            TypeError: If ``si`` is numeric and ``dominant_species`` is ``None``.
+            ValueError: If ``dominant_species`` is not pine or spruce.
+        """
 
         if isinstance(si, SiteIndexValue):
             dom = Petersson1999._validate_site_index(si)
@@ -88,7 +113,27 @@ class Petersson1999:
         altitude: float,
         dominant_species: TreeName | str | None = None,
     ) -> dict:
-        """Biomass components for a Norway spruce."""
+        """Biomass components for a Norway spruce.
+
+        Args:
+            diameter_cm: Diameter at breast height in centimetres.
+                If ``Diameter_cm`` is given, it must represent 1.3 m
+                measurement height and be taken over bark.
+            height_m: Tree height in metres.
+            age_at_breast_height: Age at breast height in years.
+            SI: Site index for the stand. When numeric, ``dominant_species``
+                must specify pine or spruce.
+            five_years_radial_increment_mm: Radial increment over five years
+                in millimetres.
+            peat: ``True`` if soil is peat (>30 cm deep).
+            latitude: Latitude in decimal degrees.
+            longitude: Longitude in decimal degrees.
+            altitude: Altitude in metres above sea level.
+            dominant_species: Species used for ``SI`` when ``SI`` is numeric.
+
+        Returns:
+            dict: Dry weight components in grams keyed by component name.
+        """
         dominant_species, SI = Petersson1999._get_dominant_species(SI, dominant_species)
         picea = dominant_species is TreeSpecies.Sweden.picea_abies
         pinus = dominant_species is TreeSpecies.Sweden.pinus_sylvestris
@@ -194,7 +239,27 @@ class Petersson1999:
         altitude: float,
         dominant_species: TreeName | str | None = None,
     ) -> dict:
-        """Biomass components for a Scots pine."""
+        """Biomass components for a Scots pine.
+
+        Args:
+            diameter_cm: Diameter at breast height in centimetres.
+                ``Diameter_cm`` must describe a 1.3 m, over-bark
+                measurement when used.
+            height_m: Tree height in metres.
+            age_at_breast_height: Age at breast height in years.
+            SI: Site index of the stand. When numeric, ``dominant_species``
+                must define pine or spruce.
+            five_years_radial_increment_mm: Radial increment over five years
+                in millimetres.
+            peat: ``True`` if soil is peat (>30 cm deep).
+            latitude: Latitude in decimal degrees.
+            longitude: Longitude in decimal degrees.
+            altitude: Altitude in metres above sea level.
+            dominant_species: Species used for ``SI`` when ``SI`` is numeric.
+
+        Returns:
+            dict: Dry weight components in grams keyed by component name.
+        """
         dominant_species, SI = Petersson1999._get_dominant_species(SI, dominant_species)
         picea = dominant_species is TreeSpecies.Sweden.picea_abies
         pinus = dominant_species is TreeSpecies.Sweden.pinus_sylvestris
@@ -305,7 +370,27 @@ class Petersson1999:
         altitude: float,
         dominant_species: TreeName | str | None = None,
     ) -> dict:
-        """Biomass components for birch (Betula spp.)."""
+        """Biomass components for birch (``Betula`` spp.).
+
+        Args:
+            diameter_cm: Diameter at breast height in centimetres. If a
+                ``Diameter_cm`` instance is supplied it must refer to a 1.3 m
+                over-bark measurement.
+            height_m: Tree height in metres.
+            age_at_breast_height: Age at breast height in years.
+            SI: Site index for the stand. Numeric values require
+                ``dominant_species``.
+            five_years_radial_increment_mm: Radial increment over five years in
+                millimetres.
+            peat: ``True`` if soil is peat (>30 cm deep).
+            latitude: Latitude in decimal degrees.
+            longitude: Longitude in decimal degrees.
+            altitude: Altitude in metres above sea level.
+            dominant_species: Species used for ``SI`` when ``SI`` is numeric.
+
+        Returns:
+            dict: Dry weight components in grams keyed by component name.
+        """
         dominant_species, SI = Petersson1999._get_dominant_species(SI, dominant_species)
         picea = dominant_species is TreeSpecies.Sweden.picea_abies
         pinus = dominant_species is TreeSpecies.Sweden.pinus_sylvestris
@@ -373,7 +458,30 @@ class Petersson1999:
         altitude: float,
         dominant_species: TreeName | str | None = None,
     ) -> dict:
-        """Dispatch biomass calculation based on species name."""
+        """Calculate biomass for a given species.
+
+        Args:
+            species: Tree species name or enum value.
+            diameter_cm: Diameter at breast height in centimetres.
+            height_m: Tree height in metres.
+            age_at_breast_height: Age at breast height in years.
+            SI: Site index for the stand. Numeric values require
+                ``dominant_species``.
+            five_years_radial_increment_mm: Radial increment over five years in
+                millimetres.
+            peat: ``True`` if soil is peat (>30 cm deep).
+            latitude: Latitude in decimal degrees.
+            longitude: Longitude in decimal degrees.
+            altitude: Altitude in metres above sea level.
+            dominant_species: Species used when ``SI`` is numeric.
+
+        Returns:
+            dict: Dry weight components in grams keyed by component name.
+
+        Raises:
+            TypeError: If ``species`` is not a valid tree species.
+            ValueError: If the species is not supported.
+        """
         if isinstance(species, str):
             species = parse_tree_species(species)
         if not isinstance(species, TreeName):
