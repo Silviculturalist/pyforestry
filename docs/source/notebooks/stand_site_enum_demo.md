@@ -63,8 +63,8 @@ Geographic utilities and climate calculations.
 ```python
 from pyforestry.sweden.geo import Moren_Perttu_radiation_1994, RetrieveGeoCode
 
-RetrieveGeoCode.getDistanceToCoast(14.784528, 56.892405)
-RetrieveGeoCode.getClimateCode(14.784528, 56.892405)
+print(RetrieveGeoCode.getDistanceToCoast(14.784528, 56.892405))
+print(RetrieveGeoCode.getClimateCode(14.784528, 56.892405))
 
 ```
 
