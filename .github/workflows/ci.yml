@@ -66,6 +66,14 @@ jobs:
             echo "$NEW" > coverage_threshold.txt
           fi
 
+      - name: Sync branch
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev'
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          # merge remote into local
+          git pull origin ${{ github.ref_name }}
+
       - name: Commit updated baseline
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev'
         uses: stefanzweifel/git-auto-commit-action@v5
