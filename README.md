@@ -53,7 +53,7 @@ environment and submitting pull requests.
 ## Sponsors
 This project has been sponsored by [Digital Impact North](https://www.digitalimpactnorth.se).
 
-![Digital Impact North](docs/source/_static/digital-impact-north.png)
+![Digital Impact North](docs/images/DIN_logotyp_primar_gron.png)
 
 ## License
 `pyforestry` is distributed under the terms of the [MIT License](LICENSE).
