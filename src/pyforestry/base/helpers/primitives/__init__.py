@@ -2,6 +2,7 @@
 
 from .age import Age, AgeMeasurement
 from .area_aggregates import StandBasalArea, StandVolume, Stems
+from .bawad import BasalAreaWeightedDiameter
 from .cartesian_position import Position
 from .diameter_cm import Diameter_cm
 from .qmd import QuadraticMeanDiameter
@@ -18,6 +19,7 @@ __all__ = [
     "Stems",
     "Position",
     "Diameter_cm",
+    "BasalAreaWeightedDiameter",
     "QuadraticMeanDiameter",
     "SiteBase",
     "SiteIndexValue",

@@ -25,6 +25,7 @@ from pyforestry.base.helpers import (
     parse_tree_species,
 )
 from pyforestry.base.helpers.primitives import (
+    BasalAreaWeightedDiameter,
     QuadraticMeanDiameter,
     SiteBase,
     StandBasalArea,
@@ -68,6 +69,8 @@ class StandMetricAccessor:
         if self._metric_name not in self._stand._metric_estimates:
             if not self._stand.use_angle_count:
                 self._stand._compute_ht_estimates()
+            else:
+                raise KeyError(f"{self._metric_name} metric unavailable for angle-count data")
 
     def __getattr__(self, item):
         """
@@ -243,6 +246,11 @@ class Stand:
         self._ensure_qmd_estimates()
         return StandMetricAccessor(self, "QMD")
 
+    @property
+    def BAWAD(self) -> StandMetricAccessor:
+        """Access the stand's basal-area weighted mean diameter."""
+        return StandMetricAccessor(self, "BAWAD")
+
     def _ensure_qmd_estimates(self):
         """
         Ensure that QMD estimates are computed.
@@ -338,29 +346,50 @@ class Stand:
                 # Adjusted BA/ha: divide by effective area.
                 ba_ha = ba_sum / effective_area_ha
 
+                # Compute sums of diameter powers
+                d2_sum = 0.0
+                d3_sum = 0.0
+                for t in trlist:
+                    d_cm = float(t.diameter_cm) if t.diameter_cm is not None else 0.0
+                    d2_sum += (d_cm**2) * t.weight_n
+                    d3_sum += (d_cm**3) * t.weight_n
+                d3_ha = d3_sum / effective_area_ha
+
                 if sp not in species_data:
-                    species_data[sp] = {"stems_per_ha": [], "basal_area_per_ha": []}
+                    species_data[sp] = {
+                        "stems_per_ha": [],
+                        "basal_area_per_ha": [],
+                        "d3_per_ha": [],
+                    }
                 species_data[sp]["stems_per_ha"].append(stems_ha)
                 species_data[sp]["basal_area_per_ha"].append(ba_ha)
+                species_data[sp]["d3_per_ha"].append(d3_ha)
 
         # 2. Compute means and variances across plots (as before)
         stems_dict: Dict[Union[TreeName, str], Stems] = {}
         ba_dict: Dict[Union[TreeName, str], StandBasalArea] = {}
+        bawad_dict: Dict[Union[TreeName, str], BasalAreaWeightedDiameter] = {}
 
         total_stems_val = 0.0
         total_stems_var = 0.0
         total_ba_val = 0.0
         total_ba_var = 0.0
+        total_d3_val = 0.0
+        total_d3_var = 0.0
 
         for sp, metricvals in species_data.items():
             s_vals = metricvals["stems_per_ha"]
             b_vals = metricvals["basal_area_per_ha"]
+            d3_vals = metricvals["d3_per_ha"]
 
             stems_mean = statistics.mean(s_vals) if s_vals else 0.0
             stems_var = statistics.pvariance(s_vals) if len(s_vals) > 1 else 0.0
 
             ba_mean = statistics.mean(b_vals) if b_vals else 0.0
             ba_var = statistics.pvariance(b_vals) if len(b_vals) > 1 else 0.0
+
+            d3_mean = statistics.mean(d3_vals) if d3_vals else 0.0
+            d3_var = statistics.pvariance(d3_vals) if len(d3_vals) > 1 else 0.0
 
             stems_dict[sp] = Stems(value=stems_mean, species=sp, precision=sqrt(stems_var))
             ba_dict[sp] = StandBasalArea(value=ba_mean, species=sp, precision=sqrt(ba_var))
@@ -369,6 +398,20 @@ class Stand:
             total_stems_var += stems_var
             total_ba_val += ba_mean
             total_ba_var += ba_var
+            total_d3_val += d3_mean
+            total_d3_var += d3_var
+
+            if ba_mean > 0:
+                d2_mean = ba_mean * (40000.0 / pi)
+                d2_var = ba_var * (40000.0 / pi) ** 2
+                bawad_value = d3_mean / d2_mean if d2_mean > 0 else 0.0
+                dR_dN = 1.0 / d2_mean if d2_mean > 0 else 0.0
+                dR_dD = -d3_mean / (d2_mean**2) if d2_mean > 0 else 0.0
+                bawad_precision = sqrt((dR_dN**2 * d3_var) + (dR_dD**2 * d2_var))
+            else:
+                bawad_value = 0.0
+                bawad_precision = 0.0
+            bawad_dict[sp] = BasalAreaWeightedDiameter(bawad_value, precision=bawad_precision)
 
             # "TOTAL" aggregator
         stems_dict["TOTAL"] = Stems(
@@ -378,8 +421,24 @@ class Stand:
             value=total_ba_val, species=None, precision=sqrt(total_ba_var)
         )
 
+        if total_ba_val > 0:
+            d2_total_mean = total_ba_val * (40000.0 / pi)
+            d2_total_var = total_ba_var * (40000.0 / pi) ** 2
+            bawad_total_value = total_d3_val / d2_total_mean if d2_total_mean > 0 else 0.0
+            dR_dN_t = 1.0 / d2_total_mean if d2_total_mean > 0 else 0.0
+            dR_dD_t = -total_d3_val / (d2_total_mean**2) if d2_total_mean > 0 else 0.0
+            bawad_total_precision = sqrt((dR_dN_t**2 * total_d3_var) + (dR_dD_t**2 * d2_total_var))
+        else:
+            bawad_total_value = 0.0
+            bawad_total_precision = 0.0
+
+        bawad_dict["TOTAL"] = BasalAreaWeightedDiameter(
+            bawad_total_value, precision=bawad_total_precision
+        )
+
         self._metric_estimates["Stems"] = {k: v for k, v in stems_dict.items()}
         self._metric_estimates["BasalArea"] = {k: v for k, v in ba_dict.items()}
+        self._metric_estimates["BAWAD"] = {k: v for k, v in bawad_dict.items()}
 
     def __repr__(self):
         """Return a short textual description of the stand."""
