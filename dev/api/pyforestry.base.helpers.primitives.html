@@ -694,6 +694,49 @@ optionally for a single species or multiple species.</p>
 </dd></dl>
 
 </section>
+<section id="module-pyforestry.base.helpers.primitives.bawad">
+<span id="pyforestry-base-helpers-primitives-bawad-module"></span><h2>pyforestry.base.helpers.primitives.bawad module<a class="headerlink" href="#module-pyforestry.base.helpers.primitives.bawad" title="Link to this heading">#</a></h2>
+<p>Class representing the basal-area weighted mean diameter (BAWAD).</p>
+<p>BAWAD is defined as the ratio of the sum of cubed diameters to the sum
+of squared diameters for a collection of trees:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">BAWAD</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">D</span><span class="o">^</span><span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">D</span><span class="o">^</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>It is expressed in centimetres and carries an optional precision
+attribute.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.base.helpers.primitives.bawad.BasalAreaWeightedDiameter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.base.helpers.primitives.bawad.</span></span><span class="sig-name descname"><span class="pre">BasalAreaWeightedDiameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/base/helpers/primitives/bawad.html#BasalAreaWeightedDiameter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.helpers.primitives.bawad.BasalAreaWeightedDiameter" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
+<p>A diameter measurement weighted by basal area.</p>
+<blockquote>
+<div><p>This subclass of <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> stores the basal-area weighted mean</p>
+</div></blockquote>
+<p>diameter in centimetres along with an associated measurement
+precision.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>value:</dt><dd><p>The computed BAWAD value in centimetres. Must be non-negative.</p>
+</dd>
+<dt>precision:</dt><dd><p>Optional precision (standard error) of the measurement in
+centimetres.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.base.helpers.primitives.bawad.BasalAreaWeightedDiameter.precision">
+<span class="sig-name descname"><span class="pre">precision</span></span><a class="headerlink" href="#pyforestry.base.helpers.primitives.bawad.BasalAreaWeightedDiameter.precision" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyforestry.base.helpers.primitives.bawad.BasalAreaWeightedDiameter.value">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#pyforestry.base.helpers.primitives.bawad.BasalAreaWeightedDiameter.value" title="Link to this definition">#</a></dt>
+<dd><p>Return the raw BAWAD value in centimetres.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 <section id="module-pyforestry.base.helpers.primitives.cartesian_position">
 <span id="pyforestry-base-helpers-primitives-cartesian-position-module"></span><h2>pyforestry.base.helpers.primitives.cartesian_position module<a class="headerlink" href="#module-pyforestry.base.helpers.primitives.cartesian_position" title="Link to this heading">#</a></h2>
 <p>Module for cartesian coordinate operations.</p>
@@ -1351,6 +1394,38 @@ This is the fundamental building block.</p>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.base.helpers.primitives.BasalAreaWeightedDiameter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.base.helpers.primitives.</span></span><span class="sig-name descname"><span class="pre">BasalAreaWeightedDiameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/base/helpers/primitives/bawad.html#BasalAreaWeightedDiameter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.helpers.primitives.BasalAreaWeightedDiameter" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
+<p>A diameter measurement weighted by basal area.</p>
+<blockquote>
+<div><p>This subclass of <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> stores the basal-area weighted mean</p>
+</div></blockquote>
+<p>diameter in centimetres along with an associated measurement
+precision.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>value:</dt><dd><p>The computed BAWAD value in centimetres. Must be non-negative.</p>
+</dd>
+<dt>precision:</dt><dd><p>Optional precision (standard error) of the measurement in
+centimetres.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.base.helpers.primitives.BasalAreaWeightedDiameter.precision">
+<span class="sig-name descname"><span class="pre">precision</span></span><a class="headerlink" href="#pyforestry.base.helpers.primitives.BasalAreaWeightedDiameter.precision" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyforestry.base.helpers.primitives.BasalAreaWeightedDiameter.value">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#pyforestry.base.helpers.primitives.BasalAreaWeightedDiameter.value" title="Link to this definition">#</a></dt>
+<dd><p>Return the raw BAWAD value in centimetres.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="pyforestry.base.helpers.primitives.CompositeVolume">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.base.helpers.primitives.</span></span><span class="sig-name descname"><span class="pre">CompositeVolume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">volumes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyforestry.base.helpers.primitives.volume.AtomicVolume" title="pyforestry.base.helpers.primitives.volume.AtomicVolume"><span class="pre">AtomicVolume</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/base/helpers/primitives/volume.html#CompositeVolume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.helpers.primitives.CompositeVolume" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -1967,6 +2042,14 @@ optionally for a single species or multiple species.</p>
 </li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.base.helpers.primitives.bawad">pyforestry.base.helpers.primitives.bawad module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.helpers.primitives.bawad.BasalAreaWeightedDiameter"><code class="docutils literal notranslate"><span class="pre">BasalAreaWeightedDiameter</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.helpers.primitives.bawad.BasalAreaWeightedDiameter.precision"><code class="docutils literal notranslate"><span class="pre">BasalAreaWeightedDiameter.precision</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.helpers.primitives.bawad.BasalAreaWeightedDiameter.value"><code class="docutils literal notranslate"><span class="pre">BasalAreaWeightedDiameter.value</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.base.helpers.primitives.cartesian_position">pyforestry.base.helpers.primitives.cartesian_position module</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.helpers.primitives.cartesian_position.Position"><code class="docutils literal notranslate"><span class="pre">Position</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.helpers.primitives.cartesian_position.Position.X"><code class="docutils literal notranslate"><span class="pre">Position.X</span></code></a></li>
@@ -2079,6 +2162,11 @@ optionally for a single species or multiple species.</p>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.helpers.primitives.AtomicVolume.to"><code class="docutils literal notranslate"><span class="pre">AtomicVolume.to()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.helpers.primitives.AtomicVolume.type"><code class="docutils literal notranslate"><span class="pre">AtomicVolume.type</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.helpers.primitives.AtomicVolume.value"><code class="docutils literal notranslate"><span class="pre">AtomicVolume.value</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.helpers.primitives.BasalAreaWeightedDiameter"><code class="docutils literal notranslate"><span class="pre">BasalAreaWeightedDiameter</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.helpers.primitives.BasalAreaWeightedDiameter.precision"><code class="docutils literal notranslate"><span class="pre">BasalAreaWeightedDiameter.precision</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.helpers.primitives.BasalAreaWeightedDiameter.value"><code class="docutils literal notranslate"><span class="pre">BasalAreaWeightedDiameter.value</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.helpers.primitives.CompositeVolume"><code class="docutils literal notranslate"><span class="pre">CompositeVolume</span></code></a><ul class="nav section-nav flex-column">

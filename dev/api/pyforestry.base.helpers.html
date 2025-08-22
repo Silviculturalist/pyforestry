@@ -526,6 +526,14 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#module-pyforestry.base.helpers.primitives.bawad">pyforestry.base.helpers.primitives.bawad module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.bawad.BasalAreaWeightedDiameter"><code class="docutils literal notranslate"><span class="pre">BasalAreaWeightedDiameter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.bawad.BasalAreaWeightedDiameter.precision"><code class="docutils literal notranslate"><span class="pre">BasalAreaWeightedDiameter.precision</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.bawad.BasalAreaWeightedDiameter.value"><code class="docutils literal notranslate"><span class="pre">BasalAreaWeightedDiameter.value</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#module-pyforestry.base.helpers.primitives.cartesian_position">pyforestry.base.helpers.primitives.cartesian_position module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.cartesian_position.Position"><code class="docutils literal notranslate"><span class="pre">Position</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.cartesian_position.Position.X"><code class="docutils literal notranslate"><span class="pre">Position.X</span></code></a></li>
@@ -638,6 +646,11 @@
 <li class="toctree-l4"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.AtomicVolume.to"><code class="docutils literal notranslate"><span class="pre">AtomicVolume.to()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.AtomicVolume.type"><code class="docutils literal notranslate"><span class="pre">AtomicVolume.type</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.AtomicVolume.value"><code class="docutils literal notranslate"><span class="pre">AtomicVolume.value</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.BasalAreaWeightedDiameter"><code class="docutils literal notranslate"><span class="pre">BasalAreaWeightedDiameter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.BasalAreaWeightedDiameter.precision"><code class="docutils literal notranslate"><span class="pre">BasalAreaWeightedDiameter.precision</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.BasalAreaWeightedDiameter.value"><code class="docutils literal notranslate"><span class="pre">BasalAreaWeightedDiameter.value</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.CompositeVolume"><code class="docutils literal notranslate"><span class="pre">CompositeVolume</span></code></a><ul>
@@ -1167,6 +1180,12 @@ used to access aggregated stand metrics such as basal area or stem count.</p>
 </dl>
 <p>If a polygon is provided, the area_ha is computed from the polygon geometry
 (reprojected to a suitable UTM if the original CRS is geographic).</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="pyforestry.base.helpers.stand.Stand.BAWAD">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BAWAD</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pyforestry.base.helpers.stand.StandMetricAccessor" title="pyforestry.base.helpers.stand.StandMetricAccessor"><span class="pre">StandMetricAccessor</span></a></em><a class="headerlink" href="#pyforestry.base.helpers.stand.Stand.BAWAD" title="Link to this definition">#</a></dt>
+<dd><p>Access the stand’s basal-area weighted mean diameter.</p>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="pyforestry.base.helpers.stand.Stand.BasalArea">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BasalArea</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pyforestry.base.helpers.stand.StandMetricAccessor" title="pyforestry.base.helpers.stand.StandMetricAccessor"><span class="pre">StandMetricAccessor</span></a></em><a class="headerlink" href="#pyforestry.base.helpers.stand.Stand.BasalArea" title="Link to this definition">#</a></dt>
@@ -2380,6 +2399,12 @@ traced back.</p>
 <p>If a polygon is provided, the area_ha is computed from the polygon geometry
 (reprojected to a suitable UTM if the original CRS is geographic).</p>
 <dl class="py property">
+<dt class="sig sig-object py" id="pyforestry.base.helpers.Stand.BAWAD">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BAWAD</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pyforestry.base.helpers.stand.StandMetricAccessor" title="pyforestry.base.helpers.stand.StandMetricAccessor"><span class="pre">StandMetricAccessor</span></a></em><a class="headerlink" href="#pyforestry.base.helpers.Stand.BAWAD" title="Link to this definition">#</a></dt>
+<dd><p>Access the stand’s basal-area weighted mean diameter.</p>
+</dd></dl>
+
+<dl class="py property">
 <dt class="sig sig-object py" id="pyforestry.base.helpers.Stand.BasalArea">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BasalArea</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pyforestry.base.helpers.stand.StandMetricAccessor" title="pyforestry.base.helpers.stand.StandMetricAccessor"><span class="pre">StandMetricAccessor</span></a></em><a class="headerlink" href="#pyforestry.base.helpers.Stand.BasalArea" title="Link to this definition">#</a></dt>
 <dd><p>Access the stand’s basal-area aggregator.
@@ -2966,6 +2991,7 @@ globally defined species (for example those exposed through
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.base.helpers.stand">pyforestry.base.helpers.stand module</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.helpers.stand.Stand"><code class="docutils literal notranslate"><span class="pre">Stand</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.helpers.stand.Stand.BAWAD"><code class="docutils literal notranslate"><span class="pre">Stand.BAWAD</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.helpers.stand.Stand.BasalArea"><code class="docutils literal notranslate"><span class="pre">Stand.BasalArea</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.helpers.stand.Stand.QMD"><code class="docutils literal notranslate"><span class="pre">Stand.QMD</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.helpers.stand.Stand.Stems"><code class="docutils literal notranslate"><span class="pre">Stand.Stems</span></code></a></li>
@@ -3171,6 +3197,7 @@ globally defined species (for example those exposed through
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.helpers.Stand"><code class="docutils literal notranslate"><span class="pre">Stand</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.helpers.Stand.BAWAD"><code class="docutils literal notranslate"><span class="pre">Stand.BAWAD</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.helpers.Stand.BasalArea"><code class="docutils literal notranslate"><span class="pre">Stand.BasalArea</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.helpers.Stand.QMD"><code class="docutils literal notranslate"><span class="pre">Stand.QMD</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.helpers.Stand.Stems"><code class="docutils literal notranslate"><span class="pre">Stand.Stems</span></code></a></li>

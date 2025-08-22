@@ -437,6 +437,7 @@
     <span class="n">parse_tree_species</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.primitives</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BasalAreaWeightedDiameter</span><span class="p">,</span>
     <span class="n">QuadraticMeanDiameter</span><span class="p">,</span>
     <span class="n">SiteBase</span><span class="p">,</span>
     <span class="n">StandBasalArea</span><span class="p">,</span>
@@ -482,6 +483,8 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metric_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stand</span><span class="o">.</span><span class="n">_metric_estimates</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stand</span><span class="o">.</span><span class="n">use_angle_count</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_stand</span><span class="o">.</span><span class="n">_compute_ht_estimates</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_metric_name</span><span class="si">}</span><span class="s2"> metric unavailable for angle-count data&quot;</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -660,6 +663,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_qmd_estimates</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">StandMetricAccessor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;QMD&quot;</span><span class="p">)</span>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">BAWAD</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StandMetricAccessor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Access the stand&#39;s basal-area weighted mean diameter.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">StandMetricAccessor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;BAWAD&quot;</span><span class="p">)</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_qmd_estimates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Ensure that QMD estimates are computed.</span>
@@ -755,29 +763,50 @@
                 <span class="c1"># Adjusted BA/ha: divide by effective area.</span>
                 <span class="n">ba_ha</span> <span class="o">=</span> <span class="n">ba_sum</span> <span class="o">/</span> <span class="n">effective_area_ha</span>
 
+                <span class="c1"># Compute sums of diameter powers</span>
+                <span class="n">d2_sum</span> <span class="o">=</span> <span class="mf">0.0</span>
+                <span class="n">d3_sum</span> <span class="o">=</span> <span class="mf">0.0</span>
+                <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">trlist</span><span class="p">:</span>
+                    <span class="n">d_cm</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">)</span> <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">diameter_cm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mf">0.0</span>
+                    <span class="n">d2_sum</span> <span class="o">+=</span> <span class="p">(</span><span class="n">d_cm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">t</span><span class="o">.</span><span class="n">weight_n</span>
+                    <span class="n">d3_sum</span> <span class="o">+=</span> <span class="p">(</span><span class="n">d_cm</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">t</span><span class="o">.</span><span class="n">weight_n</span>
+                <span class="n">d3_ha</span> <span class="o">=</span> <span class="n">d3_sum</span> <span class="o">/</span> <span class="n">effective_area_ha</span>
+
                 <span class="k">if</span> <span class="n">sp</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">species_data</span><span class="p">:</span>
-                    <span class="n">species_data</span><span class="p">[</span><span class="n">sp</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;stems_per_ha&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;basal_area_per_ha&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+                    <span class="n">species_data</span><span class="p">[</span><span class="n">sp</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                        <span class="s2">&quot;stems_per_ha&quot;</span><span class="p">:</span> <span class="p">[],</span>
+                        <span class="s2">&quot;basal_area_per_ha&quot;</span><span class="p">:</span> <span class="p">[],</span>
+                        <span class="s2">&quot;d3_per_ha&quot;</span><span class="p">:</span> <span class="p">[],</span>
+                    <span class="p">}</span>
                 <span class="n">species_data</span><span class="p">[</span><span class="n">sp</span><span class="p">][</span><span class="s2">&quot;stems_per_ha&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stems_ha</span><span class="p">)</span>
                 <span class="n">species_data</span><span class="p">[</span><span class="n">sp</span><span class="p">][</span><span class="s2">&quot;basal_area_per_ha&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ba_ha</span><span class="p">)</span>
+                <span class="n">species_data</span><span class="p">[</span><span class="n">sp</span><span class="p">][</span><span class="s2">&quot;d3_per_ha&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d3_ha</span><span class="p">)</span>
 
         <span class="c1"># 2. Compute means and variances across plots (as before)</span>
         <span class="n">stems_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">TreeName</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">Stems</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">ba_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">TreeName</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">StandBasalArea</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">bawad_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">TreeName</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">BasalAreaWeightedDiameter</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="n">total_stems_val</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="n">total_stems_var</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="n">total_ba_val</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="n">total_ba_var</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">total_d3_val</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">total_d3_var</span> <span class="o">=</span> <span class="mf">0.0</span>
 
         <span class="k">for</span> <span class="n">sp</span><span class="p">,</span> <span class="n">metricvals</span> <span class="ow">in</span> <span class="n">species_data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">s_vals</span> <span class="o">=</span> <span class="n">metricvals</span><span class="p">[</span><span class="s2">&quot;stems_per_ha&quot;</span><span class="p">]</span>
             <span class="n">b_vals</span> <span class="o">=</span> <span class="n">metricvals</span><span class="p">[</span><span class="s2">&quot;basal_area_per_ha&quot;</span><span class="p">]</span>
+            <span class="n">d3_vals</span> <span class="o">=</span> <span class="n">metricvals</span><span class="p">[</span><span class="s2">&quot;d3_per_ha&quot;</span><span class="p">]</span>
 
             <span class="n">stems_mean</span> <span class="o">=</span> <span class="n">statistics</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">s_vals</span><span class="p">)</span> <span class="k">if</span> <span class="n">s_vals</span> <span class="k">else</span> <span class="mf">0.0</span>
             <span class="n">stems_var</span> <span class="o">=</span> <span class="n">statistics</span><span class="o">.</span><span class="n">pvariance</span><span class="p">(</span><span class="n">s_vals</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">s_vals</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="mf">0.0</span>
 
             <span class="n">ba_mean</span> <span class="o">=</span> <span class="n">statistics</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">b_vals</span><span class="p">)</span> <span class="k">if</span> <span class="n">b_vals</span> <span class="k">else</span> <span class="mf">0.0</span>
             <span class="n">ba_var</span> <span class="o">=</span> <span class="n">statistics</span><span class="o">.</span><span class="n">pvariance</span><span class="p">(</span><span class="n">b_vals</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">b_vals</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="mf">0.0</span>
+
+            <span class="n">d3_mean</span> <span class="o">=</span> <span class="n">statistics</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">d3_vals</span><span class="p">)</span> <span class="k">if</span> <span class="n">d3_vals</span> <span class="k">else</span> <span class="mf">0.0</span>
+            <span class="n">d3_var</span> <span class="o">=</span> <span class="n">statistics</span><span class="o">.</span><span class="n">pvariance</span><span class="p">(</span><span class="n">d3_vals</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">d3_vals</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="mf">0.0</span>
 
             <span class="n">stems_dict</span><span class="p">[</span><span class="n">sp</span><span class="p">]</span> <span class="o">=</span> <span class="n">Stems</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">stems_mean</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="n">sp</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="n">sqrt</span><span class="p">(</span><span class="n">stems_var</span><span class="p">))</span>
             <span class="n">ba_dict</span><span class="p">[</span><span class="n">sp</span><span class="p">]</span> <span class="o">=</span> <span class="n">StandBasalArea</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">ba_mean</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="n">sp</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="n">sqrt</span><span class="p">(</span><span class="n">ba_var</span><span class="p">))</span>
@@ -786,6 +815,20 @@
             <span class="n">total_stems_var</span> <span class="o">+=</span> <span class="n">stems_var</span>
             <span class="n">total_ba_val</span> <span class="o">+=</span> <span class="n">ba_mean</span>
             <span class="n">total_ba_var</span> <span class="o">+=</span> <span class="n">ba_var</span>
+            <span class="n">total_d3_val</span> <span class="o">+=</span> <span class="n">d3_mean</span>
+            <span class="n">total_d3_var</span> <span class="o">+=</span> <span class="n">d3_var</span>
+
+            <span class="k">if</span> <span class="n">ba_mean</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">d2_mean</span> <span class="o">=</span> <span class="n">ba_mean</span> <span class="o">*</span> <span class="p">(</span><span class="mf">40000.0</span> <span class="o">/</span> <span class="n">pi</span><span class="p">)</span>
+                <span class="n">d2_var</span> <span class="o">=</span> <span class="n">ba_var</span> <span class="o">*</span> <span class="p">(</span><span class="mf">40000.0</span> <span class="o">/</span> <span class="n">pi</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+                <span class="n">bawad_value</span> <span class="o">=</span> <span class="n">d3_mean</span> <span class="o">/</span> <span class="n">d2_mean</span> <span class="k">if</span> <span class="n">d2_mean</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
+                <span class="n">dR_dN</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">d2_mean</span> <span class="k">if</span> <span class="n">d2_mean</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
+                <span class="n">dR_dD</span> <span class="o">=</span> <span class="o">-</span><span class="n">d3_mean</span> <span class="o">/</span> <span class="p">(</span><span class="n">d2_mean</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="k">if</span> <span class="n">d2_mean</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
+                <span class="n">bawad_precision</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">((</span><span class="n">dR_dN</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">d3_var</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">dR_dD</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">d2_var</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">bawad_value</span> <span class="o">=</span> <span class="mf">0.0</span>
+                <span class="n">bawad_precision</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">bawad_dict</span><span class="p">[</span><span class="n">sp</span><span class="p">]</span> <span class="o">=</span> <span class="n">BasalAreaWeightedDiameter</span><span class="p">(</span><span class="n">bawad_value</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="n">bawad_precision</span><span class="p">)</span>
 
             <span class="c1"># &quot;TOTAL&quot; aggregator</span>
         <span class="n">stems_dict</span><span class="p">[</span><span class="s2">&quot;TOTAL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Stems</span><span class="p">(</span>
@@ -795,8 +838,24 @@
             <span class="n">value</span><span class="o">=</span><span class="n">total_ba_val</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="n">sqrt</span><span class="p">(</span><span class="n">total_ba_var</span><span class="p">)</span>
         <span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">total_ba_val</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">d2_total_mean</span> <span class="o">=</span> <span class="n">total_ba_val</span> <span class="o">*</span> <span class="p">(</span><span class="mf">40000.0</span> <span class="o">/</span> <span class="n">pi</span><span class="p">)</span>
+            <span class="n">d2_total_var</span> <span class="o">=</span> <span class="n">total_ba_var</span> <span class="o">*</span> <span class="p">(</span><span class="mf">40000.0</span> <span class="o">/</span> <span class="n">pi</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+            <span class="n">bawad_total_value</span> <span class="o">=</span> <span class="n">total_d3_val</span> <span class="o">/</span> <span class="n">d2_total_mean</span> <span class="k">if</span> <span class="n">d2_total_mean</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
+            <span class="n">dR_dN_t</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">d2_total_mean</span> <span class="k">if</span> <span class="n">d2_total_mean</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
+            <span class="n">dR_dD_t</span> <span class="o">=</span> <span class="o">-</span><span class="n">total_d3_val</span> <span class="o">/</span> <span class="p">(</span><span class="n">d2_total_mean</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="k">if</span> <span class="n">d2_total_mean</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
+            <span class="n">bawad_total_precision</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">((</span><span class="n">dR_dN_t</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">total_d3_var</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">dR_dD_t</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">d2_total_var</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">bawad_total_value</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">bawad_total_precision</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+        <span class="n">bawad_dict</span><span class="p">[</span><span class="s2">&quot;TOTAL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">BasalAreaWeightedDiameter</span><span class="p">(</span>
+            <span class="n">bawad_total_value</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="n">bawad_total_precision</span>
+        <span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_metric_estimates</span><span class="p">[</span><span class="s2">&quot;Stems&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">stems_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_metric_estimates</span><span class="p">[</span><span class="s2">&quot;BasalArea&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ba_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_metric_estimates</span><span class="p">[</span><span class="s2">&quot;BAWAD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">bawad_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a short textual description of the stand.&quot;&quot;&quot;</span>
