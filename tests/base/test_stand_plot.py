@@ -98,16 +98,23 @@ def test_stand_metric_calculations():
     # Force compute:
     val_stems_total = float(st.Stems)
     val_ba_total = float(st.BasalArea)
+    val_bawad_total = float(st.BAWAD)
 
     # We won't assert the exact numbers too strictly, but we can check they're >0
     assert val_stems_total > 0
     assert val_ba_total > 0
+    assert val_bawad_total > 0
 
     # We can also specifically request species-level results:
     ba_picea = st.BasalArea(sp_picea)
     ba_pinus = st.BasalArea("pinus sylvestris")
+    bawad_picea = st.BAWAD(sp_picea)
+    bawad_pinus = st.BAWAD("pinus sylvestris")
     assert ba_picea.value > 0
     assert ba_pinus.value > 0
+    assert math.isclose(bawad_picea.value, 23.78787878, rel_tol=1e-6)
+    assert math.isclose(bawad_pinus.value, 33.65671642, rel_tol=1e-6)
+    assert math.isclose(val_bawad_total, 30.4, rel_tol=1e-6)
 
 
 def test_stand_metric_accessor_keyerror():
@@ -115,6 +122,16 @@ def test_stand_metric_accessor_keyerror():
     st = Stand(plots=[])
     with pytest.raises(KeyError):
         st.BasalArea("picea abies")
+
+
+def test_bawad_unavailable_with_angle_count():
+    """BAWAD should raise KeyError when only angle-count data are present."""
+    sp = parse_tree_species("picea abies")
+    ac = AngleCount(ba_factor=2.0, value=[4], species=[sp], point_id="P1")
+    plot = CircularPlot(id=1, radius_m=5, AngleCount=[ac])
+    st = Stand(plots=[plot])
+    with pytest.raises(KeyError):
+        float(st.BAWAD)
 
 
 def test_CircularPlot_area_ha_property():
