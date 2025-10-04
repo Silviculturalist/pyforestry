@@ -168,4 +168,15 @@ Preview the output in `docs/build/html` before submitting a PR.
   * Return values and types
   * Examples where appropriate
 
+## Naming Conventions
+
+Follow these guidelines when naming modules and objects:
+
+* **Packages and modules:** use `snake_case` and keep names short but descriptive. Domain packages like `base` or `sweden` should be entirely lowercase.
+* **Classes:** use `CapWords` (PascalCase).
+* **Functions, methods and variables:** use `snake_case`.
+* **Constants:** use `UPPER_CASE`.
+* Prefix implementation details with a single underscore to mark them as private.
+* Consider defining ``__all__`` in modules to clearly state the public API.
+
 Thank you for helping make pyforestry even better!

@@ -8,9 +8,41 @@ permissions:
 
 on:
   push:
-    branches: [ main, dev ]
+    branches: [ dev ]
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.mdx'
+      - '**/*.rst'
+      - 'docs/**'
+      - 'README*'
+      - 'LICENSE*'
+      - 'CHANGELOG*'
+      - 'mkdocs.yml'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/PULL_REQUEST_TEMPLATE*'
+      - '**/*.png'
+      - '**/*.jpg'
+      - '**/*.jpeg'
+      - '**/*.gif'
+      - '**/*.svg'
   pull_request:
-    branches: [ main, dev ]
+    branches: [ dev ]
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.mdx'
+      - '**/*.rst'
+      - 'docs/**'
+      - 'README*'
+      - 'LICENSE*'
+      - 'CHANGELOG*'
+      - 'mkdocs.yml'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/PULL_REQUEST_TEMPLATE*'
+      - '**/*.png'
+      - '**/*.jpg'
+      - '**/*.jpeg'
+      - '**/*.gif'
+      - '**/*.svg'
 
 jobs:
   test-and-coverage:

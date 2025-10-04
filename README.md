@@ -50,5 +50,10 @@ print(stand.BasalArea.TOTAL.value)
 Please see the [contributing guidelines](CONTRIBUTING.md) for tips on setting up your development
 environment and submitting pull requests.
 
+## Sponsors
+This project has been sponsored by [Digital Impact North](https://www.digitalimpactnorth.se).
+
+![Digital Impact North](docs/images/DIN_logotyp_primar_gron.png)
+
 ## License
 `pyforestry` is distributed under the terms of the [MIT License](LICENSE).
