@@ -456,7 +456,7 @@
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;pyforestry.sweden.timber.swe_timber.SweTimber at 0x7fb1d7b8eea0&gt;
+&lt;pyforestry.sweden.timber.swe_timber.SweTimber at 0x7f918fdd1eb0&gt;
 </pre></div></div>
 </div>
 </section>
@@ -557,7 +557,7 @@ Total trees to process: 4
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Generating Solution Cube: 100%|██████████| 4/4 [00:00&lt;00:00, 595.72it/s]
+Generating Solution Cube: 100%|██████████| 4/4 [00:00&lt;00:00, 572.46it/s]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -566,7 +566,7 @@ Generating Solution Cube: 100%|██████████| 4/4 [00:00&lt;00:
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 
-Finished parallel computation in 1.26 seconds.
+Finished parallel computation in 1.38 seconds.
 Successfully created xarray Dataset.
 </pre></div></div>
 </div>
@@ -598,9 +598,7 @@ Successfully created xarray Dataset.
 </symbol>
 </defs>
 </svg>
-<style>/* CSS stylesheet for displaying xarray objects in jupyterlab.
- *
- */
+<style>/* CSS stylesheet for displaying xarray objects in notebooks */
 
 :root {
   --xr-font-color0: var(
@@ -679,6 +677,7 @@ body.vscode-dark {
   display: block !important;
   min-width: 300px;
   max-width: 700px;
+  line-height: 1.6;
 }
 
 .xr-text-repr-fallback {
@@ -701,11 +700,18 @@ body.vscode-dark {
 }
 
 .xr-obj-type,
-.xr-array-name {
+.xr-obj-name,
+.xr-group-name {
   margin-left: 2px;
   margin-right: 10px;
 }
 
+.xr-group-name::before {
+  content: "📁";
+  padding-right: 0.3em;
+}
+
+.xr-group-name,
 .xr-obj-type {
   color: var(--xr-font-color2);
 }
@@ -714,6 +720,8 @@ body.vscode-dark {
   padding-left: 0 !important;
   display: grid;
   grid-template-columns: 150px auto auto 1fr 0 20px 0 20px;
+  margin-block-start: 0;
+  margin-block-end: 0;
 }
 
 .xr-section-item {
@@ -724,6 +732,7 @@ body.vscode-dark {
   display: inline-block;
   opacity: 0;
   height: 0;
+  margin: 0;
 }
 
 .xr-section-item input + label {
@@ -782,7 +791,6 @@ body.vscode-dark {
 .xr-section-summary,
 .xr-section-inline-details {
   padding-top: 4px;
-  padding-bottom: 4px;
 }
 
 .xr-section-inline-details {
@@ -792,11 +800,38 @@ body.vscode-dark {
 .xr-section-details {
   display: none;
   grid-column: 1 / -1;
+  margin-top: 4px;
   margin-bottom: 5px;
 }
 
 .xr-section-summary-in:checked ~ .xr-section-details {
   display: contents;
+}
+
+.xr-group-box {
+  display: inline-grid;
+  grid-template-columns: 0px 20px auto;
+  width: 100%;
+}
+
+.xr-group-box-vline {
+  grid-column-start: 1;
+  border-right: 0.2em solid;
+  border-color: var(--xr-border-color);
+  width: 0px;
+}
+
+.xr-group-box-hline {
+  grid-column-start: 2;
+  grid-row-start: 1;
+  height: 1em;
+  width: 20px;
+  border-bottom: 0.2em solid;
+  border-color: var(--xr-border-color);
+}
+
+.xr-group-box-contents {
+  grid-column-start: 3;
 }
 
 .xr-array-wrap {
@@ -1038,14 +1073,14 @@ Data variables:
 Attributes:
     pricelist_hash:     4058af6a860784c4a6ce94f561a4f484a0401624c2f3cc8405c30...
     taper_model:        EdgrenNylinder1949
-    creation_date_utc:  2025-08-22T15:41:23.620428+00:00
+    creation_date_utc:  2025-10-04T10:24:01.567012+00:00
     dbh_range:          20-22 cm
-    height_range:       15-15.2 m</pre><div class='xr-wrap' style='display:none'><div class='xr-header'><div class='xr-obj-type'>xarray.Dataset</div></div><ul class='xr-sections'><li class='xr-section-item'><input id='section-d6aeed74-c529-4b94-9964-77b07c368f2d' class='xr-section-summary-in' type='checkbox' disabled ><label for='section-d6aeed74-c529-4b94-9964-77b07c368f2d' class='xr-section-summary'  title='Expand/collapse section'>Dimensions:</label><div class='xr-section-inline-details'><ul class='xr-dim-list'><li><span class='xr-has-index'>species</span>: 1</li><li><span class='xr-has-index'>height</span>: 2</li><li><span class='xr-has-index'>dbh</span>: 2</li></ul></div><div class='xr-section-details'></div></li><li class='xr-section-item'><input id='section-16672e65-3c95-4fb4-be76-f5c0de24da94' class='xr-section-summary-in' type='checkbox'  checked><label for='section-16672e65-3c95-4fb4-be76-f5c0de24da94' class='xr-section-summary' >Coordinates: <span>(3)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>species</span></div><div class='xr-var-dims'>(species)</div><div class='xr-var-dtype'>object</div><div class='xr-var-preview xr-preview'>&#x27;picea abies&#x27;</div><input id='attrs-b92d0ce0-9e2e-4815-96e1-73f27440519a' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-b92d0ce0-9e2e-4815-96e1-73f27440519a' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-f3ac69a7-a99d-485f-99bd-0d525b5d9ead' class='xr-var-data-in' type='checkbox'><label for='data-f3ac69a7-a99d-485f-99bd-0d525b5d9ead' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([&#x27;picea abies&#x27;], dtype=object)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>height</span></div><div class='xr-var-dims'>(height)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>15.0 15.2</div><input id='attrs-dbf6b393-8e18-4e37-b645-196e30c42207' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-dbf6b393-8e18-4e37-b645-196e30c42207' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-9dac1cd5-3e4a-4f47-aff0-52c2fc3a130b' class='xr-var-data-in' type='checkbox'><label for='data-9dac1cd5-3e4a-4f47-aff0-52c2fc3a130b' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([15. , 15.2])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>dbh</span></div><div class='xr-var-dims'>(dbh)</div><div class='xr-var-dtype'>int64</div><div class='xr-var-preview xr-preview'>20 22</div><input id='attrs-614af467-74bd-4ce6-abec-074760208107' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-614af467-74bd-4ce6-abec-074760208107' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-b7224995-c9f3-463a-a940-056aae216c58' class='xr-var-data-in' type='checkbox'><label for='data-b7224995-c9f3-463a-a940-056aae216c58' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([20, 22])</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-88df048a-de58-408a-ae04-b2d4ca1a58cd' class='xr-section-summary-in' type='checkbox'  checked><label for='section-88df048a-de58-408a-ae04-b2d4ca1a58cd' class='xr-section-summary' >Data variables: <span>(2)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span>total_value</span></div><div class='xr-var-dims'>(species, height, dbh)</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>55.12 69.41 55.56 70.02</div><input id='attrs-2432a1bb-98b2-4685-b776-32e74319cd6d' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-2432a1bb-98b2-4685-b776-32e74319cd6d' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-d1840292-b8c5-45bd-803a-19ad78e9f001' class='xr-var-data-in' type='checkbox'><label for='data-d1840292-b8c5-45bd-803a-19ad78e9f001' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[55.121742, 69.41475 ],
-        [55.56269 , 70.01582 ]]], dtype=float32)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>solution_sections</span></div><div class='xr-var-dims'>(species, height, dbh)</div><div class='xr-var-dtype'>object</div><div class='xr-var-preview xr-preview'>&#x27;[{&quot;start_point&quot;: 80, &quot;end_point...</div><input id='attrs-14d293ff-a887-4389-b735-536fbf3f9caa' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-14d293ff-a887-4389-b735-536fbf3f9caa' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-27949c64-46b5-437e-8434-4c7df966fbff' class='xr-var-data-in' type='checkbox'><label for='data-27949c64-46b5-437e-8434-4c7df966fbff' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[&#x27;[{&quot;start_point&quot;: 80, &quot;end_point&quot;: 115, &quot;volume&quot;: 0.016191082232439986, &quot;top_diameter&quot;: 5.185598373413086, &quot;value&quot;: 4.290634632110596, &quot;species_group&quot;: &quot;picea abies&quot;, &quot;timber_proportion&quot;: 1.0, &quot;pulp_proportion&quot;: 0.0, &quot;cull_proportion&quot;: 0.0, &quot;fuelwood_proportion&quot;: 0.0, &quot;quality&quot;: 3}, {&quot;start_point&quot;: 52, &quot;end_point&quot;: 80, &quot;volume&quot;: 0.032022008100272975, &quot;top_diameter&quot;: 9.956061363220215, &quot;value&quot;: 8.485830307006836, &quot;species_group&quot;: &quot;picea abies&quot;, &quot;timber_proportion&quot;: 1.0, &quot;pulp_proportion&quot;: 0.0, &quot;cull_proportion&quot;: 0.0, &quot;fuelwood_proportion&quot;: 0.0, &quot;quality&quot;: 2}, {&quot;start_point&quot;: 0, &quot;end_point&quot;: 52, &quot;volume&quot;: 0.1362180790952966, &quot;top_diameter&quot;: 14.06132698059082, &quot;value&quot;: 42.345279693603516, &quot;species_group&quot;: &quot;picea abies&quot;, &quot;timber_proportion&quot;: 1.0, &quot;pulp_proportion&quot;: 0.0, &quot;cull_proportion&quot;: 0.0, &quot;fuelwood_proportion&quot;: 0.0, &quot;quality&quot;: 1}]&#x27;,
+    height_range:       15-15.2 m</pre><div class='xr-wrap' style='display:none'><div class='xr-header'><div class='xr-obj-type'>xarray.Dataset</div></div><ul class='xr-sections'><li class='xr-section-item'><input id='section-73bfc76a-b245-4296-a50d-ae9c661dbf62' class='xr-section-summary-in' type='checkbox' disabled ><label for='section-73bfc76a-b245-4296-a50d-ae9c661dbf62' class='xr-section-summary'  title='Expand/collapse section'>Dimensions:</label><div class='xr-section-inline-details'><ul class='xr-dim-list'><li><span class='xr-has-index'>species</span>: 1</li><li><span class='xr-has-index'>height</span>: 2</li><li><span class='xr-has-index'>dbh</span>: 2</li></ul></div><div class='xr-section-details'></div></li><li class='xr-section-item'><input id='section-5295b925-56cf-4cd6-adeb-24949a52e1ee' class='xr-section-summary-in' type='checkbox'  checked><label for='section-5295b925-56cf-4cd6-adeb-24949a52e1ee' class='xr-section-summary' >Coordinates: <span>(3)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>species</span></div><div class='xr-var-dims'>(species)</div><div class='xr-var-dtype'>object</div><div class='xr-var-preview xr-preview'>&#x27;picea abies&#x27;</div><input id='attrs-49ab4c70-2b62-4a11-a680-da6e8df3bbd3' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-49ab4c70-2b62-4a11-a680-da6e8df3bbd3' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-b42f15dd-7cf0-4938-bb7c-d58fd95274d8' class='xr-var-data-in' type='checkbox'><label for='data-b42f15dd-7cf0-4938-bb7c-d58fd95274d8' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([&#x27;picea abies&#x27;], dtype=object)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>height</span></div><div class='xr-var-dims'>(height)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>15.0 15.2</div><input id='attrs-b6d2f074-747a-4cdc-abab-9af9d5e881f3' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-b6d2f074-747a-4cdc-abab-9af9d5e881f3' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-88bd8d63-0f2e-4aa4-b463-d0290a2381ba' class='xr-var-data-in' type='checkbox'><label for='data-88bd8d63-0f2e-4aa4-b463-d0290a2381ba' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([15. , 15.2])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>dbh</span></div><div class='xr-var-dims'>(dbh)</div><div class='xr-var-dtype'>int64</div><div class='xr-var-preview xr-preview'>20 22</div><input id='attrs-7477e626-2035-4263-af44-3e35b539d3fd' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-7477e626-2035-4263-af44-3e35b539d3fd' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-41ddf206-75f9-4f3a-b4b0-8818241d6ea7' class='xr-var-data-in' type='checkbox'><label for='data-41ddf206-75f9-4f3a-b4b0-8818241d6ea7' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([20, 22])</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-2c1f9481-4464-4dc4-a141-fe3e2e77acec' class='xr-section-summary-in' type='checkbox'  checked><label for='section-2c1f9481-4464-4dc4-a141-fe3e2e77acec' class='xr-section-summary' >Data variables: <span>(2)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span>total_value</span></div><div class='xr-var-dims'>(species, height, dbh)</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>55.12 69.41 55.56 70.02</div><input id='attrs-4d9b8783-6333-4c11-b70f-1fbba780d8fc' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-4d9b8783-6333-4c11-b70f-1fbba780d8fc' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-acb3a0e1-b1af-4964-8498-4a1fde293374' class='xr-var-data-in' type='checkbox'><label for='data-acb3a0e1-b1af-4964-8498-4a1fde293374' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[55.121742, 69.41475 ],
+        [55.56269 , 70.01582 ]]], dtype=float32)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>solution_sections</span></div><div class='xr-var-dims'>(species, height, dbh)</div><div class='xr-var-dtype'>object</div><div class='xr-var-preview xr-preview'>&#x27;[{&quot;start_point&quot;: 80, &quot;end_point...</div><input id='attrs-a9d014f2-6da4-4594-9e7f-232020a75e87' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-a9d014f2-6da4-4594-9e7f-232020a75e87' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-d70ab28e-88f7-48f0-84c4-6ad5a76854a2' class='xr-var-data-in' type='checkbox'><label for='data-d70ab28e-88f7-48f0-84c4-6ad5a76854a2' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[&#x27;[{&quot;start_point&quot;: 80, &quot;end_point&quot;: 115, &quot;volume&quot;: 0.016191082232439986, &quot;top_diameter&quot;: 5.185598373413086, &quot;value&quot;: 4.290634632110596, &quot;species_group&quot;: &quot;picea abies&quot;, &quot;timber_proportion&quot;: 1.0, &quot;pulp_proportion&quot;: 0.0, &quot;cull_proportion&quot;: 0.0, &quot;fuelwood_proportion&quot;: 0.0, &quot;quality&quot;: 3}, {&quot;start_point&quot;: 52, &quot;end_point&quot;: 80, &quot;volume&quot;: 0.032022008100272975, &quot;top_diameter&quot;: 9.956061363220215, &quot;value&quot;: 8.485830307006836, &quot;species_group&quot;: &quot;picea abies&quot;, &quot;timber_proportion&quot;: 1.0, &quot;pulp_proportion&quot;: 0.0, &quot;cull_proportion&quot;: 0.0, &quot;fuelwood_proportion&quot;: 0.0, &quot;quality&quot;: 2}, {&quot;start_point&quot;: 0, &quot;end_point&quot;: 52, &quot;volume&quot;: 0.1362180790952966, &quot;top_diameter&quot;: 14.06132698059082, &quot;value&quot;: 42.345279693603516, &quot;species_group&quot;: &quot;picea abies&quot;, &quot;timber_proportion&quot;: 1.0, &quot;pulp_proportion&quot;: 0.0, &quot;cull_proportion&quot;: 0.0, &quot;fuelwood_proportion&quot;: 0.0, &quot;quality&quot;: 1}]&#x27;,
          &#x27;[{&quot;start_point&quot;: 63, &quot;end_point&quot;: 118, &quot;volume&quot;: 0.04063251286964093, &quot;top_diameter&quot;: 5.233541488647461, &quot;value&quot;: 10.767617225646973, &quot;species_group&quot;: &quot;picea abies&quot;, &quot;timber_proportion&quot;: 1.0, &quot;pulp_proportion&quot;: 0.0, &quot;cull_proportion&quot;: 0.0, &quot;fuelwood_proportion&quot;: 0.0, &quot;quality&quot;: 3}, {&quot;start_point&quot;: 36, &quot;end_point&quot;: 63, &quot;volume&quot;: 0.05364847041562995, &quot;top_diameter&quot;: 13.683911323547363, &quot;value&quot;: 14.216845512390137, &quot;species_group&quot;: &quot;picea abies&quot;, &quot;timber_proportion&quot;: 1.0, &quot;pulp_proportion&quot;: 0.0, &quot;cull_proportion&quot;: 0.0, &quot;fuelwood_proportion&quot;: 0.0, &quot;quality&quot;: 2}, {&quot;start_point&quot;: 0, &quot;end_point&quot;: 36, &quot;volume&quot;: 0.12936282734352741, &quot;top_diameter&quot;: 18.028379440307617, &quot;value&quot;: 44.4302864074707, &quot;species_group&quot;: &quot;picea abies&quot;, &quot;timber_proportion&quot;: 1.0, &quot;pulp_proportion&quot;: 0.0, &quot;cull_proportion&quot;: 0.0, &quot;fuelwood_proportion&quot;: 0.0, &quot;quality&quot;: 1}]&#x27;],
         [&#x27;[{&quot;start_point&quot;: 81, &quot;end_point&quot;: 117, &quot;volume&quot;: 0.016500787693186084, &quot;top_diameter&quot;: 5.111711502075195, &quot;value&quot;: 4.37270975112915, &quot;species_group&quot;: &quot;picea abies&quot;, &quot;timber_proportion&quot;: 1.0, &quot;pulp_proportion&quot;: 0.0, &quot;cull_proportion&quot;: 0.0, &quot;fuelwood_proportion&quot;: 0.0, &quot;quality&quot;: 3}, {&quot;start_point&quot;: 52, &quot;end_point&quot;: 81, &quot;volume&quot;: 0.0333762238052496, &quot;top_diameter&quot;: 9.94941520690918, &quot;value&quot;: 8.844701766967773, &quot;species_group&quot;: &quot;picea abies&quot;, &quot;timber_proportion&quot;: 1.0, &quot;pulp_proportion&quot;: 0.0, &quot;cull_proportion&quot;: 0.0, &quot;fuelwood_proportion&quot;: 0.0, &quot;quality&quot;: 2}, {&quot;start_point&quot;: 0, &quot;end_point&quot;: 52, &quot;volume&quot;: 0.13651392477890803, &quot;top_diameter&quot;: 14.13994312286377, &quot;value&quot;: 42.345279693603516, &quot;species_group&quot;: &quot;picea abies&quot;, &quot;timber_proportion&quot;: 1.0, &quot;pulp_proportion&quot;: 0.0, &quot;cull_proportion&quot;: 0.0, &quot;fuelwood_proportion&quot;: 0.0, &quot;quality&quot;: 1}]&#x27;,
          &#x27;[{&quot;start_point&quot;: 70, &quot;end_point&quot;: 120, &quot;volume&quot;: 0.032728334497939424, &quot;top_diameter&quot;: 5.158217430114746, &quot;value&quot;: 8.67300796508789, &quot;species_group&quot;: &quot;picea abies&quot;, &quot;timber_proportion&quot;: 1.0, &quot;pulp_proportion&quot;: 0.0, &quot;cull_proportion&quot;: 0.0, &quot;fuelwood_proportion&quot;: 0.0, &quot;quality&quot;: 3}, {&quot;start_point&quot;: 36, &quot;end_point&quot;: 70, &quot;volume&quot;: 0.06382086924742099, &quot;top_diameter&quot;: 12.685321807861328, &quot;value&quot;: 16.91252899169922, &quot;species_group&quot;: &quot;picea abies&quot;, &quot;timber_proportion&quot;: 1.0, &quot;pulp_proportion&quot;: 0.0, &quot;cull_proportion&quot;: 0.0, &quot;fuelwood_proportion&quot;: 0.0, &quot;quality&quot;: 2}, {&quot;start_point&quot;: 0, &quot;end_point&quot;: 36, &quot;volume&quot;: 0.12943462648888698, &quot;top_diameter&quot;: 18.076704025268555, &quot;value&quot;: 44.4302864074707, &quot;species_group&quot;: &quot;picea abies&quot;, &quot;timber_proportion&quot;: 1.0, &quot;pulp_proportion&quot;: 0.0, &quot;cull_proportion&quot;: 0.0, &quot;fuelwood_proportion&quot;: 0.0, &quot;quality&quot;: 1}]&#x27;]]],
-      dtype=object)</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-1d54c979-2418-49e6-94cd-6ede26e42740' class='xr-section-summary-in' type='checkbox'  ><label for='section-1d54c979-2418-49e6-94cd-6ede26e42740' class='xr-section-summary' >Indexes: <span>(3)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-index-name'><div>species</div></div><div class='xr-index-preview'>PandasIndex</div><input type='checkbox' disabled/><label></label><input id='index-a0800aa6-a527-464b-bf1c-2149137a9808' class='xr-index-data-in' type='checkbox'/><label for='index-a0800aa6-a527-464b-bf1c-2149137a9808' title='Show/Hide index repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-index-data'><pre>PandasIndex(Index([&#x27;picea abies&#x27;], dtype=&#x27;object&#x27;, name=&#x27;species&#x27;))</pre></div></li><li class='xr-var-item'><div class='xr-index-name'><div>height</div></div><div class='xr-index-preview'>PandasIndex</div><input type='checkbox' disabled/><label></label><input id='index-24766eb2-b06b-412d-aed5-9c126cd83aa1' class='xr-index-data-in' type='checkbox'/><label for='index-24766eb2-b06b-412d-aed5-9c126cd83aa1' title='Show/Hide index repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-index-data'><pre>PandasIndex(Index([15.0, 15.2], dtype=&#x27;float64&#x27;, name=&#x27;height&#x27;))</pre></div></li><li class='xr-var-item'><div class='xr-index-name'><div>dbh</div></div><div class='xr-index-preview'>PandasIndex</div><input type='checkbox' disabled/><label></label><input id='index-985292cb-42d3-4084-b492-c551df77dd72' class='xr-index-data-in' type='checkbox'/><label for='index-985292cb-42d3-4084-b492-c551df77dd72' title='Show/Hide index repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-index-data'><pre>PandasIndex(Index([20, 22], dtype=&#x27;int64&#x27;, name=&#x27;dbh&#x27;))</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-d61b0819-abb6-4e94-a070-77fb18ddf2a0' class='xr-section-summary-in' type='checkbox'  checked><label for='section-d61b0819-abb6-4e94-a070-77fb18ddf2a0' class='xr-section-summary' >Attributes: <span>(5)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><dl class='xr-attrs'><dt><span>pricelist_hash :</span></dt><dd>4058af6a860784c4a6ce94f561a4f484a0401624c2f3cc8405c3074570164174</dd><dt><span>taper_model :</span></dt><dd>EdgrenNylinder1949</dd><dt><span>creation_date_utc :</span></dt><dd>2025-08-22T15:41:23.620428+00:00</dd><dt><span>dbh_range :</span></dt><dd>20-22 cm</dd><dt><span>height_range :</span></dt><dd>15-15.2 m</dd></dl></div></li></ul></div></div></div>
+      dtype=object)</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-96130ced-29d9-4b7a-9830-4bd330321701' class='xr-section-summary-in' type='checkbox'  checked><label for='section-96130ced-29d9-4b7a-9830-4bd330321701' class='xr-section-summary' >Attributes: <span>(5)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><dl class='xr-attrs'><dt><span>pricelist_hash :</span></dt><dd>4058af6a860784c4a6ce94f561a4f484a0401624c2f3cc8405c3074570164174</dd><dt><span>taper_model :</span></dt><dd>EdgrenNylinder1949</dd><dt><span>creation_date_utc :</span></dt><dd>2025-10-04T10:24:01.567012+00:00</dd><dt><span>dbh_range :</span></dt><dd>20-22 cm</dd><dt><span>height_range :</span></dt><dd>15-15.2 m</dd></dl></div></li></ul></div></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:

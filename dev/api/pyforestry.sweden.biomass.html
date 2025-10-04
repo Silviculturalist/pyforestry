@@ -895,6 +895,154 @@ Dept. of Forest Survey. Swedish University of Agricultural Sciences. Umeå.
 </dd></dl>
 
 </section>
+<section id="module-pyforestry.sweden.biomass.petersson_1999">
+<span id="pyforestry-sweden-biomass-petersson-1999-module"></span><h2>pyforestry.sweden.biomass.petersson_1999 module<a class="headerlink" href="#module-pyforestry.sweden.biomass.petersson_1999" title="Link to this heading">#</a></h2>
+<p>Above-ground biomass functions after Petersson (1999).</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.sweden.biomass.petersson_1999.Petersson1999">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.petersson_1999.</span></span><span class="sig-name descname"><span class="pre">Petersson1999</span></span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/petersson_1999.html#Petersson1999"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.petersson_1999.Petersson1999" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Above-ground biomass models for common Swedish tree species.</p>
+<p>The formulas implemented here originate from:</p>
+<p>Petersson, H. (1999). <em>Biomassafunktioner för trädfaktorer av tall,
+gran och björk i Sverige</em>. Report 59, Dept. of Forest Resources and
+Geomatics, Swedish University of Agricultural Sciences.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.biomass.petersson_1999.Petersson1999.biomass">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">biomass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.diameter_cm.Diameter_cm" title="pyforestry.base.helpers.primitives.diameter_cm.Diameter_cm"><span class="pre">Diameter_cm</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">age_at_breast_height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.age.AgeMeasurement" title="pyforestry.base.helpers.primitives.age.AgeMeasurement"><span class="pre">AgeMeasurement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">SI</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue" title="pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue"><span class="pre">SiteIndexValue</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">five_years_radial_increment_mm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dominant_species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/petersson_1999.html#Petersson1999.biomass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.petersson_1999.Petersson1999.biomass" title="Link to this definition">#</a></dt>
+<dd><p>Calculate biomass for a given species.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>species</strong> – Tree species name or enum value.</p></li>
+<li><p><strong>diameter_cm</strong> – Diameter at breast height in centimetres.</p></li>
+<li><p><strong>height_m</strong> – Tree height in metres.</p></li>
+<li><p><strong>age_at_breast_height</strong> – Age at breast height in years.</p></li>
+<li><p><strong>SI</strong> – Site index for the stand. Numeric values require
+<code class="docutils literal notranslate"><span class="pre">dominant_species</span></code>.</p></li>
+<li><p><strong>five_years_radial_increment_mm</strong> – Radial increment over five years in
+millimetres.</p></li>
+<li><p><strong>peat</strong> – <code class="docutils literal notranslate"><span class="pre">True</span></code> if soil is peat (&gt;30 cm deep).</p></li>
+<li><p><strong>latitude</strong> – Latitude in decimal degrees.</p></li>
+<li><p><strong>longitude</strong> – Longitude in decimal degrees.</p></li>
+<li><p><strong>altitude</strong> – Altitude in metres above sea level.</p></li>
+<li><p><strong>dominant_species</strong> – Species used when <code class="docutils literal notranslate"><span class="pre">SI</span></code> is numeric.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dry weight components in grams keyed by component name.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – If <code class="docutils literal notranslate"><span class="pre">species</span></code> is not a valid tree species.</p></li>
+<li><p><strong>ValueError</strong> – If the species is not supported.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.biomass.petersson_1999.Petersson1999.birch">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">birch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.diameter_cm.Diameter_cm" title="pyforestry.base.helpers.primitives.diameter_cm.Diameter_cm"><span class="pre">Diameter_cm</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">age_at_breast_height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.age.AgeMeasurement" title="pyforestry.base.helpers.primitives.age.AgeMeasurement"><span class="pre">AgeMeasurement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">SI</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue" title="pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue"><span class="pre">SiteIndexValue</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">five_years_radial_increment_mm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dominant_species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/petersson_1999.html#Petersson1999.birch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.petersson_1999.Petersson1999.birch" title="Link to this definition">#</a></dt>
+<dd><p>Biomass components for birch (<code class="docutils literal notranslate"><span class="pre">Betula</span></code> spp.).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diameter_cm</strong> – Diameter at breast height in centimetres. If a
+<code class="docutils literal notranslate"><span class="pre">Diameter_cm</span></code> instance is supplied it must refer to a 1.3 m
+over-bark measurement.</p></li>
+<li><p><strong>height_m</strong> – Tree height in metres.</p></li>
+<li><p><strong>age_at_breast_height</strong> – Age at breast height in years.</p></li>
+<li><p><strong>SI</strong> – Site index for the stand. Numeric values require
+<code class="docutils literal notranslate"><span class="pre">dominant_species</span></code>.</p></li>
+<li><p><strong>five_years_radial_increment_mm</strong> – Radial increment over five years in
+millimetres.</p></li>
+<li><p><strong>peat</strong> – <code class="docutils literal notranslate"><span class="pre">True</span></code> if soil is peat (&gt;30 cm deep).</p></li>
+<li><p><strong>latitude</strong> – Latitude in decimal degrees.</p></li>
+<li><p><strong>longitude</strong> – Longitude in decimal degrees.</p></li>
+<li><p><strong>altitude</strong> – Altitude in metres above sea level.</p></li>
+<li><p><strong>dominant_species</strong> – Species used for <code class="docutils literal notranslate"><span class="pre">SI</span></code> when <code class="docutils literal notranslate"><span class="pre">SI</span></code> is numeric.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dry weight components in grams keyed by component name.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.biomass.petersson_1999.Petersson1999.pine">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.diameter_cm.Diameter_cm" title="pyforestry.base.helpers.primitives.diameter_cm.Diameter_cm"><span class="pre">Diameter_cm</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">age_at_breast_height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.age.AgeMeasurement" title="pyforestry.base.helpers.primitives.age.AgeMeasurement"><span class="pre">AgeMeasurement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">SI</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue" title="pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue"><span class="pre">SiteIndexValue</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">five_years_radial_increment_mm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dominant_species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/petersson_1999.html#Petersson1999.pine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.petersson_1999.Petersson1999.pine" title="Link to this definition">#</a></dt>
+<dd><p>Biomass components for a Scots pine.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diameter_cm</strong> – Diameter at breast height in centimetres.
+<code class="docutils literal notranslate"><span class="pre">Diameter_cm</span></code> must describe a 1.3 m, over-bark
+measurement when used.</p></li>
+<li><p><strong>height_m</strong> – Tree height in metres.</p></li>
+<li><p><strong>age_at_breast_height</strong> – Age at breast height in years.</p></li>
+<li><p><strong>SI</strong> – Site index of the stand. When numeric, <code class="docutils literal notranslate"><span class="pre">dominant_species</span></code>
+must define pine or spruce.</p></li>
+<li><p><strong>five_years_radial_increment_mm</strong> – Radial increment over five years
+in millimetres.</p></li>
+<li><p><strong>peat</strong> – <code class="docutils literal notranslate"><span class="pre">True</span></code> if soil is peat (&gt;30 cm deep).</p></li>
+<li><p><strong>latitude</strong> – Latitude in decimal degrees.</p></li>
+<li><p><strong>longitude</strong> – Longitude in decimal degrees.</p></li>
+<li><p><strong>altitude</strong> – Altitude in metres above sea level.</p></li>
+<li><p><strong>dominant_species</strong> – Species used for <code class="docutils literal notranslate"><span class="pre">SI</span></code> when <code class="docutils literal notranslate"><span class="pre">SI</span></code> is numeric.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dry weight components in grams keyed by component name.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.biomass.petersson_1999.Petersson1999.spruce">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">spruce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.diameter_cm.Diameter_cm" title="pyforestry.base.helpers.primitives.diameter_cm.Diameter_cm"><span class="pre">Diameter_cm</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">age_at_breast_height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.age.AgeMeasurement" title="pyforestry.base.helpers.primitives.age.AgeMeasurement"><span class="pre">AgeMeasurement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">SI</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue" title="pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue"><span class="pre">SiteIndexValue</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">five_years_radial_increment_mm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dominant_species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/petersson_1999.html#Petersson1999.spruce"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.petersson_1999.Petersson1999.spruce" title="Link to this definition">#</a></dt>
+<dd><p>Biomass components for a Norway spruce.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diameter_cm</strong> – Diameter at breast height in centimetres.
+If <code class="docutils literal notranslate"><span class="pre">Diameter_cm</span></code> is given, it must represent 1.3 m
+measurement height and be taken over bark.</p></li>
+<li><p><strong>height_m</strong> – Tree height in metres.</p></li>
+<li><p><strong>age_at_breast_height</strong> – Age at breast height in years.</p></li>
+<li><p><strong>SI</strong> – Site index for the stand. When numeric, <code class="docutils literal notranslate"><span class="pre">dominant_species</span></code>
+must specify pine or spruce.</p></li>
+<li><p><strong>five_years_radial_increment_mm</strong> – Radial increment over five years
+in millimetres.</p></li>
+<li><p><strong>peat</strong> – <code class="docutils literal notranslate"><span class="pre">True</span></code> if soil is peat (&gt;30 cm deep).</p></li>
+<li><p><strong>latitude</strong> – Latitude in decimal degrees.</p></li>
+<li><p><strong>longitude</strong> – Longitude in decimal degrees.</p></li>
+<li><p><strong>altitude</strong> – Altitude in metres above sea level.</p></li>
+<li><p><strong>dominant_species</strong> – Species used for <code class="docutils literal notranslate"><span class="pre">SI</span></code> when <code class="docutils literal notranslate"><span class="pre">SI</span></code> is numeric.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dry weight components in grams keyed by component name.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 <section id="module-pyforestry.sweden.biomass.petersson_stahl_2006">
 <span id="pyforestry-sweden-biomass-petersson-stahl-2006-module"></span><h2>pyforestry.sweden.biomass.petersson_stahl_2006 module<a class="headerlink" href="#module-pyforestry.sweden.biomass.petersson_stahl_2006" title="Link to this heading">#</a></h2>
 <dl class="py class">
@@ -1237,6 +1385,7 @@ Common arguments include:
 </section>
 <section id="module-pyforestry.sweden.biomass">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pyforestry.sweden.biomass" title="Link to this heading">#</a></h2>
+<p>Expose Swedish tree biomass models.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyforestry.sweden.biomass.Marklund_1988">
 <span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.</span></span><span class="sig-name descname"><span class="pre">Marklund_1988</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timber</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.timber.timber_base.html#pyforestry.base.timber.timber_base.timber.Timber" title="pyforestry.base.timber.timber_base.timber.Timber"><span class="pre">Timber</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/marklund_1988.html#Marklund_1988"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.Marklund_1988" title="Link to this definition">#</a></dt>
@@ -1302,6 +1451,150 @@ Dept. of Forest Survey. Swedish University of Agricultural Sciences. Umeå.
 <span class="go">}</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.sweden.biomass.Petersson1999">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.biomass.</span></span><span class="sig-name descname"><span class="pre">Petersson1999</span></span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/petersson_1999.html#Petersson1999"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.Petersson1999" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Above-ground biomass models for common Swedish tree species.</p>
+<p>The formulas implemented here originate from:</p>
+<p>Petersson, H. (1999). <em>Biomassafunktioner för trädfaktorer av tall,
+gran och björk i Sverige</em>. Report 59, Dept. of Forest Resources and
+Geomatics, Swedish University of Agricultural Sciences.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.biomass.Petersson1999.biomass">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">biomass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.diameter_cm.Diameter_cm" title="pyforestry.base.helpers.primitives.diameter_cm.Diameter_cm"><span class="pre">Diameter_cm</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">age_at_breast_height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.age.AgeMeasurement" title="pyforestry.base.helpers.primitives.age.AgeMeasurement"><span class="pre">AgeMeasurement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">SI</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue" title="pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue"><span class="pre">SiteIndexValue</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">five_years_radial_increment_mm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dominant_species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/petersson_1999.html#Petersson1999.biomass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.Petersson1999.biomass" title="Link to this definition">#</a></dt>
+<dd><p>Calculate biomass for a given species.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>species</strong> – Tree species name or enum value.</p></li>
+<li><p><strong>diameter_cm</strong> – Diameter at breast height in centimetres.</p></li>
+<li><p><strong>height_m</strong> – Tree height in metres.</p></li>
+<li><p><strong>age_at_breast_height</strong> – Age at breast height in years.</p></li>
+<li><p><strong>SI</strong> – Site index for the stand. Numeric values require
+<code class="docutils literal notranslate"><span class="pre">dominant_species</span></code>.</p></li>
+<li><p><strong>five_years_radial_increment_mm</strong> – Radial increment over five years in
+millimetres.</p></li>
+<li><p><strong>peat</strong> – <code class="docutils literal notranslate"><span class="pre">True</span></code> if soil is peat (&gt;30 cm deep).</p></li>
+<li><p><strong>latitude</strong> – Latitude in decimal degrees.</p></li>
+<li><p><strong>longitude</strong> – Longitude in decimal degrees.</p></li>
+<li><p><strong>altitude</strong> – Altitude in metres above sea level.</p></li>
+<li><p><strong>dominant_species</strong> – Species used when <code class="docutils literal notranslate"><span class="pre">SI</span></code> is numeric.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dry weight components in grams keyed by component name.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – If <code class="docutils literal notranslate"><span class="pre">species</span></code> is not a valid tree species.</p></li>
+<li><p><strong>ValueError</strong> – If the species is not supported.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.biomass.Petersson1999.birch">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">birch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.diameter_cm.Diameter_cm" title="pyforestry.base.helpers.primitives.diameter_cm.Diameter_cm"><span class="pre">Diameter_cm</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">age_at_breast_height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.age.AgeMeasurement" title="pyforestry.base.helpers.primitives.age.AgeMeasurement"><span class="pre">AgeMeasurement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">SI</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue" title="pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue"><span class="pre">SiteIndexValue</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">five_years_radial_increment_mm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dominant_species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/petersson_1999.html#Petersson1999.birch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.Petersson1999.birch" title="Link to this definition">#</a></dt>
+<dd><p>Biomass components for birch (<code class="docutils literal notranslate"><span class="pre">Betula</span></code> spp.).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diameter_cm</strong> – Diameter at breast height in centimetres. If a
+<code class="docutils literal notranslate"><span class="pre">Diameter_cm</span></code> instance is supplied it must refer to a 1.3 m
+over-bark measurement.</p></li>
+<li><p><strong>height_m</strong> – Tree height in metres.</p></li>
+<li><p><strong>age_at_breast_height</strong> – Age at breast height in years.</p></li>
+<li><p><strong>SI</strong> – Site index for the stand. Numeric values require
+<code class="docutils literal notranslate"><span class="pre">dominant_species</span></code>.</p></li>
+<li><p><strong>five_years_radial_increment_mm</strong> – Radial increment over five years in
+millimetres.</p></li>
+<li><p><strong>peat</strong> – <code class="docutils literal notranslate"><span class="pre">True</span></code> if soil is peat (&gt;30 cm deep).</p></li>
+<li><p><strong>latitude</strong> – Latitude in decimal degrees.</p></li>
+<li><p><strong>longitude</strong> – Longitude in decimal degrees.</p></li>
+<li><p><strong>altitude</strong> – Altitude in metres above sea level.</p></li>
+<li><p><strong>dominant_species</strong> – Species used for <code class="docutils literal notranslate"><span class="pre">SI</span></code> when <code class="docutils literal notranslate"><span class="pre">SI</span></code> is numeric.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dry weight components in grams keyed by component name.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.biomass.Petersson1999.pine">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.diameter_cm.Diameter_cm" title="pyforestry.base.helpers.primitives.diameter_cm.Diameter_cm"><span class="pre">Diameter_cm</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">age_at_breast_height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.age.AgeMeasurement" title="pyforestry.base.helpers.primitives.age.AgeMeasurement"><span class="pre">AgeMeasurement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">SI</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue" title="pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue"><span class="pre">SiteIndexValue</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">five_years_radial_increment_mm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dominant_species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/petersson_1999.html#Petersson1999.pine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.Petersson1999.pine" title="Link to this definition">#</a></dt>
+<dd><p>Biomass components for a Scots pine.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diameter_cm</strong> – Diameter at breast height in centimetres.
+<code class="docutils literal notranslate"><span class="pre">Diameter_cm</span></code> must describe a 1.3 m, over-bark
+measurement when used.</p></li>
+<li><p><strong>height_m</strong> – Tree height in metres.</p></li>
+<li><p><strong>age_at_breast_height</strong> – Age at breast height in years.</p></li>
+<li><p><strong>SI</strong> – Site index of the stand. When numeric, <code class="docutils literal notranslate"><span class="pre">dominant_species</span></code>
+must define pine or spruce.</p></li>
+<li><p><strong>five_years_radial_increment_mm</strong> – Radial increment over five years
+in millimetres.</p></li>
+<li><p><strong>peat</strong> – <code class="docutils literal notranslate"><span class="pre">True</span></code> if soil is peat (&gt;30 cm deep).</p></li>
+<li><p><strong>latitude</strong> – Latitude in decimal degrees.</p></li>
+<li><p><strong>longitude</strong> – Longitude in decimal degrees.</p></li>
+<li><p><strong>altitude</strong> – Altitude in metres above sea level.</p></li>
+<li><p><strong>dominant_species</strong> – Species used for <code class="docutils literal notranslate"><span class="pre">SI</span></code> when <code class="docutils literal notranslate"><span class="pre">SI</span></code> is numeric.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dry weight components in grams keyed by component name.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.biomass.Petersson1999.spruce">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">spruce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.diameter_cm.Diameter_cm" title="pyforestry.base.helpers.primitives.diameter_cm.Diameter_cm"><span class="pre">Diameter_cm</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">age_at_breast_height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.age.AgeMeasurement" title="pyforestry.base.helpers.primitives.age.AgeMeasurement"><span class="pre">AgeMeasurement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">SI</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue" title="pyforestry.base.helpers.primitives.siteindex_value.SiteIndexValue"><span class="pre">SiteIndexValue</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">five_years_radial_increment_mm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dominant_species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/biomass/petersson_1999.html#Petersson1999.spruce"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.biomass.Petersson1999.spruce" title="Link to this definition">#</a></dt>
+<dd><p>Biomass components for a Norway spruce.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diameter_cm</strong> – Diameter at breast height in centimetres.
+If <code class="docutils literal notranslate"><span class="pre">Diameter_cm</span></code> is given, it must represent 1.3 m
+measurement height and be taken over bark.</p></li>
+<li><p><strong>height_m</strong> – Tree height in metres.</p></li>
+<li><p><strong>age_at_breast_height</strong> – Age at breast height in years.</p></li>
+<li><p><strong>SI</strong> – Site index for the stand. When numeric, <code class="docutils literal notranslate"><span class="pre">dominant_species</span></code>
+must specify pine or spruce.</p></li>
+<li><p><strong>five_years_radial_increment_mm</strong> – Radial increment over five years
+in millimetres.</p></li>
+<li><p><strong>peat</strong> – <code class="docutils literal notranslate"><span class="pre">True</span></code> if soil is peat (&gt;30 cm deep).</p></li>
+<li><p><strong>latitude</strong> – Latitude in decimal degrees.</p></li>
+<li><p><strong>longitude</strong> – Longitude in decimal degrees.</p></li>
+<li><p><strong>altitude</strong> – Altitude in metres above sea level.</p></li>
+<li><p><strong>dominant_species</strong> – Species used for <code class="docutils literal notranslate"><span class="pre">SI</span></code> when <code class="docutils literal notranslate"><span class="pre">SI</span></code> is numeric.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dry weight components in grams keyed by component name.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -1753,6 +2046,16 @@ Common arguments include:
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.biomass.marklund_1988.Marklund_1988_T9"><code class="docutils literal notranslate"><span class="pre">Marklund_1988_T9()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.sweden.biomass.petersson_1999">pyforestry.sweden.biomass.petersson_1999 module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.biomass.petersson_1999.Petersson1999"><code class="docutils literal notranslate"><span class="pre">Petersson1999</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.biomass.petersson_1999.Petersson1999.biomass"><code class="docutils literal notranslate"><span class="pre">Petersson1999.biomass()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.biomass.petersson_1999.Petersson1999.birch"><code class="docutils literal notranslate"><span class="pre">Petersson1999.birch()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.biomass.petersson_1999.Petersson1999.pine"><code class="docutils literal notranslate"><span class="pre">Petersson1999.pine()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.biomass.petersson_1999.Petersson1999.spruce"><code class="docutils literal notranslate"><span class="pre">Petersson1999.spruce()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.sweden.biomass.petersson_stahl_2006">pyforestry.sweden.biomass.petersson_stahl_2006 module</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.biomass.petersson_stahl_2006.PeterssonStahl2006.below_ground_biomass"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.below_ground_biomass()</span></code></a></li>
@@ -1776,6 +2079,13 @@ Common arguments include:
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.sweden.biomass">Module contents</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.biomass.Marklund_1988"><code class="docutils literal notranslate"><span class="pre">Marklund_1988()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.biomass.Petersson1999"><code class="docutils literal notranslate"><span class="pre">Petersson1999</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.biomass.Petersson1999.biomass"><code class="docutils literal notranslate"><span class="pre">Petersson1999.biomass()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.biomass.Petersson1999.birch"><code class="docutils literal notranslate"><span class="pre">Petersson1999.birch()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.biomass.Petersson1999.pine"><code class="docutils literal notranslate"><span class="pre">Petersson1999.pine()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.biomass.Petersson1999.spruce"><code class="docutils literal notranslate"><span class="pre">Petersson1999.spruce()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.biomass.PeterssonStahl2006"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.biomass.PeterssonStahl2006.below_ground_biomass"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.below_ground_biomass()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.biomass.PeterssonStahl2006.birch_root_2mm"><code class="docutils literal notranslate"><span class="pre">PeterssonStahl2006.birch_root_2mm()</span></code></a></li>
