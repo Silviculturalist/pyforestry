@@ -125,7 +125,7 @@ class Nasberg_1985_BranchBound:
         # ------------ discretise (vector) --------------------------------
 
         NMAX = 400
-        total_dm = min(int((HTOP - HSTUB * 10)), NMAX)
+        total_dm = min(int((HTOP - HSTUB) * 10), NMAX)
         if total_dm <= 0:
             return BuckingResult(0, 1, 1, 1, 1, 0, [0] * 7, [0] * 7, 0, 0)
 
