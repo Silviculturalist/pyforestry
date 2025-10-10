@@ -30,10 +30,30 @@ def test_tree_state_capture_contains_expected_fields(sample_stand: Stand) -> Non
     assert first.uid == "t1"
     assert first.diameter_cm == pytest.approx(30.0)
     assert first.plot_id == "p1"
+    assert first.deltas == {}
+    assert first.extras == {}
+
+
+def test_tree_state_capture_preserves_custom_metadata(sample_stand: Stand) -> None:
+    tree = sample_stand.plots[0].trees[0]
+    tree.deltas = {"age": 0.5, "height_m": 1}
+    tree.extras = {"source": "model", "notes": ["baseline"]}
+
+    checkpointer = TreeCheckpointer()
+    tree_states = checkpointer.capture_tree_states(sample_stand)
+
+    captured = next(state for state in tree_states if state.uid == tree.uid)
+    assert captured.deltas["age"] == pytest.approx(0.5)
+    assert captured.deltas["height_m"] == pytest.approx(1.0)
+    assert captured.extras["source"] == "model"
+    assert captured.extras["notes"] == ["baseline"]
 
 
 def test_checkpoint_roundtrip_restores_metrics(sample_stand: Stand) -> None:
     checkpointer = TreeCheckpointer()
+    first_tree = sample_stand.plots[0].trees[0]
+    first_tree.deltas = {"age": 1.0}
+    first_tree.extras = {"note": "original"}
     baseline = checkpointer.create_checkpoint(
         sample_stand,
         seed_state={"seed": 7},
@@ -53,6 +73,12 @@ def test_checkpoint_roundtrip_restores_metrics(sample_stand: Stand) -> None:
     restored_tree_uids = {tree.uid for plot in sample_stand.plots for tree in plot.trees}
     assert restored_tree_uids == {"t1", "t2"}
     assert float(sample_stand.BasalArea) == pytest.approx(original_basal_area)
+
+    restored_first = next(
+        tree for plot in sample_stand.plots for tree in plot.trees if tree.uid == "t1"
+    )
+    assert restored_first.deltas == {"age": 1.0}
+    assert restored_first.extras == {"note": "original"}
 
 
 def test_checkpoint_serialisation_roundtrip(sample_stand: Stand) -> None:

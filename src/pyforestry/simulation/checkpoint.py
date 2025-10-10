@@ -119,9 +119,34 @@ class TreeCheckpointer:
                         weight_n=float(tree.weight_n) if tree.weight_n is not None else 0.0,
                         position=position,
                         plot_id=plot.id,
+                        deltas=self._capture_tree_deltas(tree),
+                        extras=self._capture_tree_extras(tree),
                     )
                 )
         return tree_states
+
+    @staticmethod
+    def _capture_tree_deltas(tree: Tree) -> Dict[str, float]:
+        """Extract numeric growth deltas stored on ``tree`` if present."""
+
+        raw = getattr(tree, "deltas", None)
+        if not isinstance(raw, Mapping):
+            return {}
+        deltas: Dict[str, float] = {}
+        for key, value in raw.items():
+            normalised = _normalise_scalar(value)
+            if isinstance(normalised, (int, float)):
+                deltas[str(key)] = float(normalised)
+        return deltas
+
+    @staticmethod
+    def _capture_tree_extras(tree: Tree) -> Dict[str, Any]:
+        """Return any auxiliary metadata stored on ``tree``."""
+
+        raw = getattr(tree, "extras", None)
+        if not isinstance(raw, Mapping):
+            return {}
+        return {str(key): value for key, value in raw.items()}
 
     def capture_stand_state(self, stand: Stand) -> StandState:
         """Create a :class:`StandState` snapshot for ``stand``."""
@@ -218,6 +243,10 @@ class TreeCheckpointer:
                     weight_n=tree_state.weight_n,
                     uid=tree_state.uid,
                 )
+                if tree_state.deltas:
+                    tree.deltas = dict(tree_state.deltas)
+                if tree_state.extras:
+                    tree.extras = dict(tree_state.extras)
                 trees.append(tree)
             plot = CircularPlot(
                 id=plot_state.id,
