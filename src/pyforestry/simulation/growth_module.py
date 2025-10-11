@@ -76,7 +76,12 @@ class Stage:
     def setup(self, module: "GrowthModule") -> None:
         """Hook executed once the stage is registered with a module."""
 
-    def run(self, part: StandPart, module: "GrowthModule", _rng: KeyedRNG) -> None:
+    def run(
+        self,
+        part: StandPart,
+        module: "GrowthModule",
+        rng: Optional[KeyedRNG] = None,
+    ) -> None:
         """Execute the stage for ``part``.
 
         The default implementation does nothing. Sub-classes that do not
@@ -378,7 +383,12 @@ class ValuationStage(Stage):
             return ledger
         return None
 
-    def run(self, part: StandPart, module: "GrowthModule", _rng: KeyedRNG) -> None:  # type: ignore[override]
+    def run(
+        self,
+        part: StandPart,
+        module: "GrowthModule",
+        rng: Optional[KeyedRNG] = None,
+    ) -> None:
         ledger = self._locate_ledger(part)
         if ledger is None or ledger.is_empty:
             return
@@ -498,10 +508,12 @@ class GrowthModule:
         affordances: Dict[ActionStage, Tuple[StageAction, ...]] = {}
         for stage in self.stages:
             if isinstance(stage, ActionStage):
+                allow_rng = "rng" in stage.contract.effects
+                stage_rng = self.rng_for(stage, part) if allow_rng else None
                 actions = stage.discover_affordances(
                     part,
                     self,
-                    rng=self.rng_for(stage, part, "discover"),
+                    rng=stage_rng.child("discover") if stage_rng else None,
                 )
                 affordances[stage] = actions
         return affordances
@@ -517,11 +529,12 @@ class GrowthModule:
         for stage, affordances in pending.items():
             if not affordances:
                 continue
+            allow_rng = "rng" in stage.contract.effects
             stage_records = stage.apply(
                 part,
                 affordances,
                 self,
-                rng=self.rng_for(stage, part, "apply"),
+                rng=self.rng_for(stage, part, "apply") if allow_rng else None,
             )
             records.extend(stage_records)
             self._publish_stage_event(stage, part, stage_records, phase="apply")
@@ -534,11 +547,12 @@ class GrowthModule:
         pending: Dict[ActionStage, Tuple[StageAction, ...]] = {}
         for stage in self.stages:
             if isinstance(stage, ActionStage):
-                stage_rng = self.rng_for(stage, part)
+                allow_rng = "rng" in stage.contract.effects
+                stage_rng = self.rng_for(stage, part) if allow_rng else None
                 affordances = stage.discover_affordances(
                     part,
                     self,
-                    rng=stage_rng.child("discover"),
+                    rng=stage_rng.child("discover") if stage_rng else None,
                 )
                 if not affordances:
                     continue
@@ -549,31 +563,33 @@ class GrowthModule:
                     part,
                     affordances,
                     self,
-                    rng=stage_rng.child("apply"),
+                    rng=stage_rng.child("apply") if stage_rng else None,
                 )
                 records.extend(stage_records)
                 self._publish_stage_event(stage, part, stage_records, phase="apply")
             elif isinstance(stage, ManagementStage):
                 if not pending:
                     continue
-                stage_rng = self.rng_for(stage, part)
+                allow_rng = "rng" in stage.contract.effects
+                stage_rng = self.rng_for(stage, part) if allow_rng else None
                 selection = stage.select_actions(
                     part,
                     pending,
                     self,
-                    rng=stage_rng.child("select"),
+                    rng=stage_rng.child("select") if stage_rng else None,
                 )
                 stage_records = stage.dispatch_selected(
                     part,
                     selection,
                     self,
-                    rng=stage_rng.child("dispatch"),
+                    rng=stage_rng.child("dispatch") if stage_rng else None,
                 )
                 records.extend(stage_records)
                 self._publish_stage_event(stage, part, stage_records, phase="management")
                 pending.clear()
             else:
-                stage.run(part, self, self.rng_for(stage, part))
+                stage_rng = self.rng_for(stage, part) if "rng" in stage.contract.effects else None
+                stage.run(part, self, stage_rng)
                 self._publish_stage_event(stage, part, (), phase="run")
         if pending:
             records.extend(self._apply_without_management(part, pending))
