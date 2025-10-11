@@ -1,5 +1,14 @@
-"""Simulation-facing views that expose helper-layer data."""
+"""Simulation-facing views and orchestration helpers."""
 
+from .growth_module import (
+    DisturbanceStage,
+    GrowthModule,
+    GrowthStage,
+    ManagementStage,
+    Stage,
+    StageAction,
+    ValuationStage,
+)
 from .model_view import InventoryView, SpatialTreeView, StandMetricView
 from .stand_composite import (
     DispatchRecord,
@@ -7,6 +16,17 @@ from .stand_composite import (
     StandAction,
     StandComposite,
     StandPart,
+)
+from .valuation import (
+    CohortRemoval,
+    EmptyVolumeDescriptor,
+    PieceRecord,
+    StandRemovalLedger,
+    TreeRemoval,
+    TreeVolumeDescriptor,
+    VolumeConnector,
+    VolumeDescriptor,
+    VolumeResult,
 )
 
 __all__ = [
@@ -18,4 +38,20 @@ __all__ = [
     "StandAction",
     "StandComposite",
     "StandPart",
+    "GrowthModule",
+    "GrowthStage",
+    "ManagementStage",
+    "DisturbanceStage",
+    "ValuationStage",
+    "Stage",
+    "StageAction",
+    "StandRemovalLedger",
+    "CohortRemoval",
+    "TreeRemoval",
+    "VolumeDescriptor",
+    "EmptyVolumeDescriptor",
+    "TreeVolumeDescriptor",
+    "VolumeResult",
+    "VolumeConnector",
+    "PieceRecord",
 ]

@@ -24,6 +24,7 @@ from pyforestry.simulation.stand_composite import (
     StandComposite,
     StandPart,
 )
+from pyforestry.simulation.valuation import StandRemovalLedger, VolumeConnector
 
 CapabilityRequirement = Sequence[str]
 
@@ -268,6 +269,56 @@ class DisturbanceStage(ActionStage):
             yield self._coerce_action(raw)
 
 
+class ValuationStage(Stage):
+    """Convert removal ledgers into cash flow estimates."""
+
+    name = "valuation"
+    order = 40
+
+    def __init__(self, *, connector: Optional[VolumeConnector] = None) -> None:
+        super().__init__()
+        self._connector = connector or VolumeConnector()
+
+    @staticmethod
+    def _locate_ledger(part: StandPart) -> Optional[StandRemovalLedger]:
+        """Locate a :class:`StandRemovalLedger` associated with ``part``."""
+
+        view = part.model_view
+        for attr in ("removal_ledger", "removals", "ledger"):
+            ledger = getattr(view, attr, None)
+            if isinstance(ledger, StandRemovalLedger):
+                return ledger
+        getter = getattr(view, "get_removal_ledger", None)
+        if callable(getter):
+            candidate = getter()
+            if isinstance(candidate, StandRemovalLedger):
+                return candidate
+        valuation_ctx = part.context.get("valuation")
+        if isinstance(valuation_ctx, Mapping):
+            ledger = valuation_ctx.get("ledger")
+            if isinstance(ledger, StandRemovalLedger):
+                return ledger
+        ledger = part.context.get("removal_ledger")
+        if isinstance(ledger, StandRemovalLedger):
+            return ledger
+        return None
+
+    def run(self, part: StandPart, module: "GrowthModule") -> None:  # type: ignore[override]
+        ledger = self._locate_ledger(part)
+        if ledger is None or ledger.is_empty:
+            return
+        result = self._connector.connect(part.model_view, ledger)
+        valuation_ctx: MutableMapping[str, Any] = part.context.setdefault("valuation", {})
+        valuation_ctx["ledger"] = ledger
+        valuation_ctx["result"] = result
+        valuation_ctx["pieces"] = result.pieces
+        valuation_ctx["volume_by_quality"] = result.volume_by_quality
+        valuation_ctx["total_value"] = result.total_value
+        valuation_ctx["metadata"] = result.metadata
+        existing_cash = float(part.context.get("cash", 0.0))
+        part.context["cash"] = existing_cash + float(result.total_value)
+
+
 class GrowthModule:
     """Coordinate stand management stages and their interactions."""
 
@@ -281,7 +332,7 @@ class GrowthModule:
         self.composite = composite
         if stages is None:
             management_stage = ManagementStage(rulesets=management_rulesets)
-            stages = (GrowthStage(), management_stage, DisturbanceStage())
+            stages = (GrowthStage(), management_stage, DisturbanceStage(), ValuationStage())
         else:
             stages = tuple(stages)
             if management_rulesets:
