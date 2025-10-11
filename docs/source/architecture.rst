@@ -37,6 +37,23 @@ consume. Combined, they provide a baseline vocabulary for describing spatial
 forest inventories, handling unit conversions, and validating data before it is
 passed into model pipelines.
 
+Simulation model views
+----------------------
+
+The :mod:`pyforestry.simulation` package now ships ``ModelView`` building
+blocks that map directly onto the helper layer. ``StandMetricView`` adapts a
+:class:`~pyforestry.base.helpers.stand.Stand` so that consumers can query
+``BasalArea``, ``Stems`` and related accessors without needing to know the
+implementation details of :class:`~pyforestry.base.helpers.stand.StandMetricAccessor`.
+``InventoryView`` exposes a lightweight iterator façade over the stand's
+:class:`~pyforestry.base.helpers.plot.CircularPlot` collection while
+``SpatialTreeView`` focuses on the positional attributes carried by individual
+:class:`~pyforestry.base.helpers.tree.Tree` instances.
+
+These views provide the first bridge into the future simulation pipeline: they
+package the rich helper data into read-only façades that the forthcoming
+``SimulationManager`` can consume when orchestrating full scenario runs.
+
 Future simulation architecture
 ------------------------------
 
