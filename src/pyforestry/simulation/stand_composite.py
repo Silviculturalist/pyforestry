@@ -188,17 +188,23 @@ class StandPart:
         base.update(self.disturbance_overrides)
         return dict(base)
 
-    def apply_action(self, action: StandAction) -> DispatchRecord:
+    def apply_action(
+        self,
+        action: StandAction,
+        *,
+        cost: Optional[float] = None,
+        harvest: Optional[float] = None,
+    ) -> DispatchRecord:
         """Execute ``action`` against this part and return a dispatch record."""
 
-        cost = action.cost_for(self)
-        harvest = action.harvest_for(self)
+        resolved_cost = action.cost_for(self) if cost is None else float(cost)
+        resolved_harvest = action.harvest_for(self) if harvest is None else float(harvest)
         result = action.execute(self)
         return DispatchRecord(
             part=self.name,
             action=action.name,
-            cost=cost,
-            harvest=harvest,
+            cost=resolved_cost,
+            harvest=resolved_harvest,
             result=result,
         )
 
@@ -311,6 +317,6 @@ class StandComposite:
                     raise RuntimeError(
                         f"Dispatching action '{action.name}' would exceed the harvest cap."
                     )
-                record = part.apply_action(action)
+                record = part.apply_action(action, cost=cost, harvest=harvest)
                 result.records.append(record)
         return result
