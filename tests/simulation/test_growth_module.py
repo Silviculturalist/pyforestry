@@ -6,6 +6,7 @@ from typing import Iterable, Sequence
 
 import pytest
 
+from pyforestry.simulation.contracts import StageContract
 from pyforestry.simulation.growth_module import (
     ActionStage,
     DisturbanceStage,
@@ -258,3 +259,58 @@ def test_growth_module_emits_stage_telemetry_with_metadata() -> None:
     assert payload["stage"] == "random_action"
     assert payload["records"]
     assert payload["records"][0]["action"] == "draw"
+
+
+def test_stage_contract_blocks_rng_requests() -> None:
+    class NoRNGStage(ActionStage):
+        name = "no_rng"
+        managed = False
+        contract = StageContract(effects=frozenset())
+
+        def build_actions(self, part: StandPart, module: GrowthModule, rng):  # type: ignore[override]
+            def handler(part: StandPart, *, rng):
+                return rng.random()
+
+            return (StandAction(name="needs_rng", handler=handler),)
+
+    part = _make_part("limited", capabilities=())
+    module = GrowthModule(StandComposite((part,)), stages=(NoRNGStage(),))
+
+    with pytest.raises(RuntimeError, match="rng"):
+        module.run_cycle()
+
+
+def test_stage_contract_blocks_io_requests() -> None:
+    class IOStage(ActionStage):
+        name = "io_only"
+        managed = False
+        contract = StageContract()
+
+        def build_actions(self, part: StandPart, module: GrowthModule, rng):  # type: ignore[override]
+            def handler(part: StandPart, *, io):
+                return io
+
+            return (StandAction(name="needs_io", handler=handler),)
+
+    part = _make_part("io", capabilities=())
+    module = GrowthModule(StandComposite((part,)), stages=(IOStage(),))
+
+    with pytest.raises(RuntimeError, match="io"):
+        module.run_cycle()
+
+
+def test_growth_module_rng_for_respects_contract() -> None:
+    class PassiveStage(ActionStage):
+        name = "passive"
+        managed = False
+        contract = StageContract(effects=frozenset())
+
+        def build_actions(self, part: StandPart, module: GrowthModule, rng):  # type: ignore[override]
+            return ()
+
+    part = _make_part("passive", capabilities=())
+    stage = PassiveStage()
+    module = GrowthModule(StandComposite((part,)), stages=(stage,))
+
+    with pytest.raises(RuntimeError, match="rng"):
+        module.rng_for(stage, part)

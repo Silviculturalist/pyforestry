@@ -7,6 +7,7 @@ from typing import (
     Any,
     Callable,
     Dict,
+    FrozenSet,
     Iterable,
     List,
     Mapping,
@@ -17,6 +18,7 @@ from typing import (
     Union,
 )
 
+from pyforestry.simulation.contracts import StageContract
 from pyforestry.simulation.services import KeyedRNG
 from pyforestry.simulation.stand_composite import (
     DispatchRecord,
@@ -41,6 +43,7 @@ class StageAction:
     stage: "ActionStage"
     action: StandAction
     requires_capabilities: Tuple[str, ...] = ()
+    effects: FrozenSet[str] = frozenset()
 
     @property
     def name(self) -> str:
@@ -54,17 +57,31 @@ class Stage:
 
     name: str = "stage"
     order: int = 0
+    contract: StageContract = StageContract()
 
-    def __init__(self, *, name: Optional[str] = None, order: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        *,
+        name: Optional[str] = None,
+        order: Optional[int] = None,
+        contract: Optional[StageContract] = None,
+    ) -> None:
         if name is not None:
             self.name = name
         if order is not None:
             self.order = order
+        if contract is not None:
+            self.contract = contract
 
     def setup(self, module: "GrowthModule") -> None:
         """Hook executed once the stage is registered with a module."""
 
-    def run(self, part: StandPart, module: "GrowthModule", _rng: KeyedRNG) -> None:
+    def run(
+        self,
+        part: StandPart,
+        module: "GrowthModule",
+        rng: Optional[KeyedRNG] = None,
+    ) -> None:
         """Execute the stage for ``part``.
 
         The default implementation does nothing. Sub-classes that do not
@@ -82,7 +99,7 @@ class ActionStage(Stage):
         self,
         part: StandPart,
         module: "GrowthModule",
-        rng: KeyedRNG,
+        rng: Optional[KeyedRNG],
     ) -> Iterable[StandAction]:
         """Yield :class:`StandAction` objects available for ``part``."""
 
@@ -98,14 +115,24 @@ class ActionStage(Stage):
         """Return the filtered actions that ``part`` can execute."""
 
         affordances: List[StageAction] = []
-        generator = rng or module.rng_for(self, part).child("build")
+        allow_rng = "rng" in self.contract.effects
+        generator: Optional[KeyedRNG]
+        if allow_rng:
+            generator = rng or module.rng_for(self, part).child("build")
+        else:
+            generator = None
         for action in self.build_actions(part, module, generator):
             requires_raw = getattr(action, "requires_capabilities", ())
             requires = tuple(str(item) for item in requires_raw) if requires_raw else ()
             if requires and not module.supports_capabilities(part.model_view, requires):
                 continue
             affordances.append(
-                StageAction(stage=self, action=action, requires_capabilities=requires)
+                StageAction(
+                    stage=self,
+                    action=action,
+                    requires_capabilities=requires,
+                    effects=self.contract.effects,
+                )
             )
         return tuple(affordances)
 
@@ -120,15 +147,21 @@ class ActionStage(Stage):
         """Execute ``actions`` for ``part`` and return dispatch records."""
 
         records: List[DispatchRecord] = []
-        generator = rng or module.rng_for(self, part).child("apply")
+        allow_rng = "rng" in self.contract.effects
+        generator: Optional[KeyedRNG]
+        if allow_rng:
+            generator = rng or module.rng_for(self, part).child("apply")
+        else:
+            generator = None
         for affordance in actions:
             if affordance.stage is not self:
                 raise ValueError("Cannot execute an action for a different stage.")
+            action_rng = generator.child(affordance.action.name) if generator else None
             record = self.perform_action(
                 part,
                 affordance,
                 module,
-                generator.child(affordance.action.name),
+                action_rng,
             )
             if record is not None:
                 records.append(record)
@@ -139,7 +172,7 @@ class ActionStage(Stage):
         part: StandPart,
         affordance: StageAction,
         module: "GrowthModule",
-        rng: KeyedRNG,
+        rng: Optional[KeyedRNG],
     ) -> Optional[DispatchRecord]:
         """Execute ``affordance`` for ``part``.
 
@@ -147,7 +180,12 @@ class ActionStage(Stage):
         The default implementation delegates to :meth:`StandPart.apply_action`.
         """
 
-        return part.apply_action(affordance.action, rng=rng)
+        return part.apply_action(
+            affordance.action,
+            rng=rng,
+            effects=affordance.effects,
+            stage=affordance.stage,
+        )
 
     def _coerce_action(self, raw_action: Any) -> StandAction:
         """Normalize ``raw_action`` into a :class:`StandAction` instance."""
@@ -345,7 +383,12 @@ class ValuationStage(Stage):
             return ledger
         return None
 
-    def run(self, part: StandPart, module: "GrowthModule", _rng: KeyedRNG) -> None:  # type: ignore[override]
+    def run(
+        self,
+        part: StandPart,
+        module: "GrowthModule",
+        rng: Optional[KeyedRNG] = None,
+    ) -> None:
         ledger = self._locate_ledger(part)
         if ledger is None or ledger.is_empty:
             return
@@ -422,6 +465,10 @@ class GrowthModule:
     def rng_for(self, stage: Stage, part: StandPart, *keys: object) -> KeyedRNG:
         """Return the keyed RNG stream for ``stage`` and ``part``."""
 
+        if "rng" not in stage.contract.effects:
+            raise RuntimeError(
+                f"Stage '{stage.name}' does not declare the 'rng' effect but requested RNG access."
+            )
         base_path = ("growth", stage.name, part.name)
         if keys:
             base_path += tuple(str(key) for key in keys)
@@ -461,10 +508,12 @@ class GrowthModule:
         affordances: Dict[ActionStage, Tuple[StageAction, ...]] = {}
         for stage in self.stages:
             if isinstance(stage, ActionStage):
+                allow_rng = "rng" in stage.contract.effects
+                stage_rng = self.rng_for(stage, part) if allow_rng else None
                 actions = stage.discover_affordances(
                     part,
                     self,
-                    rng=self.rng_for(stage, part, "discover"),
+                    rng=stage_rng.child("discover") if stage_rng else None,
                 )
                 affordances[stage] = actions
         return affordances
@@ -480,11 +529,12 @@ class GrowthModule:
         for stage, affordances in pending.items():
             if not affordances:
                 continue
+            allow_rng = "rng" in stage.contract.effects
             stage_records = stage.apply(
                 part,
                 affordances,
                 self,
-                rng=self.rng_for(stage, part, "apply"),
+                rng=self.rng_for(stage, part, "apply") if allow_rng else None,
             )
             records.extend(stage_records)
             self._publish_stage_event(stage, part, stage_records, phase="apply")
@@ -497,11 +547,12 @@ class GrowthModule:
         pending: Dict[ActionStage, Tuple[StageAction, ...]] = {}
         for stage in self.stages:
             if isinstance(stage, ActionStage):
-                stage_rng = self.rng_for(stage, part)
+                allow_rng = "rng" in stage.contract.effects
+                stage_rng = self.rng_for(stage, part) if allow_rng else None
                 affordances = stage.discover_affordances(
                     part,
                     self,
-                    rng=stage_rng.child("discover"),
+                    rng=stage_rng.child("discover") if stage_rng else None,
                 )
                 if not affordances:
                     continue
@@ -512,31 +563,33 @@ class GrowthModule:
                     part,
                     affordances,
                     self,
-                    rng=stage_rng.child("apply"),
+                    rng=stage_rng.child("apply") if stage_rng else None,
                 )
                 records.extend(stage_records)
                 self._publish_stage_event(stage, part, stage_records, phase="apply")
             elif isinstance(stage, ManagementStage):
                 if not pending:
                     continue
-                stage_rng = self.rng_for(stage, part)
+                allow_rng = "rng" in stage.contract.effects
+                stage_rng = self.rng_for(stage, part) if allow_rng else None
                 selection = stage.select_actions(
                     part,
                     pending,
                     self,
-                    rng=stage_rng.child("select"),
+                    rng=stage_rng.child("select") if stage_rng else None,
                 )
                 stage_records = stage.dispatch_selected(
                     part,
                     selection,
                     self,
-                    rng=stage_rng.child("dispatch"),
+                    rng=stage_rng.child("dispatch") if stage_rng else None,
                 )
                 records.extend(stage_records)
                 self._publish_stage_event(stage, part, stage_records, phase="management")
                 pending.clear()
             else:
-                stage.run(part, self, self.rng_for(stage, part))
+                stage_rng = self.rng_for(stage, part) if "rng" in stage.contract.effects else None
+                stage.run(part, self, stage_rng)
                 self._publish_stage_event(stage, part, (), phase="run")
         if pending:
             records.extend(self._apply_without_management(part, pending))
