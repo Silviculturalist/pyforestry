@@ -49,7 +49,11 @@ class TreeRemoval:
         self.species = _normalise_species(self.species)
         resolved_weight = self.weight
         if resolved_weight is None:
-            resolved_weight = self.tree.weight_n or 1.0
+            tree_weight = getattr(self.tree, "weight_n", None)
+            if tree_weight is None:
+                resolved_weight = 1.0
+            else:
+                resolved_weight = tree_weight
         if resolved_weight <= 0:
             raise ValueError("Removal weights must be positive.")
         self.weight = float(resolved_weight)
