@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import inspect
 from dataclasses import dataclass, field
 from typing import (
     Any,
@@ -15,6 +16,14 @@ from typing import (
     Sequence,
     Tuple,
     Union,
+)
+
+from pyforestry.simulation.services import (
+    CheckpointSerializer,
+    CompositeMemento,
+    KeyedRNG,
+    RandomBundle,
+    TelemetryPublisher,
 )
 
 MetricSource = Union[str, Iterable[str], None]
@@ -42,6 +51,10 @@ class StandAction:
     harvest: Union[float, Callable[["StandPart"], float]] = 0.0
     target_parts: MetricSource = None
 
+    def __post_init__(self) -> None:
+        self._handler_accepts_rng_keyword: Optional[bool] = None
+        self._handler_accepts_rng_positional: Optional[bool] = None
+
     def cost_for(self, part: "StandPart") -> float:
         """Resolve the cost for ``part``."""
 
@@ -54,9 +67,49 @@ class StandAction:
         harvest = self.harvest(part) if callable(self.harvest) else self.harvest
         return float(harvest)
 
-    def execute(self, part: "StandPart") -> Any:
-        """Execute the underlying handler for ``part``."""
+    def _analyse_handler(self) -> None:
+        signature = inspect.signature(self.handler)
+        params = list(signature.parameters.values())
+        remaining = params
+        if remaining and remaining[0].kind in (
+            inspect.Parameter.POSITIONAL_ONLY,
+            inspect.Parameter.POSITIONAL_OR_KEYWORD,
+        ):
+            remaining = remaining[1:]
+        accepts_keyword = False
+        accepts_positional = False
+        for parameter in remaining:
+            if parameter.kind == inspect.Parameter.VAR_KEYWORD:
+                accepts_keyword = True
+                break
+            if parameter.kind == inspect.Parameter.VAR_POSITIONAL:
+                accepts_positional = True
+                continue
+            if parameter.name == "rng" and parameter.kind in (
+                inspect.Parameter.POSITIONAL_OR_KEYWORD,
+                inspect.Parameter.KEYWORD_ONLY,
+            ):
+                accepts_keyword = True
+                continue
+            if parameter.kind in (
+                inspect.Parameter.POSITIONAL_ONLY,
+                inspect.Parameter.POSITIONAL_OR_KEYWORD,
+            ):
+                accepts_positional = True
+        self._handler_accepts_rng_keyword = accepts_keyword
+        self._handler_accepts_rng_positional = accepts_positional
 
+    def execute(self, part: "StandPart", rng: Optional[KeyedRNG]) -> Any:
+        """Execute the underlying handler for ``part`` using ``rng`` when accepted."""
+
+        if rng is None:
+            return self.handler(part)
+        if self._handler_accepts_rng_keyword is None:
+            self._analyse_handler()
+        if self._handler_accepts_rng_keyword:
+            return self.handler(part, rng=rng)
+        if self._handler_accepts_rng_positional:
+            return self.handler(part, rng)
         return self.handler(part)
 
     def iter_targets(self) -> Tuple[str, ...]:
@@ -194,12 +247,13 @@ class StandPart:
         *,
         cost: Optional[float] = None,
         harvest: Optional[float] = None,
+        rng: Optional[KeyedRNG] = None,
     ) -> DispatchRecord:
         """Execute ``action`` against this part and return a dispatch record."""
 
         resolved_cost = action.cost_for(self) if cost is None else float(cost)
         resolved_harvest = action.harvest_for(self) if harvest is None else float(harvest)
-        result = action.execute(self)
+        result = action.execute(self, rng)
         return DispatchRecord(
             part=self.name,
             action=action.name,
@@ -218,10 +272,21 @@ class StandComposite:
         *,
         budget: Optional[float] = None,
         harvest_cap: Optional[float] = None,
+        seed: int = 0,
+        model_id: Optional[str] = None,
+        telemetry: Optional[TelemetryPublisher] = None,
     ) -> None:
         self._parts: Dict[str, StandPart] = {}
         self.budget = budget
         self.harvest_cap = harvest_cap
+        self.seed = int(seed)
+        self.model_id = model_id or "stand"
+        self.random_bundle = RandomBundle(self.seed)
+        self.telemetry = telemetry or TelemetryPublisher(
+            model_id=self.model_id,
+            seed=self.seed,
+        )
+        self._checkpoint_serializer = CheckpointSerializer()
         for part in parts or ():
             self.add_part(part)
 
@@ -317,6 +382,27 @@ class StandComposite:
                     raise RuntimeError(
                         f"Dispatching action '{action.name}' would exceed the harvest cap."
                     )
-                record = part.apply_action(action, cost=cost, harvest=harvest)
+                rng = self.random_bundle.rng_for("composite", action.name, part.name)
+                record = part.apply_action(action, cost=cost, harvest=harvest, rng=rng)
                 result.records.append(record)
+                self.telemetry.publish(
+                    "stand.action_dispatch",
+                    {
+                        "part": part.name,
+                        "action": action.name,
+                        "cost": cost,
+                        "harvest": harvest,
+                        "part_model_id": getattr(part.model_view, "model_id", None),
+                    },
+                )
         return result
+
+    def snapshot(self) -> CompositeMemento:
+        """Return a checkpoint capturing the composite state."""
+
+        return self._checkpoint_serializer.capture(self)
+
+    def restore(self, memento: CompositeMemento) -> None:
+        """Restore state from ``memento`` created by :meth:`snapshot`."""
+
+        self._checkpoint_serializer.restore(self, memento)

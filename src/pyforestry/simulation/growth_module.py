@@ -17,6 +17,7 @@ from typing import (
     Union,
 )
 
+from pyforestry.simulation.services import KeyedRNG
 from pyforestry.simulation.stand_composite import (
     DispatchRecord,
     DispatchResult,
@@ -63,7 +64,7 @@ class Stage:
     def setup(self, module: "GrowthModule") -> None:
         """Hook executed once the stage is registered with a module."""
 
-    def run(self, part: StandPart, module: "GrowthModule") -> None:
+    def run(self, part: StandPart, module: "GrowthModule", _rng: KeyedRNG) -> None:
         """Execute the stage for ``part``.
 
         The default implementation does nothing. Sub-classes that do not
@@ -77,18 +78,28 @@ class ActionStage(Stage):
 
     managed: bool = True
 
-    def build_actions(self, part: StandPart, module: "GrowthModule") -> Iterable[StandAction]:
+    def build_actions(
+        self,
+        part: StandPart,
+        module: "GrowthModule",
+        rng: KeyedRNG,
+    ) -> Iterable[StandAction]:
         """Yield :class:`StandAction` objects available for ``part``."""
 
         raise NotImplementedError
 
     def discover_affordances(
-        self, part: StandPart, module: "GrowthModule"
+        self,
+        part: StandPart,
+        module: "GrowthModule",
+        *,
+        rng: Optional[KeyedRNG] = None,
     ) -> Tuple[StageAction, ...]:
         """Return the filtered actions that ``part`` can execute."""
 
         affordances: List[StageAction] = []
-        for action in self.build_actions(part, module):
+        generator = rng or module.rng_for(self, part).child("build")
+        for action in self.build_actions(part, module, generator):
             requires_raw = getattr(action, "requires_capabilities", ())
             requires = tuple(str(item) for item in requires_raw) if requires_raw else ()
             if requires and not module.supports_capabilities(part.model_view, requires):
@@ -99,21 +110,36 @@ class ActionStage(Stage):
         return tuple(affordances)
 
     def apply(
-        self, part: StandPart, actions: Sequence[StageAction], module: "GrowthModule"
+        self,
+        part: StandPart,
+        actions: Sequence[StageAction],
+        module: "GrowthModule",
+        *,
+        rng: Optional[KeyedRNG] = None,
     ) -> List[DispatchRecord]:
         """Execute ``actions`` for ``part`` and return dispatch records."""
 
         records: List[DispatchRecord] = []
+        generator = rng or module.rng_for(self, part).child("apply")
         for affordance in actions:
             if affordance.stage is not self:
                 raise ValueError("Cannot execute an action for a different stage.")
-            record = self.perform_action(part, affordance, module)
+            record = self.perform_action(
+                part,
+                affordance,
+                module,
+                generator.child(affordance.action.name),
+            )
             if record is not None:
                 records.append(record)
         return records
 
     def perform_action(
-        self, part: StandPart, affordance: StageAction, module: "GrowthModule"
+        self,
+        part: StandPart,
+        affordance: StageAction,
+        module: "GrowthModule",
+        rng: KeyedRNG,
     ) -> Optional[DispatchRecord]:
         """Execute ``affordance`` for ``part``.
 
@@ -121,7 +147,7 @@ class ActionStage(Stage):
         The default implementation delegates to :meth:`StandPart.apply_action`.
         """
 
-        return part.apply_action(affordance.action)
+        return part.apply_action(affordance.action, rng=rng)
 
     def _coerce_action(self, raw_action: Any) -> StandAction:
         """Normalize ``raw_action`` into a :class:`StandAction` instance."""
@@ -185,6 +211,9 @@ class ManagementStage(Stage):
         self,
         part: StandPart,
         affordances_by_stage: Mapping["ActionStage", Tuple[StageAction, ...]],
+        module: "GrowthModule",
+        *,
+        rng: Optional[KeyedRNG] = None,
     ) -> Dict["ActionStage", Tuple[StageAction, ...]]:
         """Return the actions that should be executed for ``part``."""
 
@@ -206,6 +235,8 @@ class ManagementStage(Stage):
         part: StandPart,
         selection: Mapping["ActionStage", Tuple[StageAction, ...]],
         module: "GrowthModule",
+        *,
+        rng: Optional[KeyedRNG] = None,
     ) -> List[DispatchRecord]:
         """Execute the actions chosen in :meth:`select_actions`."""
 
@@ -213,7 +244,8 @@ class ManagementStage(Stage):
         for stage, affordances in selection.items():
             if not affordances:
                 continue
-            records.extend(stage.apply(part, affordances, module))
+            stage_rng = rng.child(stage.name) if rng is not None else None
+            records.extend(stage.apply(part, affordances, module, rng=stage_rng))
         return records
 
     @staticmethod
@@ -248,7 +280,12 @@ class GrowthStage(ActionStage):
     order = 10
     managed = True
 
-    def build_actions(self, part: StandPart, module: "GrowthModule") -> Iterable[StandAction]:
+    def build_actions(
+        self,
+        part: StandPart,
+        module: "GrowthModule",
+        rng: KeyedRNG,
+    ) -> Iterable[StandAction]:
         parameters = part.growth_parameters
         raw_actions = parameters.get("actions", ())
         for raw in raw_actions:
@@ -262,7 +299,12 @@ class DisturbanceStage(ActionStage):
     order = 30
     managed = False
 
-    def build_actions(self, part: StandPart, module: "GrowthModule") -> Iterable[StandAction]:
+    def build_actions(
+        self,
+        part: StandPart,
+        module: "GrowthModule",
+        rng: KeyedRNG,
+    ) -> Iterable[StandAction]:
         parameters = part.disturbance_parameters
         raw_actions = parameters.get("actions", ())
         for raw in raw_actions:
@@ -303,7 +345,7 @@ class ValuationStage(Stage):
             return ledger
         return None
 
-    def run(self, part: StandPart, module: "GrowthModule") -> None:  # type: ignore[override]
+    def run(self, part: StandPart, module: "GrowthModule", _rng: KeyedRNG) -> None:  # type: ignore[override]
         ledger = self._locate_ledger(part)
         if ledger is None or ledger.is_empty:
             return
@@ -377,13 +419,53 @@ class GrowthModule:
                 return False
         return True
 
+    def rng_for(self, stage: Stage, part: StandPart, *keys: object) -> KeyedRNG:
+        """Return the keyed RNG stream for ``stage`` and ``part``."""
+
+        base_path = ("growth", stage.name, part.name)
+        if keys:
+            base_path += tuple(str(key) for key in keys)
+        return self.composite.random_bundle.rng_for(*base_path)
+
+    def _publish_stage_event(
+        self,
+        stage: Stage,
+        part: StandPart,
+        records: Sequence[DispatchRecord],
+        *,
+        phase: str,
+    ) -> None:
+        """Emit a telemetry event summarising ``stage`` execution."""
+
+        self.composite.telemetry.publish(
+            "growth.stage",
+            {
+                "stage": stage.name,
+                "phase": phase,
+                "part": part.name,
+                "records": [
+                    {
+                        "action": record.action,
+                        "cost": record.cost,
+                        "harvest": record.harvest,
+                    }
+                    for record in records
+                ],
+                "part_model_id": getattr(part.model_view, "model_id", None),
+            },
+        )
+
     def discover_affordances(self, part: StandPart) -> Dict[ActionStage, Tuple[StageAction, ...]]:
         """Return the action affordances available to ``part`` by stage."""
 
         affordances: Dict[ActionStage, Tuple[StageAction, ...]] = {}
         for stage in self.stages:
             if isinstance(stage, ActionStage):
-                actions = stage.discover_affordances(part, self)
+                actions = stage.discover_affordances(
+                    part,
+                    self,
+                    rng=self.rng_for(stage, part, "discover"),
+                )
                 affordances[stage] = actions
         return affordances
 
@@ -398,7 +480,14 @@ class GrowthModule:
         for stage, affordances in pending.items():
             if not affordances:
                 continue
-            records.extend(stage.apply(part, affordances, self))
+            stage_records = stage.apply(
+                part,
+                affordances,
+                self,
+                rng=self.rng_for(stage, part, "apply"),
+            )
+            records.extend(stage_records)
+            self._publish_stage_event(stage, part, stage_records, phase="apply")
         return records
 
     def _run_part(self, part: StandPart) -> List[DispatchRecord]:
@@ -408,21 +497,47 @@ class GrowthModule:
         pending: Dict[ActionStage, Tuple[StageAction, ...]] = {}
         for stage in self.stages:
             if isinstance(stage, ActionStage):
-                affordances = stage.discover_affordances(part, self)
+                stage_rng = self.rng_for(stage, part)
+                affordances = stage.discover_affordances(
+                    part,
+                    self,
+                    rng=stage_rng.child("discover"),
+                )
                 if not affordances:
                     continue
                 if stage.managed and self._management_stage is not None:
                     pending[stage] = affordances
                     continue
-                records.extend(stage.apply(part, affordances, self))
+                stage_records = stage.apply(
+                    part,
+                    affordances,
+                    self,
+                    rng=stage_rng.child("apply"),
+                )
+                records.extend(stage_records)
+                self._publish_stage_event(stage, part, stage_records, phase="apply")
             elif isinstance(stage, ManagementStage):
                 if not pending:
                     continue
-                selection = stage.select_actions(part, pending)
-                records.extend(stage.dispatch_selected(part, selection, self))
+                stage_rng = self.rng_for(stage, part)
+                selection = stage.select_actions(
+                    part,
+                    pending,
+                    self,
+                    rng=stage_rng.child("select"),
+                )
+                stage_records = stage.dispatch_selected(
+                    part,
+                    selection,
+                    self,
+                    rng=stage_rng.child("dispatch"),
+                )
+                records.extend(stage_records)
+                self._publish_stage_event(stage, part, stage_records, phase="management")
                 pending.clear()
             else:
-                stage.run(part, self)
+                stage.run(part, self, self.rng_for(stage, part))
+                self._publish_stage_event(stage, part, (), phase="run")
         if pending:
             records.extend(self._apply_without_management(part, pending))
         return records
