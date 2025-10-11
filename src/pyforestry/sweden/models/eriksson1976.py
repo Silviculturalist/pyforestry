@@ -253,6 +253,7 @@ class ErikssonSpruceStand:
         gu1_start = float(self.ba_m2_per_ha_ub)
         d1_ob = float(self.qmd_cm)
         du1_ub = float(self.qmd_cm_ub)
+        form_height_start = float(self.form_height)
 
         thin_record = {
             "applied": False,
@@ -455,7 +456,11 @@ class ErikssonSpruceStand:
         g1_start_recon = gu1_start * (1.0 + 0.01 * start_bark_add)
         net_ba_change_ob = self.ba_m2_per_ha - g1_start_recon
         self.total_ba_m2_per_ha += net_ba_change_ob + total_ob_removed
-        self.total_vol_m3sk_per_ha += self.volume_m3sk_per_ha
+
+        volume_start_recon = form_height_start * g1_start
+        volume_removed = form_height_start * (g3_ob + g4_ob)
+        net_volume_change = (self.volume_m3sk_per_ha - volume_start_recon) + volume_removed
+        self.total_vol_m3sk_per_ha += net_volume_change
 
         total_age = self.age_bh_years + self.time_to_bh_years
         self.mai_ba = mai(self.total_ba_m2_per_ha, total_age)
