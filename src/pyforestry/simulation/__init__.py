@@ -1,5 +1,14 @@
 """Simulation-facing views and orchestration helpers."""
 
+from .dp import (
+    DeterministicAdapter,
+    ModelViewStateKey,
+    PartKey,
+    SimulationProvenance,
+    decode_model_views,
+    encode_model_views,
+    simulate_one_step_pure,
+)
 from .growth_module import (
     DisturbanceStage,
     GrowthModule,
@@ -54,4 +63,11 @@ __all__ = [
     "VolumeResult",
     "VolumeConnector",
     "PieceRecord",
+    "DeterministicAdapter",
+    "ModelViewStateKey",
+    "PartKey",
+    "SimulationProvenance",
+    "decode_model_views",
+    "encode_model_views",
+    "simulate_one_step_pure",
 ]
