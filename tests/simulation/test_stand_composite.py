@@ -184,3 +184,25 @@ def test_dispatch_policies_route_to_expected_parts() -> None:
         ("central", "survey"),
         ("north", "survey"),
     ]
+
+
+def test_composite_snapshot_and_restore_resets_state() -> None:
+    part = StandPart(
+        "alpha",
+        DummyModelView(0.0, 0.0, 0.0),
+        context={"values": []},
+    )
+    composite = StandComposite([part], seed=99, model_id="snapshot")
+    rng = composite.random_bundle.rng_for("checkpoint", part.name)
+
+    first = rng.random()
+    part.context["values"].append(first)
+    snapshot = composite.snapshot()
+
+    second = rng.random()
+    part.context["values"].append(second)
+    composite.restore(snapshot)
+
+    assert part.context["values"] == [first]
+    restored_rng = composite.random_bundle.rng_for("checkpoint", part.name)
+    assert restored_rng.random() == pytest.approx(second)

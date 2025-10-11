@@ -7,6 +7,7 @@ from typing import Iterable, Sequence
 import pytest
 
 from pyforestry.simulation.growth_module import (
+    ActionStage,
     DisturbanceStage,
     GrowthModule,
     GrowthStage,
@@ -15,6 +16,33 @@ from pyforestry.simulation.growth_module import (
     StageAction,
 )
 from pyforestry.simulation.stand_composite import StandAction, StandComposite, StandPart
+
+
+class RandomStage(Stage):
+    """Stage that records RNG draws for reproducibility tests."""
+
+    name = "random"
+    order = 5
+
+    def run(self, part: StandPart, module: GrowthModule, rng) -> None:  # type: ignore[override]
+        draws = part.context.setdefault("stage_draws", [])
+        draws.append(rng.random())
+
+
+class RandomActionStage(ActionStage):
+    """Action stage producing deterministic RNG-driven actions."""
+
+    name = "random_action"
+    order = 15
+    managed = False
+
+    def build_actions(self, part: StandPart, module: GrowthModule, rng) -> Iterable[StandAction]:  # type: ignore[override]
+        def handler(part: StandPart, *, rng):
+            value = rng.random()
+            part.context.setdefault("action_draws", []).append(value)
+            return value
+
+        return (StandAction(name="draw", handler=handler),)
 
 
 class DummyModelView:
@@ -130,7 +158,11 @@ def test_management_stage_selection_defaults_and_name_matching() -> None:
     management = ManagementStage()
 
     # When no rules are registered, all actions are selected unchanged.
-    selected = management.select_actions(part, {growth_stage: affordances[growth_stage]})
+    selected = management.select_actions(
+        part,
+        {growth_stage: affordances[growth_stage]},
+        module,
+    )
     assert selected[growth_stage] == affordances[growth_stage]
 
     normalized = management._normalize_selection(
@@ -183,3 +215,46 @@ def test_growth_module_executes_without_management_stage() -> None:
 
     assert executed == ["fallback:grow", "fallback:storm"]
     assert [record.action for record in result.records] == ["grow", "storm"]
+
+
+def _run_random_stage_cycle(seed: int, stage: Stage) -> tuple[list[float], StandComposite]:
+    view = DummyModelView(())
+    view.model_id = "rng-model"
+    part = StandPart("alpha", view, context={})
+    composite = StandComposite((part,), seed=seed, model_id="rng-suite")
+    module = GrowthModule(composite, stages=(stage,))
+    module.run_cycle()
+    return part.context.get("stage_draws", part.context.get("action_draws", [])), composite
+
+
+def test_growth_module_rng_draws_are_deterministic() -> None:
+    draws1, _ = _run_random_stage_cycle(21, RandomStage())
+    draws2, _ = _run_random_stage_cycle(21, RandomStage())
+    draws3, _ = _run_random_stage_cycle(22, RandomStage())
+
+    assert draws1 == draws2
+    assert draws1 != draws3
+
+
+def test_growth_module_action_rng_is_deterministic() -> None:
+    draws1, _ = _run_random_stage_cycle(33, RandomActionStage())
+    draws2, _ = _run_random_stage_cycle(33, RandomActionStage())
+    draws3, _ = _run_random_stage_cycle(34, RandomActionStage())
+
+    assert draws1 and draws1 == draws2
+    assert draws1 != draws3
+
+
+def test_growth_module_emits_stage_telemetry_with_metadata() -> None:
+    draws, composite = _run_random_stage_cycle(44, RandomActionStage())
+    assert draws  # ensure the stage executed
+    events = composite.telemetry.events
+    assert events
+    last_event = events[-1]
+    assert last_event.type == "growth.stage"
+    payload = last_event.payload
+    assert payload["metadata"]["seed"] == composite.seed
+    assert payload["metadata"]["model_id"] == composite.model_id
+    assert payload["stage"] == "random_action"
+    assert payload["records"]
+    assert payload["records"][0]["action"] == "draw"
