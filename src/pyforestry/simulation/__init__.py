@@ -1,5 +1,6 @@
 """Simulation-facing views and orchestration helpers."""
 
+from .contracts import StageContract
 from .dp import (
     DeterministicAdapter,
     ModelViewStateKey,
@@ -54,6 +55,7 @@ __all__ = [
     "ValuationStage",
     "Stage",
     "StageAction",
+    "StageContract",
     "StandRemovalLedger",
     "CohortRemoval",
     "TreeRemoval",

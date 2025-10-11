@@ -5,9 +5,11 @@ from __future__ import annotations
 import inspect
 from dataclasses import dataclass, field
 from typing import (
+    TYPE_CHECKING,
     Any,
     Callable,
     Dict,
+    FrozenSet,
     Iterable,
     List,
     Mapping,
@@ -25,6 +27,9 @@ from pyforestry.simulation.services import (
     RandomBundle,
     TelemetryPublisher,
 )
+
+if TYPE_CHECKING:  # pragma: no cover - typing helper
+    from .growth_module import Stage
 
 MetricSource = Union[str, Iterable[str], None]
 PolicySelector = Union[
@@ -54,6 +59,8 @@ class StandAction:
     def __post_init__(self) -> None:
         self._handler_accepts_rng_keyword: Optional[bool] = None
         self._handler_accepts_rng_positional: Optional[bool] = None
+        self._handler_accepts_io_keyword: Optional[bool] = None
+        self._handler_accepts_io_positional: Optional[bool] = None
 
     def cost_for(self, part: "StandPart") -> float:
         """Resolve the cost for ``part``."""
@@ -76,41 +83,71 @@ class StandAction:
             inspect.Parameter.POSITIONAL_OR_KEYWORD,
         ):
             remaining = remaining[1:]
-        accepts_keyword = False
-        accepts_positional = False
+        accepts_rng_keyword = False
+        accepts_rng_positional = False
+        accepts_io_keyword = False
+        accepts_io_positional = False
         for parameter in remaining:
             if parameter.kind == inspect.Parameter.VAR_KEYWORD:
-                accepts_keyword = True
+                accepts_rng_keyword = True
+                accepts_io_keyword = True
                 break
             if parameter.kind == inspect.Parameter.VAR_POSITIONAL:
-                accepts_positional = True
+                accepts_rng_positional = True
+                accepts_io_positional = True
                 continue
             if parameter.name == "rng" and parameter.kind in (
                 inspect.Parameter.POSITIONAL_OR_KEYWORD,
                 inspect.Parameter.KEYWORD_ONLY,
             ):
-                accepts_keyword = True
+                accepts_rng_keyword = True
+                continue
+            if parameter.name == "io" and parameter.kind in (
+                inspect.Parameter.POSITIONAL_OR_KEYWORD,
+                inspect.Parameter.KEYWORD_ONLY,
+            ):
+                accepts_io_keyword = True
                 continue
             if parameter.kind in (
                 inspect.Parameter.POSITIONAL_ONLY,
                 inspect.Parameter.POSITIONAL_OR_KEYWORD,
             ):
-                accepts_positional = True
-        self._handler_accepts_rng_keyword = accepts_keyword
-        self._handler_accepts_rng_positional = accepts_positional
+                accepts_rng_positional = True
+                accepts_io_positional = True
+        self._handler_accepts_rng_keyword = accepts_rng_keyword
+        self._handler_accepts_rng_positional = accepts_rng_positional
+        self._handler_accepts_io_keyword = accepts_io_keyword
+        self._handler_accepts_io_positional = accepts_io_positional
+
+    def _ensure_handler_analysis(self) -> None:
+        if self._handler_accepts_rng_keyword is None:
+            self._analyse_handler()
 
     def execute(self, part: "StandPart", rng: Optional[KeyedRNG]) -> Any:
         """Execute the underlying handler for ``part`` using ``rng`` when accepted."""
 
         if rng is None:
             return self.handler(part)
-        if self._handler_accepts_rng_keyword is None:
-            self._analyse_handler()
+        self._ensure_handler_analysis()
         if self._handler_accepts_rng_keyword:
             return self.handler(part, rng=rng)
         if self._handler_accepts_rng_positional:
             return self.handler(part, rng)
         return self.handler(part)
+
+    @property
+    def requests_rng(self) -> bool:
+        """Whether the handler is capable of accepting RNG injection."""
+
+        self._ensure_handler_analysis()
+        return bool(self._handler_accepts_rng_keyword or self._handler_accepts_rng_positional)
+
+    @property
+    def requests_io(self) -> bool:
+        """Whether the handler signature exposes an ``io`` parameter."""
+
+        self._ensure_handler_analysis()
+        return bool(self._handler_accepts_io_keyword or self._handler_accepts_io_positional)
 
     def iter_targets(self) -> Tuple[str, ...]:
         """Return a normalized tuple of target part identifiers."""
@@ -248,11 +285,30 @@ class StandPart:
         cost: Optional[float] = None,
         harvest: Optional[float] = None,
         rng: Optional[KeyedRNG] = None,
+        effects: Optional[FrozenSet[str]] = None,
+        stage: Optional["Stage"] = None,
     ) -> DispatchRecord:
         """Execute ``action`` against this part and return a dispatch record."""
 
         resolved_cost = action.cost_for(self) if cost is None else float(cost)
         resolved_harvest = action.harvest_for(self) if harvest is None else float(harvest)
+        effect_set = frozenset(effects) if effects is not None else None
+        stage_label = stage.name if stage is not None else "unknown"
+        if effect_set is not None:
+            if "rng" not in effect_set:
+                if action.requests_rng:
+                    message = (
+                        f"Action '{action.name}' requires RNG access but stage "
+                        f"'{stage_label}' does not expose the 'rng' effect."
+                    )
+                    raise RuntimeError(message)
+                rng = None
+            if "io" not in effect_set and action.requests_io:
+                message = (
+                    f"Action '{action.name}' requests I/O but stage "
+                    f"'{stage_label}' does not expose the 'io' effect."
+                )
+                raise RuntimeError(message)
         result = action.execute(self, rng)
         return DispatchRecord(
             part=self.name,
