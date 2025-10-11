@@ -19,6 +19,7 @@ from .growth_module import (
     ValuationStage,
 )
 from .model_view import InventoryView, SpatialTreeView, StandMetricView
+from .services import EventCategory, EventRecord, EventStore
 from .stand_composite import (
     DispatchRecord,
     DispatchResult,
@@ -47,6 +48,9 @@ __all__ = [
     "StandAction",
     "StandComposite",
     "StandPart",
+    "EventCategory",
+    "EventRecord",
+    "EventStore",
     "GrowthModule",
     "GrowthStage",
     "ManagementStage",

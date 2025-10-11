@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+from types import SimpleNamespace
 from typing import Iterable, Sequence
 
 import pytest
 
+from pyforestry.base.helpers.bucking import QualityType
 from pyforestry.simulation.growth_module import (
     ActionStage,
     DisturbanceStage,
@@ -14,8 +16,10 @@ from pyforestry.simulation.growth_module import (
     ManagementStage,
     Stage,
     StageAction,
+    ValuationStage,
 )
 from pyforestry.simulation.stand_composite import StandAction, StandComposite, StandPart
+from pyforestry.simulation.valuation import StandRemovalLedger, VolumeDescriptor, VolumeResult
 
 
 class RandomStage(Stage):
@@ -258,3 +262,56 @@ def test_growth_module_emits_stage_telemetry_with_metadata() -> None:
     assert payload["stage"] == "random_action"
     assert payload["records"]
     assert payload["records"][0]["action"] == "draw"
+
+
+def test_stage_events_are_captured_in_event_store() -> None:
+    part = _make_part("alpha", capabilities=("grow",))
+    action = StandAction(name="grow", handler=lambda part: None, cost=5.0, harvest=2.5)
+    action.requires_capabilities = ("grow",)
+    part.growth_overrides = {"actions": (action,)}
+    composite = StandComposite((part,), seed=21, model_id="events")
+    module = GrowthModule(composite, stages=(GrowthStage(),))
+
+    module.run_cycle()
+
+    events = composite.iter_event_records(category="biological")
+    growth_events = [event for event in events if event.kind == "growth.apply"]
+    assert growth_events, "Expected growth.apply event in biological records"
+    event = growth_events[0]
+    assert event.payload["part"] == "alpha"
+    assert event.payload["records"][0]["action"] == "grow"
+    assert event.metadata["part"] == "alpha"
+
+
+def test_valuation_stage_records_economic_event_and_telemetry() -> None:
+    ledger = StandRemovalLedger(stand_id="valuation", metadata={"region": "north"})
+    ledger.cohorts["dummy"] = SimpleNamespace(tree_count=1)
+
+    class StubConnector:
+        def connect(self, model_view, removal_ledger):
+            descriptor = VolumeDescriptor(ledger=removal_ledger)
+            volume_by_quality = {quality: 0.0 for quality in QualityType}
+            volume_by_quality[QualityType.Undefined] = 3.5
+            return VolumeResult(
+                descriptor=descriptor,
+                pieces=(),
+                total_value=125.0,
+                volume_by_quality=volume_by_quality,
+                metadata={"note": "stub"},
+            )
+
+    part = _make_part("valuation", capabilities=("grow",))
+    part.context["valuation"] = {"ledger": ledger}
+    composite = StandComposite((part,), seed=3, model_id="valuation")
+    module = GrowthModule(composite, stages=(ValuationStage(connector=StubConnector()),))
+
+    module.run_cycle()
+
+    events = composite.iter_event_records(category="economic")
+    result_events = [event for event in events if event.kind == "valuation.result"]
+    assert len(result_events) == 1
+    event = result_events[0]
+    assert event.kind == "valuation.result"
+    assert event.payload["total_value"] == 125.0
+    telemetry_types = [event.type for event in composite.telemetry.events]
+    assert "valuation.result" in telemetry_types

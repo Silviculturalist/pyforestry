@@ -21,6 +21,10 @@ from typing import (
 from pyforestry.simulation.services import (
     CheckpointSerializer,
     CompositeMemento,
+    EventCategory,
+    EventRecord,
+    EventSnapshotter,
+    EventStore,
     KeyedRNG,
     RandomBundle,
     TelemetryPublisher,
@@ -275,6 +279,7 @@ class StandComposite:
         seed: int = 0,
         model_id: Optional[str] = None,
         telemetry: Optional[TelemetryPublisher] = None,
+        event_store: Optional[EventStore] = None,
     ) -> None:
         self._parts: Dict[str, StandPart] = {}
         self.budget = budget
@@ -286,7 +291,12 @@ class StandComposite:
             model_id=self.model_id,
             seed=self.seed,
         )
+        self.event_store = event_store or EventStore(
+            model_id=self.model_id,
+            seed=self.seed,
+        )
         self._checkpoint_serializer = CheckpointSerializer()
+        self._event_snapshotter = EventSnapshotter(self.event_store, self._checkpoint_serializer)
         for part in parts or ():
             self.add_part(part)
 
@@ -400,9 +410,28 @@ class StandComposite:
     def snapshot(self) -> CompositeMemento:
         """Return a checkpoint capturing the composite state."""
 
-        return self._checkpoint_serializer.capture(self)
+        return self._event_snapshotter.capture(self)
 
     def restore(self, memento: CompositeMemento) -> None:
         """Restore state from ``memento`` created by :meth:`snapshot`."""
 
-        self._checkpoint_serializer.restore(self, memento)
+        self._event_snapshotter.restore(self, memento)
+
+    def iter_event_records(
+        self,
+        *,
+        category: Optional[Union[str, EventCategory]] = None,
+        kind: Optional[str] = None,
+        start_index: Optional[int] = None,
+        metadata: Optional[Mapping[str, Any]] = None,
+        limit: Optional[int] = None,
+    ) -> Tuple[EventRecord, ...]:
+        """Return events emitted by the composite with optional filtering."""
+
+        return self.event_store.iter_records(
+            category=category,
+            kind=kind,
+            start_index=start_index,
+            metadata=metadata,
+            limit=limit,
+        )

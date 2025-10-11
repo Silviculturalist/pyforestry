@@ -19,6 +19,7 @@ class CompositeMemento:
     growth_overrides: Dict[str, Mapping[str, object]]
     disturbance_overrides: Dict[str, Mapping[str, object]]
     rng_states: Dict[Tuple[str, ...], object]
+    event_index: int = -1
 
 
 class CheckpointSerializer:

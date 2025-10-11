@@ -359,6 +359,29 @@ class ValuationStage(Stage):
         valuation_ctx["metadata"] = result.metadata
         existing_cash = float(part.context.get("cash", 0.0))
         part.context["cash"] = existing_cash + float(result.total_value)
+        volume_by_quality = {
+            getattr(quality, "name", str(quality)): float(amount)
+            for quality, amount in result.volume_by_quality.items()
+        }
+        pieces = [piece.as_mapping() for piece in result.pieces]
+        part_model_id = getattr(part.model_view, "model_id", None)
+        payload = {
+            "part": part.name,
+            "stage": self.name,
+            "part_model_id": part_model_id,
+            "total_value": float(result.total_value),
+            "volume_by_quality": volume_by_quality,
+            "pieces": pieces,
+            "ledger_metadata": dict(ledger.metadata),
+            "result_metadata": dict(result.metadata),
+            "descriptor": type(result.descriptor).__name__,
+        }
+        module.composite.telemetry.publish("valuation.result", payload)
+        module.composite.event_store.record_economic(
+            "valuation.result",
+            payload,
+            metadata={"part": part.name, "stage_order": self.order},
+        )
 
 
 class GrowthModule:
@@ -437,23 +460,44 @@ class GrowthModule:
     ) -> None:
         """Emit a telemetry event summarising ``stage`` execution."""
 
-        self.composite.telemetry.publish(
-            "growth.stage",
-            {
-                "stage": stage.name,
-                "phase": phase,
-                "part": part.name,
-                "records": [
-                    {
-                        "action": record.action,
-                        "cost": record.cost,
-                        "harvest": record.harvest,
-                    }
-                    for record in records
-                ],
-                "part_model_id": getattr(part.model_view, "model_id", None),
-            },
-        )
+        payload = {
+            "stage": stage.name,
+            "phase": phase,
+            "part": part.name,
+            "records": [
+                {
+                    "part": record.part,
+                    "action": record.action,
+                    "cost": float(record.cost),
+                    "harvest": float(record.harvest),
+                }
+                for record in records
+            ],
+            "part_model_id": getattr(part.model_view, "model_id", None),
+        }
+        self.composite.telemetry.publish("growth.stage", payload)
+        metadata = {
+            "stage_order": stage.order,
+            "part": part.name,
+        }
+        if isinstance(stage, ManagementStage) or phase == "management":
+            self.composite.event_store.record_management(
+                f"{stage.name}.{phase}",
+                payload,
+                metadata=metadata,
+            )
+        elif isinstance(stage, ValuationStage):
+            self.composite.event_store.record_economic(
+                f"{stage.name}.{phase}",
+                payload,
+                metadata=metadata,
+            )
+        else:
+            self.composite.event_store.record_biological(
+                f"{stage.name}.{phase}",
+                payload,
+                metadata=metadata,
+            )
 
     def discover_affordances(self, part: StandPart) -> Dict[ActionStage, Tuple[StageAction, ...]]:
         """Return the action affordances available to ``part`` by stage."""
