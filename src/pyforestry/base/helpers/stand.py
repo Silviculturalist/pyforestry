@@ -203,8 +203,12 @@ class Stand:
             stems_metrics: Dict[Any, Union[Stems, StandBasalArea]] = {
                 k: v for k, v in stems_from_angle_count.items()
             }
-            self._metric_estimates["BasalArea"] = basal_area_metrics
-            self._metric_estimates["Stems"] = stems_metrics
+            self._metric_estimates["BasalArea"] = self._with_total_entry(
+                basal_area_metrics, StandBasalArea
+            )
+            self._metric_estimates["Stems"] = self._with_total_entry(
+                stems_metrics, Stems
+            )
             self.use_angle_count = True
         else:
             self.use_angle_count = False
@@ -250,6 +254,38 @@ class Stand:
     def BAWAD(self) -> StandMetricAccessor:
         """Access the stand's basal-area weighted mean diameter."""
         return StandMetricAccessor(self, "BAWAD")
+
+    @staticmethod
+    def _with_total_entry(
+        metric_dict: Dict[Any, Union[Stems, StandBasalArea]],
+        metric_type: type,
+    ) -> Dict[Any, Union[Stems, StandBasalArea]]:
+        """Return a copy of ``metric_dict`` with an added ``"TOTAL"`` entry."""
+
+        metrics = list(metric_dict.values())
+
+        total_value = sum(metric.value for metric in metrics) if metrics else 0.0
+        total_precision = (
+            sqrt(sum(metric.precision**2 for metric in metrics)) if metrics else 0.0
+        )
+
+        kwargs: Dict[str, Any] = {}
+        if metrics:
+            sample = metrics[0]
+            for attr in ("over_bark", "direct_estimate"):
+                if hasattr(sample, attr):
+                    kwargs[attr] = all(getattr(metric, attr) for metric in metrics)
+
+        metric_with_total: Dict[Any, Union[Stems, StandBasalArea]] = {
+            k: v for k, v in metric_dict.items()
+        }
+        metric_with_total["TOTAL"] = metric_type(
+            total_value,
+            species=None,
+            precision=total_precision,
+            **kwargs,
+        )
+        return metric_with_total
 
     def _ensure_qmd_estimates(self):
         """

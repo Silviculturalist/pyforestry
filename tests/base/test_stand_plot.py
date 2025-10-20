@@ -134,6 +134,31 @@ def test_bawad_unavailable_with_angle_count():
         float(st.BAWAD)
 
 
+def test_angle_count_totals_available():
+    """Angle-count derived stands should expose TOTAL entries for metrics."""
+    sp1 = parse_tree_species("picea abies")
+    sp2 = parse_tree_species("pinus sylvestris")
+    ac = AngleCount(ba_factor=2.0, value=[4, 2], species=[sp1, sp2], point_id="P1")
+    plot = CircularPlot(id=1, radius_m=5, AngleCount=[ac])
+    stand = Stand(plots=[plot])
+
+    ba_species = [stand.BasalArea(sp1), stand.BasalArea(sp2)]
+    stems_species = [stand.Stems(sp1), stand.Stems(sp2)]
+
+    total_ba = stand.BasalArea.TOTAL
+    total_stems = stand.Stems.TOTAL
+
+    assert math.isclose(total_ba.value, sum(metric.value for metric in ba_species))
+    assert math.isclose(
+        total_ba.precision, math.sqrt(sum(metric.precision**2 for metric in ba_species))
+    )
+    assert math.isclose(total_stems.value, sum(metric.value for metric in stems_species))
+    assert math.isclose(
+        total_stems.precision,
+        math.sqrt(sum(metric.precision**2 for metric in stems_species)),
+    )
+
+
 def test_CircularPlot_area_ha_property():
     """Simple test of the CircularPlot area_ha property."""
     p = CircularPlot(id=10, radius_m=10)
