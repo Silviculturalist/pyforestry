@@ -16,6 +16,7 @@ class Timber:
         over_bark: Optional[bool] = None,
         stump_height_m: Optional[float] = 0.3,
     ):
+        """Instantiate a timber record and infer missing fields."""
         self.species = species.lower()
         self.diameter_cm = diameter_cm
         self.height_m = height_m
@@ -27,6 +28,7 @@ class Timber:
         self._validate_timber()
 
     def validate(self):
+        """Validate that the provided tree attributes are sensible."""
         self._validate_timber()
 
     def _validate_timber(self) -> None:

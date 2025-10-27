@@ -44,7 +44,7 @@ class SweTimber(Timber):
             double_bark_mm=double_bark_mm,
             crown_base_height_m=crown_base_height_m,
             over_bark=over_bark,
-            stump_height_m=0.01 * height_m  # Calculated stump height
+            stump_height_m=0.01 * height_m,  # Calculated stump height
         )
 
         self.region = region.lower()
@@ -65,6 +65,7 @@ class SweTimber(Timber):
         self._validate_swe_timber()
 
     def validate(self):
+        """Validate that the provided tree attributes are sensible."""
         super().validate()
         self._validate_swe_timber()
 

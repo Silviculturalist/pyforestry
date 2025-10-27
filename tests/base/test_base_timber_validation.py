@@ -31,8 +31,10 @@ def test_validate_crown_base_below_height():
 
 
 def test_validate_stump_height_non_negative():
-    stump_height_m=-0.1
-    with pytest.raises(ValueError, match=f"Stump height must be larger or equal to 0 m: {stump_height_m}"):
+    stump_height_m = -0.1
+    with pytest.raises(
+        ValueError, match=f"Stump height must be larger or equal to 0 m: {stump_height_m}"
+    ):
         Timber(species="pine", diameter_cm=10, height_m=10, stump_height_m=stump_height_m)
 
 
