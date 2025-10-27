@@ -24,9 +24,12 @@ class Timber:
         self.over_bark = over_bark
         self.stump_height_m = stump_height_m
 
-        self.validate()
+        self._validate_timber()
 
-    def validate(self) -> None:
+    def validate(self):
+        self._validate_timber()
+
+    def _validate_timber(self) -> None:
         """Validate that the provided tree attributes are sensible."""
 
         if self.height_m <= 0:

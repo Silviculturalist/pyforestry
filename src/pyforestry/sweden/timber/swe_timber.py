@@ -37,12 +37,16 @@ class SweTimber(Timber):
         swedish_site: Optional[SwedishSite] = None,
     ):
         """Instantiate a timber record and infer missing fields."""
-        self.species = species.lower()
-        self.diameter_cm = diameter_cm
-        self.height_m = height_m
-        self.double_bark_mm = double_bark_mm
-        self.crown_base_height_m = crown_base_height_m
-        self.over_bark = over_bark
+        super().__init__(
+            species=species,
+            diameter_cm=diameter_cm,
+            height_m=height_m,
+            double_bark_mm=double_bark_mm,
+            crown_base_height_m=crown_base_height_m,
+            over_bark=over_bark,
+            stump_height_m=0.01 * height_m  # Calculated stump height
+        )
+
         self.region = region.lower()
         self.swedish_site = swedish_site
 
@@ -57,31 +61,16 @@ class SweTimber(Timber):
         else:
             self.latitude = latitude
 
-        # Calculate stump height.
-        self.stump_height_m = 0.01 * height_m
-
-        self.validate()
+        # Validate the special cases for SweTimber. The rest is validated in parent class.
+        self._validate_swe_timber()
 
     def validate(self):
-        """Verify that provided parameters are within valid ranges."""
-        if self.height_m <= 0:
-            raise ValueError("Height must be larger than 0 m: {self.height_m}")
+        super().validate()
+        self._validate_swe_timber()
 
-        if self.diameter_cm < 0:
-            raise ValueError(f"Diameter must be larger or equal to 0 cm: {self.diameter_cm}")
-        if (
-            self.crown_base_height_m is not None
-            and self.height_m is not None
-            and self.crown_base_height_m >= self.height_m
-        ):
-            raise ValueError(
-                f"Crown base height ({self.crown_base_height_m} m) cannot be higher than "
-                f"tree height: {self.height_m} m"
-            )
-        if self.stump_height_m < 0:
-            raise ValueError(
-                f"Stump height must be larger or equal to 0 m: {self.stump_height_m}"
-            )  # pragma: no cover - unreachable
+    def _validate_swe_timber(self):
+        """Validate the special cases for SweTimber"""
+
         if self.region not in ["northern", "southern"]:
             raise ValueError("Region must be 'northern' or 'southern'.")
         if self.species not in [
