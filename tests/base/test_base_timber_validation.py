@@ -14,8 +14,9 @@ class DummyTaper:
 
 
 def test_validate_height_positive():
-    with pytest.raises(ValueError, match="Height must be larger than 0 m: {self.height_m}"):
-        Timber(species="pine", diameter_cm=10, height_m=0)
+    height_m = 0
+    with pytest.raises(ValueError, match=f"Height must be larger than 0 m: {height_m}"):
+        Timber(species="pine", diameter_cm=10, height_m=height_m)
 
 
 def test_validate_crown_base_below_height():
@@ -30,8 +31,9 @@ def test_validate_crown_base_below_height():
 
 
 def test_validate_stump_height_non_negative():
-    with pytest.raises(ValueError, match="Stump height must be larger or equal to 0 m: -0.1"):
-        Timber(species="pine", diameter_cm=10, height_m=10, stump_height_m=-0.1)
+    stump_height_m=-0.1
+    with pytest.raises(ValueError, match=f"Stump height must be larger or equal to 0 m: {stump_height_m}"):
+        Timber(species="pine", diameter_cm=10, height_m=10, stump_height_m=stump_height_m)
 
 
 def test_cylinder_volume_integrand_none():
