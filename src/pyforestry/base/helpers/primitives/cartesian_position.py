@@ -65,6 +65,18 @@ class Position:
         """
         return f"Position(X={self.X}, Y={self.Y}, Z={self.Z}, crs={self.crs})"
 
+    # Convenience tuple-like access for callers that expect iterable positions
+    def __iter__(self):
+        yield from (self.X, self.Y)
+
+    @property
+    def x(self) -> float:
+        return self.X
+
+    @property
+    def y(self) -> float:
+        return self.Y
+
     @staticmethod
     def _set_position(
         pos_in: Union["Position", tuple[float, float], tuple[float, float, float], None] = None,

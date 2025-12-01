@@ -205,6 +205,17 @@ class Stand:
             }
             self._metric_estimates["BasalArea"] = basal_area_metrics
             self._metric_estimates["Stems"] = stems_metrics
+            # Ensure TOTAL keys exist so downstream adapters can rely on them.
+            total_ba_val = sum(float(v) for v in basal_area_metrics.values())
+            total_ba_precision = sqrt(sum(getattr(v, "precision", 0.0) ** 2 for v in basal_area_metrics.values()))
+            total_stems_val = sum(float(v) for v in stems_metrics.values())
+            total_stems_precision = sqrt(sum(getattr(v, "precision", 0.0) ** 2 for v in stems_metrics.values()))
+            self._metric_estimates["BasalArea"]["TOTAL"] = StandBasalArea(
+                value=total_ba_val, species=None, precision=total_ba_precision
+            )
+            self._metric_estimates["Stems"]["TOTAL"] = Stems(
+                value=total_stems_val, species=None, precision=total_stems_precision
+            )
             self.use_angle_count = True
         else:
             self.use_angle_count = False

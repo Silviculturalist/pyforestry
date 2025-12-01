@@ -1,5 +1,8 @@
 """Convenience imports for common helper types."""
 
+from importlib import import_module
+from typing import TYPE_CHECKING
+
 # Suggested pyforestry/Helpers/__init__.py
 # ruff: noqa: F401, F403, F405
 # isort: off
@@ -34,6 +37,48 @@ from .bucking import (
 )
 
 # isort: on
+
+_SIMULATION_EXPORTS = [
+    "SimulationContext",
+    "ActionSpec",
+    "GrowthModel",
+    "ExampleStandGeneralModel",
+    "Requirements",
+    "SimulationSetup",
+    "TriggerSpec",
+    "ScheduledOp",
+    "ContextEnsemble",
+    "PythonEngine",
+    "BatchEngine",
+    "AdapterRegistry",
+    "AngleCountToPseudoTreesAdapter",
+    "AngleCountToSpatialPseudoTreesAdapter",
+    "AngleCountToDiameterClassAdapter",
+    "TreeListToDiameterClassAdapter",
+    "TreeListToSpatialAdapter",
+]
+_SIMULATION_EXPORT_SET = set(_SIMULATION_EXPORTS)
+
+if TYPE_CHECKING:  # pragma: no cover - for static checkers only
+    from pyforestry.base.simulation import (  # noqa: F401
+        ActionSpec,
+        AdapterRegistry,
+        AngleCountToDiameterClassAdapter,
+        AngleCountToPseudoTreesAdapter,
+        AngleCountToSpatialPseudoTreesAdapter,
+        BatchEngine,
+        ContextEnsemble,
+        ExampleStandGeneralModel,
+        GrowthModel,
+        PythonEngine,
+        Requirements,
+        ScheduledOp,
+        SimulationContext,
+        SimulationSetup,
+        TreeListToDiameterClassAdapter,
+        TreeListToSpatialAdapter,
+        TriggerSpec,
+    )
 
 __all__ = [
     # TreeSpecies components
@@ -74,4 +119,13 @@ __all__ = [
     "BuckingConfig",
     "_TreeCache",
     "QualityType",
-]
+] + _SIMULATION_EXPORTS
+
+
+def __getattr__(name):
+    if name in _SIMULATION_EXPORT_SET:
+        sim_mod = import_module("pyforestry.base.simulation")
+        attr = getattr(sim_mod, name)
+        globals()[name] = attr
+        return attr
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

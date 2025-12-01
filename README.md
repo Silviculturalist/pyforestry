@@ -7,6 +7,9 @@
 ## Documentation
 [Available online](https://silviculturalist.github.io/pyforestry/)
 
+- [Architecture overview](https://silviculturalist.github.io/pyforestry/architecture.html)
+  summarises the helper layer and outlines forthcoming simulation tooling.
+
 This package is currently under *very early* development.
 Use at your own risk. Any corrections, comments, and suggestions are greatly appreciated.
 

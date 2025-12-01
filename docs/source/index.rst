@@ -7,6 +7,7 @@ pyforestry Documentation
    :maxdepth: 3
    :caption: Contents:
 
+   architecture
    api/modules
    helpers_overview
    notebooks/tree_species_intro
