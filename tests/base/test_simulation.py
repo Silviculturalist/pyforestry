@@ -5,8 +5,10 @@ import pytest
 
 from pyforestry.base.helpers import PICEA_ABIES, AngleCount, CircularPlot, Stand, Tree
 from pyforestry.base.simulation import (
+    ActionSpec,
     ContextEnsemble,
     ExampleStandGeneralModel,
+    PythonEngine,
 )
 
 # ----------------------------- Test fixtures ---------------------------------
@@ -89,10 +91,38 @@ def test_ensemble_batch_writeback():
         ctxs.append(ctx)
     ens = ContextEnsemble(ctxs, model=model)
     for _ in range(3):
-        ens.grow(dt=1.0)
+        ens.update_step(dt=1.0)
     for c in ctxs:
         assert float(c.metrics["BasalArea"]["TOTAL"]) > 20.0
         assert float(c.metrics["Stems"]["TOTAL"]) < 1200.0
+
+
+def test_context_checkpoint_round_trip_tree_list():
+    model = ExampleStandGeneralModel()
+    ctx = model.build_context(_tree_list_stand(), mode_hint="tree_list")
+    ctx.update_step(0.5)
+    cp = ctx.checkpoint()
+    restored_ctx = type(ctx).from_checkpoint(model, cp)
+    assert restored_ctx.mode == ctx.mode
+    assert restored_ctx.state["t"] == pytest.approx(ctx.state["t"])
+    assert float(restored_ctx.metrics["BasalArea"]["TOTAL"]) == pytest.approx(
+        float(ctx.metrics["BasalArea"]["TOTAL"])
+    )
+    assert restored_ctx.attrs == ctx.attrs
+
+
+def test_context_checkpoint_round_trip_aggregate():
+    model = ExampleStandGeneralModel()
+    ctx = model.build_context(_tree_list_stand(), mode_hint="aggregate")
+    ctx.set_aggregate_metrics(ba_total=12.0, stems_total=400.0)
+    ctx.update_step(1.0)
+    cp = ctx.checkpoint()
+    restored_ctx = type(ctx).from_checkpoint(model, cp)
+    expected_ba = 12.0 * (1.0 + model.ba_rel)
+    expected_n = 400.0 * (1.0 - model.mort)
+    assert restored_ctx.mode == "aggregate"
+    assert float(restored_ctx.metrics["BasalArea"]["TOTAL"]) == pytest.approx(expected_ba)
+    assert float(restored_ctx.metrics["Stems"]["TOTAL"]) == pytest.approx(expected_n)
 
 
 # -------------------------- New/expanded coverage ----------------------------
@@ -165,11 +195,11 @@ def test_to_pandas_history_shape_and_values():
     ctx = model.build_context(_tree_list_stand(), mode_hint="aggregate")
     ctx.set_aggregate_metrics(ba_total=10.0, stems_total=100.0)
     ctx.do("fertilize", years=1.0)
-    ctx.grow(0.5)
+    ctx.update_step(0.5)
     df = ctx.to_pandas()
     assert {"t", "op", "ba_total", "n_total", "qmd_total_cm"}.issubset(set(df.columns))
-    # last op is grow; totals should be updated
-    assert df.iloc[-1]["op"] == "grow"
+    # last op is update_step; totals should be updated
+    assert df.iloc[-1]["op"] == "update_step"
     assert df.iloc[-1]["ba_total"] > 10.0
     assert df.iloc[-1]["n_total"] < 100.0
 
@@ -244,15 +274,121 @@ def test_ensemble_batch_engine_path_and_logging():
         ctxs.append(ctx)
 
     ens = ContextEnsemble(ctxs, model=model)
-    ens.grow(dt=1.0)
+    ens.update_step(dt=1.0)
 
-    # writeback happened and history was logged via _log_external_update("grow", ...)
+    # writeback happened and history was logged via _log_external_update("update_step", ...)
     for i, c in enumerate(ctxs):
         hist_ops = [h.op for h in c.history]
-        assert "grow" in hist_ops
+        assert "update_step" in hist_ops
         ba = float(c.metrics["BasalArea"]["TOTAL"])
         # fertilized contexts grew faster
         if i % 2 == 0:
             assert ba > 20.0 * (1.0 + model.ba_rel)  # got the +fert_boost
         else:
             assert ba == pytest.approx(20.0 * (1.0 + model.ba_rel))
+
+
+def test_management_phase_respects_allowed_phases():
+    """Actions declare allowed_phases and should be gated per phase."""
+
+    class PhaseyModel(ExampleStandGeneralModel):
+        def available_actions(self):
+            actions = dict(super().available_actions())
+
+            def mark(ctx):
+                ctx.attrs.setdefault("markers", []).append(ctx.state.get("t", 0.0))
+
+            actions["mark_pre"] = ActionSpec(
+                name="mark_pre",
+                fn=mark,
+                requires_modes=[],
+                allowed_phases=("pre",),
+            )
+            return actions
+
+    model = PhaseyModel()
+    ctx = model.build_context(_tree_list_stand(), mode_hint="aggregate")
+    ctx.set_aggregate_metrics(ba_total=10.0, stems_total=100.0)
+
+    # Allowed in pre-phase
+    ctx.update_step(1.0, management={"pre": ["mark_pre"]})
+    assert ctx.attrs.get("markers") == [1.0]
+
+    # Blocked in disallowed phase
+    with pytest.raises(RuntimeError):
+        ctx.update_step(1.0, management={"post": ["mark_pre"]})
+
+
+def test_context_ensemble_engine_hint_selection():
+    model = ExampleStandGeneralModel()
+    ctx = model.build_context(_tree_list_stand(), mode_hint="aggregate")
+    ens = ContextEnsemble([ctx], model=model, engine="numpy")
+    assert isinstance(ens.engine, PythonEngine)
+    with pytest.raises(ValueError):
+        ContextEnsemble([ctx], model=model, engine="unknown_backend")
+
+
+def test_parallel_runner_round_trip():
+    model = ExampleStandGeneralModel()
+    ctxs = []
+    for i in range(3):
+        ctx = model.build_context(_tree_list_stand(), mode_hint="aggregate")
+        ctx.set_aggregate_metrics(ba_total=10.0 + i, stems_total=100.0 + i * 10.0)
+        ctxs.append(ctx)
+
+    ens = ContextEnsemble(ctxs, model=model)
+
+    # Run two steps in parallel; should preserve order and update totals
+    from pyforestry.simulation.services import run_parallel
+
+    updated = run_parallel(ens, dt=1.0, steps=2, processes=2)
+    assert len(updated) == len(ctxs)
+
+    for original, restored in zip(ctxs, updated, strict=False):
+        assert float(restored.metrics["BasalArea"]["TOTAL"]) > float(original.metrics["BasalArea"]["TOTAL"])
+        assert float(restored.metrics["Stems"]["TOTAL"]) < float(original.metrics["Stems"]["TOTAL"])
+    # ensemble contexts were replaced when write_back=True
+    assert ens.contexts[0] is updated[0]
+
+
+def test_parallel_runner_write_back_optional_and_dispatcher():
+    model = ExampleStandGeneralModel()
+    ctxs = []
+    for i in range(4):
+        ctx = model.build_context(_tree_list_stand(), mode_hint="aggregate")
+        ctx.set_aggregate_metrics(ba_total=10.0, stems_total=100.0)
+        ctxs.append(ctx)
+
+    def dispatcher(idx, _ctx):
+        return idx % 2  # ensure deterministic grouping
+
+    from pyforestry.simulation.services import run_parallel
+
+    updated = run_parallel(ctxs, dt=0.5, steps=1, processes=2, write_back=False, dispatcher=dispatcher)
+    # Original list unchanged
+    assert ctxs[0] is not updated[0]
+    # Updated values reflect growth
+    assert float(updated[0].metrics["BasalArea"]["TOTAL"]) > float(ctxs[0].metrics["BasalArea"]["TOTAL"])
+
+
+def test_parallel_runner_history_tail_preserved():
+    model = ExampleStandGeneralModel()
+    ctx = model.build_context(_tree_list_stand(), mode_hint="aggregate")
+    ctx.set_aggregate_metrics(ba_total=10.0, stems_total=100.0)
+    from pyforestry.simulation.services import run_parallel
+
+    updated = run_parallel([ctx], dt=1.0, steps=1, write_back=False, include_history=True, history_tail=1)
+    assert len(updated[0].history) == 1
+
+
+def test_parallel_runner_raises_on_error():
+    class FailingModel(ExampleStandGeneralModel):
+        def update_step(self, ctx, dt):  # type: ignore[override]
+            raise RuntimeError("boom")
+
+    model = FailingModel()
+    ctx = model.build_context(_tree_list_stand(), mode_hint="aggregate")
+    from pyforestry.simulation.services import run_parallel
+
+    with pytest.raises(RuntimeError, match="Parallel simulation failed"):
+        run_parallel([ctx], dt=1.0)

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import copy
+import warnings
 from dataclasses import dataclass, field
 from math import pi, sqrt
 
@@ -14,8 +15,10 @@ from typing import (
     Iterable,
     List,
     Mapping,
+    MutableMapping,
     Optional,
     ParamSpec,
+    Tuple,
     TypedDict,
     Union,
     cast,
@@ -55,6 +58,8 @@ class ActionSpec:
     requires_tree_list: bool = False
     # New: explicit allowed modes, e.g. ["tree_list","spatial"] or []
     requires_modes: Optional[List[str]] = None
+    # Optional: phases within update_step where this action is valid, e.g. ("pre","post")
+    allowed_phases: Optional[Tuple[str, ...]] = None
 
 
 @dataclass
@@ -120,19 +125,85 @@ class SimulationContext:
 
     # ------------------------------ Public API --------------------------------
 
-    def grow(self, years: float) -> None:
+    def update_step(
+        self,
+        years: float,
+        *,
+        management: Optional[
+            Mapping[str, Iterable[Union[str, tuple[str, Mapping[str, Any]]]]]
+        ] = None,
+    ) -> None:
+        """
+        Advance the simulation by ``years`` while allowing management hooks.
+
+        ``management`` can map phase names ("pre", "mid", "post") to an iterable of
+        action specifications. Each action specification may be a string (action name)
+        or a tuple of ``(name, kwargs_mapping)`` to pass parameters. Phases execute
+        in order: pre -> model update -> mid -> metrics refresh -> post. Actions are
+        dispatched through ``self.do`` so model-provided capabilities still gate them.
+        """
+
+        def _phase_actions(
+            phase: str, actions: Iterable[Union[str, tuple[str, Mapping[str, Any]]]]
+        ):
+            for item in actions:
+                if isinstance(item, tuple):
+                    name, params = item
+                    params = dict(params)
+                else:
+                    name, params = str(item), {}
+                self.do(name, phase=phase, **params)
+
+        mgmt: MutableMapping[str, Iterable[Union[str, tuple[str, Mapping[str, Any]]]]] = (
+            dict(management) if management else {}
+        )
+
         pre = self.snapshot()
         t0 = self.state.get("t", 0.0)
+        t1 = t0 + years
+        self.state["t"] = t1
 
-        self.model.grow(self, years)
-        self.state["t"] = t0 + years
+        # Pre-update management
+        _phase_actions("pre", mgmt.get("pre", ()))
+
+        # Core model update
+        if hasattr(self.model, "update_step"):
+            self.model.update_step(self, years)  # type: ignore[call-arg]
+        else:  # pragma: no cover - compatibility shim
+            self.model.grow(self, years)  # type: ignore[call-arg]
+        self.state["t"] = t1
         self.state["last_dt"] = years
+
+        # Optional mid-phase hooks (after model update, before metric recompute)
+        _phase_actions("mid", mgmt.get("mid", ()))
 
         self._refresh_metrics()
         post = self.snapshot()
-        self._append_history("grow", {"dt": years}, pre, post)
 
-    def do(self, action: str, **kwargs: Any) -> None:
+        # Post-metric hooks (e.g. logging/valuation that depends on refreshed totals)
+        _phase_actions("post", mgmt.get("post", ()))
+
+        self._append_history(
+            "update_step",
+            {
+                "dt": years,
+                "management": {
+                    k: [str(a[0] if isinstance(a, tuple) else a) for a in v] for k, v in mgmt.items()
+                },
+            },
+            pre,
+            post,
+        )
+
+    def grow(self, years: float, **kwargs: Any) -> None:  # pragma: no cover - compatibility alias
+        warnings.warn(
+            "SimulationContext.grow is deprecated; use update_step instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        self.update_step(years, **kwargs)
+
+    def do(self, action: str, *, phase: Optional[str] = None, **kwargs: Any) -> None:
         actions = self.model.available_actions()
         if action not in actions:
             raise KeyError(f"Action '{action}' not available for this model.")
@@ -147,12 +218,18 @@ class SimulationContext:
             raise RuntimeError(
                 f"Action '{action}' requires mode in {{{req_str}}}, got '{self.mode}'."
             )
+        if phase is not None and spec.allowed_phases:
+            if phase not in spec.allowed_phases:
+                allowed = ", ".join(spec.allowed_phases)
+                raise RuntimeError(
+                    f"Action '{action}' not permitted during '{phase}' phase (allowed: {allowed})."
+                )
 
         pre = self.snapshot()
         spec.fn(self, **kwargs)
         self._refresh_metrics()
         post = self.snapshot()
-        self._append_history(f"action:{action}", {"params": kwargs}, pre, post)
+        self._append_history(f"action:{action}", {"params": kwargs, "phase": phase}, pre, post)
 
     def snapshot(self) -> Dict[str, Any]:
         if self.mode in ("tree_list", "spatial"):
@@ -427,3 +504,79 @@ class SimulationContext:
         self._refresh_metrics()
         post = self.snapshot()
         self._append_history(op, details, pre, post)
+
+    # --------------------------- Checkpointing -------------------------------
+
+    def checkpoint(
+        self,
+        *,
+        include_history: bool = False,
+        history_tail: Optional[int] = None,
+    ) -> Dict[str, Any]:
+        """
+        Return a serialisable snapshot of the context state and inventory.
+
+        The checkpoint includes mode, area/site provenance, state/attrs, and the
+        current inventory representation (plots for tree_list/spatial, diameter
+        classes for diameter_class, aggregate metrics otherwise). History is not
+        captured unless explicitly requested.
+        """
+
+        if self.mode in ("tree_list", "spatial"):
+            inventory = {"plots": copy.deepcopy(self.plots)}
+        elif self.mode == "diameter_class":
+            inventory = {"dclass": copy.deepcopy(self._dclass)}
+        else:
+            inventory = {"metrics": copy.deepcopy(self._metrics)}
+
+        payload: Dict[str, Any] = {
+            "mode": self.mode,
+            "area_ha": self.area_ha,
+            "site": copy.deepcopy(self.site),
+            "state": copy.deepcopy(self.state),
+            "attrs": copy.deepcopy(self.attrs),
+            "inventory": inventory,
+        }
+        rng_bundle = getattr(self, "random_bundle", None)
+        if rng_bundle is not None and hasattr(rng_bundle, "snapshot"):
+            try:
+                payload["rng_state"] = rng_bundle.snapshot()
+            except Exception:
+                pass
+        if include_history:
+            if history_tail is not None:
+                history_slice = self.history[-int(history_tail) :]
+            else:
+                history_slice = self.history
+            payload["history"] = copy.deepcopy(history_slice)
+        return payload
+
+    @classmethod
+    def from_checkpoint(cls, model: Any, checkpoint: Mapping[str, Any]) -> "SimulationContext":
+        """
+        Restore a context from ``checkpoint`` produced by :meth:`checkpoint`.
+
+        ``model`` must be the growth model instance that will drive the context.
+        """
+
+        payload = dict(checkpoint)
+        mode = payload["mode"]
+        inventory = payload["inventory"]
+        ctx = cls(
+            mode=mode,
+            area_ha=payload.get("area_ha"),
+            site=payload.get("site"),
+            origin_ref=None,
+            inventory=inventory,
+            initial_state=payload.get("state", {}),
+            model=model,
+            initial_attrs=payload.get("attrs", {}),
+        )
+        if "history" in payload:
+            ctx.history = list(payload["history"])
+        if "rng_state" in payload and hasattr(ctx, "random_bundle"):
+            try:
+                ctx.random_bundle.restore(payload["rng_state"])  # type: ignore[attr-defined]
+            except Exception:
+                pass
+        return ctx

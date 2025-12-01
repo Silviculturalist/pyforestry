@@ -135,7 +135,7 @@ class AngleCountToDiameterClassAdapter(Adapter):
         ba_dict = stand._metric_estimates["BasalArea"]
         n_dict = stand._metric_estimates["Stems"]
         dclass: Dict[Any, Dict[str, List[float]]] = {}
-        for key in ba_dict.items():
+        for key, _ in ba_dict.items():
             if key == "TOTAL":
                 continue
             N = float(n_dict.get(key, Stems(0.0)))

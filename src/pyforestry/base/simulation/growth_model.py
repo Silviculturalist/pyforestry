@@ -1,6 +1,7 @@
 # pyforestry/base/simulation/growth_model.py
 from __future__ import annotations
 
+import warnings
 from dataclasses import dataclass
 from typing import Any, Dict, List, Literal, Optional, Tuple
 
@@ -253,8 +254,16 @@ class GrowthModel:
     def init_state_stub(self) -> Dict[str, Any]:
         return {"t": 0.0, "years_since_thin": 0.0}
 
-    def grow(self, ctx: SimulationContext, dt: float) -> None:
+    def update_step(self, ctx: SimulationContext, dt: float) -> None:
         raise NotImplementedError
+
+    def grow(self, ctx: SimulationContext, dt: float) -> None:  # pragma: no cover - compatibility
+        warnings.warn(
+            "GrowthModel.grow is deprecated; implement/update_step instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        self.update_step(ctx, dt)
 
     def available_actions(self) -> Dict[str, ActionSpec]:
         return {}
@@ -284,7 +293,7 @@ class ExampleStandGeneralModel(GrowthModel):
     def default_attrs(self) -> Dict[str, Any]:
         return {"fertilized_remaining_years": 0.0}
 
-    def grow(self, ctx: SimulationContext, dt: float) -> None:
+    def update_step(self, ctx: SimulationContext, dt: float) -> None:
         ctx.state["years_since_thin"] = ctx.state.get("years_since_thin", 0.0) + dt
         fert_extra = (
             self.fert_boost if ctx.attrs.get("fertilized_remaining_years", 0.0) > 0.0 else 0.0
@@ -313,6 +322,14 @@ class ExampleStandGeneralModel(GrowthModel):
                 rec["bin_mids_cm"] = [float(m) + self.diam_inc * dt for m in rec["bin_mids_cm"]]
                 rec["n_per_ha"] = [float(n_i) * (1.0 - self.mort * dt) for n_i in rec["n_per_ha"]]
             ctx.set_diameter_class(dclass)
+
+    def grow(self, ctx: SimulationContext, dt: float) -> None:  # pragma: no cover - compatibility
+        warnings.warn(
+            "ExampleStandGeneralModel.grow is deprecated; use update_step instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        self.update_step(ctx, dt)
 
     def available_actions(self) -> Dict[str, ActionSpec]:
         return {

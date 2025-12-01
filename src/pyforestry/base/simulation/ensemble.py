@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Mapping, Optional, Sequence, Union
 
 import numpy as np
 
@@ -50,26 +50,61 @@ def _optional_jax_engine() -> Optional[BatchEngine]:
     return PythonEngine()
 
 
+def _engine_from_hint(hint: Optional[Union[str, BatchEngine]]) -> Optional[BatchEngine]:
+    if hint is None:
+        return None
+    if isinstance(hint, BatchEngine):
+        return hint
+    if isinstance(hint, str):
+        key = hint.strip().lower()
+        if key in ("numpy", "python"):
+            return PythonEngine()
+        if key == "numba":
+            eng = _optional_numba_engine()
+            return eng or PythonEngine()
+        if key == "jax":
+            eng = _optional_jax_engine()
+            return eng or PythonEngine()
+        raise ValueError(f"Unknown engine hint: {hint}")
+    raise TypeError("engine must be None, a BatchEngine, or a backend string.")
+
+
 @dataclass
 class ContextEnsemble:
     contexts: List[SimulationContext]
     model: Any
-    engine: Optional[BatchEngine] = None
+    engine: Optional[Union[BatchEngine, str]] = None
 
     def __post_init__(self) -> None:
-        if self.engine is None:
-            self.engine = _optional_jax_engine() or _optional_numba_engine() or PythonEngine()
+        chosen = _engine_from_hint(self.engine)
+        if chosen is None:
+            chosen = _optional_jax_engine() or _optional_numba_engine() or PythonEngine()
+        self.engine = chosen
 
-    def grow(self, dt: float) -> None:
+    def update_step(
+        self,
+        dt: float,
+        *,
+        management: Optional[Union[Mapping[str, Any], Sequence[Optional[Mapping[str, Any]]]]] = None,
+    ) -> None:
         assert self.engine is not None
+        if management is None:
+            mgmt_list: List[Optional[Mapping[str, Any]]] = [None for _ in self.contexts]
+        elif isinstance(management, (list, tuple)):
+            if len(management) != len(self.contexts):  # pragma: no cover - defensive
+                raise ValueError("management list must match the number of contexts.")
+            mgmt_list = list(management)
+        else:
+            mgmt_list = [management for _ in self.contexts]
+
         agg_ctxs = [
             c
             for c in self.contexts
             if c.mode == "aggregate" and getattr(self.model, "has_batch_engine", lambda: False)()
         ]
-        other_ctxs = [c for c in self.contexts if c not in agg_ctxs]
-        for c in other_ctxs:
-            c.grow(dt)
+        other_ctxs = [(i, c) for i, c in enumerate(self.contexts) if c not in agg_ctxs]
+        for idx, c in other_ctxs:
+            c.update_step(dt, management=mgmt_list[idx])
         if agg_ctxs:
             ba = np.array([float(c.metrics["BasalArea"]["TOTAL"]) for c in agg_ctxs], dtype=float)
             n = np.array([float(c.metrics["Stems"]["TOTAL"]) for c in agg_ctxs], dtype=float)
@@ -89,7 +124,12 @@ class ContextEnsemble:
                 )
                 c.state["t"] = c.state.get("t", 0.0) + dt
                 c.state["last_dt"] = dt
-                c._log_external_update("grow", {"dt": dt})
+                c._log_external_update("update_step", {"dt": dt})
+
+    def grow(
+        self, dt: float, *, management: Optional[Union[Mapping[str, Any], Sequence[Optional[Mapping[str, Any]]]]] = None
+    ) -> None:  # pragma: no cover - compatibility
+        self.update_step(dt, management=management)
 
     def do(self, name: str, **kwargs: Any) -> None:
         for c in self.contexts:

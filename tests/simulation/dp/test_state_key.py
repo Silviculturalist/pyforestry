@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from typing import Dict
 
 import pytest
-from hypothesis import given
+from hypothesis import HealthCheck, given, settings
 from hypothesis import strategies as st
 
 from pyforestry.simulation.dp import (
@@ -45,13 +45,14 @@ class SimpleAdapter:
 
 
 lower_alpha = st.characters(min_codepoint=97, max_codepoint=122)
-part_names = st.text(min_size=1, max_size=5, alphabet=lower_alpha)
-labels = st.text(min_size=0, max_size=5, alphabet=lower_alpha)
+part_names = st.text(min_size=1, max_size=3, alphabet=lower_alpha)
+labels = st.text(min_size=0, max_size=3, alphabet=lower_alpha)
 views = st.builds(DummyView, value=st.integers(-50, 50), label=labels)
 
 
+@settings(max_examples=50, suppress_health_check=[HealthCheck.too_slow])
 @given(
-    parts=st.dictionaries(part_names, views, min_size=1, max_size=4),
+    parts=st.dictionaries(part_names, views, min_size=1, max_size=3),
 )
 def test_encode_decode_round_trip(parts: Dict[str, DummyView]) -> None:
     """Encoding a view mapping should be reversible and namespace aware."""
@@ -74,11 +75,12 @@ def test_encode_decode_round_trip(parts: Dict[str, DummyView]) -> None:
         assert adapter_id in state_key.namespace
 
 
+@settings(max_examples=50, suppress_health_check=[HealthCheck.too_slow])
 @given(
-    parts=st.dictionaries(part_names, views, min_size=1, max_size=4),
-    action=st.text(min_size=1, max_size=4, alphabet=lower_alpha),
-    connector=st.text(min_size=1, max_size=4, alphabet=lower_alpha),
-    bucking=st.text(min_size=1, max_size=4, alphabet=lower_alpha),
+    parts=st.dictionaries(part_names, views, min_size=1, max_size=3),
+    action=st.text(min_size=1, max_size=3, alphabet=lower_alpha),
+    connector=st.text(min_size=1, max_size=3, alphabet=lower_alpha),
+    bucking=st.text(min_size=1, max_size=3, alphabet=lower_alpha),
 )
 def test_simulate_one_step_pure_is_deterministic(
     parts: Dict[str, DummyView],

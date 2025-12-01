@@ -38,7 +38,7 @@ class SimulationSetup:
         ctx.state["t"] = self.start_t
         while ctx.state["t"] < self.end_t - 1e-12:
             self._eval_triggers(ctx, phase="pre")
-            ctx.grow(self.dt)
+            ctx.update_step(self.dt)
             for s in [s for s in self.schedule if abs(s.t - ctx.state["t"]) < 1e-9]:
                 pre = ctx.snapshot()
                 s.fn(ctx)
