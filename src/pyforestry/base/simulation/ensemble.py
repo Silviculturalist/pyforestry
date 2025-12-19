@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict, List, Mapping, Optional, Sequence, Union
+from typing import Any, Dict, List, Mapping, Optional, Sequence, Union, cast
 
 import numpy as np
 
@@ -104,7 +104,8 @@ class ContextEnsemble:
                 raise ValueError("management list must match the number of contexts.")
             mgmt_list = list(management)
         else:
-            mgmt_list = [management for _ in self.contexts]
+            mgmt_item = cast(Mapping[str, Any], management)
+            mgmt_list = [mgmt_item for _ in self.contexts]
 
         engine = self.engine
         if engine is None:
@@ -115,8 +116,7 @@ class ContextEnsemble:
         agg_ctxs = [
             c
             for c in self.contexts
-            if c.mode == "aggregate"
-            and getattr(self.model, "has_batch_engine", lambda: False)()
+            if c.mode == "aggregate" and getattr(self.model, "has_batch_engine", lambda: False)()
         ]
         other_ctxs = [(i, c) for i, c in enumerate(self.contexts) if c not in agg_ctxs]
         for idx, c in other_ctxs:
