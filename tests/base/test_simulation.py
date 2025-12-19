@@ -234,7 +234,9 @@ def test_growth_model_can_build_requirements():
 
     stand_ok = Stand(
         area_ha=1.0,
-        plots=[CircularPlot(id=1, area_m2=200.0, trees=[Tree(species="Picea abies", height_m=15.0)])],
+        plots=[
+            CircularPlot(id=1, area_m2=200.0, trees=[Tree(species="Picea abies", height_m=15.0)])
+        ],
         site=_DummySite(latitude=60.0, longitude=15.0),
     )
     ok, missing = model.can_build(stand_ok)
@@ -251,7 +253,9 @@ def test_growth_model_build_context_invalid_adapter():
         model.build_context(stand, mode_hint="tree_list", use_adapter="missing_adapter")
 
     with pytest.raises(ValueError):
-        model.build_context(stand, mode_hint="tree_list", use_adapter="angle_count_pseudo_tree_list")
+        model.build_context(
+            stand, mode_hint="tree_list", use_adapter="angle_count_pseudo_tree_list"
+        )
 
 
 def test_growth_model_grow_deprecation_warning():
