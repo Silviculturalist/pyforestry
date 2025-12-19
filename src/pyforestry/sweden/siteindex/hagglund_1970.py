@@ -1,7 +1,7 @@
 import math
 import warnings
 from enum import Enum
-from typing import Union
+from typing import Callable, Union, cast
 
 from numpy import exp, log
 
@@ -74,6 +74,10 @@ class HagglundSpruceModel:
         def subroutineBonitering(eff_age: float):
             AI1 = 10.0
             AI2 = 600.0
+            AI3 = 0.0
+            A2 = 0.0
+            RK = 0.0
+            RM2 = 0.0
             while abs(AI1 - AI2) > 1:
                 AI3 = (AI1 + AI2) / 2.0
                 RK = 0.001936 + 0.00004100 * AI3**1.0105
@@ -82,8 +86,8 @@ class HagglundSpruceModel:
                 DIF = top_height_dm - A2 * (1 - exp(-eff_age * RK)) ** RM2
                 if DIF <= 0:
                     AI2 = AI3
-                else:
-                    AI1 = AI3
+            else:
+                AI1 = AI3
             T26 = (-1 / RK) * log(1 - (13 / A2) ** (1 / RM2))
             T13_local = P * (7.0287 + 0.66118 * T26)
             return A2, RK, RM2, T26, T13_local
@@ -192,6 +196,9 @@ class HagglundSpruceModel:
         def subroutineBonitering(eff_age: float):
             AI1 = 10.0
             AI2 = 600.0
+            A2 = 0.0
+            RK = 0.0
+            RM2 = 0.0
             while abs(AI1 - AI2) > 1:
                 AI3 = (AI1 + AI2) / 2.0
                 RK = 0.042624 - 7.1145 / AI3**1.0068
@@ -245,7 +252,7 @@ class HagglundSpruceModel:
         if eff_age > 90:
             warnings.warn("Too old stand, outside of the material.", stacklevel=2)
 
-            # Determine the effective DBH age for the height prediction:
+        # Determine the effective DBH age for the height prediction:
         if age2_type == Age.DBH.value:
             # If the target age 'age2' is already DBH, use its value directly for the formula.
             effective_age2_dbh = age2_value
@@ -331,6 +338,9 @@ class HagglundPineModel:
         def subroutineBonitering(eff_age: float):
             AI1 = 10.0
             AI2 = 600.0
+            A2 = 0.0
+            RK = 0.0
+            RM2 = 0.0
             while abs(AI1 - AI2) > 1:
                 AI3 = (AI1 + AI2) / 2.0
                 RM = 0.066074 + 4.4189e5 / AI3**2.9134
@@ -352,6 +362,8 @@ class HagglundPineModel:
                 T13_local = 6.8889 + 0.12405 * T262
             elif regeneration == HagglundPineRegeneration.CULTURE:
                 T13_local = 7.4624 + 0.11672 * T262 - 0.39276 * T26
+            else:  # pragma: no cover - defensive
+                raise ValueError("Unexpected regeneration class.")
             T13_local = min(T13_local, 50)
             return A2, RK, RM2, T13_local
 
@@ -387,7 +399,7 @@ class HagglundPineModel:
         if A2 > 250 and eff_age > 100:
             print("Warning: Too old stand, outside of material.")
 
-            # Determine the effective DBH age for the height prediction:
+        # Determine the effective DBH age for the height prediction:
         if age2_type == Age.DBH.value:
             # If the target age 'age2' is already DBH, use its value directly for the formula.
             effective_age2_dbh = age2_value
@@ -442,9 +454,10 @@ class HeightTrajectoryWrapper:
     def __getattr__(self, name):
         attr = getattr(self._model, name)
         if callable(attr):
+            model_attr = cast(Callable[..., tuple[SiteIndexValue, float]], attr)
 
             def wrapper(*args, **kwargs):
-                si_value, _ = attr(*args, **kwargs)
+                si_value, _ = model_attr(*args, **kwargs)
                 return si_value
 
             return wrapper
@@ -462,9 +475,10 @@ class TimeToBreastHeightWrapper:
     def __getattr__(self, name):
         attr = getattr(self._model, name)
         if callable(attr):
+            model_attr = cast(Callable[..., tuple[SiteIndexValue, float]], attr)
 
             def wrapper(*args, **kwargs):
-                _, T13 = attr(*args, **kwargs)
+                _, T13 = model_attr(*args, **kwargs)
                 return T13
 
             return wrapper
@@ -476,6 +490,24 @@ class TimeToBreastHeightWrapper:
 # =============================================================================
 
 
+class HeightTrajectoryContainer:
+    picea_abies: HeightTrajectoryWrapper
+    pinus_sylvestris: HeightTrajectoryWrapper
+
+    def __init__(self) -> None:
+        self.picea_abies = HeightTrajectoryWrapper(HagglundSpruceModel)
+        self.pinus_sylvestris = HeightTrajectoryWrapper(HagglundPineModel)
+
+
+class TimeToBreastHeightContainer:
+    picea_abies: TimeToBreastHeightWrapper
+    pinus_sylvestris: TimeToBreastHeightWrapper
+
+    def __init__(self) -> None:
+        self.picea_abies = TimeToBreastHeightWrapper(HagglundSpruceModel)
+        self.pinus_sylvestris = TimeToBreastHeightWrapper(HagglundPineModel)
+
+
 class Hagglund_1970:
     """
     Provides a class-based interface to Hägglund's site index functions.
@@ -483,20 +515,6 @@ class Hagglund_1970:
     or the time to breast height (T13).
     """
 
-    height_trajectory = type(
-        "HeightTrajectoryContainer",
-        (),
-        {
-            "picea_abies": HeightTrajectoryWrapper(HagglundSpruceModel),
-            "pinus_sylvestris": HeightTrajectoryWrapper(HagglundPineModel),
-        },
-    )
-    time_to_breast_height = type(
-        "TimeToBreastHeightContainer",
-        (),
-        {
-            "picea_abies": TimeToBreastHeightWrapper(HagglundSpruceModel),
-            "pinus_sylvestris": TimeToBreastHeightWrapper(HagglundPineModel),
-        },
-    )
+    height_trajectory: HeightTrajectoryContainer = HeightTrajectoryContainer()
+    time_to_breast_height: TimeToBreastHeightContainer = TimeToBreastHeightContainer()
     regeneration = HagglundPineRegeneration
