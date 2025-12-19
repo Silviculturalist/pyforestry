@@ -345,8 +345,12 @@ def test_parallel_runner_round_trip():
     assert len(updated) == len(ctxs)
 
     for original, restored in zip(ctxs, updated, strict=False):
-        assert float(restored.metrics["BasalArea"]["TOTAL"]) > float(original.metrics["BasalArea"]["TOTAL"])
-        assert float(restored.metrics["Stems"]["TOTAL"]) < float(original.metrics["Stems"]["TOTAL"])
+        assert float(restored.metrics["BasalArea"]["TOTAL"]) > float(
+            original.metrics["BasalArea"]["TOTAL"]
+        )
+        assert float(restored.metrics["Stems"]["TOTAL"]) < float(
+            original.metrics["Stems"]["TOTAL"]
+        )
     # ensemble contexts were replaced when write_back=True
     assert ens.contexts[0] is updated[0]
 
@@ -364,11 +368,15 @@ def test_parallel_runner_write_back_optional_and_dispatcher():
 
     from pyforestry.simulation.services import run_parallel
 
-    updated = run_parallel(ctxs, dt=0.5, steps=1, processes=2, write_back=False, dispatcher=dispatcher)
+    updated = run_parallel(
+        ctxs, dt=0.5, steps=1, processes=2, write_back=False, dispatcher=dispatcher
+    )
     # Original list unchanged
     assert ctxs[0] is not updated[0]
     # Updated values reflect growth
-    assert float(updated[0].metrics["BasalArea"]["TOTAL"]) > float(ctxs[0].metrics["BasalArea"]["TOTAL"])
+    assert float(updated[0].metrics["BasalArea"]["TOTAL"]) > float(
+        ctxs[0].metrics["BasalArea"]["TOTAL"]
+    )
 
 
 def test_parallel_runner_history_tail_preserved():
@@ -377,7 +385,9 @@ def test_parallel_runner_history_tail_preserved():
     ctx.set_aggregate_metrics(ba_total=10.0, stems_total=100.0)
     from pyforestry.simulation.services import run_parallel
 
-    updated = run_parallel([ctx], dt=1.0, steps=1, write_back=False, include_history=True, history_tail=1)
+    updated = run_parallel(
+        [ctx], dt=1.0, steps=1, write_back=False, include_history=True, history_tail=1
+    )
     assert len(updated[0].history) == 1
 
 

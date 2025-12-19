@@ -188,7 +188,8 @@ class SimulationContext:
             {
                 "dt": years,
                 "management": {
-                    k: [str(a[0] if isinstance(a, tuple) else a) for a in v] for k, v in mgmt.items()
+                    k: [str(a[0] if isinstance(a, tuple) else a) for a in v]
+                    for k, v in mgmt.items()
                 },
             },
             pre,
