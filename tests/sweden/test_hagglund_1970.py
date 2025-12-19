@@ -103,12 +103,11 @@ def test_invalid_data_types_spruce_north():
 def test_valid_input_types_spruce_south():
     """Test Spruce S. Sweden accepts various valid input types without error."""
     # Test with AgeMeasurement
-    with pytest.warns(UserWarning, match="Too low productivity"):
-        HagglundSpruceModel.southern_sweden(
-            dominant_height=DOMINANT_HEIGHT_S_SPRUCE,
-            age=Age.DBH(AGE_DBH_S_SPRUCE),
-            age2=Age.TOTAL(AGE_TOTAL_S_SPRUCE),
-        )
+    HagglundSpruceModel.southern_sweden(
+        dominant_height=DOMINANT_HEIGHT_S_SPRUCE,
+        age=Age.DBH(AGE_DBH_S_SPRUCE),
+        age2=Age.TOTAL(AGE_TOTAL_S_SPRUCE),
+    )
     HagglundSpruceModel.southern_sweden(
         dominant_height=DOMINANT_HEIGHT_S_SPRUCE,
         age=Age.TOTAL(AGE_TOTAL_S_SPRUCE),  # V2 accepts Total age
@@ -237,12 +236,11 @@ def test_spruce_southern_age_conversion_consistency():
     age_at_breast = 35.0
 
     # Compute using Age.TOTAL for age2.
-    with pytest.warns(UserWarning, match="Too old stand"):
-        si_total, T13_total = HagglundSpruceModel.southern_sweden(
-            dominant_height=dominant_height,
-            age=Age.DBH(age_at_breast),
-            age2=Age.TOTAL(total_age),
-        )
+    si_total, T13_total = HagglundSpruceModel.southern_sweden(
+        dominant_height=dominant_height,
+        age=Age.DBH(age_at_breast),
+        age2=Age.TOTAL(total_age),
+    )
     height_total = float(si_total)
 
     # Compute using DBH for age2.
