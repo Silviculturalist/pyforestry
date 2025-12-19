@@ -1,3 +1,5 @@
+from typing import cast
+
 import pytest
 
 from pyforestry.base.helpers import Age, SiteIndexValue, TreeSpecies
@@ -8,6 +10,7 @@ from pyforestry.sweden.models.eko_1985_refactor import (
     RegionSE,
 )
 from pyforestry.sweden.site.enums import Sweden
+from pyforestry.sweden.site.swedish_site import SwedishSite
 from pyforestry.sweden.siteindex.carbonnier_1975 import CarbonnierHeightModel
 
 
@@ -96,7 +99,7 @@ def test_site_context_uses_swedish_site_metadata():
         soil_moisture=Sweden.SoilMoistureEnum.MESIC_MOIST,
         climate_zone=Sweden.ClimateZone.K1,
     )
-    context = Eko1985SiteContext(swedish_site=dummy)
+    context = Eko1985SiteContext(swedish_site=cast(SwedishSite, dummy))
 
     assert context._resolved_latitude() == 61.0
     assert context._resolved_altitude() == 120.0
@@ -112,7 +115,7 @@ def test_site_context_region_fallbacks_to_latitude():
         altitude=100.0,
         climate_zone=None,
     )
-    context = Eko1985SiteContext(swedish_site=dummy)
+    context = Eko1985SiteContext(swedish_site=cast(SwedishSite, dummy))
 
     assert context.resolved_region() == "Central"
 
@@ -126,9 +129,11 @@ def test_site_context_resolves_indices_from_swedish_site():
         sis_spruce_100=21.0,
         sis_pine_100=19.0,
     )
-    context = Eko1985SiteContext(swedish_site=dummy)
+    context = Eko1985SiteContext(swedish_site=cast(SwedishSite, dummy))
 
     spruce_si, pine_si, _beech = context.resolve_site_indices()
+    assert spruce_si is not None
+    assert pine_si is not None
     assert float(spruce_si) == pytest.approx(21.0)
     assert float(pine_si) == pytest.approx(19.0)
 
@@ -137,6 +142,7 @@ def test_site_context_translates_missing_indices():
     pine_only = Eko1985SiteContext(pine_site_index=18.0)
     spruce_si, pine_si, _beech = pine_only.resolve_site_indices()
     assert spruce_si is not None
+    assert pine_si is not None
     assert float(pine_si) == pytest.approx(18.0)
 
     spruce_value = SiteIndexValue(

@@ -86,8 +86,8 @@ class HagglundSpruceModel:
                 DIF = top_height_dm - A2 * (1 - exp(-eff_age * RK)) ** RM2
                 if DIF <= 0:
                     AI2 = AI3
-            else:
-                AI1 = AI3
+                else:
+                    AI1 = AI3
             T26 = (-1 / RK) * log(1 - (13 / A2) ** (1 / RM2))
             T13_local = P * (7.0287 + 0.66118 * T26)
             return A2, RK, RM2, T26, T13_local
