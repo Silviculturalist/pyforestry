@@ -13,7 +13,11 @@ class BatchEngine:
     """Protocol for batch engines."""
 
     def grow(
-        self, model: Any, vec: Dict[str, np.ndarray], dt: float, extra=None
+        self,
+        model: Any,
+        vec: Dict[str, np.ndarray],
+        dt: float,
+        extra: Optional[Mapping[str, Any]] = None,
     ) -> Dict[str, np.ndarray]:
         raise NotImplementedError
 
@@ -22,7 +26,11 @@ class PythonEngine(BatchEngine):
     """NumPy baseline."""
 
     def grow(
-        self, model: Any, vec: Dict[str, np.ndarray], dt: float, extra=None
+        self,
+        model: Any,
+        vec: Dict[str, np.ndarray],
+        dt: float,
+        extra: Optional[Mapping[str, Any]] = None,
     ) -> Dict[str, np.ndarray]:
         ba = vec["ba"]
         n = vec["n"]
@@ -85,9 +93,10 @@ class ContextEnsemble:
         self,
         dt: float,
         *,
-        management: Optional[Union[Mapping[str, Any], Sequence[Optional[Mapping[str, Any]]]]] = None,
+        management: Optional[
+            Union[Mapping[str, Any], Sequence[Optional[Mapping[str, Any]]]]
+        ] = None,
     ) -> None:
-        assert self.engine is not None
         if management is None:
             mgmt_list: List[Optional[Mapping[str, Any]]] = [None for _ in self.contexts]
         elif isinstance(management, (list, tuple)):
@@ -97,17 +106,30 @@ class ContextEnsemble:
         else:
             mgmt_list = [management for _ in self.contexts]
 
+        engine = self.engine
+        if engine is None:
+            raise RuntimeError("Batch engine not configured.")
+        if isinstance(engine, str):  # pragma: no cover - should be resolved in __post_init__
+            raise TypeError("Engine hint was not resolved to a BatchEngine.")
+
         agg_ctxs = [
             c
             for c in self.contexts
-            if c.mode == "aggregate" and getattr(self.model, "has_batch_engine", lambda: False)()
+            if c.mode == "aggregate"
+            and getattr(self.model, "has_batch_engine", lambda: False)()
         ]
         other_ctxs = [(i, c) for i, c in enumerate(self.contexts) if c not in agg_ctxs]
         for idx, c in other_ctxs:
             c.update_step(dt, management=mgmt_list[idx])
         if agg_ctxs:
-            ba = np.array([float(c.metrics["BasalArea"]["TOTAL"]) for c in agg_ctxs], dtype=float)
-            n = np.array([float(c.metrics["Stems"]["TOTAL"]) for c in agg_ctxs], dtype=float)
+            ba = np.array(
+                [float(c.metrics["BasalArea"]["TOTAL"]) for c in agg_ctxs],
+                dtype=float,
+            )
+            n = np.array(
+                [float(c.metrics["Stems"]["TOTAL"]) for c in agg_ctxs],
+                dtype=float,
+            )
             fert_mask = np.array(
                 [
                     1.0 if c.attrs.get("fertilized_remaining_years", 0.0) > 0.0 else 0.0
@@ -115,8 +137,11 @@ class ContextEnsemble:
                 ],
                 dtype=float,
             )
-            out = self.engine.grow(
-                self.model, {"ba": ba, "n": n}, dt, extra={"fert_mask": fert_mask}
+            out = engine.grow(
+                self.model,
+                {"ba": ba, "n": n},
+                dt,
+                extra={"fert_mask": fert_mask},
             )
             for i, c in enumerate(agg_ctxs):
                 c.set_aggregate_metrics(
@@ -127,7 +152,12 @@ class ContextEnsemble:
                 c._log_external_update("update_step", {"dt": dt})
 
     def grow(
-        self, dt: float, *, management: Optional[Union[Mapping[str, Any], Sequence[Optional[Mapping[str, Any]]]]] = None
+        self,
+        dt: float,
+        *,
+        management: Optional[
+            Union[Mapping[str, Any], Sequence[Optional[Mapping[str, Any]]]]
+        ] = None,
     ) -> None:  # pragma: no cover - compatibility
         self.update_step(dt, management=management)
 
