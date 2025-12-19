@@ -78,7 +78,7 @@ def test_generate_custom_pool(monkeypatch):
         workers=-1,
     )
     assert isinstance(cube.dataset, xr.Dataset)
-    assert cube.dataset.dims["dbh"] == 1
+    assert cube.dataset.sizes["dbh"] == 1
     assert cube.dataset.attrs["taper_model"] == "object"
 
 

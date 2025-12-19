@@ -1,6 +1,7 @@
 import math
 import warnings
 from enum import Enum
+from functools import wraps
 from typing import Callable, Union, cast
 
 from numpy import exp, log
@@ -456,6 +457,7 @@ class HeightTrajectoryWrapper:
         if callable(attr):
             model_attr = cast(Callable[..., tuple[SiteIndexValue, float]], attr)
 
+            @wraps(model_attr)
             def wrapper(*args, **kwargs):
                 si_value, _ = model_attr(*args, **kwargs)
                 return si_value
@@ -477,6 +479,7 @@ class TimeToBreastHeightWrapper:
         if callable(attr):
             model_attr = cast(Callable[..., tuple[SiteIndexValue, float]], attr)
 
+            @wraps(model_attr)
             def wrapper(*args, **kwargs):
                 _, T13 = model_attr(*args, **kwargs)
                 return T13

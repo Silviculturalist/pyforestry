@@ -3,6 +3,9 @@ import pytest
 from pyforestry.sweden.geo.humidity.eriksson_1986 import eriksson_1986_humidity
 
 
+@pytest.mark.filterwarnings(
+    "ignore:Conversion of an array with ndim > 0 to a scalar is deprecated.*:DeprecationWarning"
+)
 def test_humidity_basic():
     assert eriksson_1986_humidity(15, 60) == 75.0
 

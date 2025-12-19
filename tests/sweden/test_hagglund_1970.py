@@ -102,26 +102,24 @@ def test_invalid_data_types_spruce_north():
 
 def test_valid_input_types_spruce_south():
     """Test Spruce S. Sweden accepts various valid input types without error."""
-    try:
-        # Test with AgeMeasurement
+    # Test with AgeMeasurement
+    with pytest.warns(UserWarning, match="Too low productivity"):
         HagglundSpruceModel.southern_sweden(
             dominant_height=DOMINANT_HEIGHT_S_SPRUCE,
             age=Age.DBH(AGE_DBH_S_SPRUCE),
             age2=Age.TOTAL(AGE_TOTAL_S_SPRUCE),
         )
-        HagglundSpruceModel.southern_sweden(
-            dominant_height=DOMINANT_HEIGHT_S_SPRUCE,
-            age=Age.TOTAL(AGE_TOTAL_S_SPRUCE),  # V2 accepts Total age
-            age2=Age.DBH(AGE_DBH_S_SPRUCE),  # V2 accepts DBH age2
-        )
-        # Test with float/int (defaults should apply)
-        HagglundSpruceModel.southern_sweden(
-            dominant_height=DOMINANT_HEIGHT_S_SPRUCE,
-            age=float(AGE_DBH_S_SPRUCE),
-            age2=float(AGE_TOTAL_S_SPRUCE),
-        )
-    except Exception as e:
-        pytest.fail(f"Spruce South: Error raised unexpectedly with valid input types: {e}")
+    HagglundSpruceModel.southern_sweden(
+        dominant_height=DOMINANT_HEIGHT_S_SPRUCE,
+        age=Age.TOTAL(AGE_TOTAL_S_SPRUCE),  # V2 accepts Total age
+        age2=Age.DBH(AGE_DBH_S_SPRUCE),  # V2 accepts DBH age2
+    )
+    # Test with float/int (defaults should apply)
+    HagglundSpruceModel.southern_sweden(
+        dominant_height=DOMINANT_HEIGHT_S_SPRUCE,
+        age=float(AGE_DBH_S_SPRUCE),
+        age2=float(AGE_TOTAL_S_SPRUCE),
+    )
 
 
 def test_invalid_data_types_spruce_south():
@@ -239,9 +237,12 @@ def test_spruce_southern_age_conversion_consistency():
     age_at_breast = 35.0
 
     # Compute using Age.TOTAL for age2.
-    si_total, T13_total = HagglundSpruceModel.southern_sweden(
-        dominant_height=dominant_height, age=Age.DBH(age_at_breast), age2=Age.TOTAL(total_age)
-    )
+    with pytest.warns(UserWarning, match="Too old stand"):
+        si_total, T13_total = HagglundSpruceModel.southern_sweden(
+            dominant_height=dominant_height,
+            age=Age.DBH(age_at_breast),
+            age2=Age.TOTAL(total_age),
+        )
     height_total = float(si_total)
 
     # Compute using DBH for age2.

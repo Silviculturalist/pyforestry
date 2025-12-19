@@ -1,3 +1,4 @@
+import warnings
 from math import isclose
 
 import pytest
@@ -59,6 +60,8 @@ from pyforestry.sweden.siteindex.johansson_2013 import (
     ],
 )
 def test_site_index_functions(fn, args, expected):
-    res = fn(*args)
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", UserWarning)
+        res = fn(*args)
     assert isclose(float(res), expected, rel_tol=1e-6)
     assert res > 0
