@@ -5,18 +5,20 @@ from pyforestry.base import helpers
 
 
 def test_top_level_lazy_imports():
-    sweden_mod = getattr(pyforestry, "sweden")
+    if "sweden" in pyforestry.__dict__:
+        del pyforestry.__dict__["sweden"]
+    sweden_mod = pyforestry.sweden
     assert sweden_mod.__name__ == "pyforestry.sweden"
-    assert getattr(pyforestry, "sweden") is sweden_mod
+    assert pyforestry.sweden is sweden_mod
 
     with pytest.raises(AttributeError):
-        getattr(pyforestry, "not_a_module")
+        _ = pyforestry.not_a_module
 
 
 def test_helpers_simulation_exports():
-    sim_setup = getattr(helpers, "SimulationSetup")
+    sim_setup = helpers.SimulationSetup
     assert sim_setup.__name__ == "SimulationSetup"
-    assert getattr(helpers, "SimulationSetup") is sim_setup
+    assert helpers.SimulationSetup is sim_setup
 
     with pytest.raises(AttributeError):
-        getattr(helpers, "not_a_helper")
+        _ = helpers.not_a_helper

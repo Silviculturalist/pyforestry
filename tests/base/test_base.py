@@ -1,6 +1,11 @@
 import pytest
 
-from pyforestry.base.helpers.primitives import Age, AgeMeasurement, SiteIndexValue
+from pyforestry.base.helpers.primitives import (
+    Age,
+    AgeMeasurement,
+    BasalAreaWeightedDiameter,
+    SiteIndexValue,
+)
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies, parse_tree_species
 from pyforestry.sweden.siteindex import eriksson_1997_height_trajectory_sweden_birch
 
@@ -37,6 +42,11 @@ def test_site_index_value_creation_set(sample_age_measurement, sample_species_se
     assert siv.reference_age == sample_age_measurement
     assert siv.species == sample_species_set  # Check the set itself
     assert siv.fn == sample_fn
+
+
+def test_bawad_rejects_negative_values():
+    with pytest.raises(ValueError):
+        BasalAreaWeightedDiameter(-1.0)
 
 
 def test_site_index_value_creation_set_multi(

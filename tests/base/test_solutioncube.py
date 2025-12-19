@@ -12,6 +12,21 @@ from pyforestry.sweden.pricelist.data.mellanskog_2013 import Mellanskog_2013_pri
 from pyforestry.sweden.taper import EdgrenNylinder1949
 
 
+class DummyPool:
+    def __init__(self, processes):
+        self.processes = processes
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        return False
+
+    def imap_unordered(self, func, tasks, chunksize=1):
+        for task in tasks:
+            yield func(task)
+
+
 @pytest.fixture(scope="module")
 def mini_cube():
     """
@@ -24,16 +39,23 @@ def mini_cube():
     height_range = (15, 15.2)  # Will compute for Height 15.0 and 15.2
 
     # This will generate a cube for just 2x2 = 4 trees.
-    cube = SolutionCube.generate(
-        pricelist_data=Mellanskog_2013_price_data,
-        taper_model=EdgrenNylinder1949,
-        species_list=species_list,
-        dbh_range=dbh_range,
-        height_range=height_range,
-        dbh_step=2,
-        height_step=0.2,
-        workers=1,  # No need for parallel processing for just 4 trees
-    )
+    from pyforestry.base.pricelist import solutioncube as sc
+
+    mp = pytest.MonkeyPatch()
+    mp.setattr(sc, "Pool", DummyPool)
+    try:
+        cube = SolutionCube.generate(
+            pricelist_data=Mellanskog_2013_price_data,
+            taper_model=EdgrenNylinder1949,
+            species_list=species_list,
+            dbh_range=dbh_range,
+            height_range=height_range,
+            dbh_step=2,
+            height_step=0.2,
+            workers=1,  # No need for parallel processing for just 4 trees
+        )
+    finally:
+        mp.undo()
     return cube
 
 
@@ -147,5 +169,39 @@ def test_lookup_handles_invalid_json():
     )
     cube = SolutionCube(ds)
     value, sections = cube.lookup("sp", 10, 1.0)
+    assert value == 0.0
+    assert sections == []
+
+
+def test_lookup_handles_keyerror():
+    """lookup should return defaults when selection fails."""
+
+    class DummyDataset:
+        attrs = {}
+
+        def sel(self, *args, **kwargs):  # noqa: D401 - test helper
+            raise KeyError("missing")
+
+    cube = SolutionCube(DummyDataset())
+    value, sections = cube.lookup("sp", 10, 1.0)
+    assert value == 0.0
+    assert sections == []
+
+
+def test_lookup_timber_pricelist_paths(monkeypatch):
+    ds = xr.Dataset(
+        {
+            "total_value": (("species", "height", "dbh"), [[[1.0]]]),
+            "solution_sections": (("species", "height", "dbh"), [[["[]"]]]),
+        },
+        coords={"species": ["sp"], "height": [1.0], "dbh": [10]},
+    )
+    cube = SolutionCube(ds)
+    value, sections = cube.lookup_timber_pricelist("sp")
+    assert value == 1.0
+    assert sections == []
+
+    monkeypatch.setattr(cube, "lookup", lambda *a, **k: (_ for _ in ()).throw(ValueError("boom")))
+    value, sections = cube.lookup_timber_pricelist("sp")
     assert value == 0.0
     assert sections == []
