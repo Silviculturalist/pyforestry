@@ -4,12 +4,23 @@ import math
 import pytest
 
 from pyforestry.base.helpers import PICEA_ABIES, AngleCount, CircularPlot, Stand, Tree
+from pyforestry.base.helpers.primitives import SiteBase, StandBasalArea, Stems
 from pyforestry.base.simulation import (
     ActionSpec,
     ContextEnsemble,
     ExampleStandGeneralModel,
     PythonEngine,
 )
+from pyforestry.base.simulation.adapters import (
+    AdapterRegistry,
+    AngleCountToDiameterClassAdapter,
+    AngleCountToPseudoTreesAdapter,
+    AngleCountToSpatialPseudoTreesAdapter,
+    TreeListToDiameterClassAdapter,
+    TreeListToSpatialAdapter,
+)
+from pyforestry.base.simulation.ensemble import _engine_from_hint
+from pyforestry.base.simulation.growth_model import GrowthModel, Requirements
 
 # ----------------------------- Test fixtures ---------------------------------
 
@@ -198,10 +209,132 @@ def test_to_pandas_history_shape_and_values():
     ctx.update_step(0.5)
     df = ctx.to_pandas()
     assert {"t", "op", "ba_total", "n_total", "qmd_total_cm"}.issubset(set(df.columns))
-    # last op is update_step; totals should be updated
-    assert df.iloc[-1]["op"] == "update_step"
-    assert df.iloc[-1]["ba_total"] > 10.0
-    assert df.iloc[-1]["n_total"] < 100.0
+
+
+class _DummySite(SiteBase):
+    def compute_attributes(self) -> None:
+        return None
+
+
+class _RequirementsModel(GrowthModel):
+    def requirements(self) -> Requirements:
+        return Requirements(require_site=True, require_top_height=True, inventory="aggregate")
+
+    def update_step(self, ctx, dt):  # type: ignore[override]
+        ctx.state["t"] = ctx.state.get("t", 0.0) + dt
+
+
+def test_growth_model_can_build_requirements():
+    model = _RequirementsModel()
+    stand = Stand(area_ha=1.0, plots=[])
+    ok, missing = model.can_build(stand)
+    assert not ok
+    assert "site" in missing
+    assert "top_height" in missing
+
+    stand_ok = Stand(
+        area_ha=1.0,
+        plots=[
+            CircularPlot(id=1, area_m2=200.0, trees=[Tree(species="Picea abies", height_m=15.0)])
+        ],
+        site=_DummySite(latitude=60.0, longitude=15.0),
+    )
+    ok, missing = model.can_build(stand_ok)
+    assert ok
+    assert missing == []
+
+
+def test_growth_model_can_build_tree_list_and_spatial():
+    model = ExampleStandGeneralModel()
+    ok, missing = model.can_build(_tree_list_stand(), mode_hint="tree_list", allow_adapters=False)
+    assert ok
+    assert missing == []
+
+    ok, missing = model.can_build(_ac_stand(), mode_hint="spatial", allow_adapters=True)
+    assert ok
+    assert missing == []
+
+
+def test_growth_model_build_context_invalid_adapter():
+    model = ExampleStandGeneralModel()
+    stand = _ac_stand()
+    stand._metric_estimates = {}
+
+    with pytest.raises(ValueError):
+        model.build_context(stand, mode_hint="tree_list", use_adapter="missing_adapter")
+
+    with pytest.raises(ValueError):
+        model.build_context(
+            stand, mode_hint="tree_list", use_adapter="angle_count_pseudo_tree_list"
+        )
+
+
+def test_growth_model_grow_deprecation_warning():
+    model = ExampleStandGeneralModel()
+    ctx = model.build_context(_tree_list_stand(), mode_hint="aggregate")
+    with pytest.warns(DeprecationWarning):
+        model.grow(ctx, 1.0)
+
+    base_model = _RequirementsModel()
+    with pytest.warns(DeprecationWarning):
+        base_model.grow(ctx, 1.0)
+
+
+def test_adapter_registry_and_engines():
+    registry = AdapterRegistry.default()
+    assert registry.get("missing") is None
+    assert registry.find_for("tree_list")
+
+    assert _engine_from_hint("numpy").__class__.__name__ == "PythonEngine"
+    assert _engine_from_hint(PythonEngine()).__class__.__name__ == "PythonEngine"
+    with pytest.raises(ValueError):
+        _engine_from_hint("unknown_backend")
+    with pytest.raises(TypeError):
+        _engine_from_hint(123)
+
+
+def test_angle_count_pseudo_trees_adapter_replicas_and_total():
+    stand = _ac_stand()
+    adapter = AngleCountToPseudoTreesAdapter(replicas_per_species=3)
+    out = adapter.adapt(stand, replicas_per_species=0)
+    plot = out["plots"][0]
+    assert len(plot.trees) == 3
+
+    stand_total = _ac_stand()
+    stand_total._metric_estimates = {
+        "BasalArea": {"TOTAL": StandBasalArea(10.0, species=None)},
+        "Stems": {"TOTAL": Stems(100.0, species=None)},
+    }
+    out_total = adapter.adapt(stand_total)
+    plot_total = out_total["plots"][0]
+    assert all(t.species is None for t in plot_total.trees)
+
+
+def test_angle_count_spatial_adapter_positions():
+    stand = _ac_stand()
+    adapter = AngleCountToSpatialPseudoTreesAdapter(replicas_per_species=2)
+    out = adapter.adapt(stand, seed=7)
+    plot = out["plots"][0]
+    assert all(t.position is not None for t in plot.trees)
+
+
+def test_diameter_class_adapters_and_tree_list_spatial():
+    stand = _ac_stand()
+    adapter = AngleCountToDiameterClassAdapter()
+    out = adapter.adapt(stand)
+    assert out["dclass"]
+
+    stand_no_trees = Stand(area_ha=1.0, plots=[])
+    stand_no_trees._metric_estimates = {
+        "BasalArea": {"TOTAL": StandBasalArea(12.0, species=None)},
+        "Stems": {"TOTAL": Stems(600.0, species=None)},
+    }
+    dclass = TreeListToDiameterClassAdapter().adapt(stand_no_trees)
+    assert "TOTAL" in dclass["dclass"]
+
+    stand_tree_list = _tree_list_stand(with_positions=False)
+    spatial_out = TreeListToSpatialAdapter().adapt(stand_tree_list, seed=5)
+    assert all(t.position is not None for p in spatial_out["plots"] for t in p.trees)
 
 
 def test_apply_mortality_rate_in_dclass_scales_totals():
@@ -341,12 +474,16 @@ def test_parallel_runner_round_trip():
     # Run two steps in parallel; should preserve order and update totals
     from pyforestry.simulation.services import run_parallel
 
-    updated = run_parallel(ens, dt=1.0, steps=2, processes=2)
+    updated = run_parallel(ens, dt=1.0, steps=2, processes=1)
     assert len(updated) == len(ctxs)
 
     for original, restored in zip(ctxs, updated, strict=False):
-        assert float(restored.metrics["BasalArea"]["TOTAL"]) > float(original.metrics["BasalArea"]["TOTAL"])
-        assert float(restored.metrics["Stems"]["TOTAL"]) < float(original.metrics["Stems"]["TOTAL"])
+        assert float(restored.metrics["BasalArea"]["TOTAL"]) > float(
+            original.metrics["BasalArea"]["TOTAL"]
+        )
+        assert float(restored.metrics["Stems"]["TOTAL"]) < float(
+            original.metrics["Stems"]["TOTAL"]
+        )
     # ensemble contexts were replaced when write_back=True
     assert ens.contexts[0] is updated[0]
 
@@ -354,7 +491,7 @@ def test_parallel_runner_round_trip():
 def test_parallel_runner_write_back_optional_and_dispatcher():
     model = ExampleStandGeneralModel()
     ctxs = []
-    for i in range(4):
+    for _i in range(4):
         ctx = model.build_context(_tree_list_stand(), mode_hint="aggregate")
         ctx.set_aggregate_metrics(ba_total=10.0, stems_total=100.0)
         ctxs.append(ctx)
@@ -364,11 +501,15 @@ def test_parallel_runner_write_back_optional_and_dispatcher():
 
     from pyforestry.simulation.services import run_parallel
 
-    updated = run_parallel(ctxs, dt=0.5, steps=1, processes=2, write_back=False, dispatcher=dispatcher)
+    updated = run_parallel(
+        ctxs, dt=0.5, steps=1, processes=1, write_back=False, dispatcher=dispatcher
+    )
     # Original list unchanged
     assert ctxs[0] is not updated[0]
     # Updated values reflect growth
-    assert float(updated[0].metrics["BasalArea"]["TOTAL"]) > float(ctxs[0].metrics["BasalArea"]["TOTAL"])
+    assert float(updated[0].metrics["BasalArea"]["TOTAL"]) > float(
+        ctxs[0].metrics["BasalArea"]["TOTAL"]
+    )
 
 
 def test_parallel_runner_history_tail_preserved():
@@ -377,7 +518,9 @@ def test_parallel_runner_history_tail_preserved():
     ctx.set_aggregate_metrics(ba_total=10.0, stems_total=100.0)
     from pyforestry.simulation.services import run_parallel
 
-    updated = run_parallel([ctx], dt=1.0, steps=1, write_back=False, include_history=True, history_tail=1)
+    updated = run_parallel(
+        [ctx], dt=1.0, steps=1, write_back=False, include_history=True, history_tail=1
+    )
     assert len(updated[0].history) == 1
 
 

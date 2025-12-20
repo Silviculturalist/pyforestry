@@ -42,6 +42,9 @@ def mock_gpd(monkeypatch):
     monkeypatch.setattr(gpd, "sjoin", fake_sjoin)
 
 
+@pytest.mark.filterwarnings(
+    "ignore:Conversion of an array with ndim > 0 to a scalar is deprecated.*:DeprecationWarning"
+)
 def test_retrieve_geo(monkeypatch, mock_gpd):
     assert RetrieveGeoCode.getDistanceToCoast(0, 0) == 0
     assert RetrieveGeoCode.getClimateCode(0, 0) == Sweden.ClimateZone.M1
@@ -53,6 +56,9 @@ def test_retrieve_geo(monkeypatch, mock_gpd):
     assert RetrieveGeoCode.getCountyCode(0, 0) is None
 
 
+@pytest.mark.filterwarnings(
+    "ignore:Conversion of an array with ndim > 0 to a scalar is deprecated.*:DeprecationWarning"
+)
 def test_eriksson_humidity(monkeypatch, mock_gpd):
     assert eriksson_1986_humidity(0, 0) == 75
     with pytest.raises(ValueError):

@@ -1,8 +1,9 @@
-# pyforestry/base/simulation/ensemble.py
+"""Batch orchestration helpers for running multiple simulation contexts."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict, List, Mapping, Optional, Sequence, Union
+from typing import Any, Dict, List, Mapping, Optional, Sequence, Union, cast
 
 import numpy as np
 
@@ -13,8 +14,13 @@ class BatchEngine:
     """Protocol for batch engines."""
 
     def grow(
-        self, model: Any, vec: Dict[str, np.ndarray], dt: float, extra=None
+        self,
+        model: Any,
+        vec: Dict[str, np.ndarray],
+        dt: float,
+        extra: Optional[Mapping[str, Any]] = None,
     ) -> Dict[str, np.ndarray]:
+        """Advance batch state vectors by ``dt`` and return updated arrays."""
         raise NotImplementedError
 
 
@@ -22,8 +28,13 @@ class PythonEngine(BatchEngine):
     """NumPy baseline."""
 
     def grow(
-        self, model: Any, vec: Dict[str, np.ndarray], dt: float, extra=None
+        self,
+        model: Any,
+        vec: Dict[str, np.ndarray],
+        dt: float,
+        extra: Optional[Mapping[str, Any]] = None,
     ) -> Dict[str, np.ndarray]:
+        """Apply the model batch step or pass through values."""
         ba = vec["ba"]
         n = vec["n"]
         fert_mask = (extra or {}).get("fert_mask", np.zeros_like(ba))
@@ -35,6 +46,7 @@ class PythonEngine(BatchEngine):
 
 
 def _optional_numba_engine() -> Optional[BatchEngine]:
+    """Return a batch engine when numba is available."""
     try:
         import numba  # noqa: F401
     except Exception:
@@ -43,6 +55,7 @@ def _optional_numba_engine() -> Optional[BatchEngine]:
 
 
 def _optional_jax_engine() -> Optional[BatchEngine]:
+    """Return a batch engine when jax is available."""
     try:
         import jax  # noqa: F401
     except Exception:
@@ -51,6 +64,7 @@ def _optional_jax_engine() -> Optional[BatchEngine]:
 
 
 def _engine_from_hint(hint: Optional[Union[str, BatchEngine]]) -> Optional[BatchEngine]:
+    """Resolve a backend hint into a batch engine instance."""
     if hint is None:
         return None
     if isinstance(hint, BatchEngine):
@@ -71,11 +85,14 @@ def _engine_from_hint(hint: Optional[Union[str, BatchEngine]]) -> Optional[Batch
 
 @dataclass
 class ContextEnsemble:
+    """Bundle multiple contexts and update them with a shared engine."""
+
     contexts: List[SimulationContext]
     model: Any
     engine: Optional[Union[BatchEngine, str]] = None
 
     def __post_init__(self) -> None:
+        """Resolve the engine hint to a concrete batch engine."""
         chosen = _engine_from_hint(self.engine)
         if chosen is None:
             chosen = _optional_jax_engine() or _optional_numba_engine() or PythonEngine()
@@ -85,9 +102,11 @@ class ContextEnsemble:
         self,
         dt: float,
         *,
-        management: Optional[Union[Mapping[str, Any], Sequence[Optional[Mapping[str, Any]]]]] = None,
+        management: Optional[
+            Union[Mapping[str, Any], Sequence[Optional[Mapping[str, Any]]]]
+        ] = None,
     ) -> None:
-        assert self.engine is not None
+        """Advance each context by ``dt`` using batch or per-context updates."""
         if management is None:
             mgmt_list: List[Optional[Mapping[str, Any]]] = [None for _ in self.contexts]
         elif isinstance(management, (list, tuple)):
@@ -95,7 +114,14 @@ class ContextEnsemble:
                 raise ValueError("management list must match the number of contexts.")
             mgmt_list = list(management)
         else:
-            mgmt_list = [management for _ in self.contexts]
+            mgmt_item = cast(Mapping[str, Any], management)
+            mgmt_list = [mgmt_item for _ in self.contexts]
+
+        engine = self.engine
+        if engine is None:
+            raise RuntimeError("Batch engine not configured.")
+        if isinstance(engine, str):  # pragma: no cover - should be resolved in __post_init__
+            raise TypeError("Engine hint was not resolved to a BatchEngine.")
 
         agg_ctxs = [
             c
@@ -106,8 +132,14 @@ class ContextEnsemble:
         for idx, c in other_ctxs:
             c.update_step(dt, management=mgmt_list[idx])
         if agg_ctxs:
-            ba = np.array([float(c.metrics["BasalArea"]["TOTAL"]) for c in agg_ctxs], dtype=float)
-            n = np.array([float(c.metrics["Stems"]["TOTAL"]) for c in agg_ctxs], dtype=float)
+            ba = np.array(
+                [float(c.metrics["BasalArea"]["TOTAL"]) for c in agg_ctxs],
+                dtype=float,
+            )
+            n = np.array(
+                [float(c.metrics["Stems"]["TOTAL"]) for c in agg_ctxs],
+                dtype=float,
+            )
             fert_mask = np.array(
                 [
                     1.0 if c.attrs.get("fertilized_remaining_years", 0.0) > 0.0 else 0.0
@@ -115,8 +147,11 @@ class ContextEnsemble:
                 ],
                 dtype=float,
             )
-            out = self.engine.grow(
-                self.model, {"ba": ba, "n": n}, dt, extra={"fert_mask": fert_mask}
+            out = engine.grow(
+                self.model,
+                {"ba": ba, "n": n},
+                dt,
+                extra={"fert_mask": fert_mask},
             )
             for i, c in enumerate(agg_ctxs):
                 c.set_aggregate_metrics(
@@ -127,15 +162,23 @@ class ContextEnsemble:
                 c._log_external_update("update_step", {"dt": dt})
 
     def grow(
-        self, dt: float, *, management: Optional[Union[Mapping[str, Any], Sequence[Optional[Mapping[str, Any]]]]] = None
+        self,
+        dt: float,
+        *,
+        management: Optional[
+            Union[Mapping[str, Any], Sequence[Optional[Mapping[str, Any]]]]
+        ] = None,
     ) -> None:  # pragma: no cover - compatibility
+        """Compatibility alias for :meth:`update_step`."""
         self.update_step(dt, management=management)
 
     def do(self, name: str, **kwargs: Any) -> None:
+        """Invoke an action across every context."""
         for c in self.contexts:
             c.do(name, **kwargs)
 
     def to_pandas(self):
+        """Return a concatenated history DataFrame for all contexts."""
         import pandas as pd
 
         return pd.concat(

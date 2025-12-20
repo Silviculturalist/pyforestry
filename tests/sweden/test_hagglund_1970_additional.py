@@ -85,20 +85,23 @@ def test_regeneration_str():
 def test_wrappers_return_values():
     ht = HeightTrajectoryWrapper(HagglundSpruceModel)
     t13w = TimeToBreastHeightWrapper(HagglundSpruceModel)
-    ht_res = ht.northern_sweden(
-        dominant_height=5.0,
-        age=Age.DBH(50),
-        age2=Age.TOTAL(60),
-        latitude=62.0,
-        culture=True,
-    )
-    t13_res = t13w.northern_sweden(
-        dominant_height=5.0,
-        age=Age.DBH(50),
-        age2=Age.TOTAL(60),
-        latitude=62.0,
-        culture=True,
-    )
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
+        ht_res = ht.northern_sweden(
+            dominant_height=5.0,
+            age=Age.DBH(50),
+            age2=Age.TOTAL(60),
+            latitude=62.0,
+            culture=True,
+        )
+        t13_res = t13w.northern_sweden(
+            dominant_height=5.0,
+            age=Age.DBH(50),
+            age2=Age.TOTAL(60),
+            latitude=62.0,
+            culture=True,
+        )
+    assert any("Too low productivity" in str(x.message) for x in w)
     assert isinstance(ht_res, SiteIndexValue)
     assert isinstance(t13_res, float)
 
@@ -154,24 +157,27 @@ def test_break_conditions_monkeypatch(monkeypatch):
 
     monkeypatch.setattr(mod, "exp", lambda x: 1.0)
     monkeypatch.setattr(mod, "log", lambda x: 0.0)
-    HagglundSpruceModel.northern_sweden(
-        dominant_height=10,
-        age=Age.TOTAL(40),
-        age2=Age.TOTAL(45),
-        latitude=62,
-        culture=True,
-    )
-    HagglundSpruceModel.southern_sweden(
-        dominant_height=10,
-        age=Age.TOTAL(40),
-        age2=Age.TOTAL(45),
-    )
-    HagglundPineModel.sweden(
-        dominant_height_m=10,
-        age=Age.TOTAL(40),
-        age2=Age.TOTAL(45),
-        regeneration=Hagglund_1970.regeneration.CULTURE,
-    )
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
+        HagglundSpruceModel.northern_sweden(
+            dominant_height=10,
+            age=Age.TOTAL(40),
+            age2=Age.TOTAL(45),
+            latitude=62,
+            culture=True,
+        )
+        HagglundSpruceModel.southern_sweden(
+            dominant_height=10,
+            age=Age.TOTAL(40),
+            age2=Age.TOTAL(45),
+        )
+        HagglundPineModel.sweden(
+            dominant_height_m=10,
+            age=Age.TOTAL(40),
+            age2=Age.TOTAL(45),
+            regeneration=Hagglund_1970.regeneration.CULTURE,
+        )
+    assert any("Too high productivity" in str(x.message) for x in w)
 
 
 def test_southern_high_productivity():
