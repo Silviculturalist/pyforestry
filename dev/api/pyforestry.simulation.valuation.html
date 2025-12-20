@@ -1,0 +1,1072 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pyforestry.simulation.valuation package &#8212; pyforestry  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/pyforestry.simulation.valuation';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pyforestry.sweden package" href="pyforestry.sweden.html" />
+    <link rel="prev" title="pyforestry.simulation.services package" href="pyforestry.simulation.services.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pyforestry  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="pyforestry.html">pyforestry package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="pyforestry.base.html">pyforestry.base package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.base.helpers.html">pyforestry.base.helpers package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.base.helpers.primitives.html">pyforestry.base.helpers.primitives package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.pricelist.html">pyforestry.base.pricelist package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.simulation.html">pyforestry.base.simulation package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.taper.html">pyforestry.base.taper package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.base.timber.html">pyforestry.base.timber package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.base.timber.timber_base.html">pyforestry.base.timber.timber_base package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.timber_bucking.html">pyforestry.base.timber_bucking package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="pyforestry.simulation.html">pyforestry.simulation package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.simulation.dp.html">pyforestry.simulation.dp package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.simulation.services.html">pyforestry.simulation.services package</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">pyforestry.simulation.valuation package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="pyforestry.sweden.html">pyforestry.sweden package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.bark.html">pyforestry.sweden.bark package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html">pyforestry.sweden.biomass package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.geo.html">pyforestry.sweden.geo package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.climate.html">pyforestry.sweden.geo.climate package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.coastline.html">pyforestry.sweden.geo.coastline package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.counties.html">pyforestry.sweden.geo.counties package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.humidity.html">pyforestry.sweden.geo.humidity package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.temperature.html">pyforestry.sweden.geo.temperature package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.helpers.html">pyforestry.sweden.helpers package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.misc.html">pyforestry.sweden.misc package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.models.html">pyforestry.sweden.models package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.pricelist.html">pyforestry.sweden.pricelist package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.pricelist.data.html">pyforestry.sweden.pricelist.data package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html">pyforestry.sweden.site package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.siteindex.html">pyforestry.sweden.siteindex package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.sis.html">pyforestry.sweden.siteindex.sis package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.translate.html">pyforestry.sweden.siteindex.translate package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.taper.html">pyforestry.sweden.taper package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.timber.html">pyforestry.sweden.timber package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.volume.html">pyforestry.sweden.volume package</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="modules.html" class="nav-link">pyforestry</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="pyforestry.html" class="nav-link">pyforestry package</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="pyforestry.simulation.html" class="nav-link">pyforestry.simulation package</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pyforestry.simulation.valuation package</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="pyforestry-simulation-valuation-package">
+<h1>pyforestry.simulation.valuation package<a class="headerlink" href="#pyforestry-simulation-valuation-package" title="Link to this heading">#</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
+</section>
+<section id="module-pyforestry.simulation.valuation.removals">
+<span id="pyforestry-simulation-valuation-removals-module"></span><h2>pyforestry.simulation.valuation.removals module<a class="headerlink" href="#module-pyforestry.simulation.valuation.removals" title="Link to this heading">#</a></h2>
+<p>Removal ledger data structures for stand valuation workflows.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.CohortRemoval">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.simulation.valuation.removals.</span></span><span class="sig-name descname"><span class="pre">CohortRemoval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species:</span> <span class="pre">~pyforestry.base.helpers.tree_species.TreeName</span> <span class="pre">|</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata:</span> <span class="pre">~typing.MutableMapping[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">~typing.Any]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trees:</span> <span class="pre">list[~pyforestry.simulation.valuation.removals.TreeRemoval]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/simulation/valuation/removals.html#CohortRemoval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.simulation.valuation.removals.CohortRemoval" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Group a collection of removed trees for a cohort.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.CohortRemoval.identifier">
+<span class="sig-name descname"><span class="pre">identifier</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pyforestry.simulation.valuation.removals.CohortRemoval.identifier" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.CohortRemoval.iter_trees">
+<span class="sig-name descname"><span class="pre">iter_trees</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyforestry.simulation.valuation.removals.TreeRemoval" title="pyforestry.simulation.valuation.removals.TreeRemoval"><span class="pre">TreeRemoval</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pyforestry/simulation/valuation/removals.html#CohortRemoval.iter_trees"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.simulation.valuation.removals.CohortRemoval.iter_trees" title="Link to this definition">#</a></dt>
+<dd><p>Yield the recorded tree removals.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.CohortRemoval.metadata">
+<span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">MutableMapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pyforestry.simulation.valuation.removals.CohortRemoval.metadata" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.CohortRemoval.record_tree">
+<span class="sig-name descname"><span class="pre">record_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree.Tree" title="pyforestry.base.helpers.tree.Tree"><span class="pre">Tree</span></a></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyforestry.simulation.valuation.removals.TreeRemoval" title="pyforestry.simulation.valuation.removals.TreeRemoval"><span class="pre">TreeRemoval</span></a></span></span><a class="reference internal" href="../_modules/pyforestry/simulation/valuation/removals.html#CohortRemoval.record_tree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.simulation.valuation.removals.CohortRemoval.record_tree" title="Link to this definition">#</a></dt>
+<dd><p>Append a tree removal to the cohort.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.CohortRemoval.total_weight">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">total_weight</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#pyforestry.simulation.valuation.removals.CohortRemoval.total_weight" title="Link to this definition">#</a></dt>
+<dd><p>Return the sum of removal weights in the cohort.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.CohortRemoval.tree_count">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tree_count</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pyforestry.simulation.valuation.removals.CohortRemoval.tree_count" title="Link to this definition">#</a></dt>
+<dd><p>Return the number of recorded tree removals.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.CohortRemoval.trees">
+<span class="sig-name descname"><span class="pre">trees</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyforestry.simulation.valuation.removals.TreeRemoval" title="pyforestry.simulation.valuation.removals.TreeRemoval"><span class="pre">TreeRemoval</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pyforestry.simulation.valuation.removals.CohortRemoval.trees" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.StandRemovalLedger">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.simulation.valuation.removals.</span></span><span class="sig-name descname"><span class="pre">StandRemovalLedger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stand_id:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata:</span> <span class="pre">~typing.MutableMapping[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">~typing.Any]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cohorts:</span> <span class="pre">~typing.MutableMapping[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">~pyforestry.simulation.valuation.removals.CohortRemoval]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/simulation/valuation/removals.html#StandRemovalLedger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.simulation.valuation.removals.StandRemovalLedger" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Top-level container aggregating removal cohorts for a stand.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.StandRemovalLedger.add_cohort">
+<span class="sig-name descname"><span class="pre">add_cohort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyforestry.simulation.valuation.removals.CohortRemoval" title="pyforestry.simulation.valuation.removals.CohortRemoval"><span class="pre">CohortRemoval</span></a></span></span><a class="reference internal" href="../_modules/pyforestry/simulation/valuation/removals.html#StandRemovalLedger.add_cohort"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.simulation.valuation.removals.StandRemovalLedger.add_cohort" title="Link to this definition">#</a></dt>
+<dd><p>Register a cohort and return it (existing cohorts are updated).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.StandRemovalLedger.cohorts">
+<span class="sig-name descname"><span class="pre">cohorts</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">MutableMapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#pyforestry.simulation.valuation.removals.CohortRemoval" title="pyforestry.simulation.valuation.removals.CohortRemoval"><span class="pre">CohortRemoval</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pyforestry.simulation.valuation.removals.StandRemovalLedger.cohorts" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.StandRemovalLedger.extend">
+<span class="sig-name descname"><span class="pre">extend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cohorts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyforestry.simulation.valuation.removals.CohortRemoval" title="pyforestry.simulation.valuation.removals.CohortRemoval"><span class="pre">CohortRemoval</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/pyforestry/simulation/valuation/removals.html#StandRemovalLedger.extend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.simulation.valuation.removals.StandRemovalLedger.extend" title="Link to this definition">#</a></dt>
+<dd><p>Merge <code class="docutils literal notranslate"><span class="pre">cohorts</span></code> into the ledger.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.StandRemovalLedger.is_empty">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_empty</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#pyforestry.simulation.valuation.removals.StandRemovalLedger.is_empty" title="Link to this definition">#</a></dt>
+<dd><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> when no tree removals are recorded.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.StandRemovalLedger.iter_cohorts">
+<span class="sig-name descname"><span class="pre">iter_cohorts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyforestry.simulation.valuation.removals.CohortRemoval" title="pyforestry.simulation.valuation.removals.CohortRemoval"><span class="pre">CohortRemoval</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pyforestry/simulation/valuation/removals.html#StandRemovalLedger.iter_cohorts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.simulation.valuation.removals.StandRemovalLedger.iter_cohorts" title="Link to this definition">#</a></dt>
+<dd><p>Yield the registered cohorts.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.StandRemovalLedger.iter_tree_removals">
+<span class="sig-name descname"><span class="pre">iter_tree_removals</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyforestry.simulation.valuation.removals.TreeRemoval" title="pyforestry.simulation.valuation.removals.TreeRemoval"><span class="pre">TreeRemoval</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pyforestry/simulation/valuation/removals.html#StandRemovalLedger.iter_tree_removals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.simulation.valuation.removals.StandRemovalLedger.iter_tree_removals" title="Link to this definition">#</a></dt>
+<dd><p>Yield tree removals across all cohorts.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.StandRemovalLedger.metadata">
+<span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">MutableMapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pyforestry.simulation.valuation.removals.StandRemovalLedger.metadata" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.StandRemovalLedger.record_tree">
+<span class="sig-name descname"><span class="pre">record_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree.Tree" title="pyforestry.base.helpers.tree.Tree"><span class="pre">Tree</span></a></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyforestry.simulation.valuation.removals.TreeRemoval" title="pyforestry.simulation.valuation.removals.TreeRemoval"><span class="pre">TreeRemoval</span></a></span></span><a class="reference internal" href="../_modules/pyforestry/simulation/valuation/removals.html#StandRemovalLedger.record_tree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.simulation.valuation.removals.StandRemovalLedger.record_tree" title="Link to this definition">#</a></dt>
+<dd><p>Record a tree removal under <code class="docutils literal notranslate"><span class="pre">identifier</span></code> and return the entry.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.StandRemovalLedger.stand_id">
+<span class="sig-name descname"><span class="pre">stand_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyforestry.simulation.valuation.removals.StandRemovalLedger.stand_id" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.StandRemovalLedger.total_weight">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">total_weight</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#pyforestry.simulation.valuation.removals.StandRemovalLedger.total_weight" title="Link to this definition">#</a></dt>
+<dd><p>Return the total removal weight across cohorts.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.StandRemovalLedger.tree_count">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tree_count</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pyforestry.simulation.valuation.removals.StandRemovalLedger.tree_count" title="Link to this definition">#</a></dt>
+<dd><p>Return the total number of tree removals.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.TreeRemoval">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.simulation.valuation.removals.</span></span><span class="sig-name descname"><span class="pre">TreeRemoval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cohort_id:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species:</span> <span class="pre">~pyforestry.base.helpers.tree_species.TreeName</span> <span class="pre">|</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree:</span> <span class="pre">~pyforestry.base.helpers.tree.Tree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight:</span> <span class="pre">float</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata:</span> <span class="pre">~typing.MutableMapping[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">~typing.Any]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/simulation/valuation/removals.html#TreeRemoval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.simulation.valuation.removals.TreeRemoval" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Record the removal of an individual (possibly weighted) tree.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.TreeRemoval.cohort_id">
+<span class="sig-name descname"><span class="pre">cohort_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pyforestry.simulation.valuation.removals.TreeRemoval.cohort_id" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.TreeRemoval.diameter_cm">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">diameter_cm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#pyforestry.simulation.valuation.removals.TreeRemoval.diameter_cm" title="Link to this definition">#</a></dt>
+<dd><p>Return the tree diameter in centimetres.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.TreeRemoval.height_m">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">height_m</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#pyforestry.simulation.valuation.removals.TreeRemoval.height_m" title="Link to this definition">#</a></dt>
+<dd><p>Return the tree height in metres.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.TreeRemoval.metadata">
+<span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">MutableMapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pyforestry.simulation.valuation.removals.TreeRemoval.metadata" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.TreeRemoval.species_name">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">species_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pyforestry.simulation.valuation.removals.TreeRemoval.species_name" title="Link to this definition">#</a></dt>
+<dd><p>Return the lower-case <code class="docutils literal notranslate"><span class="pre">&quot;genus</span> <span class="pre">species&quot;</span></code> representation.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.TreeRemoval.stump_height_m">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stump_height_m</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#pyforestry.simulation.valuation.removals.TreeRemoval.stump_height_m" title="Link to this definition">#</a></dt>
+<dd><p>Return the stump height in metres for the removal.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.TreeRemoval.to_timber">
+<span class="sig-name descname"><span class="pre">to_timber</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pyforestry.base.timber.timber_base.html#pyforestry.base.timber.timber_base.timber.Timber" title="pyforestry.base.timber.timber_base.timber.Timber"><span class="pre">Timber</span></a></span></span><a class="reference internal" href="../_modules/pyforestry/simulation/valuation/removals.html#TreeRemoval.to_timber"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.simulation.valuation.removals.TreeRemoval.to_timber" title="Link to this definition">#</a></dt>
+<dd><p>Convert the removal into a <code class="xref py py-class docutils literal notranslate"><span class="pre">Timber</span></code>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.TreeRemoval.tree">
+<span class="sig-name descname"><span class="pre">tree</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree.Tree" title="pyforestry.base.helpers.tree.Tree"><span class="pre">Tree</span></a></em><a class="headerlink" href="#pyforestry.simulation.valuation.removals.TreeRemoval.tree" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.TreeRemoval.weight">
+<span class="sig-name descname"><span class="pre">weight</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyforestry.simulation.valuation.removals.TreeRemoval.weight" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-pyforestry.simulation.valuation.volume">
+<span id="pyforestry-simulation-valuation-volume-module"></span><h2>pyforestry.simulation.valuation.volume module<a class="headerlink" href="#module-pyforestry.simulation.valuation.volume" title="Link to this heading">#</a></h2>
+<p>Volume conversion utilities for valuation workflows.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.EmptyVolumeDescriptor">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.simulation.valuation.volume.</span></span><span class="sig-name descname"><span class="pre">EmptyVolumeDescriptor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ledger:</span> <span class="pre">~pyforestry.simulation.valuation.removals.StandRemovalLedger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata:</span> <span class="pre">~typing.MutableMapping[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">~typing.Any]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'empty'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/simulation/valuation/volume.html#EmptyVolumeDescriptor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.simulation.valuation.volume.EmptyVolumeDescriptor" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyforestry.simulation.valuation.volume.VolumeDescriptor" title="pyforestry.simulation.valuation.volume.VolumeDescriptor"><code class="xref py py-class docutils literal notranslate"><span class="pre">VolumeDescriptor</span></code></a></p>
+<p>Descriptor used when no removals are present.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.EmptyVolumeDescriptor.evaluate">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyforestry.simulation.valuation.volume.VolumeResult" title="pyforestry.simulation.valuation.volume.VolumeResult"><span class="pre">VolumeResult</span></a></span></span><a class="reference internal" href="../_modules/pyforestry/simulation/valuation/volume.html#EmptyVolumeDescriptor.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.simulation.valuation.volume.EmptyVolumeDescriptor.evaluate" title="Link to this definition">#</a></dt>
+<dd><p>Return an empty result tagged with the reason for emptiness.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.EmptyVolumeDescriptor.reason">
+<span class="sig-name descname"><span class="pre">reason</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'empty'</span></em><a class="headerlink" href="#pyforestry.simulation.valuation.volume.EmptyVolumeDescriptor.reason" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.PieceRecord">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.simulation.valuation.volume.</span></span><span class="sig-name descname"><span class="pre">PieceRecord</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cohort_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quality</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.bucking.QualityType" title="pyforestry.base.helpers.bucking.QualityType"><span class="pre">QualityType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">length_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_diameter_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume_m3</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/simulation/valuation/volume.html#PieceRecord"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.simulation.valuation.volume.PieceRecord" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Representation of one bucked piece aggregated across identical trees.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.PieceRecord.as_mapping">
+<span class="sig-name descname"><span class="pre">as_mapping</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pyforestry/simulation/valuation/volume.html#PieceRecord.as_mapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.simulation.valuation.volume.PieceRecord.as_mapping" title="Link to this definition">#</a></dt>
+<dd><p>Return a plain mapping useful for serialisation.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.PieceRecord.cohort_id">
+<span class="sig-name descname"><span class="pre">cohort_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pyforestry.simulation.valuation.volume.PieceRecord.cohort_id" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.PieceRecord.length_m">
+<span class="sig-name descname"><span class="pre">length_m</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#pyforestry.simulation.valuation.volume.PieceRecord.length_m" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.PieceRecord.quality">
+<span class="sig-name descname"><span class="pre">quality</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.bucking.QualityType" title="pyforestry.base.helpers.bucking.QualityType"><span class="pre">QualityType</span></a></em><a class="headerlink" href="#pyforestry.simulation.valuation.volume.PieceRecord.quality" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.PieceRecord.top_diameter_cm">
+<span class="sig-name descname"><span class="pre">top_diameter_cm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#pyforestry.simulation.valuation.volume.PieceRecord.top_diameter_cm" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.PieceRecord.value">
+<span class="sig-name descname"><span class="pre">value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#pyforestry.simulation.valuation.volume.PieceRecord.value" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.PieceRecord.volume_m3">
+<span class="sig-name descname"><span class="pre">volume_m3</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#pyforestry.simulation.valuation.volume.PieceRecord.volume_m3" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.PieceRecord.weight">
+<span class="sig-name descname"><span class="pre">weight</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#pyforestry.simulation.valuation.volume.PieceRecord.weight" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.TreeVolumeDescriptor">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.simulation.valuation.volume.</span></span><span class="sig-name descname"><span class="pre">TreeVolumeDescriptor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">*,</span> <span class="pre">ledger:</span> <span class="pre">~pyforestry.simulation.valuation.removals.StandRemovalLedger,</span> <span class="pre">metadata:</span> <span class="pre">~typing.MutableMapping[str,</span> <span class="pre">~typing.Any]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;,</span> <span class="pre">removals:</span> <span class="pre">~typing.Tuple[~pyforestry.simulation.valuation.removals.TreeRemoval,</span> <span class="pre">...],</span> <span class="pre">pricelist:</span> <span class="pre">~pyforestry.base.pricelist.pricelist.Pricelist,</span> <span class="pre">taper_class:</span> <span class="pre">~typing.Type[~pyforestry.base.taper.taper.Taper],</span> <span class="pre">bucking_config:</span> <span class="pre">~pyforestry.base.helpers.bucking.BuckingConfig</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;,</span> <span class="pre">bucker_cls:</span> <span class="pre">~typing.Type[~pyforestry.base.timber_bucking.nasberg_1985.Nasberg_1985_BranchBound]</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'pyforestry.base.timber_bucking.nasberg_1985.Nasberg_1985_BranchBound'&gt;,</span> <span class="pre">min_diam_dead_wood:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/simulation/valuation/volume.html#TreeVolumeDescriptor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.simulation.valuation.volume.TreeVolumeDescriptor" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyforestry.simulation.valuation.volume.VolumeDescriptor" title="pyforestry.simulation.valuation.volume.VolumeDescriptor"><code class="xref py py-class docutils literal notranslate"><span class="pre">VolumeDescriptor</span></code></a></p>
+<p>Descriptor based on individual tree removals.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.TreeVolumeDescriptor.bucking_config">
+<span class="sig-name descname"><span class="pre">bucking_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.bucking.BuckingConfig" title="pyforestry.base.helpers.bucking.BuckingConfig"><span class="pre">BuckingConfig</span></a></em><a class="headerlink" href="#pyforestry.simulation.valuation.volume.TreeVolumeDescriptor.bucking_config" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.TreeVolumeDescriptor.evaluate">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyforestry.simulation.valuation.volume.VolumeResult" title="pyforestry.simulation.valuation.volume.VolumeResult"><span class="pre">VolumeResult</span></a></span></span><a class="reference internal" href="../_modules/pyforestry/simulation/valuation/volume.html#TreeVolumeDescriptor.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.simulation.valuation.volume.TreeVolumeDescriptor.evaluate" title="Link to this definition">#</a></dt>
+<dd><p>Run bucking and valuation over the recorded tree removals.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.TreeVolumeDescriptor.min_diam_dead_wood">
+<span class="sig-name descname"><span class="pre">min_diam_dead_wood</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></em><a class="headerlink" href="#pyforestry.simulation.valuation.volume.TreeVolumeDescriptor.min_diam_dead_wood" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.TreeVolumeDescriptor.pricelist">
+<span class="sig-name descname"><span class="pre">pricelist</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.pricelist.html#pyforestry.base.pricelist.pricelist.Pricelist" title="pyforestry.base.pricelist.pricelist.Pricelist"><span class="pre">Pricelist</span></a></em><a class="headerlink" href="#pyforestry.simulation.valuation.volume.TreeVolumeDescriptor.pricelist" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.TreeVolumeDescriptor.removals">
+<span class="sig-name descname"><span class="pre">removals</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyforestry.simulation.valuation.removals.TreeRemoval" title="pyforestry.simulation.valuation.removals.TreeRemoval"><span class="pre">TreeRemoval</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pyforestry.simulation.valuation.volume.TreeVolumeDescriptor.removals" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.TreeVolumeDescriptor.taper_class">
+<span class="sig-name descname"><span class="pre">taper_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyforestry.base.taper.html#pyforestry.base.taper.taper.Taper" title="pyforestry.base.taper.taper.Taper"><span class="pre">Taper</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pyforestry.simulation.valuation.volume.TreeVolumeDescriptor.taper_class" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.VolumeConnector">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.simulation.valuation.volume.</span></span><span class="sig-name descname"><span class="pre">VolumeConnector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">bucker_cls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyforestry.base.timber_bucking.html#pyforestry.base.timber_bucking.nasberg_1985.Nasberg_1985_BranchBound" title="pyforestry.base.timber_bucking.nasberg_1985.Nasberg_1985_BranchBound"><span class="pre">Nasberg_1985_BranchBound</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/simulation/valuation/volume.html#VolumeConnector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.simulation.valuation.volume.VolumeConnector" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Resolve removal ledgers into volume descriptors and valuation results.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.VolumeConnector.connect">
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_view</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ledger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyforestry.simulation.valuation.removals.StandRemovalLedger" title="pyforestry.simulation.valuation.removals.StandRemovalLedger"><span class="pre">StandRemovalLedger</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyforestry.simulation.valuation.volume.VolumeResult" title="pyforestry.simulation.valuation.volume.VolumeResult"><span class="pre">VolumeResult</span></a></span></span><a class="reference internal" href="../_modules/pyforestry/simulation/valuation/volume.html#VolumeConnector.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.simulation.valuation.volume.VolumeConnector.connect" title="Link to this definition">#</a></dt>
+<dd><p>Return the evaluated volume result for <code class="docutils literal notranslate"><span class="pre">ledger</span></code> and <code class="docutils literal notranslate"><span class="pre">model_view</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.VolumeConnector.describe">
+<span class="sig-name descname"><span class="pre">describe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_view</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ledger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyforestry.simulation.valuation.removals.StandRemovalLedger" title="pyforestry.simulation.valuation.removals.StandRemovalLedger"><span class="pre">StandRemovalLedger</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyforestry.simulation.valuation.volume.VolumeDescriptor" title="pyforestry.simulation.valuation.volume.VolumeDescriptor"><span class="pre">VolumeDescriptor</span></a></span></span><a class="reference internal" href="../_modules/pyforestry/simulation/valuation/volume.html#VolumeConnector.describe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.simulation.valuation.volume.VolumeConnector.describe" title="Link to this definition">#</a></dt>
+<dd><p>Return the descriptor describing <code class="docutils literal notranslate"><span class="pre">ledger</span></code> for <code class="docutils literal notranslate"><span class="pre">model_view</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.VolumeDescriptor">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.simulation.valuation.volume.</span></span><span class="sig-name descname"><span class="pre">VolumeDescriptor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ledger:</span> <span class="pre">~pyforestry.simulation.valuation.removals.StandRemovalLedger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata:</span> <span class="pre">~typing.MutableMapping[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">~typing.Any]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/simulation/valuation/volume.html#VolumeDescriptor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.simulation.valuation.volume.VolumeDescriptor" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base descriptor for conversion inputs.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.VolumeDescriptor.evaluate">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyforestry.simulation.valuation.volume.VolumeResult" title="pyforestry.simulation.valuation.volume.VolumeResult"><span class="pre">VolumeResult</span></a></span></span><a class="reference internal" href="../_modules/pyforestry/simulation/valuation/volume.html#VolumeDescriptor.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.simulation.valuation.volume.VolumeDescriptor.evaluate" title="Link to this definition">#</a></dt>
+<dd><p>Return an empty result for descriptors that cannot produce volume.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.VolumeDescriptor.ledger">
+<span class="sig-name descname"><span class="pre">ledger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pyforestry.simulation.valuation.removals.StandRemovalLedger" title="pyforestry.simulation.valuation.removals.StandRemovalLedger"><span class="pre">StandRemovalLedger</span></a></em><a class="headerlink" href="#pyforestry.simulation.valuation.volume.VolumeDescriptor.ledger" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.VolumeDescriptor.metadata">
+<span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">MutableMapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pyforestry.simulation.valuation.volume.VolumeDescriptor.metadata" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.VolumeResult">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.simulation.valuation.volume.</span></span><span class="sig-name descname"><span class="pre">VolumeResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">descriptor:</span> <span class="pre">~pyforestry.simulation.valuation.volume.VolumeDescriptor,</span> <span class="pre">pieces:</span> <span class="pre">~typing.Tuple[~pyforestry.simulation.valuation.volume.PieceRecord,</span> <span class="pre">...],</span> <span class="pre">total_value:</span> <span class="pre">float,</span> <span class="pre">volume_by_quality:</span> <span class="pre">~typing.Mapping[~pyforestry.base.helpers.bucking.QualityType,</span> <span class="pre">float],</span> <span class="pre">metadata:</span> <span class="pre">~typing.Mapping[str,</span> <span class="pre">~typing.Any]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/simulation/valuation/volume.html#VolumeResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.simulation.valuation.volume.VolumeResult" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Container describing the outcome of a valuation conversion.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.VolumeResult.descriptor">
+<span class="sig-name descname"><span class="pre">descriptor</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pyforestry.simulation.valuation.volume.VolumeDescriptor" title="pyforestry.simulation.valuation.volume.VolumeDescriptor"><span class="pre">VolumeDescriptor</span></a></em><a class="headerlink" href="#pyforestry.simulation.valuation.volume.VolumeResult.descriptor" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.VolumeResult.metadata">
+<span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pyforestry.simulation.valuation.volume.VolumeResult.metadata" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.VolumeResult.pieces">
+<span class="sig-name descname"><span class="pre">pieces</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyforestry.simulation.valuation.volume.PieceRecord" title="pyforestry.simulation.valuation.volume.PieceRecord"><span class="pre">PieceRecord</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pyforestry.simulation.valuation.volume.VolumeResult.pieces" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.VolumeResult.total_value">
+<span class="sig-name descname"><span class="pre">total_value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#pyforestry.simulation.valuation.volume.VolumeResult.total_value" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.VolumeResult.total_volume">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">total_volume</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#pyforestry.simulation.valuation.volume.VolumeResult.total_volume" title="Link to this definition">#</a></dt>
+<dd><p>Return the total merchantable volume (m³).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.volume.VolumeResult.volume_by_quality">
+<span class="sig-name descname"><span class="pre">volume_by_quality</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.bucking.QualityType" title="pyforestry.base.helpers.bucking.QualityType"><span class="pre">QualityType</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pyforestry.simulation.valuation.volume.VolumeResult.volume_by_quality" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-pyforestry.simulation.valuation">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pyforestry.simulation.valuation" title="Link to this heading">#</a></h2>
+<p>Valuation helpers for converting removals into marketable products.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="pyforestry.simulation.services.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">pyforestry.simulation.services package</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="pyforestry.sweden.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">pyforestry.sweden package</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.simulation.valuation.removals">pyforestry.simulation.valuation.removals module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.CohortRemoval"><code class="docutils literal notranslate"><span class="pre">CohortRemoval</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.CohortRemoval.identifier"><code class="docutils literal notranslate"><span class="pre">CohortRemoval.identifier</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.CohortRemoval.iter_trees"><code class="docutils literal notranslate"><span class="pre">CohortRemoval.iter_trees()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.CohortRemoval.metadata"><code class="docutils literal notranslate"><span class="pre">CohortRemoval.metadata</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.CohortRemoval.record_tree"><code class="docutils literal notranslate"><span class="pre">CohortRemoval.record_tree()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.CohortRemoval.total_weight"><code class="docutils literal notranslate"><span class="pre">CohortRemoval.total_weight</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.CohortRemoval.tree_count"><code class="docutils literal notranslate"><span class="pre">CohortRemoval.tree_count</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.CohortRemoval.trees"><code class="docutils literal notranslate"><span class="pre">CohortRemoval.trees</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.StandRemovalLedger"><code class="docutils literal notranslate"><span class="pre">StandRemovalLedger</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.StandRemovalLedger.add_cohort"><code class="docutils literal notranslate"><span class="pre">StandRemovalLedger.add_cohort()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.StandRemovalLedger.cohorts"><code class="docutils literal notranslate"><span class="pre">StandRemovalLedger.cohorts</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.StandRemovalLedger.extend"><code class="docutils literal notranslate"><span class="pre">StandRemovalLedger.extend()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.StandRemovalLedger.is_empty"><code class="docutils literal notranslate"><span class="pre">StandRemovalLedger.is_empty</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.StandRemovalLedger.iter_cohorts"><code class="docutils literal notranslate"><span class="pre">StandRemovalLedger.iter_cohorts()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.StandRemovalLedger.iter_tree_removals"><code class="docutils literal notranslate"><span class="pre">StandRemovalLedger.iter_tree_removals()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.StandRemovalLedger.metadata"><code class="docutils literal notranslate"><span class="pre">StandRemovalLedger.metadata</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.StandRemovalLedger.record_tree"><code class="docutils literal notranslate"><span class="pre">StandRemovalLedger.record_tree()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.StandRemovalLedger.stand_id"><code class="docutils literal notranslate"><span class="pre">StandRemovalLedger.stand_id</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.StandRemovalLedger.total_weight"><code class="docutils literal notranslate"><span class="pre">StandRemovalLedger.total_weight</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.StandRemovalLedger.tree_count"><code class="docutils literal notranslate"><span class="pre">StandRemovalLedger.tree_count</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.TreeRemoval"><code class="docutils literal notranslate"><span class="pre">TreeRemoval</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.TreeRemoval.cohort_id"><code class="docutils literal notranslate"><span class="pre">TreeRemoval.cohort_id</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.TreeRemoval.diameter_cm"><code class="docutils literal notranslate"><span class="pre">TreeRemoval.diameter_cm</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.TreeRemoval.height_m"><code class="docutils literal notranslate"><span class="pre">TreeRemoval.height_m</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.TreeRemoval.metadata"><code class="docutils literal notranslate"><span class="pre">TreeRemoval.metadata</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.TreeRemoval.species_name"><code class="docutils literal notranslate"><span class="pre">TreeRemoval.species_name</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.TreeRemoval.stump_height_m"><code class="docutils literal notranslate"><span class="pre">TreeRemoval.stump_height_m</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.TreeRemoval.to_timber"><code class="docutils literal notranslate"><span class="pre">TreeRemoval.to_timber()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.TreeRemoval.tree"><code class="docutils literal notranslate"><span class="pre">TreeRemoval.tree</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.TreeRemoval.weight"><code class="docutils literal notranslate"><span class="pre">TreeRemoval.weight</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.simulation.valuation.volume">pyforestry.simulation.valuation.volume module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.EmptyVolumeDescriptor"><code class="docutils literal notranslate"><span class="pre">EmptyVolumeDescriptor</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.EmptyVolumeDescriptor.evaluate"><code class="docutils literal notranslate"><span class="pre">EmptyVolumeDescriptor.evaluate()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.EmptyVolumeDescriptor.reason"><code class="docutils literal notranslate"><span class="pre">EmptyVolumeDescriptor.reason</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.PieceRecord"><code class="docutils literal notranslate"><span class="pre">PieceRecord</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.PieceRecord.as_mapping"><code class="docutils literal notranslate"><span class="pre">PieceRecord.as_mapping()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.PieceRecord.cohort_id"><code class="docutils literal notranslate"><span class="pre">PieceRecord.cohort_id</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.PieceRecord.length_m"><code class="docutils literal notranslate"><span class="pre">PieceRecord.length_m</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.PieceRecord.quality"><code class="docutils literal notranslate"><span class="pre">PieceRecord.quality</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.PieceRecord.top_diameter_cm"><code class="docutils literal notranslate"><span class="pre">PieceRecord.top_diameter_cm</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.PieceRecord.value"><code class="docutils literal notranslate"><span class="pre">PieceRecord.value</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.PieceRecord.volume_m3"><code class="docutils literal notranslate"><span class="pre">PieceRecord.volume_m3</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.PieceRecord.weight"><code class="docutils literal notranslate"><span class="pre">PieceRecord.weight</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.TreeVolumeDescriptor"><code class="docutils literal notranslate"><span class="pre">TreeVolumeDescriptor</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.TreeVolumeDescriptor.bucking_config"><code class="docutils literal notranslate"><span class="pre">TreeVolumeDescriptor.bucking_config</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.TreeVolumeDescriptor.evaluate"><code class="docutils literal notranslate"><span class="pre">TreeVolumeDescriptor.evaluate()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.TreeVolumeDescriptor.min_diam_dead_wood"><code class="docutils literal notranslate"><span class="pre">TreeVolumeDescriptor.min_diam_dead_wood</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.TreeVolumeDescriptor.pricelist"><code class="docutils literal notranslate"><span class="pre">TreeVolumeDescriptor.pricelist</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.TreeVolumeDescriptor.removals"><code class="docutils literal notranslate"><span class="pre">TreeVolumeDescriptor.removals</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.TreeVolumeDescriptor.taper_class"><code class="docutils literal notranslate"><span class="pre">TreeVolumeDescriptor.taper_class</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.VolumeConnector"><code class="docutils literal notranslate"><span class="pre">VolumeConnector</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.VolumeConnector.connect"><code class="docutils literal notranslate"><span class="pre">VolumeConnector.connect()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.VolumeConnector.describe"><code class="docutils literal notranslate"><span class="pre">VolumeConnector.describe()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.VolumeDescriptor"><code class="docutils literal notranslate"><span class="pre">VolumeDescriptor</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.VolumeDescriptor.evaluate"><code class="docutils literal notranslate"><span class="pre">VolumeDescriptor.evaluate()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.VolumeDescriptor.ledger"><code class="docutils literal notranslate"><span class="pre">VolumeDescriptor.ledger</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.VolumeDescriptor.metadata"><code class="docutils literal notranslate"><span class="pre">VolumeDescriptor.metadata</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.VolumeResult"><code class="docutils literal notranslate"><span class="pre">VolumeResult</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.VolumeResult.descriptor"><code class="docutils literal notranslate"><span class="pre">VolumeResult.descriptor</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.VolumeResult.metadata"><code class="docutils literal notranslate"><span class="pre">VolumeResult.metadata</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.VolumeResult.pieces"><code class="docutils literal notranslate"><span class="pre">VolumeResult.pieces</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.VolumeResult.total_value"><code class="docutils literal notranslate"><span class="pre">VolumeResult.total_value</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.VolumeResult.total_volume"><code class="docutils literal notranslate"><span class="pre">VolumeResult.total_volume</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.volume.VolumeResult.volume_by_quality"><code class="docutils literal notranslate"><span class="pre">VolumeResult.volume_by_quality</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.simulation.valuation">Module contents</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/pyforestry.simulation.valuation.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

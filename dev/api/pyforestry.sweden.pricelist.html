@@ -132,6 +132,13 @@
 <nav>
   <ul class="bd-navbar-elements navbar-nav">
     
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
 <li class="nav-item current active">
   <a class="nav-link nav-internal" href="modules.html">
     pyforestry
@@ -159,13 +166,6 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../notebooks/stand_site_enum_demo.html">
-    Stand metrics and site enums
-  </a>
-</li>
-
             <li class="nav-item dropdown">
                 <button class="btn dropdown-toggle nav-item" type="button"
                 data-bs-toggle="dropdown" aria-expanded="false"
@@ -174,6 +174,13 @@
                 </button>
                 <ul id="pst-nav-more-links" class="dropdown-menu">
                     
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
 <li class=" ">
   <a class="nav-link dropdown-item nav-internal" href="../notebooks/marklund_swetimber_demo.html">
     Marklund biomass with SweTimber
@@ -276,6 +283,13 @@
 <nav>
   <ul class="bd-navbar-elements navbar-nav">
     
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
 <li class="nav-item current active">
   <a class="nav-link nav-internal" href="modules.html">
     pyforestry
@@ -372,12 +386,19 @@
 </ul>
 </details></li>
 <li class="toctree-l3"><a class="reference internal" href="pyforestry.base.pricelist.html">pyforestry.base.pricelist package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.simulation.html">pyforestry.base.simulation package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyforestry.base.taper.html">pyforestry.base.taper package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.base.timber.html">pyforestry.base.timber package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="pyforestry.base.timber.timber_base.html">pyforestry.base.timber.timber_base package</a></li>
 </ul>
 </details></li>
 <li class="toctree-l3"><a class="reference internal" href="pyforestry.base.timber_bucking.html">pyforestry.base.timber_bucking package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="pyforestry.simulation.html">pyforestry.simulation package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.simulation.dp.html">pyforestry.simulation.dp package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.simulation.services.html">pyforestry.simulation.services package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.simulation.valuation.html">pyforestry.simulation.valuation package</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="pyforestry.sweden.html">pyforestry.sweden package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -495,45 +516,6 @@
 <section id="module-pyforestry.sweden.pricelist">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pyforestry.sweden.pricelist" title="Link to this heading">#</a></h2>
 <p>Swedish pricelist re-exports for convenience.</p>
-<dl class="py class">
-<dt class="sig sig-object py" id="pyforestry.sweden.pricelist.Pricelist">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.pricelist.</span></span><span class="sig-name descname"><span class="pre">Pricelist</span></span><a class="reference internal" href="../_modules/pyforestry/base/pricelist/pricelist.html#Pricelist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.pricelist.Pricelist" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Holds the combined pulpwood, timber, etc. prices and constraints.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="pyforestry.sweden.pricelist.Pricelist.load_from_dict">
-<span class="sig-name descname"><span class="pre">load_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">price_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/base/pricelist/pricelist.html#Pricelist.load_from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.pricelist.Pricelist.load_from_dict" title="Link to this definition">#</a></dt>
-<dd><p>Loads and configures the entire pricelist from a dictionary.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyforestry.sweden.pricelist.create_pricelist_from_data">
-<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.pricelist.</span></span><span class="sig-name descname"><span class="pre">create_pricelist_from_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">price_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species_to_load</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pyforestry.base.pricelist.html#pyforestry.base.pricelist.pricelist.Pricelist" title="pyforestry.base.pricelist.pricelist.Pricelist"><span class="pre">Pricelist</span></a></span></span><a class="reference internal" href="../_modules/pyforestry/base/pricelist/pricelist.html#create_pricelist_from_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.pricelist.create_pricelist_from_data" title="Link to this definition">#</a></dt>
-<dd><p>Build a <cite>Pricelist</cite> from a dictionary.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>price_data</strong> (<em>dict</em>) – The complete price dictionary (must contain the ‘Common’ block).</p></li>
-<li><p><strong>species_to_load</strong> (<em>str</em><em> | </em><em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em><em>, </em><em>default None</em>) – <ul>
-<li><p><strong>None</strong>  - load <em>all</em> species that have timber price tables.</p></li>
-<li><p><strong>str</strong>   - load just that species.</p></li>
-<li><p><strong>iterable</strong> - load every species in the iterable; it is <em>not</em>
-an error if some of them have only pulp prices.</p></li>
-</ul>
-</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A fully populated <cite>Pricelist</cite> instance.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#pyforestry.sweden.pricelist.Pricelist" title="pyforestry.sweden.pricelist.Pricelist">Pricelist</a></p>
-</dd>
-</dl>
-</dd></dl>
-
 </section>
 </section>
 
@@ -585,14 +567,7 @@ an error if some of them have only pulp prices.</p></li>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#subpackages">Subpackages</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.sweden.pricelist">Module contents</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.pricelist.Pricelist"><code class="docutils literal notranslate"><span class="pre">Pricelist</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.pricelist.Pricelist.load_from_dict"><code class="docutils literal notranslate"><span class="pre">Pricelist.load_from_dict()</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.pricelist.create_pricelist_from_data"><code class="docutils literal notranslate"><span class="pre">create_pricelist_from_data()</span></code></a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.sweden.pricelist">Module contents</a></li>
 </ul>
   </nav></div>
 
@@ -629,7 +604,7 @@ an error if some of them have only pulp prices.</p></li>
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     <br/>
   </p>
 </div>
