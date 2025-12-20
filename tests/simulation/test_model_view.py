@@ -63,6 +63,15 @@ def test_stand_metric_view_rejects_empty_stand():
         StandMetricView(Stand(plots=[]))
 
 
+def test_stand_metric_view_total_and_plot_type_error(demo_stand):
+    view = StandMetricView(demo_stand)
+    assert view.total("BasalArea") > 0
+
+    demo_stand.plots = [object()]  # type: ignore[assignment]
+    with pytest.raises(TypeError):
+        StandMetricView(demo_stand)
+
+
 def test_inventory_view_iteration(demo_stand):
     """InventoryView should iterate plots and trees in declaration order."""
 
@@ -86,10 +95,23 @@ def test_inventory_view_requires_plots():
         InventoryView(Stand(plots=[]))
 
 
+def test_inventory_view_plot_type_and_tree_none():
+    stand = Stand(plots=[CircularPlot(id=1, radius_m=5.0, trees=[])])
+    stand.plots = [object()]  # type: ignore[assignment]
+    with pytest.raises(TypeError):
+        InventoryView(stand)
+
+    bad_plot = CircularPlot(id=2, radius_m=5.0, trees=[])
+    bad_plot.trees = None
+    with pytest.raises(ValueError):
+        InventoryView(Stand(plots=[bad_plot]))
+
+
 def test_spatial_tree_view_coordinates():
     """SpatialTreeView should expose position, species and weight metadata."""
 
     tree = Tree(position=Position(100.0, 200.0, 10.0), species="picea abies", weight_n=3)
+    tree.species = "picea abies"
     view = SpatialTreeView(tree)
 
     assert view.requires_stand_metrics is False
@@ -102,9 +124,25 @@ def test_spatial_tree_view_coordinates():
     assert math.isclose(view.weight, 3.0)
 
 
+def test_spatial_tree_view_species_tree_name():
+    tree = Tree(position=Position(5.0, 6.0), species=parse_tree_species("picea abies"))
+    view = SpatialTreeView(tree)
+    assert view.species == tree.species
+
+
 def test_spatial_tree_view_requires_position():
     """Trees without spatial positions should be rejected by the view."""
 
     tree = Tree(species="picea abies", weight_n=1.0)
     with pytest.raises(ValueError):
         SpatialTreeView(tree)
+
+
+def test_spatial_tree_view_weight_and_species_none():
+    tree = Tree(position=Position(1.0, 2.0), species=None, weight_n=0.0)
+    with pytest.raises(ValueError):
+        SpatialTreeView(tree)
+
+    tree_ok = Tree(position=Position(1.0, 2.0), species=None, weight_n=1.0)
+    view = SpatialTreeView(tree_ok)
+    assert view.species is None

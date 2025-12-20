@@ -1,3 +1,4 @@
+import warnings
 from decimal import Decimal
 
 import pytest
@@ -52,10 +53,12 @@ INVALID_AGE2_CASES = [
 
 @pytest.mark.parametrize("fn,agecls,bad", INVALID_TYPE_CASES)
 def test_invalid_type_inputs(fn, agecls, bad):
-    with pytest.raises(TypeError):
-        fn(10.0, bad, agecls(20))
-    with pytest.raises(TypeError):
-        fn(10.0, agecls(20), bad)
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", UserWarning)
+        with pytest.raises(TypeError):
+            fn(10.0, bad, agecls(20))
+        with pytest.raises(TypeError):
+            fn(10.0, agecls(20), bad)
 
 
 @pytest.mark.parametrize("fn,agecls,wrongcls", INVALID_AGE2_CASES)

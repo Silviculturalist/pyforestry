@@ -44,6 +44,11 @@ def test_missing_cohort_identifier_raises():
         TreeRemoval(cohort_id="", species="Picea abies", tree=tree)
 
 
+def test_cohort_removal_requires_identifier():
+    with pytest.raises(ValueError, match="identifier"):
+        CohortRemoval(identifier="", species="Picea abies")
+
+
 def test_tree_removal_requires_tree_instance():
     with pytest.raises(TypeError, match="TreeRemoval expects a Tree"):
         TreeRemoval(cohort_id="cohort", species="Picea abies", tree=object())

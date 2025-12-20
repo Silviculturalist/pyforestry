@@ -1,4 +1,4 @@
-"""Simulation context, action handling, and metric helpers for base models."""
+"""Core simulation context, actions, and metric utilities."""
 
 from __future__ import annotations
 
@@ -102,7 +102,7 @@ class SimulationContext:
         model: Any,
         initial_attrs: Optional[Dict[str, Any]] = None,
     ) -> None:
-        """Initialize a simulation context from inventory and model state."""
+        """Initialize a simulation context with inventory and initial state."""
         if mode not in ("spatial", "tree_list", "diameter_class", "aggregate"):
             raise ValueError("mode must be 'spatial','tree_list','diameter_class', or 'aggregate'")
         self.mode = mode
@@ -152,7 +152,7 @@ class SimulationContext:
         def _phase_actions(
             phase: str, actions: Iterable[Union[str, tuple[str, Mapping[str, Any]]]]
         ):
-            """Execute action specs registered for a management phase."""
+            """Dispatch phase-specific actions by name and parameters."""
             for item in actions:
                 if isinstance(item, tuple):
                     name, params = item
@@ -204,7 +204,7 @@ class SimulationContext:
         )
 
     def grow(self, years: float, **kwargs: Any) -> None:  # pragma: no cover - compatibility alias
-        """Backward-compatible alias for :meth:`update_step`."""
+        """Compatibility alias for :meth:`update_step`."""
         warnings.warn(
             "SimulationContext.grow is deprecated; use update_step instead.",
             DeprecationWarning,
@@ -213,7 +213,7 @@ class SimulationContext:
         self.update_step(years, **kwargs)
 
     def do(self, action: str, *, phase: Optional[str] = None, **kwargs: Any) -> None:
-        """Execute a model action, enforcing mode and phase constraints."""
+        """Execute a named action with optional phase gating."""
         actions = self.model.available_actions()
         if action not in actions:
             raise KeyError(f"Action '{action}' not available for this model.")
@@ -242,7 +242,7 @@ class SimulationContext:
         self._append_history(f"action:{action}", {"params": kwargs, "phase": phase}, pre, post)
 
     def snapshot(self) -> Dict[str, Any]:
-        """Capture a lightweight snapshot of state and aggregate metrics."""
+        """Return a lightweight snapshot of state and aggregate totals."""
         if self.mode in ("tree_list", "spatial"):
             n_plots = len(self.plots)
             n_trees = sum(len(p.trees) for p in self.plots)
@@ -264,7 +264,7 @@ class SimulationContext:
 
     @property
     def metrics(self) -> MetricView:
-        """Return a read-only copy of metric mappings."""
+        """Return a read-only copy of the current metrics."""
         m = self._metrics
         return cast(
             MetricView,
@@ -276,7 +276,7 @@ class SimulationContext:
         )
 
     def to_pandas(self) -> pd.DataFrame:
-        """Render the history log into a pandas DataFrame."""
+        """Return the history log as a pandas DataFrame."""
         rows = []
         for h in self.history:
             rows.append(
@@ -294,7 +294,7 @@ class SimulationContext:
 
     # Aggregate helpers
     def set_aggregate_metrics(self, *, ba_total: float, stems_total: float) -> None:
-        """Set aggregate metrics and recompute QMD."""
+        """Set aggregate basal area and stems, then recompute QMD."""
         self._metrics.setdefault("BasalArea", {})
         self._metrics.setdefault("Stems", {})
         self._metrics.setdefault("QMD", {})
@@ -303,7 +303,7 @@ class SimulationContext:
         self._recompute_qmd()
 
     def scale_stems(self, factor: float) -> None:
-        """Scale stems and basal area totals by a factor."""
+        """Scale aggregate stems and basal area by ``factor``."""
         total_n = float(self._metrics["Stems"]["TOTAL"])
         total_ba = float(self._metrics["BasalArea"]["TOTAL"])
         new_n = max(0.0, total_n * factor)
@@ -319,7 +319,7 @@ class SimulationContext:
     # ----------------------------- Internal utils -----------------------------
 
     def _refresh_metrics(self) -> None:
-        """Refresh metric caches from the current inventory."""
+        """Refresh metrics based on the active inventory representation."""
         if self.mode in ("tree_list", "spatial"):
             computed = self._recompute_metrics_tree_list(self.plots)
             self._metrics = cast(
@@ -345,7 +345,7 @@ class SimulationContext:
             )
 
     def _recompute_qmd(self) -> None:
-        """Recompute the quadratic mean diameter from aggregate metrics."""
+        """Recompute quadratic mean diameter from aggregate totals."""
         try:
             ba = float(self._metrics["BasalArea"]["TOTAL"])
             n = float(self._metrics["Stems"]["TOTAL"])
@@ -529,7 +529,7 @@ class SimulationContext:
 
     # Used by ensemble to log vector updates
     def _log_external_update(self, op: str, details: Dict[str, Any]) -> None:
-        """Record an externally-triggered update in the history log."""
+        """Log an external update while refreshing metrics."""
         pre = self.snapshot()
         self._refresh_metrics()
         post = self.snapshot()
