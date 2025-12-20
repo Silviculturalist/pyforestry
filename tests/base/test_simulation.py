@@ -8,6 +8,7 @@ from pyforestry.base.helpers import (
     PICEA_ABIES,
     AngleCount,
     CircularPlot,
+    SiteBase,
     Stand,
     StandBasalArea,
     Stems,
@@ -61,6 +62,11 @@ def _ac_stand():
     p1 = CircularPlot(id=1, area_m2=200.0, AngleCount=[ac1])
     p2 = CircularPlot(id=2, area_m2=200.0, AngleCount=[ac2])
     return Stand(area_ha=1.0, plots=[p1, p2])
+
+
+class _DummySite(SiteBase):
+    def compute_attributes(self) -> None:
+        pass
 
 
 # --------------------------- Your existing tests -----------------------------
