@@ -128,6 +128,14 @@ def test_simulate_one_step_pure_is_deterministic(
     assert reward == expected_reward
 
 
+def test_simulation_provenance_requires_ids():
+    with pytest.raises(ValueError, match="connector_id"):
+        SimulationProvenance(connector_id="", bucking_id="b", adapter_ids={})
+
+    with pytest.raises(ValueError, match="bucking_id"):
+        SimulationProvenance(connector_id="c", bucking_id="", adapter_ids={})
+
+
 def test_namespace_mismatch_rejected() -> None:
     """simulate_one_step_pure refuses to combine incompatible provenance."""
 

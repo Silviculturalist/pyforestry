@@ -40,6 +40,11 @@ def test_site_index_value_creation_set(sample_age_measurement, sample_species_se
     assert siv.fn == sample_fn
 
 
+def test_bawad_rejects_negative_values():
+    with pytest.raises(ValueError):
+        BasalAreaWeightedDiameter(-1.0)
+
+
 def test_site_index_value_creation_set_multi(
     sample_age_measurement, sample_species_set_multi, sample_fn
 ):

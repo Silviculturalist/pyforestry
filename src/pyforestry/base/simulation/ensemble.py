@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict, List, Mapping, Optional, Sequence, Union
+from typing import Any, Dict, List, Mapping, Optional, Sequence, Union, cast
 
 import numpy as np
 
@@ -14,7 +14,11 @@ class BatchEngine:
     """Protocol for batch engines."""
 
     def grow(
-        self, model: Any, vec: Dict[str, np.ndarray], dt: float, extra=None
+        self,
+        model: Any,
+        vec: Dict[str, np.ndarray],
+        dt: float,
+        extra: Optional[Mapping[str, Any]] = None,
     ) -> Dict[str, np.ndarray]:
         """Advance a batch of aggregate metrics by ``dt``."""
         raise NotImplementedError
@@ -24,7 +28,11 @@ class PythonEngine(BatchEngine):
     """NumPy baseline."""
 
     def grow(
-        self, model: Any, vec: Dict[str, np.ndarray], dt: float, extra=None
+        self,
+        model: Any,
+        vec: Dict[str, np.ndarray],
+        dt: float,
+        extra: Optional[Mapping[str, Any]] = None,
     ) -> Dict[str, np.ndarray]:
         """Run the Python batch growth routine for aggregate metrics."""
         ba = vec["ba"]
@@ -107,7 +115,14 @@ class ContextEnsemble:
                 raise ValueError("management list must match the number of contexts.")
             mgmt_list = list(management)
         else:
-            mgmt_list = [management for _ in self.contexts]
+            mgmt_item = cast(Mapping[str, Any], management)
+            mgmt_list = [mgmt_item for _ in self.contexts]
+
+        engine = self.engine
+        if engine is None:
+            raise RuntimeError("Batch engine not configured.")
+        if isinstance(engine, str):  # pragma: no cover - should be resolved in __post_init__
+            raise TypeError("Engine hint was not resolved to a BatchEngine.")
 
         agg_ctxs = [
             c
@@ -118,8 +133,14 @@ class ContextEnsemble:
         for idx, c in other_ctxs:
             c.update_step(dt, management=mgmt_list[idx])
         if agg_ctxs:
-            ba = np.array([float(c.metrics["BasalArea"]["TOTAL"]) for c in agg_ctxs], dtype=float)
-            n = np.array([float(c.metrics["Stems"]["TOTAL"]) for c in agg_ctxs], dtype=float)
+            ba = np.array(
+                [float(c.metrics["BasalArea"]["TOTAL"]) for c in agg_ctxs],
+                dtype=float,
+            )
+            n = np.array(
+                [float(c.metrics["Stems"]["TOTAL"]) for c in agg_ctxs],
+                dtype=float,
+            )
             fert_mask = np.array(
                 [
                     1.0 if c.attrs.get("fertilized_remaining_years", 0.0) > 0.0 else 0.0
@@ -127,8 +148,11 @@ class ContextEnsemble:
                 ],
                 dtype=float,
             )
-            out = self.engine.grow(
-                self.model, {"ba": ba, "n": n}, dt, extra={"fert_mask": fert_mask}
+            out = engine.grow(
+                self.model,
+                {"ba": ba, "n": n},
+                dt,
+                extra={"fert_mask": fert_mask},
             )
             for i, c in enumerate(agg_ctxs):
                 c.set_aggregate_metrics(

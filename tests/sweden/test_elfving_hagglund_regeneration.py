@@ -38,12 +38,12 @@ def _create_valid_siteindex() -> SiteIndexValue:
 
 
 def test_validate_site_index_valid():
-    """Valid input passes and emits a warning from the heuristic check."""
+    """Valid input passes without a warning from the heuristic check."""
     si = _create_valid_siteindex()
     with warnings.catch_warnings(record=True) as rec:
         warnings.simplefilter("always")
         ElfvingHagglundInitialStand._validate_site_index(si, TreeSpecies.Sweden.pinus_sylvestris)
-        assert rec
+        assert not rec
 
 
 def test_validate_site_index_type_and_value_errors():

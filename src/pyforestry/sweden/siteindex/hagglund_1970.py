@@ -1,7 +1,10 @@
+"""Hagglund (1970s) site index models for Sweden spruce and pine."""
+
 import math
 import warnings
 from enum import Enum
-from typing import Union
+from functools import wraps
+from typing import Callable, Union, cast
 
 from numpy import exp, log
 
@@ -9,6 +12,8 @@ from pyforestry.base.helpers import Age, AgeMeasurement, SiteIndexValue, TreeSpe
 
 
 class HagglundSpruceModel:
+    """Height trajectory models for Norway spruce."""
+
     @staticmethod
     def northern_sweden(
         dominant_height: float,
@@ -72,8 +77,13 @@ class HagglundSpruceModel:
 
         # Define the bonitering subroutine that uses the effective DBH age (eff_age)
         def subroutineBonitering(eff_age: float):
+            """Return productivity parameters for an effective DBH age."""
             AI1 = 10.0
             AI2 = 600.0
+            AI3 = 0.0
+            A2 = 0.0
+            RK = 0.0
+            RM2 = 0.0
             while abs(AI1 - AI2) > 1:
                 AI3 = (AI1 + AI2) / 2.0
                 RK = 0.001936 + 0.00004100 * AI3**1.0105
@@ -95,11 +105,13 @@ class HagglundSpruceModel:
         else:
             # Use Newton–Raphson to solve: f(x) = x + T13(x) - age_value = 0
             def f(x):
+                """Root function for DBH-age estimation."""
                 # Compute T13 from the bonitering subroutine for effective age x.
                 _, _, _, _, T13_local = subroutineBonitering(x)
                 return x + T13_local - age_value
 
             def fprime(x, h=0.001):
+                """Numerical derivative for the Newton solver."""
                 return (f(x + h) - f(x - h)) / (2 * h)
 
             # Choose an initial guess. (Empirically, effective DBH age is lower than total age.)
@@ -190,8 +202,12 @@ class HagglundSpruceModel:
         top_height_dm = dominant_height * 10 - 13
 
         def subroutineBonitering(eff_age: float):
+            """Return productivity parameters for an effective DBH age."""
             AI1 = 10.0
             AI2 = 600.0
+            A2 = 0.0
+            RK = 0.0
+            RM2 = 0.0
             while abs(AI1 - AI2) > 1:
                 AI3 = (AI1 + AI2) / 2.0
                 RK = 0.042624 - 7.1145 / AI3**1.0068
@@ -216,10 +232,12 @@ class HagglundSpruceModel:
         else:
 
             def f(x):
+                """Root function for DBH-age estimation."""
                 _, _, _, _, T13_local = subroutineBonitering(x)
                 return x + T13_local - age_value
 
             def fprime(x, h=0.001):
+                """Numerical derivative for the Newton solver."""
                 return (f(x + h) - f(x - h)) / (2 * h)
 
             x = age_value * 0.35
@@ -245,7 +263,7 @@ class HagglundSpruceModel:
         if eff_age > 90:
             warnings.warn("Too old stand, outside of the material.", stacklevel=2)
 
-            # Determine the effective DBH age for the height prediction:
+        # Determine the effective DBH age for the height prediction:
         if age2_type == Age.DBH.value:
             # If the target age 'age2' is already DBH, use its value directly for the formula.
             effective_age2_dbh = age2_value
@@ -283,15 +301,20 @@ class HagglundSpruceModel:
 
 
 class HagglundPineRegeneration(Enum):
+    """Regeneration method categories for the pine model."""
+
     CULTURE = "culture"
     NATURAL = "natural"
     UNKNOWN = "unknown"
 
     def __str__(self):
+        """Return the enum value as a string."""
         return self.value
 
 
 class HagglundPineModel:
+    """Height trajectory model for Scots pine."""
+
     @staticmethod
     def sweden(
         dominant_height_m: float,
@@ -329,8 +352,12 @@ class HagglundPineModel:
             print("Warning: Too old stand, outside of the material.")
 
         def subroutineBonitering(eff_age: float):
+            """Return productivity parameters for an effective DBH age."""
             AI1 = 10.0
             AI2 = 600.0
+            A2 = 0.0
+            RK = 0.0
+            RM2 = 0.0
             while abs(AI1 - AI2) > 1:
                 AI3 = (AI1 + AI2) / 2.0
                 RM = 0.066074 + 4.4189e5 / AI3**2.9134
@@ -352,6 +379,8 @@ class HagglundPineModel:
                 T13_local = 6.8889 + 0.12405 * T262
             elif regeneration == HagglundPineRegeneration.CULTURE:
                 T13_local = 7.4624 + 0.11672 * T262 - 0.39276 * T26
+            else:  # pragma: no cover - defensive
+                raise ValueError("Unexpected regeneration class.")
             T13_local = min(T13_local, 50)
             return A2, RK, RM2, T13_local
 
@@ -360,10 +389,12 @@ class HagglundPineModel:
         else:
 
             def f(x):
+                """Root function for DBH-age estimation."""
                 _, _, _, T13_local = subroutineBonitering(x)
                 return x + T13_local - age_value
 
             def fprime(x, h=0.001):
+                """Numerical derivative for the Newton solver."""
                 return (f(x + h) - f(x - h)) / (2 * h)
 
             x = age_value * 0.35
@@ -387,7 +418,7 @@ class HagglundPineModel:
         if A2 > 250 and eff_age > 100:
             print("Warning: Too old stand, outside of material.")
 
-            # Determine the effective DBH age for the height prediction:
+        # Determine the effective DBH age for the height prediction:
         if age2_type == Age.DBH.value:
             # If the target age 'age2' is already DBH, use its value directly for the formula.
             effective_age2_dbh = age2_value
@@ -437,14 +468,19 @@ class HeightTrajectoryWrapper:
     """
 
     def __init__(self, model):
+        """Wrap a model class to return SiteIndexValue results."""
         self._model = model
 
     def __getattr__(self, name):
+        """Proxy attributes, converting callables to SI-only wrappers."""
         attr = getattr(self._model, name)
         if callable(attr):
+            model_attr = cast(Callable[..., tuple[SiteIndexValue, float]], attr)
 
+            @wraps(model_attr)
             def wrapper(*args, **kwargs):
-                si_value, _ = attr(*args, **kwargs)
+                """Return only the SiteIndexValue from the model call."""
+                si_value, _ = model_attr(*args, **kwargs)
                 return si_value
 
             return wrapper
@@ -457,14 +493,19 @@ class TimeToBreastHeightWrapper:
     """
 
     def __init__(self, model):
+        """Wrap a model class to return T13 results."""
         self._model = model
 
     def __getattr__(self, name):
+        """Proxy attributes, converting callables to T13-only wrappers."""
         attr = getattr(self._model, name)
         if callable(attr):
+            model_attr = cast(Callable[..., tuple[SiteIndexValue, float]], attr)
 
+            @wraps(model_attr)
             def wrapper(*args, **kwargs):
-                _, T13 = attr(*args, **kwargs)
+                """Return only the T13 value from the model call."""
+                _, T13 = model_attr(*args, **kwargs)
                 return T13
 
             return wrapper
@@ -476,6 +517,30 @@ class TimeToBreastHeightWrapper:
 # =============================================================================
 
 
+class HeightTrajectoryContainer:
+    """Expose height trajectory functions by species."""
+
+    picea_abies: HeightTrajectoryWrapper
+    pinus_sylvestris: HeightTrajectoryWrapper
+
+    def __init__(self) -> None:
+        """Initialize species-specific height trajectory wrappers."""
+        self.picea_abies = HeightTrajectoryWrapper(HagglundSpruceModel)
+        self.pinus_sylvestris = HeightTrajectoryWrapper(HagglundPineModel)
+
+
+class TimeToBreastHeightContainer:
+    """Expose T13 functions by species."""
+
+    picea_abies: TimeToBreastHeightWrapper
+    pinus_sylvestris: TimeToBreastHeightWrapper
+
+    def __init__(self) -> None:
+        """Initialize species-specific T13 wrappers."""
+        self.picea_abies = TimeToBreastHeightWrapper(HagglundSpruceModel)
+        self.pinus_sylvestris = TimeToBreastHeightWrapper(HagglundPineModel)
+
+
 class Hagglund_1970:
     """
     Provides a class-based interface to Hägglund's site index functions.
@@ -483,20 +548,6 @@ class Hagglund_1970:
     or the time to breast height (T13).
     """
 
-    height_trajectory = type(
-        "HeightTrajectoryContainer",
-        (),
-        {
-            "picea_abies": HeightTrajectoryWrapper(HagglundSpruceModel),
-            "pinus_sylvestris": HeightTrajectoryWrapper(HagglundPineModel),
-        },
-    )
-    time_to_breast_height = type(
-        "TimeToBreastHeightContainer",
-        (),
-        {
-            "picea_abies": TimeToBreastHeightWrapper(HagglundSpruceModel),
-            "pinus_sylvestris": TimeToBreastHeightWrapper(HagglundPineModel),
-        },
-    )
+    height_trajectory: HeightTrajectoryContainer = HeightTrajectoryContainer()
+    time_to_breast_height: TimeToBreastHeightContainer = TimeToBreastHeightContainer()
     regeneration = HagglundPineRegeneration
