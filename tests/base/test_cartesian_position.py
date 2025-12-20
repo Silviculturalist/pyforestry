@@ -30,3 +30,9 @@ def test_set_position_variants():
         Position._set_position((1, 2, 3, 4))
     with pytest.raises(TypeError):
         Position._set_position([1, 2])
+
+
+def test_position_xy_properties():
+    pos = Position(3.5, -2.25, 0.0)
+    assert pos.x == 3.5
+    assert pos.y == -2.25

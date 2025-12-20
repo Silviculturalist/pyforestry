@@ -1,4 +1,5 @@
-# pyforestry/base/simulation/core.py
+"""Simulation context, action handling, and metric helpers for base models."""
+
 from __future__ import annotations
 
 import copy
@@ -37,6 +38,8 @@ MetricView = Mapping[str, Mapping[MetricKey, MetricValue]]  # read-only facade
 
 # Mutable store
 class MetricMap(TypedDict):
+    """Mutable metrics mapping keyed by metric name and species."""
+
     Stems: Dict[MetricKey, Stems]
     BasalArea: Dict[MetricKey, StandBasalArea]
     QMD: Dict[MetricKey, QuadraticMeanDiameter]
@@ -64,6 +67,8 @@ class ActionSpec:
 
 @dataclass
 class HistoryEntry:
+    """History record capturing a single operation and its snapshots."""
+
     t: float
     op: str
     details: Dict[str, Any]
@@ -97,6 +102,7 @@ class SimulationContext:
         model: Any,
         initial_attrs: Optional[Dict[str, Any]] = None,
     ) -> None:
+        """Initialize a simulation context from inventory and model state."""
         if mode not in ("spatial", "tree_list", "diameter_class", "aggregate"):
             raise ValueError("mode must be 'spatial','tree_list','diameter_class', or 'aggregate'")
         self.mode = mode
@@ -146,6 +152,7 @@ class SimulationContext:
         def _phase_actions(
             phase: str, actions: Iterable[Union[str, tuple[str, Mapping[str, Any]]]]
         ):
+            """Execute action specs registered for a management phase."""
             for item in actions:
                 if isinstance(item, tuple):
                     name, params = item
@@ -188,7 +195,8 @@ class SimulationContext:
             {
                 "dt": years,
                 "management": {
-                    k: [str(a[0] if isinstance(a, tuple) else a) for a in v] for k, v in mgmt.items()
+                    k: [str(a[0] if isinstance(a, tuple) else a) for a in v]
+                    for k, v in mgmt.items()
                 },
             },
             pre,
@@ -196,6 +204,7 @@ class SimulationContext:
         )
 
     def grow(self, years: float, **kwargs: Any) -> None:  # pragma: no cover - compatibility alias
+        """Backward-compatible alias for :meth:`update_step`."""
         warnings.warn(
             "SimulationContext.grow is deprecated; use update_step instead.",
             DeprecationWarning,
@@ -204,6 +213,7 @@ class SimulationContext:
         self.update_step(years, **kwargs)
 
     def do(self, action: str, *, phase: Optional[str] = None, **kwargs: Any) -> None:
+        """Execute a model action, enforcing mode and phase constraints."""
         actions = self.model.available_actions()
         if action not in actions:
             raise KeyError(f"Action '{action}' not available for this model.")
@@ -232,6 +242,7 @@ class SimulationContext:
         self._append_history(f"action:{action}", {"params": kwargs, "phase": phase}, pre, post)
 
     def snapshot(self) -> Dict[str, Any]:
+        """Capture a lightweight snapshot of state and aggregate metrics."""
         if self.mode in ("tree_list", "spatial"):
             n_plots = len(self.plots)
             n_trees = sum(len(p.trees) for p in self.plots)
@@ -253,6 +264,7 @@ class SimulationContext:
 
     @property
     def metrics(self) -> MetricView:
+        """Return a read-only copy of metric mappings."""
         m = self._metrics
         return cast(
             MetricView,
@@ -264,6 +276,7 @@ class SimulationContext:
         )
 
     def to_pandas(self) -> pd.DataFrame:
+        """Render the history log into a pandas DataFrame."""
         rows = []
         for h in self.history:
             rows.append(
@@ -281,6 +294,7 @@ class SimulationContext:
 
     # Aggregate helpers
     def set_aggregate_metrics(self, *, ba_total: float, stems_total: float) -> None:
+        """Set aggregate metrics and recompute QMD."""
         self._metrics.setdefault("BasalArea", {})
         self._metrics.setdefault("Stems", {})
         self._metrics.setdefault("QMD", {})
@@ -289,6 +303,7 @@ class SimulationContext:
         self._recompute_qmd()
 
     def scale_stems(self, factor: float) -> None:
+        """Scale stems and basal area totals by a factor."""
         total_n = float(self._metrics["Stems"]["TOTAL"])
         total_ba = float(self._metrics["BasalArea"]["TOTAL"])
         new_n = max(0.0, total_n * factor)
@@ -297,12 +312,14 @@ class SimulationContext:
 
     # Diameter-class helper
     def set_diameter_class(self, dclass: Dict[Any, Dict[str, List[float]]]) -> None:
+        """Replace diameter-class inventory and recompute metrics."""
         self._dclass = self._normalize_dclass_inventory(dclass)
         self._metrics = self._recompute_metrics_dclass(self._dclass)
 
     # ----------------------------- Internal utils -----------------------------
 
     def _refresh_metrics(self) -> None:
+        """Refresh metric caches from the current inventory."""
         if self.mode in ("tree_list", "spatial"):
             computed = self._recompute_metrics_tree_list(self.plots)
             self._metrics = cast(
@@ -328,6 +345,7 @@ class SimulationContext:
             )
 
     def _recompute_qmd(self) -> None:
+        """Recompute the quadratic mean diameter from aggregate metrics."""
         try:
             ba = float(self._metrics["BasalArea"]["TOTAL"])
             n = float(self._metrics["Stems"]["TOTAL"])
@@ -340,6 +358,7 @@ class SimulationContext:
     def _append_history(
         self, op: str, details: Dict[str, Any], pre: Dict[str, Any], post: Dict[str, Any]
     ) -> None:
+        """Append a history entry capturing operation metadata and snapshots."""
         model_state = {k: v for k, v in self.state.items()}
         entry = HistoryEntry(
             t=self.state.get("t", 0.0),
@@ -353,6 +372,7 @@ class SimulationContext:
         self.history.append(entry)
 
     def _deepcopy_plots(self, plots: Iterable[CircularPlot]) -> List[CircularPlot]:
+        """Clone plot and tree data into a mutable simulation inventory."""
         out: List[CircularPlot] = []
         for p in plots:
             new_trees = [
@@ -381,6 +401,7 @@ class SimulationContext:
         return out
 
     def _normalize_aggregate_metrics(self, metrics_in: Dict[str, Dict[Any, Any]]) -> MetricMap:
+        """Normalize aggregate metric inputs and compute derived values."""
         stems_dict = cast(Dict[MetricKey, Stems], dict(metrics_in.get("Stems", {})))
         ba_dict = cast(Dict[MetricKey, StandBasalArea], dict(metrics_in.get("BasalArea", {})))
         qmd_dict: Dict[MetricKey, QuadraticMeanDiameter] = {}
@@ -395,9 +416,11 @@ class SimulationContext:
         return out_map
 
     def _recompute_metrics_tree_list(self, plots: Iterable[CircularPlot]) -> MetricMap:
+        """Compute metric aggregates from tree-list plots."""
         species_data: Dict[TreeName, Dict[str, List[float]]] = {}
 
         def _eff_area_ha(p: CircularPlot) -> float:
+            """Return effective plot area in hectares after occlusion."""
             area_ha = p.area_ha or 1.0
             return area_ha * (1 - p.occlusion) if (1 - p.occlusion) > 0 else area_ha
 
@@ -413,13 +436,17 @@ class SimulationContext:
                 by_sp.setdefault(sp, []).append(t)
 
             for sp, trs in by_sp.items():
-                stems = sum(getattr(t, "weight_n", 1.0) for t in trs)
+                stems = 0.0
+                for t in trs:
+                    weight = getattr(t, "weight_n", 1.0)
+                    stems += 1.0 if weight is None else float(weight)
                 stems_ha = stems / eff
                 ba_sum = 0.0
                 for t in trs:
                     d_cm = float(getattr(t, "diameter_cm", 0.0) or 0.0)
                     r_m = (d_cm / 100.0) / 2.0
-                    ba_sum += pi * (r_m**2) * getattr(t, "weight_n", 1.0)
+                    weight = getattr(t, "weight_n", 1.0)
+                    ba_sum += pi * (r_m**2) * (1.0 if weight is None else float(weight))
                 ba_ha = ba_sum / eff
                 species_data.setdefault(sp, {"stems_per_ha": [], "basal_area_per_ha": []})
                 species_data[sp]["stems_per_ha"].append(stems_ha)
@@ -455,6 +482,7 @@ class SimulationContext:
     def _normalize_dclass_inventory(
         self, dclass_in: Dict[Any, Dict[str, List[float]]]
     ) -> Dict[Any, Dict[str, List[float]]]:
+        """Validate and normalize diameter-class inventory arrays."""
         out: Dict[Any, Dict[str, List[float]]] = {}
         for key, rec in dclass_in.items():
             mids = list(rec.get("bin_mids_cm", []))
@@ -465,6 +493,7 @@ class SimulationContext:
         return out
 
     def _recompute_metrics_dclass(self, dclass: Dict[Any, Dict[str, List[float]]]) -> MetricMap:
+        """Compute metric aggregates from diameter-class inventory."""
         stems_dict: Dict[Union[TreeName, str], Stems] = {}
         ba_dict: Dict[Union[TreeName, str], StandBasalArea] = {}
         total_n = 0.0
@@ -500,6 +529,7 @@ class SimulationContext:
 
     # Used by ensemble to log vector updates
     def _log_external_update(self, op: str, details: Dict[str, Any]) -> None:
+        """Record an externally-triggered update in the history log."""
         pre = self.snapshot()
         self._refresh_metrics()
         post = self.snapshot()

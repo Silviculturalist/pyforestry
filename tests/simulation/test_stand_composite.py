@@ -206,3 +206,115 @@ def test_composite_snapshot_and_restore_resets_state() -> None:
     assert part.context["values"] == [first]
     restored_rng = composite.random_bundle.rng_for("checkpoint", part.name)
     assert restored_rng.random() == pytest.approx(second)
+
+
+def test_stand_action_handler_analysis_variants():
+    part = StandPart("alpha", DummyModelView(1.0, 1.0, 1.0))
+    dummy_rng = object()
+
+    def handler_kwargs(part: StandPart, **kwargs):
+        return kwargs.get("rng")
+
+    action_kwargs = StandAction("kw", handler_kwargs)
+    assert action_kwargs.requests_rng
+    assert action_kwargs.requests_io
+    assert action_kwargs.execute(part, rng=dummy_rng) is dummy_rng
+    assert action_kwargs.execute(part, rng=None) is None
+
+    def handler_args(part: StandPart, *args):
+        return args
+
+    action_args = StandAction("args", handler_args)
+    assert action_args.requests_rng
+    assert action_args.execute(part, rng=dummy_rng) == (dummy_rng,)
+
+    def handler_extra(part: StandPart, extra):
+        return extra
+
+    action_extra = StandAction("extra", handler_extra)
+    assert action_extra.requests_rng
+    assert action_extra.execute(part, rng=dummy_rng) is dummy_rng
+
+
+def test_stand_action_iter_targets():
+    action = StandAction("noop", handler=lambda part: None)
+    assert action.iter_targets() == ()
+
+    action = StandAction("north", handler=lambda part: None, target_parts="north")
+    assert action.iter_targets() == ("north",)
+
+    action = StandAction("multi", handler=lambda part: None, target_parts=("a", "b"))
+    assert action.iter_targets() == ("a", "b")
+
+
+def test_dispatch_result_by_part_groups_records():
+    action = StandAction("noop", handler=lambda part: "ok")
+    record_north = StandPart("north", DummyModelView(1.0, 1.0, 1.0)).apply_action(action)
+    record_south = StandPart("south", DummyModelView(1.0, 1.0, 1.0)).apply_action(action)
+    result = DispatchResult(records=[record_north, record_south])
+    grouped = result.by_part()
+    assert set(grouped) == {"north", "south"}
+
+
+def test_stand_part_validation_and_metric_fallbacks():
+    with pytest.raises(ValueError):
+        StandPart("", DummyModelView(1.0, 1.0, 1.0))
+    with pytest.raises(TypeError):
+        StandPart("bad", DummyModelView(1.0, 1.0, 1.0), context=[])
+
+    class CallableView:
+        def basal_area(self):
+            return 3.0
+
+    part = StandPart("callable", CallableView(), context={"basal_area": 1.0})
+    assert part.basal_area == pytest.approx(3.0)
+
+    class WeirdView:
+        basal_area = object()
+        BasalArea = object()
+
+        def total(self, metric_name: str) -> float:
+            raise KeyError(metric_name)
+
+    fallback = StandPart("fallback", WeirdView(), context={"basal_area": 2.5})
+    assert fallback.basal_area == pytest.approx(2.5)
+
+
+def test_stand_part_apply_action_effects():
+    part = StandPart("alpha", DummyModelView(1.0, 1.0, 1.0))
+    action = StandAction("noop", handler=lambda part: "ok")
+    record = part.apply_action(action, effects=frozenset({"io"}))
+    assert record.action == "noop"
+
+
+def test_composite_duplicate_part_name_raises():
+    part = StandPart("dup", DummyModelView(1.0, 1.0, 1.0))
+    composite = StandComposite([part])
+    with pytest.raises(ValueError, match="Duplicate"):
+        composite.add_part(part)
+
+
+def test_composite_select_parts_edge_cases():
+    part = StandPart("alpha", DummyModelView(1.0, 1.0, 1.0))
+    composite = StandComposite([part])
+    action = StandAction("noop", handler=lambda part: None)
+
+    selected = composite._select_parts(action, policy=lambda action, parts: ())
+    assert selected == ()
+
+    with pytest.raises(ValueError, match="target parts"):
+        composite._select_parts(action, policy="target")
+
+    empty_composite = StandComposite([])
+    assert empty_composite._select_parts(action, policy="largest_first") == ()
+
+    with pytest.raises(ValueError, match="Unknown dispatch policy"):
+        composite._select_parts(action, policy="unknown")
+
+
+def test_composite_dispatch_skips_empty_selection():
+    part = StandPart("alpha", DummyModelView(1.0, 1.0, 1.0))
+    composite = StandComposite([part])
+    action = StandAction("noop", handler=lambda part: None)
+    result = composite.dispatch([action], policy=lambda action, parts: ())
+    assert result.records == []

@@ -1,26 +1,37 @@
 pyforestry.sweden.models package
 ================================
 
-.. automodule:: pyforestry.sweden.models
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Submodules
 ----------
+
+pyforestry.sweden.models.agestam\_1985 module
+---------------------------------------------
+
+.. automodule:: pyforestry.sweden.models.agestam_1985
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+pyforestry.sweden.models.elfving\_2010 module
+---------------------------------------------
+
+.. automodule:: pyforestry.sweden.models.elfving_2010
+   :members:
+   :show-inheritance:
+   :undoc-members:
 
 pyforestry.sweden.models.elfving\_hagglund\_1975 module
 -------------------------------------------------------
 
 .. automodule:: pyforestry.sweden.models.elfving_hagglund_1975
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
-pyforestry.sweden.models.elfving\_ibm module
---------------------------------------------
+Module contents
+---------------
 
-.. automodule:: pyforestry.sweden.models.elfving_ibm
+.. automodule:: pyforestry.sweden.models
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

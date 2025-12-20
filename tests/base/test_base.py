@@ -1,5 +1,6 @@
 import pytest
 
+import pyforestry
 from pyforestry.base.helpers.primitives import Age, AgeMeasurement, SiteIndexValue
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies, parse_tree_species
 from pyforestry.sweden.siteindex import eriksson_1997_height_trajectory_sweden_birch
@@ -287,3 +288,13 @@ def test_site_index_reference_age_comparison(
     assert siv_total.reference_age != age_dbh_100
     assert siv_dbh.reference_age == age_dbh_100
     assert siv_dbh.reference_age != age_total_100
+
+
+def test_pyforestry_module_getattr():
+    base_mod = pyforestry.base
+    sim_mod = pyforestry.simulation
+    assert base_mod.__name__ == "pyforestry.base"
+    assert sim_mod.__name__ == "pyforestry.simulation"
+    missing_attr = "does_not_exist"
+    with pytest.raises(AttributeError):
+        getattr(pyforestry, missing_attr)

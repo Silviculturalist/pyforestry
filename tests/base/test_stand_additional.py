@@ -71,6 +71,20 @@ def test_accessor_value_and_precision():
     assert stand.BasalArea.precision >= 0
 
 
+def test_compute_ht_estimates_parses_string_species():
+    class DummyTree:
+        def __init__(self, species, diameter_cm, weight_n=1.0):
+            self.species = species
+            self.diameter_cm = diameter_cm
+            self.weight_n = weight_n
+
+    plot = CircularPlot(id=1, radius_m=5.0, trees=[DummyTree("picea abies", 20.0)])
+    stand = Stand(plots=[plot])
+    stand._compute_ht_estimates()
+    sp = parse_tree_species("picea abies")
+    assert sp in stand._metric_estimates["Stems"]
+
+
 def test_geographic_polygon_area():
     poly = Polygon([(0, 0), (0, 0.01), (0.01, 0.01), (0.01, 0)])
     stand = Stand(polygon=poly, crs=CRS("EPSG:4326"))
@@ -155,6 +169,24 @@ def test_get_dominant_height_no_heights():
     assert st.get_dominant_height() is None
 
 
+def test_get_dominant_height_mode_tie_uses_first_area():
+    sp = parse_tree_species("picea abies")
+    p1 = CircularPlot(
+        id=1,
+        radius_m=5.0,
+        trees=[Tree(species=sp, diameter_cm=30, height_m=20)],
+    )
+    p2 = CircularPlot(
+        id=2,
+        radius_m=6.0,
+        trees=[Tree(species=sp, diameter_cm=25, height_m=18)],
+    )
+    st = Stand(plots=[p1, p2])
+    result = st.get_dominant_height()
+    assert result is not None
+    assert result.value > 0
+
+
 def test_get_dominant_height_all_skipped():
     sp = parse_tree_species("picea abies")
     p1 = CircularPlot(
@@ -205,6 +237,17 @@ def test_thin_trees_polygon_only():
     uids = [t.uid for t in stand.plots[0].trees]
     assert uids == ["out"]
     assert "QMD" not in stand._metric_estimates
+
+
+def test_thin_trees_polygon_missing_positions():
+    sp = parse_tree_species("picea abies")
+    tree = Tree(species=sp, diameter_cm=20, uid="nopos")
+    plot = CircularPlot(id=1, radius_m=10, trees=[tree])
+    stand = Stand(plots=[plot])
+    poly = Polygon([(-5, -5), (5, -5), (5, 5), (-5, 5)])
+
+    stand.thin_trees(polygon=poly)
+    assert [t.uid for t in stand.plots[0].trees] == ["nopos"]
 
 
 def test_estimate_top_height_statistics_error():

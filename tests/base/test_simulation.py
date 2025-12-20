@@ -1,14 +1,29 @@
 # test_simulation_expanded.py
 import math
+from types import SimpleNamespace
 
 import pytest
 
-from pyforestry.base.helpers import PICEA_ABIES, AngleCount, CircularPlot, Stand, Tree
+from pyforestry.base.helpers import (
+    PICEA_ABIES,
+    AngleCount,
+    CircularPlot,
+    Stand,
+    StandBasalArea,
+    Stems,
+    Tree,
+    parse_tree_species,
+)
 from pyforestry.base.simulation import (
     ActionSpec,
     ContextEnsemble,
     ExampleStandGeneralModel,
+    GrowthModel,
     PythonEngine,
+    Requirements,
+    ScheduledOp,
+    SimulationSetup,
+    TriggerSpec,
 )
 
 # ----------------------------- Test fixtures ---------------------------------
@@ -68,6 +83,250 @@ def test_build_modes_and_adapters():
     assert ctx_sp.mode in ("spatial", "aggregate")
     if ctx_sp.mode == "spatial":
         ctx_sp.do("thin_fraction", fraction=0.05)
+
+
+def test_adapter_registry_and_angle_count_adapters():
+    from pyforestry.base.simulation.adapters import (
+        Adapter,
+        AdapterRegistry,
+        AngleCountToDiameterClassAdapter,
+        AngleCountToPseudoTreesAdapter,
+        TreeListToDiameterClassAdapter,
+    )
+
+    with pytest.raises(NotImplementedError):
+        Adapter().can_adapt(Stand())
+    with pytest.raises(NotImplementedError):
+        Adapter().adapt(Stand())
+
+    stand = Stand(plots=[])
+    stand.use_angle_count = False
+    assert not AngleCountToPseudoTreesAdapter().can_adapt(stand)
+
+    stand.use_angle_count = True
+    stand._metric_estimates = {
+        "BasalArea": {"TOTAL": StandBasalArea(10.0)},
+        "Stems": {"TOTAL": Stems(100.0)},
+    }
+    adapter = AngleCountToPseudoTreesAdapter(replicas_per_species=4)
+    out = adapter.adapt(stand, replicas_per_species=0)
+    plot = out["plots"][0]
+    assert len(plot.trees) == adapter.replicas_per_species
+
+    sp = parse_tree_species("picea abies")
+    stand2 = Stand(plots=[])
+    stand2.use_angle_count = True
+    stand2._metric_estimates = {
+        "BasalArea": {sp: StandBasalArea(5.0, species=sp), "TOTAL": StandBasalArea(5.0)},
+        "Stems": {sp: Stems(0.0, species=sp), "TOTAL": Stems(0.0)},
+    }
+    out2 = AngleCountToPseudoTreesAdapter().adapt(stand2)
+    assert out2["plots"][0].trees == []
+
+    stand3 = Stand(plots=[])
+    stand3.use_angle_count = True
+    stand3._metric_estimates = {
+        "BasalArea": {sp: StandBasalArea(0.0, species=sp), "TOTAL": StandBasalArea(10.0)},
+        "Stems": {sp: Stems(0.0, species=sp), "TOTAL": Stems(100.0)},
+    }
+    out3 = AngleCountToDiameterClassAdapter().adapt(stand3)
+    assert "TOTAL" in out3["dclass"]
+
+    stand4 = Stand(
+        plots=[CircularPlot(id=1, radius_m=5.0, trees=[Tree(species=None, diameter_cm=None)])]
+    )
+    tree_adapter = TreeListToDiameterClassAdapter()
+    assert tree_adapter.can_adapt(stand4)
+    out4 = tree_adapter.adapt(stand4)
+    assert "dclass" in out4
+
+    registry = AdapterRegistry.default()
+    spatial_adapters = registry.find_for("spatial")
+    assert any(adapter.target_mode == "spatial" for adapter in spatial_adapters)
+
+
+def test_growth_model_base_methods():
+    model = GrowthModel()
+    assert model.default_attrs() == {}
+    assert model.available_actions() == {}
+    with pytest.raises(NotImplementedError):
+        model.requirements()
+    with pytest.raises(NotImplementedError):
+        model.update_step(SimpleNamespace(), 1.0)
+
+
+def test_growth_model_can_build_branches():
+    class ReqModel(ExampleStandGeneralModel):
+        def requirements(self) -> Requirements:
+            return Requirements(inventory="spatial", require_site=True, require_top_height=True)
+
+    req_model = ReqModel()
+    plot = CircularPlot(
+        id=1,
+        area_m2=200.0,
+        trees=[Tree(species="Picea abies", diameter_cm=20.0, height_m=None, weight_n=1.0)],
+    )
+    stand = Stand(area_ha=1.0, plots=[plot])
+    ok, missing = req_model.can_build(stand, allow_adapters=False)
+    assert not ok
+    assert "site" in missing
+    assert "top_height" in missing
+    assert any("spatial" in item for item in missing)
+
+    model = ExampleStandGeneralModel()
+
+    class DummyStand:
+        use_angle_count = False
+        plots = []
+        site = None
+
+        def get_dominant_height(self):
+            return None
+
+        @property
+        def BasalArea(self):
+            raise RuntimeError("no aggregates")
+
+        @property
+        def Stems(self):
+            raise RuntimeError("no aggregates")
+
+    dummy = DummyStand()
+    ok, missing = model.can_build(dummy, mode_hint="tree_list", allow_adapters=False)
+    assert not ok
+    assert "tree_list" in missing
+
+    ok, missing = model.can_build(dummy, mode_hint="diameter_class", allow_adapters=False)
+    assert not ok
+    assert any("diameter_class" in item for item in missing)
+
+    ok, missing = model.can_build(dummy, mode_hint="aggregate", allow_adapters=False)
+    assert not ok
+    assert any("aggregates" in item for item in missing)
+
+    ok, missing = model.can_build(dummy, allow_adapters=False)
+    assert not ok
+    assert any("tree_list or aggregates" in item for item in missing)
+
+    ok, missing = model.can_build(_ac_stand(), allow_adapters=True, mode_hint="spatial")
+    assert ok
+
+    pos_stand = _tree_list_stand(with_positions=True)
+    ok, missing = model.can_build(pos_stand, allow_adapters=False, mode_hint="spatial")
+    assert ok
+
+
+def test_growth_model_build_context_branches(monkeypatch):
+    import pyforestry.base.simulation.adapters as adapters
+
+    model = ExampleStandGeneralModel()
+    ac = _ac_stand()
+
+    with pytest.raises(ValueError, match="Adapter"):
+        model.build_context(ac, mode_hint="tree_list", use_adapter="missing_adapter")
+
+    stand = Stand(plots=[])
+    stand.use_angle_count = True
+    stand._metric_estimates = {
+        "BasalArea": {"TOTAL": StandBasalArea(10.0)},
+        "Stems": {"TOTAL": Stems(100.0)},
+    }
+
+    class DummyRegistry:
+        def get(self, name):
+            return None
+
+    monkeypatch.setattr(adapters.AdapterRegistry, "default", staticmethod(lambda: DummyRegistry()))
+    ctx = model.build_context(stand, mode_hint="tree_list")
+    assert ctx.mode == "aggregate"
+
+    tree_stand = _tree_list_stand(with_positions=False)
+    ctx2 = model.build_context(tree_stand, mode_hint="spatial")
+    assert ctx2.mode == "tree_list"
+
+    stand3 = Stand(plots=[CircularPlot(id=1, radius_m=5.0, trees=[])])
+    stand3._metric_estimates = {
+        "BasalArea": {"TOTAL": StandBasalArea(10.0)},
+        "Stems": {"TOTAL": Stems(100.0)},
+    }
+    ctx3 = model.build_context(stand3, mode_hint="diameter_class")
+    assert ctx3.mode == "diameter_class"
+    assert ctx3._dclass["TOTAL"]["bin_mids_cm"]
+
+    stand4 = Stand(plots=[])
+    stand4.use_angle_count = True
+    stand4._metric_estimates = {
+        "BasalArea": {"TOTAL": StandBasalArea(12.0)},
+        "Stems": {"TOTAL": Stems(110.0)},
+    }
+    ctx4 = model.build_context(stand4)
+    assert ctx4.mode == "aggregate"
+
+    stand5 = _tree_list_stand()
+    ctx5 = model.build_context(stand5)
+    assert ctx5.mode == "tree_list"
+
+
+def test_example_model_diameter_class_update_step():
+    model = ExampleStandGeneralModel()
+    stand = Stand(plots=[])
+    stand._metric_estimates = {
+        "BasalArea": {"TOTAL": StandBasalArea(8.0)},
+        "Stems": {"TOTAL": Stems(200.0)},
+    }
+    ctx = model.build_context(stand, mode_hint="diameter_class")
+    before = ctx._dclass["TOTAL"]["bin_mids_cm"][0]
+    ctx.update_step(1.0)
+    after = ctx._dclass["TOTAL"]["bin_mids_cm"][0]
+    assert after > before
+
+
+def test_example_model_mortality_and_thinning_branches():
+    model = ExampleStandGeneralModel()
+    agg_ctx = model.build_context(_tree_list_stand(), mode_hint="aggregate")
+    agg_ctx.set_aggregate_metrics(ba_total=10.0, stems_total=100.0)
+    model._act_apply_mortality_rate(agg_ctx, rate=0.1)
+    assert float(agg_ctx.metrics["Stems"]["TOTAL"]) < 100.0
+
+    with pytest.raises(ValueError):
+        model._act_apply_mortality_rate(agg_ctx, rate=1.5)
+
+    tree = Tree(species="Picea abies", diameter_cm=20.0, weight_n=None)
+    stand = Stand(plots=[CircularPlot(id=1, area_m2=200.0, trees=[tree])])
+    tree_ctx = model.build_context(stand, mode_hint="tree_list")
+    model._act_apply_mortality_rate(tree_ctx, rate=0.2)
+    assert tree_ctx.plots[0].trees[0].weight_n == pytest.approx(0.8)
+
+    with pytest.raises(ValueError):
+        model._act_thin_fraction(tree_ctx, fraction=1.0)
+
+    empty_ctx = model.build_context(
+        Stand(plots=[CircularPlot(id=2, area_m2=200.0, trees=[])]),
+        mode_hint="tree_list",
+    )
+    model._act_thin_fraction(empty_ctx, fraction=0.5)
+
+
+def test_example_model_thin_smallest_classes_branches():
+    model = ExampleStandGeneralModel()
+    agg_ctx = model.build_context(_tree_list_stand(), mode_hint="aggregate")
+    with pytest.raises(RuntimeError):
+        model._act_thin_smallest_classes(agg_ctx, fraction=0.2)
+
+    stand = Stand(plots=[])
+    stand._metric_estimates = {
+        "BasalArea": {"TOTAL": StandBasalArea(8.0)},
+        "Stems": {"TOTAL": Stems(100.0)},
+    }
+    dclass_ctx = model.build_context(stand, mode_hint="diameter_class")
+    with pytest.raises(ValueError):
+        model._act_thin_smallest_classes(dclass_ctx, fraction=1.0)
+
+    dclass_ctx.set_diameter_class(
+        {"TOTAL": {"bin_mids_cm": [10.0, 20.0], "n_per_ha": [50.0, 50.0]}}
+    )
+    model._act_thin_smallest_classes(dclass_ctx, fraction=0.2)
+    assert dclass_ctx._dclass["TOTAL"]["n_per_ha"][1] == pytest.approx(50.0)
 
 
 def test_spatial_from_tree_list():
@@ -328,6 +587,147 @@ def test_context_ensemble_engine_hint_selection():
         ContextEnsemble([ctx], model=model, engine="unknown_backend")
 
 
+def test_ensemble_engine_helpers(monkeypatch):
+    import builtins
+
+    import numpy as np
+
+    from pyforestry.base.simulation import ensemble as ens_mod
+
+    class DummyEngine(ens_mod.BatchEngine):
+        def grow(self, model, vec, dt, extra=None):  # type: ignore[override]
+            return vec
+
+    dummy = DummyEngine()
+    assert ens_mod._engine_from_hint(dummy) is dummy
+    assert isinstance(ens_mod._engine_from_hint("numpy"), ens_mod.PythonEngine)
+
+    original_import = builtins.__import__
+
+    def fake_import(name, *args, **kwargs):
+        if name in {"numba", "jax"}:
+            raise ImportError("blocked")
+        return original_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", fake_import)
+    assert ens_mod._optional_numba_engine() is None
+    assert ens_mod._optional_jax_engine() is None
+    assert isinstance(ens_mod._engine_from_hint("numba"), ens_mod.PythonEngine)
+    assert isinstance(ens_mod._engine_from_hint("jax"), ens_mod.PythonEngine)
+
+    with pytest.raises(ValueError):
+        ens_mod._engine_from_hint("unknown")
+    with pytest.raises(TypeError):
+        ens_mod._engine_from_hint(123)
+    with pytest.raises(NotImplementedError):
+        ens_mod.BatchEngine().grow(
+            object(),
+            {"ba": np.array([1.0]), "n": np.array([2.0])},
+            dt=1.0,
+        )
+
+    engine = ens_mod.PythonEngine()
+    out = engine.grow(object(), {"ba": np.array([1.0]), "n": np.array([2.0])}, dt=1.0)
+    assert float(out["ba"][0]) == 1.0
+    assert float(out["n"][0]) == 2.0
+
+
+def test_context_ensemble_management_and_dataframe():
+    model = ExampleStandGeneralModel()
+    ctxs = []
+    for _i in range(2):
+        ctx = model.build_context(_tree_list_stand(), mode_hint="aggregate")
+        ctx.set_aggregate_metrics(ba_total=12.0, stems_total=300.0)
+        ctxs.append(ctx)
+
+    ens = ContextEnsemble(ctxs, model=model)
+    ens.update_step(dt=0.5, management=[{"pre": []}, {"pre": []}])
+    ens.update_step(dt=0.5, management={"pre": []})
+    ens.do("fertilize", years=1.0)
+
+    df = ens.to_pandas()
+    assert "context_id" in df.columns
+
+
+def test_simulation_setup_triggers_and_schedule():
+    model = ExampleStandGeneralModel()
+    ctx = model.build_context(_tree_list_stand(), mode_hint="aggregate")
+    ctx.set_aggregate_metrics(ba_total=10.0, stems_total=100.0)
+
+    fired = {"pre": 0, "post": 0}
+
+    def pre_predicate(_ctx):
+        return True
+
+    def pre_action(_ctx):
+        fired["pre"] += 1
+
+    def post_predicate(_ctx):
+        return _ctx.state.get("t", 0.0) >= 1.0
+
+    def post_action(_ctx):
+        fired["post"] += 1
+
+    def scheduled(ctx):
+        ctx.attrs["scheduled"] = True
+
+    setup = SimulationSetup(
+        start_t=0.0,
+        end_t=2.0,
+        dt=1.0,
+        triggers=[
+            TriggerSpec(
+                name="pre_once",
+                check_phase="pre",
+                predicate=pre_predicate,
+                action=pre_action,
+                once=True,
+            ),
+            TriggerSpec(
+                name="post",
+                check_phase="post",
+                predicate=post_predicate,
+                action=post_action,
+            ),
+        ],
+        schedule=[ScheduledOp(name="mark", t=1.0, fn=scheduled)],
+    )
+    setup.run(ctx)
+
+    assert fired["pre"] == 1
+    assert fired["post"] >= 1
+    assert ctx.attrs.get("scheduled") is True
+    ops = {entry.op for entry in ctx.history}
+    assert "scheduled_op" in ops
+    assert "trigger_fired" in ops
+
+
+def test_simulation_setup_trigger_error_recorded():
+    model = ExampleStandGeneralModel()
+    ctx = model.build_context(_tree_list_stand(), mode_hint="aggregate")
+    ctx.set_aggregate_metrics(ba_total=10.0, stems_total=100.0)
+
+    def bad_predicate(_ctx):
+        raise RuntimeError("boom")
+
+    setup = SimulationSetup(
+        start_t=0.0,
+        end_t=1.0,
+        dt=1.0,
+        triggers=[
+            TriggerSpec(
+                name="bad",
+                check_phase="pre",
+                predicate=bad_predicate,
+                action=lambda _ctx: None,
+            )
+        ],
+    )
+    setup.run(ctx)
+
+    assert any(entry.op == "trigger_error" for entry in ctx.history)
+
+
 def test_parallel_runner_round_trip():
     model = ExampleStandGeneralModel()
     ctxs = []
@@ -345,8 +745,12 @@ def test_parallel_runner_round_trip():
     assert len(updated) == len(ctxs)
 
     for original, restored in zip(ctxs, updated, strict=False):
-        assert float(restored.metrics["BasalArea"]["TOTAL"]) > float(original.metrics["BasalArea"]["TOTAL"])
-        assert float(restored.metrics["Stems"]["TOTAL"]) < float(original.metrics["Stems"]["TOTAL"])
+        assert float(restored.metrics["BasalArea"]["TOTAL"]) > float(
+            original.metrics["BasalArea"]["TOTAL"]
+        )
+        assert float(restored.metrics["Stems"]["TOTAL"]) < float(
+            original.metrics["Stems"]["TOTAL"]
+        )
     # ensemble contexts were replaced when write_back=True
     assert ens.contexts[0] is updated[0]
 
@@ -354,7 +758,7 @@ def test_parallel_runner_round_trip():
 def test_parallel_runner_write_back_optional_and_dispatcher():
     model = ExampleStandGeneralModel()
     ctxs = []
-    for i in range(4):
+    for _i in range(4):
         ctx = model.build_context(_tree_list_stand(), mode_hint="aggregate")
         ctx.set_aggregate_metrics(ba_total=10.0, stems_total=100.0)
         ctxs.append(ctx)
@@ -364,11 +768,20 @@ def test_parallel_runner_write_back_optional_and_dispatcher():
 
     from pyforestry.simulation.services import run_parallel
 
-    updated = run_parallel(ctxs, dt=0.5, steps=1, processes=2, write_back=False, dispatcher=dispatcher)
+    updated = run_parallel(
+        ctxs,
+        dt=0.5,
+        steps=1,
+        processes=2,
+        write_back=False,
+        dispatcher=dispatcher,
+    )
     # Original list unchanged
     assert ctxs[0] is not updated[0]
     # Updated values reflect growth
-    assert float(updated[0].metrics["BasalArea"]["TOTAL"]) > float(ctxs[0].metrics["BasalArea"]["TOTAL"])
+    assert float(updated[0].metrics["BasalArea"]["TOTAL"]) > float(
+        ctxs[0].metrics["BasalArea"]["TOTAL"]
+    )
 
 
 def test_parallel_runner_history_tail_preserved():
@@ -377,7 +790,14 @@ def test_parallel_runner_history_tail_preserved():
     ctx.set_aggregate_metrics(ba_total=10.0, stems_total=100.0)
     from pyforestry.simulation.services import run_parallel
 
-    updated = run_parallel([ctx], dt=1.0, steps=1, write_back=False, include_history=True, history_tail=1)
+    updated = run_parallel(
+        [ctx],
+        dt=1.0,
+        steps=1,
+        write_back=False,
+        include_history=True,
+        history_tail=1,
+    )
     assert len(updated[0].history) == 1
 
 
@@ -392,3 +812,83 @@ def test_parallel_runner_raises_on_error():
 
     with pytest.raises(RuntimeError, match="Parallel simulation failed"):
         run_parallel([ctx], dt=1.0)
+
+
+def test_parallel_runner_empty_contexts_returns_empty():
+    from pyforestry.simulation.services import run_parallel
+
+    assert run_parallel([], dt=1.0) == []
+
+
+def test_parallel_runner_missing_model_raises():
+    class NoModel:
+        pass
+
+    from pyforestry.simulation.services import run_parallel
+
+    with pytest.raises(ValueError, match="model"):
+        run_parallel([NoModel()], dt=1.0)
+
+
+def test_parallel_runner_pool_branch_and_management_list(monkeypatch):
+    import pyforestry.simulation.services.parallel_runner as pr
+    from pyforestry.simulation.services import run_parallel
+
+    class DummyPool:
+        def __init__(self, processes):
+            self.processes = processes
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def starmap(self, fn, iterable):
+            return [fn(*args) for args in iterable]
+
+    monkeypatch.setattr(pr.mp, "Pool", DummyPool)
+
+    model = ExampleStandGeneralModel()
+    ctxs = []
+    for _i in range(2):
+        ctx = model.build_context(_tree_list_stand(), mode_hint="aggregate")
+        ctx.set_aggregate_metrics(ba_total=10.0, stems_total=100.0)
+        ctxs.append(ctx)
+
+    mgmt = [{"pre": []}, {"pre": []}]
+    updated = run_parallel(
+        ctxs,
+        dt=0.5,
+        steps=1,
+        processes=2,
+        management=mgmt,
+        write_back=False,
+    )
+    assert len(updated) == len(ctxs)
+
+
+def test_parallel_runner_telemetry_sink(monkeypatch):
+    import pyforestry.simulation.services.parallel_runner as pr
+    from pyforestry.simulation.services import run_parallel
+
+    original = pr.SimulationContext.from_checkpoint
+
+    def patched(cls, model, checkpoint):
+        ctx = original(model, checkpoint)
+        ctx.telemetry = SimpleNamespace(events=[{"event": "ok"}])
+        return ctx
+
+    monkeypatch.setattr(pr.SimulationContext, "from_checkpoint", classmethod(patched))
+
+    model = ExampleStandGeneralModel()
+    ctx = model.build_context(_tree_list_stand(), mode_hint="aggregate")
+    ctx.set_aggregate_metrics(ba_total=10.0, stems_total=100.0)
+
+    collected = []
+
+    def sink(idx, events):
+        collected.append((idx, events))
+
+    run_parallel([ctx], dt=1.0, steps=1, write_back=False, telemetry_sink=sink)
+    assert collected == [(0, [{"event": "ok"}])]

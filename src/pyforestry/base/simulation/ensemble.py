@@ -1,4 +1,5 @@
-# pyforestry/base/simulation/ensemble.py
+"""Batch execution utilities for running ensembles of contexts."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -15,6 +16,7 @@ class BatchEngine:
     def grow(
         self, model: Any, vec: Dict[str, np.ndarray], dt: float, extra=None
     ) -> Dict[str, np.ndarray]:
+        """Advance a batch of aggregate metrics by ``dt``."""
         raise NotImplementedError
 
 
@@ -24,6 +26,7 @@ class PythonEngine(BatchEngine):
     def grow(
         self, model: Any, vec: Dict[str, np.ndarray], dt: float, extra=None
     ) -> Dict[str, np.ndarray]:
+        """Run the Python batch growth routine for aggregate metrics."""
         ba = vec["ba"]
         n = vec["n"]
         fert_mask = (extra or {}).get("fert_mask", np.zeros_like(ba))
@@ -35,6 +38,7 @@ class PythonEngine(BatchEngine):
 
 
 def _optional_numba_engine() -> Optional[BatchEngine]:
+    """Return a numba-capable engine if numba is available."""
     try:
         import numba  # noqa: F401
     except Exception:
@@ -43,6 +47,7 @@ def _optional_numba_engine() -> Optional[BatchEngine]:
 
 
 def _optional_jax_engine() -> Optional[BatchEngine]:
+    """Return a jax-capable engine if jax is available."""
     try:
         import jax  # noqa: F401
     except Exception:
@@ -51,6 +56,7 @@ def _optional_jax_engine() -> Optional[BatchEngine]:
 
 
 def _engine_from_hint(hint: Optional[Union[str, BatchEngine]]) -> Optional[BatchEngine]:
+    """Resolve an engine hint into a concrete batch engine."""
     if hint is None:
         return None
     if isinstance(hint, BatchEngine):
@@ -71,11 +77,14 @@ def _engine_from_hint(hint: Optional[Union[str, BatchEngine]]) -> Optional[Batch
 
 @dataclass
 class ContextEnsemble:
+    """Bundle multiple contexts and advance them in batches when possible."""
+
     contexts: List[SimulationContext]
     model: Any
     engine: Optional[Union[BatchEngine, str]] = None
 
     def __post_init__(self) -> None:
+        """Select a batch engine based on the hint or available backends."""
         chosen = _engine_from_hint(self.engine)
         if chosen is None:
             chosen = _optional_jax_engine() or _optional_numba_engine() or PythonEngine()
@@ -85,8 +94,11 @@ class ContextEnsemble:
         self,
         dt: float,
         *,
-        management: Optional[Union[Mapping[str, Any], Sequence[Optional[Mapping[str, Any]]]]] = None,
+        management: Optional[
+            Union[Mapping[str, Any], Sequence[Optional[Mapping[str, Any]]]]
+        ] = None,
     ) -> None:
+        """Advance all contexts by one step, batching aggregate contexts."""
         assert self.engine is not None
         if management is None:
             mgmt_list: List[Optional[Mapping[str, Any]]] = [None for _ in self.contexts]
@@ -127,15 +139,23 @@ class ContextEnsemble:
                 c._log_external_update("update_step", {"dt": dt})
 
     def grow(
-        self, dt: float, *, management: Optional[Union[Mapping[str, Any], Sequence[Optional[Mapping[str, Any]]]]] = None
+        self,
+        dt: float,
+        *,
+        management: Optional[
+            Union[Mapping[str, Any], Sequence[Optional[Mapping[str, Any]]]]
+        ] = None,
     ) -> None:  # pragma: no cover - compatibility
+        """Backward-compatible alias for :meth:`update_step`."""
         self.update_step(dt, management=management)
 
     def do(self, name: str, **kwargs: Any) -> None:
+        """Execute an action on each context."""
         for c in self.contexts:
             c.do(name, **kwargs)
 
     def to_pandas(self):
+        """Concatenate history tables from all contexts."""
         import pandas as pd
 
         return pd.concat(
