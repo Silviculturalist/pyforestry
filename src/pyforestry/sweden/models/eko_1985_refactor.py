@@ -114,6 +114,8 @@ class _ConcreteSwedishSite(SwedishSite):
 
 
 class RegionSE(Enum):
+    """Swedish region categories used by the Eko 1985 model."""
+
     NORRA = "North"
     MELLERSTA = "Central"
     SÖDRA = "South"
@@ -844,6 +846,7 @@ class Eko1985Model(GrowthModel):
         *,
         default_age: float | None = None,
     ) -> None:
+        """Initialize with optional site context and default cohort age."""
         self._site_context = site_context
         self._default_age = float(default_age) if default_age is not None else None
 
@@ -935,6 +938,7 @@ class Eko1985Model(GrowthModel):
         ctx.state["years_since_thin"] = 0.0
 
     def _ensure_aggregate_context(self, ctx: "SimulationContext") -> None:
+        """Ensure the simulation context uses aggregate inventory mode."""
         if ctx.mode != "aggregate":
             raise RuntimeError("Eko1985Model requires aggregate inventory mode.")
 
@@ -945,6 +949,7 @@ class Eko1985Model(GrowthModel):
         stand_site: SiteBase | Eko1985SiteContext | None = None,
         stand_attrs: Mapping[str, Any] | None = None,
     ) -> Eko1985SiteContext:
+        """Resolve a site context from explicit, stand, or default sources."""
         if site_context is None and stand_attrs is not None:
             site_context = stand_attrs.get("eko_1985_site_context")
         if site_context is None and stand_site is not None:
@@ -962,6 +967,7 @@ class Eko1985Model(GrowthModel):
     def _normalize_age_map(
         self, age_map: Mapping[TreeName | str, float] | None
     ) -> dict[str, float]:
+        """Normalize cohort age keys to species full names."""
         normalized: dict[str, float] = {}
         if not age_map:
             return normalized
@@ -983,6 +989,7 @@ class Eko1985Model(GrowthModel):
         age_map: Mapping[str, float],
         default_age: float | None,
     ) -> None:
+        """Validate that every cohort has an age or fallback default."""
         basals = metrics.get("BasalArea", {})
         species_keys = [key for key in basals if key != "TOTAL"]
         if not species_keys:
@@ -1000,6 +1007,7 @@ class Eko1985Model(GrowthModel):
         species: TreeName,
         default_age: float | None,
     ) -> float:
+        """Resolve an age for the species from the map or default."""
         for key in (species.full_name, species.full_name.lower(), species.code):
             if key in age_map:
                 return float(age_map[key])
@@ -1012,6 +1020,7 @@ class Eko1985Model(GrowthModel):
     def _metric_for_species(
         self, metrics: Mapping[TreeName | str, Any], species: TreeName
     ) -> Any | None:
+        """Fetch a metric keyed by species name, code, or TreeName."""
         if species in metrics:
             return metrics[species]
         for key in (species.full_name, species.full_name.lower(), species.code):
@@ -1020,6 +1029,7 @@ class Eko1985Model(GrowthModel):
         return None
 
     def _single_species_from_age_map(self, age_map: Mapping[str, float]) -> TreeName:
+        """Return the single species in the age map, raising on ambiguity."""
         species_names = [name for name in age_map if name != "TOTAL"]
         if len(species_names) != 1:
             raise ValueError(
@@ -1033,6 +1043,7 @@ class Eko1985Model(GrowthModel):
         age_map: Mapping[str, float],
         default_age: float | None,
     ) -> list[Eko1985Cohort]:
+        """Build cohorts from aggregate metrics and age information."""
         basals = metrics.get("BasalArea", {})
         stems = metrics.get("Stems", {})
         if not basals or not stems:
@@ -1079,6 +1090,7 @@ class Eko1985Model(GrowthModel):
         return cohorts
 
     def _ages_from_cohorts(self, cohorts: Sequence[Eko1985Cohort]) -> dict[str, float]:
+        """Extract cohort ages keyed by species name."""
         ages: dict[str, float] = {}
         for cohort in cohorts:
             if float(cohort.basal_area) <= 0 or float(cohort.stems) <= 0:
@@ -1087,6 +1099,7 @@ class Eko1985Model(GrowthModel):
         return ages
 
     def _write_metrics(self, ctx: "SimulationContext", cohorts: Sequence[Eko1985Cohort]) -> None:
+        """Write aggregate metrics to the context from cohorts."""
         stems_dict: dict[TreeName | str, Stems] = {}
         ba_dict: dict[TreeName | str, StandBasalArea] = {}
         qmd_dict: dict[TreeName | str, QuadraticMeanDiameter] = {}

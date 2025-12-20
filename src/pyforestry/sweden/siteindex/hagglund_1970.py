@@ -1,3 +1,5 @@
+"""Hagglund (1970s) site index models for Sweden spruce and pine."""
+
 import math
 import warnings
 from enum import Enum
@@ -10,6 +12,8 @@ from pyforestry.base.helpers import Age, AgeMeasurement, SiteIndexValue, TreeSpe
 
 
 class HagglundSpruceModel:
+    """Height trajectory models for Norway spruce."""
+
     @staticmethod
     def northern_sweden(
         dominant_height: float,
@@ -73,6 +77,7 @@ class HagglundSpruceModel:
 
         # Define the bonitering subroutine that uses the effective DBH age (eff_age)
         def subroutineBonitering(eff_age: float):
+            """Return productivity parameters for an effective DBH age."""
             AI1 = 10.0
             AI2 = 600.0
             AI3 = 0.0
@@ -100,11 +105,13 @@ class HagglundSpruceModel:
         else:
             # Use Newton–Raphson to solve: f(x) = x + T13(x) - age_value = 0
             def f(x):
+                """Root function for DBH-age estimation."""
                 # Compute T13 from the bonitering subroutine for effective age x.
                 _, _, _, _, T13_local = subroutineBonitering(x)
                 return x + T13_local - age_value
 
             def fprime(x, h=0.001):
+                """Numerical derivative for the Newton solver."""
                 return (f(x + h) - f(x - h)) / (2 * h)
 
             # Choose an initial guess. (Empirically, effective DBH age is lower than total age.)
@@ -195,6 +202,7 @@ class HagglundSpruceModel:
         top_height_dm = dominant_height * 10 - 13
 
         def subroutineBonitering(eff_age: float):
+            """Return productivity parameters for an effective DBH age."""
             AI1 = 10.0
             AI2 = 600.0
             A2 = 0.0
@@ -224,10 +232,12 @@ class HagglundSpruceModel:
         else:
 
             def f(x):
+                """Root function for DBH-age estimation."""
                 _, _, _, _, T13_local = subroutineBonitering(x)
                 return x + T13_local - age_value
 
             def fprime(x, h=0.001):
+                """Numerical derivative for the Newton solver."""
                 return (f(x + h) - f(x - h)) / (2 * h)
 
             x = age_value * 0.35
@@ -291,15 +301,20 @@ class HagglundSpruceModel:
 
 
 class HagglundPineRegeneration(Enum):
+    """Regeneration method categories for the pine model."""
+
     CULTURE = "culture"
     NATURAL = "natural"
     UNKNOWN = "unknown"
 
     def __str__(self):
+        """Return the enum value as a string."""
         return self.value
 
 
 class HagglundPineModel:
+    """Height trajectory model for Scots pine."""
+
     @staticmethod
     def sweden(
         dominant_height_m: float,
@@ -337,6 +352,7 @@ class HagglundPineModel:
             print("Warning: Too old stand, outside of the material.")
 
         def subroutineBonitering(eff_age: float):
+            """Return productivity parameters for an effective DBH age."""
             AI1 = 10.0
             AI2 = 600.0
             A2 = 0.0
@@ -373,10 +389,12 @@ class HagglundPineModel:
         else:
 
             def f(x):
+                """Root function for DBH-age estimation."""
                 _, _, _, T13_local = subroutineBonitering(x)
                 return x + T13_local - age_value
 
             def fprime(x, h=0.001):
+                """Numerical derivative for the Newton solver."""
                 return (f(x + h) - f(x - h)) / (2 * h)
 
             x = age_value * 0.35
@@ -450,15 +468,18 @@ class HeightTrajectoryWrapper:
     """
 
     def __init__(self, model):
+        """Wrap a model class to return SiteIndexValue results."""
         self._model = model
 
     def __getattr__(self, name):
+        """Proxy attributes, converting callables to SI-only wrappers."""
         attr = getattr(self._model, name)
         if callable(attr):
             model_attr = cast(Callable[..., tuple[SiteIndexValue, float]], attr)
 
             @wraps(model_attr)
             def wrapper(*args, **kwargs):
+                """Return only the SiteIndexValue from the model call."""
                 si_value, _ = model_attr(*args, **kwargs)
                 return si_value
 
@@ -472,15 +493,18 @@ class TimeToBreastHeightWrapper:
     """
 
     def __init__(self, model):
+        """Wrap a model class to return T13 results."""
         self._model = model
 
     def __getattr__(self, name):
+        """Proxy attributes, converting callables to T13-only wrappers."""
         attr = getattr(self._model, name)
         if callable(attr):
             model_attr = cast(Callable[..., tuple[SiteIndexValue, float]], attr)
 
             @wraps(model_attr)
             def wrapper(*args, **kwargs):
+                """Return only the T13 value from the model call."""
                 _, T13 = model_attr(*args, **kwargs)
                 return T13
 
@@ -494,19 +518,25 @@ class TimeToBreastHeightWrapper:
 
 
 class HeightTrajectoryContainer:
+    """Expose height trajectory functions by species."""
+
     picea_abies: HeightTrajectoryWrapper
     pinus_sylvestris: HeightTrajectoryWrapper
 
     def __init__(self) -> None:
+        """Initialize species-specific height trajectory wrappers."""
         self.picea_abies = HeightTrajectoryWrapper(HagglundSpruceModel)
         self.pinus_sylvestris = HeightTrajectoryWrapper(HagglundPineModel)
 
 
 class TimeToBreastHeightContainer:
+    """Expose T13 functions by species."""
+
     picea_abies: TimeToBreastHeightWrapper
     pinus_sylvestris: TimeToBreastHeightWrapper
 
     def __init__(self) -> None:
+        """Initialize species-specific T13 wrappers."""
         self.picea_abies = TimeToBreastHeightWrapper(HagglundSpruceModel)
         self.pinus_sylvestris = TimeToBreastHeightWrapper(HagglundPineModel)
 
