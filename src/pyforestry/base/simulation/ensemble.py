@@ -107,7 +107,8 @@ class ContextEnsemble:
         ] = None,
     ) -> None:
         """Advance all contexts by one step, batching aggregate contexts."""
-        assert self.engine is not None
+        if self.engine is None:
+            raise RuntimeError("No batch engine configured for this ensemble.")
         if management is None:
             mgmt_list: List[Optional[Mapping[str, Any]]] = [None for _ in self.contexts]
         elif isinstance(management, (list, tuple)):

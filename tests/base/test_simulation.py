@@ -35,7 +35,6 @@ from pyforestry.base.simulation.adapters import (
     TreeListToSpatialAdapter,
 )
 from pyforestry.base.simulation.ensemble import _engine_from_hint
-from pyforestry.base.simulation.growth_model import GrowthModel, Requirements
 
 # ----------------------------- Test fixtures ---------------------------------
 
