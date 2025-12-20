@@ -1,4 +1,4 @@
-"""Batch orchestration helpers for running multiple simulation contexts."""
+"""Batch execution utilities for running ensembles of contexts."""
 
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ class BatchEngine:
         dt: float,
         extra: Optional[Mapping[str, Any]] = None,
     ) -> Dict[str, np.ndarray]:
-        """Advance batch state vectors by ``dt`` and return updated arrays."""
+        """Advance a batch of aggregate metrics by ``dt``."""
         raise NotImplementedError
 
 
@@ -34,7 +34,7 @@ class PythonEngine(BatchEngine):
         dt: float,
         extra: Optional[Mapping[str, Any]] = None,
     ) -> Dict[str, np.ndarray]:
-        """Apply the model batch step or pass through values."""
+        """Run the Python batch growth routine for aggregate metrics."""
         ba = vec["ba"]
         n = vec["n"]
         fert_mask = (extra or {}).get("fert_mask", np.zeros_like(ba))
@@ -46,7 +46,7 @@ class PythonEngine(BatchEngine):
 
 
 def _optional_numba_engine() -> Optional[BatchEngine]:
-    """Return a batch engine when numba is available."""
+    """Return a numba-capable engine if numba is available."""
     try:
         import numba  # noqa: F401
     except Exception:
@@ -55,7 +55,7 @@ def _optional_numba_engine() -> Optional[BatchEngine]:
 
 
 def _optional_jax_engine() -> Optional[BatchEngine]:
-    """Return a batch engine when jax is available."""
+    """Return a jax-capable engine if jax is available."""
     try:
         import jax  # noqa: F401
     except Exception:
@@ -64,7 +64,7 @@ def _optional_jax_engine() -> Optional[BatchEngine]:
 
 
 def _engine_from_hint(hint: Optional[Union[str, BatchEngine]]) -> Optional[BatchEngine]:
-    """Resolve a backend hint into a batch engine instance."""
+    """Resolve an engine hint into a concrete batch engine."""
     if hint is None:
         return None
     if isinstance(hint, BatchEngine):
@@ -85,14 +85,14 @@ def _engine_from_hint(hint: Optional[Union[str, BatchEngine]]) -> Optional[Batch
 
 @dataclass
 class ContextEnsemble:
-    """Bundle multiple contexts and update them with a shared engine."""
+    """Bundle multiple contexts and advance them in batches when possible."""
 
     contexts: List[SimulationContext]
     model: Any
     engine: Optional[Union[BatchEngine, str]] = None
 
     def __post_init__(self) -> None:
-        """Resolve the engine hint to a concrete batch engine."""
+        """Select a batch engine based on the hint or available backends."""
         chosen = _engine_from_hint(self.engine)
         if chosen is None:
             chosen = _optional_jax_engine() or _optional_numba_engine() or PythonEngine()
@@ -106,7 +106,9 @@ class ContextEnsemble:
             Union[Mapping[str, Any], Sequence[Optional[Mapping[str, Any]]]]
         ] = None,
     ) -> None:
-        """Advance each context by ``dt`` using batch or per-context updates."""
+        """Advance all contexts by one step, batching aggregate contexts."""
+        if self.engine is None:
+            raise RuntimeError("No batch engine configured for this ensemble.")
         if management is None:
             mgmt_list: List[Optional[Mapping[str, Any]]] = [None for _ in self.contexts]
         elif isinstance(management, (list, tuple)):
@@ -169,16 +171,16 @@ class ContextEnsemble:
             Union[Mapping[str, Any], Sequence[Optional[Mapping[str, Any]]]]
         ] = None,
     ) -> None:  # pragma: no cover - compatibility
-        """Compatibility alias for :meth:`update_step`."""
+        """Backward-compatible alias for :meth:`update_step`."""
         self.update_step(dt, management=management)
 
     def do(self, name: str, **kwargs: Any) -> None:
-        """Invoke an action across every context."""
+        """Execute an action on each context."""
         for c in self.contexts:
             c.do(name, **kwargs)
 
     def to_pandas(self):
-        """Return a concatenated history DataFrame for all contexts."""
+        """Concatenate history tables from all contexts."""
         import pandas as pd
 
         return pd.concat(

@@ -66,6 +66,7 @@ class VolumeDescriptor:
     metadata: MutableMapping[str, Any] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
+        """Normalize metadata and attach the stand identifier when available."""
         self.metadata = dict(self.metadata)
         if self.ledger.stand_id:
             self.metadata.setdefault("stand_id", self.ledger.stand_id)
@@ -89,6 +90,7 @@ class EmptyVolumeDescriptor(VolumeDescriptor):
     reason: str = "empty"
 
     def evaluate(self) -> VolumeResult:  # type: ignore[override]
+        """Return an empty result tagged with the reason for emptiness."""
         base = super().evaluate()
         metadata = dict(base.metadata)
         metadata.setdefault("reason", self.reason)
@@ -115,12 +117,13 @@ class TreeVolumeDescriptor(VolumeDescriptor):
     min_diam_dead_wood: float = 0.0
 
     def evaluate(self) -> VolumeResult:  # type: ignore[override]
-        if not self.removals:
-            return super().evaluate()
-
+        """Run bucking and valuation over the recorded tree removals."""
         config = self.bucking_config
         if not isinstance(config, BuckingConfig):
             raise TypeError("Bucking configuration must be a BuckingConfig instance.")
+
+        if not self.removals:
+            return super().evaluate()
         if not config.save_sections:
             config = replace(config, save_sections=True)
 
@@ -192,6 +195,7 @@ class VolumeConnector:
     """Resolve removal ledgers into volume descriptors and valuation results."""
 
     def __init__(self, *, bucker_cls: Type[Nasberg_1985_BranchBound] | None = None) -> None:
+        """Create a connector with an optional bucker override."""
         self._bucker_cls = bucker_cls or Nasberg_1985_BranchBound
 
     def describe(self, model_view: Any, ledger: StandRemovalLedger) -> VolumeDescriptor:
@@ -227,6 +231,7 @@ class VolumeConnector:
 
     @staticmethod
     def _resolve_pricelist(model_view: Any) -> Pricelist:
+        """Resolve a pricelist from the model view."""
         candidates = (
             getattr(model_view, "pricelist", None),
             getattr(model_view, "price_list", None),
@@ -239,6 +244,7 @@ class VolumeConnector:
 
     @staticmethod
     def _resolve_taper_class(model_view: Any) -> Type[Taper]:
+        """Resolve the taper class used to compute volumes."""
         candidate = getattr(model_view, "taper_class", None)
         if callable(candidate) and not isinstance(candidate, type):
             candidate = candidate()
@@ -251,6 +257,7 @@ class VolumeConnector:
 
     @staticmethod
     def _resolve_bucking_config(model_view: Any) -> BuckingConfig:
+        """Resolve or default the bucking configuration."""
         candidate = getattr(model_view, "bucking_config", None)
         if callable(candidate):
             candidate = candidate()

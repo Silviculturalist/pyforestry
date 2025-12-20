@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from math import pi
+from types import SimpleNamespace
 
 import pytest
 
@@ -19,7 +20,13 @@ from pyforestry.base.timber.timber_base import Timber
 from pyforestry.base.timber_bucking.nasberg_1985 import BuckingConfig, QualityType
 from pyforestry.simulation import StandComposite, StandPart
 from pyforestry.simulation.growth_module import GrowthModule
-from pyforestry.simulation.valuation import StandRemovalLedger, VolumeConnector
+from pyforestry.simulation.valuation import (
+    PieceRecord,
+    StandRemovalLedger,
+    TreeVolumeDescriptor,
+    VolumeConnector,
+    VolumeResult,
+)
 
 
 class ConstantTaper(Taper):
@@ -131,3 +138,134 @@ def test_volume_connector_and_stage_produce_cash_flows(monkeypatch: pytest.Monke
     assert valuation_ctx["total_value"] == pytest.approx(expected.total_value, rel=1e-6)
     assert valuation_ctx["pieces"][0].volume_m3 == pytest.approx(piece.volume_m3, rel=1e-6)
     assert part.context["cash"] == pytest.approx(1.0 + expected.total_value, rel=1e-6)
+
+
+def test_piece_record_mapping_and_total_volume() -> None:
+    piece = PieceRecord(
+        cohort_id="c1",
+        species=PINUS_SYLVESTRIS.full_name,
+        quality=QualityType.Undefined,
+        length_m=2.0,
+        top_diameter_cm=10.0,
+        volume_m3=0.5,
+        value=2.0,
+        weight=1.0,
+    )
+    mapping = piece.as_mapping()
+    assert mapping["quality"] == "Undefined"
+
+    result = VolumeResult(
+        descriptor=SimpleNamespace(),
+        pieces=(piece,),
+        total_value=2.0,
+        volume_by_quality={quality: 0.0 for quality in QualityType},
+    )
+    assert result.total_volume == pytest.approx(0.5)
+
+
+def test_tree_volume_descriptor_empty_and_config_validation() -> None:
+    ledger = StandRemovalLedger("stand-empty")
+    descriptor = TreeVolumeDescriptor(
+        ledger=ledger,
+        removals=(),
+        pricelist=_make_pricelist(),
+        taper_class=ConstantTaper,
+    )
+    empty = descriptor.evaluate()
+    assert empty.total_value == 0.0
+
+    bad_descriptor = TreeVolumeDescriptor(
+        ledger=ledger,
+        removals=(),
+        pricelist=_make_pricelist(),
+        taper_class=ConstantTaper,
+        bucking_config="bad",
+    )
+    with pytest.raises(TypeError):
+        bad_descriptor.evaluate()
+
+
+def test_tree_volume_descriptor_sections_fallback_and_quality_handling() -> None:
+    ledger = StandRemovalLedger("stand-tree")
+    tree = Tree(species=PINUS_SYLVESTRIS, diameter_cm=15.0, height_m=6.0, weight_n=1.0)
+    ledger.record_tree("thin-2024", tree, metadata={"stump_height_m": 0.0})
+    removals = tuple(ledger.iter_tree_removals())
+
+    class DummyBucker:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        def calculate_tree_value(self, *args, **kwargs):
+            volume_per_quality = [1.0 for _ in range(len(QualityType) + 1)]
+            return SimpleNamespace(
+                total_value=5.0,
+                volume_per_quality=volume_per_quality,
+                sections=[],
+                vol_sk_ub=1.2,
+            )
+
+    descriptor = TreeVolumeDescriptor(
+        ledger=ledger,
+        removals=removals,
+        pricelist=_make_pricelist(),
+        taper_class=ConstantTaper,
+        bucking_config=BuckingConfig(save_sections=False),
+        bucker_cls=DummyBucker,
+    )
+    result = descriptor.evaluate()
+    assert result.pieces
+    assert result.pieces[0].quality == QualityType.Undefined
+
+
+def test_volume_connector_resolvers_and_errors() -> None:
+    connector = VolumeConnector()
+    with pytest.raises(TypeError):
+        connector.describe(object(), object())
+
+    class NoPriceView:
+        taper_class = ConstantTaper
+
+    with pytest.raises(AttributeError):
+        connector._resolve_pricelist(NoPriceView())
+
+    class CallableTaperView:
+        def taper_class(self):
+            return ConstantTaper
+
+    assert connector._resolve_taper_class(CallableTaperView()) is ConstantTaper
+
+    class GetterTaperView:
+        taper_class = None
+
+        def get_taper_class(self):
+            return ConstantTaper
+
+    assert connector._resolve_taper_class(GetterTaperView()) is ConstantTaper
+
+    class BadTaperView:
+        taper_class = object()
+
+    with pytest.raises(AttributeError):
+        connector._resolve_taper_class(BadTaperView())
+
+    class CallableConfigView:
+        def bucking_config(self):
+            return BuckingConfig(save_sections=True)
+
+    assert connector._resolve_bucking_config(CallableConfigView()).save_sections
+
+    class DefaultConfigView:
+        pass
+
+    assert connector._resolve_bucking_config(DefaultConfigView()).save_sections
+
+    class BadConfigView:
+        bucking_config = "bad"
+
+    with pytest.raises(TypeError):
+        connector._resolve_bucking_config(BadConfigView())
+
+    class FalseConfigView:
+        bucking_config = BuckingConfig(save_sections=False)
+
+    assert connector._resolve_bucking_config(FalseConfigView()).save_sections

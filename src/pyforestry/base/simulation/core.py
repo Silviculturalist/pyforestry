@@ -38,7 +38,7 @@ MetricView = Mapping[str, Mapping[MetricKey, MetricValue]]  # read-only facade
 
 # Mutable store
 class MetricMap(TypedDict):
-    """Mutable mapping of simulation metrics by name and species."""
+    """Mutable metrics mapping keyed by metric name and species."""
 
     Stems: Dict[MetricKey, Stems]
     BasalArea: Dict[MetricKey, StandBasalArea]
@@ -67,7 +67,7 @@ class ActionSpec:
 
 @dataclass
 class HistoryEntry:
-    """Snapshot of a state transition recorded in the simulation history."""
+    """History record capturing a single operation and its snapshots."""
 
     t: float
     op: str
@@ -358,7 +358,7 @@ class SimulationContext:
     def _append_history(
         self, op: str, details: Dict[str, Any], pre: Dict[str, Any], post: Dict[str, Any]
     ) -> None:
-        """Append a history entry capturing the transition."""
+        """Append a history entry capturing operation metadata and snapshots."""
         model_state = {k: v for k, v in self.state.items()}
         entry = HistoryEntry(
             t=self.state.get("t", 0.0),
@@ -372,7 +372,7 @@ class SimulationContext:
         self.history.append(entry)
 
     def _deepcopy_plots(self, plots: Iterable[CircularPlot]) -> List[CircularPlot]:
-        """Return a deep copy of plots and trees for safe mutation."""
+        """Clone plot and tree data into a mutable simulation inventory."""
         out: List[CircularPlot] = []
         for p in plots:
             new_trees = [
@@ -401,7 +401,7 @@ class SimulationContext:
         return out
 
     def _normalize_aggregate_metrics(self, metrics_in: Dict[str, Dict[Any, Any]]) -> MetricMap:
-        """Normalize aggregate metric inputs to a MetricMap."""
+        """Normalize aggregate metric inputs and compute derived values."""
         stems_dict = cast(Dict[MetricKey, Stems], dict(metrics_in.get("Stems", {})))
         ba_dict = cast(Dict[MetricKey, StandBasalArea], dict(metrics_in.get("BasalArea", {})))
         qmd_dict: Dict[MetricKey, QuadraticMeanDiameter] = {}
@@ -416,11 +416,11 @@ class SimulationContext:
         return out_map
 
     def _recompute_metrics_tree_list(self, plots: Iterable[CircularPlot]) -> MetricMap:
-        """Compute stems, basal area, and QMD from tree list inventory."""
+        """Compute metric aggregates from tree-list plots."""
         species_data: Dict[TreeName, Dict[str, List[float]]] = {}
 
         def _eff_area_ha(p: CircularPlot) -> float:
-            """Return plot area in hectares adjusted for occlusion."""
+            """Return effective plot area in hectares after occlusion."""
             area_ha = p.area_ha or 1.0
             return area_ha * (1 - p.occlusion) if (1 - p.occlusion) > 0 else area_ha
 
@@ -436,13 +436,17 @@ class SimulationContext:
                 by_sp.setdefault(sp, []).append(t)
 
             for sp, trs in by_sp.items():
-                stems = sum(getattr(t, "weight_n", 1.0) for t in trs)
+                stems = 0.0
+                for t in trs:
+                    weight = getattr(t, "weight_n", 1.0)
+                    stems += 1.0 if weight is None else float(weight)
                 stems_ha = stems / eff
                 ba_sum = 0.0
                 for t in trs:
                     d_cm = float(getattr(t, "diameter_cm", 0.0) or 0.0)
                     r_m = (d_cm / 100.0) / 2.0
-                    ba_sum += pi * (r_m**2) * getattr(t, "weight_n", 1.0)
+                    weight = getattr(t, "weight_n", 1.0)
+                    ba_sum += pi * (r_m**2) * (1.0 if weight is None else float(weight))
                 ba_ha = ba_sum / eff
                 species_data.setdefault(sp, {"stems_per_ha": [], "basal_area_per_ha": []})
                 species_data[sp]["stems_per_ha"].append(stems_ha)
@@ -478,7 +482,7 @@ class SimulationContext:
     def _normalize_dclass_inventory(
         self, dclass_in: Dict[Any, Dict[str, List[float]]]
     ) -> Dict[Any, Dict[str, List[float]]]:
-        """Normalize diameter-class inventory and validate bin lengths."""
+        """Validate and normalize diameter-class inventory arrays."""
         out: Dict[Any, Dict[str, List[float]]] = {}
         for key, rec in dclass_in.items():
             mids = list(rec.get("bin_mids_cm", []))
@@ -489,7 +493,7 @@ class SimulationContext:
         return out
 
     def _recompute_metrics_dclass(self, dclass: Dict[Any, Dict[str, List[float]]]) -> MetricMap:
-        """Compute stems, basal area, and QMD from diameter classes."""
+        """Compute metric aggregates from diameter-class inventory."""
         stems_dict: Dict[Union[TreeName, str], Stems] = {}
         ba_dict: Dict[Union[TreeName, str], StandBasalArea] = {}
         total_n = 0.0

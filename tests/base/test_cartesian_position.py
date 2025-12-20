@@ -33,7 +33,6 @@ def test_set_position_variants():
 
 
 def test_position_xy_properties():
-    pos = Position(9, 10)
-    assert pos.x == pos.X
-    assert pos.y == pos.Y
-    assert tuple(pos) == (pos.X, pos.Y)
+    pos = Position(3.5, -2.25, 0.0)
+    assert pos.x == 3.5
+    assert pos.y == -2.25

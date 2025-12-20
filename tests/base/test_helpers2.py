@@ -1,5 +1,6 @@
 import pytest
 
+import pyforestry.base.helpers as helpers
 from pyforestry.base.helpers import AngleCount, CircularPlot
 from pyforestry.base.helpers.bucking import BuckingResult
 from pyforestry.base.helpers.primitives import (
@@ -97,3 +98,11 @@ def test_anglecount_update_series_new_species():
     ac.update_series(sp2)
     assert len(ac.species) == 2
     assert ac.value[ac.species.index(sp2)] == 1
+
+
+def test_helpers_getattr_simulation_exports():
+    ctx_cls = helpers.SimulationContext
+    assert ctx_cls.__name__ == "SimulationContext"
+    missing_attr = "missing_export"
+    with pytest.raises(AttributeError):
+        getattr(helpers, missing_attr)

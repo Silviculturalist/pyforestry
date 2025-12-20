@@ -9,6 +9,7 @@ from pyforestry.base.helpers import (
     AngleCount,
     AngleCountAggregator,
     AtomicVolume,
+    BasalAreaWeightedDiameter,
     CircularPlot,
     Diameter_cm,
     Position,
@@ -132,6 +133,11 @@ def test_bawad_unavailable_with_angle_count():
     st = Stand(plots=[plot])
     with pytest.raises(KeyError):
         float(st.BAWAD)
+
+
+def test_bawad_rejects_negative_values():
+    with pytest.raises(ValueError):
+        BasalAreaWeightedDiameter(-1.0)
 
 
 def test_CircularPlot_area_ha_property():

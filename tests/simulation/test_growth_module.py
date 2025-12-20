@@ -15,8 +15,11 @@ from pyforestry.simulation.growth_module import (
     ManagementStage,
     Stage,
     StageAction,
+    ValuationStage,
 )
+from pyforestry.simulation.services import KeyedRNG, RandomBundle, TelemetryPublisher
 from pyforestry.simulation.stand_composite import StandAction, StandComposite, StandPart
+from pyforestry.simulation.valuation import StandRemovalLedger
 
 
 class RandomStage(Stage):
@@ -123,6 +126,131 @@ def test_stage_initialisation_allows_name_and_order_override() -> None:
     assert stage.order == 7
 
 
+def test_stage_init_contract_override() -> None:
+    contract = StageContract(effects=frozenset({"rng"}))
+    stage = Stage(contract=contract)
+    assert stage.contract is contract
+
+
+def test_action_stage_build_actions_not_implemented() -> None:
+    stage = ActionStage()
+    part = _make_part("simple", capabilities=())
+    module = GrowthModule(StandComposite((part,)), stages=(stage,))
+    with pytest.raises(NotImplementedError):
+        stage.build_actions(part, module, None)
+
+
+def test_action_stage_apply_rejects_mismatched_stage() -> None:
+    stage = GrowthStage()
+    other = DisturbanceStage()
+    part = _make_part("mismatch", capabilities=())
+    module = GrowthModule(StandComposite((part,)), stages=(stage, other))
+    affordance = StageAction(
+        stage=other,
+        action=StandAction(name="noop", handler=lambda part: None),
+    )
+    with pytest.raises(ValueError, match="different stage"):
+        stage.apply(part, (affordance,), module)
+
+
+def test_management_stage_selection_empty_affordances() -> None:
+    part = _make_part("empty", capabilities=())
+    module = GrowthModule(StandComposite((part,)))
+    stage = GrowthStage()
+    management = ManagementStage()
+
+    selected = management.select_actions(part, {stage: ()}, module)
+    assert selected == {}
+
+
+def test_management_stage_normalize_none_and_unknown() -> None:
+    stage = GrowthStage()
+    management = ManagementStage()
+    affordance = StageAction(stage=stage, action=StandAction("thin", handler=lambda part: None))
+
+    assert management._normalize_selection(stage, (affordance,), None) == ()
+
+    with pytest.raises(KeyError, match="Unknown action"):
+        management._normalize_selection(stage, (affordance,), ("missing",))
+
+
+def test_management_stage_dispatch_selected_skips_empty() -> None:
+    part = _make_part("dispatch", capabilities=())
+    module = GrowthModule(StandComposite((part,)))
+    stage = GrowthStage()
+    management = ManagementStage()
+    records = management.dispatch_selected(part, {stage: ()}, module)
+    assert records == []
+
+
+def test_valuation_stage_locates_ledger_sources() -> None:
+    ledger = StandRemovalLedger("stand")
+
+    class ViewWithGetter:
+        def get_removal_ledger(self):
+            return ledger
+
+    part_getter = StandPart("getter", model_view=ViewWithGetter(), context={})
+    stage = ValuationStage()
+    assert stage._locate_ledger(part_getter) is ledger
+
+    part_ctx = StandPart("ctx", model_view=object(), context={"valuation": {"ledger": ledger}})
+    assert stage._locate_ledger(part_ctx) is ledger
+
+
+def test_growth_module_management_rulesets_update() -> None:
+    part = _make_part("rules", capabilities=())
+    rulesets = {"growth": lambda part, actions: ()}
+    management = ManagementStage()
+    module = GrowthModule(
+        StandComposite((part,)),
+        stages=(management,),
+        management_rulesets=rulesets,
+    )
+    assert module._management_stage is management
+    assert management._rulesets["growth"] is rulesets["growth"]
+
+
+def test_growth_module_supports_empty_capabilities() -> None:
+    module = GrowthModule(StandComposite())
+    assert module.supports_capabilities(None, ())
+
+
+def test_growth_module_rng_for_with_keys() -> None:
+    part = _make_part("rng", capabilities=())
+
+    class RNGStage(Stage):
+        name = "rng"
+        order = 1
+        contract = StageContract(effects=frozenset({"rng"}))
+
+    stage = RNGStage()
+    module = GrowthModule(StandComposite((part,)), stages=(stage,))
+    rng = module.rng_for(stage, part, "extra")
+    assert isinstance(rng, KeyedRNG)
+
+
+def test_growth_module_pending_actions_apply_without_management() -> None:
+    class LateStage(ActionStage):
+        name = "late"
+        order = 30
+
+        def build_actions(self, part: StandPart, module: GrowthModule, rng):  # type: ignore[override]
+            def handler(part: StandPart) -> int:
+                part.context["hits"] = part.context.get("hits", 0) + 1
+                return part.context["hits"]
+
+            return (StandAction(name="late_action", handler=handler),)
+
+    part = _make_part("late", capabilities=())
+    management = ManagementStage()
+    management.order = 5
+    module = GrowthModule(StandComposite((part,)), stages=(management, LateStage()))
+
+    module.run_cycle()
+    assert part.context["hits"] == 1
+
+
 def test_action_stage_coerce_action_from_tuple_and_mapping() -> None:
     stage = GrowthStage()
     base = StandAction(name="tuple", handler=lambda part: None)
@@ -144,6 +272,9 @@ def test_action_stage_coerce_action_from_tuple_and_mapping() -> None:
 
     with pytest.raises(TypeError):
         stage._coerce_action(123)
+
+    with pytest.raises(TypeError):
+        stage._coerce_action(("not-action", ("thin",)))
 
 
 def test_management_stage_selection_defaults_and_name_matching() -> None:
@@ -314,3 +445,33 @@ def test_growth_module_rng_for_respects_contract() -> None:
 
     with pytest.raises(RuntimeError, match="rng"):
         module.rng_for(stage, part)
+
+
+def test_keyed_rng_helpers_and_child():
+    bundle = RandomBundle(123)
+    rng = bundle.rng_for("alpha")
+    assert 0.0 <= rng.random() < 1.0
+    assert isinstance(rng.randint(1, 2), int)
+    assert 0.0 <= rng.uniform(0.0, 1.0) <= 1.0
+
+    child = rng.child("beta", ("gamma", "delta"))
+    assert isinstance(child, KeyedRNG)
+
+    state = rng.state
+    rng.jumpahead(2)
+    rng.state = state
+
+
+def test_telemetry_publisher_sink_and_clear():
+    events = []
+
+    def sink(event):
+        events.append(event)
+
+    publisher = TelemetryPublisher(model_id=None, seed=7, sink=sink)
+    publisher.publish("unit", {"value": 1.0})
+
+    assert events
+    assert publisher.events
+    publisher.clear()
+    assert publisher.events == []

@@ -20,14 +20,13 @@ def _worker_run(
     include_history: bool,
     history_tail: Optional[int],
 ) -> List[Result]:
-    """Worker: restore contexts, run update steps, return checkpoints with telemetry."""
-
+    """Restore contexts, run update steps, and return checkpoints with telemetry."""
     out: List[Result] = []
     for idx, cp, mgmt in tasks:
         telemetry_payload: Optional[List[Any]] = None
         try:
             ctx = SimulationContext.from_checkpoint(model, cp)
-            for _ in range(steps):
+            for _i in range(steps):
                 ctx.update_step(dt, management=mgmt)
             tp = getattr(ctx, "telemetry", None)
             if tp is not None and hasattr(tp, "events"):
@@ -70,21 +69,7 @@ def run_parallel(
     max_processes: int = 8,
     telemetry_sink: Optional[Callable[[int, List[Any]], None]] = None,
 ) -> List[SimulationContext]:
-    """
-    Execute ``steps`` of ``dt`` across contexts in parallel using checkpoints.
-
-    ``target`` can be a :class:`ContextEnsemble` or a sequence of contexts. If
-    ``write_back`` is True, the supplied ensemble's contexts are replaced with the
-    updated instances; otherwise updated contexts are returned without mutation.
-
-    Extra controls:
-      • ``management``: per-context management payloads forwarded to update_step.
-      • ``include_history``/``history_tail``: include recent history entries in checkpoints.
-      • ``dispatcher``: function mapping context index -> worker index for custom sharding.
-      • ``telemetry_sink``: optional callback receiving (index, telemetry events) per context.
-      • ``max_processes``: safety cap on worker count (default 8).
-    """
-
+    """Execute steps of dt across contexts in parallel using checkpoints."""
     if isinstance(target, ContextEnsemble):
         ensemble = target
         contexts = list(ensemble.contexts)
@@ -92,12 +77,11 @@ def run_parallel(
         ensemble = None
         contexts = list(target)
 
-    # When given a plain sequence of contexts, fall back to non-mutating mode.
     if write_back and ensemble is None:
         write_back = False
-
     if not contexts:
         return []
+
     model_obj = getattr(contexts[0], "model", None)
     if model_obj is None:
         raise ValueError("Contexts must carry a 'model' attribute for parallel execution.")
@@ -109,17 +93,18 @@ def run_parallel(
         if len(mgmt) != len(contexts):  # pragma: no cover - defensive
             raise ValueError("management list must match number of contexts.")
 
-    # Determine process count with a conservative cap
     procs = max(1, min(processes or mp.cpu_count(), len(contexts), max_processes))
 
-    # Build indexed tasks (index preserved for deterministic reordering)
     tasks: List[Task] = []
     for idx, (ctx, mg) in enumerate(zip(contexts, mgmt, strict=False)):
         tasks.append(
-            (idx, ctx.checkpoint(include_history=include_history, history_tail=history_tail), mg)
+            (
+                idx,
+                ctx.checkpoint(include_history=include_history, history_tail=history_tail),
+                mg,
+            )
         )
 
-    # Optional dispatcher to control worker placement
     if dispatcher is not None:
         buckets: List[List[Task]] = [[] for _ in range(procs)]
         for idx, task in enumerate(tasks):
@@ -128,35 +113,32 @@ def run_parallel(
             buckets[worker_idx].append(task)
         chunks = [b for b in buckets if b]
     else:
-        chunks: List[List[Task]] = [[] for _ in range(procs)]
+        chunks = [[] for _i in range(procs)]
         for i, task in enumerate(tasks):
             chunks[i % procs].append(task)
-        chunks = [c for c in chunks if c]
+        chunks = [chunk for chunk in chunks if chunk]
 
     results: List[Result] = []
-
     if len(chunks) == 1:
-        # Avoid multiprocessing/pickling overhead when only one worker is needed.
-        results.extend(
-            _worker_run(
-                chunks[0],
-                model_obj,
-                dt,
-                steps,
-                include_history,
-                history_tail,
-            )
-        )
+        results.extend(_worker_run(chunks[0], model_obj, dt, steps, include_history, history_tail))
     else:
-        with mp.Pool(processes=len(chunks)) as pool:
-            for sub in pool.starmap(
-                _worker_run,
-                [(chunk, model_obj, dt, steps, include_history, history_tail) for chunk in chunks],
-            ):
-                results.extend(sub)
+        try:
+            with mp.Pool(processes=len(chunks)) as pool:
+                for sub in pool.starmap(
+                    _worker_run,
+                    [
+                        (chunk, model_obj, dt, steps, include_history, history_tail)
+                        for chunk in chunks
+                    ],
+                ):
+                    results.extend(sub)
+        except (OSError, PermissionError):
+            for chunk in chunks:
+                results.extend(
+                    _worker_run(chunk, model_obj, dt, steps, include_history, history_tail)
+                )
 
-    # Handle errors and rebuild contexts ordered by original index
-    errors = [r for r in results if r[2] is not None]
+    errors = [result for result in results if result[2] is not None]
     if errors:
         first = errors[0]
         message = first[2] or {}
@@ -168,7 +150,7 @@ def run_parallel(
             telemetry_sink(idx, telemetry)
         restored_pairs.append((idx, SimulationContext.from_checkpoint(model_obj, cp)))
     restored_pairs.sort(key=lambda pair: pair[0])
-    restored: List[SimulationContext] = [ctx for (_idx, ctx) in restored_pairs]
+    restored = [ctx for (_idx, ctx) in restored_pairs]
 
     if write_back and ensemble is not None:
         ensemble.contexts = restored

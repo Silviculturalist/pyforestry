@@ -133,15 +133,35 @@ class SolutionCube:
             _worker_buck_one_tree, pricelist_data=pricelist_data, taper_model_class=taper_model
         )
 
-        # Run the optimizations in parallel
+        # Run the optimizations in parallel (or sequentially for single-worker setups).
         start_time = time.time()
-        with Pool(processes=workers) as pool:
-            # imap_unordered is great for getting results as they complete
-            results = tqdm(
-                list(pool.imap_unordered(worker_func, tasks, chunksize=10)),
-                total=len(tasks),
-                desc="Generating Solution Cube",
+        if workers <= 1:
+            results = list(
+                tqdm(
+                    (worker_func(task) for task in tasks),
+                    total=len(tasks),
+                    desc="Generating Solution Cube",
+                )
             )
+        else:
+            try:
+                with Pool(processes=workers) as pool:
+                    # imap_unordered is great for getting results as they complete
+                    results = list(
+                        tqdm(
+                            pool.imap_unordered(worker_func, tasks, chunksize=10),
+                            total=len(tasks),
+                            desc="Generating Solution Cube",
+                        )
+                    )
+            except (OSError, PermissionError):
+                results = list(
+                    tqdm(
+                        (worker_func(task) for task in tasks),
+                        total=len(tasks),
+                        desc="Generating Solution Cube",
+                    )
+                )
         end_time = time.time()
         print(f"\nFinished parallel computation in {end_time - start_time:.2f} seconds.")
 
@@ -193,6 +213,9 @@ class SolutionCube:
         Uses nearest-neighbor interpolation.
         """
         try:
+            if "species" in self.dataset.coords:
+                if species not in self.dataset.coords["species"].values:
+                    raise KeyError
             # .sel is xarray's powerful selection method. 'nearest' finds the closest point.
             solution = self.dataset.sel(species=species, dbh=dbh, height=height, method="nearest")
 
