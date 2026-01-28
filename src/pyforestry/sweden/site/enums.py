@@ -167,6 +167,31 @@ class SwedenCounty(Enum):
         return None  # Return None if code not found
 
 
+def county_flags_syz_t_area(county: Optional[SwedenCounty]) -> tuple[int, int, int]:
+    """Return (gotland, syz_area, t_area) flags for Appendix 1 regeneration functions.
+
+    SYZ-area corresponds to old county codes S, Y, Z (X is excluded). We map
+    those to the modern enum members below.
+    """
+
+    if county is None:
+        return (0, 0, 0)
+
+    gotland = int(county == SwedenCounty.GOTLAND)
+    syz_area = int(
+        county
+        in {
+            SwedenCounty.VARMLAND,  # S
+            SwedenCounty.VASTERNORRLAND_ANGERMANLANDS,  # Y Angermanland
+            SwedenCounty.VASTERNORRLAND_MEDELPADS,  # Y Medelpad
+            SwedenCounty.JAMTLAND_JAMTLANDS,  # Z Jamtland
+            SwedenCounty.JAMTLAND_HARJEDALENS,  # Z Harjedalen
+        }
+    )
+    t_area = int(county == SwedenCounty.OREBRO)  # T-area
+    return (gotland, syz_area, t_area)
+
+
 class SwedenClimateZone(Enum):
     M1 = ClimateZoneData(1, "M1", "Maritime, West coast")
     M2 = ClimateZoneData(2, "M2", "Maritime, East coast")
