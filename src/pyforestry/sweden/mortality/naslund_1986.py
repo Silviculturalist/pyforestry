@@ -1028,9 +1028,17 @@ class _Descriptor:
     @property
     def source(self):
         return SourceReference(
-            author="Näslund, B.",
+            author="Näslund, B.-Å.",
             year=1986,
-            title="Simulation of damage and mortality in young stands",
+            title=(
+                "Simulering av skador och avgång i ungskog och deras betydelse för "
+                "beståndsutvecklingen"
+            ),
+            note=(
+                "Sveriges lantbruksuniversitet, institutionen för skogsskötsel, "
+                "Rapporter nr 18, 147 s. Bert-Åke Näslund; not to be confused with "
+                "Manfred Näslund (volume functions, 1947)."
+            ),
         )
 
     @property

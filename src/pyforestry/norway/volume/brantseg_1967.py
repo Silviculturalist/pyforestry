@@ -87,8 +87,11 @@ DESCRIPTOR = FormulaDescriptor(
     source=SourceReference(
         author="Brantseg, A.",
         year=1967,
-        title="Furu soennafjells. Kubering av staaende skog",
-        note="Medd. norske Skogforsoksvesen 22:689-739. Scots pine tree-volume equation.",
+        title="Furu sønnafjells. Kubering av stående skog. Funksjoner og tabeller",
+        note=(
+            "Meddelelser fra Det norske Skogforsøksvesen 22:695-739. "
+            "Scots pine tree-volume equation."
+        ),
     ),
     species_groups={"pine": frozenset({"Pinus sylvestris"})},
     units={},

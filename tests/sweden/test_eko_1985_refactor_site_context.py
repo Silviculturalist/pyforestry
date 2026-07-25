@@ -19,7 +19,7 @@ from pyforestry.sweden.blocks.eko1985 import EngineStand as ExtractedEngineStand
 from pyforestry.sweden.blocks.eko1985 import EngineStandPart as ExtractedEngineStandPart
 from pyforestry.sweden.site.enums import Sweden
 from pyforestry.sweden.site.swedish_site import SwedishSite
-from pyforestry.sweden.siteindex.carbonnier_1975 import CarbonnierHeightModel
+from pyforestry.sweden.siteindex.carbonnier_1971 import CarbonnierHeightModel
 from pyforestry.sweden.siteindex.hagglund_1970 import Hagglund_1970
 
 

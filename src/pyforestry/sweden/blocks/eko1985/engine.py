@@ -36,12 +36,13 @@ from pyforestry.simulation.stand_composite import StandAction, StandComposite, S
 from .site_context import EkoStandSite, _coerce_species, _safe_sum
 
 # ---------------------------------------------------------------------------
-# Natural-mortality coefficients for the HUGIN natural-avgang functions used by
-# Eko's growth simulator. Scientific source: Bengtsson, G. (1979) "Plan foer
-# projekt 'Naturlig avgang' inom projekt Hugin" (SLU, stencil), as applied in the
-# HUGIN system (cf. Haegglund, B. 1981a), reached via the container thesis
-# Eko, P.M. (1985) Report nr 16, Dept. of Silviculture, SLU, Umea. (There is no
-# joint "Bengtsson & Haegglund 1981" paper; Eko 1985 cites the two separately.)
+# Natural-mortality coefficients for the HUGIN natural-avgång functions used by
+# Ekö's growth simulator. Scientific source: Bengtsson, G. (1979) "Plan för
+# projekt 'Naturlig avgång' inom projekt Hugin" (SLU, stencil), as applied in the
+# HUGIN system (cf. Hägglund, B. 1981a), reached via the container thesis
+# Ekö, P.-M. (1985) Rapport nr 16, institutionen för skogsskötsel, SLU, Umeå.
+# (There is no joint "Bengtsson & Hägglund 1981" paper; Ekö 1985 cites the two
+# separately.)
 # The coefficients were transcribed from the ProdMod2 program (Eko's simulator;
 # recovered C++ source) -- an implementation reference, not a scientific citation.
 # Both the chronic (self-thinning / crowding) and acute ("other") five-year

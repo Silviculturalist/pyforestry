@@ -23,7 +23,7 @@ pyforestry.sweden.siteindex.sis.generated\_site\_category\_trees module
 pyforestry.sweden.siteindex.sis.hagglund\_lundmark\_1979 module
 ---------------------------------------------------------------
 
-.. automodule:: pyforestry.sweden.siteindex.sis.hagglund_lundmark_1979
+.. automodule:: pyforestry.sweden.siteindex.sis.hagglund_lundmark_1977
    :members:
    :undoc-members:
    :show-inheritance:

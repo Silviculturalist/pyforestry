@@ -155,9 +155,13 @@ __all__ = [
 DESCRIPTOR = FormulaDescriptor(
     component_id="sharma_2011_siteindex",
     source=SourceReference(
-        author="Sharma, R.P.",
+        author="Sharma, R.P., Brunner, A., Eid, T. & Øyen, B.-H.",
         year=2011,
-        title="Height trajectories for Norway spruce and Scots pine in Norway.",
+        title=(
+            "Modelling dominant height growth from national forest inventory individual "
+            "tree data with short time series and large age errors"
+        ),
+        note="Forest Ecology and Management 262(12):2162-2175.",
     ),
     species_groups={
         "spruce": frozenset({"Picea abies"}),

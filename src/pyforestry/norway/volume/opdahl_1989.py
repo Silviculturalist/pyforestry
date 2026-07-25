@@ -1,4 +1,9 @@
-"""Opdahl & Skroppa (1989) aspen tree-volume equation for Norway."""
+"""Opdahl (1989) aspen tree-volume equation for Norway.
+
+Source:
+    Opdahl, H. (1989). *Avsmaling og volum hos osp (Populus tremula L.) i Sør-Norge.*
+    Meddelelser fra Norsk institutt for skogforskning 43.
+"""
 
 from __future__ import annotations
 
@@ -93,10 +98,15 @@ __all__ = ["opdahl_1989_volume_aspen_norway"]
 DESCRIPTOR = FormulaDescriptor(
     component_id="opdahl_1989_volume",
     source=SourceReference(
-        author="Opdahl, H.; Skroppa, T.",
+        author="Opdahl, H.",
         year=1989,
-        title="Aspen tree-volume equation for Norway",
-        note="Descriptive title; the formal publication title is not established here.",
+        title="Avsmaling og volum hos osp (Populus tremula L.) i Sør-Norge",
+        note=(
+            "Meddelelser fra Norsk institutt for skogforskning 43. Aspen taper and "
+            "tree-volume equations. Distinct from Opdahl, H. (1992) 'Bonitet, vekst og "
+            "produksjon hos osp (Populus tremula L.) i Sør-Norge', Meddelelser fra "
+            "Skogforsk 44.11:1-44, which is the site-index/growth-and-yield study."
+        ),
     ),
     species_groups={"aspen": frozenset({"Populus tremula"})},
     units={},

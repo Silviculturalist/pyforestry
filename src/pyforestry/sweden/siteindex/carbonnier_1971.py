@@ -1,4 +1,17 @@
-"""Carbonnier (1975) beech height development and site index helpers."""
+"""Carbonnier (1971) beech height development and site index helpers.
+
+The height-development model is Appendix IV of Carbonnier (1971): a stand's height at
+age ``j`` is ``h_j = a_j + tau * b_j``, where ``{a_j}`` and ``{b_j}`` are species-wide
+constants tabulated per five-year total age and ``tau`` characterises the individual
+stand. Fixing the site index at total age 100 pins ``tau = (h100 - a100) / b100``.
+
+Source:
+    Carbonnier, C. (1971). *Bokens produktion i södra Sverige = Yield of beech in
+    southern Sweden.* Studia Forestalia Suecica nr 91. Institutionen för
+    skogsproduktion, Skogshögskolan (Royal College of Forestry), Stockholm.
+    Height-development curves: Appendix IV, derived by Susanne Kallstenius after a
+    method of Bertil Matérn.
+"""
 
 from __future__ import annotations
 
@@ -18,11 +31,13 @@ SiteIndexLike = Union[float, int, SiteIndexValue]
 @dataclass
 class CarbonnierHeightModel:
     """
-    Carbonnier (1975) height development model for European beech.
+    Carbonnier (1971) height development model for European beech.
 
     The original model uses age-indexed ``a`` and ``b`` coefficient tables with
     the linear relationship ``h_j = a_j + τ * b_j`` where ``τ`` is derived from
-    the site index at a reference age (typically H100).
+    the site index at a reference age (typically H100). ``τ`` is Matérn's ``t``
+    in Appendix IV: ``τ = 0`` is the average height development, positive values
+    grow faster and negative values slower.
 
     Parameters
     ----------
@@ -180,11 +195,20 @@ class CarbonnierHeightModel:
 
 
 DESCRIPTOR = FormulaDescriptor(
-    component_id="carbonnier_1975_siteindex",
+    component_id="carbonnier_1971_siteindex",
     source=SourceReference(
         author="Carbonnier, C.",
-        year=1975,
-        title="Production of cultivated European beech (Fagus sylvatica) in southern Sweden",
+        year=1971,
+        title="Bokens produktion i södra Sverige = Yield of beech in southern Sweden",
+        appendix="Bilaga IV: Härledning av höjdutvecklingskurvor, av Susanne Kallstenius",
+        note=(
+            "Studia Forestalia Suecica nr 91. Institutionen för skogsproduktion, "
+            "Skogshögskolan (Royal College of Forestry), Stockholm. The height-development "
+            "curves come from Appendix IV, derived by Susanne Kallstenius after a method of "
+            "Bertil Matérn; the smoothed sequences {a_j}, {b_j} are Table IV.1. Not to be "
+            "confused with Carbonnier (1975), Studia Forestalia Suecica nr 125, which is the "
+            "OAK yield study and uses a different (Hägglund exponential) height function."
+        ),
     ),
     species_groups={"beech": frozenset({"Fagus sylvatica"})},
     units={},

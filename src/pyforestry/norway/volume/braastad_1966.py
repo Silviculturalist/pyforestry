@@ -100,8 +100,8 @@ DESCRIPTOR = FormulaDescriptor(
     source=SourceReference(
         author="Braastad, H.",
         year=1966,
-        title="Volumtabeller for bjoerk",
-        note="Medd. norske Skogforsoksvesen 21:265-365. Birch tree-volume equation.",
+        title="Volumtabeller for bjørk",
+        note=("Meddelelser fra Det norske Skogforsøksvesen 21:23-78. Birch tree-volume equation."),
     ),
     species_groups={"birch": frozenset({"Betula pubescens", "Betula pendula"})},
     units={},

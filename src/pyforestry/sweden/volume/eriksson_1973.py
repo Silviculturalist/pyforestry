@@ -84,7 +84,11 @@ class _Descriptor:
         return SourceReference(
             author="Eriksson, H.",
             year=1973,
-            title="Volymfunktioner för asp och contortatall",
+            title="Volymfunktioner för stående träd av ask, asp, klibbal och contortatall",
+            note=(
+                "Skogshögskolan, institutionen för skogsproduktion, Rapporter och "
+                "uppsatser nr 26, Stockholm, 26 s."
+            ),
         )
 
     @property

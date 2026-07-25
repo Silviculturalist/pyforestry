@@ -16,12 +16,12 @@ Auto-generated from ``pyforestry.catalog`` (74 models). Regenerate with ``python
      - formula
      - norway
      - bark
-     - Braastad, H. (1966) Volumtabeller for bjoerk
+     - Braastad, H. (1966) Volumtabeller for bjørk
    * - ``brantseg_1967_bark``
      - formula
      - norway
      - bark
-     - Brantseg, A. (1967) Furu soennafjells. Kubering av staaende skog
+     - Brantseg, A. (1967) Furu sønnafjells. Kubering av stående skog. Funksjoner og tabeller
    * - ``hansen_2023_bark``
      - formula
      - norway
@@ -31,7 +31,7 @@ Auto-generated from ``pyforestry.catalog`` (74 models). Regenerate with ``python
      - formula
      - norway
      - bark
-     - Vestjordet, E. (1967) Funksjoner og tabeller for kubering av staaende gran
+     - Vestjordet, E. (1967) Funksjoner og tabeller for kubering av stående gran
    * - ``allen_2020_growth``
      - formula
      - norway
@@ -56,32 +56,32 @@ Auto-generated from ``pyforestry.catalog`` (74 models). Regenerate with ``python
      - formula
      - norway
      - growth
-     - Kuehne, C. et al. (2022) A stand-level growth and yield model for thinned and unthinned even-aged Scots pine forests in Norway. Silva Fennica 56(1) art. 10627 (stem density, basal area, volume and thinning, Eqs. 6-10)
+     - Kuehne, C., McLean, J.P., Maleki, K., Antón-Fernández, C. & Astrup, R. (2022) A stand-level growth and yield model for thinned and unthinned even-aged Scots pine forests in Norway. Silva Fennica 56(1) art. 10627 (stem density, basal area, volume and thinning, Eqs. 6-10)
    * - ``kuehne_2022_model``
      - model
      - norway
      - growth
-     - Kuehne, C. et al. (2022) A stand-level growth and yield model for thinned and unthinned even-aged Scots pine forests in Norway. Silva Fennica 56(1) art. 10627 (composes kuehne_2022_siteindex)
+     - Kuehne, C., McLean, J.P., Maleki, K., Antón-Fernández, C. & Astrup, R. (2022) A stand-level growth and yield model for thinned and unthinned even-aged Scots pine forests in Norway. Silva Fennica 56(1) art. 10627 (composes kuehne_2022_siteindex)
    * - ``maleki_2022_growth``
      - formula
      - norway
      - growth
-     - Maleki, K. et al. (2022) Stand-level growth models for long-term projections of the main species groups in Norway
+     - Maleki, K., Astrup, R., Kuehne, C., McLean, J.P. & Antón-Fernández, C. (2022) Stand-level growth models for long-term projections of the main species groups in Norway
    * - ``maleki_2022_model``
      - model
      - norway
      - growth
-     - Maleki, K. et al. (2022) Stand-level growth models for long-term projections of the main species groups in Norway (composes maleki_2022_growth)
+     - Maleki, K., Astrup, R., Kuehne, C., McLean, J.P. & Antón-Fernández, C. (2022) Stand-level growth models for long-term projections of the main species groups in Norway (composes maleki_2022_growth)
    * - ``kuehne_2022_siteindex``
      - formula
      - norway
      - siteindex
-     - Kuehne, C. et al. (2022) A stand-level growth and yield model for thinned and unthinned even-aged Scots pine forests in Norway. Silva Fennica 56(1) art. 10627 (dominant-height / site-index sub-model, Eq. 5)
+     - Kuehne, C., McLean, J.P., Maleki, K., Antón-Fernández, C. & Astrup, R. (2022) A stand-level growth and yield model for thinned and unthinned even-aged Scots pine forests in Norway. Silva Fennica 56(1) art. 10627 (dominant-height / site-index sub-model, Eq. 5)
    * - ``sharma_2011_siteindex``
      - formula
      - norway
      - siteindex
-     - Sharma, R.P. (2011) Height trajectories for Norway spruce and Scots pine in Norway.
+     - Sharma, R.P., Brunner, A., Eid, T. & Øyen, B.-H. (2011) Modelling dominant height growth from national forest inventory individual tree data with short time series and large age errors
    * - ``tveite_siteindex``
      - formula
      - norway
@@ -96,22 +96,22 @@ Auto-generated from ``pyforestry.catalog`` (74 models). Regenerate with ``python
      - formula
      - norway
      - volume
-     - Braastad, H. (1966) Volumtabeller for bjoerk
+     - Braastad, H. (1966) Volumtabeller for bjørk
    * - ``brantseg_1967_volume``
      - formula
      - norway
      - volume
-     - Brantseg, A. (1967) Furu soennafjells. Kubering av staaende skog
+     - Brantseg, A. (1967) Furu sønnafjells. Kubering av stående skog. Funksjoner og tabeller
    * - ``opdahl_1989_volume``
      - formula
      - norway
      - volume
-     - Opdahl, H.; Skroppa, T. (1989) Aspen tree-volume equation for Norway
+     - Opdahl, H. (1989) Avsmaling og volum hos osp (Populus tremula L.) i Sør-Norge
    * - ``vestjordet_1967_volume``
      - formula
      - norway
      - volume
-     - Vestjordet, E. (1967) Funksjoner og tabeller for kubering av staaende gran
+     - Vestjordet, E. (1967) Funksjoner og tabeller for kubering av stående gran
    * - ``hannrup_2004_bark``
      - formula
      - sweden
@@ -141,7 +141,7 @@ Auto-generated from ``pyforestry.catalog`` (74 models). Regenerate with ``python
      - model
      - sweden
      - growth
-     - Eko, P.M. (1985) En produktionsmodell for skog i Sverige
+     - Ekö, P.-M. (1985) En produktionsmodell för skog i Sverige, baserad på bestånd från riksskogstaxeringens provytor
    * - ``elfving_1982_model``
      - model
      - sweden
@@ -226,7 +226,7 @@ Auto-generated from ``pyforestry.catalog`` (74 models). Regenerate with ``python
      - formula
      - sweden
      - mortality
-     - Näslund, B. (1986) Simulation of damage and mortality in young stands
+     - Näslund, B.-Å. (1986) Simulering av skador och avgång i ungskog och deras betydelse för beståndsutvecklingen
    * - ``retained_trees_mortality``
      - formula
      - sweden
@@ -262,16 +262,16 @@ Auto-generated from ``pyforestry.catalog`` (74 models). Regenerate with ``python
      - sweden
      - siteindex
      - Agestam, E. (1985) A growth simulator for mixed stands of pine, spruce and birch in Sweden
-   * - ``carbonnier_1975_siteindex``
+   * - ``carbonnier_1971_siteindex``
      - formula
      - sweden
      - siteindex
-     - Carbonnier, C. (1975) Production of cultivated European beech (Fagus sylvatica) in southern Sweden
+     - Carbonnier, C. (1971) Bokens produktion i södra Sverige = Yield of beech in southern Sweden
    * - ``eko_2008_siteindex``
      - formula
      - sweden
      - siteindex
-     - Ekö, P.-M. (2008) Current growth differences of Norway spruce (Picea abies), Scots pine (Pinus sylvestris) and birch (Betula pendula and Betula pubescens) in different regions in Sweden
+     - Ekö, P.-M., Johansson, U., Petersson, N., Bergqvist, J., Elfving, B. & Frisk, J. (2008) Current growth differences of Norway spruce (Picea abies), Scots pine (Pinus sylvestris) and birch (Betula pendula and Betula pubescens) in different regions in Sweden
    * - ``elfving_kiviste_1997``
      - formula
      - sweden
@@ -286,17 +286,17 @@ Auto-generated from ``pyforestry.catalog`` (74 models). Regenerate with ``python
      - formula
      - sweden
      - siteindex
-     - Hägglund, B. (1970) Site index curves for Scots pine and Norway spruce in Sweden
-   * - ``hagglund_1979_siteindex``
-     - formula
-     - sweden
-     - siteindex
-     - Hägglund, B. & Lundmark, J.-E. (1979) Ett system för bonitering av skogsmark - analys, kontroll och diskussion inför praktisk tillämpning (site index estimation by site factors for Scots pine and Norway spruce in Sweden)
+     - Hägglund, B. (1972) Om övre höjdens utveckling för gran i norra Sverige
    * - ``hagglund_1981_siteindex``
      - formula
      - sweden
      - siteindex
      - Hägglund, B. (1981) Site index to productivity (mean annual volume growth at culmination) translation
+   * - ``hagglund_lundmark_1977_siteindex``
+     - formula
+     - sweden
+     - siteindex
+     - Hägglund, B. & Lundmark, J.-E. (1977) Skattning av höjdboniteten med ståndortsfaktorer: Tall och gran i Sverige
    * - ``hagglund_remrod_1977``
      - formula
      - sweden
@@ -366,7 +366,7 @@ Auto-generated from ``pyforestry.catalog`` (74 models). Regenerate with ``python
      - formula
      - sweden
      - volume
-     - Eriksson, H. (1973) Volymfunktioner för asp och contortatall
+     - Eriksson, H. (1973) Volymfunktioner för stående träd av ask, asp, klibbal och contortatall
    * - ``johnsson_1953_volume``
      - formula
      - sweden
@@ -376,7 +376,7 @@ Auto-generated from ``pyforestry.catalog`` (74 models). Regenerate with ``python
      - formula
      - sweden
      - volume
-     - Matérn, B. (1975) Volymfunktioner för ek och bok
+     - Hagberg, E. & Matérn, B. (1975) Tabeller för kubering av ek och bok
    * - ``naslund_1947_volume``
      - formula
      - sweden

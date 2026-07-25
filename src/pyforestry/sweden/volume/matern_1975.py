@@ -1,6 +1,9 @@
-"""Matern 1975 utilities and interfaces.
+"""Tree volume functions for oak and beech, Hagberg & Matérn (1975).
 
-Source: Swedish forestry domain models and helper implementations curated in pyforestry.
+Source:
+    Hagberg, E. & Matérn, B. (1975). *Tabeller för kubering av ek och bok.*
+    Skogshögskolan, institutionen för skoglig matematisk statistik, Rapporter och
+    uppsatser nr 14, Stockholm, 118 s.
 """
 
 
@@ -94,9 +97,13 @@ class _Descriptor:
         from pyforestry.simulation.contracts import SourceReference
 
         return SourceReference(
-            author="Matérn, B.",
+            author="Hagberg, E. & Matérn, B.",
             year=1975,
-            title="Volymfunktioner för ek och bok",
+            title="Tabeller för kubering av ek och bok",
+            note=(
+                "Skogshögskolan, institutionen för skoglig matematisk statistik, "
+                "Rapporter och uppsatser nr 14, Stockholm, 118 s."
+            ),
         )
 
     @property

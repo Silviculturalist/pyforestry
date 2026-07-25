@@ -5,9 +5,9 @@ import pytest
 
 from pyforestry.base.helpers import Age, SiteIndexValue, enum_code
 from pyforestry.sweden.site.enums import Sweden
-from pyforestry.sweden.siteindex.sis import hagglund_lundmark_1979 as hlm
-from pyforestry.sweden.siteindex.sis.hagglund_lundmark_1979 import (
-    Hagglund_Lundmark_1979_SIS,
+from pyforestry.sweden.siteindex.sis import hagglund_lundmark_1977 as hlm
+from pyforestry.sweden.siteindex.sis.hagglund_lundmark_1977 import (
+    Hagglund_Lundmark_1977_SIS,
 )
 
 
@@ -45,7 +45,7 @@ def _common_params():
 def test_sis_spruce_with_enums():
     params = _common_params()
     params.update(species="Picea abies", peat=False)
-    sis = Hagglund_Lundmark_1979_SIS(**params)
+    sis = Hagglund_Lundmark_1977_SIS(**params)
     assert isinstance(sis, SiteIndexValue)
     assert sis.reference_age == Age.TOTAL(100)
     assert 0 < float(sis) < 50
@@ -54,7 +54,7 @@ def test_sis_spruce_with_enums():
 def test_sis_with_county_enum():
     params = _common_params()
     params.update(species="Picea abies", peat=False, dlan=Sweden.County.VASTMANLAND)
-    sis = Hagglund_Lundmark_1979_SIS(**params)
+    sis = Hagglund_Lundmark_1977_SIS(**params)
     assert isinstance(sis, SiteIndexValue)
     assert 0 < float(sis) < 50
 
@@ -68,7 +68,7 @@ def test_sis_pine_on_peat():
         lateral_water=Sweden.SoilWater.LONGER_PERIODS,
         soil_moisture=Sweden.SoilMoistureEnum.MOIST,
     )
-    sis = Hagglund_Lundmark_1979_SIS(**params)
+    sis = Hagglund_Lundmark_1977_SIS(**params)
     assert isinstance(sis, SiteIndexValue)
     assert 0 < float(sis) < 50
 
@@ -77,14 +77,14 @@ def test_invalid_species_raises():
     params = _common_params()
     params.update(species="Unknown", peat=False)
     with pytest.raises(ValueError):
-        Hagglund_Lundmark_1979_SIS(**params)
+        Hagglund_Lundmark_1977_SIS(**params)
 
 
 def test_latitude_out_of_range_returns_nan():
     params = _common_params()
     params.update(latitude=50.0, species="Picea abies", peat=False)
     with pytest.warns(UserWarning, match="latitude must be between"):
-        res = Hagglund_Lundmark_1979_SIS(**params)
+        res = Hagglund_Lundmark_1977_SIS(**params)
     assert np.isnan(res)
 
 
@@ -92,7 +92,7 @@ def test_soil_depth_nan_requires_peat():
     params = _common_params()
     params.update(soil_depth=np.nan, species="Picea abies", peat=False)
     with pytest.warns(UserWarning, match="soil_depth must be one of float"):
-        res = Hagglund_Lundmark_1979_SIS(**params)
+        res = Hagglund_Lundmark_1977_SIS(**params)
     assert np.isnan(res)
 
 
@@ -100,7 +100,7 @@ def test_invalid_dlan_prints_message():
     params = _common_params()
     params.update(dlan=0, species="Picea abies", peat=False)
     with pytest.warns(UserWarning, match="dlan must be one of int"):
-        res = Hagglund_Lundmark_1979_SIS(**params)
+        res = Hagglund_Lundmark_1977_SIS(**params)
     assert np.isnan(res)
 
 
@@ -108,7 +108,7 @@ def test_invalid_lateral_water():
     params = _common_params()
     params.update(lateral_water=4, species="Picea abies", peat=False)
     with pytest.warns(UserWarning, match="lateral_water must be int"):
-        res = Hagglund_Lundmark_1979_SIS(**params)
+        res = Hagglund_Lundmark_1977_SIS(**params)
     assert np.isnan(res)
 
 
@@ -116,7 +116,7 @@ def test_invalid_climate_code():
     params = _common_params()
     params.update(climate_code="bad", species="Picea abies", peat=False)
     with pytest.warns(UserWarning, match="climate_code must be one of float"):
-        res = Hagglund_Lundmark_1979_SIS(**params)
+        res = Hagglund_Lundmark_1977_SIS(**params)
     assert np.isnan(res)
 
 
@@ -129,14 +129,14 @@ def test_spruce_dry_soil_warning():
         peat=False,
     )
     with pytest.warns(UserWarning, match="No coverage for Spruce on dry soils"):
-        sis = Hagglund_Lundmark_1979_SIS(**params)
+        sis = Hagglund_Lundmark_1977_SIS(**params)
     assert isinstance(sis, SiteIndexValue)
 
 
 def test_sis_pine_mineral_soil():
     params = _common_params()
     params.update(species="Pinus sylvestris", peat=False)
-    sis = Hagglund_Lundmark_1979_SIS(**params)
+    sis = Hagglund_Lundmark_1977_SIS(**params)
     assert isinstance(sis, SiteIndexValue)
     assert 0 < float(sis) < 50
 
@@ -145,7 +145,7 @@ def test_altitude_out_of_range_returns_nan():
     params = _common_params()
     params.update(altitude=2200.0, species="Picea abies", peat=False)
     with pytest.warns(UserWarning, match="altitude must be between"):
-        res = Hagglund_Lundmark_1979_SIS(**params)
+        res = Hagglund_Lundmark_1977_SIS(**params)
     assert np.isnan(res)
 
 
@@ -153,7 +153,7 @@ def test_invalid_gotland_bool():
     params = _common_params()
     params.update(gotland="no", species="Picea abies", peat=False)
     with pytest.warns(UserWarning, match="Gotland must be a bool"):
-        res = Hagglund_Lundmark_1979_SIS(**params)
+        res = Hagglund_Lundmark_1977_SIS(**params)
     assert np.isnan(res)
 
 
@@ -174,7 +174,7 @@ def test_sis_valid_combinations(species, latitude, altitude, soil_moisture):
         altitude=altitude,
         soil_moisture=soil_moisture,
     )
-    sis = Hagglund_Lundmark_1979_SIS(**params)
+    sis = Hagglund_Lundmark_1977_SIS(**params)
     assert isinstance(sis, SiteIndexValue)
     assert 0 < float(sis) < 50
 
@@ -183,7 +183,7 @@ def test_invalid_soil_moisture():
     params = _common_params()
     params.update(soil_moisture=6, species="Picea abies", peat=False)
     with pytest.warns(UserWarning, match="soil_moisture must be int"):
-        res = Hagglund_Lundmark_1979_SIS(**params)
+        res = Hagglund_Lundmark_1977_SIS(**params)
     assert np.isnan(res)
 
 
@@ -191,7 +191,7 @@ def test_invalid_ground_layer():
     params = _common_params()
     params.update(ground_layer=7, species="Picea abies", peat=False)
     with pytest.warns(UserWarning, match="ground_layer must be int"):
-        res = Hagglund_Lundmark_1979_SIS(**params)
+        res = Hagglund_Lundmark_1977_SIS(**params)
     assert np.isnan(res)
 
 
@@ -199,7 +199,7 @@ def test_invalid_vegetation():
     params = _common_params()
     params.update(vegetation=19, species="Picea abies", peat=False)
     with pytest.warns(UserWarning, match="Vegetation must be int"):
-        res = Hagglund_Lundmark_1979_SIS(**params)
+        res = Hagglund_Lundmark_1977_SIS(**params)
     assert np.isnan(res)
 
 
@@ -207,7 +207,7 @@ def test_invalid_soil_texture():
     params = _common_params()
     params.update(soil_texture=10, species="Picea abies", peat=False)
     with pytest.warns(UserWarning, match="soil_texture must be int"):
-        res = Hagglund_Lundmark_1979_SIS(**params)
+        res = Hagglund_Lundmark_1977_SIS(**params)
     assert np.isnan(res)
 
 
@@ -215,7 +215,7 @@ def test_invalid_soil_depth_range():
     params = _common_params()
     params.update(soil_depth=6, species="Picea abies", peat=False)
     with pytest.warns(UserWarning, match="soil_depth must be one of float"):
-        res = Hagglund_Lundmark_1979_SIS(**params)
+        res = Hagglund_Lundmark_1977_SIS(**params)
     assert np.isnan(res)
 
 
@@ -223,7 +223,7 @@ def test_invalid_incline_percent():
     params = _common_params()
     params.update(incline_percent=150.0, species="Picea abies", peat=False)
     with pytest.warns(UserWarning, match="incline_percent must be float"):
-        res = Hagglund_Lundmark_1979_SIS(**params)
+        res = Hagglund_Lundmark_1977_SIS(**params)
     assert np.isnan(res)
 
 
@@ -231,7 +231,7 @@ def test_invalid_aspect():
     params = _common_params()
     params.update(aspect=400.0, species="Picea abies", peat=False)
     with pytest.warns(UserWarning, match="Aspect must be float"):
-        res = Hagglund_Lundmark_1979_SIS(**params)
+        res = Hagglund_Lundmark_1977_SIS(**params)
     assert np.isnan(res)
 
 
@@ -239,7 +239,7 @@ def test_invalid_peat_bool():
     params = _common_params()
     params.update(peat="yes", species="Picea abies")
     with pytest.warns(UserWarning, match="Peat must be a bool"):
-        res = Hagglund_Lundmark_1979_SIS(**params)
+        res = Hagglund_Lundmark_1977_SIS(**params)
     assert np.isnan(res)
 
 
@@ -247,7 +247,7 @@ def test_warn_nfi_adjustment_bool():
     params = _common_params()
     params.update(nfi_adjustments="no", species="Picea abies", peat=False)
     with pytest.warns(UserWarning, match="nfi_adjustments must be a bool"):
-        sis = Hagglund_Lundmark_1979_SIS(**params)
+        sis = Hagglund_Lundmark_1977_SIS(**params)
     assert isinstance(sis, SiteIndexValue)
 
 
@@ -261,7 +261,7 @@ def test_spruce_change_to_pine_branch():
         vegetation=Sweden.FieldLayer.SEDGE_HIGH,
         ground_layer=Sweden.BottomLayer.SWAMP_MOSS,
     )
-    sis = Hagglund_Lundmark_1979_SIS(**params)
+    sis = Hagglund_Lundmark_1977_SIS(**params)
     assert isinstance(sis, SiteIndexValue)
     assert 0 < float(sis) < 50
 
@@ -276,7 +276,7 @@ def test_spruce_on_peat_branch():
         soil_moisture=Sweden.SoilMoistureEnum.MOIST,
         ground_layer=Sweden.BottomLayer.SWAMP_MOSS,
     )
-    sis = Hagglund_Lundmark_1979_SIS(**params)
+    sis = Hagglund_Lundmark_1977_SIS(**params)
     assert isinstance(sis, SiteIndexValue)
     assert 0 < float(sis) < 50
 
@@ -291,7 +291,7 @@ def test_dry_soil_swamp_adjustment_no_warning():
     )
     with warnings.catch_warnings(record=True) as rec:
         warnings.simplefilter("always")
-        sis = Hagglund_Lundmark_1979_SIS(**params)
+        sis = Hagglund_Lundmark_1977_SIS(**params)
     assert not any("No coverage for Spruce" in str(w.message) for w in rec)
     assert isinstance(sis, SiteIndexValue)
 
@@ -354,7 +354,7 @@ def test_pine_branches(
         soil_depth=soil_depth,
         soil_texture=Sweden.SoilTextureTill.SANDY,
     )
-    sis = Hagglund_Lundmark_1979_SIS(**params)
+    sis = Hagglund_Lundmark_1977_SIS(**params)
     assert isinstance(sis, SiteIndexValue)
     assert 0 < float(sis) < 50
 
@@ -363,7 +363,7 @@ def test_invalid_coast_bool():
     params = _common_params()
     params.update(coast="no", species="Picea abies", peat=False)
     with pytest.warns(UserWarning, match="coast must be a bool"):
-        sis = Hagglund_Lundmark_1979_SIS(**params)
+        sis = Hagglund_Lundmark_1977_SIS(**params)
     assert isinstance(sis, SiteIndexValue)
 
 
@@ -371,14 +371,14 @@ def test_invalid_limes_bool():
     params = _common_params()
     params.update(limes_norrlandicus="no", species="Picea abies", peat=False)
     with pytest.warns(UserWarning, match="limes_norrlandicus must be a bool"):
-        sis = Hagglund_Lundmark_1979_SIS(**params)
+        sis = Hagglund_Lundmark_1977_SIS(**params)
     assert isinstance(sis, SiteIndexValue)
 
 
 def test_mineral_soil_texture_zero():
     params = _common_params()
     params.update(species="Pinus sylvestris", peat=False, soil_texture=0)
-    sis = Hagglund_Lundmark_1979_SIS(**params)
+    sis = Hagglund_Lundmark_1977_SIS(**params)
     assert isinstance(sis, SiteIndexValue)
     assert 0 < float(sis) < 50
 
@@ -391,7 +391,7 @@ def test_spruce_missing_texture_replacement():
         soil_texture=0,
         soil_depth=Sweden.SoilDepth.DEEP,
     )
-    sis_missing = Hagglund_Lundmark_1979_SIS(**params1)
+    sis_missing = Hagglund_Lundmark_1977_SIS(**params1)
 
     params2 = _common_params()
     params2.update(
@@ -400,7 +400,7 @@ def test_spruce_missing_texture_replacement():
         soil_texture=Sweden.SoilTextureTill.BOULDER,
         soil_depth=Sweden.SoilDepth.SHALLOW,
     )
-    sis_replaced = Hagglund_Lundmark_1979_SIS(**params2)
+    sis_replaced = Hagglund_Lundmark_1977_SIS(**params2)
 
     assert float(sis_missing) == pytest.approx(float(sis_replaced), rel=1e-6)
 
@@ -414,7 +414,7 @@ def test_spruce_lichen_reclassification():
         ground_layer=Sweden.BottomLayer.LICHEN_TYPE,
         vegetation=Sweden.FieldLayer.BILBERRY,
     )
-    sis_auto = Hagglund_Lundmark_1979_SIS(**params1)
+    sis_auto = Hagglund_Lundmark_1977_SIS(**params1)
 
     params2 = _common_params()
     params2.update(
@@ -424,7 +424,7 @@ def test_spruce_lichen_reclassification():
         ground_layer=Sweden.BottomLayer.SWAMP_MOSS,
         vegetation=Sweden.FieldLayer.HORSETAIL,
     )
-    sis_manual = Hagglund_Lundmark_1979_SIS(**params2)
+    sis_manual = Hagglund_Lundmark_1977_SIS(**params2)
 
     assert float(sis_auto) == pytest.approx(float(sis_manual), rel=1e-6)
 
@@ -437,7 +437,7 @@ def test_spruce_wet_no_lateral_water_adjustment():
         soil_moisture=Sweden.SoilMoistureEnum.WET,
         lateral_water=Sweden.SoilWater.SELDOM_NEVER,
     )
-    sis_wet = Hagglund_Lundmark_1979_SIS(**params1)
+    sis_wet = Hagglund_Lundmark_1977_SIS(**params1)
 
     params2 = _common_params()
     params2.update(
@@ -447,7 +447,7 @@ def test_spruce_wet_no_lateral_water_adjustment():
         lateral_water=Sweden.SoilWater.LONGER_PERIODS,
         ground_layer=Sweden.BottomLayer.SWAMP_MOSS,
     )
-    sis_moist = Hagglund_Lundmark_1979_SIS(**params2)
+    sis_moist = Hagglund_Lundmark_1977_SIS(**params2)
 
     assert float(sis_wet) == pytest.approx(0.7 * float(sis_moist), rel=1e-6)
 
@@ -461,7 +461,7 @@ def test_spruce_gravel_texture_branch():
         soil_texture=Sweden.SoilTextureTill.SANDY,
         lateral_water=Sweden.SoilWater.LONGER_PERIODS,
     )
-    sis_gravel = Hagglund_Lundmark_1979_SIS(**params1)
+    sis_gravel = Hagglund_Lundmark_1977_SIS(**params1)
 
     params2 = _common_params()
     params2.update(
@@ -471,7 +471,7 @@ def test_spruce_gravel_texture_branch():
         soil_texture=Sweden.SoilTextureTill.GRAVEL,
         lateral_water=Sweden.SoilWater.LONGER_PERIODS,
     )
-    sis_manual = Hagglund_Lundmark_1979_SIS(**params2)
+    sis_manual = Hagglund_Lundmark_1977_SIS(**params2)
 
     assert float(sis_gravel) == pytest.approx(float(sis_manual), rel=1e-6)
 
@@ -488,11 +488,11 @@ def test_spruce_change_to_pine_deepsoil():
         vegetation=Sweden.FieldLayer.HIGH_HERB_WITHOUT_SHRUBS,
         climate_code=Sweden.ClimateZone.K3,
     )
-    sis_k3 = Hagglund_Lundmark_1979_SIS(**params_k3)
+    sis_k3 = Hagglund_Lundmark_1977_SIS(**params_k3)
 
     params_k1 = params_k3.copy()
     params_k1["climate_code"] = Sweden.ClimateZone.K1
-    sis_k1 = Hagglund_Lundmark_1979_SIS(**params_k1)
+    sis_k1 = Hagglund_Lundmark_1977_SIS(**params_k1)
 
     assert float(sis_k3) > float(sis_k1)
 
@@ -510,10 +510,10 @@ def test_pine_on_peat_without_adjustments():
         coast=False,
         limes_norrlandicus=True,
     )
-    sis_no_adj = Hagglund_Lundmark_1979_SIS(**params1)
+    sis_no_adj = Hagglund_Lundmark_1977_SIS(**params1)
 
     params1["nfi_adjustments"] = True
-    sis_adj = Hagglund_Lundmark_1979_SIS(**params1)
+    sis_adj = Hagglund_Lundmark_1977_SIS(**params1)
 
     assert sis_no_adj != sis_adj
 
@@ -532,10 +532,10 @@ def test_pine_latitude_altitude_extremes():
         altitude=0.0,
         latitude=55.2,
     )
-    low = Hagglund_Lundmark_1979_SIS(**params)
+    low = Hagglund_Lundmark_1977_SIS(**params)
 
     params.update(altitude=2110.0, latitude=69.0)
-    high = Hagglund_Lundmark_1979_SIS(**params)
+    high = Hagglund_Lundmark_1977_SIS(**params)
 
     assert low != high
 
@@ -549,11 +549,11 @@ def test_nfi_adjustments_sets_flags():
         coast=False,
         limes_norrlandicus=False,
     )
-    sis_auto = Hagglund_Lundmark_1979_SIS(**params1)
+    sis_auto = Hagglund_Lundmark_1977_SIS(**params1)
 
     params2 = params1.copy()
     params2.update(coast=True, limes_norrlandicus=True)
-    sis_manual = Hagglund_Lundmark_1979_SIS(**params2)
+    sis_manual = Hagglund_Lundmark_1977_SIS(**params2)
 
     assert float(sis_auto) == pytest.approx(float(sis_manual), rel=1e-6)
 
@@ -600,10 +600,10 @@ def test_pine_adjustment_floor(monkeypatch):
     )
     params_low = params.copy()
     params_low.update(altitude=0.0)
-    sis_low = Hagglund_Lundmark_1979_SIS(**params_low)
+    sis_low = Hagglund_Lundmark_1977_SIS(**params_low)
     params_high = params.copy()
     params_high.update(altitude=100.0)
-    sis_high = Hagglund_Lundmark_1979_SIS(**params_high)
+    sis_high = Hagglund_Lundmark_1977_SIS(**params_high)
 
     assert float(sis_low) == pytest.approx(float(sis_high), rel=1e-6)
 
@@ -627,7 +627,7 @@ def test_pine_peat_ditched_vegetation(vegetation):
         vegetation=vegetation,
         ditched=True,
     )
-    sis = Hagglund_Lundmark_1979_SIS(**params)
+    sis = Hagglund_Lundmark_1977_SIS(**params)
     assert isinstance(sis, SiteIndexValue)
     assert 0 < float(sis) < 50
 
@@ -645,7 +645,7 @@ def test_pine_groundlayer_altitude_branch():
         altitude=400.0,
         incline_percent=20.0,
     )
-    sis = Hagglund_Lundmark_1979_SIS(**params)
+    sis = Hagglund_Lundmark_1977_SIS(**params)
     assert isinstance(sis, SiteIndexValue)
     assert 0 < float(sis) < 50
 
@@ -662,7 +662,7 @@ def test_pine_climate_code_dlan_branch():
         climate_code=Sweden.ClimateZone.M2,
         dlan=Sweden.County.UPPSALA,
     )
-    sis = Hagglund_Lundmark_1979_SIS(**params)
+    sis = Hagglund_Lundmark_1977_SIS(**params)
     assert isinstance(sis, SiteIndexValue)
     assert 0 < float(sis) < 50
 
@@ -685,7 +685,7 @@ def test_pine_dry_groundlayer_branches(ground_layer):
         climate_code=Sweden.ClimateZone.K3,
         soil_depth=Sweden.SoilDepth.DEEP,
     )
-    sis = Hagglund_Lundmark_1979_SIS(**params)
+    sis = Hagglund_Lundmark_1977_SIS(**params)
     assert isinstance(sis, SiteIndexValue)
     assert 0 < float(sis) < 50
 
@@ -708,8 +708,8 @@ def test_pine_final_adjustment_flags():
         altitude=1000.0,
         incline_percent=20.0,
     )
-    sis_neg = Hagglund_Lundmark_1979_SIS(**neg)
-    sis_pos = Hagglund_Lundmark_1979_SIS(**pos)
+    sis_neg = Hagglund_Lundmark_1977_SIS(**neg)
+    sis_pos = Hagglund_Lundmark_1977_SIS(**pos)
     assert sis_neg != sis_pos
 
 
@@ -735,7 +735,7 @@ def test_spruce_lateral_water_and_ditched(lateral):
         lateral_water=lateral,
         ditched=True,
     )
-    sis = Hagglund_Lundmark_1979_SIS(**params)
+    sis = Hagglund_Lundmark_1977_SIS(**params)
     assert isinstance(sis, SiteIndexValue)
     assert 0 < float(sis) < 50
 
@@ -759,7 +759,7 @@ def test_spruce_moist_vegetation_branches(vegetation):
         lateral_water=Sweden.SoilWater.SHORTER_PERIODS,
         ditched=True,
     )
-    sis = Hagglund_Lundmark_1979_SIS(**params)
+    sis = Hagglund_Lundmark_1977_SIS(**params)
     assert isinstance(sis, SiteIndexValue)
     assert 0 < float(sis) < 50
 
@@ -767,9 +767,9 @@ def test_spruce_moist_vegetation_branches(vegetation):
 def test_spruce_gotland_reduction():
     base = _common_params()
     base.update(species="Picea abies", peat=False)
-    normal = Hagglund_Lundmark_1979_SIS(**base)
+    normal = Hagglund_Lundmark_1977_SIS(**base)
     base["gotland"] = True
-    gotland = Hagglund_Lundmark_1979_SIS(**base)
+    gotland = Hagglund_Lundmark_1977_SIS(**base)
     assert gotland < normal
 
 
@@ -792,7 +792,7 @@ def test_pine_mesic_high_vegetation_variants(vegetation):
         soil_depth=Sweden.SoilDepth.DEEP,
         lateral_water=Sweden.SoilWater.LONGER_PERIODS,
     )
-    sis = Hagglund_Lundmark_1979_SIS(**params)
+    sis = Hagglund_Lundmark_1977_SIS(**params)
     assert isinstance(sis, SiteIndexValue)
     assert 0 < float(sis) < 50
 
@@ -810,7 +810,7 @@ def test_pine_mesic_shallow_ground_layer():
         altitude=400.0,
         incline_percent=15.0,
     )
-    sis = Hagglund_Lundmark_1979_SIS(**params)
+    sis = Hagglund_Lundmark_1977_SIS(**params)
     assert isinstance(sis, SiteIndexValue)
     assert 0 < float(sis) < 50
 
@@ -825,7 +825,7 @@ def test_pine_wet_longer_periods():
         vegetation=Sweden.FieldLayer.NO_FIELD_LAYER,
         lateral_water=Sweden.SoilWater.LONGER_PERIODS,
     )
-    sis = Hagglund_Lundmark_1979_SIS(**params)
+    sis = Hagglund_Lundmark_1977_SIS(**params)
     assert isinstance(sis, SiteIndexValue)
     assert 0 < float(sis) < 50
 
@@ -833,7 +833,7 @@ def test_pine_wet_longer_periods():
 def test_pine_gotland_reduction():
     base = _common_params()
     base.update(species="Pinus sylvestris", peat=False)
-    normal = Hagglund_Lundmark_1979_SIS(**base)
+    normal = Hagglund_Lundmark_1977_SIS(**base)
     base["gotland"] = True
-    gotland = Hagglund_Lundmark_1979_SIS(**base)
+    gotland = Hagglund_Lundmark_1977_SIS(**base)
     assert gotland < normal

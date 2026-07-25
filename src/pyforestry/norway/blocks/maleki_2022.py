@@ -149,7 +149,7 @@ class Maleki2022GrowthModel(GrowthModel):
     def source(self) -> SourceReference:
         """Bibliographic provenance."""
         return SourceReference(
-            author="Maleki, K. et al.",
+            author="Maleki, K., Astrup, R., Kuehne, C., McLean, J.P. & Antón-Fernández, C.",
             year=2022,
             title=(
                 "Stand-level growth models for long-term projections of the main "
@@ -229,7 +229,7 @@ __all__ = [
 DESCRIPTOR = FormulaDescriptor(
     component_id="maleki_2022_model",
     source=SourceReference(
-        author="Maleki, K. et al.",
+        author="Maleki, K., Astrup, R., Kuehne, C., McLean, J.P. & Antón-Fernández, C.",
         year=2022,
         title=(
             "Stand-level growth models for long-term projections of the main "

@@ -335,9 +335,12 @@ class Eko1985Model(GrowthModel):
     def source(self) -> SourceReference:
         """Bibliographic provenance for the Eko 1985 stand model."""
         return SourceReference(
-            author="Eko, P.M.",
+            author="Ekö, P.-M.",
             year=1985,
-            title="En produktionsmodell for skog i Sverige",
+            title=(
+                "En produktionsmodell för skog i Sverige, baserad på bestånd från "
+                "riksskogstaxeringens provytor"
+            ),
         )
 
     def requirements(self) -> Requirements:
@@ -639,9 +642,12 @@ __all__ = [
 DESCRIPTOR = FormulaDescriptor(
     component_id="eko_1985_model",
     source=SourceReference(
-        author="Eko, P.M.",
+        author="Ekö, P.-M.",
         year=1985,
-        title="En produktionsmodell for skog i Sverige",
+        title=(
+            "En produktionsmodell för skog i Sverige, baserad på bestånd från "
+            "riksskogstaxeringens provytor"
+        ),
     ),
     kind="model",
     domain="growth",

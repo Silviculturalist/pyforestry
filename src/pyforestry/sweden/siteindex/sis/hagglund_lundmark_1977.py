@@ -1,14 +1,15 @@
 # Version 0.91 2024-07-30
 
-"""Hägglund & Lundmark (1979) site index estimation models.
+"""Hägglund & Lundmark (1977) site index estimation models.
 
 This module implements routines for estimating H100 (height at age 100) for
 Norway spruce and Scots pine stands in Sweden using the stand factor models
-described by Hägglund and Lundmark (1979).
+described by Hägglund and Lundmark (1977), taken from the corrected Appendix II
+functions reprinted in Hägglund (1979).
 
 The original equations are reproduced together with various corrections used in
 the Swedish National Forest Inventory (NFI). The public entry point is
-``Hagglund_Lundmark_1979_SIS`` which dispatches to species specific helper
+``Hagglund_Lundmark_1977_SIS`` which dispatches to species specific helper
 functions.
 """
 
@@ -796,7 +797,7 @@ def nfi_sis_pine(**kwargs) -> float:
     return SIS
 
 
-def Hagglund_Lundmark_1979_SIS(
+def Hagglund_Lundmark_1977_SIS(
     latitude: float,
     altitude: float,
     soil_moisture: Union[int, Sweden.SoilMoistureEnum],
@@ -1007,14 +1008,20 @@ def Hagglund_Lundmark_1979_SIS(
 
 
 DESCRIPTOR = FormulaDescriptor(
-    component_id="hagglund_1979_siteindex",
+    component_id="hagglund_lundmark_1977_siteindex",
     source=SourceReference(
         author="Hägglund, B. & Lundmark, J.-E.",
-        year=1979,
-        title=(
-            "Ett system för bonitering av skogsmark - analys, kontroll och diskussion "
-            "inför praktisk tillämpning (site index estimation by site factors for "
-            "Scots pine and Norway spruce in Sweden)"
+        year=1977,
+        title="Skattning av höjdboniteten med ståndortsfaktorer: Tall och gran i Sverige",
+        appendix="Appendix II (corrected functions)",
+        note=(
+            "Departments of Forest Ecology and Forest Soils, Royal College of Forestry, "
+            "Research Notes nr 28, Stockholm, 1-240. Implemented from the corrected "
+            "Appendix II functions as reproduced in Hägglund, B. (1979) 'Ett system för "
+            "bonitering av skogsmark: analys, kontroll och diskussion inför praktisk "
+            "tillämpning', 2. uppl., Rapport / Projekt HUGIN nr 14, ISSN 0348-7024, Umeå, "
+            "188 s., which carries the corrections. Note that the 1979 report is "
+            "sole-authored by Hägglund; Lundmark is a co-author of the 1977 source only."
         ),
     ),
     species_groups={
@@ -1022,5 +1029,5 @@ DESCRIPTOR = FormulaDescriptor(
         "pine": frozenset({"Pinus sylvestris"}),
     },
     units={},
-    kernel_names=("nfi_sis_spruce", "nfi_sis_pine", "Hagglund_Lundmark_1979_SIS"),
+    kernel_names=("nfi_sis_spruce", "nfi_sis_pine", "Hagglund_Lundmark_1977_SIS"),
 )

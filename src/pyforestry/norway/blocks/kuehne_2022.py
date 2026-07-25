@@ -45,7 +45,7 @@ class KuehnePineGrowthModel(GrowthModel):
     def source(self) -> SourceReference:
         """Bibliographic provenance."""
         return SourceReference(
-            author="Kuehne, C. et al.",
+            author="Kuehne, C., McLean, J.P., Maleki, K., Antón-Fernández, C. & Astrup, R.",
             year=2022,
             title=(
                 "A stand-level growth and yield model for thinned and unthinned "
@@ -118,7 +118,7 @@ __all__ = [
 DESCRIPTOR = FormulaDescriptor(
     component_id="kuehne_2022_model",
     source=SourceReference(
-        author="Kuehne, C. et al.",
+        author="Kuehne, C., McLean, J.P., Maleki, K., Antón-Fernández, C. & Astrup, R.",
         year=2022,
         title=(
             "A stand-level growth and yield model for thinned and unthinned "

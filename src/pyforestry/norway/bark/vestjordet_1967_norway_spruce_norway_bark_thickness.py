@@ -56,8 +56,8 @@ DESCRIPTOR = FormulaDescriptor(
     source=SourceReference(
         author="Vestjordet, E.",
         year=1967,
-        title="Funksjoner og tabeller for kubering av staaende gran",
-        note="Medd. norske Skogforsoksvesen 22:539-574. Double-bark equation.",
+        title="Funksjoner og tabeller for kubering av stående gran",
+        note=("Meddelelser fra Det norske Skogforsøksvesen 22:539-574. Double-bark equation."),
     ),
     species_groups={"spruce": frozenset({"Picea abies"})},
     units={},

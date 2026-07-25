@@ -10,7 +10,7 @@ from pyforestry.base.helpers.primitives import SiteBase
 from pyforestry.sweden.geo.humidity import eriksson_1986_humidity
 from pyforestry.sweden.geo.temperature import Odin_temperature_sum
 from pyforestry.sweden.siteindex.sis import (
-    Hagglund_Lundmark_1979_SIS,
+    Hagglund_Lundmark_1977_SIS,
     eko_pm_2008_estimate_si_birch,
 )
 
@@ -157,7 +157,7 @@ class SwedishSite(SiteBase):
 
             # Attempt Spruce SI
             try:
-                spruce_si = Hagglund_Lundmark_1979_SIS(
+                spruce_si = Hagglund_Lundmark_1977_SIS(
                     latitude=self.latitude,
                     altitude=self.altitude,
                     soil_moisture=self.soil_moisture.value.code,
@@ -184,7 +184,7 @@ class SwedishSite(SiteBase):
 
             # Attempt Pine SI
             try:
-                pine_si = Hagglund_Lundmark_1979_SIS(
+                pine_si = Hagglund_Lundmark_1977_SIS(
                     latitude=self.latitude,
                     altitude=self.altitude,
                     soil_moisture=self.soil_moisture.value.code,

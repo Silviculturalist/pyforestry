@@ -16,7 +16,7 @@ Submodules
 pyforestry.sweden.siteindex.carbonnier\_1975 module
 ---------------------------------------------------
 
-.. automodule:: pyforestry.sweden.siteindex.carbonnier_1975
+.. automodule:: pyforestry.sweden.siteindex.carbonnier_1971
    :members:
    :undoc-members:
    :show-inheritance:

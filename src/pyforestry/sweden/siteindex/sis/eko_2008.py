@@ -138,13 +138,17 @@ def eko_pm_2008_estimate_si_birch(
 DESCRIPTOR = FormulaDescriptor(
     component_id="eko_2008_siteindex",
     source=SourceReference(
-        author="Ekö, P.-M.",
+        author=(
+            "Ekö, P.-M., Johansson, U., Petersson, N., Bergqvist, J., Elfving, B. & Frisk, J."
+        ),
         year=2008,
         title=(
             "Current growth differences of Norway spruce (Picea abies), Scots pine "
             "(Pinus sylvestris) and birch (Betula pendula and Betula pubescens) in "
             "different regions in Sweden"
         ),
+        note="Scandinavian Journal of Forest Research 23(4):307-318. "
+        "doi:10.1080/02827580802249126",
     ),
     species_groups={"birch": frozenset({"Betula pendula", "Betula pubescens"})},
     units={},

@@ -20,7 +20,7 @@ from pyforestry.base.helpers import (
 )
 from pyforestry.sweden.site.enums import Sweden
 from pyforestry.sweden.site.swedish_site import SwedishSite
-from pyforestry.sweden.siteindex.carbonnier_1975 import CarbonnierHeightModel
+from pyforestry.sweden.siteindex.carbonnier_1971 import CarbonnierHeightModel
 from pyforestry.sweden.siteindex.hagglund_1970 import Hagglund_1970, HagglundPineRegeneration
 from pyforestry.sweden.siteindex.translate import leijon_pine_to_spruce, leijon_spruce_to_pine
 from pyforestry.sweden.siteindex.validation import validate_hagglund_1970_h100_site_index

@@ -2,7 +2,7 @@ import pytest
 
 from pyforestry.base.helpers import Age, SiteIndexValue
 from pyforestry.base.helpers.tree_species import TreeSpecies
-from pyforestry.sweden.siteindex.carbonnier_1975 import CarbonnierHeightModel
+from pyforestry.sweden.siteindex.carbonnier_1971 import CarbonnierHeightModel
 
 
 @pytest.fixture

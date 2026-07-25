@@ -402,7 +402,10 @@ def _eko_stand_with_metrics(cohorts) -> Stand:
 def test_eko1985_model_describable_metadata():
     model = Eko1985Model(site_context=_eko_site_context())
     assert model.component_id == "eko_1985"
-    assert model.source.author.startswith("Eko")
+    # Ekö with the diaeresis: the author is Per-Magnus Ekö, not "Eko".
+    assert model.source.author == "Ekö, P.-M."
+    assert model.source.year == 1985
+    assert model.source.title.startswith("En produktionsmodell för skog i Sverige")
     assert model.requirements().inventory == "aggregate"
 
 

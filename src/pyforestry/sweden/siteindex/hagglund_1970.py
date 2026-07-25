@@ -1,4 +1,18 @@
-"""Hagglund (1970s) site index models for Sweden spruce and pine."""
+"""Hägglund site index models for Swedish Norway spruce and Scots pine.
+
+Three separate publications, one per model. The ``Hagglund_1970`` class name is a
+legacy identifier: there is no Hägglund (1970) site-index publication.
+
+Sources:
+    Hägglund, B. (1972). *Om övre höjdens utveckling för gran i norra Sverige.*
+    Skogshögskolan, institutionen för skogsproduktion, Rapporter och uppsatser nr 21.
+
+    Hägglund, B. (1973). *Om övre höjdens utveckling för gran i södra Sverige.*
+    Skogshögskolan, institutionen för skogsproduktion, Rapporter och uppsatser nr 24.
+
+    Hägglund, B. (1974). *Övre höjdens utveckling i tallbestånd.* Skogshögskolan,
+    institutionen för skogsproduktion, Rapporter och uppsatser nr 31.
+"""
 
 import math
 import warnings
@@ -571,8 +585,19 @@ class _Descriptor:
 
         return SourceReference(
             author="Hägglund, B.",
-            year=1970,
-            title="Site index curves for Scots pine and Norway spruce in Sweden",
+            year=1972,
+            title="Om övre höjdens utveckling för gran i norra Sverige",
+            note=(
+                "Skogshögskolan, institutionen för skogsproduktion, Rapporter och uppsatser "
+                "nr 21. This module spans three of the author's publications and a single "
+                "reference cannot carry them all; each model is named for its own year. "
+                "Norway spruce, northern Sweden: Hägglund (1972), above. Norway spruce, "
+                "southern Sweden: Hägglund (1973) 'Om övre höjdens utveckling för gran i "
+                "södra Sverige', Rapporter och uppsatser nr 24. Scots pine: Hägglund (1974) "
+                "'Övre höjdens utveckling i tallbestånd', Rapporter och uppsatser nr 31. "
+                "There is no Hägglund (1970) site-index publication; the class name "
+                "Hagglund_1970 is a legacy identifier, not a citation."
+            ),
         )
 
     @property
