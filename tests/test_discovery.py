@@ -95,7 +95,15 @@ def test_base_region_models_are_discovered():
         "nasberg_1985_bucking",
     } <= ids
     assert all(m.region == "base" for m in base)
-    assert all(m.source.author and m.source.year for m in base)
+    for model in base:
+        assert model.source.author and model.source.title
+        # year 0 with author "(none)" is the documented not-applicable sentinel for
+        # a pyforestry collection with no publication of its own; anything else
+        # must be a real year.
+        if model.source.author == "(none)":
+            assert model.source.year == 0
+        else:
+            assert 1900 < model.source.year < 2030
 
 
 def test_geo_climate_models_are_discovered():

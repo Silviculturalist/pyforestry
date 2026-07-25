@@ -11,7 +11,10 @@ import pytest
 
 from pyforestry.base.competition import (
     INDEX_REGISTRY,
+    INDEX_SET_REVIEW,
+    INDEX_SOURCES,
     NON_SPATIAL_INDICES,
+    SELECTOR_SOURCES,
     SPATIAL_INDICES,
     BitterlichBAF,
     FixedRadius,
@@ -27,8 +30,10 @@ from pyforestry.base.competition import (
     compute_index,
     fraction_of_circle_inside_circle,
     hegyi,
+    index_source,
     martin_ek_sdrl2,
     mean_spacing_m,
+    selector_source,
 )
 from pyforestry.base.helpers import CircularPlot, Tree
 from pyforestry.base.helpers.primitives import Position
@@ -491,11 +496,92 @@ def test_api_is_discoverable_in_the_catalog():
     """The package publishes a DESCRIPTOR under region 'base', domain 'competition'."""
     from pyforestry import catalog
 
-    entry = catalog.describe("maleki_2015_competition_indices")
+    entry = catalog.describe("competition_indices")
     assert entry.region == "base"
     assert entry.domain == "competition"
-    assert entry.source.year == 2015
-    assert "10.5424/fs/2015242-05742" in entry.source.note
+    # The package itself has no publication; it collects eighteen that do.
+    assert entry.source.author == "(none)"
+    assert entry.source.year == 0
+    assert set(entry.composes) == set(INDEX_REGISTRY)
+
+
+# ---------------------------------------------------------------------------
+# Attribution
+# ---------------------------------------------------------------------------
+
+
+def test_every_index_cites_its_own_author_not_the_review():
+    """Each index is attributed to the paper that proposed it."""
+    assert len(INDEX_SOURCES) == 18
+    for name in INDEX_REGISTRY:
+        source = index_source(name)
+        assert source.author and source.title
+        assert 1900 < source.year < 2030
+        # None of them may be credited to the review that tabulated the set.
+        assert "Maleki" not in source.author
+
+
+def test_index_sources_match_the_originals():
+    """Spot-check the attributions against the primary literature."""
+    expected = {
+        "BA-gj": ("Steneker", 1963),
+        "BAL": ("Wykoff", 1982),
+        "Sdr": ("Lorimer", 1983),
+        "drg": ("Hamilton", 1986),
+        "BAr": ("Corona", 1989),
+        "BALr": ("Vanclay", 1991),
+        "BALMOD": ("Schroder", 1999),
+        "Sl": ("Staebler", 1951),
+        "SOr": ("Gerrard", 1969),
+        "SOdr": ("Bella", 1971),
+        "SBAr": ("Daniels", 1986),
+        "Heg": ("Hegyi", 1974),
+        "SAng1": ("Lin", 1974),
+        "SAng2": ("Rouvinen", 1997),
+        "SdrAng": ("Rouvinen", 1997),
+        "Almdg": ("Alemdag", 1978),
+        "Sdrl1": ("Lorimer", 1983),
+        "Sdrl2": ("Martin", 1984),
+    }
+    for name, (surname, year) in expected.items():
+        source = index_source(name)
+        assert source.author.startswith(surname), name
+        assert source.year == year, name
+
+
+def test_rouvinen_kuuluvainen_year_is_corrected():
+    """The 2015 table dates the work 1977; it is 1997."""
+    for name in ("SAng2", "SdrAng"):
+        assert index_source(name).year == 1997
+        assert "1977" in index_source(name).note
+
+
+def test_index_registry_entries_expose_formula_and_source():
+    """A registry entry is callable and carries its own provenance and spatial flag."""
+    entry = INDEX_REGISTRY["Heg"]
+    assert entry.abbreviation == "Heg"
+    assert entry.source.author.startswith("Hegyi")
+    assert entry.spatial is True
+    assert INDEX_REGISTRY["BAL"].spatial is False
+    n = Neighbourhood(subject_dbh_cm=20.0, competitor_dbh_cm=(25.0,), distances_m=(4.0,))
+    assert entry(n) == pytest.approx(compute_index("Heg", n))
+
+
+def test_the_review_is_cited_only_as_the_source_of_the_set():
+    """Maleki et al. (2015) is credited for assembling the comparison, nothing more."""
+    assert INDEX_SET_REVIEW.author.startswith("Maleki")
+    assert INDEX_SET_REVIEW.year == 2015
+    assert "attributed to its own author" in INDEX_SET_REVIEW.note
+
+
+def test_selectors_carry_their_own_sources():
+    """Published selection rules cite their authors; plain geometry cites nobody."""
+    assert selector_source(MeanHeightRadius()).author.startswith("Sims")
+    assert selector_source(LeeGadowRadius()).author.startswith("Lee")
+    assert selector_source(BitterlichBAF()).author.startswith("Bitterlich")
+    assert selector_source(FixedRadius(5.0)) is None
+    assert selector_source(NearestNeighbours(3)) is None
+    assert set(SELECTOR_SOURCES) == {"MeanHeightRadius", "LeeGadowRadius", "BitterlichBAF"}
 
 
 def test_crown_radius_round_trips_on_tree():

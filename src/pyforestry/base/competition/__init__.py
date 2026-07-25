@@ -1,32 +1,40 @@
 """Individual-tree competition indices.
 
-Implements the eighteen indices reviewed by Maleki, Kiviste & Korjus (2015),
-Table 2 -- seven distance-independent and eleven spatially explicit -- together
-with the four competitor-selection rules the same paper tests, because an index
-value is only interpretable alongside the rule that chose its competitors.
-
-Three layers, from most to least general:
-
-* :mod:`~pyforestry.base.competition.indices` -- the index formulas, each a pure
-  function of a :class:`~pyforestry.base.competition.neighbourhood.Neighbourhood`.
-* :mod:`~pyforestry.base.competition.selection` -- competitor selection rules.
-* :func:`~pyforestry.base.competition.api.competition_indices` -- the convenience
-  entry point over a tree list, a ``CircularPlot`` or a ``Stand``.
+Eighteen indices -- seven distance-independent and eleven spatially explicit --
+each attributed to the paper that proposed it, from Staebler (1951) through to
+Schroder & Gadow (1999). Alongside them are the competitor-selection rules they
+are used with, because an index value is only interpretable next to the rule that
+chose its competitors.
 
     >>> from pyforestry.base.competition import competition_indices, FixedRadius
     >>> results = competition_indices(plot, indices=["Heg", "BAL"],
     ...                               selector=FixedRadius(8.0, min_size_ratio=0.3))
     >>> results[0].indices["Heg"]
 
+Every index carries its own citation::
+
+    >>> from pyforestry.base.competition import index_source
+    >>> index_source("Heg")     # Hegyi (1974), not the review it was collected from
+    >>> index_source("Sdrl2")   # Martin & Ek (1984)
+
+Three layers:
+
+* :mod:`~pyforestry.base.competition.indices` -- the formulas, each a pure
+  function of a :class:`~pyforestry.base.competition.neighbourhood.Neighbourhood`.
+* :mod:`~pyforestry.base.competition.selection` -- competitor selection rules.
+* :func:`~pyforestry.base.competition.api.competition_indices` -- the entry point
+  over a tree list, a ``CircularPlot`` or a ``Stand``.
+
 Distance-dependent indices are biased low for trees near a plot boundary, whose
 competition zone is partly unobserved. Every result reports
 ``observed_zone_fraction``, and by default the spatial indices are divided by it
 (proportional-area weighting).
 
-Source:
-    Maleki, K., Kiviste, A. & Korjus, H. (2015). *Analysis of individual tree
-    competition effect on diameter growth of silver birch in Estonia.* Forest
-    Systems 24(2), e023, 13 pp. doi:10.5424/fs/2015242-05742
+This package holds no science of its own. The set of eighteen was assembled and
+compared by Maleki, Kiviste & Korjus (2015), which is why these particular
+indices are here; see
+:data:`~pyforestry.base.competition.sources.INDEX_SET_REVIEW`. Per-index
+provenance is in :data:`~pyforestry.base.competition.sources.INDEX_SOURCES`.
 """
 
 from pyforestry.base.contracts import FormulaDescriptor, SourceReference
@@ -42,6 +50,7 @@ from .indices import (
     INDEX_REGISTRY,
     NON_SPATIAL_INDICES,
     SPATIAL_INDICES,
+    CompetitionIndex,
     alemdag_almdg,
     bal_ratio_balr,
     balmod,
@@ -54,6 +63,7 @@ from .indices import (
     diameter_ratio_drg,
     gerrard_sor,
     hegyi,
+    index_source,
     lin_sang1,
     lorimer_sdrl1,
     martin_ek_sdrl2,
@@ -72,9 +82,17 @@ from .selection import (
     NearestNeighbours,
     Selection,
     SelectionContext,
+    selector_source,
 )
+from .sources import INDEX_SET_REVIEW, INDEX_SOURCES, SELECTOR_SOURCES
 
 __all__ = [
+    "selector_source",
+    "index_source",
+    "SELECTOR_SOURCES",
+    "INDEX_SOURCES",
+    "INDEX_SET_REVIEW",
+    "CompetitionIndex",
     "BitterlichBAF",
     "CompetitorSelector",
     "FixedRadius",
@@ -116,25 +134,20 @@ __all__ = [
 ]
 
 DESCRIPTOR = FormulaDescriptor(
-    component_id="maleki_2015_competition_indices",
+    component_id="competition_indices",
     source=SourceReference(
-        author="Maleki, K., Kiviste, A. & Korjus, H.",
-        year=2015,
-        title=(
-            "Analysis of individual tree competition effect on diameter growth of "
-            "silver birch in Estonia"
-        ),
-        appendix="Table 2",
+        author="(none)",
+        year=0,
+        title="Individual-tree competition indices (pyforestry collection)",
         note=(
-            "Forest Systems 24(2), e023, 13 pp. doi:10.5424/fs/2015242-05742. A review "
-            "and comparison; each index carries its own original citation, given in the "
-            "function docstrings (Steneker & Jarvis 1963, Wykoff et al. 1982, Lorimer "
-            "1983, Hamilton 1986, Corona & Ferrara 1989, Vanclay 1991, Schroder & Gadow "
-            "1999, Staebler 1951, Gerrard 1969, Bella 1971, Daniels et al. 1986, Hegyi "
-            "1974, Lin 1974, Rouvinen & Kuuluvainen 1997, Alemdag 1978, Martin & Ek "
-            "1984). Two departures from Table 2 as printed: the Martin & Ek exponent is "
-            "negative here (the table's positive sign makes competition grow without "
-            "bound with distance), and Rouvinen & Kuuluvainen is 1997, not 1977."
+            "No primary publication, and none is possible: this package collects "
+            "eighteen indices by eighteen different authors, each carrying its own "
+            "citation in `INDEX_SOURCES` and reachable via `index_source(name)`. "
+            "year=0 is a sentinel for 'not applicable', not a citation date. The "
+            "particular set assembled here follows the comparison in Maleki, Kiviste & "
+            "Korjus (2015), Forest Systems 24(2) e023, doi:10.5424/fs/2015242-05742 -- "
+            "see `INDEX_SET_REVIEW`; that review supplies the selection and the "
+            "abbreviations, not the science."
         ),
     ),
     species_groups={},
@@ -144,6 +157,7 @@ DESCRIPTOR = FormulaDescriptor(
         "plot_area": "ha",
         "basal_area": "m2/ha",
     },
-    kernel_names=("competition_indices", "compute_index"),
+    kernel_names=("competition_indices", "compute_index", "index_source"),
+    composes=tuple(sorted(INDEX_REGISTRY)),
     domain="competition",
 )

@@ -1,43 +1,48 @@
-"""The eighteen competition indices of Maleki, Kiviste & Korjus (2015), Table 2.
+"""Eighteen individual-tree competition indices, each attributed to its own author.
 
-Seven non-spatial and eleven spatially explicit indices, each a pure function of
-a :class:`~pyforestry.base.competition.neighbourhood.Neighbourhood`. Symbols
-follow the paper: ``d_i`` subject diameter (cm), ``d_j`` competitor diameter
-(cm), ``l_ij`` stem-to-stem distance (m), ``g`` basal area (m^2), ``G`` plot
-basal area (m^2/ha), ``S`` plot area (ha), ``CZR`` competition-zone radius (m),
-``CZ`` competition-zone area (m^2), ``O_ij`` influence-zone overlap (m^2).
+Seven distance-independent and eleven spatially explicit indices, spanning
+Staebler (1951) to Schroder & Gadow (1999). Every index is a pure function of a
+:class:`~pyforestry.base.competition.neighbourhood.Neighbourhood`, and every one
+carries the citation of the paper that *proposed* it -- reachable as
+:func:`index_source` or ``INDEX_REGISTRY[name].source``. The set was assembled
+and compared by Maleki, Kiviste & Korjus (2015), who are credited for that
+collection in :data:`~pyforestry.base.competition.sources.INDEX_SET_REVIEW` and
+for nothing else.
 
-Two departures from Table 2 as printed, both deliberate:
+Symbols follow the usual convention: ``d_i`` subject diameter (cm), ``d_j``
+competitor diameter (cm), ``l_ij`` stem-to-stem distance (m), ``g`` basal area
+(m^2), ``G`` plot basal area (m^2/ha), ``S`` plot area (ha), ``CZR``
+competition-zone radius (m), ``CZ`` competition-zone area (m^2), ``O_ij``
+influence-zone overlap (m^2).
 
-* **Martin & Ek (1984), ``Sdrl2``** -- the table prints
-  ``exp(16*l_ij/(d_i+d_j))`` with a positive exponent, as does Wang et al.
-  (2012) Table 1. A positive exponent makes a competitor's contribution grow
-  without bound with distance: at ``d_i+d_j = 40 cm`` a competitor 10 m away
-  would count 24 times a competitor 2 m away. The index is a distance-*decay*
-  weighting, and the original is negative. Implemented as ``exp(-16*...)``;
-  :func:`martin_ek_sdrl2` documents this and a regression test pins the sign.
-* **Rouvinen & Kuuluvainen** -- Table 2 dates this 1977; the work is 1997,
-  Canadian Journal of Forest Research 27:890-902.
+Where the transcription departs from the 2015 review's Table 2 it does so to
+follow the original, and says so at the point of use:
 
-The angular indices (``SAng1``, ``SAng2``, ``SdrAng``) convert diameters from cm
-to m before taking the arctangent. As printed the ratio mixes cm with m, which
-makes the "horizontal angle" dimensionally inconsistent -- a 20 cm stem 5 m away
-would subtend 76 degrees instead of 2.3. See :func:`lin_sang1`.
-
-Source:
-    Maleki, K., Kiviste, A. & Korjus, H. (2015). *Analysis of individual tree
-    competition effect on diameter growth of silver birch in Estonia.* Forest
-    Systems 24(2), e023, 13 pp. doi:10.5424/fs/2015242-05742
+* **Martin & Ek (1984), ``Sdrl2``** -- the exponent is negative. Table 2 prints
+  ``exp(+16*l_ij/(d_i+d_j))``, as does Wang et al. (2012) Table 1, which would
+  make a competitor's contribution grow without bound with distance: at
+  ``d_i+d_j = 40 cm`` one 10 m away would count 24 times one at 2 m. See
+  :func:`martin_ek_sdrl2`.
+* **Rouvinen & Kuuluvainen** -- Table 2 dates the work 1977; it is 1997.
+* The angular indices (``SAng1``, ``SAng2``, ``SdrAng``) convert diameters from
+  cm to m before the arctangent. As printed the ratio mixes cm with m, putting a
+  20 cm stem 5 m away at 76 degrees instead of 2.3. See :func:`lin_sang1`.
 """
 
+from dataclasses import dataclass
 from math import atan, exp, pi, sqrt
 from typing import Callable, Dict
 
+from pyforestry.base.contracts import SourceReference
+
 from .geometry import circle_intersection_area, circle_overlap_length
 from .neighbourhood import Neighbourhood
+from .sources import INDEX_SOURCES
 
 __all__ = [
     "INDEX_REGISTRY",
+    "CompetitionIndex",
+    "index_source",
     "NON_SPATIAL_INDICES",
     "SPATIAL_INDICES",
     "alemdag_almdg",
@@ -465,41 +470,81 @@ def martin_ek_sdrl2(n: Neighbourhood) -> float:
 # Registry
 # ---------------------------------------------------------------------------
 
-#: Non-spatial indices, keyed by the abbreviation used in Table 2.
-NON_SPATIAL_INDICES: Dict[str, Callable[[Neighbourhood], float]] = {
-    "BA-gj": basal_area_sum_ba_gj,
-    "BAL": basal_area_of_larger_bal,
-    "Sdr": sum_diameter_ratio_sdr,
-    "drg": diameter_ratio_drg,
-    "BAr": basal_area_ratio_bar,
-    "BALr": bal_ratio_balr,
-    "BALMOD": balmod,
+
+@dataclass(frozen=True)
+class CompetitionIndex:
+    """One competition index: its formula, its provenance and what it needs.
+
+    Attributes:
+        abbreviation: The short name used in the literature, e.g. ``"Heg"``.
+        compute: The kernel, a pure function of a :class:`Neighbourhood`.
+        source: The publication that proposed *this index*. Not the review it was
+            collected from -- see
+            :data:`pyforestry.base.competition.sources.INDEX_SET_REVIEW` for that.
+        spatial: Whether the index needs stem-to-stem distances.
+    """
+
+    abbreviation: str
+    compute: Callable[[Neighbourhood], float]
+    source: SourceReference
+    spatial: bool
+
+    def __call__(self, neighbourhood: Neighbourhood) -> float:
+        """Evaluate the index."""
+        return self.compute(neighbourhood)
+
+
+def _entry(abbrev: str, fn: Callable[[Neighbourhood], float], spatial: bool) -> CompetitionIndex:
+    """Bind a kernel to its own primary citation."""
+    return CompetitionIndex(abbrev, fn, INDEX_SOURCES[abbrev], spatial)
+
+
+#: Non-spatial indices, keyed by the abbreviation used in the literature.
+NON_SPATIAL_INDICES: Dict[str, CompetitionIndex] = {
+    entry.abbreviation: entry
+    for entry in (
+        _entry("BA-gj", basal_area_sum_ba_gj, False),
+        _entry("BAL", basal_area_of_larger_bal, False),
+        _entry("Sdr", sum_diameter_ratio_sdr, False),
+        _entry("drg", diameter_ratio_drg, False),
+        _entry("BAr", basal_area_ratio_bar, False),
+        _entry("BALr", bal_ratio_balr, False),
+        _entry("BALMOD", balmod, False),
+    )
 }
 
-#: Spatially explicit indices, keyed by the abbreviation used in Table 2.
-SPATIAL_INDICES: Dict[str, Callable[[Neighbourhood], float]] = {
-    "Sl": staebler_sl,
-    "SOr": gerrard_sor,
-    "SOdr": bella_sodr,
-    "SBAr": daniels_sbar,
-    "Heg": hegyi,
-    "SAng1": lin_sang1,
-    "SAng2": rouvinen_kuuluvainen_sang2,
-    "SdrAng": rouvinen_kuuluvainen_sdrang,
-    "Almdg": alemdag_almdg,
-    "Sdrl1": lorimer_sdrl1,
-    "Sdrl2": martin_ek_sdrl2,
+#: Spatially explicit indices, keyed by the abbreviation used in the literature.
+SPATIAL_INDICES: Dict[str, CompetitionIndex] = {
+    entry.abbreviation: entry
+    for entry in (
+        _entry("Sl", staebler_sl, True),
+        _entry("SOr", gerrard_sor, True),
+        _entry("SOdr", bella_sodr, True),
+        _entry("SBAr", daniels_sbar, False),
+        _entry("Heg", hegyi, True),
+        _entry("SAng1", lin_sang1, True),
+        _entry("SAng2", rouvinen_kuuluvainen_sang2, True),
+        _entry("SdrAng", rouvinen_kuuluvainen_sdrang, True),
+        _entry("Almdg", alemdag_almdg, True),
+        _entry("Sdrl1", lorimer_sdrl1, True),
+        _entry("Sdrl2", martin_ek_sdrl2, True),
+    )
 }
 
-#: Every index in Table 2, keyed by abbreviation.
-INDEX_REGISTRY: Dict[str, Callable[[Neighbourhood], float]] = {
-    **NON_SPATIAL_INDICES,
-    **SPATIAL_INDICES,
-}
+#: Every index, keyed by abbreviation.
+INDEX_REGISTRY: Dict[str, CompetitionIndex] = {**NON_SPATIAL_INDICES, **SPATIAL_INDICES}
+
+
+def _resolve(name: str) -> CompetitionIndex:
+    """Look an index up by abbreviation, case-insensitively."""
+    key = {k.lower(): k for k in INDEX_REGISTRY}.get(name.lower())
+    if key is None:
+        raise KeyError(f"Unknown competition index {name!r}. Known: {sorted(INDEX_REGISTRY)}")
+    return INDEX_REGISTRY[key]
 
 
 def compute_index(name: str, neighbourhood: Neighbourhood) -> float:
-    """Compute one index by its Table 2 abbreviation.
+    """Compute one index by its abbreviation.
 
     Args:
         name: The abbreviation, e.g. ``"Heg"`` or ``"BAL"``. Case-insensitive.
@@ -511,7 +556,20 @@ def compute_index(name: str, neighbourhood: Neighbourhood) -> float:
     Raises:
         KeyError: If ``name`` is not one of the eighteen indices.
     """
-    key = {k.lower(): k for k in INDEX_REGISTRY}.get(name.lower())
-    if key is None:
-        raise KeyError(f"Unknown competition index {name!r}. Known: {sorted(INDEX_REGISTRY)}")
-    return INDEX_REGISTRY[key](neighbourhood)
+    return _resolve(name).compute(neighbourhood)
+
+
+def index_source(name: str) -> SourceReference:
+    """Return the publication that proposed the named index.
+
+    Args:
+        name: The abbreviation, e.g. ``"Heg"``. Case-insensitive.
+
+    Returns:
+        The index's own primary citation -- Hegyi (1974) for ``"Heg"``, not the
+        review the set was collected from.
+
+    Raises:
+        KeyError: If ``name`` is not one of the eighteen indices.
+    """
+    return _resolve(name).source

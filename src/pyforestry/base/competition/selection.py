@@ -1,23 +1,28 @@
 """Rules for deciding which neighbours count as competitors.
 
-Maleki, Kiviste & Korjus (2015) make the point that a competition index value is
-only meaningful alongside the rule that chose its competitors: the same formula
-on the same stand ranks trees differently under different selection rules. The
-formula and the rule are therefore kept as separate, composable objects here.
+A competition index value is only meaningful alongside the rule that chose its
+competitors: the same formula on the same stand ranks trees differently under
+different rules. The formula and the rule are therefore separate, composable
+objects here. That framing, and this particular set of four approaches, is from
+Maleki, Kiviste & Korjus (2015); the rules themselves are their own authors'.
 
-The four approaches the paper tests are all available:
-
-1. :class:`FixedRadius` and :class:`MeanHeightRadius` -- a fixed influence zone,
-   the latter as a fraction of stand mean height (``CZR = 0.4 * h`` in the paper,
-   after Sims et al. 2009).
+1. :class:`FixedRadius` -- plain geometry, no citation.
+   :class:`MeanHeightRadius` -- a fraction of stand mean height,
+   ``CZR = 0.4 * h`` after Sims et al. (2009). The influence-zone concept it
+   rests on is Staebler (1951).
 2. :class:`LeeGadowRadius` -- a dynamic radius ``k * sqrt(10000 / N)``, i.e. a
-   multiple of mean spacing (Lee & Gadow 1997); the paper uses ``k = 2, 3``.
-3. :class:`BitterlichBAF` -- Bitterlich (1952) variable-radius selection, a tree
-   competing when ``l_ij <= d_i * sqrt(50 / BAF)``.
-4. :class:`NearestNeighbours` -- the ``k`` closest stems.
+   multiple of mean spacing, after Lee & von Gadow (1997).
+3. :class:`BitterlichBAF` -- variable-radius selection after Bitterlich (1952):
+   a tree competes when it falls inside the angle-count limiting distance
+   ``50 * d_i / sqrt(BAF)``, ``d_i`` in metres.
+4. :class:`NearestNeighbours` -- the ``n`` closest stems; plain geometry.
 
-Every selector can additionally apply the paper's minimum-size screen, keeping a
-neighbour only when ``d_j >= min_size_ratio * d_i`` (``0.3`` in the paper).
+Each rule that implements somebody's published proposal exposes it as
+``.source``; :func:`selector_source` reads it, returning ``None`` for the two
+that are plain geometry.
+
+Every selector can additionally apply a minimum-size screen, keeping a neighbour
+only when ``d_j >= min_size_ratio * d_i`` (``0.3`` in the 2015 comparison).
 """
 
 from dataclasses import dataclass
@@ -25,9 +30,11 @@ from math import sqrt
 from typing import List, Optional, Protocol, Sequence, Tuple
 
 from .geometry import mean_spacing_m
+from .sources import SELECTOR_SOURCES
 
 __all__ = [
     "BitterlichBAF",
+    "selector_source",
     "CompetitorSelector",
     "FixedRadius",
     "LeeGadowRadius",
@@ -155,6 +162,11 @@ class MeanHeightRadius:
     fraction: float = 0.4
     min_size_ratio: float = 0.0
 
+    @property
+    def source(self):
+        """The publication this radius rule comes from: Sims et al. (2009)."""
+        return SELECTOR_SOURCES["MeanHeightRadius"]
+
     def select(
         self,
         subject_index: int,
@@ -185,6 +197,11 @@ class LeeGadowRadius:
 
     k: float = 2.0
     min_size_ratio: float = 0.0
+
+    @property
+    def source(self):
+        """The publication this radius rule comes from: Lee & von Gadow (1997)."""
+        return SELECTOR_SOURCES["LeeGadowRadius"]
 
     def select(
         self,
@@ -232,6 +249,11 @@ class BitterlichBAF:
         """Reject a non-positive basal area factor."""
         if self.basal_area_factor <= 0:
             raise ValueError("basal_area_factor must be positive.")
+
+    @property
+    def source(self):
+        """The publication this selection rule comes from: Bitterlich (1952)."""
+        return SELECTOR_SOURCES["BitterlichBAF"]
 
     def select(
         self,
@@ -284,3 +306,17 @@ class NearestNeighbours:
         # is the effective reach, which the edge correction can use.
         reach = max(chosen_dist) if chosen_dist else None
         return Selection(chosen_idx, chosen_dist, reach)
+
+
+def selector_source(selector: object):
+    """Return the publication a selector implements, if it has one.
+
+    Args:
+        selector: Any competitor selector.
+
+    Returns:
+        Its :class:`~pyforestry.base.contracts.SourceReference`, or ``None`` for
+        the rules that are plain geometry rather than somebody's proposal
+        (:class:`FixedRadius`, :class:`NearestNeighbours`).
+    """
+    return getattr(selector, "source", None)

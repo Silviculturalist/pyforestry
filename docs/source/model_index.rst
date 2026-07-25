@@ -17,11 +17,11 @@ Auto-generated from ``pyforestry.catalog`` (82 models). Regenerate with ``python
      - base
      - bucking
      - Näsberg, M. (1985) Mathematical programming models for optimal log bucking
-   * - ``maleki_2015_competition_indices``
+   * - ``competition_indices``
      - formula
      - base
      - competition
-     - Maleki, K., Kiviste, A. & Korjus, H. (2015) Analysis of individual tree competition effect on diameter growth of silver birch in Estonia
+     - (none) (0) Individual-tree competition indices (pyforestry collection) (composes Almdg, BA-gj, BAL, BALMOD, BALr, BAr, Heg, SAng1, SAng2, SBAr, SOdr, SOr, Sdr, SdrAng, Sdrl1, Sdrl2, Sl, drg)
    * - ``garcia_1998_top_height``
      - formula
      - base
