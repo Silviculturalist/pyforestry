@@ -1,4 +1,16 @@
-"""Simulation-layer mortality orchestration for Swedish mortality modules."""
+"""Simulation-layer mortality orchestration for Swedish mortality modules.
+
+This module is pyforestry's own composition layer and carries no publication of
+its own: it selects among, and applies, mortality models that each carry their
+own provenance. The scientific sources are those of the composed modules --
+:mod:`pyforestry.sweden.mortality.elfving_2013`,
+:mod:`pyforestry.sweden.mortality.fridman_stahl_2001`,
+:mod:`pyforestry.sweden.mortality.siipilehto_2020`,
+:mod:`pyforestry.sweden.mortality.soderberg_1986`,
+:mod:`pyforestry.sweden.mortality.bengtsson` and
+:mod:`pyforestry.sweden.mortality.naslund_1986` -- reachable through
+:attr:`MortalityEngine.components`.
+"""
 
 from __future__ import annotations
 
@@ -8,6 +20,7 @@ from typing import Any, Protocol
 
 import numpy as np
 
+from pyforestry.base.contracts import SourceReference
 from pyforestry.base.helpers.tree_species import TreeSpecies
 from pyforestry.sweden._model_input_normalization import (
     normalize_hagglund_h100_site_index_m as _normalize_hagglund_h100_site_index_m,
@@ -218,6 +231,46 @@ class MortalityEngine:
         """Seed the realization RNG and build the one configured tree-model strategy."""
         self._rng = np.random.default_rng(self.config.stochastic_seed)
         self._tree_model = self._build_tree_model()
+
+    # -- provenance --------------------------------------------------------
+
+    @property
+    def component_id(self) -> str:
+        """Stable identifier for this composition."""
+        return "sweden_mortality_engine"
+
+    @property
+    def source(self) -> SourceReference:
+        """Provenance for the engine itself, which is a pyforestry composition.
+
+        The engine has no publication of its own. The scientific content belongs
+        to the composed mortality modules; see :attr:`components`.
+        """
+        return SourceReference(
+            author="(none)",
+            year=0,
+            title="Swedish mortality orchestration (pyforestry composition)",
+            note=(
+                "No primary publication, and none is needed: this layer selects among "
+                "and applies mortality models, and holds no coefficients of its own. "
+                "year=0 is a sentinel for 'not applicable', not a citation date. The "
+                "scientific provenance is that of the composed modules listed in "
+                "`components`."
+            ),
+        )
+
+    @property
+    def components(self) -> tuple[str, ...]:
+        """Component ids of the mortality modules this engine can compose."""
+        return (
+            "elfving_2013_mortality",
+            "fridman_stahl_2001_mortality",
+            "siipilehto_2020_mortality",
+            "soderberg_1986_mortality_calibration",
+            "bengtsson_mortality_calibration",
+            "naslund_1986_damage",
+            "retained_trees_mortality",
+        )
 
     # -- public API --------------------------------------------------------
 

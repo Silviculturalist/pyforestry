@@ -1,4 +1,13 @@
-"""Scientific kernel equations for Elfving (2010) growth."""
+"""Scientific kernel equations for Elfving (2010) growth.
+
+The single-tree diameter-growth coefficients live here. They are transcribed from
+Appendix 3 of the source below; the surrounding feature transforms are in
+:mod:`pyforestry.sweden.growth.elfving_2010.features`.
+
+Source:
+    Elfving, B. (2010). *Growth modelling in the Heureka system.* Sveriges
+    lantbruksuniversitet, Faculty of Forestry, Umeå. Appendix 3.
+"""
 
 from __future__ import annotations
 

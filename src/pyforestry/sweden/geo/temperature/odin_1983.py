@@ -1,4 +1,10 @@
-"""Implementation of Swedish temperature and radiation models."""
+"""Implementation of Swedish temperature and radiation models.
+
+Source:
+    Odin, H., Eriksson, B. & Perttu, K. (1983). *Temperature and radiation in
+    Swedish forestry (Temperaturklimatkartor för svenskt skogsbruk).* Sveriges
+    lantbruksuniversitet, Reports in Forest Ecology and Forest Soils nr 45.
+"""
 
 import math
 from typing import Optional

@@ -1,4 +1,14 @@
-"""Extracted Hugin (Elfving 1982) formulas and NYSKOG reconstruction kernels."""
+"""Extracted HUGIN (Elfving 1982) formulas and NYSKOG reconstruction kernels.
+
+These are the kernel equations behind
+:mod:`pyforestry.sweden.blocks.elfving_1982`, which carries the catalog
+descriptor for the pair; the per-function docstrings below cite the section of
+the report each formula comes from.
+
+Source:
+    Elfving, B. (1982). *HUGINs ungskogstaxering 1976-1979.* Sveriges
+    lantbruksuniversitet, Projekt HUGIN, Rapport nr 27, Umeå, 115 s.
+"""
 
 from __future__ import annotations
 

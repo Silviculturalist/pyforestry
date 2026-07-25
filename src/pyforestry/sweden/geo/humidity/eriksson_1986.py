@@ -1,4 +1,10 @@
-"""Humidity lookup helper based on Eriksson (1986) data."""
+"""Humidity lookup helper based on Eriksson (1986) data.
+
+Source:
+    Eriksson, B. (1986). *Nederbörds- och humiditetsklimatet i Sverige under
+    vegetationsperioden.* Sveriges Meteorologiska och Hydrologiska Institut
+    (SMHI), Rapporter i meteorologi och klimatologi (RMK) nr 46.
+"""
 
 from importlib.resources import as_file, files
 

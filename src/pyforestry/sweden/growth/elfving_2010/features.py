@@ -1,4 +1,9 @@
-"""Feature transforms and context resolution for Elfving (2010) growth kernels."""
+"""Feature transforms and context resolution for Elfving (2010) growth kernels.
+
+Source:
+    Elfving, B. (2010). *Growth modelling in the Heureka system.* Sveriges
+    lantbruksuniversitet, Faculty of Forestry, Umeå. Appendix 3.
+"""
 
 from __future__ import annotations
 

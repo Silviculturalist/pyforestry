@@ -3,7 +3,14 @@
 This module provides classes to tally tree counts per species
 using the angle-count (relascope) method and to aggregate
 multiple sampling points into stand-level basal area and
-stem density metrics."""
+stem density metrics.
+
+Source:
+    Bitterlich, W. (1948). *Die Winkelzählprobe.* Allgemeine Forst- und
+    Holzwirtschaftliche Zeitung 59(1/2), 4-5. The angle-count principle: with a
+    basal area factor ``k``, every tallied tree contributes ``k`` m^2/ha of basal
+    area regardless of its distance from the sample point.
+"""
 
 import math
 import statistics

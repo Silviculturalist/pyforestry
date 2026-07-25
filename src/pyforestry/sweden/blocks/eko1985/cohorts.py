@@ -1,7 +1,13 @@
 """Species cohort classes and factory for the Eko 1985 stand model.
 
 Each cohort subclass implements the species-specific volume, mortality,
-and basal-area increment equations from Eko (1985).
+and basal-area increment equations from Ekö (1985).
+
+Source:
+    Ekö, P.-M. (1985). *En produktionsmodell för skog i Sverige, baserad på bestånd
+    från riksskogstaxeringens provytor = A growth simulator for Swedish forests,
+    based on data from the national forest survey.* Sveriges lantbruksuniversitet,
+    institutionen för skogsskötsel, Rapport nr 16, Umeå.
 """
 
 from __future__ import annotations

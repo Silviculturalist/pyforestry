@@ -1,4 +1,12 @@
-"""Example price list data from Mellanskog's 2013 tables."""
+"""Example price list data from Mellanskog's 2013 tables.
+
+Commercial price-list data, not a scientific publication: these are the timber
+and pulpwood prices published by the Swedish forest owners' association
+Mellanskog for 2013, bundled as example data so the bucking optimiser has
+something to run against. They are not a recommendation and are long out of
+date; supply your own :class:`~pyforestry.base.pricelist.Pricelist` for real
+work.
+"""
 
 # Use of TreeSpecies shorthand to avoid typos and situations e.g. Betula != Betula pendula.
 

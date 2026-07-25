@@ -19,6 +19,7 @@ import warnings
 from dataclasses import dataclass
 from typing import Dict, Union
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.helpers.primitives import SiteIndexValue
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies
 from pyforestry.sweden._model_input_normalization import (
@@ -1224,3 +1225,31 @@ def soderberg_1986_volume_m3(**kwargs) -> float:
 
 
 __all__ = ["soderberg_1986_form_height_m", "soderberg_1986_volume_m3"]
+
+
+DESCRIPTOR = FormulaDescriptor(
+    component_id="soderberg_1986_form_height",
+    source=SourceReference(
+        author="Söderberg, U.",
+        year=1986,
+        title=(
+            "Funktioner för skogliga produktionsprognoser: tillväxt och formhöjd "
+            "för enskilda träd av inhemska trädslag i Sverige"
+        ),
+        note=(
+            "Sveriges lantbruksuniversitet, institutionen för biometri och "
+            "skogsindelning, Rapport nr 14, Umeå, 251 s. ISBN 91-576-2634-0. "
+            "Form height in metres; volume follows as basal area times form height."
+        ),
+    ),
+    species_groups={
+        "pine": frozenset({"Pinus sylvestris"}),
+        "spruce": frozenset({"Picea abies"}),
+        "birch": frozenset({"Betula pendula", "Betula pubescens"}),
+    },
+    units={
+        "diameter_cm": "cm",
+        "return": "m (form height) / m3 (volume)",
+    },
+    kernel_names=("soderberg_1986_form_height_m", "soderberg_1986_volume_m3"),
+)

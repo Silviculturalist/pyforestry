@@ -95,8 +95,13 @@ class Soderberg1986CompositePreset(Elfving2010CompositePreset):
         return SourceReference(
             author="Söderberg, U.",
             year=1986,
-            title="Funktioner för skogliga produktionsprognoser",
-            note="Provenance of the growth model this preset projects with. The "
+            title=(
+                "Funktioner för skogliga produktionsprognoser: tillväxt och formhöjd "
+                "för enskilda träd av inhemska trädslag i Sverige"
+            ),
+            note="Rapport nr 14, institutionen för biometri och skogsindelning, "
+            "Sveriges lantbruksuniversitet, Umeå. Provenance of the growth model "
+            "this preset projects with. The "
             "preset itself is a pyforestry composition and carries no separate "
             "publication: it reuses the Elfving 2010 composite workflow (Elfving "
             "1982/NYSKOG reconstruction, Nyström 2000 young-stand, Elfving 2013 "

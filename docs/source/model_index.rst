@@ -1,7 +1,7 @@
 Model index
 ===========
 
-Auto-generated from ``pyforestry.catalog`` (74 models). Regenerate with ``python scripts/generate_model_index.py``.
+Auto-generated from ``pyforestry.catalog`` (75 models). Regenerate with ``python scripts/generate_model_index.py``.
 
 .. list-table::
    :header-rows: 1
@@ -382,3 +382,8 @@ Auto-generated from ``pyforestry.catalog`` (74 models). Regenerate with ``python
      - sweden
      - volume
      - Näslund, M. (1947) Funktioner och tabeller för kubering av stående träd: tall, gran och björk i södra Sverige samt i hela landet
+   * - ``soderberg_1986_form_height``
+     - formula
+     - sweden
+     - volume
+     - Söderberg, U. (1986) Funktioner för skogliga produktionsprognoser: tillväxt och formhöjd för enskilda träd av inhemska trädslag i Sverige

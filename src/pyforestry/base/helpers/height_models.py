@@ -15,6 +15,13 @@ configurable top-height estimators:
 
 Heights produced by a curve are *interpolated*, never measured; callers keep the
 two provenances distinct (see ``Tree.predicted_height_m``).
+
+Source:
+    Näslund, M. (1936). *Skogsförsöksanstaltens gallringsförsök i tallskog.*
+    Meddelanden från Statens skogsförsöksanstalt 29(1), 1-169. The height-diameter
+    curve and its linearising transform are Näslund's; the least-squares fitting
+    procedure and the pluggable ``HeightSource`` abstraction around it are
+    pyforestry's own.
 """
 
 import warnings
@@ -41,6 +48,9 @@ MIN_HEIGHT_ABOVE_BREAST_M = 0.5
 
 class NaslundHeightCurve:
     """Näslund's height-diameter curve ``h = 1.3 + d**p / (a + b*d)**p``.
+
+    After Näslund, M. (1936), *Skogsförsöksanstaltens gallringsförsök i tallskog*,
+    Meddelanden från Statens skogsförsöksanstalt 29(1).
 
     The two coefficients ``a`` and ``b`` are positive; ``p`` (the exponent) is
     2 for Näslund's common "minor" function and is occasionally 3, but it may

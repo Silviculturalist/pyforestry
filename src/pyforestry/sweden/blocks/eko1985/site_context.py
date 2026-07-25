@@ -1,4 +1,11 @@
-"""Extracted site/context helpers for the Eko 1985 model adapter."""
+"""Extracted site/context helpers for the Ekö 1985 model adapter.
+
+Source:
+    Ekö, P.-M. (1985). *En produktionsmodell för skog i Sverige, baserad på bestånd
+    från riksskogstaxeringens provytor = A growth simulator for Swedish forests,
+    based on data from the national forest survey.* Sveriges lantbruksuniversitet,
+    institutionen för skogsskötsel, Rapport nr 16, Umeå.
+"""
 
 from __future__ import annotations
 
