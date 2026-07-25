@@ -1798,10 +1798,10 @@ class _Descriptor:
         return SourceReference(
             author="Wikberg, P-E.",
             year=2004,
-            title=(
-                "Occurrence, morphology and growth of understory saplings in Swedish "
-                "forests, doctoral thesis, Acta Universitatis Agriculturae Sueciae, "
-                "SLU, Umeå"
+            title=("Occurrence, morphology and growth of understory saplings in Swedish forests"),
+            note=(
+                "Doctoral thesis. Acta Universitatis Agriculturae Sueciae, Silvestria 322, "
+                "Sveriges lantbruksuniversitet, Umeå. ISBN 91-576-6706-3."
             ),
         )
 

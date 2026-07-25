@@ -113,9 +113,10 @@ class _Descriptor:
             author="Elfving, B., Kiviste, A.",
             year=1997,
             title=(
-                "Construction of site index equations for Pinus sylvestris L."
-                " using permanent plot data in Sweden"
+                "Construction of site index equations for Pinus sylvestris L. "
+                "using permanent plot data in Sweden"
             ),
+            note="Forest Ecology and Management 98:125-134.",
         )
 
     @property

@@ -227,8 +227,11 @@ DESCRIPTOR = FormulaDescriptor(
         year=2022,
         title=(
             "A stand-level growth and yield model for thinned and unthinned "
-            "even-aged Scots pine forests in Norway. Silva Fennica 56(1) art. "
-            "10627 (stem density, basal area, volume and thinning, Eqs. 6-10)"
+            "even-aged Scots pine forests in Norway"
+        ),
+        note=(
+            "Silva Fennica 56(1), article 10627. doi:10.14214/sf.10627. "
+            "Stem density, basal area, volume and thinning sub-models, Eqs. 6-10."
         ),
     ),
     species_groups={"pine": frozenset({"Pinus sylvestris"})},

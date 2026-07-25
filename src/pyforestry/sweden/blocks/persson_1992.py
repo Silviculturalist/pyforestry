@@ -1046,9 +1046,16 @@ class Persson1992Model(GrowthModel):
     @property
     def source(self) -> SourceReference:
         return SourceReference(
-            author="Persson, O. A.",
+            author="Persson, O.",
             year=1992,
-            title="En produktionsmodell för tallskog i Sverige",
+            title=(
+                "En produktionsmodell för tallskog i Sverige = A growth simulator "
+                "for Scots pine (Pinus sylvestris L.) in Sweden"
+            ),
+            note=(
+                "Sveriges lantbruksuniversitet, institutionen för skogsproduktion, "
+                "Rapport nr 31, Garpenberg, 206 s."
+            ),
         )
 
     def requirements(self) -> Requirements:
@@ -1194,9 +1201,16 @@ def persson_simulate(
 DESCRIPTOR = FormulaDescriptor(
     component_id="persson_1992_model",
     source=SourceReference(
-        author="Persson, O. A.",
+        author="Persson, O.",
         year=1992,
-        title="En produktionsmodell för tallskog i Sverige",
+        title=(
+            "En produktionsmodell för tallskog i Sverige = A growth simulator "
+            "for Scots pine (Pinus sylvestris L.) in Sweden"
+        ),
+        note=(
+            "Sveriges lantbruksuniversitet, institutionen för skogsproduktion, "
+            "Rapport nr 31, Garpenberg, 206 s."
+        ),
     ),
     kind="model",
     domain="growth",

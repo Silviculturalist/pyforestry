@@ -836,8 +836,10 @@ class TestPersson1992Model:
     def test_source(self):
         model = Persson1992Model()
         src = model.source
-        assert src.author == "Persson, O. A."
+        assert src.author == "Persson, O."
         assert src.year == 1992
+        assert src.title.startswith("En produktionsmodell för tallskog i Sverige")
+        assert "Rapport nr 31" in src.note
 
     def test_requirements_aggregate(self):
         model = Persson1992Model()

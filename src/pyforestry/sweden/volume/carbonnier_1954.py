@@ -1,6 +1,9 @@
-"""Carbonnier 1954 utilities and interfaces.
+"""Larch volume functions, Carbonnier (1954).
 
-Source: Swedish forestry domain models and helper implementations curated in pyforestry.
+Source:
+    Carbonnier, C. (1954). *Funktioner för kubering av europeisk, sibirisk och
+    japansk lärk.* Manuscript; no formal publication. Reproduced in the Heureka PM
+    of 2004-01-20 by Björn Elfving.
 """
 
 
@@ -48,7 +51,11 @@ class _Descriptor:
         return SourceReference(
             author="Carbonnier, C.",
             year=1954,
-            title="Volymfunktioner för lärk",
+            title=("Funktioner för kubering av europeisk, sibirisk och japansk lärk"),
+            note=(
+                "Manuscript; no formal publication. Reproduced in the Heureka PM of "
+                "2004-01-20 by Björn Elfving."
+            ),
         )
 
     @property

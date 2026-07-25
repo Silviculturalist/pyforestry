@@ -904,6 +904,7 @@ class Petterson1955Model(GrowthModel):
             author="Petterson, H.",
             year=1955,
             title="Barrskogens volymproduktion",
+            note=("Meddelanden från Statens skogsforskningsinstitut 45(1), 1-391."),
         )
 
     def requirements(self) -> Requirements:
@@ -955,6 +956,7 @@ DESCRIPTOR = FormulaDescriptor(
         author="Petterson, H.",
         year=1955,
         title="Barrskogens volymproduktion",
+        note=("Meddelanden från Statens skogsforskningsinstitut 45(1), 1-391."),
     ),
     species_groups={
         "growth": frozenset({"Pinus sylvestris", "Picea abies"}),

@@ -26,7 +26,7 @@ Auto-generated from ``pyforestry.catalog`` (74 models). Regenerate with ``python
      - formula
      - norway
      - bark
-     - Hansen, E. (2023) Bark-thickness equations for Norway
+     - Hansen, E., Rahlf, J., Astrup, R. & Gobakken, T. (2023) Taper, volume, and bark thickness models for spruce, pine, and birch in Norway
    * - ``vestjordet_1967_bark``
      - formula
      - norway
@@ -36,32 +36,32 @@ Auto-generated from ``pyforestry.catalog`` (74 models). Regenerate with ``python
      - formula
      - norway
      - growth
-     - Allen, M.G. II; Anton-Fernandez, C.; Astrup, R. (2020) A stand-level growth and yield model for thinned and unthinned managed Norway spruce forests in Norway. Scand. J. For. Res. 35(5-6):238-251
+     - Allen, M.G. II, Antón-Fernández, C. & Astrup, R. (2020) A stand-level growth and yield model for thinned and unthinned managed Norway spruce forests in Norway
    * - ``allen_2020_model``
      - model
      - norway
      - growth
-     - Allen, M.G. II; Anton-Fernandez, C.; Astrup, R. (2020) A stand-level growth and yield model for Norway spruce forests in Norway (composes allen_2020_growth)
+     - Allen, M.G. II, Antón-Fernández, C. & Astrup, R. (2020) A stand-level growth and yield model for thinned and unthinned managed Norway spruce forests in Norway (composes allen_2020_growth)
    * - ``bollandsas_2008_growth``
      - formula
      - norway
      - growth
-     - Bollandsas, O.M., Buongiorno, J. & Gobakken, T. (2008) Predicting the growth of stands of trees of mixed species and size: a matrix model for Norway. Scand. J. For. Res. 23(2):167-178 (submodels from Bollandsas 2007)
+     - Bollandsås, O.M., Buongiorno, J. & Gobakken, T. (2008) Predicting the growth of stands of trees of mixed species and size: a matrix model for Norway
    * - ``bollandsas_2008_model``
      - model
      - norway
      - growth
-     - Bollandsas, O.M., Buongiorno, J. & Gobakken, T. (2008) Predicting the growth of stands of trees of mixed species and size: A matrix model for Norway (composes bollandsas_2008_growth)
+     - Bollandsås, O.M., Buongiorno, J. & Gobakken, T. (2008) Predicting the growth of stands of trees of mixed species and size: a matrix model for Norway (composes bollandsas_2008_growth)
    * - ``kuehne_2022_growth``
      - formula
      - norway
      - growth
-     - Kuehne, C., McLean, J.P., Maleki, K., Antón-Fernández, C. & Astrup, R. (2022) A stand-level growth and yield model for thinned and unthinned even-aged Scots pine forests in Norway. Silva Fennica 56(1) art. 10627 (stem density, basal area, volume and thinning, Eqs. 6-10)
+     - Kuehne, C., McLean, J.P., Maleki, K., Antón-Fernández, C. & Astrup, R. (2022) A stand-level growth and yield model for thinned and unthinned even-aged Scots pine forests in Norway
    * - ``kuehne_2022_model``
      - model
      - norway
      - growth
-     - Kuehne, C., McLean, J.P., Maleki, K., Antón-Fernández, C. & Astrup, R. (2022) A stand-level growth and yield model for thinned and unthinned even-aged Scots pine forests in Norway. Silva Fennica 56(1) art. 10627 (composes kuehne_2022_siteindex)
+     - Kuehne, C., McLean, J.P., Maleki, K., Antón-Fernández, C. & Astrup, R. (2022) A stand-level growth and yield model for thinned and unthinned even-aged Scots pine forests in Norway (composes kuehne_2022_siteindex)
    * - ``maleki_2022_growth``
      - formula
      - norway
@@ -76,7 +76,7 @@ Auto-generated from ``pyforestry.catalog`` (74 models). Regenerate with ``python
      - formula
      - norway
      - siteindex
-     - Kuehne, C., McLean, J.P., Maleki, K., Antón-Fernández, C. & Astrup, R. (2022) A stand-level growth and yield model for thinned and unthinned even-aged Scots pine forests in Norway. Silva Fennica 56(1) art. 10627 (dominant-height / site-index sub-model, Eq. 5)
+     - Kuehne, C., McLean, J.P., Maleki, K., Antón-Fernández, C. & Astrup, R. (2022) A stand-level growth and yield model for thinned and unthinned even-aged Scots pine forests in Norway
    * - ``sharma_2011_siteindex``
      - formula
      - norway
@@ -91,7 +91,7 @@ Auto-generated from ``pyforestry.catalog`` (74 models). Regenerate with ``python
      - formula
      - norway
      - taper
-     - Hansen, E. (2023) Taper model for spruce, pine, and birch in Norway
+     - Hansen, E., Rahlf, J., Astrup, R. & Gobakken, T. (2023) Taper, volume, and bark thickness models for spruce, pine, and birch in Norway
    * - ``braastad_1966_volume``
      - formula
      - norway
@@ -116,7 +116,7 @@ Auto-generated from ``pyforestry.catalog`` (74 models). Regenerate with ``python
      - formula
      - sweden
      - bark
-     - Hannrup, B. (2004) Bark thickness functions for pine and spruce
+     - Hannrup, B. (2004) Funktioner för skattning av barkens tjocklek hos tall och gran vid avverkning med skördare
    * - ``soderberg_1992_bark``
      - formula
      - sweden
@@ -131,27 +131,27 @@ Auto-generated from ``pyforestry.catalog`` (74 models). Regenerate with ``python
      - formula
      - sweden
      - biomass
-     - Petersson, H. (1999) Biomassafunktioner för trädfaktorer
+     - Petersson, H. (1999) Biomassafunktioner för trädfaktorer av tall, gran och björk i Sverige
    * - ``petersson_stahl_2006_biomass``
      - formula
      - sweden
      - biomass
-     - Petersson, H. & Ståhl, G. (2006) Below-ground biomass functions
+     - Petersson, H. & Ståhl, G. (2006) Functions for below-ground biomass of Pinus sylvestris, Picea abies, Betula pendula and Betula pubescens in Sweden
    * - ``eko_1985_model``
      - model
      - sweden
      - growth
-     - Ekö, P.-M. (1985) En produktionsmodell för skog i Sverige, baserad på bestånd från riksskogstaxeringens provytor
+     - Ekö, P.-M. (1985) En produktionsmodell för skog i Sverige, baserad på bestånd från riksskogstaxeringens provytor = A growth simulator for Swedish forests, based on data from the national forest survey
    * - ``elfving_1982_model``
      - model
      - sweden
      - growth
-     - Elfving, B. (1982) Hugins ungskogstaxering 1976-1979
+     - Elfving, B. (1982) HUGINs ungskogstaxering 1976-1979
    * - ``elfving_2009_thinning_response``
      - formula
      - sweden
      - growth
-     - Elfving, B. (2009) Thinning response function (GG-trials)
+     - Elfving, B. (2009) Thinning response function based on the Swedish thinning-fertilisation (GG) trials
    * - ``elfving_2010_growth``
      - formula
      - sweden
@@ -176,7 +176,7 @@ Auto-generated from ``pyforestry.catalog`` (74 models). Regenerate with ``python
      - model
      - sweden
      - growth
-     - Persson, O. A. (1992) En produktionsmodell för tallskog i Sverige
+     - Persson, O. (1992) En produktionsmodell för tallskog i Sverige = A growth simulator for Scots pine (Pinus sylvestris L.) in Sweden
    * - ``petterson_1955_model``
      - model
      - sweden
@@ -186,12 +186,12 @@ Auto-generated from ``pyforestry.catalog`` (74 models). Regenerate with ``python
      - formula
      - sweden
      - growth
-     - Söderberg, U. (1986) Funktioner för skogliga produktionsprognoser
+     - Söderberg, U. (1986) Funktioner för skogliga produktionsprognoser: tillväxt och formhöjd för enskilda träd av inhemska trädslag i Sverige
    * - ``soderberg_1986_model``
      - model
      - sweden
      - growth
-     - Söderberg, U. (1986) Funktioner för skogliga produktionsprognoser (composes soderberg_1986_growth)
+     - Söderberg, U. (1986) Funktioner för skogliga produktionsprognoser: tillväxt och formhöjd för enskilda träd av inhemska trädslag i Sverige (composes soderberg_1986_growth)
    * - ``nystrom_2000_height``
      - formula
      - sweden
@@ -206,7 +206,7 @@ Auto-generated from ``pyforestry.catalog`` (74 models). Regenerate with ``python
      - formula
      - sweden
      - ingrowth
-     - Wikberg, P-E. (2004) Occurrence, morphology and growth of understory saplings in Swedish forests, doctoral thesis, Acta Universitatis Agriculturae Sueciae, SLU, Umeå
+     - Wikberg, P-E. (2004) Occurrence, morphology and growth of understory saplings in Swedish forests
    * - ``bengtsson_mortality_calibration``
      - formula
      - sweden
@@ -251,17 +251,17 @@ Auto-generated from ``pyforestry.catalog`` (74 models). Regenerate with ``python
      - formula
      - sweden
      - regeneration
-     - Elfving, B. (1992) Regeneration quality predictions
+     - Elfving, B. (1992) Återväxtens etablering och utveckling till röjningstidpunkten
    * - ``elfving_hagglund_1975_model``
      - model
      - sweden
      - regeneration
-     - Elfving, B., Hägglund, B. (1975) Utgångslägen för produktionsprognoser: Tall och gran i Sverige
+     - Elfving, B., Hägglund, B. (1975) Utgångslägen för produktionsprognoser: tall och gran i Sverige = Initial stands for yield forecasts: Scots pine and Norway spruce in Sweden
    * - ``agestam_1985_siteindex``
      - formula
      - sweden
      - siteindex
-     - Agestam, E. (1985) A growth simulator for mixed stands of pine, spruce and birch in Sweden
+     - Agestam, E. (1985) En produktionsmodell för blandbestånd av tall, gran och björk i Sverige = A growth simulator for mixed stands of pine, spruce and birch in Sweden
    * - ``carbonnier_1971_siteindex``
      - formula
      - sweden
@@ -291,7 +291,7 @@ Auto-generated from ``pyforestry.catalog`` (74 models). Regenerate with ``python
      - formula
      - sweden
      - siteindex
-     - Hägglund, B. (1981) Site index to productivity (mean annual volume growth at culmination) translation
+     - Hägglund, B. (1981) Forecasting growth and yield in established forests
    * - ``hagglund_lundmark_1977_siteindex``
      - formula
      - sweden
@@ -301,42 +301,42 @@ Auto-generated from ``pyforestry.catalog`` (74 models). Regenerate with ``python
      - formula
      - sweden
      - siteindex
-     - Hagglund, B., Remrod, J. (1977) Ovre hojdens utveckling i bestand med Pinus contorta
+     - Hägglund, B. & Remröd, J. (1977) Övre höjdens utveckling i bestånd med Pinus contorta
    * - ``johansson_1996``
      - formula
      - sweden
      - siteindex
-     - Johansson, T. (1996) Site Index Curves for European Aspen (Populus tremula L.) Growing on Forest Land of Different Soils in Sweden
+     - Johansson, T. (1996) Site index curves for European aspen (Populus tremula L.) growing on forest land of different soils in Sweden
    * - ``johansson_1999``
      - formula
      - sweden
      - siteindex
-     - Johansson, T. (1999) Site Index Curves for Common Alder and Grey Alder Growing on Different Types of Forest Soil in Sweden
+     - Johansson, T. (1999) Site index curves for common alder and grey alder growing on different types of forest soil in Sweden
    * - ``johansson_2011``
      - formula
      - sweden
      - siteindex
-     - Johansson, T. (2011) Site index curves for Poplar growing on former farmland in Sweden
+     - Johansson, T. (2011) Site index curves for poplar growing on former farmland in Sweden
    * - ``johansson_2013``
      - formula
      - sweden
      - siteindex
-     - Johansson, U., Eko, P.-M., Elfving, B., Johansson, T., Nilsson, U. (2013) Nya hojdutvecklingskurvor for bonitering
+     - Johansson, U., Ekö, P.-M., Elfving, B., Johansson, T. & Nilsson, U. (2013) Nya höjdutvecklingskurvor för bonitering
    * - ``jonson_1914_siteindex``
      - formula
      - sweden
      - siteindex
-     - Jonson, T. (1914) Jonson site index (bonitet) classification from productivity
+     - Jonson, T. (1914) Om bonitering av skogsmark
    * - ``leijon_1979_siteindex``
      - formula
      - sweden
      - siteindex
-     - Leijon, B. (1979) Site index translations between Scots pine and Norway spruce
+     - Leijon, B. (1979) Tallens och granens produktion på lika ståndort
    * - ``tegnhammar_1992_adjusted_siteindex``
      - formula
      - sweden
      - siteindex
-     - Tegnhammar, L. (1992) Om skattningen av ståndortsindex för gran - adjusted spruce site index from stand variables
+     - Tegnhammar, L. (1992) Om skattningen av ståndortsindex för gran
    * - ``tegnhammar_1992_siteindex``
      - formula
      - sweden
@@ -346,7 +346,7 @@ Auto-generated from ``pyforestry.catalog`` (74 models). Regenerate with ``python
      - formula
      - sweden
      - taper
-     - Edgren, V. & Nylinder, P. (1949) Edgren-Nylinder taper functions for Scots pine and Norway spruce.
+     - Edgren, V. & Nylinder, P. (1949) Funktioner och tabeller för bestämning av avsmalning och formkvot under bark för tall och gran i norra och södra Sverige
    * - ``andersson_1954_volume``
      - formula
      - sweden
@@ -356,12 +356,12 @@ Auto-generated from ``pyforestry.catalog`` (74 models). Regenerate with ``python
      - formula
      - sweden
      - volume
-     - Brandel, G. (1990) Volymfunktioner för enskilda träd
+     - Brandel, G. (1990) Volymfunktioner för enskilda träd: tall, gran och björk
    * - ``carbonnier_1954_volume``
      - formula
      - sweden
      - volume
-     - Carbonnier, C. (1954) Volymfunktioner för lärk
+     - Carbonnier, C. (1954) Funktioner för kubering av europeisk, sibirisk och japansk lärk
    * - ``eriksson_1973_volume``
      - formula
      - sweden
@@ -371,7 +371,7 @@ Auto-generated from ``pyforestry.catalog`` (74 models). Regenerate with ``python
      - formula
      - sweden
      - volume
-     - Johnsson, H. (1953) Hybridaspens ungdomsutveckling
+     - Johnsson, H. (1953) Hybridaspens ungdomsutveckling och ett försök till framtidsprognos
    * - ``matern_1975_volume``
      - formula
      - sweden
@@ -381,4 +381,4 @@ Auto-generated from ``pyforestry.catalog`` (74 models). Regenerate with ``python
      - formula
      - sweden
      - volume
-     - Näslund, M. (1947) Funktioner och tabeller för kubering av stående träd
+     - Näslund, M. (1947) Funktioner och tabeller för kubering av stående träd: tall, gran och björk i södra Sverige samt i hela landet

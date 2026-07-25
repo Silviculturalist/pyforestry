@@ -110,7 +110,8 @@ class _Descriptor:
         return SourceReference(
             author="Johansson, T.",
             year=2011,
-            title="Site index curves for Poplar growing on former farmland in Sweden",
+            title="Site index curves for poplar growing on former farmland in Sweden",
+            note="Scandinavian Journal of Forest Research 26:161-170.",
         )
 
     @property

@@ -1861,11 +1861,14 @@ class _Descriptor:
             author="Marklund, L.-G.",
             year=1988,
             title="Biomassafunktioner för tall, gran och björk i Sverige",
-            appendix="Report 45, Dept. of Forest Survey, SLU, Umeå",
+            appendix="Report 45",
             note=(
-                "Dry-weight component functions; constants include the bias correction "
-                "for the log back-transformation. Spruce functions largely follow "
-                "Marklund (1987) with corrected constants."
+                "Sveriges lantbruksuniversitet, institutionen för skogstaxering, "
+                "Rapport 45, Umeå, 73 s. ISBN 91-576-3524-2. Dry-weight component "
+                "functions; constants include the bias correction for the log "
+                "back-transformation. Spruce functions largely follow Marklund (1987), "
+                "'Biomass functions for Norway spruce (Picea abies (L.) Karst.) in "
+                "Sweden', Rapport 43, with corrected constants."
             ),
         )
 

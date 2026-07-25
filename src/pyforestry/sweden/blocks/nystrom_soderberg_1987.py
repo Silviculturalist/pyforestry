@@ -213,7 +213,12 @@ DESCRIPTOR = FormulaDescriptor(
         author="Nyström, K. & Söderberg, U.",
         year=1987,
         title="Tillväxtberäkningen för ungskog i Hugin-systemet",
-        note="SLU, inst. för skogsskötsel, Arbetsrapporter nr 18.",
+        note=(
+            "Sveriges lantbruksuniversitet, institutionen för skogsskötsel, "
+            "Arbetsrapport nr 18, Umeå, 81 s. Full title: 'Tillväxtberäkningen för "
+            "ungskog i HUGIN-systemet: en kontroll med data från återinventerade "
+            "ungskogsytor'."
+        ),
     ),
     kind="model",
     domain="growth",

@@ -55,7 +55,8 @@ class _Descriptor:
         return SourceReference(
             author="Johnsson, H.",
             year=1953,
-            title="Hybridaspens ungdomsutveckling",
+            title=("Hybridaspens ungdomsutveckling och ett försök till framtidsprognos"),
+            note="Svenska Skogsvårdsföreningens Tidskrift 51:73-96.",
         )
 
     @property

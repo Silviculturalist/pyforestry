@@ -1,6 +1,10 @@
-"""Petersson Stahl 2006 utilities and interfaces.
+"""Below-ground biomass functions, Petersson & Ståhl (2006).
 
-Source: Swedish forestry domain models and helper implementations curated in pyforestry.
+Source:
+    Petersson, H. & Ståhl, G. (2006). *Functions for below-ground biomass of
+    Pinus sylvestris, Picea abies, Betula pendula and Betula pubescens in Sweden.*
+    Scandinavian Journal of Forest Research 21(S7):84-93.
+    doi:10.1080/14004080500486864
 """
 
 import numpy as np
@@ -374,7 +378,14 @@ class _Descriptor:
         return SourceReference(
             author="Petersson, H. & Ståhl, G.",
             year=2006,
-            title="Below-ground biomass functions",
+            title=(
+                "Functions for below-ground biomass of Pinus sylvestris, Picea abies, "
+                "Betula pendula and Betula pubescens in Sweden"
+            ),
+            note=(
+                "Scandinavian Journal of Forest Research 21(S7):84-93. "
+                "doi:10.1080/14004080500486864"
+            ),
         )
 
     @property

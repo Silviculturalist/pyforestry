@@ -52,7 +52,11 @@ DESCRIPTOR = FormulaDescriptor(
     source=SourceReference(
         author="Leijon, B.",
         year=1979,
-        title="Site index translations between Scots pine and Norway spruce",
+        title="Tallens och granens produktion på lika ståndort",
+        note=(
+            "Sveriges lantbruksuniversitet, institutionen för skogsskötsel, Umeå. "
+            "Report series number not yet confirmed against the primary document."
+        ),
     ),
     species_groups={
         "pine": frozenset({"Pinus sylvestris"}),

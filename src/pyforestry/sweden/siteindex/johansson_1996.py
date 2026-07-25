@@ -129,9 +129,10 @@ class _Descriptor:
             author="Johansson, T.",
             year=1996,
             title=(
-                "Site Index Curves for European Aspen (Populus tremula L.)"
-                " Growing on Forest Land of Different Soils in Sweden"
+                "Site index curves for European aspen (Populus tremula L.) "
+                "growing on forest land of different soils in Sweden"
             ),
+            note="Silva Fennica 30(4):437-458.",
         )
 
     @property

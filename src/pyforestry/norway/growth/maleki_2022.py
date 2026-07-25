@@ -362,6 +362,10 @@ DESCRIPTOR = FormulaDescriptor(
             "Stand-level growth models for long-term projections of the main "
             "species groups in Norway"
         ),
+        note=(
+            "Scandinavian Journal of Forest Research 37(2):130-143. "
+            "doi:10.1080/02827581.2022.2056632"
+        ),
     ),
     species_groups={
         "norway_spruce": frozenset({"Picea abies"}),

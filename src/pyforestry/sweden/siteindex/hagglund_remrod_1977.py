@@ -135,9 +135,13 @@ class _Descriptor:
         from pyforestry.simulation.contracts import SourceReference
 
         return SourceReference(
-            author="Hagglund, B., Remrod, J.",
+            author="Hägglund, B. & Remröd, J.",
             year=1977,
-            title="Ovre hojdens utveckling i bestand med Pinus contorta",
+            title="Övre höjdens utveckling i bestånd med Pinus contorta",
+            note=(
+                "Sveriges lantbruksuniversitet, Rapport / Projekt HUGIN nr 4, "
+                "ISSN 0348-7024, Umeå, 27 bl."
+            ),
         )
 
     @property

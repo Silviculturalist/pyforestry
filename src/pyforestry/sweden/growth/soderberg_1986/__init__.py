@@ -25,7 +25,14 @@ class _Soderberg1986GrowthDescriptor:
         return SourceReference(
             author="Söderberg, U.",
             year=1986,
-            title="Funktioner för skogliga produktionsprognoser",
+            title=(
+                "Funktioner för skogliga produktionsprognoser: tillväxt och formhöjd "
+                "för enskilda träd av inhemska trädslag i Sverige"
+            ),
+            note=(
+                "Sveriges lantbruksuniversitet, institutionen för biometri och "
+                "skogsindelning, Rapport nr 14, Umeå, 251 s. ISBN 91-576-2634-0."
+            ),
         )
 
     @property

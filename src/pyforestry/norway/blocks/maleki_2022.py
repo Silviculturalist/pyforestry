@@ -155,6 +155,10 @@ class Maleki2022GrowthModel(GrowthModel):
                 "Stand-level growth models for long-term projections of the main "
                 "species groups in Norway"
             ),
+            note=(
+                "Scandinavian Journal of Forest Research 37(2):130-143. "
+                "doi:10.1080/02827581.2022.2056632"
+            ),
         )
 
     def requirements(self) -> Requirements:
@@ -234,6 +238,10 @@ DESCRIPTOR = FormulaDescriptor(
         title=(
             "Stand-level growth models for long-term projections of the main "
             "species groups in Norway"
+        ),
+        note=(
+            "Scandinavian Journal of Forest Research 37(2):130-143. "
+            "doi:10.1080/02827581.2022.2056632"
         ),
     ),
     kind="model",

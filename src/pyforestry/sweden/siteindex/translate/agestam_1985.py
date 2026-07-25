@@ -56,7 +56,15 @@ DESCRIPTOR = FormulaDescriptor(
     source=SourceReference(
         author="Agestam, E.",
         year=1985,
-        title="A growth simulator for mixed stands of pine, spruce and birch in Sweden",
+        title=(
+            "En produktionsmodell för blandbestånd av tall, gran och björk i Sverige = "
+            "A growth simulator for mixed stands of pine, spruce and birch in Sweden"
+        ),
+        note=(
+            "Sveriges lantbruksuniversitet, institutionen för skogsproduktion "
+            "(Dept. of Forest Yield Research), Rapport nr 15, Garpenberg. "
+            "ISBN 91-576-2528-x. Doctoral thesis."
+        ),
     ),
     species_groups={},
     units={},

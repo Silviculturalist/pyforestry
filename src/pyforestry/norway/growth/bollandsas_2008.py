@@ -328,12 +328,15 @@ __all__ = ["Bollandsas2008"]
 DESCRIPTOR = FormulaDescriptor(
     component_id="bollandsas_2008_growth",
     source=SourceReference(
-        author="Bollandsas, O.M., Buongiorno, J. & Gobakken, T.",
+        author="Bollandsås, O.M., Buongiorno, J. & Gobakken, T.",
         year=2008,
         title=(
             "Predicting the growth of stands of trees of mixed species and size: "
-            "a matrix model for Norway. Scand. J. For. Res. 23(2):167-178 "
-            "(submodels from Bollandsas 2007)"
+            "a matrix model for Norway"
+        ),
+        note=(
+            "Scandinavian Journal of Forest Research 23(2):167-178. "
+            "doi:10.1080/02827580801995315. Submodels from Bollandsås (2007)."
         ),
     ),
     species_groups={

@@ -190,9 +190,10 @@ class _Descriptor:
             author="Johansson, T.",
             year=1999,
             title=(
-                "Site Index Curves for Common Alder and Grey Alder"
-                " Growing on Different Types of Forest Soil in Sweden"
+                "Site index curves for common alder and grey alder growing on "
+                "different types of forest soil in Sweden"
             ),
+            note="Scandinavian Journal of Forest Research 14:441-453.",
         )
 
     @property

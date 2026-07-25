@@ -282,12 +282,15 @@ __all__ = [
 DESCRIPTOR = FormulaDescriptor(
     component_id="allen_2020_growth",
     source=SourceReference(
-        author="Allen, M.G. II; Anton-Fernandez, C.; Astrup, R.",
+        author="Allen, M.G. II, Antón-Fernández, C. & Astrup, R.",
         year=2020,
         title=(
             "A stand-level growth and yield model for thinned and unthinned "
-            "managed Norway spruce forests in Norway. "
-            "Scand. J. For. Res. 35(5-6):238-251"
+            "managed Norway spruce forests in Norway"
+        ),
+        note=(
+            "Scandinavian Journal of Forest Research 35(5-6):238-251. "
+            "doi:10.1080/02827581.2020.1773525"
         ),
     ),
     species_groups={"norway_spruce": frozenset({"Picea abies"})},

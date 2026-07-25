@@ -323,7 +323,11 @@ DESCRIPTOR = FormulaDescriptor(
     source=SourceReference(
         author="Edgren, V. & Nylinder, P.",
         year=1949,
-        title="Edgren-Nylinder taper functions for Scots pine and Norway spruce.",
+        title=(
+            "Funktioner och tabeller för bestämning av avsmalning och formkvot under "
+            "bark för tall och gran i norra och södra Sverige"
+        ),
+        note="Meddelanden från Statens skogsforskningsinstitut 38(7), 81 s.",
     ),
     species_groups={
         "spruce": frozenset({"Picea abies"}),

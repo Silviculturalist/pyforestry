@@ -802,7 +802,15 @@ DESCRIPTOR = FormulaDescriptor(
     source=SourceReference(
         author="Elfving, B., Hägglund, B.",
         year=1975,
-        title="Utgångslägen för produktionsprognoser: Tall och gran i Sverige",
+        title=(
+            "Utgångslägen för produktionsprognoser: tall och gran i Sverige = "
+            "Initial stands for yield forecasts: Scots pine and Norway spruce "
+            "in Sweden"
+        ),
+        note=(
+            "Rapporter och uppsatser / Institutionen för skogsproduktion, "
+            "Skogshögskolan, ISSN 0585-3303, nr 38, Stockholm, 75 s."
+        ),
     ),
     kind="model",
     domain="regeneration",

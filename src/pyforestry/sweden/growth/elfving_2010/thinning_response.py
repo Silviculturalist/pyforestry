@@ -169,8 +169,12 @@ DESCRIPTOR = FormulaDescriptor(
     source=SourceReference(
         author="Elfving, B.",
         year=2009,
-        title="Thinning response function (GG-trials)",
-        note="Appendix of Elfving (2010) 'Growth modelling in the Heureka system'.",
+        title="Thinning response function based on the Swedish thinning-fertilisation (GG) trials",
+        note=(
+            "Documented as an appendix of Elfving, B. (2010) 'Growth modelling in the "
+            "Heureka system', Sveriges lantbruksuniversitet, Faculty of Forestry. The "
+            "work is dated 2009; the containing report is 2010."
+        ),
     ),
     kind="formula",
     domain="growth",

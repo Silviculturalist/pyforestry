@@ -1,6 +1,8 @@
-"""Andersson 1954 utilities and interfaces.
+"""Small-tree volume functions, Andersson (1954).
 
-Source: Swedish forestry domain models and helper implementations curated in pyforestry.
+Source:
+    Andersson, S.-O. (1954). *Funktioner och tabeller för kubering av småträd.*
+    Meddelanden från Statens skogsforskningsinstitut 44(12), 29 s.
 """
 
 import math
@@ -138,6 +140,7 @@ class _Descriptor:
             author="Andersson, S.-O.",
             year=1954,
             title="Funktioner och tabeller för kubering av småträd",
+            note="Meddelanden från Statens skogsforskningsinstitut 44(12).",
         )
 
     @property

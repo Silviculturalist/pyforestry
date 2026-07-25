@@ -38,11 +38,15 @@ class Bollandsas2008GrowthModel(GrowthModel):
     def source(self) -> SourceReference:
         """Bibliographic provenance."""
         return SourceReference(
-            author="Bollandsas, O.M., Buongiorno, J. & Gobakken, T.",
+            author="Bollandsås, O.M., Buongiorno, J. & Gobakken, T.",
             year=2008,
             title=(
                 "Predicting the growth of stands of trees of mixed species and size: "
-                "A matrix model for Norway"
+                "a matrix model for Norway"
+            ),
+            note=(
+                "Scandinavian Journal of Forest Research 23(2):167-178. "
+                "doi:10.1080/02827580801995315. Submodels from Bollandsås (2007)."
             ),
         )
 
@@ -121,11 +125,15 @@ __all__ = ["Bollandsas2008", "Bollandsas2008AdapterConfig", "Bollandsas2008Growt
 DESCRIPTOR = FormulaDescriptor(
     component_id="bollandsas_2008_model",
     source=SourceReference(
-        author="Bollandsas, O.M., Buongiorno, J. & Gobakken, T.",
+        author="Bollandsås, O.M., Buongiorno, J. & Gobakken, T.",
         year=2008,
         title=(
             "Predicting the growth of stands of trees of mixed species and size: "
-            "A matrix model for Norway"
+            "a matrix model for Norway"
+        ),
+        note=(
+            "Scandinavian Journal of Forest Research 23(2):167-178. "
+            "doi:10.1080/02827580801995315. Submodels from Bollandsås (2007)."
         ),
     ),
     kind="model",

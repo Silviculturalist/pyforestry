@@ -419,10 +419,10 @@ class _Descriptor:
         return SourceReference(
             author="Elfving, B.",
             year=1992,
-            title="Regeneration quality predictions",
+            title=("Återväxtens etablering och utveckling till röjningstidpunkten"),
             note=(
-                "Elfving (1992), Arbetsrapporter nr 67; "
-                "the tabulated form of the published Elfving regeneration report."
+                "Sveriges lantbruksuniversitet, institutionen för skogsskötsel, "
+                "Arbetsrapporter nr 67, Umeå."
             ),
         )
 

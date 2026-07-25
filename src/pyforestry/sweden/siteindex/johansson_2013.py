@@ -343,9 +343,10 @@ class _Descriptor:
         from pyforestry.simulation.contracts import SourceReference
 
         return SourceReference(
-            author="Johansson, U., Eko, P.-M., Elfving, B., Johansson, T., Nilsson, U.",
+            author=("Johansson, U., Ekö, P.-M., Elfving, B., Johansson, T. & Nilsson, U."),
             year=2013,
-            title="Nya hojdutvecklingskurvor for bonitering",
+            title="Nya höjdutvecklingskurvor för bonitering",
+            note="Sveriges lantbruksuniversitet, Fakta Skog nr 14, 2013.",
         )
 
     @property

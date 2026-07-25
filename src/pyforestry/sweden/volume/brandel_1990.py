@@ -460,8 +460,11 @@ class _Descriptor:
         return SourceReference(
             author="Brandel, G.",
             year=1990,
-            title="Volymfunktioner för enskilda träd",
-            note="Rapport 26, SLU.",
+            title="Volymfunktioner för enskilda träd: tall, gran och björk",
+            note=(
+                "Sveriges lantbruksuniversitet, institutionen för skogsproduktion, "
+                "Rapport nr 26, Garpenberg, 72 s. ISBN 91-576-4030-0."
+            ),
         )
 
     @property

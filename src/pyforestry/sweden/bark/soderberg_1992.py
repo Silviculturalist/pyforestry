@@ -613,7 +613,10 @@ class _Descriptor:
             author="Söderberg, U.",
             year=1992,
             title="Funktioner för skogsbruksplanering",
-            note="Bark thickness at breast height. Report 52, SLU.",
+            note=(
+                "Sveriges lantbruksuniversitet, institutionen för skogstaxering, "
+                "Rapport nr 52, Umeå. Bark thickness at breast height."
+            ),
         )
 
     @property

@@ -1628,6 +1628,10 @@ class Eriksson1976Model(GrowthModel):
             author="Eriksson, H.",
             year=1976,
             title="Granens produktion i Sverige",
+            note=(
+                "Skogshögskolan, institutionen för skogsproduktion, Rapporter och "
+                "uppsatser nr 41, Stockholm, 291 s. Doctoral thesis."
+            ),
         )
 
     def requirements(self) -> Requirements:
@@ -1774,6 +1778,10 @@ DESCRIPTOR = FormulaDescriptor(
         author="Eriksson, H.",
         year=1976,
         title="Granens produktion i Sverige",
+        note=(
+            "Skogshögskolan, institutionen för skogsproduktion, Rapporter och "
+            "uppsatser nr 41, Stockholm, 291 s. Doctoral thesis."
+        ),
     ),
     kind="model",
     domain="growth",

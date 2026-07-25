@@ -339,7 +339,12 @@ class Eko1985Model(GrowthModel):
             year=1985,
             title=(
                 "En produktionsmodell för skog i Sverige, baserad på bestånd från "
-                "riksskogstaxeringens provytor"
+                "riksskogstaxeringens provytor = A growth simulator for Swedish "
+                "forests, based on data from the national forest survey"
+            ),
+            note=(
+                "Sveriges lantbruksuniversitet, institutionen för skogsskötsel, "
+                "Rapport nr 16, Umeå. Doctoral thesis."
             ),
         )
 
@@ -646,7 +651,12 @@ DESCRIPTOR = FormulaDescriptor(
         year=1985,
         title=(
             "En produktionsmodell för skog i Sverige, baserad på bestånd från "
-            "riksskogstaxeringens provytor"
+            "riksskogstaxeringens provytor = A growth simulator for Swedish "
+            "forests, based on data from the national forest survey"
+        ),
+        note=(
+            "Sveriges lantbruksuniversitet, institutionen för skogsskötsel, "
+            "Rapport nr 16, Umeå. Doctoral thesis."
         ),
     ),
     kind="model",

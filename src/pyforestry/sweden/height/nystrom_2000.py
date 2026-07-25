@@ -334,7 +334,11 @@ class _Descriptor:
             author="Nyström, K.",
             year=2000,
             title="Funktioner för att skatta höjdtillväxten i ungskog",
-            note="Table 4, Model M2",
+            note=(
+                "Sveriges lantbruksuniversitet, institutionen för skoglig "
+                "resurshushållning och geomatik, Arbetsrapport nr 68, Umeå. "
+                "Table 4, Model M2."
+            ),
         )
 
     @property

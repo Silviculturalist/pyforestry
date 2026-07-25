@@ -92,11 +92,14 @@ __all__ = [
 DESCRIPTOR = FormulaDescriptor(
     component_id="hansen_2023_bark",
     source=SourceReference(
-        author="Hansen, E.",
+        author="Hansen, E., Rahlf, J., Astrup, R. & Gobakken, T.",
         year=2023,
-        title="Bark-thickness equations for Norway",
-        note="Hansen et al.; descriptive title, the formal publication title is not "
-        "established here.",
+        title="Taper, volume, and bark thickness models for spruce, pine, and birch in Norway",
+        note=(
+            "Scandinavian Journal of Forest Research 38(6):413-428. "
+            "doi:10.1080/02827581.2023.2243821. "
+            "Bark-thickness sub-model; the bark equation form follows Hannrup (2004)."
+        ),
     ),
     species_groups={
         "spruce": frozenset({"Picea abies"}),

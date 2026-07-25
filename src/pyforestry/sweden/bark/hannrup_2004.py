@@ -271,7 +271,11 @@ class _Descriptor:
         return SourceReference(
             author="Hannrup, B.",
             year=2004,
-            title="Bark thickness functions for pine and spruce",
+            title=(
+                "Funktioner för skattning av barkens tjocklek hos tall och gran "
+                "vid avverkning med skördare"
+            ),
+            note="Skogforsk, Arbetsrapport nr 575, Uppsala.",
         )
 
     @property

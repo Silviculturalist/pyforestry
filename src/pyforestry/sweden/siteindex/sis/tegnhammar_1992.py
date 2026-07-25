@@ -1,6 +1,8 @@
-"""Tegnhammar 1992 utilities and interfaces.
+"""Tegnhammar (1992) site index estimation for Norway spruce.
 
-Source: Swedish forestry domain models and helper implementations curated in pyforestry.
+Source:
+    Tegnhammar, L. (1992). *Om skattningen av ståndortsindex för gran.* Sveriges
+    lantbruksuniversitet, institutionen för skogstaxering, Rapport nr 53, Umeå, 259 s.
 """
 
 # Tegnhammar Site Index corrections for Hägglund Site Index for Swedish Spruce.
@@ -226,6 +228,10 @@ DESCRIPTOR = FormulaDescriptor(
         author="Tegnhammar, L.",
         year=1992,
         title="Om skattningen av ståndortsindex för gran",
+        note=(
+            "Sveriges lantbruksuniversitet, institutionen för skogstaxering, "
+            "Rapport nr 53, Umeå, 259 s."
+        ),
     ),
     species_groups={"spruce": frozenset({"Picea abies"})},
     units={},

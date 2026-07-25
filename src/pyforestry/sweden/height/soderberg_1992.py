@@ -1360,7 +1360,11 @@ class _Descriptor:
             author="Söderberg, U.",
             year=1992,
             title="Funktioner för skogsbruksplanering",
-            note="Height, form height and bark thickness of individual trees. Report 52, SLU.",
+            note=(
+                "Sveriges lantbruksuniversitet, institutionen för skogstaxering, "
+                "Rapport nr 52, Umeå. Height, form height and bark thickness of "
+                "individual trees."
+            ),
         )
 
     @property

@@ -1,6 +1,11 @@
-"""Eko 2008 utilities and interfaces.
+"""Ekö et al. (2008) regional growth-difference site index adjustment.
 
-Source: Swedish forestry domain models and helper implementations curated in pyforestry.
+Source:
+    Ekö, P.-M., Johansson, U., Petersson, N., Bergqvist, J., Elfving, B. & Frisk, J.
+    (2008). *Current growth differences of Norway spruce (Picea abies), Scots pine
+    (Pinus sylvestris) and birch (Betula pendula and Betula pubescens) in different
+    regions in Sweden.* Scandinavian Journal of Forest Research 23(4):307-318.
+    doi:10.1080/02827580802249126
 """
 
 from pyforestry.base.contracts import FormulaDescriptor, SourceReference

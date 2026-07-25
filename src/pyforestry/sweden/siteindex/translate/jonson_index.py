@@ -109,7 +109,11 @@ DESCRIPTOR = FormulaDescriptor(
     source=SourceReference(
         author="Jonson, T.",
         year=1914,
-        title="Jonson site index (bonitet) classification from productivity",
+        title="Om bonitering av skogsmark",
+        note=(
+            "Svenska Skogsvårdsföreningens Tidskrift 12:369-392. The Jonson bonitet "
+            "classification, in use in Swedish forestry until the early 1980s."
+        ),
     ),
     species_groups={},
     units={},

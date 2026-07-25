@@ -552,7 +552,11 @@ class _Descriptor:
         return SourceReference(
             author="Näslund, M.",
             year=1947,
-            title="Funktioner och tabeller för kubering av stående träd",
+            title=(
+                "Funktioner och tabeller för kubering av stående träd: tall, gran "
+                "och björk i södra Sverige samt i hela landet"
+            ),
+            note="Meddelanden från Statens skogsforskningsinstitut 36(3).",
         )
 
     @property

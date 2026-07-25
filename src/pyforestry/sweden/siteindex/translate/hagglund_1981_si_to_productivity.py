@@ -147,7 +147,12 @@ DESCRIPTOR = FormulaDescriptor(
     source=SourceReference(
         author="Hägglund, B.",
         year=1981,
-        title="Site index to productivity (mean annual volume growth at culmination) translation",
+        title="Forecasting growth and yield in established forests",
+        note=(
+            "Sveriges lantbruksuniversitet, Department of Forest Survey, Report 31, "
+            "Umeå, 145 pp. ISBN 91-576-0797-4. Used here for the site-index to "
+            "productivity (mean annual volume growth at culmination) translation."
+        ),
     ),
     species_groups={
         "spruce": frozenset({"Picea abies"}),

@@ -543,7 +543,11 @@ class _Descriptor:
         return SourceReference(
             author="Petersson, H.",
             year=1999,
-            title="Biomassafunktioner för trädfaktorer",
+            title=("Biomassafunktioner för trädfaktorer av tall, gran och björk i Sverige"),
+            note=(
+                "Sveriges lantbruksuniversitet, institutionen för skoglig "
+                "resurshushållning och geomatik, Arbetsrapport nr 59, Umeå."
+            ),
         )
 
     @property

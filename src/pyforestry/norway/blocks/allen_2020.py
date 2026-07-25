@@ -94,9 +94,16 @@ class Allen2020GrowthModel(GrowthModel):
     def source(self) -> SourceReference:
         """Bibliographic provenance."""
         return SourceReference(
-            author="Allen, M.G. II; Anton-Fernandez, C.; Astrup, R.",
+            author="Allen, M.G. II, Antón-Fernández, C. & Astrup, R.",
             year=2020,
-            title="A stand-level growth and yield model for Norway spruce forests in Norway",
+            title=(
+                "A stand-level growth and yield model for thinned and unthinned "
+                "managed Norway spruce forests in Norway"
+            ),
+            note=(
+                "Scandinavian Journal of Forest Research 35(5-6):238-251. "
+                "doi:10.1080/02827581.2020.1773525"
+            ),
         )
 
     def requirements(self) -> Requirements:
@@ -160,9 +167,16 @@ __all__ = [
 DESCRIPTOR = FormulaDescriptor(
     component_id="allen_2020_model",
     source=SourceReference(
-        author="Allen, M.G. II; Anton-Fernandez, C.; Astrup, R.",
+        author="Allen, M.G. II, Antón-Fernández, C. & Astrup, R.",
         year=2020,
-        title="A stand-level growth and yield model for Norway spruce forests in Norway",
+        title=(
+            "A stand-level growth and yield model for thinned and unthinned "
+            "managed Norway spruce forests in Norway"
+        ),
+        note=(
+            "Scandinavian Journal of Forest Research 35(5-6):238-251. "
+            "doi:10.1080/02827581.2020.1773525"
+        ),
     ),
     kind="model",
     domain="growth",

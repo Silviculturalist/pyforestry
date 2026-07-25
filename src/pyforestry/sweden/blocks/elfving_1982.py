@@ -610,8 +610,11 @@ DESCRIPTOR = FormulaDescriptor(
     source=SourceReference(
         author="Elfving, B.",
         year=1982,
-        title="Hugins ungskogstaxering 1976-1979",
-        note="SLU, Projekt Hugin, Rapport 27. The Hugin young stand survey.",
+        title="HUGINs ungskogstaxering 1976-1979",
+        note=(
+            "Sveriges lantbruksuniversitet, Projekt HUGIN, Rapport nr 27, Umeå, "
+            "115 s. The HUGIN young-stand survey."
+        ),
     ),
     kind="model",
     domain="growth",

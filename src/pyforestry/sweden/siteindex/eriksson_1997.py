@@ -133,9 +133,10 @@ class _Descriptor:
             author="Eriksson, H., Johansson, U., Kiviste, A.",
             year=1997,
             title=(
-                "A site-index model for pure and mixed stands of"
-                " Betula pendula and Betula pubescens in Sweden"
+                "A site-index model for pure and mixed stands of Betula pendula "
+                "and Betula pubescens in Sweden"
             ),
+            note="Scandinavian Journal of Forest Research 12(2):149-156.",
         )
 
     @property
