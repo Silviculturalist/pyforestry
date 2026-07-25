@@ -54,8 +54,10 @@ DESCRIPTOR = FormulaDescriptor(
         year=1979,
         title="Tallens och granens produktion på lika ståndort",
         note=(
-            "Sveriges lantbruksuniversitet, institutionen för skogsskötsel, Umeå. "
-            "Report series number not yet confirmed against the primary document."
+            "Slutredovisning för anslag från Statens råd för skogs- och "
+            "jordbruksforskning. Sveriges lantbruksuniversitet, institutionen för "
+            "skogsskötsel, Umeå. A grant final report, so it carries no report "
+            "series number."
         ),
     ),
     species_groups={
