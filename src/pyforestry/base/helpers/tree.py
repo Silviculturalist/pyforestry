@@ -34,6 +34,11 @@ class Tree:
         classification is left to downstream models.
     mortality : float | None
         Optional mortality fraction (0-1) applied to the tree record.
+    crown_radius_m : float | None
+        Optional horizontal crown (or influence-zone) radius in metres. Used by
+        the influence-zone overlap competition indices; see
+        :mod:`pyforestry.base.competition`. Left ``None`` unless measured or
+        supplied by a crown model.
     uid : int | None
         A unique identifier for the Tree object.
     """
@@ -50,6 +55,7 @@ class Tree:
         mortality: Optional[float] = None,
         uid: Optional[Union[int, str]] = None,
         predicted_height_m: Optional[float] = None,
+        crown_radius_m: Optional[float] = None,
     ):
         """Create a Tree instance with optional attributes.
 
@@ -75,6 +81,9 @@ class Tree:
             Optional unique identifier for the tree.
         predicted_height_m : float | None, optional
             Optional interpolated height (m) from a height-diameter curve.
+        crown_radius_m : float | None, optional
+            Optional crown/influence-zone radius (m) for the influence-zone
+            competition indices.
         """
         self.position = Position._set_position(position)
 
@@ -97,6 +106,7 @@ class Tree:
         self.weight_n = weight_n
         self.is_overstorey = is_overstorey
         self.mortality = mortality
+        self.crown_radius_m = crown_radius_m
 
     @property
     def height_provenance(self) -> Optional[str]:
