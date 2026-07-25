@@ -1,6 +1,12 @@
 import pytest
 
-from pyforestry.base.helpers.primitives import Age, AgeMeasurement, SiteIndexValue
+import pyforestry
+from pyforestry.base.helpers.primitives import (
+    Age,
+    AgeMeasurement,
+    BasalAreaWeightedDiameter,
+    SiteIndexValue,
+)
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies, parse_tree_species
 from pyforestry.sweden.siteindex import eriksson_1997_height_trajectory_sweden_birch
 
@@ -37,6 +43,11 @@ def test_site_index_value_creation_set(sample_age_measurement, sample_species_se
     assert siv.reference_age == sample_age_measurement
     assert siv.species == sample_species_set  # Check the set itself
     assert siv.fn == sample_fn
+
+
+def test_bawad_rejects_negative_values():
+    with pytest.raises(ValueError):
+        BasalAreaWeightedDiameter(-1.0)
 
 
 def test_site_index_value_creation_set_multi(
@@ -193,6 +204,25 @@ def test_age_measurement_equality(age_total_100, age_dbh_100):
     assert "100" != age_total_100
 
 
+def test_age_measurement_hashable(age_total_100, age_dbh_100):
+    """Regression: defining __eq__ without __hash__ made instances unhashable.
+
+    They must be usable as dict keys / set members, and hashing must stay
+    consistent with __eq__ (which compares on the float value against plain
+    numbers)."""
+    # Hashable at all (previously raised TypeError: unhashable type).
+    assert isinstance(hash(age_total_100), int)
+
+    # Equal objects hash equally.
+    assert hash(age_total_100) == hash(AgeMeasurement(100.0, Age.TOTAL.value))
+    # Consistent with equality against a plain float (age == 100.0 is True).
+    assert hash(age_total_100) == hash(100.0)
+
+    # Usable in sets/dicts; same value + different code are distinct members.
+    assert len({age_total_100, AgeMeasurement(100.0, Age.TOTAL.value), age_dbh_100}) == 2
+    assert {age_total_100: "x"}[AgeMeasurement(100.0, Age.TOTAL.value)] == "x"
+
+
 # --- Tests for Age Enum ---
 
 
@@ -287,3 +317,13 @@ def test_site_index_reference_age_comparison(
     assert siv_total.reference_age != age_dbh_100
     assert siv_dbh.reference_age == age_dbh_100
     assert siv_dbh.reference_age != age_total_100
+
+
+def test_pyforestry_module_getattr():
+    base_mod = pyforestry.base
+    sim_mod = pyforestry.simulation
+    assert base_mod.__name__ == "pyforestry.base"
+    assert sim_mod.__name__ == "pyforestry.simulation"
+    missing_attr = "does_not_exist"
+    with pytest.raises(AttributeError):
+        getattr(pyforestry, missing_attr)

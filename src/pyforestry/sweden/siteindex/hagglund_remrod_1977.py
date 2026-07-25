@@ -116,3 +116,45 @@ def hagglund_remrod_1977_height_trajectories_lodgepole_pine(
         species={TreeSpecies.Sweden.pinus_contorta},
         fn=hagglund_remrod_1977_height_trajectories_lodgepole_pine,
     )
+
+
+# ---------------------------------------------------------------------------
+# Introspection
+# ---------------------------------------------------------------------------
+
+
+class _Descriptor:
+    """FormulaModuleDescriptor for Hagglund & Remrod (1977)."""
+
+    @property
+    def component_id(self):
+        return "hagglund_remrod_1977"
+
+    @property
+    def source(self):
+        from pyforestry.simulation.contracts import SourceReference
+
+        return SourceReference(
+            author="Hagglund, B., Remrod, J.",
+            year=1977,
+            title="Ovre hojdens utveckling i bestand med Pinus contorta",
+        )
+
+    @property
+    def species_groups(self):
+        return {}
+
+    @property
+    def units(self):
+        return {
+            "dominant_height_m": "m",
+            "age_years": "years",
+            "return": "SiteIndexValue (m)",
+        }
+
+    @property
+    def kernel_names(self):
+        return ["hagglund_remrod_1977_height_trajectories_lodgepole_pine"]
+
+
+DESCRIPTOR = _Descriptor()

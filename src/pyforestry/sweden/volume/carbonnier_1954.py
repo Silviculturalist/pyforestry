@@ -1,3 +1,9 @@
+"""Carbonnier 1954 utilities and interfaces.
+
+Source: Swedish forestry domain models and helper implementations curated in pyforestry.
+"""
+
+
 def carbonnier_1954_volume_larch(diameter_cm, height_m):
     """
     Volume of Larch trees, from Carbonnier 1954.
@@ -21,3 +27,41 @@ def carbonnier_1954_volume_larch(diameter_cm, height_m):
         - 0.08406 * diameter_cm * height_m
         + 0.1972 * height_m
     ) / 1000
+
+
+# ---------------------------------------------------------------------------
+# Introspection
+# ---------------------------------------------------------------------------
+
+
+class _Descriptor:
+    """FormulaModuleDescriptor for Carbonnier, C. (1954)."""
+
+    @property
+    def component_id(self):
+        return "carbonnier_1954_volume"
+
+    @property
+    def source(self):
+        from pyforestry.simulation.contracts import SourceReference
+
+        return SourceReference(
+            author="Carbonnier, C.",
+            year=1954,
+            title="Volymfunktioner för lärk",
+        )
+
+    @property
+    def species_groups(self):
+        return {}
+
+    @property
+    def units(self):
+        return {}
+
+    @property
+    def kernel_names(self):
+        return ["carbonnier_1954_volume_larch"]
+
+
+DESCRIPTOR = _Descriptor()

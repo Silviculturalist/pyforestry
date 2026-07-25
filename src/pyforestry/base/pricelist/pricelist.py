@@ -1,3 +1,8 @@
+"""Pricelist utilities and interfaces.
+
+Source: Internal pyforestry implementation.
+"""
+
 from dataclasses import dataclass
 from enum import IntEnum
 from typing import Dict, Iterable, List, Optional, Sequence, Union
@@ -7,12 +12,24 @@ from pyforestry.base.helpers.tree_species import TreeName, parse_tree_species
 
 @dataclass
 class DiameterRange:
+    """Diameter range container and behavior.
+
+    Source:
+        Internal pyforestry implementation.
+    """
+
     Min: float
     Max: float
 
 
 @dataclass
 class LengthRange:
+    """Length range container and behavior.
+
+    Source:
+        Internal pyforestry implementation.
+    """
+
     Min: float
     Max: float
 
@@ -24,6 +41,16 @@ class TimberPriceForDiameter:
     """
 
     def __init__(self, butt_price: float, middle_price: float, top_price: float):
+        """Init.
+
+        Args:
+            butt_price: Parameter for `TimberPriceForDiameter.__init__`.
+            middle_price: Parameter for `TimberPriceForDiameter.__init__`.
+            top_price: Parameter for `TimberPriceForDiameter.__init__`.
+
+        Source:
+            Internal pyforestry implementation.
+        """
         self.butt_price = butt_price
         self.middle_price = middle_price
         self.top_price = top_price
@@ -50,6 +77,14 @@ class LengthCorrections:
     """
 
     def __init__(self, corrections: Optional[Dict[int, Dict[int, int]]] = None):
+        """Init.
+
+        Args:
+            corrections: Parameter for `LengthCorrections.__init__`.
+
+        Source:
+            Internal pyforestry implementation.
+        """
         self.corrections = corrections or {}
 
     def get_length_correction(self, diameter: int, log_part: Optional[int], length: int) -> int:
@@ -76,11 +111,27 @@ class TimberPricelist:
 
     # Using your code's idea of enumerations: Butt = 0, Middle = 1, Top = 2 ...
     class LogParts(IntEnum):
+        """Log parts container and behavior.
+
+        Source:
+            Internal pyforestry implementation.
+        """
+
         Butt = 0
         Middle = 1
         Top = 2
 
     def __init__(self, min_diameter: int, max_diameter: int, volume_type: str = "m3to"):
+        """Init.
+
+        Args:
+            min_diameter: Parameter for `TimberPricelist.__init__`.
+            max_diameter: Parameter for `TimberPricelist.__init__`.
+            volume_type: Parameter for `TimberPricelist.__init__`.
+
+        Source:
+            Internal pyforestry implementation.
+        """
         self.min_diameter = min_diameter
         self.max_diameter = max_diameter
         self.volume_type = volume_type  # e.g. "m3to" or "m3fub"
@@ -104,15 +155,7 @@ class TimberPricelist:
         """Store a price entry for a certain diameter class."""
         self._price_by_diameter[diameter] = price_struct
 
-    @property
-    def minDiameter(self):
-        return self.min_diameter
-
-    @property
-    def maxDiameter(self):
-        return self.max_diameter
-
-    def getTimberWeight(self, log_part: "TimberPricelist.LogParts"):
+    def get_timber_weight(self, log_part: "TimberPricelist.LogParts"):
         """
         If you're applying downgrading or certain proportions for pulp/fuel/cull,
         this returns an object with attributes like ``.PulpwoodPercentage``,
@@ -121,6 +164,12 @@ class TimberPricelist:
         """
 
         class LogWeights:
+            """Container for derived log-quality weight percentages.
+
+            Source:
+                Internal pyforestry implementation.
+            """
+
             pulpwoodPercentage = 0.0
             fuelWoodPercentage = 0.0
             logCullPercentage = 0.0
@@ -157,9 +206,14 @@ class PulpPricelist:
     """Placeholder for pulp prices per species."""
 
     def __init__(self):
+        """Init.
+
+        Source:
+            Internal pyforestry implementation.
+        """
         self._prices = {}
 
-    def getPulpwoodPrice(self, species: Union[str, TreeName]) -> int:
+    def get_pulpwood_price(self, species: Union[str, TreeName]) -> int:
         """
         Try to find the price for a species by first looking for a full name match.
         If none is found, look for a match on just the genus.
@@ -185,10 +239,11 @@ class PulpPricelist:
                 if genus_key in self._prices:
                     return self._prices[genus_key]
         else:
-            # When species_obj is None, try matching the input as a genus.
-            NotImplementedError("TODO: Implement species via genus")
-            # if normalized in self._prices:
-            #    return self._prices[normalized]
+            # species_obj is None (the string could not be parsed as a species).
+            # Genus-only lookup is not implemented yet, so fall through to the
+            # default price below.
+            # TODO: match the input string as a genus and return its pulp price.
+            pass
 
         # Default price if no match is found.
         return 200
@@ -198,6 +253,11 @@ class Pricelist:
     """Holds the combined pulpwood, timber, etc. prices and constraints."""
 
     def __init__(self):
+        """Init.
+
+        Source:
+            Internal pyforestry implementation.
+        """
         self.Timber: Dict[str, TimberPricelist] = {}
         self.PulpLogDiameter = DiameterRange(5, 70)
         self.Pulp = PulpPricelist()
@@ -260,6 +320,24 @@ class Pricelist:
         timber_pricelist.max_height_quality3 = timber_data["MaxHeight"]["Top"]
 
         self.Timber[species_key] = timber_pricelist
+
+    def get_pulpwood_waste_proportion(self, species: Union[str, TreeName]) -> float:
+        """Proportion (0-1) of a pulpwood log downgraded to waste/harvest residue.
+
+        Placeholder returning ``0.0`` (no downgrade), mirroring the timber-side
+        :meth:`TimberPricelist.get_timber_weight` hook. Consumed by the pulp branch of
+        the Näsberg (1985) bucking optimiser when ``BuckingConfig.use_downgrading`` is
+        set; override per species once real downgrade data is available.
+        """
+        return 0.0
+
+    def get_pulpwood_fuelwood_proportion(self, species: Union[str, TreeName]) -> float:
+        """Proportion (0-1) of a pulpwood log downgraded to fuelwood.
+
+        Placeholder returning ``0.0`` (no downgrade); override per species as needed.
+        See :meth:`get_pulpwood_waste_proportion`.
+        """
+        return 0.0
 
 
 def create_pricelist_from_data(

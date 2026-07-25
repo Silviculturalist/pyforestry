@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import warnings
-from inspect import getmodule
 
 import numpy as np
 
@@ -16,6 +15,7 @@ from pyforestry.base.helpers import (
     TreeSpecies,
     parse_tree_species,
 )
+from pyforestry.sweden.siteindex.validation import validate_hagglund_1970_h100_site_index
 
 
 class Petersson1999:
@@ -29,66 +29,58 @@ class Petersson1999:
     """
 
     @staticmethod
-    def _validate_site_index(si: SiteIndexValue) -> TreeName:
+    def _validate_site_index(site_index_value: SiteIndexValue) -> TreeName:
         """Validate a :class:`SiteIndexValue`.
 
         Args:
-            si: Site index to validate.
+            site_index_value: Site index to validate.
 
         Returns:
             TreeName: Dominant species referenced by ``si``.
 
         Raises:
-            TypeError: If ``si`` is not a :class:`SiteIndexValue`.
-            ValueError: If ``si`` does not reference pine or spruce at age
+            TypeError: If ``site_index_value`` is not a :class:`SiteIndexValue`.
+            ValueError: If ``site_index_value`` does not reference pine or spruce at age
                 ``Age.TOTAL(100)`` or its function is not from
                 ``Hagglund_1970``.
         """
-
-        if not isinstance(si, SiteIndexValue):
-            raise TypeError("SI must be a SiteIndexValue")
-        if si.reference_age != Age.TOTAL(100):
-            raise ValueError("SI must have reference age Age.TOTAL(100)")
-        if si.species == {TreeSpecies.Sweden.picea_abies}:
-            dominant = TreeSpecies.Sweden.picea_abies
-        elif si.species == {TreeSpecies.Sweden.pinus_sylvestris}:
-            dominant = TreeSpecies.Sweden.pinus_sylvestris
-        else:
-            raise ValueError("SI must reference Picea abies or Pinus sylvestris")
-        mod = getmodule(si.fn)
-        if mod is None or not mod.__name__.endswith("hagglund_1970"):
-            raise ValueError("SI.fn must come from Hagglund_1970")
-        return dominant
+        return validate_hagglund_1970_h100_site_index(
+            site_index_value,
+            param_name="site_index",
+            allowed_species={
+                TreeSpecies.Sweden.picea_abies,
+                TreeSpecies.Sweden.pinus_sylvestris,
+            },
+        )
 
     @staticmethod
     def _get_dominant_species(
-        si: SiteIndexValue | float,
+        site_index_input: SiteIndexValue | float,
         dominant_species: TreeName | str | None,
     ) -> tuple[TreeName, float]:
         """Resolve dominant species from ``SI`` and return its value.
 
         Args:
-            si: Site index as an object or numeric value.
-            dominant_species: Species used when ``si`` is numeric.
+            site_index_input: Site index as an object or numeric value.
+            dominant_species: Species used when ``site_index_input`` is numeric.
 
         Returns:
             tuple[TreeName, float]: Dominant species and numeric site index.
 
         Raises:
-            TypeError: If ``si`` is numeric and ``dominant_species`` is ``None``.
+            TypeError: If ``site_index_input`` is numeric and ``dominant_species`` is ``None``.
             ValueError: If ``dominant_species`` is not pine or spruce.
         """
-
-        if isinstance(si, SiteIndexValue):
-            dom = Petersson1999._validate_site_index(si)
+        if isinstance(site_index_input, SiteIndexValue):
+            dominant_species_from_site_index = Petersson1999._validate_site_index(site_index_input)
             if dominant_species is not None:
                 warnings.warn(
                     "dominant_species ignored when SI is SiteIndexValue",
                     stacklevel=2,
                 )
-            return dom, float(si)
+            return dominant_species_from_site_index, float(site_index_input)
 
-        si_value = float(si)
+        site_index_m = float(site_index_input)
         if dominant_species is None:
             raise TypeError("dominant_species required when SI is numeric")
         if isinstance(dominant_species, str):
@@ -98,7 +90,7 @@ class Petersson1999:
             TreeSpecies.Sweden.pinus_sylvestris,
         }:
             raise ValueError("dominant_species must be Picea abies or Pinus sylvestris")
-        return dominant_species, si_value
+        return dominant_species, site_index_m
 
     @staticmethod
     def spruce(
@@ -134,9 +126,9 @@ class Petersson1999:
         Returns:
             dict: Dry weight components in grams keyed by component name.
         """
-        dominant_species, SI = Petersson1999._get_dominant_species(SI, dominant_species)
-        picea = dominant_species is TreeSpecies.Sweden.picea_abies
-        pinus = dominant_species is TreeSpecies.Sweden.pinus_sylvestris
+        dominant_species, site_index_m = Petersson1999._get_dominant_species(SI, dominant_species)
+        dominant_is_spruce = dominant_species is TreeSpecies.Sweden.picea_abies
+        dominant_is_pine = dominant_species is TreeSpecies.Sweden.pinus_sylvestris
 
         if isinstance(diameter_cm, Diameter_cm):
             if diameter_cm.measurement_height_m != 1.3:
@@ -164,8 +156,8 @@ class Petersson1999:
             + 0.093033 * inc_log
             - 0.002763 * increment_01mm
             + 0.111347 * age_log
-            + 0.012148 * float(SI) * picea
-            + 0.011586 * float(SI) * pinus
+            + 0.012148 * site_index_m * dominant_is_spruce
+            + 0.011586 * site_index_m * dominant_is_pine
             - 0.000020194 * latitude
             + (0.17069**2) / 2
         )
@@ -260,9 +252,9 @@ class Petersson1999:
         Returns:
             dict: Dry weight components in grams keyed by component name.
         """
-        dominant_species, SI = Petersson1999._get_dominant_species(SI, dominant_species)
-        picea = dominant_species is TreeSpecies.Sweden.picea_abies
-        pinus = dominant_species is TreeSpecies.Sweden.pinus_sylvestris
+        dominant_species, site_index_m = Petersson1999._get_dominant_species(SI, dominant_species)
+        dominant_is_spruce = dominant_species is TreeSpecies.Sweden.picea_abies
+        dominant_is_pine = dominant_species is TreeSpecies.Sweden.pinus_sylvestris
 
         if isinstance(diameter_cm, Diameter_cm):
             if diameter_cm.measurement_height_m != 1.3:
@@ -290,8 +282,8 @@ class Petersson1999:
             + 0.084427 * inc_log
             - 0.002665 * increment_01mm
             + 0.253227 * age_log
-            + 0.028478 * float(SI) * picea
-            + 0.031435 * float(SI) * pinus
+            + 0.028478 * site_index_m * dominant_is_spruce
+            + 0.031435 * site_index_m * dominant_is_pine
             + 0.000008342 * latitude
             + (0.17803**2) / 2
         )
@@ -330,8 +322,8 @@ class Petersson1999:
             -2.032666
             + 2.413856 * np.log(diameter_mm + 6)
             + 0.130304 * age_log
-            + 0.011834 * float(SI) * picea
-            + 0.013668 * float(SI) * pinus
+            + 0.011834 * site_index_m * dominant_is_spruce
+            + 0.013668 * site_index_m * dominant_is_pine
             + (0.15651**2) / 2
         )
         res["total"] = np.exp(
@@ -391,9 +383,9 @@ class Petersson1999:
         Returns:
             dict: Dry weight components in grams keyed by component name.
         """
-        dominant_species, SI = Petersson1999._get_dominant_species(SI, dominant_species)
-        picea = dominant_species is TreeSpecies.Sweden.picea_abies
-        pinus = dominant_species is TreeSpecies.Sweden.pinus_sylvestris
+        dominant_species, site_index_m = Petersson1999._get_dominant_species(SI, dominant_species)
+        dominant_is_spruce = dominant_species is TreeSpecies.Sweden.picea_abies
+        dominant_is_pine = dominant_species is TreeSpecies.Sweden.pinus_sylvestris
 
         if isinstance(diameter_cm, Diameter_cm):
             if diameter_cm.measurement_height_m != 1.3:
@@ -418,8 +410,8 @@ class Petersson1999:
             -3.091932
             + 2.479648 * np.log(diameter_mm + 7)
             + 0.243747 * age_log
-            + 0.022185 * float(SI) * picea
-            + 0.022955 * float(SI) * pinus
+            + 0.022185 * site_index_m * dominant_is_spruce
+            + 0.022955 * site_index_m * dominant_is_pine
             + (0.19827**2) / 2
         )
         res["bark"] = np.exp(
@@ -530,3 +522,41 @@ class Petersson1999:
                 dominant_species,
             )
         raise ValueError("Tree species not supported.")
+
+
+# ---------------------------------------------------------------------------
+# Introspection
+# ---------------------------------------------------------------------------
+
+
+class _Descriptor:
+    """FormulaModuleDescriptor for Petersson, H. (1999)."""
+
+    @property
+    def component_id(self):
+        return "petersson_1999_biomass"
+
+    @property
+    def source(self):
+        from pyforestry.simulation.contracts import SourceReference
+
+        return SourceReference(
+            author="Petersson, H.",
+            year=1999,
+            title="Biomassafunktioner för trädfaktorer",
+        )
+
+    @property
+    def species_groups(self):
+        return {}
+
+    @property
+    def units(self):
+        return {}
+
+    @property
+    def kernel_names(self):
+        return ["Petersson1999"]
+
+
+DESCRIPTOR = _Descriptor()

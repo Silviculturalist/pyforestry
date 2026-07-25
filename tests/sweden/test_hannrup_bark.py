@@ -43,7 +43,11 @@ def test_pine_bark_valid_and_errors():
         assert any("measurementheight" in str(w.message) for w in rec)
 
     # term_lat <= 0 triggers early return
-    assert Hannrup_2004_bark_pinus_sylvestris_sweden(300, 200, 150) == 2.0
+    with warnings.catch_warnings(record=True) as rec:
+        warnings.simplefilter("always")
+        assert Hannrup_2004_bark_pinus_sylvestris_sweden(300, 200, 150) == 2.0
+        assert any("Latitude" in str(w.message) for w in rec)
+        assert any("Cannot calculate htg" in str(w.message) for w in rec)
 
 
 def test_spruce_bark_valid_and_errors():

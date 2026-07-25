@@ -1,8 +1,19 @@
+"""Timber Volume Integrator utilities and interfaces.
+
+Source: Internal pyforestry implementation.
+"""
+
 import numpy as np
 from scipy.integrate import quad
 
 
 class TimberVolumeIntegrator:
+    """Timber volume integrator container and behavior.
+
+    Source:
+        Internal pyforestry implementation.
+    """
+
     @staticmethod
     def cylinder_volume_integrand(height, taper_instance):
         """

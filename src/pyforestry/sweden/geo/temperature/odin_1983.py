@@ -35,6 +35,12 @@ def Odin_temperature_sum(latitude: float, altitude_m: float) -> float:
 
 
 class Moren_Perttu_radiation_1994:
+    """Moren perttu radiation 1994 container and behavior.
+
+    Source:
+        Internal pyforestry implementation.
+    """
+
     def __init__(
         self,
         latitude: float,

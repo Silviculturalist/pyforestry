@@ -1,7 +1,13 @@
+"""Tegnhammar 1992 Adjusted Spruce Si By Stand Variables utilities and interfaces.
+
+Source: Swedish forestry domain models and helper implementations curated in pyforestry.
+"""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.sweden.site.enums import Sweden
 
 from .tegnhammar_1992 import tegnhammar_1992_adjusted_spruce_si_by_stand_variables as _impl
@@ -45,3 +51,19 @@ def tegnhammar_1992_adjusted_spruce_si_by_stand_variables(
         peat_humification=peat_humification,
         epsg=epsg,
     )
+
+
+DESCRIPTOR = FormulaDescriptor(
+    component_id="tegnhammar_1992_adjusted_siteindex",
+    source=SourceReference(
+        author="Tegnhammar, L.",
+        year=1992,
+        title=(
+            "Om skattningen av ståndortsindex för gran - adjusted spruce site index "
+            "from stand variables"
+        ),
+    ),
+    species_groups={"spruce": frozenset({"Picea abies"})},
+    units={},
+    kernel_names=("tegnhammar_1992_adjusted_spruce_si_by_stand_variables",),
+)

@@ -1,4 +1,13 @@
-"""Branch-and-bound timber bucking algorithm from Näslund (1985)."""
+"""Value-optimising timber bucking (log cross-cutting) after Näsberg (1985).
+
+Dynamic-programming optimisation of how to cross-cut a single stem into logs so as to
+maximise the total stem value, given a diameter/length/quality price matrix.
+
+Reference:
+    Näsberg, M. (1985). Mathematical programming models for optimal log bucking.
+    Linköping Studies in Science and Technology, Dissertation No. 132,
+    Linköping University, Sweden.
+"""
 
 from math import pi
 from typing import Optional, Type
@@ -47,9 +56,9 @@ class Nasberg_1985_BranchBound:
         self._minLengthPulpwoodLog_dm = int(round(pricelist.PulpLogLength.Min * 10))  # 27
         self._maxLengthPulpwoodLog_dm = int(round(pricelist.PulpLogLength.Max * 10))  # 55
 
-        self._minDiameterTimberLog = self._timber_prices.minDiameter
-        self._maxDiameterTimberLog = self._timber_prices.maxDiameter
-        self._mvarde = pricelist.Pulp.getPulpwoodPrice(timber.species) * 100.0
+        self._minDiameterTimberLog = self._timber_prices.min_diameter
+        self._maxDiameterTimberLog = self._timber_prices.max_diameter
+        self._mvarde = pricelist.Pulp.get_pulpwood_price(timber.species) * 100.0
 
         # modules list + O(1) reverse map
         min_len = int(min(self._minLengthPulpwoodLog_dm, self._minLengthTimberLog_dm))
@@ -119,7 +128,7 @@ class Nasberg_1985_BranchBound:
 
         # ------------ general --------------------------------------------
         # Observe! This is *height above stump*
-        DBH_cm = Taper.get_diameter_at_height(taper, 1.3 - HSTUB)  # cm
+        dbh_cm = Taper.get_diameter_at_height(taper, 1.3 - HSTUB)  # cm
         diameter_stump_cm = Taper.get_diameter_at_height(taper, 0.0)  # cm
 
         # ------------ discretise (vector) --------------------------------
@@ -127,14 +136,23 @@ class Nasberg_1985_BranchBound:
         NMAX = 400
         total_dm = min(int((HTOP - HSTUB) * 10), NMAX)
         if total_dm <= 0:
-            return BuckingResult(0, 1, 1, 1, 1, 0, [0] * 7, [0] * 7, 0, 0)
+            # Degenerate stem: the merchantable top lies at or below the stump, so
+            # there is nothing to buck. Return a well-formed zero result carrying the
+            # geometry already known here (the taper arrays are not built yet).
+            return BuckingResult.zero(
+                species_group=self._species,
+                dbh_cm=dbh_cm,
+                height_m=height_m,
+                stump_height_m=HSTUB,
+                diameter_stump_cm=diameter_stump_cm,
+            )
 
         dm = np.arange(total_dm + 1, dtype=np.int32)
         h = HSTUB + dm * 0.1
         dh = taper.get_diameter_vectorised(h)  # vectorised diameter
 
-        taperDiams_cm = dh.tolist()  # NumPy → list[float]
-        taperHeights_m = h.tolist()  # ditto
+        taper_diameters_cm = dh.tolist()  # NumPy → list[float]
+        taper_heights_m = h.tolist()  # ditto
 
         #  endpoints ------------------------------------------------------
         dead_idx = int(dm[dh >= min_diam_dead_wood].max(initial=0))
@@ -243,7 +261,7 @@ class Nasberg_1985_BranchBound:
                 if config.use_downgrading:
                     # loop small (<=3) – negligible
                     for k, _ in enumerate(idxs):
-                        w = self._timber_prices.getTimberWeight(part_vec[k])
+                        w = self._timber_prices.get_timber_weight(part_vec[k])
                         pp, fp, cp = (
                             w.pulpwoodPercentage / 100.0,
                             w.fuelWoodPercentage / 100.0,
@@ -270,8 +288,8 @@ class Nasberg_1985_BranchBound:
                 idxs = np.where(pulp_ok)[0]
                 pulp_val = config.pulp_price_factor * self._mvarde * vol_vec[idxs]
                 if config.use_downgrading:
-                    waste = self._pricelist.getPulpWoodWasteProportion(self._species)
-                    fuel = self._pricelist.getPulpwoodFuelwoodProportion(self._species)
+                    waste = self._pricelist.get_pulpwood_waste_proportion(self._species)
+                    fuel = self._pricelist.get_pulpwood_fuelwood_proportion(self._species)
                     if waste + fuel > 1.0:
                         waste = max(0.0, 1 - fuel)
                     pulp_val *= 1 - waste - fuel
@@ -300,7 +318,23 @@ class Nasberg_1985_BranchBound:
         end = int(np.argmax(v))
         best = v[end]
         if best <= 0:
-            return BuckingResult(0, 1, p_dead, p_vol_hs, 0, 0, [0] * 7, [0] * 7, vol_fub5, vol_sk)
+            # Defensive fallback: no profitable endpoint. In practice unreachable
+            # because v[0] is seeded to 1e-5, but kept as a graceful zero-value
+            # return. The full stem geometry is known here, so carry it and zero
+            # only the value/quality fields.
+            return BuckingResult.zero(
+                species_group=self._species,
+                dead_wood_proportion=p_dead,
+                high_stump_volume_proportion=p_vol_hs,
+                vol_fub_5cm=vol_fub5,
+                vol_sk_ub=vol_sk,
+                dbh_cm=dbh_cm,
+                height_m=height_m,
+                stump_height_m=self._timber.stump_height_m,
+                diameter_stump_cm=diameter_stump_cm,
+                taper_diameters_cm=taper_diameters_cm,
+                taper_heights_m=taper_heights_m,
+            )
 
         total_SEK = best / 100.0
         vol_top = taper.volume_section(h[end], height_m)
@@ -376,12 +410,12 @@ class Nasberg_1985_BranchBound:
             timber_price_by_quality=price_q,
             vol_fub_5cm=vol_fub5,
             vol_sk_ub=vol_sk,
-            DBH_cm=DBH_cm,
+            dbh_cm=dbh_cm,
             height_m=height_m,
             stump_height_m=self._timber.stump_height_m,
             diameter_stump_cm=diameter_stump_cm,
-            taperDiams_cm=taperDiams_cm,
-            taperHeights_m=taperHeights_m,
+            taper_diameters_cm=taper_diameters_cm,
+            taper_heights_m=taper_heights_m,
             sections=secs if config.save_sections else None,
         )
 

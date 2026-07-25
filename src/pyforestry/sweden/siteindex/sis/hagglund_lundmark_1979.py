@@ -28,12 +28,14 @@ from __future__ import annotations
 # Forest Ecology & Forest Soils. Royal College of Forestry. Stockholm. Sweden.
 # Author: Carl Vigren, Dept. Forest Resource Management, SLU Umeå.
 # Written to match results to SIS NFI routine.
+import warnings
 from math import exp
 from typing import TYPE_CHECKING, Union
 
 import numpy as np
 from pandas import isna as pdisna
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.helpers import (
     Age,
     SiteIndexValue,
@@ -46,7 +48,7 @@ if TYPE_CHECKING:
     from pyforestry.sweden.site.enums import Sweden
 
 
-def NFI_SIS_SPRUCE(**kwargs) -> float:
+def nfi_sis_spruce(**kwargs) -> float:
     """
     Estimate Site Index H100 for Spruce in Sweden by stand factors.
 
@@ -146,7 +148,7 @@ def NFI_SIS_SPRUCE(**kwargs) -> float:
 
     # Spruce cannot be placed on dry soil, switch to mesic.
     if New_SoilMoisture == 1:
-        print("Warning: No coverage for Spruce on dry soils, switching to mesic.")
+        warnings.warn("No coverage for Spruce on dry soils, switching to mesic.", stacklevel=2)
         New_SoilMoisture = 2
 
     # moist-wet mineral soils with lichen-dominated ground layer: set vegetation
@@ -459,7 +461,7 @@ def NFI_SIS_SPRUCE(**kwargs) -> float:
     return SIS
 
 
-def NFI_SIS_PINE(**kwargs) -> float:
+def nfi_sis_pine(**kwargs) -> float:
     """
     Estimate Site Index H100 for Pine in Sweden by stand factors.
 
@@ -887,72 +889,76 @@ def Hagglund_Lundmark_1979_SIS(
         )
 
     if latitude < 55.2 or latitude > 69.1 or latitude is None:
-        print("latitude must be between (55.2, 69.1)")
+        warnings.warn("latitude must be between (55.2, 69.1)", stacklevel=2)
         return np.nan
     if altitude < 0 or altitude > 2117 or altitude is None:
-        print("altitude must be between (0,2117)")
+        warnings.warn("altitude must be between (0,2117)", stacklevel=2)
         return np.nan
     if soil_moisture not in range(1, 6) or soil_moisture is None:
-        print("soil_moisture must be int 1 - 5")
+        warnings.warn("soil_moisture must be int 1 - 5", stacklevel=2)
         return np.nan
     if ground_layer not in range(1, 7) or ground_layer is None:
-        print("ground_layer must be int 1-6")
+        warnings.warn("ground_layer must be int 1-6", stacklevel=2)
         return np.nan
     if vegetation not in range(1, 19) or vegetation is None:
-        print("Vegetation must be int 1-18")
+        warnings.warn("Vegetation must be int 1-18", stacklevel=2)
         return np.nan
 
     if not isinstance(peat, (bool, np.bool_)):
-        print("Peat must be a bool: True or False")
+        warnings.warn("Peat must be a bool: True or False", stacklevel=2)
         return np.nan
 
     if not peat:
         if soil_texture not in range(0, 10) or soil_texture is None:
-            print("soil_texture must be int 0-10")
+            warnings.warn("soil_texture must be int 0-10", stacklevel=2)
             return np.nan
 
     if pdisna(soil_depth) and not peat:
-        print(
-            "soil_depth must be one of float: NA; int 1-5. If soil_depth is NA peat must be True."
+        warnings.warn(
+            "soil_depth must be one of float: NA; int 1-5. If soil_depth is NA peat must be True.",
+            stacklevel=2,
         )
         return np.nan
 
     if not peat:
         if soil_depth not in range(0, 6) or soil_depth is None:
-            print(
+            warnings.warn(
                 "soil_depth must be one of float: NA; int 1-5. "
-                "If soil_depth is NA peat must be True."
+                "If soil_depth is NA peat must be True.",
+                stacklevel=2,
             )
             return np.nan
 
     if dlan is not None:
         if dlan < 1 or dlan > 31:
-            print("dlan must be one of int: 1-31 or NA.")
+            warnings.warn("dlan must be one of int: 1-31 or NA.", stacklevel=2)
             return np.nan
 
     if climate_code not in ["M1", "M2", "M3", "K1", "K2", "K3"] and not pdisna(climate_code):
-        print("climate_code must be one of float: NA; str: M1, M2, M3, K1, K2, K3")
+        warnings.warn(
+            "climate_code must be one of float: NA; str: M1, M2, M3, K1, K2, K3", stacklevel=2
+        )
         return np.nan
     if lateral_water not in range(1, 4) or lateral_water is None:
-        print("lateral_water must be int 1-3")
+        warnings.warn("lateral_water must be int 1-3", stacklevel=2)
         return np.nan
 
     if incline_percent < 0.0 or incline_percent > 100.0:
-        print("incline_percent must be float 0-100")
+        warnings.warn("incline_percent must be float 0-100", stacklevel=2)
         return np.nan
     if aspect < 0 or aspect > 360:
-        print("Aspect must be float 0-360")
+        warnings.warn("Aspect must be float 0-360", stacklevel=2)
         return np.nan
 
     if not isinstance(gotland, (bool, np.bool_)):
-        print("Gotland must be a bool: True or False")
+        warnings.warn("Gotland must be a bool: True or False", stacklevel=2)
         return np.nan
     if not isinstance(nfi_adjustments, (bool, np.bool_)):
-        print("nfi_adjustments must be a bool: True or False")
+        warnings.warn("nfi_adjustments must be a bool: True or False", stacklevel=2)
     if not isinstance(coast, (bool, np.bool_)):
-        print("coast must be a bool: True or False")
+        warnings.warn("coast must be a bool: True or False", stacklevel=2)
     if not isinstance(limes_norrlandicus, (bool, np.bool_)):
-        print("limes_norrlandicus must be a bool: True or False")
+        warnings.warn("limes_norrlandicus must be a bool: True or False", stacklevel=2)
 
     if nfi_adjustments:
         limes_norrlandicus = True
@@ -980,7 +986,7 @@ def Hagglund_Lundmark_1979_SIS(
     }
 
     if species == "Picea abies":
-        SIS = NFI_SIS_SPRUCE(**args)
+        SIS = nfi_sis_spruce(**args)
         fn = (
             Hagglund_1970.height_trajectory.picea_abies.northern_sweden
             if latitude >= 60
@@ -988,7 +994,7 @@ def Hagglund_Lundmark_1979_SIS(
         )
         spec = {TreeSpecies.Sweden.picea_abies}
     else:
-        SIS = NFI_SIS_PINE(**args)
+        SIS = nfi_sis_pine(**args)
         fn = Hagglund_1970.height_trajectory.pinus_sylvestris.sweden
         spec = {TreeSpecies.Sweden.pinus_sylvestris}
 
@@ -998,3 +1004,23 @@ def Hagglund_Lundmark_1979_SIS(
         species=spec,
         fn=fn,
     )
+
+
+DESCRIPTOR = FormulaDescriptor(
+    component_id="hagglund_1979_siteindex",
+    source=SourceReference(
+        author="Hägglund, B. & Lundmark, J.-E.",
+        year=1979,
+        title=(
+            "Ett system för bonitering av skogsmark - analys, kontroll och diskussion "
+            "inför praktisk tillämpning (site index estimation by site factors for "
+            "Scots pine and Norway spruce in Sweden)"
+        ),
+    ),
+    species_groups={
+        "spruce": frozenset({"Picea abies"}),
+        "pine": frozenset({"Pinus sylvestris"}),
+    },
+    units={},
+    kernel_names=("nfi_sis_spruce", "nfi_sis_pine", "Hagglund_Lundmark_1979_SIS"),
+)

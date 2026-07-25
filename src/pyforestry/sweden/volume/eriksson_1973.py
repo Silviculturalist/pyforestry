@@ -1,7 +1,7 @@
 """Tree volume functions from Eriksson (1973)."""
 
 
-def Eriksson_1973_volume_aspen_Sweden(diameter_cm: float, height_m: float) -> float:
+def eriksson_1973_volume_aspen_sweden(diameter_cm: float, height_m: float) -> float:
     """
     Calculates the volume of a Ash, Aspen, Alnus glutinosa tree in m³ according to Eriksson (1973).
 
@@ -33,7 +33,7 @@ def Eriksson_1973_volume_aspen_Sweden(diameter_cm: float, height_m: float) -> fl
     return volume / 1000  # Original in dm3
 
 
-def Eriksson_1973_volume_lodgepole_pine_Sweden(diameter_cm: float, height_m: float) -> float:
+def eriksson_1973_volume_lodgepole_pine_sweden(diameter_cm: float, height_m: float) -> float:
     """
     Calculates the volume of a Lodgepole Pine tree in m³ according to Eriksson (1973).
 
@@ -63,3 +63,41 @@ def Eriksson_1973_volume_lodgepole_pine_Sweden(diameter_cm: float, height_m: flo
         + 0.01249 * diameter_cm * h2
     )
     return volume / 1000
+
+
+# ---------------------------------------------------------------------------
+# Introspection
+# ---------------------------------------------------------------------------
+
+
+class _Descriptor:
+    """FormulaModuleDescriptor for Eriksson, H. (1973)."""
+
+    @property
+    def component_id(self):
+        return "eriksson_1973_volume"
+
+    @property
+    def source(self):
+        from pyforestry.simulation.contracts import SourceReference
+
+        return SourceReference(
+            author="Eriksson, H.",
+            year=1973,
+            title="Volymfunktioner för asp och contortatall",
+        )
+
+    @property
+    def species_groups(self):
+        return {}
+
+    @property
+    def units(self):
+        return {}
+
+    @property
+    def kernel_names(self):
+        return ["eriksson_1973_volume_aspen_sweden", "eriksson_1973_volume_lodgepole_pine_sweden"]
+
+
+DESCRIPTOR = _Descriptor()

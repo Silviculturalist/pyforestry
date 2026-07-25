@@ -1,11 +1,6 @@
 pyforestry.sweden.siteindex package
 ===================================
 
-.. automodule:: pyforestry.sweden.siteindex
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Subpackages
 -----------
 
@@ -17,6 +12,14 @@ Subpackages
 
 Submodules
 ----------
+
+pyforestry.sweden.siteindex.carbonnier\_1975 module
+---------------------------------------------------
+
+.. automodule:: pyforestry.sweden.siteindex.carbonnier_1975
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 pyforestry.sweden.siteindex.elfving\_kiviste\_1997 module
 ---------------------------------------------------------
@@ -78,6 +81,22 @@ pyforestry.sweden.siteindex.johansson\_2013 module
 --------------------------------------------------
 
 .. automodule:: pyforestry.sweden.siteindex.johansson_2013
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyforestry.sweden.siteindex.validation module
+---------------------------------------------
+
+.. automodule:: pyforestry.sweden.siteindex.validation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: pyforestry.sweden.siteindex
    :members:
    :undoc-members:
    :show-inheritance:

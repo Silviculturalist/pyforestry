@@ -69,12 +69,12 @@ def test_buckingresult_methods(monkeypatch):
         timber_price_by_quality=[0.0],
         vol_fub_5cm=0.0,
         vol_sk_ub=0.0,
-        DBH_cm=10.0,
+        dbh_cm=10.0,
         height_m=15.0,
         stump_height_m=0.3,
         diameter_stump_cm=12.0,
-        taperDiams_cm=[10.0, 8.0],
-        taperHeights_m=[0.3, 2.0],
+        taper_diameters_cm=[10.0, 8.0],
+        taper_heights_m=[0.3, 2.0],
         sections=[CrossCutSection(-5, -2, 0.01, 5.0, 1.0, "a")],
     )
     with pytest.raises(KeyError):

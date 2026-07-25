@@ -7,6 +7,11 @@
 ## Documentation
 [Available online](https://silviculturalist.github.io/pyforestry/)
 
+- [Architecture responsibility and context boundary policy](ARCHITECTURE.md)
+  defines package ownership boundaries and migration guardrails.
+- [Architecture overview](https://silviculturalist.github.io/pyforestry/architecture.html)
+  mirrors the architecture policy in the published documentation.
+
 This package is currently under *very early* development.
 Use at your own risk. Any corrections, comments, and suggestions are greatly appreciated.
 
@@ -44,6 +49,19 @@ plot = CircularPlot(id=1, radius_m=5.0, trees=[
 ])
 stand = Stand(plots=[plot])
 print(stand.BasalArea.TOTAL.value)
+```
+
+## Finding a model
+With 60+ growth, yield, volume, bark, biomass, and site-index models, the model
+catalog lets you discover them without knowing the import path or citation:
+
+```python
+from pyforestry import catalog
+
+catalog.find(domain="volume", species="Picea abies")  # volume models for spruce
+catalog.search("brandel")                              # by id / author / title
+catalog.describe("brandel_1990_volume").source         # citation
+catalog.regions()                                      # ['norway', 'sweden']
 ```
 
 ## Contributing

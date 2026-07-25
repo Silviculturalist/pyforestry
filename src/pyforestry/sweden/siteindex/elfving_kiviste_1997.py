@@ -91,3 +91,48 @@ def elfving_kiviste_1997_height_trajectory_sweden_pine(
         species={TreeSpecies.Sweden.pinus_sylvestris},
         fn=elfving_kiviste_1997_height_trajectory_sweden_pine,
     )
+
+
+# ---------------------------------------------------------------------------
+# Introspection
+# ---------------------------------------------------------------------------
+
+
+class _Descriptor:
+    """FormulaModuleDescriptor for Elfving & Kiviste (1997)."""
+
+    @property
+    def component_id(self):
+        return "elfving_kiviste_1997"
+
+    @property
+    def source(self):
+        from pyforestry.simulation.contracts import SourceReference
+
+        return SourceReference(
+            author="Elfving, B., Kiviste, A.",
+            year=1997,
+            title=(
+                "Construction of site index equations for Pinus sylvestris L."
+                " using permanent plot data in Sweden"
+            ),
+        )
+
+    @property
+    def species_groups(self):
+        return {}
+
+    @property
+    def units(self):
+        return {
+            "dominant_height_m": "m",
+            "age_years": "years",
+            "return": "SiteIndexValue (m)",
+        }
+
+    @property
+    def kernel_names(self):
+        return ["elfving_kiviste_1997_height_trajectory_sweden_pine"]
+
+
+DESCRIPTOR = _Descriptor()

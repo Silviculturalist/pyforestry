@@ -324,3 +324,50 @@ def johansson_2013_height_trajectory_sweden_oak(
         species={TreeSpecies.Sweden.quercus_robur},
         fn=johansson_2013_height_trajectory_sweden_oak,
     )
+
+
+# ---------------------------------------------------------------------------
+# Introspection
+# ---------------------------------------------------------------------------
+
+
+class _Descriptor:
+    """FormulaModuleDescriptor for Johansson et al. (2013)."""
+
+    @property
+    def component_id(self):
+        return "johansson_2013"
+
+    @property
+    def source(self):
+        from pyforestry.simulation.contracts import SourceReference
+
+        return SourceReference(
+            author="Johansson, U., Eko, P.-M., Elfving, B., Johansson, T., Nilsson, U.",
+            year=2013,
+            title="Nya hojdutvecklingskurvor for bonitering",
+        )
+
+    @property
+    def species_groups(self):
+        return {}
+
+    @property
+    def units(self):
+        return {
+            "dominant_height_m": "m",
+            "age_years": "years",
+            "return": "SiteIndexValue (m)",
+        }
+
+    @property
+    def kernel_names(self):
+        return [
+            "johansson_2013_height_trajectory_sweden_beech",
+            "johansson_2013_height_trajectory_sweden_hybrid_aspen",
+            "johansson_2013_height_trajectory_sweden_larch",
+            "johansson_2013_height_trajectory_sweden_oak",
+        ]
+
+
+DESCRIPTOR = _Descriptor()

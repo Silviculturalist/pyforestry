@@ -34,3 +34,41 @@ def johnsson_1953_volume_hybrid_aspen(diameter_cm, height_m):
     # Convert volume to m³
     volume_m3 = volume_dm3 / 1000  # 1000 dm³ in 1 m³
     return volume_m3
+
+
+# ---------------------------------------------------------------------------
+# Introspection
+# ---------------------------------------------------------------------------
+
+
+class _Descriptor:
+    """FormulaModuleDescriptor for Johnsson, H. (1953)."""
+
+    @property
+    def component_id(self):
+        return "johnsson_1953_volume"
+
+    @property
+    def source(self):
+        from pyforestry.simulation.contracts import SourceReference
+
+        return SourceReference(
+            author="Johnsson, H.",
+            year=1953,
+            title="Hybridaspens ungdomsutveckling",
+        )
+
+    @property
+    def species_groups(self):
+        return {}
+
+    @property
+    def units(self):
+        return {}
+
+    @property
+    def kernel_names(self):
+        return ["johnsson_1953_volume_hybrid_aspen"]
+
+
+DESCRIPTOR = _Descriptor()

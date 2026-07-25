@@ -1,3 +1,8 @@
+"""Enums utilities and interfaces.
+
+Source: Swedish forestry domain models and helper implementations curated in pyforestry.
+"""
+
 from enum import Enum
 from typing import Optional
 
@@ -15,6 +20,12 @@ from .sweden_site_primitives import (
 
 
 class SwedenFieldLayer(Enum):
+    """Sweden field layer container and behavior.
+
+    Source:
+        Swedish forestry domain models and helper implementations curated in pyforestry.
+    """
+
     HIGH_HERB_WITHOUT_SHRUBS = Vegetation(1, "Högört utan ris", "Rich-herb without shrubs", 4)
     HIGH_HERB_WITH_SHRUBS_BLUEBERRY = Vegetation(
         2, "Högört med ris/blåbär", "Rich-herb with shrubs/bilberry", 2.5
@@ -44,6 +55,12 @@ class SwedenFieldLayer(Enum):
 
 
 class SwedenBottomLayer(Enum):
+    """Sweden bottom layer container and behavior.
+
+    Source:
+        Swedish forestry domain models and helper implementations curated in pyforestry.
+    """
+
     LICHEN_TYPE = BottomLayerType(1, "Lichen type", "Lavtyp")
     LICHEN_RICH_BOGMOSS = BottomLayerType(2, "Lichen-rich bogmoss type", "Lavrik vitmosstyp")
     LICHEN_RICH = BottomLayerType(3, "Lichen-rich", "Lavrik typ")
@@ -53,12 +70,24 @@ class SwedenBottomLayer(Enum):
 
 
 class SwedenSoilWater(Enum):
+    """Sweden soil water container and behavior.
+
+    Source:
+        Swedish forestry domain models and helper implementations curated in pyforestry.
+    """
+
     SELDOM_NEVER = SoilWaterCat(1, "saknas", "Seldom/never")
     SHORTER_PERIODS = SoilWaterCat(2, "kortare perioder", "Shorter periods")
     LONGER_PERIODS = SoilWaterCat(3, "längre perioder", "Longer periods")
 
 
 class SwedenSoilDepth(Enum):
+    """Sweden soil depth container and behavior.
+
+    Source:
+        Swedish forestry domain models and helper implementations curated in pyforestry.
+    """
+
     DEEP = SoilDepthCat(
         1, "Mäktigt >70 cm. Inga synliga hällar", "Deep >70cm. No visible stone outcrops."
     )
@@ -83,11 +112,17 @@ class SwedenSoilDepth(Enum):
 
 
 class SwedenSoilTextureTill(Enum):
+    """Sweden soil texture till container and behavior.
+
+    Source:
+        Swedish forestry domain models and helper implementations curated in pyforestry.
+    """
+
     BOULDER = SoilTextureCategory(1, "Stenig/blockig morän", "Boulder rich/stony till", "Boulder")
     GRAVEL = SoilTextureCategory(2, "Grusig morän", "Gravelly till", "Gravel")
     SANDY = SoilTextureCategory(3, "Sandig morän", "Sandy till", "Coarse sand")
     SANDY_MOIG = SoilTextureCategory(4, "Sandig-moig morän", "Sandy-silty till", "Medium sand")
-    SILTY_SAND = SoilTextureCategory(5, "Sandig-moig morän", "Silty-sandy till", "Fine sand")
+    SILTY_SAND = SoilTextureCategory(5, "Finmoig morän", "Silty-sandy till", "Fine sand")
     COARSE_SILTY = SoilTextureCategory(6, "Moig morän", "Coarse silty till", "Coarse silt")
     FINE_SILTY = SoilTextureCategory(7, "Mjälig morän", "Fine silty till", "Fine silt")
     CLAY = SoilTextureCategory(8, "Lerig morän", "Clayey till", "Clay")
@@ -95,6 +130,12 @@ class SwedenSoilTextureTill(Enum):
 
 
 class SwedenSoilTextureSediment(Enum):
+    """Sweden soil texture sediment container and behavior.
+
+    Source:
+        Swedish forestry domain models and helper implementations curated in pyforestry.
+    """
+
     BOULDER = SoilTextureCategory(1, "Sten/block", "Boulders/stones", "Boulder")
     GRAVEL = SoilTextureCategory(2, "Grus", "Gravel", "Gravel")
     COARSE_SAND = SoilTextureCategory(3, "Grovsand", "Coarse sand", "Coarse sand")
@@ -107,6 +148,12 @@ class SwedenSoilTextureSediment(Enum):
 
 
 class SwedenSoilMoisture(Enum):
+    """Sweden soil moisture container and behavior.
+
+    Source:
+        Swedish forestry domain models and helper implementations curated in pyforestry.
+    """
+
     DRY = SoilMoistureData(1, "torr", "Dry (subsoil water depth >2 m)")
     MESIC = SoilMoistureData(2, "frisk", "Mesic (subsoil water depth = 1-2 m)")
     MESIC_MOIST = SoilMoistureData(3, "frisk-fuktig", "Mesic-moist (subsoil water depth <1 m)")
@@ -117,6 +164,12 @@ class SwedenSoilMoisture(Enum):
 
 
 class SwedenPeatHumification(Enum):
+    """Sweden peat humification container and behavior.
+
+    Source:
+        Swedish forestry domain models and helper implementations curated in pyforestry.
+    """
+
     NONE = PeatHumificationCat(0, "ingen", "None")
     LOW = PeatHumificationCat(1, "låg", "Low")
     MEDIUM = PeatHumificationCat(2, "medium", "Medium")
@@ -124,6 +177,12 @@ class SwedenPeatHumification(Enum):
 
 
 class SwedenCounty(Enum):
+    """Sweden county container and behavior.
+
+    Source:
+        Swedish forestry domain models and helper implementations curated in pyforestry.
+    """
+
     NORRBOTTENS_LAPPMARK = CountyData(1, "Norrbottens lappmark (BD lappm)")
     NORRBOTTENS_KUSTLAND = CountyData(2, "Norrbottens kustland (BD kust)")
     VASTERBOTTENS_LAPPMARK = CountyData(3, "Västerbottens lappmark (AC lappm)")
@@ -167,7 +226,38 @@ class SwedenCounty(Enum):
         return None  # Return None if code not found
 
 
+def county_flags_syz_t_area(county: Optional[SwedenCounty]) -> tuple[int, int, int]:
+    """Return (gotland, syz_area, t_area) flags for Appendix 1 regeneration functions.
+
+    SYZ-area corresponds to old county codes S, Y, Z (X is excluded). We map
+    those to the modern enum members below.
+    """
+
+    if county is None:
+        return (0, 0, 0)
+
+    gotland = int(county == SwedenCounty.GOTLAND)
+    syz_area = int(
+        county
+        in {
+            SwedenCounty.VARMLAND,  # S
+            SwedenCounty.VASTERNORRLAND_ANGERMANLANDS,  # Y Angermanland
+            SwedenCounty.VASTERNORRLAND_MEDELPADS,  # Y Medelpad
+            SwedenCounty.JAMTLAND_JAMTLANDS,  # Z Jamtland
+            SwedenCounty.JAMTLAND_HARJEDALENS,  # Z Harjedalen
+        }
+    )
+    t_area = int(county == SwedenCounty.OREBRO)  # T-area
+    return (gotland, syz_area, t_area)
+
+
 class SwedenClimateZone(Enum):
+    """Sweden climate zone container and behavior.
+
+    Source:
+        Swedish forestry domain models and helper implementations curated in pyforestry.
+    """
+
     M1 = ClimateZoneData(1, "M1", "Maritime, West coast")
     M2 = ClimateZoneData(2, "M2", "Maritime, East coast")
     M3 = ClimateZoneData(3, "M3", "Maritime, Mountain range")
@@ -185,6 +275,12 @@ class SwedenClimateZone(Enum):
 
 
 class Sweden:
+    """Sweden container and behavior.
+
+    Source:
+        Swedish forestry domain models and helper implementations curated in pyforestry.
+    """
+
     FieldLayer = SwedenFieldLayer
     BottomLayer = SwedenBottomLayer
     SoilWater = SwedenSoilWater

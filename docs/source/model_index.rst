@@ -1,0 +1,384 @@
+Model index
+===========
+
+Auto-generated from ``pyforestry.catalog`` (74 models). Regenerate with ``python scripts/generate_model_index.py``.
+
+.. list-table::
+   :header-rows: 1
+   :widths: 24 8 8 10 42
+
+   * - Component id
+     - Kind
+     - Region
+     - Domain
+     - Source
+   * - ``braastad_1966_bark``
+     - formula
+     - norway
+     - bark
+     - Braastad, H. (1966) Volumtabeller for bjoerk
+   * - ``brantseg_1967_bark``
+     - formula
+     - norway
+     - bark
+     - Brantseg, A. (1967) Furu soennafjells. Kubering av staaende skog
+   * - ``hansen_2023_bark``
+     - formula
+     - norway
+     - bark
+     - Hansen, E. (2023) Bark-thickness equations for Norway
+   * - ``vestjordet_1967_bark``
+     - formula
+     - norway
+     - bark
+     - Vestjordet, E. (1967) Funksjoner og tabeller for kubering av staaende gran
+   * - ``allen_2020_growth``
+     - formula
+     - norway
+     - growth
+     - Allen, M.G. II; Anton-Fernandez, C.; Astrup, R. (2020) A stand-level growth and yield model for thinned and unthinned managed Norway spruce forests in Norway. Scand. J. For. Res. 35(5-6):238-251
+   * - ``allen_2020_model``
+     - model
+     - norway
+     - growth
+     - Allen, M.G. II; Anton-Fernandez, C.; Astrup, R. (2020) A stand-level growth and yield model for Norway spruce forests in Norway (composes allen_2020_growth)
+   * - ``bollandsas_2008_growth``
+     - formula
+     - norway
+     - growth
+     - Bollandsas, O.M., Buongiorno, J. & Gobakken, T. (2008) Predicting the growth of stands of trees of mixed species and size: a matrix model for Norway. Scand. J. For. Res. 23(2):167-178 (submodels from Bollandsas 2007)
+   * - ``bollandsas_2008_model``
+     - model
+     - norway
+     - growth
+     - Bollandsas, O.M., Buongiorno, J. & Gobakken, T. (2008) Predicting the growth of stands of trees of mixed species and size: A matrix model for Norway (composes bollandsas_2008_growth)
+   * - ``kuehne_2022_growth``
+     - formula
+     - norway
+     - growth
+     - Kuehne, C. et al. (2022) A stand-level growth and yield model for thinned and unthinned even-aged Scots pine forests in Norway. Silva Fennica 56(1) art. 10627 (stem density, basal area, volume and thinning, Eqs. 6-10)
+   * - ``kuehne_2022_model``
+     - model
+     - norway
+     - growth
+     - Kuehne, C. et al. (2022) A stand-level growth and yield model for thinned and unthinned even-aged Scots pine forests in Norway. Silva Fennica 56(1) art. 10627 (composes kuehne_2022_siteindex)
+   * - ``maleki_2022_growth``
+     - formula
+     - norway
+     - growth
+     - Maleki, K. et al. (2022) Stand-level growth models for long-term projections of the main species groups in Norway
+   * - ``maleki_2022_model``
+     - model
+     - norway
+     - growth
+     - Maleki, K. et al. (2022) Stand-level growth models for long-term projections of the main species groups in Norway (composes maleki_2022_growth)
+   * - ``kuehne_2022_siteindex``
+     - formula
+     - norway
+     - siteindex
+     - Kuehne, C. et al. (2022) A stand-level growth and yield model for thinned and unthinned even-aged Scots pine forests in Norway. Silva Fennica 56(1) art. 10627 (dominant-height / site-index sub-model, Eq. 5)
+   * - ``sharma_2011_siteindex``
+     - formula
+     - norway
+     - siteindex
+     - Sharma, R.P. (2011) Height trajectories for Norway spruce and Scots pine in Norway.
+   * - ``tveite_siteindex``
+     - formula
+     - norway
+     - siteindex
+     - Tveite, B. (1977) Bonitetskurver for gran
+   * - ``hansen_2023_taper``
+     - formula
+     - norway
+     - taper
+     - Hansen, E. (2023) Taper model for spruce, pine, and birch in Norway
+   * - ``braastad_1966_volume``
+     - formula
+     - norway
+     - volume
+     - Braastad, H. (1966) Volumtabeller for bjoerk
+   * - ``brantseg_1967_volume``
+     - formula
+     - norway
+     - volume
+     - Brantseg, A. (1967) Furu soennafjells. Kubering av staaende skog
+   * - ``opdahl_1989_volume``
+     - formula
+     - norway
+     - volume
+     - Opdahl, H.; Skroppa, T. (1989) Aspen tree-volume equation for Norway
+   * - ``vestjordet_1967_volume``
+     - formula
+     - norway
+     - volume
+     - Vestjordet, E. (1967) Funksjoner og tabeller for kubering av staaende gran
+   * - ``hannrup_2004_bark``
+     - formula
+     - sweden
+     - bark
+     - Hannrup, B. (2004) Bark thickness functions for pine and spruce
+   * - ``soderberg_1992_bark``
+     - formula
+     - sweden
+     - bark
+     - Söderberg, U. (1992) Funktioner för skogsbruksplanering
+   * - ``marklund_1988_biomass``
+     - formula
+     - sweden
+     - biomass
+     - Marklund, L.-G. (1988) Biomassafunktioner för tall, gran och björk i Sverige
+   * - ``petersson_1999_biomass``
+     - formula
+     - sweden
+     - biomass
+     - Petersson, H. (1999) Biomassafunktioner för trädfaktorer
+   * - ``petersson_stahl_2006_biomass``
+     - formula
+     - sweden
+     - biomass
+     - Petersson, H. & Ståhl, G. (2006) Below-ground biomass functions
+   * - ``eko_1985_model``
+     - model
+     - sweden
+     - growth
+     - Eko, P.M. (1985) En produktionsmodell for skog i Sverige
+   * - ``elfving_1982_model``
+     - model
+     - sweden
+     - growth
+     - Elfving, B. (1982) Hugins ungskogstaxering 1976-1979
+   * - ``elfving_2009_thinning_response``
+     - formula
+     - sweden
+     - growth
+     - Elfving, B. (2009) Thinning response function (GG-trials)
+   * - ``elfving_2010_growth``
+     - formula
+     - sweden
+     - growth
+     - Elfving, B. (2010) Growth modelling in the Heureka system
+   * - ``elfving_2010_model``
+     - model
+     - sweden
+     - growth
+     - Elfving, B. (2010) Growth modelling in the Heureka system (composes elfving_2010_growth)
+   * - ``eriksson_1976_model``
+     - model
+     - sweden
+     - growth
+     - Eriksson, H. (1976) Granens produktion i Sverige
+   * - ``nystrom_1987_model``
+     - model
+     - sweden
+     - growth
+     - Nyström, K. & Söderberg, U. (1987) Tillväxtberäkningen för ungskog i Hugin-systemet
+   * - ``persson_1992_model``
+     - model
+     - sweden
+     - growth
+     - Persson, O. A. (1992) En produktionsmodell för tallskog i Sverige
+   * - ``petterson_1955_model``
+     - model
+     - sweden
+     - growth
+     - Petterson, H. (1955) Barrskogens volymproduktion (composes naslund_1947_volume)
+   * - ``soderberg_1986_growth``
+     - formula
+     - sweden
+     - growth
+     - Söderberg, U. (1986) Funktioner för skogliga produktionsprognoser
+   * - ``soderberg_1986_model``
+     - model
+     - sweden
+     - growth
+     - Söderberg, U. (1986) Funktioner för skogliga produktionsprognoser (composes soderberg_1986_growth)
+   * - ``nystrom_2000_height``
+     - formula
+     - sweden
+     - height
+     - Nyström, K. (2000) Funktioner för att skatta höjdtillväxten i ungskog
+   * - ``soderberg_1992_height``
+     - formula
+     - sweden
+     - height
+     - Söderberg, U. (1992) Funktioner för skogsbruksplanering
+   * - ``wikberg_2004_ingrowth``
+     - formula
+     - sweden
+     - ingrowth
+     - Wikberg, P-E. (2004) Occurrence, morphology and growth of understory saplings in Swedish forests, doctoral thesis, Acta Universitatis Agriculturae Sueciae, SLU, Umeå
+   * - ``bengtsson_mortality_calibration``
+     - formula
+     - sweden
+     - mortality
+     - Bengtsson, G. (1978) Beräkning av den naturliga avgången i avverkningsberäkningarna för 1973 års skogsutrednings slutbetänkande
+   * - ``elfving_2013_mortality``
+     - formula
+     - sweden
+     - mortality
+     - Elfving, B. (2013) Single-tree mortality functions for the Swedish forest
+   * - ``fridman_stahl_2001_mortality``
+     - formula
+     - sweden
+     - mortality
+     - Fridman, J. & Ståhl, G. (2001) A three-step approach for modelling tree mortality in Swedish forests
+   * - ``naslund_1986_damage``
+     - formula
+     - sweden
+     - mortality
+     - Näslund, B. (1986) Simulation of damage and mortality in young stands
+   * - ``retained_trees_mortality``
+     - formula
+     - sweden
+     - mortality
+     - (none) (0) Retained-tree mortality window selection
+   * - ``root_rot_thor_stahl_stenlid_2005``
+     - formula
+     - sweden
+     - mortality
+     - Thor, M., Ståhl, G. & Stenlid, J. (2005) Modelling root rot incidence in Sweden using tree, site and stand variables
+   * - ``siipilehto_2020_mortality``
+     - formula
+     - sweden
+     - mortality
+     - Siipilehto, J., Allen, M., Nilsson, U., Brunner, A., Huuskonen, S., Haikarainen, S., Subramanian, N., Antón-Fernández, C., Holmström, E., Andreassen, K. & Hynynen, J. (2020) Stand-level mortality models for Nordic boreal forests
+   * - ``soderberg_1986_mortality_calibration``
+     - formula
+     - sweden
+     - mortality
+     - Söderberg, U. (1986) Funktioner för skogliga produktionsprognoser: tillväxt och formhöjd för enskilda träd av inhemska trädslag i Sverige
+   * - ``Elfving1992Regeneration``
+     - formula
+     - sweden
+     - regeneration
+     - Elfving, B. (1992) Regeneration quality predictions
+   * - ``elfving_hagglund_1975_model``
+     - model
+     - sweden
+     - regeneration
+     - Elfving, B., Hägglund, B. (1975) Utgångslägen för produktionsprognoser: Tall och gran i Sverige
+   * - ``agestam_1985_siteindex``
+     - formula
+     - sweden
+     - siteindex
+     - Agestam, E. (1985) A growth simulator for mixed stands of pine, spruce and birch in Sweden
+   * - ``carbonnier_1975_siteindex``
+     - formula
+     - sweden
+     - siteindex
+     - Carbonnier, C. (1975) Production of cultivated European beech (Fagus sylvatica) in southern Sweden
+   * - ``eko_2008_siteindex``
+     - formula
+     - sweden
+     - siteindex
+     - Ekö, P.-M. (2008) Current growth differences of Norway spruce (Picea abies), Scots pine (Pinus sylvestris) and birch (Betula pendula and Betula pubescens) in different regions in Sweden
+   * - ``elfving_kiviste_1997``
+     - formula
+     - sweden
+     - siteindex
+     - Elfving, B., Kiviste, A. (1997) Construction of site index equations for Pinus sylvestris L. using permanent plot data in Sweden
+   * - ``eriksson_1997``
+     - formula
+     - sweden
+     - siteindex
+     - Eriksson, H., Johansson, U., Kiviste, A. (1997) A site-index model for pure and mixed stands of Betula pendula and Betula pubescens in Sweden
+   * - ``hagglund_1970_siteindex``
+     - formula
+     - sweden
+     - siteindex
+     - Hägglund, B. (1970) Site index curves for Scots pine and Norway spruce in Sweden
+   * - ``hagglund_1979_siteindex``
+     - formula
+     - sweden
+     - siteindex
+     - Hägglund, B. & Lundmark, J.-E. (1979) Ett system för bonitering av skogsmark - analys, kontroll och diskussion inför praktisk tillämpning (site index estimation by site factors for Scots pine and Norway spruce in Sweden)
+   * - ``hagglund_1981_siteindex``
+     - formula
+     - sweden
+     - siteindex
+     - Hägglund, B. (1981) Site index to productivity (mean annual volume growth at culmination) translation
+   * - ``hagglund_remrod_1977``
+     - formula
+     - sweden
+     - siteindex
+     - Hagglund, B., Remrod, J. (1977) Ovre hojdens utveckling i bestand med Pinus contorta
+   * - ``johansson_1996``
+     - formula
+     - sweden
+     - siteindex
+     - Johansson, T. (1996) Site Index Curves for European Aspen (Populus tremula L.) Growing on Forest Land of Different Soils in Sweden
+   * - ``johansson_1999``
+     - formula
+     - sweden
+     - siteindex
+     - Johansson, T. (1999) Site Index Curves for Common Alder and Grey Alder Growing on Different Types of Forest Soil in Sweden
+   * - ``johansson_2011``
+     - formula
+     - sweden
+     - siteindex
+     - Johansson, T. (2011) Site index curves for Poplar growing on former farmland in Sweden
+   * - ``johansson_2013``
+     - formula
+     - sweden
+     - siteindex
+     - Johansson, U., Eko, P.-M., Elfving, B., Johansson, T., Nilsson, U. (2013) Nya hojdutvecklingskurvor for bonitering
+   * - ``jonson_1914_siteindex``
+     - formula
+     - sweden
+     - siteindex
+     - Jonson, T. (1914) Jonson site index (bonitet) classification from productivity
+   * - ``leijon_1979_siteindex``
+     - formula
+     - sweden
+     - siteindex
+     - Leijon, B. (1979) Site index translations between Scots pine and Norway spruce
+   * - ``tegnhammar_1992_adjusted_siteindex``
+     - formula
+     - sweden
+     - siteindex
+     - Tegnhammar, L. (1992) Om skattningen av ståndortsindex för gran - adjusted spruce site index from stand variables
+   * - ``tegnhammar_1992_siteindex``
+     - formula
+     - sweden
+     - siteindex
+     - Tegnhammar, L. (1992) Om skattningen av ståndortsindex för gran
+   * - ``edgren_1949_taper``
+     - formula
+     - sweden
+     - taper
+     - Edgren, V. & Nylinder, P. (1949) Edgren-Nylinder taper functions for Scots pine and Norway spruce.
+   * - ``andersson_1954_volume``
+     - formula
+     - sweden
+     - volume
+     - Andersson, S.-O. (1954) Funktioner och tabeller för kubering av småträd
+   * - ``brandel_1990_volume``
+     - formula
+     - sweden
+     - volume
+     - Brandel, G. (1990) Volymfunktioner för enskilda träd
+   * - ``carbonnier_1954_volume``
+     - formula
+     - sweden
+     - volume
+     - Carbonnier, C. (1954) Volymfunktioner för lärk
+   * - ``eriksson_1973_volume``
+     - formula
+     - sweden
+     - volume
+     - Eriksson, H. (1973) Volymfunktioner för asp och contortatall
+   * - ``johnsson_1953_volume``
+     - formula
+     - sweden
+     - volume
+     - Johnsson, H. (1953) Hybridaspens ungdomsutveckling
+   * - ``matern_1975_volume``
+     - formula
+     - sweden
+     - volume
+     - Matérn, B. (1975) Volymfunktioner för ek och bok
+   * - ``naslund_1947_volume``
+     - formula
+     - sweden
+     - volume
+     - Näslund, M. (1947) Funktioner och tabeller för kubering av stående träd

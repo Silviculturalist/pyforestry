@@ -1,11 +1,6 @@
 pyforestry.base package
 =======================
 
-.. automodule:: pyforestry.base
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Subpackages
 -----------
 
@@ -14,6 +9,15 @@ Subpackages
 
    pyforestry.base.helpers
    pyforestry.base.pricelist
+   pyforestry.base.simulation
    pyforestry.base.taper
    pyforestry.base.timber
    pyforestry.base.timber_bucking
+
+Module contents
+---------------
+
+.. automodule:: pyforestry.base
+   :members:
+   :undoc-members:
+   :show-inheritance:

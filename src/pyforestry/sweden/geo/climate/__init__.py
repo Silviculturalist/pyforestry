@@ -1,3 +1,8 @@
+"""Init   utilities and interfaces.
+
+Source: Internal pyforestry implementation.
+"""
+
 import os
 
 # Provide access to the climate shapefile

@@ -1,5 +1,6 @@
 import pytest
 
+import pyforestry.base.helpers as helpers
 from pyforestry.base.helpers import AngleCount, CircularPlot
 from pyforestry.base.helpers.bucking import BuckingResult
 from pyforestry.base.helpers.primitives import (
@@ -44,12 +45,12 @@ def test_bucking_result_plot_empty():
         timber_price_by_quality=[0],
         vol_fub_5cm=0.0,
         vol_sk_ub=0.0,
-        DBH_cm=10,
+        dbh_cm=10,
         height_m=20,
         stump_height_m=0.3,
         diameter_stump_cm=12,
-        taperDiams_cm=[10, 8],
-        taperHeights_m=[0.3, 2.0],
+        taper_diameters_cm=[10, 8],
+        taper_heights_m=[0.3, 2.0],
         sections=[],
     )
     with pytest.raises(ValueError):
@@ -97,3 +98,11 @@ def test_anglecount_update_series_new_species():
     ac.update_series(sp2)
     assert len(ac.species) == 2
     assert ac.value[ac.species.index(sp2)] == 1
+
+
+def test_helpers_getattr_simulation_exports():
+    ctx_cls = helpers.SimulationContext
+    assert ctx_cls.__name__ == "SimulationContext"
+    missing_attr = "missing_export"
+    with pytest.raises(AttributeError):
+        getattr(helpers, missing_attr)

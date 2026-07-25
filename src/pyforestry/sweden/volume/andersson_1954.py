@@ -1,3 +1,8 @@
+"""Andersson 1954 utilities and interfaces.
+
+Source: Swedish forestry domain models and helper implementations curated in pyforestry.
+"""
+
 import math
 
 
@@ -111,3 +116,46 @@ def andersson_1954_volume_small_trees_spruce(diameter_cm, height_m):
         + 0.01712 * (diameter_cm**2) * height_m
         + 0.008905 * diameter_cm * (height_m**2)
     ) / 1000
+
+
+# ---------------------------------------------------------------------------
+# Introspection
+# ---------------------------------------------------------------------------
+
+
+class _Descriptor:
+    """FormulaModuleDescriptor for Andersson, S.-O. (1954)."""
+
+    @property
+    def component_id(self):
+        return "andersson_1954_volume"
+
+    @property
+    def source(self):
+        from pyforestry.simulation.contracts import SourceReference
+
+        return SourceReference(
+            author="Andersson, S.-O.",
+            year=1954,
+            title="Funktioner och tabeller för kubering av småträd",
+        )
+
+    @property
+    def species_groups(self):
+        return {}
+
+    @property
+    def units(self):
+        return {}
+
+    @property
+    def kernel_names(self):
+        return [
+            "andersson_1954_volume_small_trees_birch_height_above_4_m",
+            "andersson_1954_volume_small_trees_birch_under_diameter_5_cm",
+            "andersson_1954_volume_small_trees_pine",
+            "andersson_1954_volume_small_trees_spruce",
+        ]
+
+
+DESCRIPTOR = _Descriptor()

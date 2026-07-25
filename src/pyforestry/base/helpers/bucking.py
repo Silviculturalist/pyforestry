@@ -7,7 +7,6 @@ from dataclasses import dataclass, field
 from enum import IntEnum
 from typing import Any, Iterator, List
 
-import matplotlib.pyplot as plt
 import numpy as np
 
 from pyforestry.base.taper import Taper
@@ -95,13 +94,48 @@ class BuckingResult(Mapping):
     timber_price_by_quality: List[float]
     vol_fub_5cm: float
     vol_sk_ub: float
-    DBH_cm: float
+    dbh_cm: float
     height_m: float
     stump_height_m: float
     diameter_stump_cm: float
-    taperDiams_cm: List[float]
-    taperHeights_m: List[float]
+    taper_diameters_cm: List[float]
+    taper_heights_m: List[float]
     sections: List[CrossCutSection] | None = field(default_factory=list)
+
+    @classmethod
+    def zero(cls, **known: Any) -> "BuckingResult":
+        """Return a well-formed zero-value result for a stem with no merchantable bucking.
+
+        Every value/volume field defaults to zero and the taper arrays to empty, so a
+        degenerate stem yields a fully-constructed :class:`BuckingResult` with
+        ``total_value == 0`` instead of a partially-built object. Any geometry actually
+        known at the call site (``species_group``, ``dbh_cm``, ``height_m``,
+        ``taper_diameters_cm`` ...) may be passed as keyword arguments to override the
+        corresponding defaults. The per-quality arrays are sized to ``QualityType`` so
+        they stay indexable by quality value.
+        """
+        defaults: dict[str, Any] = {
+            "species_group": "",
+            "total_value": 0.0,
+            "top_proportion": 0.0,
+            "dead_wood_proportion": 0.0,
+            "high_stump_volume_proportion": 0.0,
+            "high_stump_value_proportion": 0.0,
+            "last_cut_relative_height": 0.0,
+            "volume_per_quality": [0.0] * len(QualityType),
+            "timber_price_by_quality": [0.0] * len(QualityType),
+            "vol_fub_5cm": 0.0,
+            "vol_sk_ub": 0.0,
+            "dbh_cm": 0.0,
+            "height_m": 0.0,
+            "stump_height_m": 0.0,
+            "diameter_stump_cm": 0.0,
+            "taper_diameters_cm": [],
+            "taper_heights_m": [],
+            "sections": None,
+        }
+        defaults.update(known)
+        return cls(**defaults)
 
     def __getitem__(self, key: str) -> Any:
         """Return attribute ``key`` or raise ``KeyError``."""
@@ -122,10 +156,17 @@ class BuckingResult(Mapping):
         if not self.sections:
             raise ValueError("No sections available for plotting.")
 
+        try:
+            import matplotlib.pyplot as plt
+        except ImportError as exc:  # pragma: no cover - optional plotting dependency
+            raise ImportError(
+                "Plotting requires matplotlib; install it with `pip install pyforestry[plot]`."
+            ) from exc
+
         fig, ax = plt.subplots(figsize=(10, 6))
 
-        taper_heights = np.array(self.taperHeights_m, dtype=float)
-        taper_diams = np.array(self.taperDiams_cm, dtype=float)
+        taper_heights = np.array(self.taper_heights_m, dtype=float)
+        taper_diams = np.array(self.taper_diameters_cm, dtype=float)
         taper_x = (taper_heights - self.stump_height_m) * 10
         taper_y = taper_diams
 
@@ -188,7 +229,7 @@ class BuckingResult(Mapping):
             )
 
         ax.scatter(
-            (1.3 - self.stump_height_m) * 10, self.DBH_cm, color="red", label="Diameter @ 1.3 m"
+            (1.3 - self.stump_height_m) * 10, self.dbh_cm, color="red", label="Diameter @ 1.3 m"
         )
 
         ax.set_xlabel("Distance from stump (dm)")
@@ -203,7 +244,7 @@ class BuckingResult(Mapping):
         textstr = "\n".join(
             (
                 f"Species Group: {self.species_group}",
-                f"DBH: {self.DBH_cm:.1f} cm",
+                f"DBH: {self.dbh_cm:.1f} cm",
                 f"Height: {self.height_m:.1f} m",
                 f"Stump Height: {self.stump_height_m:.1f} m",
                 f"Stump Diameter: {self.diameter_stump_cm:.1f} cm",

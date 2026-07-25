@@ -1,3 +1,9 @@
+"""Matern 1975 utilities and interfaces.
+
+Source: Swedish forestry domain models and helper implementations curated in pyforestry.
+"""
+
+
 def matern_1975_volume_sweden_oak(diameter_cm, height_m):
     """
     Calculate the volume of Oak trees based on Matérn (1975).
@@ -69,3 +75,41 @@ def matern_1975_volume_sweden_beech(diameter_cm, height_m):
         + 0.00622 * diameter_cm * (height_m**2)
     )
     return volume / 1000
+
+
+# ---------------------------------------------------------------------------
+# Introspection
+# ---------------------------------------------------------------------------
+
+
+class _Descriptor:
+    """FormulaModuleDescriptor for Matérn, B. (1975)."""
+
+    @property
+    def component_id(self):
+        return "matern_1975_volume"
+
+    @property
+    def source(self):
+        from pyforestry.simulation.contracts import SourceReference
+
+        return SourceReference(
+            author="Matérn, B.",
+            year=1975,
+            title="Volymfunktioner för ek och bok",
+        )
+
+    @property
+    def species_groups(self):
+        return {}
+
+    @property
+    def units(self):
+        return {}
+
+    @property
+    def kernel_names(self):
+        return ["matern_1975_volume_sweden_oak", "matern_1975_volume_sweden_beech"]
+
+
+DESCRIPTOR = _Descriptor()

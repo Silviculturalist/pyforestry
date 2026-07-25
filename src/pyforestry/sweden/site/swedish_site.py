@@ -1,3 +1,8 @@
+"""Swedish Site utilities and interfaces.
+
+Source: Swedish forestry domain models and helper implementations curated in pyforestry.
+"""
+
 from dataclasses import dataclass, field
 from typing import Optional, Union
 
@@ -50,6 +55,11 @@ class SwedishSite(SiteBase):
     n_of_limes_norrlandicus: Optional[bool] = field(init=False, default=None)
 
     def __post_init__(self) -> None:
+        """Post init.
+
+        Source:
+            Swedish forestry domain models and helper implementations curated in pyforestry.
+        """
         from pyforestry.sweden.geo import RetrieveGeoCode
 
         # Compute county first

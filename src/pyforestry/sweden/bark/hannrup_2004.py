@@ -250,3 +250,44 @@ def Hannrup_2004_bark_picea_abies_sweden(
     db_mm_final = max(db_mm, 2.0)
 
     return db_mm_final
+
+
+# ---------------------------------------------------------------------------
+# Introspection
+# ---------------------------------------------------------------------------
+
+
+class _Descriptor:
+    """FormulaModuleDescriptor for Hannrup, B. (2004)."""
+
+    @property
+    def component_id(self):
+        return "hannrup_2004_bark"
+
+    @property
+    def source(self):
+        from pyforestry.simulation.contracts import SourceReference
+
+        return SourceReference(
+            author="Hannrup, B.",
+            year=2004,
+            title="Bark thickness functions for pine and spruce",
+        )
+
+    @property
+    def species_groups(self):
+        return {}
+
+    @property
+    def units(self):
+        return {}
+
+    @property
+    def kernel_names(self):
+        return [
+            "Hannrup_2004_bark_picea_abies_sweden",
+            "Hannrup_2004_bark_pinus_sylvestris_sweden",
+        ]
+
+
+DESCRIPTOR = _Descriptor()

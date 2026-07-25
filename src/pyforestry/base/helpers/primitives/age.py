@@ -117,3 +117,10 @@ class AgeMeasurement(float):
         """Return the inverse result of :py:meth:`__eq__`."""
         equal = self.__eq__(other)
         return NotImplemented if equal is NotImplemented else not equal
+
+    # Defining __eq__ sets __hash__ to None (unhashable). Restore hashing on the
+    # float value so instances stay usable as dict keys / set members; this is
+    # consistent with __eq__ (equality requires equal float value, so equal
+    # objects hash equally — two same-value/different-code ages may share a hash,
+    # which is a permitted collision).
+    __hash__ = float.__hash__

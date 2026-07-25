@@ -28,7 +28,10 @@ class CircularPlot:
     radius_m : float | None
         The radius of the circular plot in meters (if known).
     occlusion : float
-        Portion [0-1] of the stand to be adjusted for being outside of the stand. Adjustment is
+        Portion ``[0, 1)`` of the plot that falls outside the stand and so was never
+        observed. Per-hectare figures are computed against the visible area,
+        ``area_ha * (1 - occlusion)``, which scales the observed trees up to the
+        whole plot.
     area_m2 : float | None
         The area of the plot in m² (if known). Must supply either radius_m or area_m2.
     site : SiteBase | None
@@ -78,7 +81,10 @@ class CircularPlot:
         self.site = site
 
         if not 0 <= occlusion < 1:
-            raise ValueError("Plot must have [0,0.99] occlusion!")
+            raise ValueError(
+                f"occlusion must be in [0, 1) for plot {id}; got {occlusion}. "
+                "A fully occluded plot (1.0) observes nothing and cannot be scaled up."
+            )
         self.occlusion = occlusion
 
         self.AngleCount = AngleCount if AngleCount is not None else []

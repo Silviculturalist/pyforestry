@@ -18,10 +18,10 @@ def pricelist() -> Pricelist:
 
 def test_pulpwood_prices(pricelist):
     # Check pulp prices for correctness
-    assert pricelist.Pulp.getPulpwoodPrice("pinus sylvestris") == 250
-    assert pricelist.Pulp.getPulpwoodPrice("picea abies") == 265
-    assert pricelist.Pulp.getPulpwoodPrice("betula pendula") == 250
-    assert pricelist.Pulp.getPulpwoodPrice("NonExistingSpecies") == 200  # default price
+    assert pricelist.Pulp.get_pulpwood_price("pinus sylvestris") == 250
+    assert pricelist.Pulp.get_pulpwood_price("picea abies") == 265
+    assert pricelist.Pulp.get_pulpwood_price("betula pendula") == 250
+    assert pricelist.Pulp.get_pulpwood_price("NonExistingSpecies") == 200  # default price
 
 
 def test_timber_prices_pine(pricelist):

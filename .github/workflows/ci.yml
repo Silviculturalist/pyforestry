@@ -70,6 +70,12 @@ jobs:
       - name: Check formatting
         run: ruff format --check
 
+      - name: Lint (ruff check)
+        run: ruff check
+
+      - name: Architecture lint (AL001 + AL002)
+        run: python scripts/check_architecture_lint.py
+
       - name: Load coverage threshold
         run: echo "THRESHOLD=$(cat coverage_threshold.txt)" >> $GITHUB_ENV
 
@@ -205,6 +211,9 @@ jobs:
       - name: Generate API docs
         run: |
           sphinx-apidoc -f -o docs/source/api src/pyforestry
+
+      - name: Generate model index
+        run: python scripts/generate_model_index.py
 
       # MODIFIED STEP: Change to docs directory before building
       - name: Set docs destination

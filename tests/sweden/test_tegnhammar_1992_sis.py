@@ -24,7 +24,7 @@ def test_tegnhammar_si_returns_siteindexvalue():
     assert 0 < float(si) < 50
 
 
-def test_ditched_message_and_effect(capsys):
+def test_ditched_message_and_effect():
     params = dict(
         latitude=60.0,
         longitude=18.0,
@@ -38,12 +38,11 @@ def test_ditched_message_and_effect(capsys):
         peat_humification=Sweden.PeatHumification.NONE,
     )
 
-    si_ditch = tegnhammar_1992_adjusted_spruce_si_by_stand_variables(
-        **params,
-        ditched=True,
-    )
-    out, _ = capsys.readouterr()
-    assert "Ditched only defined for peat or moist soils" in out
+    with pytest.warns(UserWarning, match="Ditched only defined for peat or moist soils"):
+        si_ditch = tegnhammar_1992_adjusted_spruce_si_by_stand_variables(
+            **params,
+            ditched=True,
+        )
 
     si_no_ditch = tegnhammar_1992_adjusted_spruce_si_by_stand_variables(
         **params,
@@ -101,6 +100,51 @@ def test_peat_humification_levels(monkeypatch):
     assert base - low == pytest.approx(22.450707 / 100)
     assert base - medium == pytest.approx(10.735284 / 100)
     assert base - high == pytest.approx(2.872332 / 100)
+
+
+def test_lateral_water_shorter_and_longer_periods(monkeypatch):
+    """Regression: the lateral-water flags were mapped off-by-one against
+    SwedenSoilWater (SHORTER=2, LONGER=3). The longer-periods flag tested ==4
+    (unreachable -> dead) and the shorter-periods flag tested ==3 (the longer code),
+    so SHORTER contributed nothing and LONGER got the wrong coefficient. Each class
+    must now add its own published term (+8.004164 / +12.557257, /100)."""
+    from pyforestry.sweden.geo.geo import RetrieveGeoCode
+
+    monkeypatch.setattr(RetrieveGeoCode, "getDistanceToCoast", lambda self, lon, lat: 0)
+
+    params = dict(
+        latitude=58.0,
+        longitude=18.0,
+        altitude=100.0,
+        vegetation=Sweden.FieldLayer.BILBERRY,
+        ground_layer=Sweden.BottomLayer.FRESH_MOSS,
+        aspect_main=0,
+        soil_moisture=Sweden.SoilMoistureEnum.MESIC,
+        soil_depth=Sweden.SoilDepth.DEEP,
+        soil_texture=Sweden.SoilTextureTill.SANDY,
+        humidity=80.0,
+    )
+
+    si_seldom = float(
+        tegnhammar_1992_adjusted_spruce_si_by_stand_variables(
+            lateral_water=Sweden.SoilWater.SELDOM_NEVER, **params
+        )
+    )
+    si_shorter = float(
+        tegnhammar_1992_adjusted_spruce_si_by_stand_variables(
+            lateral_water=Sweden.SoilWater.SHORTER_PERIODS, **params
+        )
+    )
+    si_longer = float(
+        tegnhammar_1992_adjusted_spruce_si_by_stand_variables(
+            lateral_water=Sweden.SoilWater.LONGER_PERIODS, **params
+        )
+    )
+
+    assert si_shorter - si_seldom == pytest.approx(8.004164 / 100)
+    assert si_longer - si_seldom == pytest.approx(12.557257 / 100)
+    # longer periods must exceed shorter periods (both were previously mis-mapped)
+    assert si_longer > si_shorter
 
 
 def test_adjusted_si_formula():

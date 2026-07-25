@@ -531,3 +531,41 @@ class NaslundFormFactor:
                 ) / 1000
             else:
                 return (384.88 + 344.14 * (1 / height_m) + 55.34 * (height_m / diameter_cm)) / 1000
+
+
+# ---------------------------------------------------------------------------
+# Introspection
+# ---------------------------------------------------------------------------
+
+
+class _Descriptor:
+    """FormulaModuleDescriptor for Näslund, M. (1947)."""
+
+    @property
+    def component_id(self):
+        return "naslund_1947_volume"
+
+    @property
+    def source(self):
+        from pyforestry.simulation.contracts import SourceReference
+
+        return SourceReference(
+            author="Näslund, M.",
+            year=1947,
+            title="Funktioner och tabeller för kubering av stående träd",
+        )
+
+    @property
+    def species_groups(self):
+        return {}
+
+    @property
+    def units(self):
+        return {}
+
+    @property
+    def kernel_names(self):
+        return ["NaslundVolume", "NaslundFormFactor"]
+
+
+DESCRIPTOR = _Descriptor()

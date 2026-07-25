@@ -1,3 +1,8 @@
+"""Petersson Stahl 2006 utilities and interfaces.
+
+Source: Swedish forestry domain models and helper implementations curated in pyforestry.
+"""
+
 import numpy as np
 
 
@@ -332,13 +337,57 @@ class PeterssonStahl2006:
         diameter_mm = kwargs.get("diameter_cm", 0) * 10  # Convert cm to mm
         kwargs["diameter_mm"] = diameter_mm
 
-        for func in functions:
+        # The candidate lists are ordered simplest-first (model category i, ii, iii).
+        # Petersson & Ståhl (2006, p. 92) recommend applying the most detailed model
+        # category "whenever possible", so select the most detailed model (iii, then
+        # ii, then i) whose required inputs are all supplied -- iterate in reverse.
+        for func in reversed(functions):
             try:
                 # Match arguments dynamically and evaluate the function
                 func_args = func.__code__.co_varnames[: func.__code__.co_argcount]
                 args = {key: value for key, value in kwargs.items() if key in func_args}
+                if any(name not in args for name in func_args):
+                    continue  # a required predictor is missing; try a simpler model
                 return np.exp(func(**args)) / 1000  # return kg
             except TypeError:
                 continue
 
         raise ValueError("No suitable function matched the provided arguments.")
+
+
+# ---------------------------------------------------------------------------
+# Introspection
+# ---------------------------------------------------------------------------
+
+
+class _Descriptor:
+    """FormulaModuleDescriptor for Petersson, H. & Ståhl, G. (2006)."""
+
+    @property
+    def component_id(self):
+        return "petersson_stahl_2006_biomass"
+
+    @property
+    def source(self):
+        from pyforestry.simulation.contracts import SourceReference
+
+        return SourceReference(
+            author="Petersson, H. & Ståhl, G.",
+            year=2006,
+            title="Below-ground biomass functions",
+        )
+
+    @property
+    def species_groups(self):
+        return {}
+
+    @property
+    def units(self):
+        return {}
+
+    @property
+    def kernel_names(self):
+        return ["PeterssonStahl2006"]
+
+
+DESCRIPTOR = _Descriptor()

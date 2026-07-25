@@ -1,12 +1,6 @@
 pyforestry.base.helpers.primitives package
 ==========================================
 
-.. automodule:: pyforestry.base.helpers.primitives
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :noindex:
-
 Submodules
 ----------
 
@@ -22,6 +16,14 @@ pyforestry.base.helpers.primitives.area\_aggregates module
 ----------------------------------------------------------
 
 .. automodule:: pyforestry.base.helpers.primitives.area_aggregates
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyforestry.base.helpers.primitives.bawad module
+-----------------------------------------------
+
+.. automodule:: pyforestry.base.helpers.primitives.bawad
    :members:
    :undoc-members:
    :show-inheritance:
@@ -78,6 +80,14 @@ pyforestry.base.helpers.primitives.volume module
 ------------------------------------------------
 
 .. automodule:: pyforestry.base.helpers.primitives.volume
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: pyforestry.base.helpers.primitives
    :members:
    :undoc-members:
    :show-inheritance:

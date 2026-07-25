@@ -1,5 +1,8 @@
 """Convenience imports for common helper types."""
 
+from importlib import import_module
+from typing import TYPE_CHECKING
+
 # Suggested pyforestry/Helpers/__init__.py
 # ruff: noqa: F401, F403, F405
 # isort: off
@@ -20,6 +23,14 @@ from .tree_species import (
 
 # From Primitives.py
 from .primitives import *  # noqa: F401,F403
+from .tree_metrics import basal_area_larger
+from .height_models import (
+    CurveHeightSource,
+    MeasuredHeightSource,
+    NaslundHeightCurve,
+    resolve_height_source,
+)
+from .top_height import compute_top_height
 from .tree import Tree
 from .bitterlich_angle_count import AngleCount, AngleCountAggregator
 from .plot import CircularPlot
@@ -34,6 +45,48 @@ from .bucking import (
 )
 
 # isort: on
+
+_SIMULATION_EXPORTS = [
+    "SimulationContext",
+    "ActionSpec",
+    "GrowthModel",
+    "ExampleStandGeneralModel",
+    "Requirements",
+    "SimulationSetup",
+    "TriggerSpec",
+    "ScheduledOp",
+    "ContextEnsemble",
+    "PythonEngine",
+    "BatchEngine",
+    "AdapterRegistry",
+    "AngleCountToPseudoTreesAdapter",
+    "AngleCountToSpatialPseudoTreesAdapter",
+    "AngleCountToDiameterClassAdapter",
+    "TreeListToDiameterClassAdapter",
+    "TreeListToSpatialAdapter",
+]
+_SIMULATION_EXPORT_SET = set(_SIMULATION_EXPORTS)
+
+if TYPE_CHECKING:  # pragma: no cover - for static checkers only
+    from pyforestry.base.simulation import (  # noqa: F401
+        ActionSpec,
+        AdapterRegistry,
+        AngleCountToDiameterClassAdapter,
+        AngleCountToPseudoTreesAdapter,
+        AngleCountToSpatialPseudoTreesAdapter,
+        BatchEngine,
+        ContextEnsemble,
+        ExampleStandGeneralModel,
+        GrowthModel,
+        PythonEngine,
+        Requirements,
+        ScheduledOp,
+        SimulationContext,
+        SimulationSetup,
+        TreeListToDiameterClassAdapter,
+        TreeListToSpatialAdapter,
+        TriggerSpec,
+    )
 
 __all__ = [
     # TreeSpecies components
@@ -50,6 +103,10 @@ __all__ = [
     "Age",
     "AgeMeasurement",
     "Diameter_cm",
+    "diameter_to_basal_area_cm2",
+    "basal_area_cm2_to_diameter_cm",
+    "diameter_growth_to_basal_area_growth_cm2",
+    "basal_area_growth_cm2_to_diameter_growth_cm",
     "Position",
     "SiteIndexValue",
     "StandBasalArea",
@@ -58,11 +115,18 @@ __all__ = [
     "TopHeightDefinition",
     "TopHeightMeasurement",
     "QuadraticMeanDiameter",
+    "LoreysMeanHeight",
     "AtomicVolume",
     "CompositeVolume",
     "AngleCount",
     "AngleCountAggregator",
     "Tree",
+    "basal_area_larger",
+    "NaslundHeightCurve",
+    "MeasuredHeightSource",
+    "CurveHeightSource",
+    "resolve_height_source",
+    "compute_top_height",
     # Base components
     "CircularPlot",
     "Stand",
@@ -74,4 +138,14 @@ __all__ = [
     "BuckingConfig",
     "_TreeCache",
     "QualityType",
-]
+] + _SIMULATION_EXPORTS
+
+
+def __getattr__(name):
+    """Lazily resolve simulation exports to avoid import cycles at module import time."""
+    if name in _SIMULATION_EXPORT_SET:
+        sim_mod = import_module("pyforestry.base.simulation")
+        attr = getattr(sim_mod, name)
+        globals()[name] = attr
+        return attr
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

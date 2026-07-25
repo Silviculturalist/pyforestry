@@ -1,11 +1,6 @@
 pyforestry.sweden.siteindex.translate package
 =============================================
 
-.. automodule:: pyforestry.sweden.siteindex.translate
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Submodules
 ----------
 
@@ -25,10 +20,26 @@ pyforestry.sweden.siteindex.translate.hagglund\_1981\_si\_to\_productivity modul
    :undoc-members:
    :show-inheritance:
 
+pyforestry.sweden.siteindex.translate.jonson\_index module
+----------------------------------------------------------
+
+.. automodule:: pyforestry.sweden.siteindex.translate.jonson_index
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pyforestry.sweden.siteindex.translate.leijon\_1979 module
 ---------------------------------------------------------
 
 .. automodule:: pyforestry.sweden.siteindex.translate.leijon_1979
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: pyforestry.sweden.siteindex.translate
    :members:
    :undoc-members:
    :show-inheritance:

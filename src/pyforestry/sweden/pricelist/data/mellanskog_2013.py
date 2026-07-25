@@ -4,7 +4,7 @@
 
 from pyforestry.base.helpers.tree_species import TreeSpecies
 
-Mellanskog_2013_price_data = {
+MELLANSKOG_2013_PRICE_DATA = {
     "Common": {
         "MaximumTreeHeight": 450,
         "SawlogLengthRange": (3.4, 5.5),
@@ -83,3 +83,8 @@ Mellanskog_2013_price_data = {
         "MaxHeight": {"Butt": 5.5, "Middle": 11.0, "Top": 99.0},
     },
 }
+
+# Backward-compatible alias for existing imports.
+Mellanskog_2013_price_data = MELLANSKOG_2013_PRICE_DATA
+
+__all__ = ["MELLANSKOG_2013_PRICE_DATA", "Mellanskog_2013_price_data"]

@@ -6,12 +6,12 @@ used to access aggregated stand metrics such as basal area or stem count.
 """
 
 import statistics
+import warnings
 from dataclasses import dataclass, field
 from math import isclose, pi, sqrt
-from typing import Any, Callable, Dict, List, Optional, Union, cast
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union, cast
 
 import geopandas as gpd
-import numpy as np
 from pyproj import CRS
 from shapely import Polygon
 from shapely.geometry import Point
@@ -24,8 +24,10 @@ from pyforestry.base.helpers import (
     TreeName,
     parse_tree_species,
 )
+from pyforestry.base.helpers.height_models import HeightSourceSpec, resolve_height_source
 from pyforestry.base.helpers.primitives import (
     BasalAreaWeightedDiameter,
+    LoreysMeanHeight,
     QuadraticMeanDiameter,
     SiteBase,
     StandBasalArea,
@@ -33,6 +35,171 @@ from pyforestry.base.helpers.primitives import (
     TopHeightDefinition,
     TopHeightMeasurement,
 )
+from pyforestry.base.helpers.top_height import compute_top_height
+
+
+def _mean_and_se(values: List[float]) -> Tuple[float, float]:
+    """Return the sample mean and standard error of the mean of ``values``.
+
+    The standard error is the sample standard deviation divided by ``sqrt(n)``;
+    it is ``0.0`` when fewer than two values are supplied.
+    """
+    n = len(values)
+    if n == 0:
+        return 0.0, 0.0
+    mean = statistics.mean(values)
+    se = sqrt(statistics.variance(values) / n) if n > 1 else 0.0
+    return mean, se
+
+
+def _ratio_and_se(
+    numerator: List[float],
+    denominator: List[float],
+) -> Tuple[float, float]:
+    """Ratio of two per-plot means with a covariance-aware standard error.
+
+    Both arguments are the *per-plot series* of the numerator and denominator
+    (not their means), because a ratio metric such as Lorey's mean height or the
+    basal-area weighted diameter draws both parts from the same trees: they are
+    strongly correlated, and treating them as independent invents variance that
+    is not there.
+
+    The standard error is the classical ratio-estimator form, which carries that
+    correlation exactly::
+
+        SE(R) = sqrt(Var(N_i - R * D_i) / n) / mean(D)
+
+    A stand whose plots all share the same ratio therefore reports a standard
+    error of zero, however much the plots differ in density.
+
+    Returns ``(0.0, 0.0)`` when the denominator mean is non-positive (e.g. no
+    basal area, or no measured heights for Lorey's mean).
+    """
+    n = len(numerator)
+    if n == 0:
+        return 0.0, 0.0
+    denominator_mean = statistics.mean(denominator)
+    if denominator_mean <= 0:
+        return 0.0, 0.0
+    ratio = statistics.mean(numerator) / denominator_mean
+    if n < 2:
+        return ratio, 0.0
+    residuals = [num - ratio * den for num, den in zip(numerator, denominator, strict=True)]
+    se = sqrt(statistics.variance(residuals) / n) / denominator_mean
+    return ratio, se
+
+
+_D2_PER_BA = 40000.0 / pi  # basal area (m²/ha) -> sum of d² (cm²/ha)
+
+# Per-plot, per-species quantities accumulated once and reused to derive every
+# metric: stem count, stem count of trees carrying a diameter, basal area, sum of
+# cubed diameters (BAWAD numerator), and the basal-area weighted height sum with
+# its matching basal area (Lorey's).
+_COMPONENT_KEYS = ("stems", "stems_d", "ba", "d3", "gh", "ba_h")
+
+
+def _sum_series(
+    components: Dict[Any, Dict[str, List[float]]],
+    species: List[Any],
+) -> Dict[str, List[float]]:
+    """Elementwise per-plot sum of the component series over ``species``.
+
+    Summing the series *before* reducing keeps a species group covariance-aware
+    in the same way the stand total is: species that trade off against each other
+    across plots do not each contribute independent variance.
+    """
+    n_plots = 0
+    for sp in species:
+        record = components.get(sp)
+        if record is not None:
+            n_plots = len(record[_COMPONENT_KEYS[0]])
+            break
+    summed: Dict[str, List[float]] = {key: [0.0] * n_plots for key in _COMPONENT_KEYS}
+    for sp in species:
+        record = components.get(sp)
+        if record is None:
+            continue
+        for key in _COMPONENT_KEYS:
+            target = summed[key]
+            for index, value in enumerate(record[key]):
+                target[index] += value
+    return summed
+
+
+def _metrics_from_series(
+    series: Dict[str, List[float]],
+) -> Tuple[Dict[str, float], Dict[str, float]]:
+    """Derive the stand metrics and their standard errors from component series.
+
+    ``series`` maps each per-plot component accumulated by
+    :meth:`Stand._compute_plot_mean_estimates` (``stems``, ``ba``, ``d3``, ``gh``,
+    ``ba_h``) to its per-plot values. Additive metrics come from the plot-to-plot
+    mean; the ratio metrics (basal-area weighted diameter, Lorey's mean height)
+    go through :func:`_ratio_and_se`, which carries the correlation between their
+    numerator and denominator instead of assuming it away.
+
+    Returns a ``(value, precision)`` pair of dicts keyed by metric name.
+    """
+    stems_mean, stems_se = _mean_and_se(series["stems"])
+    ba_mean, ba_se = _mean_and_se(series["ba"])
+    bawad, bawad_se = _ratio_and_se(series["d3"], [ba * _D2_PER_BA for ba in series["ba"]])
+    hl, hl_se = _ratio_and_se(series["gh"], series["ba_h"])
+    return (
+        {"stems": stems_mean, "ba": ba_mean, "bawad": bawad, "hl": hl},
+        {"stems": stems_se, "ba": ba_se, "bawad": bawad_se, "hl": hl_se},
+    )
+
+
+def _qmd_from_series(series: Dict[str, List[float]]) -> QuadraticMeanDiameter:
+    """Quadratic mean diameter from per-plot basal-area and stem series.
+
+    Uses ``stems_d`` -- the stems that actually carry a diameter -- so that the
+    numerator and denominator describe the same trees; a record with no diameter
+    contributes no basal area and must not enter the count either.
+
+    ``QMD = sqrt(40000/pi * R)`` for the mean basal area per stem ``R``, so the
+    standard error is obtained by propagating through that square root from
+    :func:`_ratio_and_se`. Going via the ratio rather than combining the two
+    standard errors and their covariance term by term avoids the cancellation
+    those three near-equal terms suffer: a stand whose plots share one QMD
+    reports exactly zero here instead of a small numerical residue.
+    """
+    stems_key = "stems_d" if "stems_d" in series else "stems"
+    ratio, ratio_se = _ratio_and_se(series["ba"], series[stems_key])
+    if ratio <= 0:
+        return QuadraticMeanDiameter(0.0, precision=0.0)
+    qmd_value = sqrt(_D2_PER_BA * ratio)
+    qmd_se = qmd_value / (2.0 * ratio) * ratio_se
+    return QuadraticMeanDiameter(qmd_value, precision=qmd_se)
+
+
+def _qmd_from_components(
+    ba_mean: float,
+    ba_se: float,
+    stems_mean: float,
+    stems_se: float,
+) -> QuadraticMeanDiameter:
+    """Quadratic mean diameter (cm) from basal-area and stem means, with its SE.
+
+    ``QMD = sqrt(40000 * BA / (pi * N))``; the standard error is propagated from
+    the basal-area and stem standard errors by the delta method.
+
+    This form treats the two as independent, which overstates the error because
+    basal area and stem count rise and fall together across plots. It is only for
+    callers that have nothing but the reduced means -- angle-count stands, where
+    basal area comes from the tally and stems from the recorded diameters. Where
+    the per-plot series survive, :func:`_qmd_from_series` is both covariance-aware
+    and numerically better behaved.
+    """
+    if stems_mean > 0 and ba_mean > 0:
+        qmd_value = sqrt((40000.0 * ba_mean) / (pi * stems_mean))
+        d_qmd_d_ba = 20000.0 / (pi * stems_mean * qmd_value)
+        d_qmd_d_stems = qmd_value / (2 * stems_mean)
+        qmd_se = sqrt((d_qmd_d_ba * ba_se) ** 2 + (d_qmd_d_stems * stems_se) ** 2)
+    else:
+        qmd_value = 0.0
+        qmd_se = 0.0
+    return QuadraticMeanDiameter(qmd_value, precision=qmd_se)
 
 
 # -------------------------------------------------------------------------
@@ -65,10 +232,10 @@ class StandMetricAccessor:
         self._metric_name = metric_name
 
     def _ensure_estimates(self):
-        """Compute or refresh HT estimates if not done."""
+        """Compute or refresh the plot-mean estimates if not done."""
         if self._metric_name not in self._stand._metric_estimates:
             if not self._stand.use_angle_count:
-                self._stand._compute_ht_estimates()
+                self._stand._compute_plot_mean_estimates()
             else:
                 raise KeyError(f"{self._metric_name} metric unavailable for angle-count data")
 
@@ -102,6 +269,108 @@ class StandMetricAccessor:
                 f"No estimate found for species={sp_obj.full_name} in {self._metric_name}."
             )
         return metric_dict[sp_obj]
+
+    def group(self, species=None, *, predicate=None):
+        """Aggregate this metric over a group of species.
+
+        Parameters
+        ----------
+        species:
+            Either an iterable of species to include (each a :class:`TreeName`
+            or a species-name string), or a predicate ``callable(TreeName) ->
+            bool`` (a predicate may be passed positionally for convenience).
+        predicate:
+            A ``callable(TreeName) -> bool`` selecting species to include. A
+            species is included if it matches ``species`` *or* ``predicate``.
+
+        Returns
+        -------
+        The same value type this accessor exposes (:class:`StandBasalArea`,
+        :class:`Stems`, :class:`QuadraticMeanDiameter`,
+        :class:`BasalAreaWeightedDiameter` or :class:`LoreysMeanHeight`),
+        aggregated over the selected species. Additive metrics (basal area,
+        stems) are summed with standard errors combined in quadrature; ratio
+        metrics (QMD, BAWAD, HL) are recomputed from the selected species'
+        component sums.
+
+        Examples
+        --------
+        Conifers only::
+
+            stand.BasalArea.group(lambda s: s.tree_type == "Coniferous")
+
+        An explicit species list::
+
+            stand.Stems.group(["pinus sylvestris", "picea abies"])
+        """
+        if callable(species) and predicate is None:
+            predicate = species
+            species = None
+        if species is None and predicate is None:
+            raise ValueError("group() requires a species iterable or a predicate.")
+
+        self._ensure_estimates()
+        components = self._stand._species_components
+
+        wanted = None
+        if species is not None:
+            wanted = {parse_tree_species(sp) if isinstance(sp, str) else sp for sp in species}
+
+        # Candidate species come from the component cache (tree-list stands) or,
+        # failing that, from the metric dict keys (e.g. angle-count stands).
+        if components:
+            candidates: List[TreeName] = list(components.keys())
+        else:
+            candidates = [
+                k
+                for k in self._stand._metric_estimates.get(self._metric_name, {})
+                if isinstance(k, TreeName)
+            ]
+
+        selected = [
+            sp
+            for sp in candidates
+            if (wanted is not None and sp in wanted) or (predicate is not None and predicate(sp))
+        ]
+        species_list = selected or None
+        name = self._metric_name
+
+        if components:
+            group_series = _sum_series(components, selected)
+            if name == "QMD":
+                return _qmd_from_series(group_series)
+            value, precision = _metrics_from_series(group_series)
+            if name == "Stems":
+                return Stems(
+                    value=value["stems"], species=species_list, precision=precision["stems"]
+                )
+            if name == "BasalArea":
+                return StandBasalArea(
+                    value=value["ba"], species=species_list, precision=precision["ba"]
+                )
+            if name == "BAWAD":
+                return BasalAreaWeightedDiameter(value["bawad"], precision=precision["bawad"])
+            if name == "HL":
+                return LoreysMeanHeight(value["hl"], precision=precision["hl"])
+
+        # Fallback for stands without a component cache (e.g. angle-count):
+        # only the additive metrics can be re-summed from stored values.
+        metric_dict = self._stand._metric_estimates.get(name, {})
+        if name in ("Stems", "BasalArea"):
+            mean_total = 0.0
+            var_total = 0.0
+            for sp in selected:
+                obj = metric_dict.get(sp)
+                if obj is None:
+                    continue
+                mean_total += float(obj)
+                var_total += getattr(obj, "precision", 0.0) ** 2
+            cls = Stems if name == "Stems" else StandBasalArea
+            return cls(value=mean_total, species=species_list, precision=sqrt(var_total))
+        raise KeyError(
+            f"Group aggregation of {name} is unavailable for this stand "
+            "(it needs per-species component data)."
+        )
 
     def __float__(self):
         """
@@ -153,6 +422,20 @@ class Stand:
         default_factory=dict,
         init=False,
     )
+    # Per-species *per-plot* component series, cached by ``_compute_plot_mean_estimates``
+    # so that species-group queries and QMD can be rebuilt from the raw plot
+    # values rather than from already-reduced means. Keeping the series is what
+    # lets ratio metrics and groups carry their covariance instead of assuming
+    # independence. Maps species -> {component: [value per plot]}.
+    _species_components: Dict[Any, Dict[str, List[float]]] = field(
+        default_factory=dict,
+        init=False,
+    )
+    # The same series summed over every species, i.e. the stand total per plot.
+    _total_components: Dict[str, List[float]] = field(
+        default_factory=dict,
+        init=False,
+    )
     use_angle_count: bool = field(default=False, init=False)
 
     def __post_init__(self) -> None:
@@ -194,20 +477,49 @@ class Stand:
         # Determine if any plots supply AngleCount objects
         all_angle_counts = [ac for plot in self.plots for ac in plot.AngleCount]
         if all_angle_counts:
-            ba_from_angle_count, stems_from_angle_count = AngleCountAggregator(
-                all_angle_counts
-            ).aggregate_stand_metrics()
-            basal_area_metrics: Dict[Any, Union[Stems, StandBasalArea]] = {
-                k: v for k, v in ba_from_angle_count.items()
-            }
-            stems_metrics: Dict[Any, Union[Stems, StandBasalArea]] = {
-                k: v for k, v in stems_from_angle_count.items()
-            }
-            self._metric_estimates["BasalArea"] = basal_area_metrics
-            self._metric_estimates["Stems"] = stems_metrics
-            self.use_angle_count = True
+            self._apply_angle_count_metrics(all_angle_counts)
         else:
             self.use_angle_count = False
+
+    def _apply_angle_count_metrics(self, all_angle_counts: List[Any]) -> None:
+        """Populate basal-area (and, if derivable, stem) estimates from tallies.
+
+        Basal area is always available from angle-count sampling. Stems/ha are
+        only produced when the tallies carry per-tree diameters (see
+        :meth:`AngleCount.__init__`); otherwise the ``"Stems"`` metric is left
+        unset so the accessor reports it as unavailable rather than returning a
+        physically meaningless tally count.
+        """
+        ba_by_sp, stems_by_sp = AngleCountAggregator(all_angle_counts).aggregate_stand_metrics()
+
+        ba_dict: Dict[Any, Union[Stems, StandBasalArea]] = dict(ba_by_sp)
+        ba_dict["TOTAL"] = StandBasalArea(
+            value=sum(float(v) for v in ba_by_sp.values()),
+            species=None,
+            precision=sqrt(sum(getattr(v, "precision", 0.0) ** 2 for v in ba_by_sp.values())),
+        )
+        self._metric_estimates["BasalArea"] = ba_dict
+
+        if stems_by_sp:
+            stems_dict: Dict[Any, Union[Stems, StandBasalArea]] = dict(stems_by_sp)
+            stems_dict["TOTAL"] = Stems(
+                value=sum(float(v) for v in stems_by_sp.values()),
+                species=None,
+                precision=sqrt(
+                    sum(getattr(v, "precision", 0.0) ** 2 for v in stems_by_sp.values())
+                ),
+            )
+            self._metric_estimates["Stems"] = stems_dict
+        else:
+            self._metric_estimates.pop("Stems", None)
+
+        # QMD is derived from stems; drop any stale value. The per-plot component
+        # series belong to the tree-list path and must not survive a switch to
+        # angle-count data, or QMD would be rebuilt from the wrong stand.
+        self._metric_estimates.pop("QMD", None)
+        self._species_components = {}
+        self._total_components = {}
+        self.use_angle_count = True
 
     # Two key properties for your requested usage:
     @property
@@ -251,69 +563,101 @@ class Stand:
         """Access the stand's basal-area weighted mean diameter."""
         return StandMetricAccessor(self, "BAWAD")
 
+    @property
+    def HL(self) -> StandMetricAccessor:
+        """Access the stand's Lorey's (basal-area weighted) mean height, in metres.
+
+        Only trees carrying a measured ``height_m`` contribute, so ``HL`` is the
+        basal-area weighted mean of the measured heights::
+
+            stand.HL.TOTAL               -> LoreysMeanHeight for the whole stand
+            stand.HL(TreeSpecies(...))   -> species-level Lorey's mean height
+            float(stand.HL)              -> numeric total value (metres)
+        """
+        return StandMetricAccessor(self, "HL")
+
     def _ensure_qmd_estimates(self):
         """
         Ensure that QMD estimates are computed.
         QMD is computed from the existing BasalArea and Stems estimates.
         """
-        if "QMD" not in self._metric_estimates:
-            # Ensure BA and Stems are available (compute if needed)
-            if "BasalArea" not in self._metric_estimates or "Stems" not in self._metric_estimates:
-                self._compute_ht_estimates()
-            self._compute_qmd_estimates()
+        if "QMD" in self._metric_estimates:
+            return
+        if self.use_angle_count:
+            # BA/Stems come from the angle-count aggregator; QMD needs stems,
+            # which are only available when the tallies carry diameters.
+            if "Stems" not in self._metric_estimates:
+                raise KeyError(
+                    "QMD is unavailable for angle-count data without per-tally "
+                    "diameters (no stem estimate)."
+                )
+        elif "BasalArea" not in self._metric_estimates or "Stems" not in self._metric_estimates:
+            self._compute_plot_mean_estimates()
+        self._compute_qmd_estimates()
 
     def _compute_qmd_estimates(self):
         """
         Compute Quadratic Mean Diameter (QMD) estimates for each species (and total)
         from the existing basal area and stems estimates.
+
+        Where the per-plot component series are available (tree-list stands) the
+        standard error carries the basal-area/stem covariance; angle-count stands
+        keep only reduced means, so their QMD falls back to assuming the two are
+        independent, which is conservative.
         """
-        qmd_dict = {}
         ba_dict = self._metric_estimates["BasalArea"]
         stems_dict = self._metric_estimates["Stems"]
+        components = self._species_components
 
+        qmd_dict = {}
         for key in ba_dict:
-            ba_obj = ba_dict[key]
-            stems_obj = stems_dict[key]
-            if stems_obj.value > 0:
-                # QMD in cm computed from BA (m²/ha) and stems (stems/ha)
-                qmd_value = sqrt((40000.0 * ba_obj.value) / (pi * stems_obj.value))
-                # Propagate errors:
-                # dQ/dBA = 20000 / (pi * stems * QMD)
-                # dQ/dStems = - QMD / (2 * stems)
-                if qmd_value > 0:
-                    dQ_dBA = 20000.0 / (pi * stems_obj.value * qmd_value)
-                else:
-                    dQ_dBA = 0.0
-                dQ_dStems = qmd_value / (2 * stems_obj.value)
-                qmd_precision = sqrt(
-                    (dQ_dBA * ba_obj.precision) ** 2 + (dQ_dStems * stems_obj.precision) ** 2
-                )
+            series = self._total_components if key == "TOTAL" else components.get(key)
+            if series:
+                qmd_dict[key] = _qmd_from_series(series)
             else:
-                qmd_value = 0.0
-                qmd_precision = 0.0
-
-            qmd_dict[key] = QuadraticMeanDiameter(qmd_value, precision=qmd_precision)
-
+                qmd_dict[key] = _qmd_from_components(
+                    ba_dict[key].value,
+                    ba_dict[key].precision,
+                    stems_dict[key].value,
+                    stems_dict[key].precision,
+                )
         self._metric_estimates["QMD"] = qmd_dict
 
-    def _compute_ht_estimates(self):
+    def _compute_plot_mean_estimates(self):
+        """Compute per-hectare stand estimates as the mean over all plots.
+
+        A single pass over every plot's trees accumulates, per species, the
+        per-hectare stem count, basal area, sum of cubed diameters (for BAWAD)
+        and basal-area-weighted height sum (for Lorey's mean height). Species
+        absent from a plot contribute an explicit zero for that plot, so the
+        cross-plot mean divides by the number of plots -- not merely the plots
+        where the species happens to occur (which would over-count both the
+        species and the stand total).
+
+        The reported ``precision`` of every metric is the standard error of the
+        stand mean (plot-to-plot sample standard deviation divided by sqrt(n)),
+        consistent with :class:`AngleCountAggregator`. It is a *between-plot*
+        error only: it does not include measurement or model error, so a metric
+        built on curve-imputed heights still reports a measured-quality error.
+        Stand totals, species groups and ratio metrics are all reduced from the
+        per-plot series, so between-species and numerator/denominator covariance
+        is carried rather than assumed away.
+
+        Results are stored in ``self._metric_estimates`` under ``"Stems"``,
+        ``"BasalArea"``, ``"BAWAD"`` and ``"HL"`` (each mapping species -> value
+        plus a ``"TOTAL"`` entry). The per-plot component series are cached in
+        ``self._species_components`` / ``self._total_components`` so group and
+        QMD queries can be rebuilt from the raw plot values.
         """
-        Compute Horvitz-Thompson style estimates across all plots.
-        We'll sum or average the per-plot values for each species:
-          - stems/ha
-          - basal_area/ha
-        Store them in self._metric_estimates:
-            {
-                "Stems": {TreeName(...): Stems(...), ..., "TOTAL": Stems(...)},
-                "BasalArea": {
-                    TreeName(...): StandBasalArea(...),
-                    ...,
-                    "TOTAL": StandBasalArea(...),
-                }
-            }
-        """
-        species_data: Dict[TreeName, Dict[str, List[float]]] = {}
-        # 1. Gather data from each plot
+        component_keys = _COMPONENT_KEYS
+        missing_diameter = 0
+
+        # 1. Single pass over each plot: per-species per-hectare component sums.
+        species_order: List[TreeName] = []
+        seen: set = set()
+        per_plot_species: List[Dict[TreeName, Dict[str, float]]] = []
+        per_plot_total: List[Dict[str, float]] = []
+
         for plot in self.plots:
             area_ha = plot.area_ha or 1.0
             # effective area is the visible portion of the plot
@@ -321,138 +665,135 @@ class Stand:
                 area_ha * (1 - plot.occlusion) if (1 - plot.occlusion) > 0 else area_ha
             )
 
-            # Group trees by species
-            trees_by_sp: Dict[TreeName, List[Tree]] = {}
+            plot_acc: Dict[TreeName, Dict[str, float]] = {}
             for tr in plot.trees:
                 sp = getattr(tr, "species", None)
                 if sp is None:
                     continue
                 if isinstance(sp, str):
                     sp = parse_tree_species(sp)
-                trees_by_sp.setdefault(sp, []).append(tr)
 
-            # For each species in this plot, compute the adjusted stems/ha and BA/ha
-            for sp, trlist in trees_by_sp.items():
-                stems_count = sum(t.weight_n for t in trlist)
-                # Adjusted stems/ha: divide by the effective area
-                stems_ha = stems_count / effective_area_ha
+                weight = float(tr.weight_n) if tr.weight_n is not None else 1.0
+                has_diameter = tr.diameter_cm is not None
+                d_cm = float(tr.diameter_cm) if has_diameter else 0.0
+                g_m2 = pi * ((d_cm / 100.0) / 2.0) ** 2  # basal area of one stem
 
-                # Compute basal area (m²) for trees in the plot.
-                ba_sum = 0.0
-                for t in trlist:
-                    d_cm = float(t.diameter_cm) if t.diameter_cm is not None else 0.0
-                    r_m = (d_cm / 100.0) / 2.0
-                    ba_sum += pi * (r_m**2) * t.weight_n
-                # Adjusted BA/ha: divide by effective area.
-                ba_ha = ba_sum / effective_area_ha
+                acc = plot_acc.get(sp)
+                if acc is None:
+                    acc = {k: 0.0 for k in component_keys}
+                    plot_acc[sp] = acc
+                # A record with no diameter is still a stem, but it can carry no
+                # basal area. Counting it in the QMD/BAWAD denominators as if it
+                # were a zero-diameter tree would drag both downwards, so the
+                # diameter-derived metrics use their own stem count.
+                acc["stems"] += weight
+                if not has_diameter:
+                    missing_diameter += 1
+                    continue
+                acc["stems_d"] += weight
+                acc["ba"] += g_m2 * weight
+                acc["d3"] += (d_cm**3) * weight
+                # Lorey's mean height weights only trees carrying a height.
+                height_m = getattr(tr, "height_m", None)
+                if height_m is not None:
+                    acc["gh"] += g_m2 * float(height_m) * weight
+                    acc["ba_h"] += g_m2 * weight
 
-                # Compute sums of diameter powers
-                d2_sum = 0.0
-                d3_sum = 0.0
-                for t in trlist:
-                    d_cm = float(t.diameter_cm) if t.diameter_cm is not None else 0.0
-                    d2_sum += (d_cm**2) * t.weight_n
-                    d3_sum += (d_cm**3) * t.weight_n
-                d3_ha = d3_sum / effective_area_ha
+            # Convert this plot's accumulators to per-hectare and record.
+            plot_species: Dict[TreeName, Dict[str, float]] = {}
+            plot_total = {k: 0.0 for k in component_keys}
+            for sp, acc in plot_acc.items():
+                per_ha = {k: acc[k] / effective_area_ha for k in component_keys}
+                plot_species[sp] = per_ha
+                for k in component_keys:
+                    plot_total[k] += per_ha[k]
+                if sp not in seen:
+                    seen.add(sp)
+                    species_order.append(sp)
+            per_plot_species.append(plot_species)
+            per_plot_total.append(plot_total)
 
-                if sp not in species_data:
-                    species_data[sp] = {
-                        "stems_per_ha": [],
-                        "basal_area_per_ha": [],
-                        "d3_per_ha": [],
-                    }
-                species_data[sp]["stems_per_ha"].append(stems_ha)
-                species_data[sp]["basal_area_per_ha"].append(ba_ha)
-                species_data[sp]["d3_per_ha"].append(d3_ha)
+        if missing_diameter:
+            warnings.warn(
+                f"{missing_diameter} tree record(s) have no diameter_cm; they are counted "
+                "in Stems but contribute no basal area, and are excluded from QMD and "
+                "BAWAD so those stay consistent with the trees they describe.",
+                stacklevel=2,
+            )
 
-        # 2. Compute means and variances across plots (as before)
+        # 2. Per-species cross-plot component series (absent plot contributes 0).
+        def component_series(sp: TreeName, key: str) -> List[float]:
+            """Per-plot values of ``key`` for ``sp`` (0.0 where the species is absent)."""
+            series = []
+            for plot_species in per_plot_species:
+                record = plot_species.get(sp)
+                series.append(record[key] if record is not None else 0.0)
+            return series
+
         stems_dict: Dict[Union[TreeName, str], Stems] = {}
         ba_dict: Dict[Union[TreeName, str], StandBasalArea] = {}
         bawad_dict: Dict[Union[TreeName, str], BasalAreaWeightedDiameter] = {}
+        hl_dict: Dict[Union[TreeName, str], LoreysMeanHeight] = {}
+        components: Dict[Any, Dict[str, List[float]]] = {}
 
-        total_stems_val = 0.0
-        total_stems_var = 0.0
-        total_ba_val = 0.0
-        total_ba_var = 0.0
-        total_d3_val = 0.0
-        total_d3_var = 0.0
+        for sp in species_order:
+            components[sp] = {key: component_series(sp, key) for key in component_keys}
 
-        for sp, metricvals in species_data.items():
-            s_vals = metricvals["stems_per_ha"]
-            b_vals = metricvals["basal_area_per_ha"]
-            d3_vals = metricvals["d3_per_ha"]
+        # The stand total is the per-plot sum over species, which is exactly the
+        # elementwise sum of the per-species series, so both are built by the
+        # same helper and both stay covariance-aware.
+        total_series = {
+            key: [plot_total[key] for plot_total in per_plot_total] for key in component_keys
+        }
 
-            stems_mean = statistics.mean(s_vals) if s_vals else 0.0
-            stems_var = statistics.pvariance(s_vals) if len(s_vals) > 1 else 0.0
+        for sp in species_order:
+            value, precision = _metrics_from_series(components[sp])
+            stems_dict[sp] = Stems(value=value["stems"], species=sp, precision=precision["stems"])
+            ba_dict[sp] = StandBasalArea(value=value["ba"], species=sp, precision=precision["ba"])
+            bawad_dict[sp] = BasalAreaWeightedDiameter(
+                value["bawad"], precision=precision["bawad"]
+            )
+            hl_dict[sp] = LoreysMeanHeight(value["hl"], precision=precision["hl"])
 
-            ba_mean = statistics.mean(b_vals) if b_vals else 0.0
-            ba_var = statistics.pvariance(b_vals) if len(b_vals) > 1 else 0.0
-
-            d3_mean = statistics.mean(d3_vals) if d3_vals else 0.0
-            d3_var = statistics.pvariance(d3_vals) if len(d3_vals) > 1 else 0.0
-
-            stems_dict[sp] = Stems(value=stems_mean, species=sp, precision=sqrt(stems_var))
-            ba_dict[sp] = StandBasalArea(value=ba_mean, species=sp, precision=sqrt(ba_var))
-
-            total_stems_val += stems_mean
-            total_stems_var += stems_var
-            total_ba_val += ba_mean
-            total_ba_var += ba_var
-            total_d3_val += d3_mean
-            total_d3_var += d3_var
-
-            if ba_mean > 0:
-                d2_mean = ba_mean * (40000.0 / pi)
-                d2_var = ba_var * (40000.0 / pi) ** 2
-                bawad_value = d3_mean / d2_mean if d2_mean > 0 else 0.0
-                dR_dN = 1.0 / d2_mean if d2_mean > 0 else 0.0
-                dR_dD = -d3_mean / (d2_mean**2) if d2_mean > 0 else 0.0
-                bawad_precision = sqrt((dR_dN**2 * d3_var) + (dR_dD**2 * d2_var))
-            else:
-                bawad_value = 0.0
-                bawad_precision = 0.0
-            bawad_dict[sp] = BasalAreaWeightedDiameter(bawad_value, precision=bawad_precision)
-
-            # "TOTAL" aggregator
+        total_value, total_precision = _metrics_from_series(total_series)
         stems_dict["TOTAL"] = Stems(
-            value=total_stems_val, species=None, precision=sqrt(total_stems_var)
+            value=total_value["stems"], species=None, precision=total_precision["stems"]
         )
         ba_dict["TOTAL"] = StandBasalArea(
-            value=total_ba_val, species=None, precision=sqrt(total_ba_var)
+            value=total_value["ba"], species=None, precision=total_precision["ba"]
         )
-
-        if total_ba_val > 0:
-            d2_total_mean = total_ba_val * (40000.0 / pi)
-            d2_total_var = total_ba_var * (40000.0 / pi) ** 2
-            bawad_total_value = total_d3_val / d2_total_mean if d2_total_mean > 0 else 0.0
-            dR_dN_t = 1.0 / d2_total_mean if d2_total_mean > 0 else 0.0
-            dR_dD_t = -total_d3_val / (d2_total_mean**2) if d2_total_mean > 0 else 0.0
-            bawad_total_precision = sqrt((dR_dN_t**2 * total_d3_var) + (dR_dD_t**2 * d2_total_var))
-        else:
-            bawad_total_value = 0.0
-            bawad_total_precision = 0.0
-
         bawad_dict["TOTAL"] = BasalAreaWeightedDiameter(
-            bawad_total_value, precision=bawad_total_precision
+            total_value["bawad"], precision=total_precision["bawad"]
         )
+        hl_dict["TOTAL"] = LoreysMeanHeight(total_value["hl"], precision=total_precision["hl"])
 
-        self._metric_estimates["Stems"] = {k: v for k, v in stems_dict.items()}
-        self._metric_estimates["BasalArea"] = {k: v for k, v in ba_dict.items()}
-        self._metric_estimates["BAWAD"] = {k: v for k, v in bawad_dict.items()}
+        self._metric_estimates["Stems"] = stems_dict
+        self._metric_estimates["BasalArea"] = ba_dict
+        self._metric_estimates["BAWAD"] = bawad_dict
+        self._metric_estimates["HL"] = hl_dict
+        self._species_components = components
+        self._total_components = total_series
 
     def __repr__(self):
         """Return a short textual description of the stand."""
         return f"Stand(area_ha={self.area_ha}, n_plots={len(self.plots)})"
 
     def get_dominant_height(self) -> Optional[TopHeightMeasurement]:
-        """
-        Attempts to compute a stand-level 'dominant height' (aka top height)
-        from the available plots, then correct it by subtracting a simulated bias.
+        """Compute a simple stand-level 'dominant height' (aka top height).
+
+        This is the straightforward estimator: within the most common plot area,
+        take the ``m`` thickest measured-height trees per plot (``m`` being the
+        smallest such count across those plots), average their heights, and
+        average across plots. No small-area bias correction is applied.
+
+        For a selectable estimator -- García's (1998) selection-corrected
+        order-statistic estimators for variable plot sizes, or a plain mean of
+        the ``n`` tallest/widest trees -- use :meth:`estimate_top_height`.
 
         Returns
         -------
         TopHeightMeasurement | None
-            The final best estimate of top height in meters, along with metadata.
+            The best estimate of top height in meters, along with metadata.
             If insufficient data, returns None.
         """
         if not self.plots:
@@ -482,7 +823,7 @@ class Stand:
         for plot in subplots:
             # Sort trees descending by diameter
             sorted_trees = sorted(
-                plot.trees, key=lambda t: (t.diameter_cm if t.diameter_cm else -999), reverse=True
+                plot.trees, key=lambda t: t.diameter_cm if t.diameter_cm else -999, reverse=True
             )
             count_valid = sum(1 for t in sorted_trees if t.height_m is not None)
             m_values.append(count_valid)
@@ -500,7 +841,7 @@ class Stand:
         subplot_means = []
         for plot in subplots:
             sorted_trees = sorted(
-                plot.trees, key=lambda t: (t.diameter_cm if t.diameter_cm else -999), reverse=True
+                plot.trees, key=lambda t: t.diameter_cm if t.diameter_cm else -999, reverse=True
             )
             # The top M among those that have heights
             valid_heights = [t.height_m for t in sorted_trees[:m_real] if t.height_m is not None]
@@ -519,131 +860,144 @@ class Stand:
         if not subplot_means:
             return None
 
-        h_est_raw = statistics.mean(subplot_means)
+        # Standard error of the stand mean, on the same sample-variance basis as
+        # every other metric here (population sigma would understate it).
+        h_est_raw, precision_est = _mean_and_se(subplot_means)
 
-        # Simple standard error across subplots
-        if len(subplot_means) > 1:
-            precision_est = statistics.pstdev(subplot_means) / sqrt(len(subplot_means))
-        else:
-            precision_est = 0.0
-
-        # 4. Use a small Monte Carlo to estimate bias for (r_real, m_real)
-        real_radius_m = sqrt(mode_area_ha * 10_000 / pi)
-        nominal_top_n = self.top_height_definition.nominal_n
-        nominal_area_ha = self.top_height_definition.nominal_area_ha
-
-        bias, _bias_percentage = self.calculate_top_height_bias(
-            r=real_radius_m,
-            m=m_real,
-            n_trees=1000,
-            n_simulations=5000,
-            nominal_top_n=nominal_top_n,
-            nominal_area=nominal_area_ha * 10_000,
-            sigma=3.0,
-        )
-
-        h_est_corrected = h_est_raw - bias
-
-        # Return a TopHeightMeasurement
+        # Return the definition-based estimate directly. The previous
+        # Monte-Carlo "Matérn" small-area bias correction was removed: it drew a
+        # synthetic stand unrelated to the observed trees, used an unseeded RNG
+        # (so repeated calls disagreed) and was costly, so it could not be
+        # justified as a general correction. See estimate_top_height() for
+        # principled, source-backed alternatives.
         return TopHeightMeasurement(
-            value=h_est_corrected,
+            value=h_est_raw,
             definition=self.top_height_definition,
             species=None,  # or you could attempt an aggregated species list
             precision=precision_est,
-            est_bias=float(bias),
+            est_bias=0.0,
         )
 
-    @staticmethod
-    def calculate_top_height_bias(
-        r: float,
-        m: int,
-        n_trees: int = 1000,
-        n_simulations: int = 10000,
-        nominal_top_n: int = 100,
-        nominal_area: float = 10000.0,
-        sigma: float = 3.0,
-    ):
+    def estimate_top_height(
+        self,
+        reference: str = "garcia_u",
+        height_source: HeightSourceSpec = "measured",
+        *,
+        n: Optional[int] = None,
+        by: str = "diameter",
+        percentile: float = 90.0,
+        k: float = 3.0,
+        naslund_exponent: Union[int, float, str] = 2,
+    ) -> Optional[TopHeightMeasurement]:
+        """Estimate stand top height with a selectable estimator, over all plots.
+
+        This is the flexible counterpart to :meth:`get_dominant_height`. The
+        ``reference`` chooses what "the top" is and ``height_source`` chooses how
+        heights are obtained; they are composed per plot and averaged over all
+        plots. See
+        :func:`pyforestry.base.helpers.top_height.compute_top_height` for the
+        full description of each ``reference`` (``"mean_of_largest"``,
+        ``"garcia_u"``, ``"garcia_pp"``, ``"percentile"``,
+        ``"mean_plus_k_sigma"``) and ``height_source`` (``"measured"``,
+        ``"naslund"``, a callable, or a fitted curve).
+
+        The stand's :attr:`top_height_definition` supplies ``nominal_n`` /
+        ``nominal_area_ha`` (the reference area used by the García methods).
+
+        Returns
+        -------
+        TopHeightMeasurement | None
+            The estimated top height (metres), or ``None`` if no plot could
+            contribute an estimate.
         """
-        Calculate the bias of the estimator h_hat for top height in a forest stand.
-        Based on (a simplified interpretation of) Matérn's ideas on top-height sampling.
+        return compute_top_height(
+            self.plots,
+            reference=reference,
+            height_source=height_source,
+            n=n,
+            by=by,
+            percentile=percentile,
+            k=k,
+            definition=self.top_height_definition,
+            naslund_exponent=naslund_exponent,
+        )
 
-        Parameters:
-        -----------
-        r : float
-            Radius of the circular plot (meters).
-        m : int
-            Number of largest trees (by diameter) to average in the plot.
-        n_trees : int
-            Number of trees in each simulated stand.
-        n_simulations : int
-            Number of Monte Carlo runs (default 10,000).
-        nominal_top_n : int
-            The nominal definition of "top" trees (e.g. top 100 in 1.0 ha).
-        nominal_area : float
-            The nominal area in which we define top_n (default: 10,000 m² = 1.0 ha).
-        sigma : float
-            Percentage measurement error in height (default 3.0% of the tree's height).
+    def impute_heights(
+        self,
+        source: HeightSourceSpec = "naslund",
+        *,
+        which: str = "missing",
+        overwrite: bool = False,
+        naslund_exponent: Union[int, float, str] = 2,
+    ) -> int:
+        """Assign interpolated heights to trees from a height-diameter curve.
 
-        Returns:
-        --------
-        (bias, bias_percentage):
-            bias : float
-                Average difference (h_hat - H_bar).
-            bias_percentage : float
-                That bias as a percentage of the true top height H_bar.
+        The imputed values are written to each tree's ``predicted_height_m`` and
+        are kept distinct from measured ``height_m`` (which is never modified),
+        so a modelled height is never mistaken for a measurement.
+
+        Parameters
+        ----------
+        source:
+            A *curve* height source: ``"naslund"`` (fit from the stand's measured
+            height-diameter pairs), a callable ``f(diameter_cm) -> height_m``, or
+            a :class:`~pyforestry.base.helpers.height_models.NaslundHeightCurve`.
+            A measured source is rejected -- there is nothing to impute from.
+        which:
+            ``"missing"`` (default) imputes only trees lacking a measured height;
+            ``"all"`` imputes every tree that has a diameter.
+        overwrite:
+            When ``True``, replace an existing ``predicted_height_m``; otherwise
+            keep any value already present.
+        naslund_exponent:
+            Exponent for the ``"naslund"`` fit. Defaults to 2.
+
+        Returns
+        -------
+        int
+            The number of trees assigned a predicted height.
+
+        Raises
+        ------
+        ValueError
+            If the source cannot be resolved/fit, or if it is not a curve.
         """
-        h_hat_list = []
-        H_bar_list = []
+        all_trees = [tree for plot in self.plots for tree in plot.trees]
+        height_source = resolve_height_source(source, all_trees, naslund_exponent=naslund_exponent)
+        if height_source is None:
+            measured = sum(
+                1
+                for tree in all_trees
+                if getattr(tree, "height_m", None) is not None
+                and getattr(tree, "diameter_cm", None) is not None
+            )
+            raise ValueError(
+                "Could not fit the requested height source from "
+                f"{measured} usable measured height-diameter pair(s). A Näslund fit "
+                "needs at least two pairs that are well clear of breast height and "
+                "that span a range of diameters; a set that is degenerate (one single "
+                "diameter) or that implies a non-monotone curve is rejected."
+            )
+        if not height_source.is_curve:
+            raise ValueError(
+                "impute_heights requires a curve height source (Näslund or a "
+                "callable), not measured heights."
+            )
 
-        for _ in range(n_simulations):
-            # Generate random positions in the square bounding nominal_area
-            side = sqrt(nominal_area)
-            x_pos = np.random.uniform(0, side, n_trees)
-            y_pos = np.random.uniform(0, side, n_trees)
-
-            # Generate diameters (exponential distribution, mean ~20 cm)
-            diameters = np.random.exponential(scale=20.0, size=n_trees)
-
-            # 'True' heights from a toy height-diameter function
-            # You can replace this with a more realistic model
-            heights_true = 1.3 + (diameters**2) / ((1.1138 + 0.2075 * diameters) ** 2)
-
-            # Add 3% measurement error (for example)
-            noise = np.random.normal(0, (sigma / 100.0) * heights_true, n_trees)
-            heights_measured = heights_true + noise
-
-            # The "true" top height H_bar in the entire stand is the mean of
-            # top nominal_top_n by diameter
-            top_indices = np.argsort(diameters)[-nominal_top_n:][::-1]
-            H_bar = np.mean(heights_true[top_indices])
-            H_bar_list.append(H_bar)
-
-            # Now place a random circular plot of radius r
-            center_x = np.random.uniform(r, side - r)
-            center_y = np.random.uniform(r, side - r)
-            dist = np.sqrt((x_pos - center_x) ** 2 + (y_pos - center_y) ** 2)
-            in_plot = dist <= r
-
-            # If enough trees are in the plot, compute h_hat
-            if np.sum(in_plot) >= m:
-                plot_diams = diameters[in_plot]
-                plot_h = heights_measured[in_plot]
-                # The top m by diameter
-                top_m_indices = np.argsort(plot_diams)[-m:][::-1]
-                h_hat = np.mean(plot_h[top_m_indices])
-            else:
-                h_hat = np.nan
-
-            h_hat_list.append(h_hat)
-
-        # Compute average bias
-        h_hat_avg = np.nanmean(h_hat_list)
-        H_bar_avg = np.mean(H_bar_list)
-
-        bias = h_hat_avg - H_bar_avg
-        bias_percentage = (bias / H_bar_avg) * 100.0 if H_bar_avg != 0 else 0.0
-
-        return bias, bias_percentage
+        count = 0
+        for tree in all_trees:
+            if which == "missing" and getattr(tree, "height_m", None) is not None:
+                continue
+            if not overwrite and getattr(tree, "predicted_height_m", None) is not None:
+                continue
+            diameter = getattr(tree, "diameter_cm", None)
+            if diameter is None:
+                continue
+            predicted = height_source.height_at_diameter(float(diameter))
+            if predicted is not None:
+                tree.predicted_height_m = predicted
+                count += 1
+        return count
 
     def append_plot(self, plot: CircularPlot) -> None:
         """
@@ -656,14 +1010,12 @@ class Stand:
         all_angle_counts = [ac for p in self.plots for ac in p.AngleCount]
 
         if all_angle_counts:
-            # Use the AngleCount aggregator.
-            ba_dict, stems_dict = AngleCountAggregator(all_angle_counts).aggregate_stand_metrics()
-            self._metric_estimates["Stems"] = {k: v for k, v in stems_dict.items()}
-            self._metric_estimates["BasalArea"] = {k: v for k, v in ba_dict.items()}
-            self.use_angle_count = True
+            # Use the AngleCount aggregator (adds TOTAL, omits stems if the
+            # tallies carry no diameters).
+            self._apply_angle_count_metrics(all_angle_counts)
         else:
             # Otherwise, recompute using the tree-based estimates.
-            self._compute_ht_estimates()
+            self._compute_plot_mean_estimates()
             self.use_angle_count = False
 
         # Invalidate any cached QMD estimates
@@ -720,6 +1072,6 @@ class Stand:
 
             plot.trees = new_trees
 
-        self._compute_ht_estimates()
+        self._compute_plot_mean_estimates()
         if "QMD" in self._metric_estimates:
             del self._metric_estimates["QMD"]

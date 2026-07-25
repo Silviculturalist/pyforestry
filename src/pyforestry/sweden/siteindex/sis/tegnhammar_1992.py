@@ -1,9 +1,16 @@
+"""Tegnhammar 1992 utilities and interfaces.
+
+Source: Swedish forestry domain models and helper implementations curated in pyforestry.
+"""
+
 # Tegnhammar Site Index corrections for Hägglund Site Index for Swedish Spruce.
 from __future__ import annotations
 
+import warnings
 from math import exp
 from typing import cast
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.helpers import Age, SiteIndexValue, TreeSpecies, enum_code
 from pyforestry.sweden.geo.humidity.eriksson_1986 import eriksson_1986_humidity
 from pyforestry.sweden.site.enums import Sweden
@@ -88,11 +95,18 @@ def tegnhammar_1992_adjusted_spruce_si_by_stand_variables(
     peat = 1 if soil_texture == 9 else 0
 
     if ditched and peat == 0 and moist == 0:
-        print("Ditched only defined for peat or moist soils! Setting ditched to 0.")
+        warnings.warn(
+            "Ditched only defined for peat or moist soils! Setting ditched to 0.", stacklevel=2
+        )
         ditched = 0
 
-    lateral_water_longer_periods = 1 if lateral_water == 4 else 0
-    lateral_water_shorter_periods = 1 if lateral_water == 3 else 0
+    # SwedenSoilWater codes: SELDOM_NEVER=1, SHORTER_PERIODS=2, LONGER_PERIODS=3
+    # (site/enums.py). The longer-periods flag previously tested ==4 (unreachable ->
+    # its 12.557257 term was dead) and the shorter-periods flag tested ==3 (which is
+    # LONGER, mis-applying the shorter coefficient). Map each to its real enum code,
+    # matching the sibling HL1979 convention (==3 is longer periods).
+    lateral_water_longer_periods = 1 if lateral_water == 3 else 0
+    lateral_water_shorter_periods = 1 if lateral_water == 2 else 0
     coarse = 1 if soil_texture in [1, 2, 3] else 0
     fine = 1 if soil_texture in [7, 8] else 0
 
@@ -204,3 +218,19 @@ def tegnhammar_1992_adjusted_si_spruce(sih, dominant_age, latitude):
         float: Adjusted SIH in metres.
     """
     return ((sih * 10) + (3.89 - 0.0498 * latitude) * (dominant_age - 15)) / 10
+
+
+DESCRIPTOR = FormulaDescriptor(
+    component_id="tegnhammar_1992_siteindex",
+    source=SourceReference(
+        author="Tegnhammar, L.",
+        year=1992,
+        title="Om skattningen av ståndortsindex för gran",
+    ),
+    species_groups={"spruce": frozenset({"Picea abies"})},
+    units={},
+    kernel_names=(
+        "tegnhammar_1992_adjusted_spruce_si_by_stand_variables",
+        "tegnhammar_1992_adjusted_si_spruce",
+    ),
+)

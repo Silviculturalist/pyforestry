@@ -1,3 +1,5 @@
+import warnings
+
 import numpy as np
 import pytest
 
@@ -78,52 +80,47 @@ def test_invalid_species_raises():
         Hagglund_Lundmark_1979_SIS(**params)
 
 
-def test_latitude_out_of_range_returns_nan(capsys):
+def test_latitude_out_of_range_returns_nan():
     params = _common_params()
     params.update(latitude=50.0, species="Picea abies", peat=False)
-    res = Hagglund_Lundmark_1979_SIS(**params)
-    out, _ = capsys.readouterr()
-    assert "latitude must be between (55.2, 69.1)" in out
+    with pytest.warns(UserWarning, match="latitude must be between"):
+        res = Hagglund_Lundmark_1979_SIS(**params)
     assert np.isnan(res)
 
 
-def test_soil_depth_nan_requires_peat(capsys):
+def test_soil_depth_nan_requires_peat():
     params = _common_params()
     params.update(soil_depth=np.nan, species="Picea abies", peat=False)
-    res = Hagglund_Lundmark_1979_SIS(**params)
-    out, _ = capsys.readouterr()
-    assert "soil_depth must be one of float: NA; int 1-5" in out
+    with pytest.warns(UserWarning, match="soil_depth must be one of float"):
+        res = Hagglund_Lundmark_1979_SIS(**params)
     assert np.isnan(res)
 
 
-def test_invalid_dlan_prints_message(capsys):
+def test_invalid_dlan_prints_message():
     params = _common_params()
     params.update(dlan=0, species="Picea abies", peat=False)
-    res = Hagglund_Lundmark_1979_SIS(**params)
-    out, _ = capsys.readouterr()
-    assert "dlan must be one of int: 1-31 or NA." in out
+    with pytest.warns(UserWarning, match="dlan must be one of int"):
+        res = Hagglund_Lundmark_1979_SIS(**params)
     assert np.isnan(res)
 
 
-def test_invalid_lateral_water(capsys):
+def test_invalid_lateral_water():
     params = _common_params()
     params.update(lateral_water=4, species="Picea abies", peat=False)
-    res = Hagglund_Lundmark_1979_SIS(**params)
-    out, _ = capsys.readouterr()
-    assert "lateral_water must be int 1-3" in out
+    with pytest.warns(UserWarning, match="lateral_water must be int"):
+        res = Hagglund_Lundmark_1979_SIS(**params)
     assert np.isnan(res)
 
 
-def test_invalid_climate_code(capsys):
+def test_invalid_climate_code():
     params = _common_params()
     params.update(climate_code="bad", species="Picea abies", peat=False)
-    res = Hagglund_Lundmark_1979_SIS(**params)
-    out, _ = capsys.readouterr()
-    assert "climate_code must be one of float: NA; str: M1, M2, M3, K1, K2, K3" in out
+    with pytest.warns(UserWarning, match="climate_code must be one of float"):
+        res = Hagglund_Lundmark_1979_SIS(**params)
     assert np.isnan(res)
 
 
-def test_spruce_dry_soil_warning(capsys):
+def test_spruce_dry_soil_warning():
     params = _common_params()
     params.update(
         species="Picea abies",
@@ -131,9 +128,8 @@ def test_spruce_dry_soil_warning(capsys):
         ground_layer=Sweden.BottomLayer.LICHEN_TYPE,
         peat=False,
     )
-    sis = Hagglund_Lundmark_1979_SIS(**params)
-    out, _ = capsys.readouterr()
-    assert "Warning: No coverage for Spruce on dry soils, switching to mesic." in out
+    with pytest.warns(UserWarning, match="No coverage for Spruce on dry soils"):
+        sis = Hagglund_Lundmark_1979_SIS(**params)
     assert isinstance(sis, SiteIndexValue)
 
 
@@ -145,21 +141,19 @@ def test_sis_pine_mineral_soil():
     assert 0 < float(sis) < 50
 
 
-def test_altitude_out_of_range_returns_nan(capsys):
+def test_altitude_out_of_range_returns_nan():
     params = _common_params()
     params.update(altitude=2200.0, species="Picea abies", peat=False)
-    res = Hagglund_Lundmark_1979_SIS(**params)
-    out, _ = capsys.readouterr()
-    assert "altitude must be between (0,2117)" in out
+    with pytest.warns(UserWarning, match="altitude must be between"):
+        res = Hagglund_Lundmark_1979_SIS(**params)
     assert np.isnan(res)
 
 
-def test_invalid_gotland_bool(capsys):
+def test_invalid_gotland_bool():
     params = _common_params()
     params.update(gotland="no", species="Picea abies", peat=False)
-    res = Hagglund_Lundmark_1979_SIS(**params)
-    out, _ = capsys.readouterr()
-    assert "Gotland must be a bool: True or False" in out
+    with pytest.warns(UserWarning, match="Gotland must be a bool"):
+        res = Hagglund_Lundmark_1979_SIS(**params)
     assert np.isnan(res)
 
 
@@ -185,88 +179,79 @@ def test_sis_valid_combinations(species, latitude, altitude, soil_moisture):
     assert 0 < float(sis) < 50
 
 
-def test_invalid_soil_moisture(capsys):
+def test_invalid_soil_moisture():
     params = _common_params()
     params.update(soil_moisture=6, species="Picea abies", peat=False)
-    res = Hagglund_Lundmark_1979_SIS(**params)
-    out, _ = capsys.readouterr()
-    assert "soil_moisture must be int 1 - 5" in out
+    with pytest.warns(UserWarning, match="soil_moisture must be int"):
+        res = Hagglund_Lundmark_1979_SIS(**params)
     assert np.isnan(res)
 
 
-def test_invalid_ground_layer(capsys):
+def test_invalid_ground_layer():
     params = _common_params()
     params.update(ground_layer=7, species="Picea abies", peat=False)
-    res = Hagglund_Lundmark_1979_SIS(**params)
-    out, _ = capsys.readouterr()
-    assert "ground_layer must be int 1-6" in out
+    with pytest.warns(UserWarning, match="ground_layer must be int"):
+        res = Hagglund_Lundmark_1979_SIS(**params)
     assert np.isnan(res)
 
 
-def test_invalid_vegetation(capsys):
+def test_invalid_vegetation():
     params = _common_params()
     params.update(vegetation=19, species="Picea abies", peat=False)
-    res = Hagglund_Lundmark_1979_SIS(**params)
-    out, _ = capsys.readouterr()
-    assert "Vegetation must be int 1-18" in out
+    with pytest.warns(UserWarning, match="Vegetation must be int"):
+        res = Hagglund_Lundmark_1979_SIS(**params)
     assert np.isnan(res)
 
 
-def test_invalid_soil_texture(capsys):
+def test_invalid_soil_texture():
     params = _common_params()
     params.update(soil_texture=10, species="Picea abies", peat=False)
-    res = Hagglund_Lundmark_1979_SIS(**params)
-    out, _ = capsys.readouterr()
-    assert "soil_texture must be int 0-10" in out
+    with pytest.warns(UserWarning, match="soil_texture must be int"):
+        res = Hagglund_Lundmark_1979_SIS(**params)
     assert np.isnan(res)
 
 
-def test_invalid_soil_depth_range(capsys):
+def test_invalid_soil_depth_range():
     params = _common_params()
     params.update(soil_depth=6, species="Picea abies", peat=False)
-    res = Hagglund_Lundmark_1979_SIS(**params)
-    out, _ = capsys.readouterr()
-    assert "soil_depth must be one of float: NA; int 1-5" in out
+    with pytest.warns(UserWarning, match="soil_depth must be one of float"):
+        res = Hagglund_Lundmark_1979_SIS(**params)
     assert np.isnan(res)
 
 
-def test_invalid_incline_percent(capsys):
+def test_invalid_incline_percent():
     params = _common_params()
     params.update(incline_percent=150.0, species="Picea abies", peat=False)
-    res = Hagglund_Lundmark_1979_SIS(**params)
-    out, _ = capsys.readouterr()
-    assert "incline_percent must be float 0-100" in out
+    with pytest.warns(UserWarning, match="incline_percent must be float"):
+        res = Hagglund_Lundmark_1979_SIS(**params)
     assert np.isnan(res)
 
 
-def test_invalid_aspect(capsys):
+def test_invalid_aspect():
     params = _common_params()
     params.update(aspect=400.0, species="Picea abies", peat=False)
-    res = Hagglund_Lundmark_1979_SIS(**params)
-    out, _ = capsys.readouterr()
-    assert "Aspect must be float 0-360" in out
+    with pytest.warns(UserWarning, match="Aspect must be float"):
+        res = Hagglund_Lundmark_1979_SIS(**params)
     assert np.isnan(res)
 
 
-def test_invalid_peat_bool(capsys):
+def test_invalid_peat_bool():
     params = _common_params()
     params.update(peat="yes", species="Picea abies")
-    res = Hagglund_Lundmark_1979_SIS(**params)
-    out, _ = capsys.readouterr()
-    assert "Peat must be a bool: True or False" in out
+    with pytest.warns(UserWarning, match="Peat must be a bool"):
+        res = Hagglund_Lundmark_1979_SIS(**params)
     assert np.isnan(res)
 
 
-def test_warn_nfi_adjustment_bool(capsys):
+def test_warn_nfi_adjustment_bool():
     params = _common_params()
     params.update(nfi_adjustments="no", species="Picea abies", peat=False)
-    sis = Hagglund_Lundmark_1979_SIS(**params)
-    out, _ = capsys.readouterr()
-    assert "nfi_adjustments must be a bool: True or False" in out
+    with pytest.warns(UserWarning, match="nfi_adjustments must be a bool"):
+        sis = Hagglund_Lundmark_1979_SIS(**params)
     assert isinstance(sis, SiteIndexValue)
 
 
-def test_spruce_change_to_pine_branch(capsys):
+def test_spruce_change_to_pine_branch():
     params = _common_params()
     params.update(
         species="Picea abies",
@@ -277,7 +262,6 @@ def test_spruce_change_to_pine_branch(capsys):
         ground_layer=Sweden.BottomLayer.SWAMP_MOSS,
     )
     sis = Hagglund_Lundmark_1979_SIS(**params)
-    capsys.readouterr()
     assert isinstance(sis, SiteIndexValue)
     assert 0 < float(sis) < 50
 
@@ -297,7 +281,7 @@ def test_spruce_on_peat_branch():
     assert 0 < float(sis) < 50
 
 
-def test_dry_soil_swamp_adjustment_no_warning(capsys):
+def test_dry_soil_swamp_adjustment_no_warning():
     params = _common_params()
     params.update(
         species="Picea abies",
@@ -305,9 +289,10 @@ def test_dry_soil_swamp_adjustment_no_warning(capsys):
         ground_layer=Sweden.BottomLayer.SWAMP_MOSS,
         peat=False,
     )
-    sis = Hagglund_Lundmark_1979_SIS(**params)
-    out, _ = capsys.readouterr()
-    assert "Warning: No coverage for Spruce" not in out
+    with warnings.catch_warnings(record=True) as rec:
+        warnings.simplefilter("always")
+        sis = Hagglund_Lundmark_1979_SIS(**params)
+    assert not any("No coverage for Spruce" in str(w.message) for w in rec)
     assert isinstance(sis, SiteIndexValue)
 
 
@@ -374,21 +359,19 @@ def test_pine_branches(
     assert 0 < float(sis) < 50
 
 
-def test_invalid_coast_bool(capsys):
+def test_invalid_coast_bool():
     params = _common_params()
     params.update(coast="no", species="Picea abies", peat=False)
-    sis = Hagglund_Lundmark_1979_SIS(**params)
-    out, _ = capsys.readouterr()
-    assert "coast must be a bool: True or False" in out
+    with pytest.warns(UserWarning, match="coast must be a bool"):
+        sis = Hagglund_Lundmark_1979_SIS(**params)
     assert isinstance(sis, SiteIndexValue)
 
 
-def test_invalid_limes_bool(capsys):
+def test_invalid_limes_bool():
     params = _common_params()
     params.update(limes_norrlandicus="no", species="Picea abies", peat=False)
-    sis = Hagglund_Lundmark_1979_SIS(**params)
-    out, _ = capsys.readouterr()
-    assert "limes_norrlandicus must be a bool: True or False" in out
+    with pytest.warns(UserWarning, match="limes_norrlandicus must be a bool"):
+        sis = Hagglund_Lundmark_1979_SIS(**params)
     assert isinstance(sis, SiteIndexValue)
 
 
@@ -580,7 +563,7 @@ def test_spruce_negative_sis_raises(monkeypatch):
     params = _common_params()
     params.update(species="Picea abies", peat=False)
     with pytest.raises(ValueError, match="SIS estimated < 0"):
-        hlm.NFI_SIS_SPRUCE(**params)
+        hlm.nfi_sis_spruce(**params)
 
 
 def test_pine_excessive_sis_raises(monkeypatch):
@@ -588,21 +571,21 @@ def test_pine_excessive_sis_raises(monkeypatch):
     params = _common_params()
     params.update(species="Pinus sylvestris", peat=False)
     with pytest.raises(ValueError, match="SIS estimated > 50"):
-        hlm.NFI_SIS_PINE(**params)
+        hlm.nfi_sis_pine(**params)
 
 
 def test_invalid_soil_moisture_spruce_raises():
     params = _common_params()
     params.update(species="Picea abies", peat=False, soil_moisture=6)
     with pytest.raises(ValueError, match="No SIS method found"):
-        hlm.NFI_SIS_SPRUCE(**params)
+        hlm.nfi_sis_spruce(**params)
 
 
 def test_invalid_soil_moisture_pine_raises():
     params = _common_params()
     params.update(species="Pinus sylvestris", peat=False, soil_moisture=0)
     with pytest.raises(ValueError, match="No SIS method found"):
-        hlm.NFI_SIS_PINE(**params)
+        hlm.nfi_sis_pine(**params)
 
 
 def test_pine_adjustment_floor(monkeypatch):
@@ -735,7 +718,7 @@ def test_pine_negative_sis_raises(monkeypatch):
     params = _common_params()
     params.update(species="Pinus sylvestris", peat=False)
     with pytest.raises(ValueError, match="SIS estimated < 0"):
-        hlm.NFI_SIS_PINE(**params)
+        hlm.nfi_sis_pine(**params)
 
 
 @pytest.mark.parametrize(

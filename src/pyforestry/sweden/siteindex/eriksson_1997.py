@@ -111,3 +111,48 @@ def eriksson_1997_height_trajectory_sweden_birch(
         },  # This represents the genus group Betula
         fn=eriksson_1997_height_trajectory_sweden_birch,
     )
+
+
+# ---------------------------------------------------------------------------
+# Introspection
+# ---------------------------------------------------------------------------
+
+
+class _Descriptor:
+    """FormulaModuleDescriptor for Eriksson et al. (1997)."""
+
+    @property
+    def component_id(self):
+        return "eriksson_1997"
+
+    @property
+    def source(self):
+        from pyforestry.simulation.contracts import SourceReference
+
+        return SourceReference(
+            author="Eriksson, H., Johansson, U., Kiviste, A.",
+            year=1997,
+            title=(
+                "A site-index model for pure and mixed stands of"
+                " Betula pendula and Betula pubescens in Sweden"
+            ),
+        )
+
+    @property
+    def species_groups(self):
+        return {}
+
+    @property
+    def units(self):
+        return {
+            "dominant_height_m": "m",
+            "age_years": "years",
+            "return": "SiteIndexValue (m)",
+        }
+
+    @property
+    def kernel_names(self):
+        return ["eriksson_1997_height_trajectory_sweden_birch"]
+
+
+DESCRIPTOR = _Descriptor()

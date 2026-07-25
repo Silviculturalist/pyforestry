@@ -89,3 +89,45 @@ def johansson_2011_height_trajectory_sweden_poplar(
         species={TreeSpecies.Sweden.populus_tremula},
         fn=johansson_2011_height_trajectory_sweden_poplar,
     )
+
+
+# ---------------------------------------------------------------------------
+# Introspection
+# ---------------------------------------------------------------------------
+
+
+class _Descriptor:
+    """FormulaModuleDescriptor for Johansson (2011)."""
+
+    @property
+    def component_id(self):
+        return "johansson_2011"
+
+    @property
+    def source(self):
+        from pyforestry.simulation.contracts import SourceReference
+
+        return SourceReference(
+            author="Johansson, T.",
+            year=2011,
+            title="Site index curves for Poplar growing on former farmland in Sweden",
+        )
+
+    @property
+    def species_groups(self):
+        return {}
+
+    @property
+    def units(self):
+        return {
+            "dominant_height_m": "m",
+            "age_years": "years",
+            "return": "SiteIndexValue (m)",
+        }
+
+    @property
+    def kernel_names(self):
+        return ["johansson_2011_height_trajectory_sweden_poplar"]
+
+
+DESCRIPTOR = _Descriptor()

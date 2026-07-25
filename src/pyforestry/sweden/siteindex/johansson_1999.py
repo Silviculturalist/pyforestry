@@ -168,3 +168,51 @@ def johansson_1999_height_trajectory_sweden_alnus_incana(
         species={TreeSpecies.Sweden.alnus_incana},
         fn=johansson_1999_height_trajectory_sweden_alnus_incana,
     )
+
+
+# ---------------------------------------------------------------------------
+# Introspection
+# ---------------------------------------------------------------------------
+
+
+class _Descriptor:
+    """FormulaModuleDescriptor for Johansson (1999)."""
+
+    @property
+    def component_id(self):
+        return "johansson_1999"
+
+    @property
+    def source(self):
+        from pyforestry.simulation.contracts import SourceReference
+
+        return SourceReference(
+            author="Johansson, T.",
+            year=1999,
+            title=(
+                "Site Index Curves for Common Alder and Grey Alder"
+                " Growing on Different Types of Forest Soil in Sweden"
+            ),
+        )
+
+    @property
+    def species_groups(self):
+        return {}
+
+    @property
+    def units(self):
+        return {
+            "dominant_height_m": "m",
+            "age_years": "years",
+            "return": "SiteIndexValue (m)",
+        }
+
+    @property
+    def kernel_names(self):
+        return [
+            "johansson_1999_height_trajectory_sweden_alnus_glutinosa",
+            "johansson_1999_height_trajectory_sweden_alnus_incana",
+        ]
+
+
+DESCRIPTOR = _Descriptor()

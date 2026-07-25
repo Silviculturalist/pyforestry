@@ -1,14 +1,20 @@
+"""Edgren-Nylinder (1949) taper implementation and associated constants."""
+
+import warnings
 from functools import lru_cache  # to cache results
 
 import numpy as np
 from scipy.optimize import minimize_scalar
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.taper import Taper
 from pyforestry.sweden.timber.swe_timber import SweTimber
 from pyforestry.sweden.volume.naslund_1947 import NaslundFormFactor
 
 
 class EdgrenNylinder1949Consts:
+    """Constant tables and lookup helpers for Edgren-Nylinder taper curves."""
+
     # --- Define constants at the class level so they are only created ONCE ---
     _CONST_SPRUCE_NORTH = np.array(
         [
@@ -66,6 +72,7 @@ class EdgrenNylinder1949Consts:
     @staticmethod
     @lru_cache(maxsize=None)  # <-- ADD THIS DECORATOR TO CACHE RESULTS
     def get_constants(species: str, north: bool, form_factor: float):
+        """Return the coefficient row for species/region and rounded form factor."""
         # Species and region logic now refers to the pre-defined constants
         if north and species == "picea abies":
             constants = EdgrenNylinder1949Consts._CONST_SPRUCE_NORTH
@@ -98,6 +105,7 @@ class EdgrenNylinder1949Consts:
 
     @staticmethod
     def get_inflexion_point(species: str, north: bool, form_quotient: float) -> float:
+        """Return the relative-height inflexion point for taper piecewise curves."""
         if north:
             if species == "picea abies":
                 return 0.08631 / (1 - form_quotient) ** 0.5
@@ -110,11 +118,14 @@ class EdgrenNylinder1949Consts:
                 return 0.06873 / (1 - form_quotient) ** 0.8
 
 
-class Pettersson1949_consts:
+class Pettersson1949Consts:
+    """Pettersson (1949) helpers used to derive taper form quotient."""
+
     @staticmethod
     def form_quotient(
         species: str, north: bool, height: float, dbh_ub: float, form_factor_ub: float
     ) -> float:
+        """Compute Pettersson form quotient from tree dimensions and region."""
         if north:
             if species == "picea abies":
                 return 0.239 + 0.01046 * height - 0.004407 * dbh_ub + 0.6532 * form_factor_ub
@@ -128,6 +139,8 @@ class Pettersson1949_consts:
 
 
 class EdgrenNylinder1949(Taper):
+    """Stateful taper model using precomputed constants for one timber object."""
+
     def __init__(self, timber: SweTimber):
         """
         Constructor is now stateful. It pre-calculates all taper parameters
@@ -150,13 +163,16 @@ class EdgrenNylinder1949(Taper):
             region=self.timber.region,
         )
 
-        form_quotient = Pettersson1949_consts.form_quotient(
+        form_quotient = Pettersson1949Consts.form_quotient(
             species=self.timber.species,
             north=is_north,
             height=self.timber.height_m,
             dbh_ub=self.timber.diameter_cm,
             form_factor_ub=form_factor,
         )
+        # Clamp to avoid complex values in inflexion-point calculations.
+        if form_quotient >= 1.0:
+            form_quotient = 0.99
 
         self.inflexion_point = EdgrenNylinder1949Consts.get_inflexion_point(
             species=self.timber.species, north=is_north, form_quotient=form_quotient
@@ -225,24 +241,33 @@ class EdgrenNylinder1949(Taper):
         Instance method using pre-calculated parameters from self.
         """
         # Constants are now read directly from the instance
-        const_F, const_beta, const_Gamma, const_q, const_Q, const_R = self.constants[0]
+        (
+            _const_f,
+            const_beta,
+            const_gamma,
+            const_q,
+            const_q_spline,
+            const_r,
+        ) = self.constants[0]
         inflexion_point = self.inflexion_point
 
         # Compute relative diameter based on height regions
         if rel_height <= inflexion_point:
             return 100 - const_q * np.log10(1 + 10000 * rel_height)
         elif inflexion_point < rel_height <= 0.6:
-            if np.isnan(const_Q):
-                Diameter_inflexion_point = 100 - const_q * np.log10(1 + 10000 * inflexion_point)
-                Diameter_60p_height = const_R * np.log10(1 + (1 - 0.6) * const_Gamma)
-                slope = (Diameter_60p_height - Diameter_inflexion_point) / (0.6 - inflexion_point)
-                return Diameter_inflexion_point + slope * (rel_height - inflexion_point)
+            if np.isnan(const_q_spline):
+                diameter_at_inflexion_point = 100 - const_q * np.log10(1 + 10000 * inflexion_point)
+                diameter_at_relative_height_60 = const_r * np.log10(1 + (1 - 0.6) * const_gamma)
+                slope = (diameter_at_relative_height_60 - diameter_at_inflexion_point) / (
+                    0.6 - inflexion_point
+                )
+                return diameter_at_inflexion_point + slope * (rel_height - inflexion_point)
             else:
-                return const_Q * np.log10(1 + (1 - rel_height) * const_beta)
+                return const_q_spline * np.log10(1 + (1 - rel_height) * const_beta)
         elif 0.6 < rel_height < 1:
-            return const_R * np.log10(1 + (1 - rel_height) * const_Gamma)
+            return const_r * np.log10(1 + (1 - rel_height) * const_gamma)
         else:
-            print(f"Warning: Unexpected value for relative height: {rel_height}")
+            warnings.warn(f"Unexpected value for relative height: {rel_height}", stacklevel=2)
             return 0
 
     def get_diameter_at_height(self, height_m: float) -> float:
@@ -262,20 +287,52 @@ class EdgrenNylinder1949(Taper):
 
     def get_height_at_diameter(self, diameter: float) -> float:
         """Instance method."""
-        if diameter <= 0 or diameter > self.base_diameter:
-            print(f"Invalid minDiameter: {diameter}. Must be between 0 and {self.base_diameter}.")
+        target_diameter_cm = diameter
+        if target_diameter_cm <= 0 or target_diameter_cm > self.base_diameter:
+            warnings.warn(
+                "Invalid diameter_cm: "
+                f"{target_diameter_cm}. Must be between 0 and {self.base_diameter}.",
+                stacklevel=2,
+            )
             return 0.0
 
-        def objective(height):
+        def objective(height_m: float) -> float:
+            """Objective function minimized to recover height at target diameter."""
             # The objective function now calls the fast instance method
-            diameter_at_height = self.get_diameter_at_height(height)
+            diameter_at_height = self.get_diameter_at_height(height_m)
             if diameter_at_height is None:
-                return abs(0 - diameter)
-            return abs(diameter_at_height - diameter)
+                return abs(target_diameter_cm)
+            return abs(diameter_at_height - target_diameter_cm)
 
         result = minimize_scalar(objective, bounds=(0, self.timber.height_m), method="bounded")
         if result.success:
             return result.x
         else:
-            print(f"Optimization failed for minDiameter: {diameter}")
+            warnings.warn(
+                f"Optimization failed for diameter_cm: {target_diameter_cm}", stacklevel=2
+            )
             return 0.0
+
+
+# Backward compatibility for older imports/tests.
+Pettersson1949_consts = Pettersson1949Consts
+
+
+DESCRIPTOR = FormulaDescriptor(
+    component_id="edgren_1949_taper",
+    source=SourceReference(
+        author="Edgren, V. & Nylinder, P.",
+        year=1949,
+        title="Edgren-Nylinder taper functions for Scots pine and Norway spruce.",
+    ),
+    species_groups={
+        "spruce": frozenset({"Picea abies"}),
+        "pine": frozenset({"Pinus sylvestris"}),
+    },
+    units={},
+    kernel_names=(
+        "EdgrenNylinder1949",
+        "EdgrenNylinder1949Consts",
+        "Pettersson1949Consts",
+    ),
+)

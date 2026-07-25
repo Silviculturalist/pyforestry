@@ -1,11 +1,6 @@
 pyforestry.sweden.site package
 ==============================
 
-.. automodule:: pyforestry.sweden.site
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Submodules
 ----------
 
@@ -29,6 +24,14 @@ pyforestry.sweden.site.swedish\_site module
 -------------------------------------------
 
 .. automodule:: pyforestry.sweden.site.swedish_site
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: pyforestry.sweden.site
    :members:
    :undoc-members:
    :show-inheritance:
