@@ -102,9 +102,17 @@ def test_callable_source_is_curve():
 
 
 def test_measured_source_predicted_fallback():
-    tree = Tree(species=PINE, diameter_cm=20.0, predicted_height_m=15.0)
+    tree = Tree(species=PINE, diameter_cm=20.0)
+    tree.set_imputed("height_m", 15.0, _fake_imputer())
     assert resolve_height_source("measured").height_for(tree) is None
     assert resolve_height_source("measured+predicted").height_for(tree) == 15.0
+
+
+def _fake_imputer():
+    """Minimal stand-in for an Imputer, for tests that only need a stored value."""
+    from pyforestry.base.imputation import NaslundHeightImputer
+
+    return NaslundHeightImputer()
 
 
 # --------------------------------------------------------------------------- #
@@ -112,16 +120,19 @@ def test_measured_source_predicted_fallback():
 # --------------------------------------------------------------------------- #
 def test_tree_height_provenance_and_effective_height():
     measured = Tree(species=PINE, diameter_cm=20.0, height_m=15.0)
-    predicted = Tree(species=PINE, diameter_cm=20.0, predicted_height_m=14.0)
+    imputed = Tree(species=PINE, diameter_cm=20.0)
+    imputed.set_imputed("height_m", 14.0, _fake_imputer())
     neither = Tree(species=PINE, diameter_cm=20.0)
-    assert measured.height_provenance == "measured"
-    assert predicted.height_provenance == "predicted"
-    assert neither.height_provenance is None
-    # measured wins by default; predicted-preference can override
-    both = Tree(species=PINE, diameter_cm=20.0, height_m=15.0, predicted_height_m=14.0)
-    assert both.effective_height_m() == 15.0
-    assert both.effective_height_m(prefer="predicted") == 14.0
-    assert both.effective_height_m(prefer="predicted_only") == 14.0
+    assert measured.provenance("height_m") == "measured"
+    assert imputed.provenance("height_m") == "imputed"
+    assert neither.provenance("height_m") is None
+    # measured wins by default; imputed-preference can override
+    both = Tree(species=PINE, diameter_cm=20.0, height_m=15.0)
+    both.set_imputed("height_m", 14.0, _fake_imputer())
+    assert both.value_of("height_m") == 15.0
+    assert both.value_of("height_m", prefer="imputed") == 14.0
+    assert both.value_of("height_m", prefer="imputed_only") == 14.0
+    assert both.value_of("height_m", prefer="measured_only") == 15.0
 
 
 # --------------------------------------------------------------------------- #
@@ -134,17 +145,20 @@ def test_impute_heights_fills_missing_without_touching_measured():
     trees.append(Tree(species=PINE, diameter_cm=25))  # missing height
     stand = Stand(plots=[CircularPlot(id=1, radius_m=_radius_for(500.0), trees=trees)])
 
-    assigned = stand.impute_heights("naslund", which="missing")
+    assigned = stand.impute("height_m", "naslund", which="missing")
     assert assigned == 1
-    assert trees[0].height_m == 8 and trees[0].predicted_height_m is None  # measured untouched
-    assert trees[3].predicted_height_m is not None
-    assert trees[3].height_provenance == "predicted"
+    # measured untouched
+    assert trees[0].height_m == 8 and "height_m" not in trees[0].imputed
+    assert trees[3].value_of("height_m") is not None
+    assert trees[3].provenance("height_m") == "imputed"
+    # the modelled value records which curve produced it
+    assert trees[3].imputed_source("height_m").year == 1936
 
 
 def test_impute_heights_rejects_measured_source():
     stand = Stand(plots=[_plot(500.0, [(20, 15), (30, 20)])])
     with pytest.raises(ValueError):
-        stand.impute_heights("measured")
+        stand.impute("height_m", "measured")
 
 
 # --------------------------------------------------------------------------- #

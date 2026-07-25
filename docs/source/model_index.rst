@@ -1,7 +1,7 @@
 Model index
 ===========
 
-Auto-generated from ``pyforestry.catalog`` (82 models). Regenerate with ``python scripts/generate_model_index.py``.
+Auto-generated from ``pyforestry.catalog`` (83 models). Regenerate with ``python scripts/generate_model_index.py``.
 
 .. list-table::
    :header-rows: 1
@@ -32,6 +32,11 @@ Auto-generated from ``pyforestry.catalog`` (82 models). Regenerate with ``python
      - base
      - height
      - Näslund, M. (1936) Skogsförsöksanstaltens gallringsförsök i tallskog
+   * - ``tree_attribute_imputation``
+     - formula
+     - base
+     - imputation
+     - (none) (0) Tree attribute imputation (pyforestry mechanism) (composes naslund_height_imputer)
    * - ``bitterlich_1948_angle_count``
      - formula
      - base

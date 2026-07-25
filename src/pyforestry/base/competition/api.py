@@ -241,7 +241,7 @@ def competition_indices(
 
 def _mean_height(trees: Sequence[Tree]) -> Optional[float]:
     """Arithmetic mean of whatever heights are available, or ``None``."""
-    heights = [h for h in (t.effective_height_m() for t in trees) if h is not None]
+    heights = [h for h in (t.value_of("height_m") for t in trees) if h is not None]
     return sum(heights) / len(heights) if heights else None
 
 

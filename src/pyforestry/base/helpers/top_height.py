@@ -285,7 +285,7 @@ def compute_top_height(
         ``f(diameter_cm) -> height_m``, or a ready height source/curve. The
         diameter-reference methods require a curve source. With ``"measured"``
         only trees carrying a measured height contribute, so if the thickest
-        trees lack heights, impute them first (``Stand.impute_heights``) or use a
+        trees lack heights, impute them first (``Stand.impute("height_m")``) or use a
         curve source instead.
     n:
         For ``"mean_of_largest"``: number of largest trees per plot. Defaults to

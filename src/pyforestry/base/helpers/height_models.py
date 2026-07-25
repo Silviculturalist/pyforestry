@@ -14,7 +14,7 @@ configurable top-height estimators:
   :class:`HeightSource`) into a :class:`HeightSource`.
 
 Heights produced by a curve are *interpolated*, never measured; callers keep the
-two provenances distinct (see ``Tree.predicted_height_m``).
+two provenances distinct (see ``Tree.imputed`` and ``Tree.value_of``).
 
 Source:
     Näslund, M. (1936). *Skogsförsöksanstaltens gallringsförsök i tallskog.*
@@ -287,9 +287,9 @@ class MeasuredHeightSource(HeightSource):
     Parameters
     ----------
     use_predicted_fallback:
-        When ``True`` and a tree has no measured ``height_m``, fall back to its
-        ``predicted_height_m`` (an interpolated value). Defaults to ``False``,
-        i.e. measured heights only.
+        When ``True`` and a tree has no measured ``height_m``, fall back to an
+        imputed height from ``Tree.imputed`` (a modelled value). Defaults to
+        ``False``, i.e. measured heights only.
     """
 
     is_curve = False
@@ -299,10 +299,11 @@ class MeasuredHeightSource(HeightSource):
         self.use_predicted_fallback = use_predicted_fallback
 
     def height_for(self, tree) -> Optional[float]:  # noqa: ANN001
-        """Return the tree's measured height, or predicted height if allowed."""
+        """Return the tree's measured height, or an imputed height if allowed."""
         height = getattr(tree, "height_m", None)
         if height is None and self.use_predicted_fallback:
-            height = getattr(tree, "predicted_height_m", None)
+            entry = getattr(tree, "imputed", {}).get("height_m")
+            height = None if entry is None else entry.value
         return None if height is None else float(height)
 
 

@@ -9,7 +9,10 @@ import statistics
 import warnings
 from dataclasses import dataclass, field
 from math import isclose, pi, sqrt
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union, cast
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Union, cast
+
+if TYPE_CHECKING:  # pragma: no cover - import cycle: imputation reaches helpers
+    from pyforestry.base.imputation.registry import ImputerSpec
 
 import geopandas as gpd
 from pyproj import CRS
@@ -24,7 +27,7 @@ from pyforestry.base.helpers import (
     TreeName,
     parse_tree_species,
 )
-from pyforestry.base.helpers.height_models import HeightSourceSpec, resolve_height_source
+from pyforestry.base.helpers.height_models import HeightSourceSpec
 from pyforestry.base.helpers.primitives import (
     BasalAreaWeightedDiameter,
     LoreysMeanHeight,
@@ -922,80 +925,92 @@ class Stand:
             naslund_exponent=naslund_exponent,
         )
 
-    def impute_heights(
+    def impute(
         self,
-        source: HeightSourceSpec = "naslund",
+        attribute: str,
+        imputer: "ImputerSpec" = None,
         *,
         which: str = "missing",
         overwrite: bool = False,
-        naslund_exponent: Union[int, float, str] = 2,
+        **imputer_kwargs: object,
     ) -> int:
-        """Assign interpolated heights to trees from a height-diameter curve.
+        """Fill in a tree attribute the inventory does not carry.
 
-        The imputed values are written to each tree's ``predicted_height_m`` and
-        are kept distinct from measured ``height_m`` (which is never modified),
-        so a modelled height is never mistaken for a measurement.
+        Modelled values are written to each tree's
+        :attr:`~pyforestry.base.helpers.tree.Tree.imputed` map together with the
+        imputer that produced them and its citation. Measured attributes are
+        never modified, so a modelled value cannot be mistaken for a measurement;
+        read the two together with
+        :meth:`~pyforestry.base.helpers.tree.Tree.value_of`.
 
         Parameters
         ----------
-        source:
-            A *curve* height source: ``"naslund"`` (fit from the stand's measured
-            height-diameter pairs), a callable ``f(diameter_cm) -> height_m``, or
-            a :class:`~pyforestry.base.helpers.height_models.NaslundHeightCurve`.
-            A measured source is rejected -- there is nothing to impute from.
+        attribute:
+            What to impute, e.g. ``"height_m"``.
+        imputer:
+            A registered imputer name (``"naslund"``), an
+            :class:`~pyforestry.base.imputation.imputer.Imputer`, a callable
+            ``f(tree) -> value | None``, or ``None`` for the attribute's default.
+            A callable is recorded as uncited, which is what it is.
         which:
-            ``"missing"`` (default) imputes only trees lacking a measured height;
-            ``"all"`` imputes every tree that has a diameter.
+            ``"missing"`` (default) imputes only trees lacking a measured value;
+            ``"all"`` imputes every tree the imputer can produce a value for.
         overwrite:
-            When ``True``, replace an existing ``predicted_height_m``; otherwise
-            keep any value already present.
-        naslund_exponent:
-            Exponent for the ``"naslund"`` fit. Defaults to 2.
+            When ``True``, replace an existing imputed value; otherwise keep any
+            already present.
+        **imputer_kwargs:
+            Passed to a registered imputer's constructor, e.g.
+            ``naslund_exponent="auto"``.
 
         Returns
         -------
         int
-            The number of trees assigned a predicted height.
+            The number of trees assigned a value.
 
         Raises
         ------
+        KeyError
+            If no imputer is registered for ``attribute`` and none was given.
         ValueError
-            If the source cannot be resolved/fit, or if it is not a curve.
+            If the imputer cannot be fitted from the available trees, or
+            ``which`` is not recognised.
         """
+        from pyforestry.base.imputation import resolve_imputer
+
+        if which not in ("missing", "all"):
+            raise ValueError(f"Unknown which={which!r}; use 'missing' or 'all'.")
+
         all_trees = [tree for plot in self.plots for tree in plot.trees]
-        height_source = resolve_height_source(source, all_trees, naslund_exponent=naslund_exponent)
-        if height_source is None:
-            measured = sum(
+        resolved = resolve_imputer(attribute, imputer)
+        if imputer_kwargs:
+            resolved = type(resolved)(**imputer_kwargs)  # type: ignore[call-arg]
+
+        context: dict = {"stand": self}
+        fitted = resolved.fit(all_trees, context)
+        if fitted is None:
+            usable = sum(
                 1
                 for tree in all_trees
-                if getattr(tree, "height_m", None) is not None
+                if getattr(tree, attribute, None) is not None
                 and getattr(tree, "diameter_cm", None) is not None
             )
             raise ValueError(
-                "Could not fit the requested height source from "
-                f"{measured} usable measured height-diameter pair(s). A Näslund fit "
-                "needs at least two pairs that are well clear of breast height and "
-                "that span a range of diameters; a set that is degenerate (one single "
-                "diameter) or that implies a non-monotone curve is rejected."
-            )
-        if not height_source.is_curve:
-            raise ValueError(
-                "impute_heights requires a curve height source (Näslund or a "
-                "callable), not measured heights."
+                f"Could not fit an imputer for {attribute!r} from {usable} usable "
+                "measured pair(s). A Näslund fit needs at least two pairs that are "
+                "well clear of breast height and that span a range of diameters; a "
+                "set that is degenerate (one single diameter) or that implies a "
+                "non-monotone curve is rejected."
             )
 
         count = 0
         for tree in all_trees:
-            if which == "missing" and getattr(tree, "height_m", None) is not None:
+            if which == "missing" and getattr(tree, attribute, None) is not None:
                 continue
-            if not overwrite and getattr(tree, "predicted_height_m", None) is not None:
+            if not overwrite and attribute in getattr(tree, "imputed", {}):
                 continue
-            diameter = getattr(tree, "diameter_cm", None)
-            if diameter is None:
-                continue
-            predicted = height_source.height_at_diameter(float(diameter))
-            if predicted is not None:
-                tree.predicted_height_m = predicted
+            value = fitted.impute(tree, context)
+            if value is not None:
+                tree.set_imputed(attribute, value, fitted)
                 count += 1
         return count
 

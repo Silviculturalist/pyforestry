@@ -214,7 +214,7 @@ def test_naslund_fit_failure_message_is_accurate():
     sp_trees = [Tree(species=PINE, diameter_cm=20.0, height_m=15.0) for _ in range(5)]
     stand = Stand(plots=[CircularPlot(id=1, area_m2=500.0, trees=sp_trees)])
     with pytest.raises(ValueError, match="span a range of diameters"):
-        stand.impute_heights("naslund")
+        stand.impute("height_m", "naslund")
 
 
 def test_naslund_exponent_fit_recovers_a_known_exponent():
