@@ -9,6 +9,8 @@ Source:
 import math
 from typing import Optional
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
+
 
 def Odin_temperature_sum(latitude: float, altitude_m: float) -> float:
     """
@@ -416,3 +418,26 @@ class Moren_Perttu_radiation_1994:
             + 0.00132 * latitude_deg * altitude_m
         )
         return int(round(start_day))
+
+
+DESCRIPTOR = FormulaDescriptor(
+    component_id="odin_1983_temperature_sum",
+    source=SourceReference(
+        author="Odin, H., Eriksson, B. & Perttu, K.",
+        year=1983,
+        title="Temperature and radiation in Swedish forestry",
+        note=(
+            "Sveriges lantbruksuniversitet, Reports in Forest Ecology and Forest "
+            "Soils nr 45. Annual temperature sum above 5 degrees C from latitude "
+            "and altitude."
+        ),
+    ),
+    species_groups={},
+    units={
+        "latitude": "decimal degrees",
+        "altitude_m": "m",
+        "return": "degree-days above 5 C",
+    },
+    kernel_names=("Odin_temperature_sum",),
+    domain="climate",
+)

@@ -13,9 +13,13 @@ import path::
     >>> entry = catalog.describe("soderberg_1992_bark")
     >>> entry.source.title
 
-Discovery currently covers modules that expose a ``DESCRIPTOR``; the set grows
-as more modules (notably siteindex, taper, and the Norway region) adopt the
-convention.
+Discovery covers ``pyforestry.base`` as well as the regions, so region-independent
+models are findable too::
+
+    >>> catalog.find(region="base")                    # Näslund, García, Bitterlich, Näsberg
+
+Discovery currently covers modules that expose a ``DESCRIPTOR``; the set grows as
+more modules adopt the convention.
 """
 
 from __future__ import annotations
@@ -27,14 +31,19 @@ from typing import Any, Iterator, Mapping, Optional
 
 from pyforestry.base.contracts import SourceReference
 
-# Region packages scanned for DESCRIPTOR-bearing formula modules.
-_MODEL_ROOTS = ("pyforestry.sweden", "pyforestry.norway")
+# Packages scanned for DESCRIPTOR-bearing formula modules. ``base`` is scanned
+# alongside the regions because it holds region-independent science (Näslund's
+# height curve, García's top-height estimator, Bitterlich angle-count sampling,
+# Näsberg's bucking optimiser); those entries report ``region="base"``.
+_MODEL_ROOTS = ("pyforestry.base", "pyforestry.sweden", "pyforestry.norway")
 
 # Subpackage names that hold data, geometry, or runtime glue rather than
 # scientific descriptors. Skipped to keep discovery fast and focused. ``blocks``
 # is intentionally *not* skipped: its composed model adapters publish
 # ``kind="model"`` descriptors that the catalog surfaces alongside formulas.
-_SKIP_SEGMENTS = frozenset({"geo", "simulation", "pricelist", "timber", "site", "misc", "helpers"})
+# Neither are ``geo`` (Odin 1983, Eriksson 1986) or ``helpers`` (the base science
+# listed above) — both carry published models, so both are scanned.
+_SKIP_SEGMENTS = frozenset({"simulation", "pricelist", "timber", "site", "misc"})
 
 _DESCRIPTOR_ATTRS = ("component_id", "source", "species_groups", "units", "kernel_names")
 

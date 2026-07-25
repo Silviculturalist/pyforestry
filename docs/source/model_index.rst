@@ -1,7 +1,7 @@
 Model index
 ===========
 
-Auto-generated from ``pyforestry.catalog`` (75 models). Regenerate with ``python scripts/generate_model_index.py``.
+Auto-generated from ``pyforestry.catalog`` (81 models). Regenerate with ``python scripts/generate_model_index.py``.
 
 .. list-table::
    :header-rows: 1
@@ -12,6 +12,26 @@ Auto-generated from ``pyforestry.catalog`` (75 models). Regenerate with ``python
      - Region
      - Domain
      - Source
+   * - ``nasberg_1985_bucking``
+     - formula
+     - base
+     - bucking
+     - Näsberg, M. (1985) Mathematical programming models for optimal log bucking
+   * - ``garcia_1998_top_height``
+     - formula
+     - base
+     - height
+     - García, O. (1998) Estimating top height with variable plot sizes
+   * - ``naslund_1936_height_curve``
+     - formula
+     - base
+     - height
+     - Näslund, M. (1936) Skogsförsöksanstaltens gallringsförsök i tallskog
+   * - ``bitterlich_1948_angle_count``
+     - formula
+     - base
+     - sampling
+     - Bitterlich, W. (1948) Die Winkelzählprobe
    * - ``braastad_1966_bark``
      - formula
      - norway
@@ -137,6 +157,16 @@ Auto-generated from ``pyforestry.catalog`` (75 models). Regenerate with ``python
      - sweden
      - biomass
      - Petersson, H. & Ståhl, G. (2006) Functions for below-ground biomass of Pinus sylvestris, Picea abies, Betula pendula and Betula pubescens in Sweden
+   * - ``eriksson_1986_humidity``
+     - formula
+     - sweden
+     - climate
+     - Eriksson, B. (1986) Nederbörds- och humiditetsklimatet i Sverige under vegetationsperioden
+   * - ``odin_1983_temperature_sum``
+     - formula
+     - sweden
+     - climate
+     - Odin, H., Eriksson, B. & Perttu, K. (1983) Temperature and radiation in Swedish forestry
    * - ``eko_1985_model``
      - model
      - sweden

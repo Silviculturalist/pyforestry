@@ -17,7 +17,11 @@ from tqdm import tqdm
 from pyforestry.base.pricelist.pricelist import create_pricelist_from_data
 from pyforestry.base.taper.taper import Taper
 from pyforestry.base.timber.timber_base.timber import Timber
-from pyforestry.base.timber_bucking.nasberg_1985 import BuckingConfig, Nasberg_1985_BranchBound
+
+# ``nasberg_1985`` imports ``pyforestry.base.pricelist``, which imports this module, so a
+# module-level import here is a cycle. It only bites when ``nasberg_1985`` is imported
+# first (as model discovery does), which left it silently undiscoverable. Imported inside
+# the worker instead.
 
 
 def _hash_pricelist(price_data: Dict[str, Any]) -> str:
@@ -39,6 +43,11 @@ def _worker_buck_one_tree(
     A top-level function for a single tree optimization.
     This is what each parallel process will execute.
     """
+    from pyforestry.base.timber_bucking.nasberg_1985 import (  # circular import; see module head
+        BuckingConfig,
+        Nasberg_1985_BranchBound,
+    )
+
     species, dbh_cm, height_dm = tree_params
     height_m = height_dm / 10.0
 

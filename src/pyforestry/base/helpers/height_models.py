@@ -27,6 +27,8 @@ Source:
 import warnings
 from typing import Callable, List, Optional, Sequence, Tuple, Union
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
+
 __all__ = [
     "NaslundHeightCurve",
     "HeightSource",
@@ -388,3 +390,27 @@ def resolve_height_source(
             return None if curve is None else CurveHeightSource(curve.predict)
         raise ValueError(f"Unknown height source {source!r}.")
     raise TypeError(f"Unsupported height source of type {type(source).__name__}.")
+
+
+DESCRIPTOR = FormulaDescriptor(
+    component_id="naslund_1936_height_curve",
+    source=SourceReference(
+        author="Näslund, M.",
+        year=1936,
+        title="Skogsförsöksanstaltens gallringsförsök i tallskog",
+        note=(
+            "Meddelanden från Statens skogsförsöksanstalt 29(1), 1-169. The "
+            "height-diameter curve h = 1.3 + d**p / (a + b*d)**p and its linearising "
+            "transform are Näslund's; the least-squares fitting procedure and the "
+            "pluggable HeightSource abstraction around it are pyforestry's own."
+        ),
+    ),
+    species_groups={},
+    units={
+        "diameter": "cm",
+        "height": "m",
+        "return": "m",
+    },
+    kernel_names=("NaslundHeightCurve", "resolve_height_source"),
+    domain="height",
+)

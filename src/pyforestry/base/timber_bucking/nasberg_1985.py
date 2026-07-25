@@ -14,6 +14,7 @@ from typing import Optional, Type
 
 import numpy as np
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.pricelist import Pricelist, TimberPricelist
 from pyforestry.base.taper import Taper
 from pyforestry.base.timber import Timber
@@ -444,3 +445,27 @@ class Nasberg_1985_BranchBound:
             fuelwood_proportion=w_avg("fuelwood_proportion"),
             quality=a.quality,
         )
+
+
+DESCRIPTOR = FormulaDescriptor(
+    component_id="nasberg_1985_bucking",
+    source=SourceReference(
+        author="Näsberg, M.",
+        year=1985,
+        title="Mathematical programming models for optimal log bucking",
+        note=(
+            "Linköping Studies in Science and Technology, Dissertation No. 132, "
+            "Linköping University, Sweden. Dynamic-programming cross-cutting of a "
+            "single stem to maximise total value under a diameter/length/quality "
+            "price matrix."
+        ),
+    ),
+    species_groups={},
+    units={
+        "diameter": "cm",
+        "length": "m",
+        "return": "value (price-list currency)",
+    },
+    kernel_names=("Nasberg_1985_BranchBound",),
+    domain="bucking",
+)

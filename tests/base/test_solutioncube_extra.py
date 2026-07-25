@@ -48,7 +48,12 @@ class FailingPool:
 
 def test_worker_with_sections(monkeypatch):
     monkeypatch.setattr(sc, "create_pricelist_from_data", lambda *a, **k: {})
-    monkeypatch.setattr(sc, "Nasberg_1985_BranchBound", lambda *a, **k: DummyOptimizer())
+    # See test_solutioncube_worker: the optimiser is imported inside the worker, so it
+    # is patched on its own module rather than on solutioncube.
+    monkeypatch.setattr(
+        "pyforestry.base.timber_bucking.nasberg_1985.Nasberg_1985_BranchBound",
+        lambda *a, **k: DummyOptimizer(),
+    )
 
     res = sc._worker_buck_one_tree(
         ("pine", 10, 100), {}, object, timber_class=lambda *args, **kwargs: object()
@@ -59,7 +64,10 @@ def test_worker_with_sections(monkeypatch):
 
 def test_worker_error(monkeypatch):
     monkeypatch.setattr(sc, "create_pricelist_from_data", lambda *a, **k: {})
-    monkeypatch.setattr(sc, "Nasberg_1985_BranchBound", lambda *a, **k: FailingOptimizer())
+    monkeypatch.setattr(
+        "pyforestry.base.timber_bucking.nasberg_1985.Nasberg_1985_BranchBound",
+        lambda *a, **k: FailingOptimizer(),
+    )
 
     out = sc._worker_buck_one_tree(
         ("pine", 10, 100), {}, object, timber_class=lambda *a, **k: object()

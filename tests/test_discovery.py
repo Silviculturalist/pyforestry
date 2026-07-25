@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import pathlib
+
 import pytest
 
 import pyforestry
@@ -78,7 +80,47 @@ def test_domains_and_regions():
     """Helper enumerations expose the discovered domains and regions."""
     assert "volume" in catalog.domains()
     assert "growth" in catalog.domains()
-    assert {"sweden", "norway"} <= set(catalog.regions())  # both regions publish models
+    assert {"base", "sweden", "norway"} <= set(catalog.regions())
+
+
+def test_base_region_models_are_discovered():
+    """``base`` holds region-independent science and is scanned like the regions."""
+    base = catalog.find(region="base")
+    ids = {m.component_id for m in base}
+    # Naslund's height curve, Garcia's top height, Bitterlich sampling, Nasberg bucking.
+    assert {
+        "naslund_1936_height_curve",
+        "garcia_1998_top_height",
+        "bitterlich_1948_angle_count",
+        "nasberg_1985_bucking",
+    } <= ids
+    assert all(m.region == "base" for m in base)
+    assert all(m.source.author and m.source.year for m in base)
+
+
+def test_geo_climate_models_are_discovered():
+    """``geo`` is scanned too: Odin 1983 and Eriksson 1986 publish descriptors."""
+    climate = {m.component_id for m in catalog.find(domain="climate")}
+    assert {"odin_1983_temperature_sum", "eriksson_1986_humidity"} <= climate
+
+
+def test_discovery_does_not_import_geopandas_eagerly():
+    """Scanning the geo modules must not pay the multi-second geopandas import.
+
+    ``eriksson_1986`` defers it into the function for exactly this reason; a
+    module-level import there would make every ``catalog`` call slow.
+    """
+    source = (
+        pathlib.Path(__file__).resolve().parents[1]
+        / "src"
+        / "pyforestry"
+        / "sweden"
+        / "geo"
+        / "humidity"
+        / "eriksson_1986.py"
+    ).read_text(encoding="utf-8")
+    module_level = source.split("def eriksson_1986_humidity", 1)[0]
+    assert "import geopandas" not in module_level
 
 
 def test_refresh_rebuilds_cache():

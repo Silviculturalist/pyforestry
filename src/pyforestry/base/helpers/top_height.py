@@ -33,6 +33,7 @@ import warnings
 from math import floor, sqrt
 from typing import List, Optional, Sequence, Union
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.helpers.height_models import (
     HeightSource,
     HeightSourceSpec,
@@ -383,3 +384,31 @@ def compute_top_height(
         precision=precision,
         est_bias=0.0,
     )
+
+
+DESCRIPTOR = FormulaDescriptor(
+    component_id="garcia_1998_top_height",
+    source=SourceReference(
+        author="García, O.",
+        year=1998,
+        title="Estimating top height with variable plot sizes",
+        note=(
+            "Canadian Journal of Forest Research 28(10), 1509-1517. Supplies the "
+            "'garcia_u' distribution-free linear-unbiased U-statistic (his eqs 4-7) "
+            "and the 'garcia_pp' plotting-position estimator (his eq 3, with the "
+            "Hosking Gumbel constant alpha = 0.65). The other references composed "
+            "here carry their own provenance: the Näslund height curve is "
+            "naslund_1936_height_curve, and the 'mean_plus_k_sigma' reference with "
+            "k = 3 follows Petterson, H. (1955), 'Barrskogens volymproduktion', "
+            "Meddelanden från Statens skogsforskningsinstitut 45(1)."
+        ),
+    ),
+    species_groups={},
+    units={
+        "diameter": "cm",
+        "height": "m",
+        "return": "m",
+    },
+    kernel_names=("compute_top_height",),
+    domain="height",
+)

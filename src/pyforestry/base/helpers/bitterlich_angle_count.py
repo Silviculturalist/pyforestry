@@ -16,6 +16,7 @@ import math
 import statistics
 from typing import Dict, List, Optional, Set, Tuple, Union
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.helpers.primitives import StandBasalArea, Stems
 from pyforestry.base.helpers.tree_species import TreeName
 
@@ -328,3 +329,25 @@ class AngleCountAggregator:
 
         # Empty stems mapping signals "stems/ha not estimable from these tallies".
         return basal_area_by_species, stems_by_species
+
+
+DESCRIPTOR = FormulaDescriptor(
+    component_id="bitterlich_1948_angle_count",
+    source=SourceReference(
+        author="Bitterlich, W.",
+        year=1948,
+        title="Die Winkelzählprobe",
+        note=(
+            "Allgemeine Forst- und Holzwirtschaftliche Zeitung 59(1/2), 4-5. With a "
+            "basal area factor k, every tallied tree contributes k m2/ha of basal "
+            "area regardless of its distance from the sample point."
+        ),
+    ),
+    species_groups={},
+    units={
+        "basal_area_factor": "m2/ha per tallied tree",
+        "return": "m2/ha (basal area), stems/ha",
+    },
+    kernel_names=("AngleCount", "AngleCountAggregator"),
+    domain="sampling",
+)
