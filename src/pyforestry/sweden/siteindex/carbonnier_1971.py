@@ -194,6 +194,65 @@ class CarbonnierHeightModel:
         )
 
 
+# Table IV.1, "Utjämnade värden för talföljderna {a_j} och {b_j}" -- the smoothed
+# sequences from Carbonnier (1971) Appendix IV. Held as (total age, a_j, b_j)
+# triples rather than three parallel lists so the columns cannot drift out of
+# alignment during transcription.
+#
+# The paper is explicit that the curves must not be extrapolated above 135 years
+# ("Kurvorna bör under inga förhållanden extrapoleras ovanför 135 år"), which is
+# why the table stops there; ``_coefficients_at_age`` already refuses ages
+# outside the tabulated range.
+CARBONNIER_1971_BEECH_HEIGHT_TABLE: tuple[tuple[float, float, float], ...] = (
+    (10.0, 1.4027, 0.0115),
+    (15.0, 3.6122, 0.0263),
+    (20.0, 5.7323, 0.0405),
+    (25.0, 7.7630, 0.0541),
+    (30.0, 9.7043, 0.0671),
+    (35.0, 11.5562, 0.0795),
+    (40.0, 13.3187, 0.0913),
+    (45.0, 14.9918, 0.1025),
+    (50.0, 16.5755, 0.1131),
+    (55.0, 18.0698, 0.1231),
+    (60.0, 19.4747, 0.1325),
+    (65.0, 20.7902, 0.1413),
+    (70.0, 22.0163, 0.1495),
+    (75.0, 23.1530, 0.1571),
+    (80.0, 24.2003, 0.1641),
+    (85.0, 25.1582, 0.1705),
+    (90.0, 26.0267, 0.1763),
+    (95.0, 26.8058, 0.1815),
+    (100.0, 27.4955, 0.1861),
+    (105.0, 28.0958, 0.1901),
+    (110.0, 28.6067, 0.1935),
+    (115.0, 29.0282, 0.1963),
+    (120.0, 29.3603, 0.1985),
+    (125.0, 29.6030, 0.2001),
+    (130.0, 29.7563, 0.2011),
+    (135.0, 29.8202, 0.2015),
+)
+
+#: Highest total age the published curves may be evaluated at (Appendix IV).
+CARBONNIER_1971_MAX_TOTAL_AGE = 135.0
+
+
+def carbonnier_1971_beech_height_model() -> CarbonnierHeightModel:
+    """Return the published beech height model of Carbonnier (1971).
+
+    The coefficients are Table IV.1 of Appendix IV; the returned model is valid
+    for total ages 10-135 years and is keyed on H100 (top height at 100 years
+    total age).
+
+    Returns:
+        A :class:`CarbonnierHeightModel` carrying the published ``{a_j}`` and
+        ``{b_j}`` sequences for *Fagus sylvatica*.
+    """
+    ages = tuple(age for age, _, _ in CARBONNIER_1971_BEECH_HEIGHT_TABLE)
+    a_vals = tuple(a for _, a, _ in CARBONNIER_1971_BEECH_HEIGHT_TABLE)
+    b_vals = tuple(b for _, _, b in CARBONNIER_1971_BEECH_HEIGHT_TABLE)
+    return CarbonnierHeightModel(ages=ages, a_vals=a_vals, b_vals=b_vals)
+
+
 DESCRIPTOR = FormulaDescriptor(
     component_id="carbonnier_1971_siteindex",
     source=SourceReference(
@@ -211,6 +270,11 @@ DESCRIPTOR = FormulaDescriptor(
         ),
     ),
     species_groups={"beech": frozenset({"Fagus sylvatica"})},
-    units={},
-    kernel_names=("CarbonnierHeightModel",),
+    units={
+        "height": "m",
+        "measurement_age": "years (Age.TOTAL)",
+        "si_age": "years (Age.TOTAL)",
+        "return": "SiteIndexValue (m at total age 100)",
+    },
+    kernel_names=("CarbonnierHeightModel", "carbonnier_1971_beech_height_model"),
 )

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import warnings
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from math import log as _math_log
 from math import pi
@@ -20,7 +20,10 @@ from pyforestry.base.helpers import (
 )
 from pyforestry.sweden.site.enums import Sweden
 from pyforestry.sweden.site.swedish_site import SwedishSite
-from pyforestry.sweden.siteindex.carbonnier_1971 import CarbonnierHeightModel
+from pyforestry.sweden.siteindex.carbonnier_1971 import (
+    CarbonnierHeightModel,
+    carbonnier_1971_beech_height_model,
+)
 from pyforestry.sweden.siteindex.hagglund_1970 import Hagglund_1970, HagglundPineRegeneration
 from pyforestry.sweden.siteindex.translate import leijon_pine_to_spruce, leijon_spruce_to_pine
 from pyforestry.sweden.siteindex.validation import validate_hagglund_1970_h100_site_index
@@ -142,7 +145,13 @@ class Eko1985SiteContext:
     pine_height_obs: DominantHeightObservation | None = None
     pine_regeneration: HagglundPineRegeneration = HagglundPineRegeneration.UNKNOWN
     beech_height_obs: DominantHeightObservation | None = None
-    carbonnier_model: CarbonnierHeightModel | None = None
+    # Defaults to the published Carbonnier (1971) Table IV.1 coefficients. Before
+    # those were transcribed this field had no usable default, so a beech height
+    # observation could never yield a site index unless the caller built the
+    # coefficient table themselves -- which nothing did.
+    carbonnier_model: CarbonnierHeightModel | None = field(
+        default_factory=carbonnier_1971_beech_height_model
+    )
     swedish_site: SwedishSite | None = None
 
     def _as_field_layer(self) -> Sweden.FieldLayer | None:
