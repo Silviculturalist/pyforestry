@@ -5,7 +5,7 @@ formula on a fixed three-competitor neighbourhood, so a transcription slip in
 any single term shows up as a failure in exactly one test.
 """
 
-from math import atan, exp, isclose, pi, sqrt
+from math import atan, exp, isclose, pi, radians, sqrt, tan
 
 import pytest
 
@@ -17,12 +17,14 @@ from pyforestry.base.competition import (
     SELECTOR_SOURCES,
     SPATIAL_INDICES,
     BitterlichBAF,
+    Candidates,
     FixedRadius,
     LeeGadowRadius,
     MeanHeightRadius,
     MissingNeighbourhoodData,
     NearestNeighbours,
     Neighbourhood,
+    SearchCone,
     SelectionContext,
     circle_intersection_area,
     circle_overlap_length,
@@ -35,7 +37,7 @@ from pyforestry.base.competition import (
     mean_spacing_m,
     selector_source,
 )
-from pyforestry.base.helpers import CircularPlot, Tree
+from pyforestry.base.helpers import CircularPlot, Stand, Tree
 from pyforestry.base.helpers.primitives import Position
 
 # Subject 20 cm; competitors 30, 15 and 25 cm at 3, 5 and 4 m.
@@ -323,39 +325,50 @@ def test_mean_spacing():
 # Competitor selection
 # ---------------------------------------------------------------------------
 
-DIAMS = [20.0, 30.0, 15.0, 25.0, 5.0]
-DISTS = [0.0, 3.0, 5.0, 4.0, 2.0]
+DIAMS = (20.0, 30.0, 15.0, 25.0, 5.0)
+DISTS = (0.0, 3.0, 5.0, 4.0, 2.0)
+# Bearings put every neighbour on its own ray from the subject, so the default
+# tests are unaffected by the elimination angle.
+BEARINGS = (0.0, 0.0, pi / 2, pi, 3 * pi / 2)
+HEIGHTS = (18.0, 24.0, 12.0, 20.0, 6.0)
+CAND = Candidates(
+    diameters_cm=DIAMS,
+    distances_m=DISTS,
+    bearings_rad=BEARINGS,
+    heights_m=HEIGHTS,
+    crown_base_heights_m=(8.0, None, None, None, None),
+)
 CTX = SelectionContext(stems_per_ha=1000.0, mean_height_m=20.0)
 
 
 def test_fixed_radius_excludes_the_subject_and_distant_trees():
     """The subject never competes with itself."""
-    sel = FixedRadius(4.5).select(0, DIAMS, DISTS, CTX)
+    sel = FixedRadius(4.5).select(0, CAND, CTX)
     assert sel.indices == (1, 3, 4)
     assert sel.zone_radius_m == 4.5
 
 
 def test_min_size_ratio_screens_suppressed_neighbours():
     """d_j >= 0.3 * d_i drops the 5 cm stem next to a 20 cm subject."""
-    sel = FixedRadius(10.0, min_size_ratio=0.3).select(0, DIAMS, DISTS, CTX)
+    sel = FixedRadius(10.0, min_size_ratio=0.3).select(0, CAND, CTX)
     assert 4 not in sel.indices
     assert sel.indices == (1, 2, 3)
 
 
 def test_mean_height_radius_scales_with_the_stand():
     """CZR = 0.4 * mean height = 8 m here."""
-    sel = MeanHeightRadius(0.4).select(0, DIAMS, DISTS, CTX)
+    sel = MeanHeightRadius(0.4).select(0, CAND, CTX)
     assert sel.zone_radius_m == pytest.approx(8.0)
     with pytest.raises(ValueError, match="mean_height_m"):
-        MeanHeightRadius().select(0, DIAMS, DISTS, SelectionContext())
+        MeanHeightRadius().select(0, CAND, SelectionContext())
 
 
 def test_lee_gadow_radius_is_a_multiple_of_mean_spacing():
     """CZR = k * sqrt(10000/N)."""
-    sel = LeeGadowRadius(k=2.0).select(0, DIAMS, DISTS, CTX)
+    sel = LeeGadowRadius(k=2.0).select(0, CAND, CTX)
     assert sel.zone_radius_m == pytest.approx(2.0 * sqrt(10.0))
     with pytest.raises(ValueError, match="stems_per_ha"):
-        LeeGadowRadius().select(0, DIAMS, DISTS, SelectionContext())
+        LeeGadowRadius().select(0, CAND, SelectionContext())
 
 
 def test_bitterlich_limiting_distance_grows_with_the_subject():
@@ -364,7 +377,7 @@ def test_bitterlich_limiting_distance_grows_with_the_subject():
     A 20 cm subject at BAF 2 reaches 7.07 m. Reading the paper's ``d_i`` as cm
     without converting would give 1.0 m and silently drop most competitors.
     """
-    sel = BitterlichBAF(basal_area_factor=2.0).select(0, DIAMS, DISTS, CTX)
+    sel = BitterlichBAF(basal_area_factor=2.0).select(0, CAND, CTX)
     assert sel.zone_radius_m == pytest.approx(7.0711, abs=1e-4)
     assert sel.zone_radius_m == pytest.approx(20.0 / (2.0 * sqrt(2.0)))
     assert sel.indices == (1, 2, 3, 4)  # every neighbour is inside 7.07 m
@@ -374,9 +387,9 @@ def test_bitterlich_limiting_distance_grows_with_the_subject():
     assert 10000.0 * (0.20 / (2.0 * limit)) ** 2 == pytest.approx(2.0)
 
     # A larger subject reaches further; a larger BAF reaches less far.
-    bigger = BitterlichBAF(2.0).select(3, DIAMS, DISTS, CTX).zone_radius_m
+    bigger = BitterlichBAF(2.0).select(3, CAND, CTX).zone_radius_m
     assert bigger > limit
-    coarser = BitterlichBAF(4.0).select(0, DIAMS, DISTS, CTX).zone_radius_m
+    coarser = BitterlichBAF(4.0).select(0, CAND, CTX).zone_radius_m
     assert coarser < limit
 
     with pytest.raises(ValueError):
@@ -385,7 +398,7 @@ def test_bitterlich_limiting_distance_grows_with_the_subject():
 
 def test_nearest_neighbours_takes_the_closest_n():
     """The two closest qualifying stems, in input order."""
-    sel = NearestNeighbours(n=2).select(0, DIAMS, DISTS, CTX)
+    sel = NearestNeighbours(n=2).select(0, CAND, CTX)
     assert sel.indices == (1, 4)  # 3 m and 2 m
     assert sel.zone_radius_m == pytest.approx(3.0)
     with pytest.raises(ValueError):
@@ -579,12 +592,224 @@ def test_selectors_carry_their_own_sources():
     assert selector_source(MeanHeightRadius()).author.startswith("Sims")
     assert selector_source(LeeGadowRadius()).author.startswith("Lee")
     assert selector_source(BitterlichBAF()).author.startswith("Bitterlich")
+    assert selector_source(SearchCone()).author.startswith("Pretzsch")
     assert selector_source(FixedRadius(5.0)) is None
     assert selector_source(NearestNeighbours(3)) is None
-    assert set(SELECTOR_SOURCES) == {"MeanHeightRadius", "LeeGadowRadius", "BitterlichBAF"}
+    assert set(SELECTOR_SOURCES) == {
+        "MeanHeightRadius",
+        "LeeGadowRadius",
+        "BitterlichBAF",
+        "SearchCone",
+    }
 
 
 def test_crown_radius_round_trips_on_tree():
     """Tree carries the optional crown radius the overlap indices need."""
     assert Tree(diameter_cm=20.0).crown_radius_m is None
     assert isclose(Tree(diameter_cm=20.0, crown_radius_m=3.5).crown_radius_m, 3.5)
+
+
+# ---------------------------------------------------------------------------
+# Parameters are parameters, not constants
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize("fraction,expected_radius", [(0.25, 5.0), (0.4, 8.0), (0.6, 12.0)])
+def test_mean_height_fraction_is_settable(fraction, expected_radius):
+    """0.4 is the value Sims et al. tested, not a fixed constant."""
+    sel = MeanHeightRadius(fraction).select(0, CAND, CTX)
+    assert sel.zone_radius_m == pytest.approx(expected_radius)
+
+
+@pytest.mark.parametrize("k,expected", [(2.0, 2 * sqrt(10.0)), (3.0, 3 * sqrt(10.0))])
+def test_lee_gadow_k_is_settable(k, expected):
+    """The 2015 comparison tests k = 2 and k = 3."""
+    assert LeeGadowRadius(k).select(0, CAND, CTX).zone_radius_m == pytest.approx(expected)
+
+
+@pytest.mark.parametrize("baf,expected", [(1.0, 10.0), (2.0, 7.0711), (4.0, 5.0)])
+def test_bitterlich_baf_is_settable(baf, expected):
+    """BAF 1, 2 and 4 are the values the comparison tests."""
+    got = BitterlichBAF(baf).select(0, CAND, CTX).zone_radius_m
+    assert got == pytest.approx(expected, abs=1e-4)
+
+
+def test_bitterlich_gauge_angles_match_the_published_table():
+    """BAF 1, 2 and 4 are quoted as gauge angles of 1.15, 1.62 and 2.30 degrees.
+
+    An independent check on the unit conversion in the limiting distance: the
+    angles follow from 2*arcsin(sqrt(BAF/10000)) only if BAF is read the way
+    BitterlichBAF reads it. Reading the diameter in cm without converting would
+    be out by two orders of magnitude, so this pins the conversion tightly even
+    at a loose tolerance.
+
+    The relation gives 1.1459, 1.6206 and 2.2920 degrees. The paper's first two
+    round to its quoted values; its third is quoted as 2.30 where 2.292 rounds
+    to 2.29, so the tolerance allows that last digit.
+    """
+    assert BitterlichBAF(1.0).gauge_angle_deg == pytest.approx(1.15, abs=0.01)
+    assert BitterlichBAF(2.0).gauge_angle_deg == pytest.approx(1.62, abs=0.01)
+    assert BitterlichBAF(4.0).gauge_angle_deg == pytest.approx(2.30, abs=0.01)
+
+
+# ---------------------------------------------------------------------------
+# Competition elimination angle
+# ---------------------------------------------------------------------------
+
+
+def _stacked() -> Candidates:
+    """Two neighbours nearly on the same bearing, one behind the other."""
+    return Candidates(
+        diameters_cm=(20.0, 25.0, 25.0, 25.0),
+        distances_m=(0.0, 3.0, 6.0, 5.0),
+        bearings_rad=(0.0, 0.0, radians(5.0), radians(90.0)),
+        heights_m=(18.0, 20.0, 20.0, 20.0),
+    )
+
+
+def test_elimination_angle_drops_the_shadowed_neighbour():
+    """At 30 degrees the far tree 5 degrees off the near tree's bearing goes."""
+    cand = _stacked()
+    assert FixedRadius(10.0).select(0, cand, CTX).indices == (1, 2, 3)
+    assert FixedRadius(10.0, elimination_angle_deg=30.0).select(0, cand, CTX).indices == (1, 3)
+
+
+def test_elimination_angle_keeps_the_nearer_of_a_shadowed_pair():
+    """Shadowing is applied nearest-first, so the near tree always survives."""
+    sel = FixedRadius(10.0, elimination_angle_deg=30.0).select(0, _stacked(), CTX)
+    assert 1 in sel.indices and 2 not in sel.indices
+
+
+def test_elimination_angle_zero_is_a_no_op():
+    sel = FixedRadius(10.0, elimination_angle_deg=0.0).select(0, _stacked(), CTX)
+    assert sel.indices == (1, 2, 3)
+
+
+def test_elimination_angle_needs_bearings():
+    cand = Candidates(diameters_cm=(20.0, 25.0), distances_m=(0.0, 3.0))
+    with pytest.raises(ValueError, match="needs bearings"):
+        FixedRadius(10.0, elimination_angle_deg=30.0).select(0, cand, CTX)
+
+
+def test_elimination_angle_composes_with_the_size_screen():
+    """Approaches 1 and 2 of the comparison apply both screens together."""
+    cand = Candidates(
+        diameters_cm=(20.0, 25.0, 25.0, 4.0),
+        distances_m=(0.0, 3.0, 6.0, 1.0),
+        bearings_rad=(0.0, 0.0, radians(5.0), radians(180.0)),
+    )
+    sel = FixedRadius(10.0, min_size_ratio=0.3, elimination_angle_deg=30.0).select(0, cand, CTX)
+    assert sel.indices == (1,)  # 2 is shadowed, 3 is undersized
+
+
+def test_elimination_angle_available_on_every_radius_selector():
+    cand = _stacked()
+    ctx = SelectionContext(stems_per_ha=1000.0, mean_height_m=30.0)
+    assert MeanHeightRadius(0.4, elimination_angle_deg=30.0).select(0, cand, ctx).indices == (1, 3)
+    assert LeeGadowRadius(3.0, elimination_angle_deg=30.0).select(0, cand, ctx).indices == (1, 3)
+
+
+# ---------------------------------------------------------------------------
+# Search cone
+# ---------------------------------------------------------------------------
+
+
+def _cone_reach(height_m: float, beta_deg: float) -> float:
+    """Horizontal reach of the cone for a competitor of the given height."""
+    return height_m / tan(radians(90.0 - beta_deg / 2.0))
+
+
+@pytest.mark.parametrize("height", [10.0, 20.0, 30.0])
+def test_search_cone_reach_grows_with_competitor_height(height):
+    """A taller neighbour competes from further away; that is the point of it."""
+    cone = SearchCone(opening_angle_deg=80.0)
+    reach = _cone_reach(height, 80.0)
+    inside = Candidates(
+        diameters_cm=(20.0, 20.0), distances_m=(0.0, reach - 0.01), heights_m=(18.0, height)
+    )
+    outside = Candidates(
+        diameters_cm=(20.0, 20.0), distances_m=(0.0, reach + 0.01), heights_m=(18.0, height)
+    )
+    assert cone.select(0, inside, CTX).indices == (1,)
+    assert cone.select(0, outside, CTX).indices == ()
+
+
+@pytest.mark.parametrize("beta", [100.0, 80.0, 60.0])
+def test_search_cone_opening_angle_is_settable(beta):
+    """The comparison tests 100, 80 and 60 degrees."""
+    cand = Candidates(diameters_cm=(20.0, 20.0), distances_m=(0.0, 15.0), heights_m=(18.0, 20.0))
+    expected = (1,) if 15.0 < _cone_reach(20.0, beta) else ()
+    assert SearchCone(opening_angle_deg=beta).select(0, cand, CTX).indices == expected
+
+
+def test_search_cone_widening_only_ever_adds_competitors():
+    cand = Candidates(
+        diameters_cm=(20.0,) * 4,
+        distances_m=(0.0, 5.0, 12.0, 20.0),
+        heights_m=(18.0, 20.0, 20.0, 20.0),
+    )
+    counts = [
+        len(SearchCone(opening_angle_deg=b).select(0, cand, CTX).indices)
+        for b in (60.0, 80.0, 100.0)
+    ]
+    assert counts == sorted(counts)
+
+
+def test_search_cone_crown_base_apex_is_stricter():
+    """Raising the apex to the subject's crown base shortens the reach."""
+    cand = Candidates(
+        diameters_cm=(20.0, 20.0),
+        # 12 m is inside the stem-base cone (16.8 m) but outside the
+        # crown-base cone (10.1 m), which is what distinguishes the two.
+        distances_m=(0.0, 12.0),
+        heights_m=(18.0, 20.0),
+        crown_base_heights_m=(8.0, None),
+    )
+    assert SearchCone(80.0, apex="stem_base").select(0, cand, CTX).indices == (1,)
+    assert SearchCone(80.0, apex="crown_base").select(0, cand, CTX).indices == ()
+
+
+def test_search_cone_requires_heights():
+    cand = Candidates(diameters_cm=(20.0, 20.0), distances_m=(0.0, 5.0))
+    with pytest.raises(ValueError, match="needs heights"):
+        SearchCone().select(0, cand, CTX)
+
+
+def test_search_cone_crown_base_apex_requires_a_crown_base():
+    cand = Candidates(diameters_cm=(20.0, 20.0), distances_m=(0.0, 5.0), heights_m=(18.0, 20.0))
+    with pytest.raises(ValueError, match="crown base"):
+        SearchCone(apex="crown_base").select(0, cand, CTX)
+
+
+def test_search_cone_rejects_bad_parameters():
+    with pytest.raises(ValueError, match="between 0 and 180"):
+        SearchCone(opening_angle_deg=0.0)
+    with pytest.raises(ValueError, match="Unknown apex"):
+        SearchCone(apex="canopy")
+
+
+def test_search_cone_skips_neighbours_without_a_height():
+    cand = Candidates(
+        diameters_cm=(20.0, 20.0, 20.0),
+        distances_m=(0.0, 4.0, 4.0),
+        heights_m=(18.0, 20.0, None),
+    )
+    assert SearchCone(80.0).select(0, cand, CTX).indices == (1,)
+
+
+def test_search_cone_uses_imputed_heights_through_the_api():
+    """A neighbour whose height was imputed still competes."""
+    trees = [
+        Tree(position=(0.0, 0.0), diameter_cm=20.0, height_m=18.0, uid="c"),
+        Tree(position=(4.0, 0.0), diameter_cm=30.0, height_m=24.0, uid="a"),
+        Tree(position=(0.0, 4.0), diameter_cm=25.0, uid="b"),  # height imputed below
+    ]
+    stand = Stand(
+        plots=[CircularPlot(id=1, position=Position(0.0, 0.0), radius_m=15.0, trees=trees)]
+    )
+    stand.impute("height_m")
+    assert trees[2].value_of("height_m") is not None
+    results = competition_indices(
+        stand.plots[0], indices=["Heg"], selector=SearchCone(100.0), edge_correction=None
+    )
+    assert results[0].n_competitors == 2

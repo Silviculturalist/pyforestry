@@ -206,6 +206,17 @@ SELECTOR_SOURCES = {
         title="Iterative Bestimmung der Konkurrenzbaeume in Pinus densiflora Bestaenden",
         note="Allgemeine Forst- und Jagdzeitung 168(3-4):41-44.",
     ),
+    "SearchCone": SourceReference(
+        author="Pretzsch, H.",
+        year=2009,
+        title="Forest dynamics, growth and yield: from measurement to model",
+        note=(
+            "Springer, Berlin. The reversed search-cone method; Maleki et al. (2015) "
+            "also cite Richards et al. (2008) for the equivalent angular-height "
+            "method. Their equations 4 and 5 print the subject's height where the "
+            "competitor's is meant -- see SearchCone."
+        ),
+    ),
     "BitterlichBAF": SourceReference(
         author="Bitterlich, W.",
         year=1952,

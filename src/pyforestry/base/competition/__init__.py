@@ -11,6 +11,21 @@ chose its competitors.
     ...                               selector=FixedRadius(8.0, min_size_ratio=0.3))
     >>> results[0].indices["Heg"]
 
+Every number in a selection rule is a parameter with a literature default, not a
+fixed value. The defaults are one study's choices and are meant to be varied::
+
+    MeanHeightRadius(fraction=0.25)              # 0.4 is Sims et al.'s, not a law
+    LeeGadowRadius(k=3.0)                        # k = 2 and 3 both tested
+    BitterlichBAF(basal_area_factor=4.0)         # 1, 2 and 4 tested
+    SearchCone(opening_angle_deg=60.0)           # 100, 80 and 60 tested
+    SearchCone(80.0, apex="crown_base")          # apex at the crown base instead
+    FixedRadius(8.0, min_size_ratio=0.3, elimination_angle_deg=30.0)
+
+The last of those reproduces the size screen *and* the shadow screen that the
+2015 comparison applies together for its approaches 1 and 2: a neighbour is
+dropped when it is under ``0.3 * d_i``, or when it stands within 30 degrees of
+the bearing of a nearer competitor.
+
 Every index carries its own citation::
 
     >>> from pyforestry.base.competition import index_source
@@ -75,11 +90,13 @@ from .indices import (
 from .neighbourhood import MissingNeighbourhoodData, Neighbourhood
 from .selection import (
     BitterlichBAF,
+    Candidates,
     CompetitorSelector,
     FixedRadius,
     LeeGadowRadius,
     MeanHeightRadius,
     NearestNeighbours,
+    SearchCone,
     Selection,
     SelectionContext,
     selector_source,
@@ -87,6 +104,8 @@ from .selection import (
 from .sources import INDEX_SET_REVIEW, INDEX_SOURCES, SELECTOR_SOURCES
 
 __all__ = [
+    "Candidates",
+    "SearchCone",
     "selector_source",
     "index_source",
     "SELECTOR_SOURCES",

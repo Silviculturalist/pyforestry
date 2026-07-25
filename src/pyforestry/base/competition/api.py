@@ -24,7 +24,7 @@ not depend on where in the plot the subject sits.
 """
 
 from dataclasses import dataclass, field
-from math import hypot, pi
+from math import atan2, hypot, pi
 from typing import Callable, Dict, List, Optional, Sequence, Union
 
 from pyforestry.base.helpers.plot import CircularPlot
@@ -33,7 +33,7 @@ from pyforestry.base.helpers.tree import Tree
 from .geometry import fraction_of_circle_inside_circle
 from .indices import INDEX_REGISTRY, SPATIAL_INDICES, compute_index
 from .neighbourhood import MissingNeighbourhoodData, Neighbourhood, basal_area_m2
-from .selection import CompetitorSelector, FixedRadius, SelectionContext
+from .selection import Candidates, CompetitorSelector, FixedRadius, SelectionContext
 
 __all__ = ["TreeCompetition", "competition_indices"]
 
@@ -180,6 +180,11 @@ def competition_indices(
         mean_height_m=_mean_height(trees),
     )
 
+    # Heights and crown base heights are read through value_of, so an imputed
+    # value counts exactly as a measured one (see pyforestry.base.imputation).
+    heights = tuple(t.value_of("height_m") for t in trees)
+    crown_bases = tuple(t.value_of("crown_base_height_m") for t in trees)
+
     results: List[TreeCompetition] = []
     for i, tree in enumerate(trees):
         distances = _distances_from(i, positions) if have_positions else None
@@ -189,7 +194,14 @@ def competition_indices(
             chosen_dist = None
             zone_radius = None
         else:
-            selection = selector.select(i, diameters, distances, context)
+            candidates = Candidates(
+                diameters_cm=tuple(diameters),
+                distances_m=tuple(distances),
+                bearings_rad=_bearings_from(i, positions),
+                heights_m=heights,
+                crown_base_heights_m=crown_bases,
+            )
+            selection = selector.select(i, candidates, context)
             chosen_idx = selection.indices
             chosen_dist = selection.distances_m
             zone_radius = selection.zone_radius_m
@@ -243,6 +255,12 @@ def _mean_height(trees: Sequence[Tree]) -> Optional[float]:
     """Arithmetic mean of whatever heights are available, or ``None``."""
     heights = [h for h in (t.value_of("height_m") for t in trees) if h is not None]
     return sum(heights) / len(heights) if heights else None
+
+
+def _bearings_from(i: int, positions: Sequence) -> tuple:
+    """Bearing (radians) from tree ``i`` to every tree; its own entry is 0."""
+    p_i = positions[i]
+    return tuple(atan2(p.Y - p_i.Y, p.X - p_i.X) for p in positions)
 
 
 def _distances_from(i: int, positions: Sequence) -> List[float]:
