@@ -50,19 +50,34 @@ class Bollandsas2008GrowthModel(GrowthModel):
         )
 
     def requirements(self) -> Requirements:
-        """Require tree-list style stand input for class construction."""
-        return Requirements(inventory="tree_list")
+        """Declare the diameter-class representation this matrix model steps.
+
+        Bollandsås 2008 is a transition-matrix model over fixed diameter classes:
+        its state *is* a per-species class vector, so the context should hold that
+        representation rather than a tree list it never reads back. Publishing
+        class vectors through ``set_aggregate_metrics`` while the context stood in
+        ``tree_list`` mode meant every refresh rebuilt the metrics from the
+        untouched plots and discarded the step entirely.
+        """
+        return Requirements(inventory="diameter_class")
 
     @staticmethod
-    def _stems_total(state: Mapping[str, object]) -> float:
-        """Return total stems/ha from species class vectors."""
-        return float(sum(float(arr.sum()) for arr in state.values()))
+    def _dclass_payload(
+        core: Bollandsas2008, state: Mapping[str, object]
+    ) -> dict[str, dict[str, list[float]]]:
+        """Express the model's class vectors as a diameter-class inventory.
 
-    @staticmethod
-    def _ba_total(core: Bollandsas2008, state: Mapping[str, object]) -> float:
-        """Return total basal area (`m2/ha`) across all species groups."""
-        ba_by_species = core.compute_stand_basal_area_by_species(state)
-        return float(sum(float(v) for v in ba_by_species.values()))
+        ``Bollandsas2008.class_mid`` is in millimetres; the context's inventory is
+        in centimetres.
+        """
+        bin_mids_cm = [float(mid) / 10.0 for mid in core.class_mid]
+        return {
+            species: {
+                "bin_mids_cm": list(bin_mids_cm),
+                "n_per_ha": [float(n) for n in vector],  # type: ignore[union-attr]
+            }
+            for species, vector in state.items()
+        }
 
     def build_context(
         self,
@@ -83,10 +98,7 @@ class Bollandsas2008GrowthModel(GrowthModel):
         state = core.stand_to_state(stand)
         ctx.attrs["bollandsas_model"] = core
         ctx.attrs["bollandsas_state"] = state
-        ctx.set_aggregate_metrics(
-            ba_total=self._ba_total(core, state),
-            stems_total=self._stems_total(state),
-        )
+        ctx.set_diameter_class(self._dclass_payload(core, state))
         return ctx
 
     def update_step(self, ctx: SimulationContext, dt: float) -> None:
@@ -111,10 +123,9 @@ class Bollandsas2008GrowthModel(GrowthModel):
         ctx.attrs["bollandsas_basal_area_by_species"] = {
             k: float(v) for k, v in core.compute_stand_basal_area_by_species(next_state).items()
         }
-        ctx.set_aggregate_metrics(
-            ba_total=self._ba_total(core, next_state),
-            stems_total=self._stems_total(next_state),
-        )
+        # Publish into the representation the context actually holds, so the next
+        # metric refresh reads the stepped state rather than overwriting it.
+        ctx.set_diameter_class(self._dclass_payload(core, next_state))
         ctx.state["t"] = float(ctx.state.get("t", 0.0)) + dt
 
 

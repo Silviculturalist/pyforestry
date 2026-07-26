@@ -164,6 +164,9 @@ def test_bollandsas_growth_model_adapter():
         )
     )
     ctx = adapter.build_context(stand)
+    # This is a transition-matrix model over diameter classes; the context must
+    # hold that representation, not a tree list the model never reads back.
+    assert ctx.mode == "diameter_class"
     stems_before = float(ctx.metrics["Stems"]["TOTAL"])
     ba_before = float(ctx.metrics["BasalArea"]["TOTAL"])
 
@@ -179,3 +182,42 @@ def test_bollandsas_growth_model_adapter():
 
     with pytest.raises(ValueError):
         adapter.update_step(ctx, dt=1.0)
+
+
+def test_bollandsas_growth_survives_the_context_metric_refresh():
+    """Stepping through the context must not discard what the model computed.
+
+    The adapter used to declare ``tree_list`` and publish its class vectors with
+    ``set_aggregate_metrics``. ``SimulationContext.update_step`` refreshes the
+    metrics after the model runs, and in tree-list mode that rebuilds them from
+    the plots -- which this model never touches -- so a step driven through the
+    documented runtime path silently reverted to the starting state.
+    """
+    stand = Stand(
+        plots=[
+            CircularPlot(
+                id="p1",
+                area_m2=400.0,
+                trees=[
+                    Tree(species=TreeSpecies.Sweden.picea_abies, diameter_cm=d, weight_n=1.0)
+                    for d in (12.0, 18.0, 24.0, 30.0)
+                ],
+            )
+        ]
+    )
+    config = Bollandsas2008AdapterConfig(site_index_by_species={"spruce": 17.0}, latitude_deg=60.0)
+
+    direct = Bollandsas2008GrowthModel(config)
+    ctx_direct = direct.build_context(stand)
+    direct.update_step(ctx_direct, 5.0)
+
+    through_runtime = Bollandsas2008GrowthModel(config)
+    ctx_runtime = through_runtime.build_context(stand)
+    ctx_runtime.update_step(5.0)
+
+    assert float(ctx_runtime.metrics["BasalArea"]["TOTAL"]) == pytest.approx(
+        float(ctx_direct.metrics["BasalArea"]["TOTAL"])
+    )
+    assert float(ctx_runtime.metrics["Stems"]["TOTAL"]) == pytest.approx(
+        float(ctx_direct.metrics["Stems"]["TOTAL"])
+    )

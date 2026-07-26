@@ -290,8 +290,12 @@ class TreeListToDiameterClassAdapter(Adapter):
             d_vals = [d for (d, _, _) in items]
             d_min, d_max = min(d_vals), max(d_vals)
             lo = bin_w * math.floor(d_min / bin_w)
-            hi = bin_w * math.ceil(d_max / bin_w)
-            mids = [lo + bin_w * i + bin_w / 2.0 for i in range(int((hi - lo) / bin_w))]
+            # At least one bin, always. When every tree of a species shares a
+            # diameter that sits exactly on a bin boundary -- 20.0 cm at a 2 cm
+            # width -- the span rounds to zero, and the empty ``mids`` that
+            # produced made the ``counts[idx]`` below index an empty list.
+            n_bins = max(1, math.ceil((d_max - lo) / bin_w))
+            mids = [lo + bin_w * i + bin_w / 2.0 for i in range(n_bins)]
             counts = [0.0 for _ in mids]
             for d, w, eff_area in items:
                 idx = int((d - lo) // bin_w)

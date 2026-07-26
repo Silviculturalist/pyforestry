@@ -27,7 +27,8 @@ from typing import (
 
 import pandas as pd
 
-from pyforestry.base.helpers import CircularPlot, Tree, TreeName, parse_tree_species
+from pyforestry.base.aggregation import aggregate_plots
+from pyforestry.base.helpers import CircularPlot, TreeName
 from pyforestry.base.helpers.primitives import QuadraticMeanDiameter, StandBasalArea, Stems
 
 # ---- Type aliases for metric containers ----
@@ -302,8 +303,34 @@ class SimulationContext:
         return pd.DataFrame(rows)
 
     # Aggregate helpers
+    def _require_mode(self, method: str, *modes: str) -> None:
+        """Reject a state write that the next metric refresh would silently undo.
+
+        In ``tree_list``/``spatial``/``diameter_class`` mode the metrics are a
+        *view* of the inventory, and :meth:`_refresh_metrics` rebuilds them from it
+        after every step. Writing totals directly in one of those modes therefore
+        looked like it worked and was then discarded: a model that kept its state
+        in ``attrs`` and published through :meth:`set_aggregate_metrics` had its
+        entire growth step reverted the moment the context refreshed.
+        """
+        if self.mode not in modes:
+            allowed = ", ".join(repr(m) for m in modes)
+            raise RuntimeError(
+                f"{method} requires mode in {{{allowed}}}, got {self.mode!r}. In "
+                f"{self.mode!r} mode the metrics are derived from the inventory and "
+                f"are rebuilt on the next refresh, so this write would be silently "
+                f"discarded. Update the inventory instead "
+                f"(the plots, or set_diameter_class), or build the context in "
+                f"aggregate mode."
+            )
+
     def set_aggregate_metrics(self, *, ba_total: float, stems_total: float) -> None:
-        """Set aggregate basal area and stems, then recompute QMD."""
+        """Set aggregate basal area and stems, then recompute QMD.
+
+        Raises:
+            RuntimeError: If the context is not in aggregate mode.
+        """
+        self._require_mode("set_aggregate_metrics", "aggregate")
         self._metrics.setdefault("BasalArea", {})
         self._metrics.setdefault("Stems", {})
         self._metrics.setdefault("QMD", {})
@@ -312,7 +339,12 @@ class SimulationContext:
         self._recompute_qmd()
 
     def scale_stems(self, factor: float) -> None:
-        """Scale aggregate stems and basal area by ``factor``."""
+        """Scale aggregate stems and basal area by ``factor``.
+
+        Raises:
+            RuntimeError: If the context is not in aggregate mode.
+        """
+        self._require_mode("scale_stems", "aggregate")
         total_n = float(self._metrics["Stems"]["TOTAL"])
         total_ba = float(self._metrics["BasalArea"]["TOTAL"])
         new_n = max(0.0, total_n * factor)
@@ -321,7 +353,12 @@ class SimulationContext:
 
     # Diameter-class helper
     def set_diameter_class(self, dclass: Dict[Any, Dict[str, List[float]]]) -> None:
-        """Replace diameter-class inventory and recompute metrics."""
+        """Replace diameter-class inventory and recompute metrics.
+
+        Raises:
+            RuntimeError: If the context is not in diameter-class mode.
+        """
+        self._require_mode("set_diameter_class", "diameter_class")
         self._dclass = self._normalize_dclass_inventory(dclass)
         self._metrics = self._recompute_metrics_dclass(self._dclass)
 
@@ -414,67 +451,27 @@ class SimulationContext:
         return out_map
 
     def _recompute_metrics_tree_list(self, plots: Iterable[CircularPlot]) -> MetricMap:
-        """Compute metric aggregates from tree-list plots."""
-        species_data: Dict[TreeName, Dict[str, List[float]]] = {}
+        """Compute metric aggregates from tree-list plots.
 
-        def _eff_area_ha(p: CircularPlot) -> float:
-            """Return effective plot area in hectares after occlusion."""
-            area_ha = p.area_ha or 1.0
-            return area_ha * (1 - p.occlusion) if (1 - p.occlusion) > 0 else area_ha
+        Delegates to :func:`pyforestry.base.aggregation.aggregate_plots`, the same
+        estimator :class:`~pyforestry.base.helpers.stand.Stand` reports from. This
+        used to be a second implementation, and it disagreed: it averaged a species
+        over only the plots where that species occurred, so a two-plot stand with
+        one spruce plot and one pine plot read 1.0 stems/ha through ``Stand`` and
+        2.0 through the context, growing with the number of species.
 
-        for plot in plots:
-            eff = _eff_area_ha(plot)
-            by_sp: Dict[TreeName, List[Tree]] = {}
-            for t in plot.trees:
-                sp = getattr(t, "species", None)
-                if sp is None:
-                    continue
-                if isinstance(sp, str):
-                    sp = parse_tree_species(sp)
-                by_sp.setdefault(sp, []).append(t)
-
-            for sp, trs in by_sp.items():
-                stems = 0.0
-                for t in trs:
-                    weight = getattr(t, "weight_n", 1.0)
-                    stems += 1.0 if weight is None else float(weight)
-                stems_ha = stems / eff
-                ba_sum = 0.0
-                for t in trs:
-                    d_cm = float(getattr(t, "diameter_cm", 0.0) or 0.0)
-                    r_m = (d_cm / 100.0) / 2.0
-                    weight = getattr(t, "weight_n", 1.0)
-                    ba_sum += pi * (r_m**2) * (1.0 if weight is None else float(weight))
-                ba_ha = ba_sum / eff
-                species_data.setdefault(sp, {"stems_per_ha": [], "basal_area_per_ha": []})
-                species_data[sp]["stems_per_ha"].append(stems_ha)
-                species_data[sp]["basal_area_per_ha"].append(ba_ha)
-
-        stems_dict: Dict[Union[TreeName, str], Stems] = {}
-        ba_dict: Dict[Union[TreeName, str], StandBasalArea] = {}
-        total_stems_val = 0.0
-        total_ba_val = 0.0
-        for sp, vals in species_data.items():
-            s_vals = vals["stems_per_ha"]
-            b_vals = vals["basal_area_per_ha"]
-            stems_mean = sum(s_vals) / len(s_vals) if s_vals else 0.0
-            ba_mean = sum(b_vals) / len(b_vals) if b_vals else 0.0
-            stems_dict[sp] = Stems(stems_mean, species=sp, precision=0.0)
-            ba_dict[sp] = StandBasalArea(ba_mean, species=sp, precision=0.0)
-            total_stems_val += stems_mean
-            total_ba_val += ba_mean
-
-        stems_dict["TOTAL"] = Stems(total_stems_val, species=None, precision=0.0)
-        ba_dict["TOTAL"] = StandBasalArea(total_ba_val, species=None, precision=0.0)
-        qmd_dict: Dict[Union[TreeName, str], QuadraticMeanDiameter] = {}
-        if total_stems_val > 0 and total_ba_val > 0:
-            total_qmd = sqrt((40000.0 * total_ba_val) / (pi * total_stems_val))
-        else:
-            total_qmd = 0.0
-        qmd_dict["TOTAL"] = QuadraticMeanDiameter(total_qmd, precision=0.0)
+        The missing-diameter warning is suppressed here: this runs on every metric
+        refresh, i.e. every step, and the stand it was built from already reported
+        it once.
+        """
+        aggregation = aggregate_plots(plots, warn_missing_diameter=False)
         return cast(
             MetricMap,
-            {"Stems": stems_dict, "BasalArea": ba_dict, "QMD": qmd_dict},
+            {
+                "Stems": dict(aggregation.stems),
+                "BasalArea": dict(aggregation.basal_area),
+                "QMD": {"TOTAL": aggregation.qmd},
+            },
         )
 
     def _normalize_dclass_inventory(
