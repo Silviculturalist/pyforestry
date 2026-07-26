@@ -272,7 +272,7 @@ def test_growth_model_build_context_branches(monkeypatch):
     }
     ctx3 = model.build_context(stand3, mode_hint="diameter_class")
     assert ctx3.mode == "diameter_class"
-    assert ctx3._dclass["TOTAL"]["bin_mids_cm"]
+    assert ctx3.diameter_classes["TOTAL"]["bin_mids_cm"]
 
     stand4 = Stand(plots=[])
     stand4.use_angle_count = True
@@ -296,9 +296,9 @@ def test_example_model_diameter_class_update_step():
         "Stems": {"TOTAL": Stems(200.0)},
     }
     ctx = model.build_context(stand, mode_hint="diameter_class")
-    before = ctx._dclass["TOTAL"]["bin_mids_cm"][0]
+    before = ctx.diameter_classes["TOTAL"]["bin_mids_cm"][0]
     ctx.update_step(1.0)
-    after = ctx._dclass["TOTAL"]["bin_mids_cm"][0]
+    after = ctx.diameter_classes["TOTAL"]["bin_mids_cm"][0]
     assert after > before
 
 
@@ -347,7 +347,7 @@ def test_example_model_thin_smallest_classes_branches():
         {"TOTAL": {"bin_mids_cm": [10.0, 20.0], "n_per_ha": [50.0, 50.0]}}
     )
     model._act_thin_smallest_classes(dclass_ctx, fraction=0.2)
-    assert dclass_ctx._dclass["TOTAL"]["n_per_ha"][1] == pytest.approx(50.0)
+    assert dclass_ctx.diameter_classes["TOTAL"]["n_per_ha"][1] == pytest.approx(50.0)
 
 
 def test_spatial_from_tree_list():

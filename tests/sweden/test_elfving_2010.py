@@ -6,7 +6,6 @@ import pyforestry.sweden.adapters.elfving_2010 as elfving_2010_module
 from pyforestry.base.helpers import CircularPlot, Stand, Tree, TreeSpecies
 from pyforestry.base.helpers.primitives import (
     Age,
-    QuadraticMeanDiameter,
     SiteBase,
     StandBasalArea,
     Stems,
@@ -1432,20 +1431,21 @@ def _set_species_metrics(ctx) -> None:
     contorta = TreeSpecies.Sweden.pinus_contorta
     spruce = TreeSpecies.Sweden.picea_abies
     birch = TreeSpecies.Sweden.betula_pubescens
-    ctx._metrics = {
-        "BasalArea": {
+    ctx.set_species_metrics(
+        basal_area={
             "TOTAL": StandBasalArea(20.0, species=None),
             contorta: StandBasalArea(6.0, species=contorta),
             spruce: StandBasalArea(9.0, species=spruce),
             birch: StandBasalArea(5.0, species=birch),
         },
-        "Stems": {
+        # Birch is deliberately absent: a breakdown may be partial, and the
+        # supplied TOTAL is what stands.
+        stems={
             "TOTAL": Stems(500.0, species=None),
             contorta: Stems(150.0, species=contorta),
             spruce: Stems(250.0, species=spruce),
         },
-        "QMD": {"TOTAL": QuadraticMeanDiameter(20.0)},
-    }
+    )
 
 
 def test_thinning_response_boosts_aggregate_basal_area_growth():
@@ -1516,7 +1516,7 @@ def test_update_step_tree_list_handles_empty_tree_inventory():
 def test_update_tree_list_returns_when_basal_area_is_zero():
     model = Elfving2010Model()
     ctx = _build_tree_list_context(model)
-    ctx._metrics["BasalArea"]["TOTAL"] = StandBasalArea(0.0, species=None)
+    ctx.stand._metric_estimates["BasalArea"]["TOTAL"] = StandBasalArea(0.0, species=None)
     model._update_tree_list(ctx, None, 1.0)
 
 
@@ -1705,22 +1705,14 @@ def test_update_step_routes_to_aggregate_mode():
 def test_update_aggregate_returns_when_totals_are_not_positive():
     model = Elfving2010Model()
     ctx = _build_aggregate_context(model)
-    ctx._metrics = {
-        "BasalArea": {"TOTAL": StandBasalArea(0.0, species=None)},
-        "Stems": {"TOTAL": Stems(100.0, species=None)},
-        "QMD": {},
-    }
+    ctx.set_aggregate_metrics(ba_total=0.0, stems_total=100.0)
     model._update_aggregate(ctx, None, 1.0)
 
 
 def test_update_aggregate_requires_species_level_metrics():
     model = Elfving2010Model()
     ctx = _build_aggregate_context(model)
-    ctx._metrics = {
-        "BasalArea": {"TOTAL": StandBasalArea(20.0, species=None)},
-        "Stems": {"TOTAL": Stems(500.0, species=None)},
-        "QMD": {},
-    }
+    ctx.set_aggregate_metrics(ba_total=20.0, stems_total=500.0)
     with pytest.raises(ValueError, match="species-level"):
         model._update_aggregate(ctx, None, 1.0)
 
@@ -1739,8 +1731,8 @@ def test_update_aggregate_updates_metrics_with_species_mix():
     ctx = _build_aggregate_context(model)
     _set_species_metrics(ctx)
     model._update_aggregate(ctx, None, 1.0)
-    assert float(ctx._metrics["BasalArea"]["TOTAL"]) > 0.0
-    assert "TOTAL" in ctx._metrics["QMD"]
+    assert float(ctx.metrics["BasalArea"]["TOTAL"]) > 0.0
+    assert "TOTAL" in ctx.metrics["QMD"]
 
 
 def test_update_aggregate_clamps_negative_basal_area(monkeypatch):
@@ -1753,4 +1745,4 @@ def test_update_aggregate_clamps_negative_basal_area(monkeypatch):
         lambda **_kwargs: -1_000_000.0,
     )
     model._update_aggregate(ctx, None, 1.0)
-    assert float(ctx._metrics["BasalArea"]["TOTAL"]) == pytest.approx(0.0)
+    assert float(ctx.metrics["BasalArea"]["TOTAL"]) == pytest.approx(0.0)

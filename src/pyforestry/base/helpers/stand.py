@@ -7,8 +7,19 @@ used to access aggregated stand metrics such as basal area or stem count.
 
 import statistics
 from dataclasses import dataclass, field
-from math import isclose, sqrt
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union, cast
+from math import isclose, pi, sqrt
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Dict,
+    List,
+    Literal,
+    Mapping,
+    Optional,
+    Union,
+    cast,
+)
 
 if TYPE_CHECKING:  # pragma: no cover - import cycle: imputation reaches helpers
     from pyforestry.base.imputation.registry import ImputerSpec
@@ -52,6 +63,7 @@ from pyforestry.base.helpers.height_models import HeightSourceSpec
 from pyforestry.base.helpers.primitives import (
     BasalAreaWeightedDiameter,
     LoreysMeanHeight,
+    QuadraticMeanDiameter,
     SiteBase,
     StandBasalArea,
     Stems,
@@ -59,6 +71,13 @@ from pyforestry.base.helpers.primitives import (
     TopHeightMeasurement,
 )
 from pyforestry.base.helpers.top_height import compute_top_height
+
+#: How a stand stores what it knows. ``tree_list`` and ``angle_count`` are
+#: measurements; ``diameter_class`` and ``aggregate`` are reduced forms a model
+#: may work in. The metric accessors read the same way whichever is active --
+#: which representation is in use decides how ``_metric_estimates`` is filled,
+#: not what a caller may ask for.
+Representation = Literal["tree_list", "angle_count", "diameter_class", "aggregate"]
 
 
 # -------------------------------------------------------------------------
@@ -296,6 +315,16 @@ class Stand:
         init=False,
     )
     use_angle_count: bool = field(default=False, init=False)
+    #: Which representation currently holds this stand's state. Set by
+    #: ``__post_init__`` for measured stands and by the ``from_*`` constructors
+    #: and mutators for the reduced ones.
+    representation: Representation = field(default="tree_list", init=False)
+    #: Diameter-class inventory, species -> {"bin_mids_cm": [...], "n_per_ha": [...]}.
+    #: Populated only in ``diameter_class`` representation.
+    _diameter_classes: Dict[Any, Dict[str, List[float]]] = field(
+        default_factory=dict,
+        init=False,
+    )
 
     def __post_init__(self) -> None:
         """Initialize derived attributes and pre-compute metric estimates.
@@ -379,6 +408,306 @@ class Stand:
         self._species_components = {}
         self._total_components = {}
         self.use_angle_count = True
+        self.representation = "angle_count"
+
+    # ------------------------------------------------------------------
+    # Reduced representations
+    # ------------------------------------------------------------------
+    #
+    # A stand does not always hold trees. A model may need diameter classes, or
+    # only stand totals, and once it steps them the result is still the stand's
+    # state -- so it lives here, next to the estimator, rather than in a second
+    # object that reports the same quantities from its own arithmetic.
+
+    @classmethod
+    def from_aggregate_metrics(
+        cls,
+        metrics: Mapping[str, Mapping[Any, Any]],
+        *,
+        site: Optional[SiteBase] = None,
+        area_ha: Optional[float] = None,
+        top_height_definition: Optional[TopHeightDefinition] = None,
+    ) -> "Stand":
+        """Build a stand from per-hectare totals rather than from plots.
+
+        ``metrics`` maps ``"BasalArea"`` and ``"Stems"`` to species -> value
+        mappings, each optionally carrying a ``"TOTAL"``; a missing total is
+        summed from the species entries. QMD is derived, never supplied.
+        """
+        stand = cls(
+            site=site,
+            area_ha=area_ha,
+            top_height_definition=top_height_definition or TopHeightDefinition(),
+        )
+        stand.representation = "aggregate"
+        stand.set_species_metrics(
+            basal_area=metrics.get("BasalArea", {}),
+            stems=metrics.get("Stems", {}),
+        )
+        return stand
+
+    @classmethod
+    def from_diameter_classes(
+        cls,
+        diameter_classes: Mapping[Any, Mapping[str, List[float]]],
+        *,
+        site: Optional[SiteBase] = None,
+        area_ha: Optional[float] = None,
+        top_height_definition: Optional[TopHeightDefinition] = None,
+    ) -> "Stand":
+        """Build a stand from a binned diameter distribution.
+
+        ``diameter_classes`` maps species to ``{"bin_mids_cm": [...],
+        "n_per_ha": [...]}``; the two arrays must be the same length.
+        """
+        stand = cls(
+            site=site,
+            area_ha=area_ha,
+            top_height_definition=top_height_definition or TopHeightDefinition(),
+        )
+        stand.representation = "diameter_class"
+        stand.set_diameter_classes(diameter_classes)
+        return stand
+
+    def _require_representation(self, method: str, *allowed: Representation) -> None:
+        """Reject a write the next metric refresh would silently undo.
+
+        In ``tree_list``/``angle_count``/``diameter_class`` the metrics are a
+        *view* of the inventory and are rebuilt from it on refresh, so writing
+        totals directly in one of those looks like it worked and is then
+        discarded -- a model keeping its state elsewhere and publishing through
+        :meth:`set_aggregate_metrics` had its whole growth step reverted.
+        """
+        if self.representation not in allowed:
+            names = ", ".join(repr(name) for name in allowed)
+            raise RuntimeError(
+                f"Stand.{method} requires representation in {{{names}}}, got "
+                f"{self.representation!r}. In {self.representation!r} the metrics are "
+                f"derived from the inventory and are rebuilt on the next refresh, so "
+                f"this write would be silently discarded. Update the inventory instead "
+                f"(the plots, or set_diameter_classes), or build the stand with "
+                f"Stand.from_aggregate_metrics."
+            )
+
+    def set_aggregate_metrics(self, *, ba_total: float, stems_total: float) -> None:
+        """Replace the stand totals, dropping any species detail.
+
+        QMD is re-derived from the two. Use :meth:`set_species_metrics` when the
+        per-species breakdown is known.
+
+        Raises:
+            RuntimeError: If the stand is not in ``aggregate`` representation.
+        """
+        self._require_representation("set_aggregate_metrics", "aggregate")
+        self._metric_estimates["BasalArea"] = {
+            "TOTAL": StandBasalArea(ba_total, species=None, precision=0.0)
+        }
+        self._metric_estimates["Stems"] = {
+            "TOTAL": Stems(stems_total, species=None, precision=0.0)
+        }
+        self._derive_aggregate_qmd()
+
+    def set_species_metrics(
+        self,
+        *,
+        basal_area: Mapping[Any, Any],
+        stems: Mapping[Any, Any],
+    ) -> None:
+        """Replace the aggregate metrics with a per-species breakdown.
+
+        A supplied ``"TOTAL"`` is taken as given; it is summed from the species
+        entries only when absent. The breakdown a stand carries is often partial
+        -- basal area known per species from an angle count, stems only for the
+        species that were tallied -- so forcing the total to equal the sum would
+        silently shrink such a stand. The caller knows whether its breakdown is
+        complete; this method does not.
+
+        QMD *is* derived here, per species and for the total, because that
+        derivation is the same arithmetic everywhere and having each model repeat
+        it is how the two copies came to disagree. A species with no basal area or
+        no stems gets no QMD, so the metric is never reported for a species it
+        cannot be defined for.
+
+        Raises:
+            RuntimeError: If the stand is not in ``aggregate`` representation.
+        """
+        self._require_representation("set_species_metrics", "aggregate")
+
+        ba_dict: Dict[Any, Any] = {}
+        summed_ba = 0.0
+        for key, value in basal_area.items():
+            if key == "TOTAL":
+                continue
+            ba_dict[key] = StandBasalArea(
+                float(value),
+                species=getattr(value, "species", None) or key,
+                precision=getattr(value, "precision", 0.0),
+                over_bark=getattr(value, "over_bark", True),
+                direct_estimate=getattr(value, "direct_estimate", True),
+            )
+            summed_ba += float(value)
+
+        stems_dict: Dict[Any, Any] = {}
+        summed_stems = 0.0
+        for key, value in stems.items():
+            if key == "TOTAL":
+                continue
+            stems_dict[key] = Stems(
+                float(value),
+                species=getattr(value, "species", None) or key,
+                precision=getattr(value, "precision", 0.0),
+            )
+            summed_stems += float(value)
+
+        total_ba = float(basal_area["TOTAL"]) if "TOTAL" in basal_area else summed_ba
+        total_stems = float(stems["TOTAL"]) if "TOTAL" in stems else summed_stems
+        ba_dict["TOTAL"] = StandBasalArea(total_ba, species=None, precision=0.0)
+        stems_dict["TOTAL"] = Stems(total_stems, species=None, precision=0.0)
+
+        self._metric_estimates["BasalArea"] = ba_dict
+        self._metric_estimates["Stems"] = stems_dict
+
+        qmd_dict: Dict[Any, Any] = {}
+        for key, ba in ba_dict.items():
+            n = stems_dict.get(key)
+            if n is None or float(n) <= 0.0 or float(ba) <= 0.0:
+                continue
+            qmd_dict[key] = QuadraticMeanDiameter(
+                sqrt((40000.0 * float(ba)) / (pi * float(n))), precision=0.0
+            )
+        qmd_dict.setdefault("TOTAL", QuadraticMeanDiameter(0.0, precision=0.0))
+        self._metric_estimates["QMD"] = qmd_dict
+
+    def scale_stems(self, factor: float) -> None:
+        """Scale the stand totals by ``factor``, clamping at zero.
+
+        Raises:
+            RuntimeError: If the stand is not in ``aggregate`` representation.
+        """
+        self._require_representation("scale_stems", "aggregate")
+        total_n = float(self._metric_estimates["Stems"]["TOTAL"])
+        total_ba = float(self._metric_estimates["BasalArea"]["TOTAL"])
+        self.set_aggregate_metrics(
+            ba_total=max(0.0, total_ba * factor),
+            stems_total=max(0.0, total_n * factor),
+        )
+
+    @property
+    def diameter_classes(self) -> Dict[Any, Dict[str, List[float]]]:
+        """The diameter-class inventory, keyed by species.
+
+        Each entry holds ``bin_mids_cm`` and a matching ``n_per_ha``. This is a
+        copy: mutate it freely and hand it back through
+        :meth:`set_diameter_classes`, which revalidates and refreshes the metrics.
+
+        Raises:
+            RuntimeError: If the stand is not in ``diameter_class`` representation.
+        """
+        self._require_representation("diameter_classes", "diameter_class")
+        return {
+            key: {name: list(values) for name, values in record.items()}
+            for key, record in self._diameter_classes.items()
+        }
+
+    def set_diameter_classes(
+        self, diameter_classes: Mapping[Any, Mapping[str, List[float]]]
+    ) -> None:
+        """Replace the diameter-class inventory and recompute the metrics.
+
+        Raises:
+            RuntimeError: If the stand is not in ``diameter_class`` representation.
+            ValueError: If a species' ``bin_mids_cm`` and ``n_per_ha`` differ in length.
+        """
+        self._require_representation("set_diameter_classes", "diameter_class")
+        normalized: Dict[Any, Dict[str, List[float]]] = {}
+        for key, record in diameter_classes.items():
+            mids = list(record.get("bin_mids_cm", []))
+            counts = list(record.get("n_per_ha", []))
+            if len(mids) != len(counts):
+                raise ValueError(
+                    f"Diameter-class arrays length mismatch for {key}: "
+                    f"{len(mids)} bin midpoints against {len(counts)} counts."
+                )
+            normalized[key] = {"bin_mids_cm": mids, "n_per_ha": counts}
+        self._diameter_classes = normalized
+        self._compute_diameter_class_estimates()
+
+    def refresh_metrics(self) -> None:
+        """Rebuild the metric estimates from whichever representation is active.
+
+        A no-op for ``aggregate``, where the metrics *are* the state; for the
+        others they are a view of an inventory that a step may have changed.
+        """
+        if self.representation == "tree_list":
+            self._compute_plot_mean_estimates()
+            self._metric_estimates.pop("QMD", None)
+        elif self.representation == "angle_count":
+            tallies = [ac for plot in self.plots for ac in plot.AngleCount]
+            if tallies:
+                self._apply_angle_count_metrics(tallies)
+        elif self.representation == "diameter_class":
+            self._compute_diameter_class_estimates()
+        # "aggregate": the metrics are the state; nothing to recompute.
+
+    def _derive_aggregate_qmd(self) -> None:
+        """Set the total QMD from the stored total basal area and stems."""
+        try:
+            ba = float(self._metric_estimates["BasalArea"]["TOTAL"])
+            n = float(self._metric_estimates["Stems"]["TOTAL"])
+            value = sqrt((40000.0 * ba) / (pi * n)) if (ba > 0.0 and n > 0.0) else 0.0
+        except KeyError:
+            value = 0.0
+        self._metric_estimates["QMD"] = {"TOTAL": QuadraticMeanDiameter(value, precision=0.0)}
+
+    def _compute_diameter_class_estimates(self) -> None:
+        """Reduce the diameter-class inventory to stems, basal area and QMD.
+
+        Each class contributes ``n_per_ha`` stems at the bin midpoint's basal
+        area. There is no sampling error to report -- a binned distribution is
+        already a reduction -- so every ``precision`` here is zero, which is
+        honest rather than optimistic: it says "no between-plot error is
+        available", not "this estimate is exact".
+
+        An inventory keyed only by ``"TOTAL"`` is an unspeciated distribution of
+        the whole stand, not an empty stand. Summing the species keys and then
+        overwriting ``"TOTAL"`` with that sum used to zero exactly this case, and
+        it is the case ``build_context`` produces whenever it has to fall back to
+        a single class at the stand's own QMD -- so a diameter-class model driven
+        from a stand with no tree list read a stand of nothing.
+        """
+        stems_dict: Dict[Any, Any] = {}
+        ba_dict: Dict[Any, Any] = {}
+        total_n = 0.0
+        total_ba = 0.0
+        speciated = False
+        for key, record in self._diameter_classes.items():
+            n_class = sum(float(n) for n in record["n_per_ha"])
+            ba_class = 0.0
+            for diameter_cm, count in zip(record["bin_mids_cm"], record["n_per_ha"], strict=False):
+                radius_m = (float(diameter_cm) / 100.0) / 2.0
+                ba_class += float(count) * pi * radius_m * radius_m
+            species = key if key != "TOTAL" else None
+            stems_dict[key] = Stems(n_class, species=species, precision=0.0)
+            ba_dict[key] = StandBasalArea(ba_class, species=species, precision=0.0)
+            if key != "TOTAL":
+                speciated = True
+                total_n += n_class
+                total_ba += ba_class
+
+        if speciated:
+            stems_dict["TOTAL"] = Stems(total_n, species=None, precision=0.0)
+            ba_dict["TOTAL"] = StandBasalArea(total_ba, species=None, precision=0.0)
+        else:
+            total_n = float(stems_dict.get("TOTAL", Stems(0.0)))
+            total_ba = float(ba_dict.get("TOTAL", StandBasalArea(0.0)))
+            stems_dict.setdefault("TOTAL", Stems(0.0, species=None, precision=0.0))
+            ba_dict.setdefault("TOTAL", StandBasalArea(0.0, species=None, precision=0.0))
+
+        self._metric_estimates["Stems"] = stems_dict
+        self._metric_estimates["BasalArea"] = ba_dict
+        defined = total_ba > 0.0 and total_n > 0.0
+        value = sqrt((40000.0 * total_ba) / (pi * total_n)) if defined else 0.0
+        self._metric_estimates["QMD"] = {"TOTAL": QuadraticMeanDiameter(value, precision=0.0)}
 
     # Two key properties for your requested usage:
     @property
@@ -450,6 +779,11 @@ class Stand:
                     "QMD is unavailable for angle-count data without per-tally "
                     "diameters (no stem estimate)."
                 )
+        elif self.representation in ("aggregate", "diameter_class"):
+            # The reduced representations set QMD whenever they set the metrics
+            # it derives from, so reaching here means they hold no metrics at all.
+            self._derive_aggregate_qmd()
+            return
         elif "BasalArea" not in self._metric_estimates or "Stems" not in self._metric_estimates:
             self._compute_plot_mean_estimates()
         self._compute_qmd_estimates()
@@ -786,6 +1120,7 @@ class Stand:
             # Otherwise, recompute using the tree-based estimates.
             self._compute_plot_mean_estimates()
             self.use_angle_count = False
+            self.representation = "tree_list"
 
         # Invalidate any cached QMD estimates
         if "QMD" in self._metric_estimates:
@@ -813,6 +1148,7 @@ class Stand:
 
         if self.use_angle_count:
             raise ValueError("Thinning not supported when using AngleCount data.")
+        self._require_representation("thin_trees", "tree_list")
 
         for plot in self.plots:
             new_trees = []

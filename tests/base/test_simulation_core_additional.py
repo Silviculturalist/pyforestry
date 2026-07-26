@@ -186,7 +186,7 @@ def test_build_context_diameter_class_fallback():
     }
     ctx = model.build_context(stand, mode_hint="diameter_class")
     assert ctx.mode == "diameter_class"
-    assert ctx._dclass["TOTAL"]["bin_mids_cm"]
+    assert ctx.diameter_classes["TOTAL"]["bin_mids_cm"]
 
 
 def test_build_context_angle_count_origin():
@@ -338,7 +338,13 @@ def test_simulation_context_management_tuple_and_scale_stems():
     assert float(ctx.metrics["Stems"]["TOTAL"]) == pytest.approx(50.0)
 
 
-def test_simulation_context_metrics_edge_paths():
+def test_simulation_context_metrics_come_from_its_stand():
+    """A tree-list context reports exactly what its stand reports.
+
+    The context used to carry a second estimator, and this test covered its edge
+    paths. There is only one estimator now, so the property worth asserting is
+    that the context is a view of the stand rather than a parallel calculation.
+    """
     model = DummyModel()
     plot = CircularPlot(
         id=1,
@@ -348,7 +354,6 @@ def test_simulation_context_metrics_edge_paths():
             Tree(species="Picea abies", diameter_cm=20.0, weight_n=2.0),
         ],
     )
-    plot.trees[1].species = "Picea abies"
     ctx = SimulationContext(
         mode="tree_list",
         area_ha=1.0,
@@ -359,16 +364,27 @@ def test_simulation_context_metrics_edge_paths():
         model=model,
         initial_attrs={},
     )
-    metrics = ctx._recompute_metrics_tree_list([plot])
-    assert "TOTAL" in metrics["Stems"]
+    assert "TOTAL" in ctx.metrics["Stems"]
+    assert float(ctx.metrics["Stems"]["TOTAL"]) == pytest.approx(float(ctx.stand.Stems))
+    assert float(ctx.metrics["BasalArea"]["TOTAL"]) == pytest.approx(float(ctx.stand.BasalArea))
+    assert float(ctx.metrics["QMD"]["TOTAL"]) == pytest.approx(float(ctx.stand.QMD))
 
-    ctx._metrics.pop("BasalArea", None)
-    ctx._recompute_qmd()
-    assert float(ctx._metrics["QMD"]["TOTAL"]) == 0.0
 
+def test_simulation_context_qmd_is_zero_without_measurable_trees():
+    """A stand of trees with no diameters has no QMD to report, not a crash."""
+    model = DummyModel()
     empty_plot = CircularPlot(id=2, area_m2=200.0, trees=[Tree(species=None)])
-    metrics_empty = ctx._recompute_metrics_tree_list([empty_plot])
-    assert float(metrics_empty["QMD"]["TOTAL"]) == 0.0
+    ctx = SimulationContext(
+        mode="tree_list",
+        area_ha=1.0,
+        site=None,
+        origin_ref=None,
+        inventory={"plots": [empty_plot]},
+        initial_state={},
+        model=model,
+        initial_attrs={},
+    )
+    assert float(ctx.metrics["QMD"]["TOTAL"]) == 0.0
 
 
 def test_simulation_context_checkpoint_dclass_and_rng_restore():

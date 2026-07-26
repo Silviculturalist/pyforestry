@@ -5,7 +5,6 @@ from __future__ import annotations
 import copy
 import warnings
 from dataclasses import dataclass, field
-from math import pi, sqrt
 
 # ----------------------------- Actions & History ------------------------------
 from typing import (
@@ -27,8 +26,7 @@ from typing import (
 
 import pandas as pd
 
-from pyforestry.base.aggregation import aggregate_plots
-from pyforestry.base.helpers import CircularPlot, TreeName
+from pyforestry.base.helpers import CircularPlot, Stand, TreeName
 from pyforestry.base.helpers.primitives import QuadraticMeanDiameter, StandBasalArea, Stems
 
 # ---- Type aliases for metric containers ----
@@ -85,10 +83,20 @@ class HistoryEntry:
 
 
 class SimulationContext:
-    """
-    Sandboxed, auditable working copy for a single run.
+    """The context of one run: a stand, a clock, an audit trail.
 
-    mode ∈ {"spatial","tree_list","diameter_class","aggregate"}
+    The stand is the state. This class used to own a second copy of it -- its own
+    metric store, its own diameter-class inventory, its own plot-to-stand
+    estimator -- and the two disagreed by a factor that grew with the number of
+    species in the stand. Now :attr:`stand` holds every representation and every
+    metric, and this class holds what is genuinely about the *run*: which
+    inventory mode the model asked for, where time stands, the model itself, the
+    RNG bundle, and the history.
+
+    ``mode`` (∈ ``{"spatial", "tree_list", "diameter_class", "aggregate"}``) is
+    the model's requirement, not the stand's storage: ``spatial`` and
+    ``tree_list`` are the same representation, differing in whether the model
+    needs tree positions.
     """
 
     def __init__(
@@ -115,29 +123,73 @@ class SimulationContext:
         if mode not in ("spatial", "tree_list", "diameter_class", "aggregate"):
             raise ValueError("mode must be 'spatial','tree_list','diameter_class', or 'aggregate'")
         self.mode = mode
-        self.area_ha = area_ha
-        self.site = site
         self.origin_ref = origin_ref  # provenance only
         self.model = model
         self.random_bundle = random_bundle
-        # Internal inventory & metrics containers (dicts for mutability)
-        self._metrics: MetricMap = {"Stems": {}, "BasalArea": {}, "QMD": {}}
-        self._dclass: Dict[Any, Dict[str, List[float]]] = {}
-
-        if self.mode in ("tree_list", "spatial"):
-            self.plots: List[CircularPlot] = self._copy_plots_with_tree_refs(inventory["plots"])
-            self._metrics = self._recompute_metrics_tree_list(self.plots)
-        elif self.mode == "aggregate":
-            self._metrics = self._normalize_aggregate_metrics(inventory["metrics"])
-        else:  # "diameter_class"
-            self._dclass = self._normalize_dclass_inventory(inventory["dclass"])
-            self._metrics = self._recompute_metrics_dclass(self._dclass)
+        self.stand: Stand = self._build_stand(mode, inventory, area_ha, site)
 
         self.state: Dict[str, Any] = dict(initial_state)
         self.attrs: Dict[str, Any] = dict(initial_attrs or {})
         self.history: List[HistoryEntry] = []
         self.state.setdefault("t", 0.0)
         self.state.setdefault("last_dt", 0.0)
+
+    def _build_stand(
+        self,
+        mode: str,
+        inventory: Dict[str, Any],
+        area_ha: Optional[float],
+        site: Optional[Any],
+    ) -> Stand:
+        """Build the run's working stand from the inventory payload.
+
+        The stand is a sandbox: plot containers are copied so a run cannot append
+        to or thin the caller's inventory, while the ``Tree`` objects themselves
+        are shared by reference, which is what lets a model mutate diameters in
+        place and what :attr:`Tree.uid` exists to make traceable.
+        """
+        if mode in ("tree_list", "spatial"):
+            stand = Stand(
+                site=site,
+                area_ha=area_ha,
+                plots=self._copy_plots_with_tree_refs(inventory["plots"]),
+            )
+            stand.refresh_metrics()
+            return stand
+        if mode == "aggregate":
+            return Stand.from_aggregate_metrics(inventory["metrics"], site=site, area_ha=area_ha)
+        return Stand.from_diameter_classes(inventory["dclass"], site=site, area_ha=area_ha)
+
+    # --------------------------- Stand delegation -----------------------------
+    #
+    # These forward to the one state object. They are kept because they read
+    # better at a call site inside a model (``ctx.plots``, ``ctx.area_ha``) and
+    # because removing them would touch every adapter for no gain -- but there is
+    # no second store behind them.
+
+    @property
+    def area_ha(self) -> Optional[float]:
+        """The stand's area in hectares, if known."""
+        return self.stand.area_ha
+
+    @property
+    def site(self) -> Optional[Any]:
+        """The stand's site reference, if any."""
+        return self.stand.site
+
+    @property
+    def plots(self) -> List[CircularPlot]:
+        """The working copy's plots.
+
+        Raises:
+            AttributeError: If the run is not in a tree-list representation.
+        """
+        if self.stand.representation not in ("tree_list", "angle_count"):
+            raise AttributeError(
+                f"This context is in {self.mode!r} mode, which holds no plots. "
+                f"Read ctx.diameter_classes or ctx.metrics instead."
+            )
+        return self.stand.plots
 
     # ------------------------------ Public API --------------------------------
 
@@ -253,16 +305,19 @@ class SimulationContext:
 
     def snapshot(self) -> Dict[str, Any]:
         """Return a lightweight snapshot of state and aggregate totals."""
-        if self.mode in ("tree_list", "spatial"):
-            n_plots = len(self.plots)
-            n_trees = sum(len(p.trees) for p in self.plots)
-            tree_stats = {"n_plots": n_plots, "n_trees": n_trees}
+        if self.stand.representation in ("tree_list", "angle_count"):
+            plots = self.stand.plots
+            tree_stats = {
+                "n_plots": len(plots),
+                "n_trees": sum(len(p.trees) for p in plots),
+            }
         else:
             tree_stats = {"n_plots": 0, "n_trees": 0}
 
-        ba = float(self._metrics["BasalArea"]["TOTAL"]) if "BasalArea" in self._metrics else 0.0
-        stems = float(self._metrics["Stems"]["TOTAL"]) if "Stems" in self._metrics else 0.0
-        qmd = float(self._metrics["QMD"]["TOTAL"]) if "QMD" in self._metrics else 0.0
+        metrics = self._metrics
+        ba = float(metrics["BasalArea"]["TOTAL"]) if metrics["BasalArea"] else 0.0
+        stems = float(metrics["Stems"]["TOTAL"]) if metrics["Stems"] else 0.0
+        qmd = float(metrics["QMD"]["TOTAL"]) if metrics["QMD"] else 0.0
 
         return {
             "mode": self.mode,
@@ -274,7 +329,7 @@ class SimulationContext:
 
     @property
     def diameter_classes(self) -> Dict[Any, Dict[str, List[float]]]:
-        """The diameter-class inventory, keyed by species.
+        """The stand's diameter-class inventory, keyed by species.
 
         Each entry holds ``bin_mids_cm`` and a matching ``n_per_ha``. This is a
         copy: mutate it freely and hand it back through
@@ -283,11 +338,34 @@ class SimulationContext:
         Raises:
             RuntimeError: If the context is not in diameter-class mode.
         """
-        self._require_mode("diameter_classes", "diameter_class")
-        return {
-            key: {name: list(values) for name, values in rec.items()}
-            for key, rec in self._dclass.items()
-        }
+        return self.stand.diameter_classes
+
+    @property
+    def _metrics(self) -> MetricMap:
+        """The stand's metric estimates, in this module's three-key shape.
+
+        Reads through to :attr:`Stand._metric_estimates`; there is no second
+        store. ``Stand`` also computes BAWAD and Lorey's height, which this view
+        drops because nothing in the runtime consumes them yet -- read them off
+        ``ctx.stand`` when that changes.
+        """
+        estimates = self.stand._metric_estimates
+        if "QMD" not in estimates:
+            # Stand derives QMD lazily; force it here so every mode reports the
+            # same three keys. An angle-count stand whose tallies carry no
+            # diameters genuinely cannot produce one, and says so by raising.
+            try:
+                self.stand.QMD  # noqa: B018 -- accessed for its side effect
+            except KeyError:
+                pass
+        return cast(
+            MetricMap,
+            {
+                "Stems": estimates.get("Stems", {}),
+                "BasalArea": estimates.get("BasalArea", {}),
+                "QMD": estimates.get("QMD", {}),
+            },
+        )
 
     @property
     def metrics(self) -> MetricView:
@@ -319,27 +397,10 @@ class SimulationContext:
             )
         return pd.DataFrame(rows)
 
-    # Aggregate helpers
-    def _require_mode(self, method: str, *modes: str) -> None:
-        """Reject a state write that the next metric refresh would silently undo.
-
-        In ``tree_list``/``spatial``/``diameter_class`` mode the metrics are a
-        *view* of the inventory, and :meth:`_refresh_metrics` rebuilds them from it
-        after every step. Writing totals directly in one of those modes therefore
-        looked like it worked and was then discarded: a model that kept its state
-        in ``attrs`` and published through :meth:`set_aggregate_metrics` had its
-        entire growth step reverted the moment the context refreshed.
-        """
-        if self.mode not in modes:
-            allowed = ", ".join(repr(m) for m in modes)
-            raise RuntimeError(
-                f"{method} requires mode in {{{allowed}}}, got {self.mode!r}. In "
-                f"{self.mode!r} mode the metrics are derived from the inventory and "
-                f"are rebuilt on the next refresh, so this write would be silently "
-                f"discarded. Update the inventory instead "
-                f"(the plots, or set_diameter_class), or build the context in "
-                f"aggregate mode."
-            )
+    # ---------------------------- State mutation ------------------------------
+    #
+    # Every one of these forwards to the stand, which owns both the state and the
+    # rule about which representation may be written directly.
 
     def set_aggregate_metrics(self, *, ba_total: float, stems_total: float) -> None:
         """Set aggregate basal area and stems, then recompute QMD.
@@ -347,13 +408,24 @@ class SimulationContext:
         Raises:
             RuntimeError: If the context is not in aggregate mode.
         """
-        self._require_mode("set_aggregate_metrics", "aggregate")
-        self._metrics.setdefault("BasalArea", {})
-        self._metrics.setdefault("Stems", {})
-        self._metrics.setdefault("QMD", {})
-        self._metrics["BasalArea"]["TOTAL"] = StandBasalArea(ba_total, species=None, precision=0.0)
-        self._metrics["Stems"]["TOTAL"] = Stems(stems_total, species=None, precision=0.0)
-        self._recompute_qmd()
+        self.stand.set_aggregate_metrics(ba_total=ba_total, stems_total=stems_total)
+
+    def set_species_metrics(
+        self,
+        *,
+        basal_area: Mapping[Any, Any],
+        stems: Mapping[Any, Any],
+    ) -> None:
+        """Publish a per-species aggregate result, deriving totals and QMD.
+
+        This is the public path for a model that steps species cohorts and knows
+        the breakdown. Writing ``ctx._metrics`` directly used to be the only way,
+        which put two modules' arithmetic in charge of the same invariants.
+
+        Raises:
+            RuntimeError: If the context is not in aggregate mode.
+        """
+        self.stand.set_species_metrics(basal_area=basal_area, stems=stems)
 
     def scale_stems(self, factor: float) -> None:
         """Scale aggregate stems and basal area by ``factor``.
@@ -361,62 +433,21 @@ class SimulationContext:
         Raises:
             RuntimeError: If the context is not in aggregate mode.
         """
-        self._require_mode("scale_stems", "aggregate")
-        total_n = float(self._metrics["Stems"]["TOTAL"])
-        total_ba = float(self._metrics["BasalArea"]["TOTAL"])
-        new_n = max(0.0, total_n * factor)
-        new_ba = max(0.0, total_ba * factor)
-        self.set_aggregate_metrics(ba_total=new_ba, stems_total=new_n)
+        self.stand.scale_stems(factor)
 
-    # Diameter-class helper
     def set_diameter_class(self, dclass: Dict[Any, Dict[str, List[float]]]) -> None:
         """Replace diameter-class inventory and recompute metrics.
 
         Raises:
             RuntimeError: If the context is not in diameter-class mode.
         """
-        self._require_mode("set_diameter_class", "diameter_class")
-        self._dclass = self._normalize_dclass_inventory(dclass)
-        self._metrics = self._recompute_metrics_dclass(self._dclass)
+        self.stand.set_diameter_classes(dclass)
 
     # ----------------------------- Internal utils -----------------------------
 
     def _refresh_metrics(self) -> None:
-        """Refresh metrics based on the active inventory representation."""
-        if self.mode in ("tree_list", "spatial"):
-            computed = self._recompute_metrics_tree_list(self.plots)
-            self._metrics = cast(
-                MetricMap,
-                {
-                    "Stems": dict(computed.get("Stems", {})),
-                    "BasalArea": dict(computed.get("BasalArea", {})),
-                    "QMD": dict(computed.get("QMD", {})),
-                },
-            )
-
-        elif self.mode == "aggregate":
-            self._recompute_qmd()
-        else:
-            computed = self._recompute_metrics_dclass(self._dclass)
-            self._metrics = cast(
-                MetricMap,
-                {
-                    "Stems": dict(computed.get("Stems", {})),
-                    "BasalArea": dict(computed.get("BasalArea", {})),
-                    "QMD": dict(computed.get("QMD", {})),
-                },
-            )
-
-    def _recompute_qmd(self) -> None:
-        """Recompute quadratic mean diameter from aggregate totals."""
-        try:
-            ba = float(self._metrics["BasalArea"]["TOTAL"])
-            n = float(self._metrics["Stems"]["TOTAL"])
-            qmd_val = sqrt((40000.0 * ba) / (pi * n)) if (ba > 0 and n > 0) else 0.0
-        except KeyError:
-            qmd_val = 0.0
-        self._metrics.setdefault("QMD", {})
-        self._metrics["QMD"]["TOTAL"] = QuadraticMeanDiameter(qmd_val, precision=0.0)
+        """Rebuild the stand's metrics from whichever representation it holds."""
+        self.stand.refresh_metrics()
 
     def _append_history(
         self, op: str, details: Dict[str, Any], pre: Dict[str, Any], post: Dict[str, Any]
@@ -452,93 +483,6 @@ class SimulationContext:
             )
         return out
 
-    def _normalize_aggregate_metrics(self, metrics_in: Dict[str, Dict[Any, Any]]) -> MetricMap:
-        """Normalize aggregate metric inputs and compute derived values."""
-        stems_dict = cast(Dict[MetricKey, Stems], dict(metrics_in.get("Stems", {})))
-        ba_dict = cast(Dict[MetricKey, StandBasalArea], dict(metrics_in.get("BasalArea", {})))
-        qmd_dict: Dict[MetricKey, QuadraticMeanDiameter] = {}
-        stems_dict.setdefault("TOTAL", Stems(0.0))
-        ba_dict.setdefault("TOTAL", StandBasalArea(0.0))
-        out_map = cast(
-            MetricMap,
-            {"Stems": stems_dict, "BasalArea": ba_dict, "QMD": qmd_dict},
-        )
-        self._metrics = out_map
-        self._recompute_qmd()
-        return out_map
-
-    def _recompute_metrics_tree_list(self, plots: Iterable[CircularPlot]) -> MetricMap:
-        """Compute metric aggregates from tree-list plots.
-
-        Delegates to :func:`pyforestry.base.aggregation.aggregate_plots`, the same
-        estimator :class:`~pyforestry.base.helpers.stand.Stand` reports from. This
-        used to be a second implementation, and it disagreed: it averaged a species
-        over only the plots where that species occurred, so a two-plot stand with
-        one spruce plot and one pine plot read 1.0 stems/ha through ``Stand`` and
-        2.0 through the context, growing with the number of species.
-
-        The missing-diameter warning is suppressed here: this runs on every metric
-        refresh, i.e. every step, and the stand it was built from already reported
-        it once.
-        """
-        aggregation = aggregate_plots(plots, warn_missing_diameter=False)
-        return cast(
-            MetricMap,
-            {
-                "Stems": dict(aggregation.stems),
-                "BasalArea": dict(aggregation.basal_area),
-                "QMD": {"TOTAL": aggregation.qmd},
-            },
-        )
-
-    def _normalize_dclass_inventory(
-        self, dclass_in: Dict[Any, Dict[str, List[float]]]
-    ) -> Dict[Any, Dict[str, List[float]]]:
-        """Validate and normalize diameter-class inventory arrays."""
-        out: Dict[Any, Dict[str, List[float]]] = {}
-        for key, rec in dclass_in.items():
-            mids = list(rec.get("bin_mids_cm", []))
-            nph = list(rec.get("n_per_ha", []))
-            if len(mids) != len(nph):
-                raise ValueError(f"Diameter-class arrays length mismatch for {key}.")
-            out[key] = {"bin_mids_cm": mids, "n_per_ha": nph}
-        return out
-
-    def _recompute_metrics_dclass(self, dclass: Dict[Any, Dict[str, List[float]]]) -> MetricMap:
-        """Compute metric aggregates from diameter-class inventory."""
-        stems_dict: Dict[Union[TreeName, str], Stems] = {}
-        ba_dict: Dict[Union[TreeName, str], StandBasalArea] = {}
-        total_n = 0.0
-        total_ba = 0.0
-        for key, rec in dclass.items():
-            mids = rec["bin_mids_cm"]
-            nph = rec["n_per_ha"]
-            n_sp = sum(nph)
-            ba_sp = 0.0
-            for D_cm, n_i in zip(mids, nph, strict=False):
-                r_m = (float(D_cm) / 100.0) / 2.0
-                ba_sp += float(n_i) * (pi * r_m * r_m)
-            stems_dict[key] = Stems(n_sp, species=key if key != "TOTAL" else None, precision=0.0)
-            ba_dict[key] = StandBasalArea(
-                ba_sp, species=key if key != "TOTAL" else None, precision=0.0
-            )
-            if key != "TOTAL":
-                total_n += n_sp
-                total_ba += ba_sp
-        stems_dict["TOTAL"] = Stems(total_n, species=None, precision=0.0)
-        ba_dict["TOTAL"] = StandBasalArea(total_ba, species=None, precision=0.0)
-        qmd_dict: Dict[Union[TreeName, str], QuadraticMeanDiameter] = {}
-        if total_ba > 0.0 and total_n > 0.0:
-            qmd_dict["TOTAL"] = QuadraticMeanDiameter(
-                sqrt((40000.0 * total_ba) / (pi * total_n)), precision=0.0
-            )
-        else:
-            qmd_dict["TOTAL"] = QuadraticMeanDiameter(0.0, precision=0.0)
-        return cast(
-            MetricMap,
-            {"Stems": stems_dict, "BasalArea": ba_dict, "QMD": qmd_dict},
-        )
-
     # Used by ensemble to log vector updates
     def _log_external_update(self, op: str, details: Dict[str, Any]) -> None:
         """Log an external update while refreshing metrics."""
@@ -565,16 +509,16 @@ class SimulationContext:
         """
 
         if self.mode in ("tree_list", "spatial"):
-            inventory = {"plots": copy.deepcopy(self.plots)}
+            inventory = {"plots": copy.deepcopy(self.stand.plots)}
         elif self.mode == "diameter_class":
-            inventory = {"dclass": copy.deepcopy(self._dclass)}
+            inventory = {"dclass": copy.deepcopy(self.stand.diameter_classes)}
         else:
-            inventory = {"metrics": copy.deepcopy(self._metrics)}
+            inventory = {"metrics": copy.deepcopy(dict(self._metrics))}
 
         payload: Dict[str, Any] = {
             "mode": self.mode,
-            "area_ha": self.area_ha,
-            "site": copy.deepcopy(self.site),
+            "area_ha": self.stand.area_ha,
+            "site": copy.deepcopy(self.stand.site),
             "state": copy.deepcopy(self.state),
             "attrs": copy.deepcopy(self.attrs),
             "inventory": inventory,

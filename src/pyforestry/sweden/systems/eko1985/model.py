@@ -596,12 +596,16 @@ class Eko1985Model(GrowthModel):
         return ages
 
     def _write_metrics(self, ctx: "SimulationContext", cohorts: Sequence[Eko1985Cohort]) -> None:
-        """Write aggregate metrics to the context from cohorts."""
+        """Publish the cohorts' state as the context's aggregate metrics.
+
+        Cohorts with no stems or no basal area are dropped rather than reported as
+        zeros: a species that is not present should be absent from the breakdown,
+        not present at zero. Totals and QMD are derived by the context, so this
+        model and the runtime cannot disagree about how they follow from the
+        per-species figures.
+        """
         stems_dict: dict[TreeName | str, Stems] = {}
         ba_dict: dict[TreeName | str, StandBasalArea] = {}
-        qmd_dict: dict[TreeName | str, QuadraticMeanDiameter] = {}
-        total_stems = 0.0
-        total_ba = 0.0
 
         for cohort in cohorts:
             stems_val = float(cohort.stems)
@@ -611,15 +615,8 @@ class Eko1985Model(GrowthModel):
             species = cohort.species
             stems_dict[species] = Stems(stems_val, species=species, precision=0.0)
             ba_dict[species] = StandBasalArea(ba_val, species=species, precision=0.0)
-            qmd_dict[species] = QuadraticMeanDiameter(float(cohort.qmd), precision=0.0)
-            total_stems += stems_val
-            total_ba += ba_val
 
-        stems_dict["TOTAL"] = Stems(total_stems, species=None, precision=0.0)
-        ba_dict["TOTAL"] = StandBasalArea(total_ba, species=None, precision=0.0)
-        qmd_dict["TOTAL"] = _safe_qmd(total_ba, total_stems)
-
-        ctx._metrics = {"Stems": stems_dict, "BasalArea": ba_dict, "QMD": qmd_dict}
+        ctx.set_species_metrics(basal_area=ba_dict, stems=stems_dict)
 
 
 __all__ = [

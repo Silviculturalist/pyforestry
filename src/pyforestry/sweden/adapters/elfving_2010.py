@@ -16,13 +16,12 @@ from __future__ import annotations
 
 import warnings
 from dataclasses import dataclass
-from math import exp, log, pi, sqrt
+from math import exp, log, sqrt
 from typing import Sequence
 
 from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.helpers import Tree, TreeName, TreeSpecies
 from pyforestry.base.helpers.primitives import (
-    QuadraticMeanDiameter,
     StandBasalArea,
     Stems,
     basal_area_growth_cm2_to_diameter_growth_cm,
@@ -843,41 +842,32 @@ class Elfving2010Model(GrowthModel):
         # Scale species-level basal areas to preserve proportions.
         scale_ba = ba_new / ba_total
 
+        # Scale every species by the same factor so the mixture is preserved; the
+        # published stand-level function predicts the total, not the breakdown.
+        metrics = ctx.metrics
         new_ba_dict: dict[TreeName | str, StandBasalArea] = {}
-        for key, ba in ctx._metrics["BasalArea"].items():
+        for key, ba in metrics["BasalArea"].items():
             if key == "TOTAL":
                 continue
-            new_val = float(ba) * scale_ba
             new_ba_dict[key] = StandBasalArea(
-                new_val,
+                float(ba) * scale_ba,
                 species=getattr(ba, "species", None),
                 precision=getattr(ba, "precision", 0.0),
                 over_bark=getattr(ba, "over_bark", True),
                 direct_estimate=getattr(ba, "direct_estimate", True),
             )
 
+        # Carry the totals so a stand that knows its total but not its mixture
+        # (an angle-count stand, say) still grows instead of collapsing to zero.
         new_ba_dict["TOTAL"] = StandBasalArea(
             ba_new, species=None, precision=0.0, over_bark=True, direct_estimate=True
         )
 
-        # Preserve stems
-        new_stems_dict = dict(ctx._metrics["Stems"])
+        # Stems are unchanged by growth; mortality is a separate step.
+        new_stems_dict: dict[TreeName | str, Stems] = dict(metrics["Stems"])
         new_stems_dict["TOTAL"] = Stems(stems_total, species=None, precision=0.0)
 
-        # Recompute QMD
-        new_qmd_dict: dict[TreeName | str, QuadraticMeanDiameter] = {}
-        for key, ba in new_ba_dict.items():
-            stems = new_stems_dict.get(key)
-            if stems is None or float(stems) <= 0 or float(ba) <= 0:
-                continue
-            qmd_val = sqrt((40000.0 * float(ba)) / (pi * float(stems)))
-            new_qmd_dict[key] = QuadraticMeanDiameter(qmd_val)
-
-        ctx._metrics = {
-            "BasalArea": new_ba_dict,
-            "Stems": new_stems_dict,
-            "QMD": {k: v for k, v in new_qmd_dict.items()},
-        }
+        ctx.set_species_metrics(basal_area=new_ba_dict, stems=new_stems_dict)
 
 
 __all__ = [
