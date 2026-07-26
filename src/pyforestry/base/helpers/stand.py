@@ -32,26 +32,16 @@ from shapely.geometry.base import BaseGeometry
 
 # The plot-to-stand estimator lives in pyforestry.base.aggregation so that the
 # simulation runtime reduces plots to metrics through exactly the same code this
-# class does. It used to carry its own copy, and the two disagreed. The private
-# aliases keep this module's internals reading as before.
-from pyforestry.base.aggregation import (
-    aggregate_plots as _aggregate_plots,
-)
-from pyforestry.base.aggregation import (
-    mean_and_se as _mean_and_se,
-)
-from pyforestry.base.aggregation import (
-    metrics_from_series as _metrics_from_series,
-)
-from pyforestry.base.aggregation import (
-    qmd_from_components as _qmd_from_components,
-)
-from pyforestry.base.aggregation import (
-    qmd_from_series as _qmd_from_series,
-)
-from pyforestry.base.aggregation import (
-    sum_series as _sum_series,
-)
+# class does. It used to carry its own copy, and the two disagreed.
+#
+# The *module* is bound here rather than the names in it, and that is load-bearing.
+# ``aggregation`` imports ``base.helpers.primitives``, which initialises this
+# package, which imports this module -- so ``from ... import aggregate_plots``
+# resolves a name that does not exist yet whenever ``base.aggregation`` is the
+# first thing a program imports, and ``import pyforestry.base.aggregation`` failed
+# outright. Binding the module defers every lookup to call time, by which point
+# both modules are fully initialised.
+import pyforestry.base.aggregation as _aggregation
 from pyforestry.base.helpers import (
     AngleCountAggregator,
     CircularPlot,
@@ -219,10 +209,10 @@ class StandMetricAccessor:
         name = self._metric_name
 
         if components:
-            group_series = _sum_series(components, selected)
+            group_series = _aggregation.sum_series(components, selected)
             if name == "QMD":
-                return _qmd_from_series(group_series)
-            value, precision = _metrics_from_series(group_series)
+                return _aggregation.qmd_from_series(group_series)
+            value, precision = _aggregation.metrics_from_series(group_series)
             if name == "Stems":
                 return Stems(
                     value=value["stems"], species=species_list, precision=precision["stems"]
@@ -811,9 +801,9 @@ class Stand:
         for key in ba_dict:
             series = self._total_components if key == "TOTAL" else components.get(key)
             if series:
-                qmd_dict[key] = _qmd_from_series(series)
+                qmd_dict[key] = _aggregation.qmd_from_series(series)
             else:
-                qmd_dict[key] = _qmd_from_components(
+                qmd_dict[key] = _aggregation.qmd_from_components(
                     ba_dict[key].value,
                     ba_dict[key].precision,
                     stems_dict[key].value,
@@ -847,7 +837,7 @@ class Stand:
         ``self._species_components`` / ``self._total_components`` so group and
         QMD queries can be rebuilt from the raw plot values.
         """
-        aggregation = _aggregate_plots(self.plots)
+        aggregation = _aggregation.aggregate_plots(self.plots)
         self._metric_estimates["Stems"] = dict(aggregation.stems)
         self._metric_estimates["BasalArea"] = dict(aggregation.basal_area)
         self._metric_estimates["BAWAD"] = dict(aggregation.bawad)
@@ -943,7 +933,7 @@ class Stand:
 
         # Standard error of the stand mean, on the same sample-variance basis as
         # every other metric here (population sigma would understate it).
-        h_est_raw, precision_est = _mean_and_se(subplot_means)
+        h_est_raw, precision_est = _aggregation.mean_and_se(subplot_means)
 
         # Return the definition-based estimate directly. The previous
         # Monte-Carlo "Matérn" small-area bias correction was removed: it drew a

@@ -34,9 +34,15 @@ import statistics
 import warnings
 from dataclasses import dataclass, field
 from math import pi, sqrt
-from typing import Any, Dict, Iterable, List, Sequence, Tuple, Union
+from typing import TYPE_CHECKING, Any, Dict, Iterable, List, Sequence, Tuple, Union
 
-from pyforestry.base.helpers.plot import CircularPlot
+if TYPE_CHECKING:  # pragma: no cover - annotation only
+    # Importing this at runtime executes ``base.helpers.__init__``, which imports
+    # ``.stand``, which imports back into this module -- so ``import
+    # pyforestry.base.aggregation`` as a program's first import failed with a
+    # partially-initialised-module error. It is only ever an annotation here.
+    from pyforestry.base.helpers.plot import CircularPlot
+
 from pyforestry.base.helpers.primitives import (
     BasalAreaWeightedDiameter,
     LoreysMeanHeight,
@@ -259,7 +265,7 @@ class PlotAggregation:
 
 
 def aggregate_plots(
-    plots: Iterable[CircularPlot],
+    plots: Iterable["CircularPlot"],
     *,
     warn_missing_diameter: bool = True,
 ) -> PlotAggregation:

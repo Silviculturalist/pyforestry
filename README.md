@@ -42,14 +42,36 @@ pip install -e .[dev]
 
 ## Quick example
 ```python
-from pyforestry.base.helpers import CircularPlot, Tree, Stand, parse_tree_species
+import pyforestry as pf
 
-plot = CircularPlot(id=1, radius_m=5.0, trees=[
-    Tree(species=parse_tree_species("picea abies"), diameter_cm=20),
+plot = pf.CircularPlot(id=1, radius_m=5.0, trees=[
+    pf.Tree(species="picea abies", diameter_cm=20),
 ])
-stand = Stand(plots=[plot])
+stand = pf.Stand(plots=[plot])
 print(stand.BasalArea.TOTAL.value)
 ```
+
+## Projecting a stand
+One call runs a published growth model forward and hands back a table, the final
+stand, and the citations behind both:
+
+```python
+import pyforestry as pf
+
+result = pf.project(stand, model="elfving_2010", years=100, step=5, seed=42)
+
+result.table        # a DataFrame, one row per step
+result.stand        # the final state
+result.provenance   # every component that was cited, by component id
+
+pf.available_models()   # every name `model=` accepts
+```
+
+`step` defaults to the period the model was fitted for, so you only pass it when
+you want something else. The stand you hand in is not modified, so the same stand
+can be projected under several models and compared. For finer control, pass a
+management `policy` or an explicit `pipeline` of steps; the typed constructors
+(`Elfving2010Model`, `build_context`, `run_pipeline`) all remain available.
 
 ## Finding a model
 With 60+ growth, yield, volume, bark, biomass, and site-index models, the model

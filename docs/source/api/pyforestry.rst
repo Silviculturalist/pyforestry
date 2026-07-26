@@ -23,6 +23,14 @@ pyforestry.catalog module
    :undoc-members:
    :show-inheritance:
 
+pyforestry.projection module
+----------------------------
+
+.. automodule:: pyforestry.projection
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

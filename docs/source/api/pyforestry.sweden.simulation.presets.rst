@@ -12,18 +12,26 @@ pyforestry.sweden.simulation.presets.baseline module
    :undoc-members:
    :show-inheritance:
 
-pyforestry.sweden.simulation.presets.elfving\_2010\_composite module
---------------------------------------------------------------------
+pyforestry.sweden.simulation.presets.elfving\_2010\_pipeline module
+-------------------------------------------------------------------
 
 .. automodule:: pyforestry.sweden.simulation.presets.elfving_2010_pipeline
    :members:
    :undoc-members:
    :show-inheritance:
 
-pyforestry.sweden.simulation.presets.soderberg\_1986\_composite module
-----------------------------------------------------------------------
+pyforestry.sweden.simulation.presets.soderberg\_1986\_pipeline module
+---------------------------------------------------------------------
 
 .. automodule:: pyforestry.sweden.simulation.presets.soderberg_1986_pipeline
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyforestry.sweden.simulation.presets.valuation\_cube module
+-----------------------------------------------------------
+
+.. automodule:: pyforestry.sweden.simulation.presets.valuation_cube
    :members:
    :undoc-members:
    :show-inheritance:
