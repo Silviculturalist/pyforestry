@@ -1069,7 +1069,7 @@ class Persson1992Model(GrowthModel):
         track_history: Optional[bool] = None,
         **kwargs: Any,
     ) -> SimulationContext:
-        ctx = super().build_context(stand, mode_hint="aggregate", **kwargs)
+        ctx = super().build_context(stand, **kwargs)
         resolved_init = self._resolve_init(stand, init)
         resolved_program = (
             program or stand.attrs.get("persson_1992_program") or self._default_program

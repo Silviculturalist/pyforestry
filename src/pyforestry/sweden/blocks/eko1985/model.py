@@ -361,7 +361,7 @@ class Eko1985Model(GrowthModel):
         **kwargs: Any,
     ) -> "SimulationContext":
         """Build an aggregate simulation context with site + cohort age metadata."""
-        ctx = super().build_context(stand, mode_hint="aggregate", **kwargs)
+        ctx = super().build_context(stand, **kwargs)
 
         resolved_site = self._resolve_site_context(
             site_context=site_context,

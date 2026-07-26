@@ -1647,7 +1647,7 @@ class Eriksson1976Model(GrowthModel):
         **kwargs: Any,
     ) -> SimulationContext:
         """Build a simulation context with an attached Eriksson 1976 stand."""
-        ctx = super().build_context(stand, mode_hint="aggregate", **kwargs)
+        ctx = super().build_context(stand, **kwargs)
         resolved_init = self._resolve_init(stand, init)
         resolved_program = (
             program or stand.attrs.get("eriksson_1976_program") or self._default_program

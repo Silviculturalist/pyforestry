@@ -182,7 +182,7 @@ class Maleki2022GrowthModel(GrowthModel):
     ) -> SimulationContext:
         """Build and seed simulation context for Maleki projections."""
         cfg = config or self.config
-        ctx = super().build_context(stand, mode_hint="aggregate", **kwargs)
+        ctx = super().build_context(stand, **kwargs)
         ctx.state["t"] = float(cfg.start_total_age_years)
         ctx.attrs["maleki_species"] = cfg.species.value
         ctx.attrs["maleki_h40_m"] = float(cfg.h40_m)

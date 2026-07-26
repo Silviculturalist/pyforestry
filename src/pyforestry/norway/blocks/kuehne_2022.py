@@ -66,7 +66,7 @@ class KuehnePineGrowthModel(GrowthModel):
     ) -> SimulationContext:
         """Build context and seed Kuehne trajectory state."""
         cfg = config or self.config
-        ctx = super().build_context(stand, mode_hint="aggregate", **kwargs)
+        ctx = super().build_context(stand, **kwargs)
         ctx.state["t"] = float(cfg.start_total_age_years)
         ctx.attrs["kuehne_dominant_height_m"] = float(cfg.dominant_height_m)
         return ctx

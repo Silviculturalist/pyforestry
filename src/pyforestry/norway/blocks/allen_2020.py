@@ -118,7 +118,7 @@ class Allen2020GrowthModel(GrowthModel):
     ) -> SimulationContext:
         """Build and seed a simulation context for Allen projections."""
         cfg = config or self.config
-        ctx = super().build_context(stand, mode_hint="aggregate", **kwargs)
+        ctx = super().build_context(stand, **kwargs)
         ctx.state["t"] = float(cfg.start_total_age_years)
         ctx.attrs["allen_h40_m"] = float(cfg.h40_m)
         ctx.attrs["dominant_height_m"] = float(cfg.dominant_height_m)

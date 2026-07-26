@@ -73,7 +73,7 @@ class Bollandsas2008GrowthModel(GrowthModel):
     ) -> SimulationContext:
         """Build context and seed class-state payload for simulation updates."""
         cfg = config or self.config
-        ctx = super().build_context(stand, mode_hint="tree_list", **kwargs)
+        ctx = super().build_context(stand, **kwargs)
         core = Bollandsas2008(
             site_index_by_species=cfg.site_index_by_species,
             latitude_deg=float(cfg.latitude_deg),

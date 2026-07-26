@@ -19,6 +19,46 @@ from .core import ActionSpec, SimulationContext
 InventoryMode = Literal["spatial", "tree_list", "diameter_class", "aggregate", "either"]
 
 
+def _aggregate_metrics(stand: Stand) -> Dict[str, Any]:
+    """Read a stand's aggregate basal area and stem density.
+
+    Prefers the stand's own plot-mean estimates and only derives a total from the
+    metric accessors when no estimate is stored. Reading them eagerly is what a
+    ``dict.get(name, {"TOTAL": Stems(float(stand.Stems))})`` default used to do,
+    which turned "this stand has no stem estimate" into a bare ``KeyError`` raised
+    from inside a default argument -- an angle-count stand whose tallies carry no
+    diameters cannot report stems/ha at all, and deserves to be told so.
+
+    Args:
+        stand: The stand to read.
+
+    Returns:
+        A metrics mapping suitable for :class:`SimulationContext` in aggregate mode.
+
+    Raises:
+        ValueError: If the stand cannot supply one of the required metrics.
+    """
+    estimates = getattr(stand, "_metric_estimates", {})
+    out: Dict[str, Any] = {}
+    for name, wrapper in (("BasalArea", StandBasalArea), ("Stems", Stems)):
+        stored = estimates.get(name)
+        if stored:
+            out[name] = stored
+            continue
+        try:
+            total = float(getattr(stand, name))
+        except Exception as exc:
+            raise ValueError(
+                f"Cannot build an aggregate simulation context: this stand does not "
+                f"supply {name}. Angle-count tallies yield stems/ha only when the "
+                f"tallied trees' diameters were recorded (AngleCount(diameters_cm=...)); "
+                f"without them only BasalArea is available. Use GrowthModel.can_build() "
+                f"to check before building."
+            ) from exc
+        out[name] = {"TOTAL": wrapper(total, species=None)}
+    return out
+
+
 @dataclass(frozen=True)
 class Requirements:
     """Declares model prerequisites and preferred/required inventory mode."""
@@ -171,35 +211,62 @@ class GrowthModel:
         use_adapter: Optional[str] = None,
         adapter_kwargs: Optional[Dict[str, Any]] = None,
     ) -> SimulationContext:
-        """Build context.
+        """Build the working context this model will step.
+
+        The inventory mode comes from :meth:`requirements`: a model that declares
+        a concrete ``inventory`` gets that mode, because running it on a
+        representation it was not written for is a silent error rather than a
+        graceful degradation. ``mode_hint`` is the caller's override for the
+        ``"either"`` case, and subclasses should *not* pass it from an overridden
+        ``build_context`` -- declare the mode in ``requirements()`` instead.
 
         Args:
-            stand: Parameter for `GrowthModel.build_context`.
-            mode_hint: Parameter for `GrowthModel.build_context`.
-            use_adapter: Parameter for `GrowthModel.build_context`.
-            adapter_kwargs: Parameter for `GrowthModel.build_context`.
+            stand: The inventory to build from. Not mutated; the context works on
+                its own plot containers.
+            mode_hint: Override the inventory mode. Only meaningful for models
+                whose requirements say ``"either"``.
+            use_adapter: Name of a specific registered adapter to convert
+                angle-count tallies with, instead of the preferred-order default.
+            adapter_kwargs: Extra keyword arguments forwarded to the adapter.
 
         Returns:
-            Result produced by this callable.
+            A :class:`SimulationContext` holding a working copy of the inventory,
+            the model's initial state, and an ``inventory_origin`` attribute
+            recording how the representation was obtained.
 
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
+        Raises:
+            ValueError: If ``use_adapter`` names an adapter that cannot adapt
+                ``stand``.
         """
         req = self.requirements()
         adapter_kwargs = adapter_kwargs or {}
         inventory: Dict[str, Any] = {}
-        # Choose mode
-        if mode_hint is not None:
+        # Mode selection. A model that declares a concrete inventory mode gets it:
+        # silently downgrading an angle-count stand to "aggregate" would hand a
+        # tree-list model a representation it cannot step. ``mode_hint`` overrides,
+        # and is the only knob for a model that accepts "either".
+        if req.inventory in ("spatial", "tree_list", "diameter_class", "aggregate"):
+            mode = req.inventory
+            if mode_hint is not None and mode_hint != mode:
+                warnings.warn(
+                    f"{type(self).__name__} requires inventory mode {mode!r}; "
+                    f"ignoring mode_hint={mode_hint!r}.",
+                    stacklevel=2,
+                )
+        elif mode_hint is not None:
             mode = mode_hint
         elif stand.use_angle_count:
-            # Default safety for Angle-Count: aggregate unless caller opts in.
+            # Angle-count tallies carry no stems unless diameters were recorded,
+            # so aggregate is the safe default for a model that accepts either.
             mode = "aggregate"
         else:
-            if req.inventory in ("spatial", "tree_list", "diameter_class", "aggregate"):
-                mode = req.inventory
-            else:
-                has_trees = any(p.trees for p in stand.plots)
-                mode = "tree_list" if has_trees else "aggregate"
+            has_trees = any(p.trees for p in stand.plots)
+            mode = "tree_list" if has_trees else "aggregate"
+
+        # How the inventory was actually obtained, recorded as it is built rather
+        # than reconstructed afterwards.
+        origin = mode
+        adapter_used: Optional[str] = None
 
         # Build inventory by mode
         if mode in ("tree_list", "spatial"):
@@ -214,6 +281,7 @@ class GrowthModel:
                     if adp is None or not adp.can_adapt(stand):
                         raise ValueError(f"Adapter '{use_adapter}' cannot adapt this stand.")
                     plots_payload = adp.adapt(stand, **adapter_kwargs)["plots"]
+                    adapter_used = use_adapter
                 else:
                     if mode == "spatial":
                         preferred = [
@@ -229,21 +297,15 @@ class GrowthModel:
                         adp = reg.get(name)
                         if adp and adp.can_adapt(stand):
                             plots_payload = adp.adapt(stand, **adapter_kwargs)["plots"]
+                            adapter_used = name
                             break
+                origin = adapter_used or origin
                 if plots_payload is None:
-                    # Fallback to aggregate metrics when adapter cannot produce plots
-                    metrics = {
-                        "BasalArea": getattr(stand, "_metric_estimates", {}).get(
-                            "BasalArea",
-                            {"TOTAL": StandBasalArea(float(stand.BasalArea), species=None)},
-                        ),
-                        "Stems": getattr(stand, "_metric_estimates", {}).get(
-                            "Stems",
-                            {"TOTAL": Stems(float(stand.Stems), species=None)},
-                        ),
-                    }
-                    inventory = {"metrics": metrics}
+                    # No adapter could turn the tallies into stems, so fall back to
+                    # the aggregate metrics the tallies do support.
+                    inventory = {"metrics": _aggregate_metrics(stand)}
                     mode = "aggregate"
+                    origin = "angle_count_aggregate"
             elif mode == "spatial":
                 # Ensure positions or use adapter to fill
                 have_all_pos = all(
@@ -255,8 +317,11 @@ class GrowthModel:
                     adp = AdapterRegistry.default().get("tree_list_to_spatial")
                     if adp and adp.can_adapt(stand):
                         plots_payload = adp.adapt(stand, **adapter_kwargs)["plots"]
+                        adapter_used = "tree_list_to_spatial"
+                        origin = adapter_used
                     else:
                         mode = "tree_list"
+                        origin = "tree_list"
 
             if mode in ("tree_list", "spatial"):
                 inventory = {"plots": plots_payload if plots_payload is not None else stand.plots}
@@ -270,11 +335,14 @@ class GrowthModel:
                 adp = reg.get("tree_list_to_diameter_class")
                 if adp:
                     dclass_payload = adp.adapt(stand, **adapter_kwargs)["dclass"]
+                    adapter_used = "tree_list_to_diameter_class"
             else:
                 adp = reg.get("angle_count_to_diameter_class")
                 if adp and adp.can_adapt(stand):
                     dclass_payload = adp.adapt(stand, **adapter_kwargs)["dclass"]
+                    adapter_used = "angle_count_to_diameter_class"
             if dclass_payload is None:
+                # Nothing to bin, so stand in a single class at the stand's own QMD.
                 ba = float(stand.BasalArea)
                 n = float(stand.Stems)
                 qmd = float(stand.QMD) if n > 0 and ba > 0 else 0.0
@@ -284,36 +352,24 @@ class GrowthModel:
                         "n_per_ha": [n] if qmd > 0 else [],
                     }
                 }
+                origin = "diameter_class_from_qmd"
+            else:
+                origin = adapter_used or origin
             inventory = {"dclass": dclass_payload}
 
         else:  # aggregate
-            metrics = {
-                "BasalArea": getattr(stand, "_metric_estimates", {}).get(
-                    "BasalArea", {"TOTAL": StandBasalArea(float(stand.BasalArea), species=None)}
-                ),
-                "Stems": getattr(stand, "_metric_estimates", {}).get(
-                    "Stems", {"TOTAL": Stems(float(stand.Stems), species=None)}
-                ),
-            }
-            inventory = {"metrics": metrics}
+            inventory = {"metrics": _aggregate_metrics(stand)}
+            origin = "angle_count_aggregate" if stand.use_angle_count else "aggregate"
 
         state = self.init_state_stub()
         attrs = self.default_attrs()
 
-        # Provenance
-        if stand.use_angle_count and mode in ("tree_list", "spatial"):
-            attrs["inventory_origin"] = (
-                "angle_count_pseudo_tree_list"
-                if mode == "tree_list"
-                else "angle_count_spatial_pseudo_tree_list"
-            )
-            if mode == "tree_list":
-                attrs["inventory_origin"] = "angle_count_pseudo_tree_list"
-        else:
-            attrs["inventory_origin"] = "angle_count_spatial_pseudo_tree_list"
-            attrs["angle_count_adapter"] = use_adapter or "auto"
-        if mode == "diameter_class":
-            attrs.setdefault("inventory_origin", "diameter_class_built")
+        # Provenance: what the inventory in this context actually came from. Only
+        # record an adapter when one really ran -- claiming a measured tree list was
+        # reconstructed from angle-count tallies is worse than saying nothing.
+        attrs["inventory_origin"] = origin
+        if adapter_used is not None:
+            attrs["inventory_adapter"] = adapter_used
 
         ctx = SimulationContext(
             mode=mode,

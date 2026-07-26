@@ -918,7 +918,7 @@ class Petterson1955Model(GrowthModel):
         program: Optional[PettersonThinningProgram] = None,
         **kwargs: Any,
     ) -> SimulationContext:
-        ctx = super().build_context(stand, mode_hint="aggregate", **kwargs)
+        ctx = super().build_context(stand, **kwargs)
         resolved_init = init or stand.attrs.get("petterson_1955_init") or self._default_init
         if resolved_init is None:
             raise ValueError("Petterson1955Model requires a PettersonStandInit.")

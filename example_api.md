@@ -976,7 +976,7 @@ program = ThinningProgram(
 )
 
 model = Eriksson1976Model(init=init, program=program, track_history=True)
-ctx = model.build_context(stand, mode_hint="aggregate")
+ctx = model.build_context(stand)  # mode comes from Eriksson1976Model.requirements()
 
 schedule = Eriksson1976ManagementSchedule(program=program)
 schedule.initialize(ctx)
