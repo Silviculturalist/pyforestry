@@ -101,8 +101,16 @@ class SimulationContext:
         initial_state: Dict[str, Any],
         model: Any,
         initial_attrs: Optional[Dict[str, Any]] = None,
+        random_bundle: Optional[Any] = None,
     ) -> None:
-        """Initialize a simulation context with inventory and initial state."""
+        """Initialize a simulation context with inventory and initial state.
+
+        ``random_bundle`` is any object exposing ``snapshot()``/``restore(state)``
+        (a :class:`~pyforestry.simulation.services.RandomBundle`, in practice). It
+        is kept duck-typed so the base simulation layer does not depend on the
+        staged runtime. Supplying one is what makes :meth:`checkpoint` and
+        :meth:`from_checkpoint` reproduce a stochastic run.
+        """
         if mode not in ("spatial", "tree_list", "diameter_class", "aggregate"):
             raise ValueError("mode must be 'spatial','tree_list','diameter_class', or 'aggregate'")
         self.mode = mode
@@ -110,6 +118,7 @@ class SimulationContext:
         self.site = site
         self.origin_ref = origin_ref  # provenance only
         self.model = model
+        self.random_bundle = random_bundle
         # Internal inventory & metrics containers (dicts for mutability)
         self._metrics: MetricMap = {"Stems": {}, "BasalArea": {}, "QMD": {}}
         self._dclass: Dict[Any, Dict[str, List[float]]] = {}
@@ -558,10 +567,7 @@ class SimulationContext:
         }
         rng_bundle = getattr(self, "random_bundle", None)
         if rng_bundle is not None and hasattr(rng_bundle, "snapshot"):
-            try:
-                payload["rng_state"] = rng_bundle.snapshot()
-            except Exception:
-                pass
+            payload["rng_state"] = rng_bundle.snapshot()
         if include_history:
             if history_tail is not None:
                 history_slice = self.history[-int(history_tail) :]
@@ -571,11 +577,25 @@ class SimulationContext:
         return payload
 
     @classmethod
-    def from_checkpoint(cls, model: Any, checkpoint: Mapping[str, Any]) -> "SimulationContext":
+    def from_checkpoint(
+        cls,
+        model: Any,
+        checkpoint: Mapping[str, Any],
+        *,
+        random_bundle: Optional[Any] = None,
+    ) -> "SimulationContext":
         """
         Restore a context from ``checkpoint`` produced by :meth:`checkpoint`.
 
         ``model`` must be the growth model instance that will drive the context.
+        ``random_bundle`` receives any RNG state the checkpoint carries. Without it
+        a checkpoint's ``rng_state`` cannot be restored, and a stochastic run
+        resumed from it would silently diverge -- so that combination raises rather
+        than continuing with a fresh stream.
+
+        Raises:
+            ValueError: If the checkpoint carries RNG state but no bundle was given
+                to restore it into.
         """
 
         payload = dict(checkpoint)
@@ -590,12 +610,18 @@ class SimulationContext:
             initial_state=payload.get("state", {}),
             model=model,
             initial_attrs=payload.get("attrs", {}),
+            random_bundle=random_bundle,
         )
         if "history" in payload:
             ctx.history = list(payload["history"])
-        if "rng_state" in payload and hasattr(ctx, "random_bundle"):
-            try:
-                ctx.random_bundle.restore(payload["rng_state"])  # type: ignore[attr-defined]
-            except Exception:
-                pass
+        if "rng_state" in payload:
+            bundle = ctx.random_bundle
+            if bundle is None or not hasattr(bundle, "restore"):
+                raise ValueError(
+                    "This checkpoint carries RNG state but no random_bundle was supplied "
+                    "to restore it into; resuming without it would silently diverge from "
+                    "the checkpointed run. Pass "
+                    "SimulationContext.from_checkpoint(..., random_bundle=...)."
+                )
+            bundle.restore(payload["rng_state"])
         return ctx

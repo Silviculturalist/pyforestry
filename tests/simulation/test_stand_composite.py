@@ -224,16 +224,27 @@ def test_stand_action_handler_analysis_variants():
     def handler_args(part: StandPart, *args):
         return args
 
+    # ``*args`` cannot name what it is given, so it is not an RNG declaration.
     action_args = StandAction("args", handler_args)
-    assert action_args.requests_rng
-    assert action_args.execute(part, rng=dummy_rng) == (dummy_rng,)
+    assert not action_args.requests_rng
+    assert action_args.execute(part, rng=dummy_rng) == ()
 
-    def handler_extra(part: StandPart, extra):
+    def handler_extra(part: StandPart, extra="default"):
         return extra
 
+    # Neither is an ordinary second parameter. Injecting by position meant a
+    # handler's own argument was silently overwritten with the RNG, and the effect
+    # check then rejected the action for requiring RNG access it never requested.
     action_extra = StandAction("extra", handler_extra)
-    assert action_extra.requests_rng
-    assert action_extra.execute(part, rng=dummy_rng) is dummy_rng
+    assert not action_extra.requests_rng
+    assert action_extra.execute(part, rng=dummy_rng) == "default"
+
+    def handler_named_rng(part: StandPart, rng=None):
+        return rng
+
+    action_named = StandAction("named", handler_named_rng)
+    assert action_named.requests_rng
+    assert action_named.execute(part, rng=dummy_rng) is dummy_rng
 
 
 def test_stand_action_iter_targets():
@@ -318,3 +329,30 @@ def test_composite_dispatch_skips_empty_selection():
     action = StandAction("noop", handler=lambda part: None)
     result = composite.dispatch([action], policy=lambda action, parts: ())
     assert result.records == []
+
+
+def test_part_without_metrics_raises_instead_of_reporting_zero():
+    """A view that implements none of the metric conventions is an error, not an empty stand.
+
+    ``_metric_from_model`` used to fall through to ``0.0``, so an unrecognised model
+    view read as a part holding no basal area and no stems -- and
+    :meth:`StandComposite.dispatch` enforces its budget and harvest cap against
+    exactly those numbers, so every constraint passed.
+    """
+
+    class OpaqueView:
+        """Exposes no metric attribute, metric name, or total() accessor."""
+
+    part = StandPart("opaque", OpaqueView())
+    with pytest.raises(AttributeError, match="cannot report 'basal_area'"):
+        _ = part.basal_area
+    with pytest.raises(AttributeError, match="cannot report 'stems'"):
+        _ = part.stems
+
+    # Cash is an accumulator, not state: an unvalued part legitimately holds none.
+    assert part.cash == pytest.approx(0.0)
+
+    # The context remains a first-class source for parts whose view is opaque.
+    supplied = StandPart("opaque", OpaqueView(), context={"basal_area": 4.0, "stems": 300.0})
+    assert supplied.basal_area == pytest.approx(4.0)
+    assert supplied.stems == pytest.approx(300.0)

@@ -384,24 +384,44 @@ def test_simulation_context_checkpoint_dclass_and_rng_restore():
         initial_attrs={},
     )
 
-    class BadBundle:
-        def snapshot(self):
-            raise RuntimeError("boom")
+    class Bundle:
+        """A minimal snapshot/restore bundle."""
 
-    ctx.random_bundle = BadBundle()
+        def __init__(self):
+            self.state = {"draws": 3}
+            self.restored = None
+
+        def snapshot(self):
+            return dict(self.state)
+
+        def restore(self, state):
+            self.restored = state
+
+    # A round trip must actually carry the RNG state across. This used to be dead:
+    # checkpoint() stored rng_state, but from_checkpoint() guarded on
+    # hasattr(ctx, "random_bundle") -- which the constructor never set -- so the
+    # state was silently dropped and a resumed stochastic run diverged in silence.
+    bundle = Bundle()
+    ctx.random_bundle = bundle
     ctx.history.append(object())
     payload = ctx.checkpoint(include_history=True)
-    payload["rng_state"] = {"state": 1}
+    assert payload["rng_state"] == {"draws": 3}
 
-    class RestoreBundle:
-        def restore(self, _state):
-            raise RuntimeError("restore fail")
+    target = Bundle()
+    restored = SimulationContext.from_checkpoint(model, payload, random_bundle=target)
+    assert target.restored == {"draws": 3}
+    assert restored.random_bundle is target
 
-    class CustomContext(SimulationContext):
-        pass
+    # Resuming a stochastic checkpoint with nowhere to put the state is an error,
+    # not a quiet fresh stream.
+    with pytest.raises(ValueError, match="no random_bundle was supplied"):
+        SimulationContext.from_checkpoint(model, payload)
 
-    CustomContext.random_bundle = RestoreBundle()  # type: ignore[assignment]
-    CustomContext.from_checkpoint(model, payload)
+    # A checkpoint without RNG state restores fine without a bundle.
+    ctx.random_bundle = None
+    plain = ctx.checkpoint()
+    assert "rng_state" not in plain
+    assert SimulationContext.from_checkpoint(model, plain).random_bundle is None
 
 
 def test_simulation_context_dclass_qmd_zero():

@@ -42,11 +42,15 @@ def test_stand_action_analysis_and_execution():
     assert result is rng
     assert action_pos.iter_targets() == ("p1", "p2")
 
-    def handler_generic(part, x):  # noqa: ARG001 - test hook
+    def handler_generic(part, x=7):  # noqa: ARG001 - test hook
         return x
 
+    # A parameter that is not called "rng" is not an RNG slot. This used to receive
+    # the KeyedRNG object simply for being the second positional parameter, which
+    # silently replaced whatever the handler actually wanted there.
     action_generic = StandAction(name="generic", handler=handler_generic)
-    assert action_generic.execute(part, rng) is rng
+    assert action_generic.requests_rng is False
+    assert action_generic.execute(part, rng) == 7
 
     action_plain = StandAction(name="plain", handler=lambda p: p.name, target_parts=None)
     assert action_plain.execute(part, None) == "p1"
@@ -55,11 +59,22 @@ def test_stand_action_analysis_and_execution():
     def handler_varargs(part, *args, **kwargs):  # noqa: ARG001 - test hook
         return args, kwargs
 
+    # A **kwargs catch-all can absorb rng=/io= by name, so injection is safe there.
     action_var = StandAction(name="var", handler=handler_varargs)
     result = action_var.execute(part, rng)
+    assert result[0] == ()  # never passed positionally
     assert result[1]["rng"] is rng
     assert action_var.requests_rng is True
     assert action_var.requests_io is True
+
+    def handler_starargs(part, *args):  # noqa: ARG001 - test hook
+        return args
+
+    # A bare *args is not a declaration: it cannot name what it receives, so
+    # injecting into it is the same positional guess that broke handler_generic.
+    action_star = StandAction(name="star", handler=handler_starargs)
+    assert action_star.requests_rng is False
+    assert action_star.execute(part, rng) == ()
 
 
 def test_dispatch_result_grouping():

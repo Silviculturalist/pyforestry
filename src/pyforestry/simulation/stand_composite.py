@@ -57,15 +57,9 @@ class StandAction:
     target_parts: MetricSource = None
 
     def __post_init__(self) -> None:
-        """Post init.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
-        self._handler_accepts_rng_keyword: Optional[bool] = None
-        self._handler_accepts_rng_positional: Optional[bool] = None
-        self._handler_accepts_io_keyword: Optional[bool] = None
-        self._handler_accepts_io_positional: Optional[bool] = None
+        """Defer handler signature inspection until something actually needs it."""
+        self._handler_accepts_rng: Optional[bool] = None
+        self._handler_accepts_io: Optional[bool] = None
 
     def cost_for(self, part: "StandPart") -> float:
         """Resolve the cost for ``part``."""
@@ -80,95 +74,70 @@ class StandAction:
         return float(harvest)
 
     def _analyse_handler(self) -> None:
-        """Analyse handler.
+        """Record whether the handler can accept ``rng`` and ``io`` injection.
 
-        Returns:
-            Result produced by this callable.
+        Detection is by parameter **name**, never by position. A handler's second
+        positional parameter is its own business -- a thinning intensity, a target
+        species -- and treating any such parameter as the RNG slot meant
+        ``def thin(part, intensity=0.25)`` silently received a ``KeyedRNG`` object
+        in ``intensity``, and was additionally rejected by the effect check for
+        "requiring RNG access" it had never asked for.
 
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
+        A ``**kwargs`` catch-all still counts: it can absorb ``rng=``/``io=``
+        harmlessly, and handlers written against it read them by name. A bare
+        ``*args`` does not, for the same reason positional inference does not.
         """
-        signature = inspect.signature(self.handler)
-        params = list(signature.parameters.values())
-        remaining = params
-        if remaining and remaining[0].kind in (
+        try:
+            params = list(inspect.signature(self.handler).parameters.values())
+        except (TypeError, ValueError):  # pragma: no cover - C callables
+            self._handler_accepts_rng = False
+            self._handler_accepts_io = False
+            return
+        # The first positional parameter is the StandPart itself.
+        if params and params[0].kind in (
             inspect.Parameter.POSITIONAL_ONLY,
             inspect.Parameter.POSITIONAL_OR_KEYWORD,
         ):
-            remaining = remaining[1:]
-        accepts_rng_keyword = False
-        accepts_rng_positional = False
-        accepts_io_keyword = False
-        accepts_io_positional = False
-        for parameter in remaining:
-            if parameter.kind == inspect.Parameter.VAR_KEYWORD:
-                accepts_rng_keyword = True
-                accepts_io_keyword = True
-                break
-            if parameter.kind == inspect.Parameter.VAR_POSITIONAL:
-                accepts_rng_positional = True
-                accepts_io_positional = True
-                continue
-            if parameter.name == "rng" and parameter.kind in (
-                inspect.Parameter.POSITIONAL_OR_KEYWORD,
-                inspect.Parameter.KEYWORD_ONLY,
-            ):
-                accepts_rng_keyword = True
-                continue
-            if parameter.name == "io" and parameter.kind in (
-                inspect.Parameter.POSITIONAL_OR_KEYWORD,
-                inspect.Parameter.KEYWORD_ONLY,
-            ):
-                accepts_io_keyword = True
-                continue
-            if parameter.kind in (
-                inspect.Parameter.POSITIONAL_ONLY,
-                inspect.Parameter.POSITIONAL_OR_KEYWORD,
-            ):
-                accepts_rng_positional = True
-                accepts_io_positional = True
-        self._handler_accepts_rng_keyword = accepts_rng_keyword
-        self._handler_accepts_rng_positional = accepts_rng_positional
-        self._handler_accepts_io_keyword = accepts_io_keyword
-        self._handler_accepts_io_positional = accepts_io_positional
+            params = params[1:]
+
+        named = {
+            parameter.name
+            for parameter in params
+            if parameter.kind
+            in (inspect.Parameter.POSITIONAL_OR_KEYWORD, inspect.Parameter.KEYWORD_ONLY)
+        }
+        catch_all = any(p.kind == inspect.Parameter.VAR_KEYWORD for p in params)
+        self._handler_accepts_rng = "rng" in named or catch_all
+        self._handler_accepts_io = "io" in named or catch_all
 
     def _ensure_handler_analysis(self) -> None:
-        """Ensure handler analysis.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
-        if self._handler_accepts_rng_keyword is None:
+        """Inspect the handler signature once, on first use."""
+        if self._handler_accepts_rng is None:
             self._analyse_handler()
 
     def execute(self, part: "StandPart", rng: Optional[KeyedRNG]) -> Any:
-        """Execute the underlying handler for ``part`` using ``rng`` when accepted."""
+        """Execute the underlying handler for ``part``, passing ``rng`` if it asked."""
 
         if rng is None:
             return self.handler(part)
         self._ensure_handler_analysis()
-        if self._handler_accepts_rng_keyword:
+        if self._handler_accepts_rng:
             return self.handler(part, rng=rng)
-        if self._handler_accepts_rng_positional:
-            return self.handler(part, rng)
         return self.handler(part)
 
     @property
     def requests_rng(self) -> bool:
-        """Whether the handler is capable of accepting RNG injection."""
+        """Whether the handler declares an ``rng`` parameter (or a ``**kwargs`` catch-all)."""
 
         self._ensure_handler_analysis()
-        return bool(self._handler_accepts_rng_keyword or self._handler_accepts_rng_positional)
+        return bool(self._handler_accepts_rng)
 
     @property
     def requests_io(self) -> bool:
-        """Whether the handler signature exposes an ``io`` parameter."""
+        """Whether the handler declares an ``io`` parameter (or a ``**kwargs`` catch-all)."""
 
         self._ensure_handler_analysis()
-        return bool(self._handler_accepts_io_keyword or self._handler_accepts_io_positional)
+        return bool(self._handler_accepts_io)
 
     def iter_targets(self) -> Tuple[str, ...]:
         """Return a normalized tuple of target part identifiers."""
@@ -242,9 +211,35 @@ class StandPart:
         self.growth_overrides = dict(self.growth_overrides or {})
         self.disturbance_overrides = dict(self.disturbance_overrides or {})
 
-    def _metric_from_model(self, attr_name: str, metric_name: str, default: float) -> float:
-        """Attempt to resolve ``metric_name`` from the attached model view."""
+    def _metric_from_model(
+        self,
+        attr_name: str,
+        metric_name: str,
+        default: Optional[float] = None,
+    ) -> float:
+        """Resolve ``metric_name`` from the model view, or from this part's context.
 
+        Four sources are tried in order: a ``basal_area``-style attribute on the
+        view, the ``BasalArea``-style metric name, a ``view.total(metric_name)``
+        accessor, and finally ``context[attr_name]``. Each may be a value or a
+        callable returning one.
+
+        Args:
+            attr_name: Snake-case attribute/context key, e.g. ``"basal_area"``.
+            metric_name: Metric name as the stand layer spells it, e.g. ``"BasalArea"``.
+            default: Value to use when nothing supplies the metric. ``None`` means
+                the metric is required and an unresolvable view is an error.
+
+        Returns:
+            The resolved value.
+
+        Raises:
+            AttributeError: If nothing supplies a required metric. Returning ``0.0``
+                instead -- as this did -- let a view that implements none of the
+                four conventions read as an empty stand, and
+                :meth:`StandComposite.dispatch` enforces its budget and harvest cap
+                against exactly these numbers.
+        """
         view = self.model_view
 
         if hasattr(view, attr_name):
@@ -265,28 +260,41 @@ class StandPart:
                 return float(total_method(metric_name))
             except (KeyError, TypeError):
                 pass
-        context_value = None
         if isinstance(self.context, Mapping):
-            context_value = self.context.get(attr_name, default)
-        return float(context_value if context_value is not None else default)
+            context_value = self.context.get(attr_name)
+            if context_value is not None:
+                return float(context_value)
+        if default is not None:
+            return float(default)
+        raise AttributeError(
+            f"Stand part {self.name!r} cannot report {attr_name!r}: its model view "
+            f"({type(view).__name__}) exposes no {attr_name!r} or {metric_name!r} "
+            f"attribute and no total({metric_name!r}) accessor, and the part's "
+            f"context does not supply {attr_name!r} either."
+        )
 
     @property
     def basal_area(self) -> float:
         """Basal area contributed by this part."""
 
-        return self._metric_from_model("basal_area", "BasalArea", 0.0)
+        return self._metric_from_model("basal_area", "BasalArea")
 
     @property
     def stems(self) -> float:
         """Stem count contributed by this part."""
 
-        return self._metric_from_model("stems", "Stems", 0.0)
+        return self._metric_from_model("stems", "Stems")
 
     @property
     def cash(self) -> float:
-        """Cash contribution for this part."""
+        """Cash contribution for this part.
 
-        return self._metric_from_model("cash", "Cash", 0.0)
+        Unlike the state metrics this is an accumulator: a part that has not been
+        valued yet legitimately holds nothing, so an absent value means zero
+        rather than a broken view.
+        """
+
+        return self._metric_from_model("cash", "Cash", default=0.0)
 
     @property
     def growth_parameters(self) -> Mapping[str, Any]:
