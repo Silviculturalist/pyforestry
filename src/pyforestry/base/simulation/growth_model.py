@@ -15,6 +15,7 @@ model.
 from __future__ import annotations
 
 import warnings
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Any, ClassVar, Dict, List, Literal, Optional, Tuple
 
@@ -69,18 +70,34 @@ def _aggregate_metrics(stand: Stand) -> Dict[str, Any]:
 
 @dataclass(frozen=True)
 class Requirements:
-    """Declares model prerequisites and preferred/required inventory mode."""
+    """Declares model prerequisites and preferred/required inventory mode.
+
+    ``native_step_years`` is the period the model's functions were fitted for.
+    Declaring it is how a caller learns a model's step length without triggering
+    its exception: Bollandsås raises unless ``dt`` is a whole multiple of 5, Ekö
+    steps 5, Elfving scales linearly from 5 with a warning. ``None`` means the
+    model is genuinely step-agnostic, not that nobody filled it in -- a model
+    with a native period should say so.
+    """
 
     inventory: InventoryMode = "either"
     require_site: bool = False
     require_top_height: bool = False
+    native_step_years: Optional[float] = None
 
 
-class GrowthModel:
+class GrowthModel(ABC):
     """Abstract base for growth models with a factory interface.
 
-    Subclasses should override ``component_id`` and ``source`` to satisfy
-    the ``Describable`` protocol for provenance and catalog support.
+    :meth:`requirements` and :meth:`update_step` are abstract, so a model that
+    forgets one fails at instantiation rather than partway through a projection.
+
+    :attr:`source` is *not* given a default. It used to return
+    ``SourceReference(author="unknown", year=0, title="unknown")``, which meant a
+    model that forgot its provenance produced a citation-shaped object that read
+    like a real one in a catalog listing and a provenance report -- in a package
+    whose stated value is traceability. Not overriding it now raises, and says
+    what to write.
     """
 
     # ----------------------------- Introspection ------------------------------
@@ -92,11 +109,24 @@ class GrowthModel:
 
     @property
     def source(self) -> SourceReference:
-        """Bibliographic provenance. Override in subclasses."""
-        return SourceReference(author="unknown", year=0, title="unknown")
+        """Bibliographic provenance for the published model this implements.
+
+        Raises:
+            NotImplementedError: Always; every model must cite its own source.
+        """
+        raise NotImplementedError(
+            f"{type(self).__name__} does not declare a source. Every model must "
+            f"cite the publication it implements:\n\n"
+            f"    @property\n"
+            f"    def source(self) -> SourceReference:\n"
+            f"        return SourceReference(author=..., year=..., title=...)\n\n"
+            f"This used to default to a placeholder that read like a real "
+            f"citation wherever provenance was reported."
+        )
 
     # ----------------------------- Factory ------------------------------------
 
+    @abstractmethod
     def requirements(self) -> Requirements:
         """Declare the inventory and site data this model needs.
 
@@ -104,9 +134,6 @@ class GrowthModel:
             The model's prerequisites. The declared ``inventory`` is authoritative:
             :meth:`build_context` builds that representation rather than guessing
             from what the stand happens to carry.
-
-        Raises:
-            NotImplementedError: Always; every model must declare its own.
         """
         raise NotImplementedError
 
@@ -481,6 +508,7 @@ class GrowthModel:
         """
         return {"t": 0.0, "years_since_thin": 0.0}
 
+    @abstractmethod
     def update_step(self, ctx: SimulationContext, dt: float) -> None:
         """Advance ``ctx`` by ``dt`` years. This is the model.
 
@@ -491,9 +519,6 @@ class GrowthModel:
         Args:
             ctx: The working copy to advance, in the mode this model requires.
             dt: Length of the step in years.
-
-        Raises:
-            NotImplementedError: Always; every model must implement its own step.
         """
         raise NotImplementedError
 

@@ -135,13 +135,40 @@ def test_growth_model_can_build_modes():
     assert any("tree_list or aggregates" in item for item in missing)
 
 
-def test_growth_model_base_methods_raise():
-    model = GrowthModel()
-    with pytest.raises(NotImplementedError):
-        model.requirements()
-    with pytest.raises(NotImplementedError):
-        model.update_step(None, 1.0)
-    assert model.available_actions() == {}
+def test_growth_model_cannot_be_instantiated_incomplete():
+    """A model missing requirements() or update_step() fails at construction.
+
+    It used to construct fine and raise NotImplementedError partway through a
+    projection instead.
+    """
+    with pytest.raises(TypeError, match="abstract"):
+        GrowthModel()
+
+    class NoStep(GrowthModel):
+        def requirements(self):
+            return Requirements()
+
+    with pytest.raises(TypeError, match="abstract"):
+        NoStep()
+
+
+def test_growth_model_without_a_source_refuses_to_supply_a_fake_one():
+    """It used to return SourceReference("unknown", 0, "unknown").
+
+    That reads like a real citation everywhere provenance is reported, in a
+    package whose stated value is traceability.
+    """
+
+    class Uncited(GrowthModel):
+        def requirements(self):
+            return Requirements()
+
+        def update_step(self, ctx, dt):
+            return None
+
+    with pytest.raises(NotImplementedError, match="does not declare a source"):
+        _ = Uncited().source
+    assert Uncited().available_actions() == {}
 
 
 def test_build_context_angle_count_fallback(monkeypatch):

@@ -119,12 +119,30 @@ class Tree:
         else:
             self.species = species
 
-        # If `age` is e.g. float or Age, store as is (for more advanced usage,
-        # you might unify to an AgeMeasurement).
-        self.age = age
+        # `age` and `diameter_cm` are stored as given, and both stay that way on
+        # purpose. This used to carry two shipped TODO comments suggesting they be
+        # coerced to `AgeMeasurement` and `Diameter_cm`; neither is right.
+        #
+        # A bare age is ambiguous between total age and age at breast height, and
+        # those differ by the years the tree took to reach 1.3 m -- which is why
+        # `AgeMeasurement` exists. Coercing would pick one silently, and a wrong
+        # guess propagates into every site-index and growth function that reads it.
+        #
+        # A bare diameter could be wrapped in `Diameter_cm` -- it is a float
+        # subclass, so nothing numeric would change -- but its defaults assert
+        # `over_bark=True` at `measurement_height_m=1.3`. That is the usual
+        # convention, not a stated one, and a measurement convention this package
+        # invented is worse than a plain number the caller supplied. Pass a real
+        # `Diameter_cm` when the convention is known.
+        #
+        # What the TODOs were reaching for -- that a caller can rely on the value
+        # -- is served by validating it instead.
+        if diameter_cm is not None and float(diameter_cm) < 0.0:
+            raise ValueError(f"diameter_cm must not be negative; got {diameter_cm!r}.")
+        if height_m is not None and float(height_m) < 0.0:
+            raise ValueError(f"height_m must not be negative; got {height_m!r}.")
 
-        # If `diameter_cm` is a float, you could coerce to a default Diameter_cm( ... )
-        # or just store as float. For now, store as given:
+        self.age = age
         self.diameter_cm = diameter_cm
         self.height_m = height_m
         self.imputed: Dict[str, ImputedValue] = dict(imputed) if imputed else {}

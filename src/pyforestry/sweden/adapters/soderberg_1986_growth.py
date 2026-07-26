@@ -79,7 +79,7 @@ class Soderberg1986Model(GrowthModel):
 
     def requirements(self) -> Requirements:
         """Return model inventory/site requirements."""
-        return Requirements(inventory="either", require_site=False)
+        return Requirements(inventory="either", require_site=False, native_step_years=5.0)
 
     def update_step(self, ctx: SimulationContext, dt: float) -> None:
         """Update one simulation step for tree-list or spatial contexts."""

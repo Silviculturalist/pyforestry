@@ -100,9 +100,13 @@ def test_anglecount_update_series_new_species():
     assert ac.value[ac.species.index(sp2)] == 1
 
 
-def test_helpers_getattr_simulation_exports():
-    ctx_cls = helpers.SimulationContext
-    assert ctx_cls.__name__ == "SimulationContext"
-    missing_attr = "missing_export"
-    with pytest.raises(AttributeError):
-        getattr(helpers, missing_attr)
+def test_helpers_no_longer_re_exports_the_simulation_runtime():
+    """The data-contract layer stopped advertising the runtime as its own API.
+
+    Each of those classes had two supported spellings, and the cycle the
+    re-export was said to avoid only ever ran one way.
+    """
+    with pytest.raises(AttributeError, match="part of the simulation runtime"):
+        _ = helpers.SimulationContext
+    with pytest.raises(AttributeError, match="has no attribute"):
+        _ = helpers.missing_export

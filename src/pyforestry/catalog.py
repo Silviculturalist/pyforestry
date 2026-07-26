@@ -26,6 +26,7 @@ from __future__ import annotations
 
 import importlib
 import pkgutil
+import warnings
 from dataclasses import dataclass
 from typing import Any, Iterator, Mapping, Optional
 
@@ -79,12 +80,37 @@ class ModelEntry:
 
 _CACHE: Optional[list[ModelEntry]] = None
 
+#: Modules that could not be imported during the last discovery pass, as
+#: ``{module_name: exception}``. Populated by :func:`_discover`; read it with
+#: :func:`discovery_errors`.
+_ERRORS: dict[str, BaseException] = {}
+
+
+def _record_failure(module_name: str, exc: BaseException) -> None:
+    """Remember an import failure and warn once, rather than losing the model.
+
+    A model whose module raises on import used to disappear from
+    :func:`list_models`, :func:`find` and :func:`search` with no diagnostic at
+    all -- the failure mode was a model that "does not exist", which is
+    indistinguishable from one that was never written and sends you looking in
+    the wrong place. Discovery still continues past the failure, because one
+    broken module should not hide the other eighty.
+    """
+    _ERRORS[module_name] = exc
+    warnings.warn(
+        f"pyforestry.catalog could not import {module_name!r}, so any model it "
+        f"defines is missing from the catalog: {type(exc).__name__}: {exc}. "
+        f"See pyforestry.catalog.discovery_errors().",
+        stacklevel=2,
+    )
+
 
 def _iter_module_names(root_name: str) -> Iterator[str]:
     """Yield dotted names of candidate formula modules under ``root_name``."""
     try:
         root = importlib.import_module(root_name)
-    except Exception:  # pragma: no cover - defensive: region import failure
+    except Exception as exc:
+        _record_failure(root_name, exc)
         return
     stack = [root]
     while stack:
@@ -101,7 +127,8 @@ def _iter_module_names(root_name: str) -> Iterator[str]:
             if info.ispkg:
                 try:
                     stack.append(importlib.import_module(info.name))
-                except Exception:  # pragma: no cover - defensive: subpackage import failure
+                except Exception as exc:
+                    _record_failure(info.name, exc)
                     continue
 
 
@@ -114,7 +141,8 @@ def _entry_from_module(module_name: str) -> Optional[ModelEntry]:
     """Build a :class:`ModelEntry` from a module's ``DESCRIPTOR``, or ``None``."""
     try:
         module = importlib.import_module(module_name)
-    except Exception:  # pragma: no cover - defensive: leaf module import failure
+    except Exception as exc:
+        _record_failure(module_name, exc)
         return None
     descriptor = getattr(module, "DESCRIPTOR", None)
     if descriptor is None or not _looks_like_descriptor(descriptor):
@@ -142,6 +170,7 @@ def _discover() -> list[ModelEntry]:
     """Discover all ``DESCRIPTOR``-bearing models (result is cached)."""
     global _CACHE
     if _CACHE is None:
+        _ERRORS.clear()
         entries: dict[str, ModelEntry] = {}
         for root in _MODEL_ROOTS:
             for name in _iter_module_names(root):
@@ -156,6 +185,18 @@ def refresh() -> None:
     """Clear the discovery cache (e.g. after importing new model modules)."""
     global _CACHE
     _CACHE = None
+    _ERRORS.clear()
+
+
+def discovery_errors() -> dict[str, BaseException]:
+    """Return the modules the last discovery pass could not import.
+
+    Empty when everything imported. A non-empty result means the catalog is
+    incomplete and says exactly which modules are missing and why -- which is
+    what "this model does not exist" used to look like.
+    """
+    _discover()
+    return dict(_ERRORS)
 
 
 def list_models() -> list[ModelEntry]:
@@ -257,6 +298,7 @@ def describe(identifier: str) -> ModelEntry:
 
 __all__ = [
     "ModelEntry",
+    "discovery_errors",
     "find",
     "search",
     "describe",

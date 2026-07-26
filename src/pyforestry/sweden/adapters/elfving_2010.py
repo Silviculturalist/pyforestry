@@ -191,7 +191,7 @@ class Elfving2010Model(GrowthModel):
 
     def requirements(self) -> Requirements:
         """Declare that this model accepts either inventory mode and needs site data."""
-        return Requirements(inventory="either", require_site=True)
+        return Requirements(inventory="either", require_site=True, native_step_years=5.0)
 
     Inputs = Elfving2010Inputs
 

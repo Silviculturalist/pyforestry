@@ -59,7 +59,7 @@ class Bollandsas2008GrowthModel(GrowthModel):
         ``tree_list`` mode meant every refresh rebuilt the metrics from the
         untouched plots and discarded the step entirely.
         """
-        return Requirements(inventory="diameter_class")
+        return Requirements(inventory="diameter_class", native_step_years=5.0)
 
     @staticmethod
     def _dclass_payload(

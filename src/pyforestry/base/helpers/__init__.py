@@ -1,8 +1,5 @@
 """Convenience imports for common helper types."""
 
-from importlib import import_module
-from typing import TYPE_CHECKING
-
 # Suggested pyforestry/Helpers/__init__.py
 # ruff: noqa: F401, F403, F405
 # isort: off
@@ -46,41 +43,27 @@ from .bucking import (
 
 # isort: on
 
-_SIMULATION_EXPORTS = [
-    "SimulationContext",
-    "ActionSpec",
-    "GrowthModel",
-    "ExampleStandGeneralModel",
-    "Requirements",
-    "ContextEnsemble",
-    "PythonEngine",
-    "BatchEngine",
-    "AdapterRegistry",
-    "AngleCountToPseudoTreesAdapter",
-    "AngleCountToSpatialPseudoTreesAdapter",
-    "AngleCountToDiameterClassAdapter",
-    "TreeListToDiameterClassAdapter",
-    "TreeListToSpatialAdapter",
-]
-_SIMULATION_EXPORT_SET = set(_SIMULATION_EXPORTS)
-
-if TYPE_CHECKING:  # pragma: no cover - for static checkers only
-    from pyforestry.base.simulation import (  # noqa: F401
-        ActionSpec,
-        AdapterRegistry,
-        AngleCountToDiameterClassAdapter,
-        AngleCountToPseudoTreesAdapter,
-        AngleCountToSpatialPseudoTreesAdapter,
-        BatchEngine,
-        ContextEnsemble,
-        ExampleStandGeneralModel,
-        GrowthModel,
-        PythonEngine,
-        Requirements,
-        SimulationContext,
-        TreeListToDiameterClassAdapter,
-        TreeListToSpatialAdapter,
-    )
+# The names this module used to re-export from the simulation runtime. Kept only
+# so ``__getattr__`` can point at their real home rather than saying "no such
+# attribute" to code written against the old spelling.
+_SIMULATION_NAMES = frozenset(
+    {
+        "ActionSpec",
+        "AdapterRegistry",
+        "AngleCountToDiameterClassAdapter",
+        "AngleCountToPseudoTreesAdapter",
+        "AngleCountToSpatialPseudoTreesAdapter",
+        "BatchEngine",
+        "ContextEnsemble",
+        "ExampleStandGeneralModel",
+        "GrowthModel",
+        "PythonEngine",
+        "Requirements",
+        "SimulationContext",
+        "TreeListToDiameterClassAdapter",
+        "TreeListToSpatialAdapter",
+    }
+)
 
 __all__ = [
     # TreeSpecies components
@@ -130,16 +113,25 @@ __all__ = [
     "CrossCutSection",
     "BuckingResult",
     "BuckingConfig",
-    "_TreeCache",
     "QualityType",
-] + _SIMULATION_EXPORTS
+]
 
 
 def __getattr__(name):
-    """Lazily resolve simulation exports to avoid import cycles at module import time."""
-    if name in _SIMULATION_EXPORT_SET:
-        sim_mod = import_module("pyforestry.base.simulation")
-        attr = getattr(sim_mod, name)
-        globals()[name] = attr
-        return attr
+    """Reject an unknown attribute, and say where the simulation runtime lives.
+
+    This module used to lazily re-export seventeen names from
+    ``pyforestry.base.simulation`` -- ``GrowthModel``, ``SimulationContext``,
+    every adapter -- so the data-contract layer advertised the simulation runtime
+    as its own API and each of those classes had two supported spellings. The
+    docstring said the re-export existed to avoid an import cycle, but the cycle
+    only ever ran one way: ``base.simulation`` imports ``base.helpers`` and never
+    the reverse, so there was nothing to break.
+    """
+    if name in _SIMULATION_NAMES:
+        raise AttributeError(
+            f"{name!r} is part of the simulation runtime, not the data contract. "
+            f"Import it from pyforestry.base.simulation instead; "
+            f"pyforestry.base.helpers no longer re-exports it."
+        )
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

@@ -117,17 +117,22 @@ class StandMetricAccessor:
             else:
                 raise KeyError(f"{self._metric_name} metric unavailable for angle-count data")
 
-    def __getattr__(self, item):
+    @property
+    def TOTAL(self) -> Any:
+        """The whole-stand value of this metric, with its standard error.
+
+        ``stand.BasalArea.TOTAL`` is the first line of code most users of this
+        package run, and it used to resolve through ``__getattr__`` -- so no
+        editor could complete it, no type checker could see it, and the only way
+        to learn the name was to read the source. It is an ordinary property.
+
+        The concrete type follows the metric: :class:`StandBasalArea` for
+        ``BasalArea``, :class:`Stems` for ``Stems``, and so on. Each is a ``float``
+        subclass, so it can be used directly in arithmetic and carries
+        ``.value``/``.precision`` alongside.
         """
-        Allows dot-based access .TOTAL => returns aggregator for total.
-        """
-        if item == "TOTAL":
-            self._ensure_estimates()
-            metric_dict = self._stand._metric_estimates[self._metric_name]
-            return metric_dict["TOTAL"]
-        raise AttributeError(
-            f"No attribute '{item}' in StandMetricAccessor for {self._metric_name}"
-        )
+        self._ensure_estimates()
+        return self._stand._metric_estimates[self._metric_name]["TOTAL"]
 
     def __call__(self, species: Union[TreeName, str]):
         """

@@ -349,7 +349,7 @@ class Eko1985Model(GrowthModel):
 
     def requirements(self) -> Requirements:
         """Declare aggregate inventory requirements."""
-        return Requirements(inventory="aggregate")
+        return Requirements(inventory="aggregate", native_step_years=5.0)
 
     def build_context(
         self,

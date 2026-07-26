@@ -15,10 +15,12 @@ def test_top_level_lazy_imports():
         _ = pyforestry.not_a_module
 
 
-def test_helpers_simulation_exports():
-    growth_model = helpers.GrowthModel
-    assert growth_model.__name__ == "GrowthModel"
-    assert helpers.GrowthModel is growth_model
+def test_helpers_redirects_simulation_names_to_their_real_home():
+    with pytest.raises(AttributeError, match="pyforestry.base.simulation"):
+        _ = helpers.GrowthModel
 
-    with pytest.raises(AttributeError):
+    with pytest.raises(AttributeError, match="has no attribute"):
         _ = helpers.not_a_helper
+
+    # The data contract itself is unaffected.
+    assert helpers.Stand.__name__ == "Stand"

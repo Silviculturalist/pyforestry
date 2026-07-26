@@ -163,13 +163,21 @@ def test_adapter_registry_and_angle_count_adapters():
 
 
 def test_growth_model_base_methods():
-    model = GrowthModel()
+    """The base class is abstract; its non-abstract defaults still work."""
+    with pytest.raises(TypeError, match="abstract"):
+        GrowthModel()
+
+    class Minimal(GrowthModel):
+        def requirements(self):
+            return Requirements()
+
+        def update_step(self, ctx, dt):
+            return None
+
+    model = Minimal()
     assert model.default_attrs() == {}
     assert model.available_actions() == {}
-    with pytest.raises(NotImplementedError):
-        model.requirements()
-    with pytest.raises(NotImplementedError):
-        model.update_step(SimpleNamespace(), 1.0)
+    assert model.requirements().native_step_years is None
 
 
 def test_growth_model_can_build_branches():
