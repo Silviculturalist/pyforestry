@@ -6,14 +6,14 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-import pyforestry.sweden.simulation.presets.elfving_2010_composite as preset_module
+import pyforestry.sweden.simulation.presets.elfving_2010_pipeline as preset_module
 from pyforestry.base.helpers import Tree
 from pyforestry.base.helpers.primitives import SiteBase
 from pyforestry.base.helpers.tree_species import TreeSpecies
 from pyforestry.sweden.simulation.mortality import MortalityConfig, MortalityResult
 from pyforestry.sweden.simulation.presets import (
-    Elfving2010CompositePresetConfig,
-    build_elfving_2010_composite_preset,
+    Elfving2010PipelineConfig,
+    build_elfving_2010_pipeline,
 )
 from pyforestry.sweden.site import Sweden, SwedishSite
 
@@ -40,8 +40,8 @@ def _make_site() -> _SiteDemo:
     )
 
 
-def _make_config(seed: int = 42, **overrides: object) -> Elfving2010CompositePresetConfig:
-    return Elfving2010CompositePresetConfig(
+def _make_config(seed: int = 42, **overrides: object) -> Elfving2010PipelineConfig:
+    return Elfving2010PipelineConfig(
         sample_trees=28,
         random_seed=seed,
         deterministic=True,
@@ -51,7 +51,7 @@ def _make_config(seed: int = 42, **overrides: object) -> Elfving2010CompositePre
 
 
 def test_preset_initialization_returns_non_empty_tree_list() -> None:
-    preset = build_elfving_2010_composite_preset(_make_config())
+    preset = build_elfving_2010_pipeline(_make_config())
     trees = preset.initialize(site=_make_site())
     assert len(trees) > 0
     assert any((tree.diameter_cm or 0.0) > 0.0 for tree in trees)
@@ -59,8 +59,8 @@ def test_preset_initialization_returns_non_empty_tree_list() -> None:
 
 def test_run_projection_is_deterministic_with_fixed_seed() -> None:
     site = _make_site()
-    preset_one = build_elfving_2010_composite_preset(_make_config(seed=2026))
-    preset_two = build_elfving_2010_composite_preset(_make_config(seed=2026))
+    preset_one = build_elfving_2010_pipeline(_make_config(seed=2026))
+    preset_two = build_elfving_2010_pipeline(_make_config(seed=2026))
 
     out_one = preset_one.run_projection(site=site, n_steps=2)
     out_two = preset_two.run_projection(site=site, n_steps=2)
@@ -69,7 +69,7 @@ def test_run_projection_is_deterministic_with_fixed_seed() -> None:
 
 
 def test_projection_rows_include_qmd_and_hq_metrics() -> None:
-    preset = build_elfving_2010_composite_preset(_make_config(seed=2026))
+    preset = build_elfving_2010_pipeline(_make_config(seed=2026))
     out = preset.run_projection(site=_make_site(), n_steps=1)
 
     assert "qmd_cm" in out.columns
@@ -100,7 +100,7 @@ def test_hq_helper_interpolates_height_at_qmd() -> None:
         ),
     ]
 
-    preset = build_elfving_2010_composite_preset(_make_config())
+    preset = build_elfving_2010_pipeline(_make_config())
     ba = sum(
         math.pi * ((float(tree.diameter_cm) / 200.0) ** 2) * float(tree.weight_n) for tree in trees
     )
@@ -112,7 +112,7 @@ def test_hq_helper_interpolates_height_at_qmd() -> None:
 
 
 def test_handover_rule_dbh_threshold_10cm() -> None:
-    preset = build_elfving_2010_composite_preset(_make_config())
+    preset = build_elfving_2010_pipeline(_make_config())
     trees = preset.initialize(site=_make_site())
     assert len(trees) >= 2
 
@@ -124,7 +124,7 @@ def test_handover_rule_dbh_threshold_10cm() -> None:
 
 
 def test_standing_valuation_runs_with_mellanskog_2013() -> None:
-    preset = build_elfving_2010_composite_preset(_make_config())
+    preset = build_elfving_2010_pipeline(_make_config())
     preset.initialize(site=_make_site())
     valuation = preset.value_standing_forest()
 
@@ -134,7 +134,7 @@ def test_standing_valuation_runs_with_mellanskog_2013() -> None:
 
 
 def test_standing_valuation_uses_lookup_cache(monkeypatch: pytest.MonkeyPatch) -> None:
-    preset = build_elfving_2010_composite_preset(
+    preset = build_elfving_2010_pipeline(
         _make_config(
             valuation_use_solution_cube=True,
             valuation_solution_cube_path=None,
@@ -182,7 +182,7 @@ def test_standing_valuation_uses_lookup_cache(monkeypatch: pytest.MonkeyPatch) -
 def test_standing_valuation_cube_lookup_miss_falls_back_and_caches(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    preset = build_elfving_2010_composite_preset(
+    preset = build_elfving_2010_pipeline(
         _make_config(
             valuation_use_solution_cube=True,
             valuation_solution_cube_path=None,
@@ -233,111 +233,8 @@ def test_standing_valuation_cube_lookup_miss_falls_back_and_caches(
     assert second["standing_volume_m3_per_ha"] == pytest.approx(first["standing_volume_m3_per_ha"])
 
 
-def test_generate_recommended_cube_uses_expected_species(monkeypatch: pytest.MonkeyPatch) -> None:
-    calls: dict[str, object] = {}
-    fake_cube = object()
-
-    def _fake_generate(
-        *,
-        pricelist_data,
-        taper_model,
-        timber_class,
-        species_list,
-        dbh_range,
-        height_range,
-        dbh_step,
-        height_step,
-        workers,
-    ):  # noqa: ANN001, ANN202
-        calls["pricelist_data"] = pricelist_data
-        calls["taper_model"] = taper_model
-        calls["timber_class"] = timber_class
-        calls["species_list"] = species_list
-        calls["dbh_range"] = dbh_range
-        calls["height_range"] = height_range
-        calls["dbh_step"] = dbh_step
-        calls["height_step"] = height_step
-        calls["workers"] = workers
-        return fake_cube
-
-    monkeypatch.setattr(
-        preset_module.SolutionCube,
-        "generate",
-        staticmethod(_fake_generate),
-    )
-
-    out = preset_module.Elfving2010CompositePreset.generate_recommended_valuation_solution_cube(
-        workers=3,
-        dbh_range_cm=(12.0, 32.0),
-        height_range_m=(9.0, 25.0),
-        dbh_step_cm=4,
-        height_step_m=1.5,
-    )
-
-    assert out is fake_cube
-    assert calls["timber_class"] is preset_module.SweTimber
-    assert calls["species_list"] == ["pinus sylvestris", "picea abies"]
-    assert calls["dbh_range"] == (12.0, 32.0)
-    assert calls["height_range"] == (9.0, 25.0)
-    assert calls["dbh_step"] == 4
-    assert calls["height_step"] == 1.5
-    assert calls["workers"] == 3
-
-
-def test_recommended_cube_file_helper_builds_and_saves(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-) -> None:
-    calls: dict[str, object] = {}
-
-    class _FakeCube:
-        def save(self, path: str) -> None:
-            calls["save_path"] = path
-            Path(path).write_text("fake cube")
-
-    def _fake_generate(
-        cls,  # noqa: ANN001
-        *,
-        workers,
-        dbh_range_cm,
-        height_range_m,
-        dbh_step_cm,
-        height_step_m,
-    ):  # noqa: ANN001, ANN202
-        calls["workers"] = workers
-        calls["dbh_range_cm"] = dbh_range_cm
-        calls["height_range_m"] = height_range_m
-        calls["dbh_step_cm"] = dbh_step_cm
-        calls["height_step_m"] = height_step_m
-        return _FakeCube()
-
-    monkeypatch.setattr(
-        preset_module.Elfving2010CompositePreset,
-        "generate_recommended_valuation_solution_cube",
-        classmethod(_fake_generate),
-    )
-
-    cube_path = tmp_path / "test_composite_cube_helper.nc"
-    out = preset_module.Elfving2010CompositePreset.ensure_recommended_valuation_solution_cube_file(
-        path=str(cube_path),
-        overwrite=True,
-        workers=3,
-        dbh_range_cm=(12.0, 32.0),
-        height_range_m=(9.0, 25.0),
-        dbh_step_cm=4,
-        height_step_m=1.5,
-    )
-
-    assert Path(out) == cube_path
-    assert Path(calls["save_path"]) == cube_path
-    assert calls["workers"] == 3
-    assert calls["dbh_range_cm"] == (12.0, 32.0)
-    assert calls["height_range_m"] == (9.0, 25.0)
-    assert calls["dbh_step_cm"] == 4
-    assert calls["height_step_m"] == 1.5
-
-
 def test_load_solution_cube_autogenerates_when_missing(monkeypatch: pytest.MonkeyPatch) -> None:
-    preset = build_elfving_2010_composite_preset(
+    preset = build_elfving_2010_pipeline(
         _make_config(
             valuation_solution_cube_path="/tmp/missing_composite_cube.nc",
             valuation_solution_cube_autogenerate_if_missing=True,
@@ -354,7 +251,7 @@ def test_load_solution_cube_autogenerates_when_missing(monkeypatch: pytest.Monke
         return fake_cube
 
     monkeypatch.setattr(
-        preset_module.Elfving2010CompositePreset,
+        preset_module.Elfving2010Pipeline,
         "ensure_valuation_solution_cube",
         _fake_ensure,
     )
@@ -367,7 +264,7 @@ def test_load_solution_cube_autogenerates_when_missing(monkeypatch: pytest.Monke
 
 
 def test_step_uses_5_year_default_period() -> None:
-    preset = build_elfving_2010_composite_preset(_make_config())
+    preset = build_elfving_2010_pipeline(_make_config())
     preset.initialize(site=_make_site())
     age_before = preset.current_age_years
     elapsed_before = preset.years_elapsed
@@ -379,7 +276,7 @@ def test_step_uses_5_year_default_period() -> None:
 
 
 def test_mature_only_step_updates_live_tree_diameter() -> None:
-    preset = build_elfving_2010_composite_preset(_make_config())
+    preset = build_elfving_2010_pipeline(_make_config())
     preset.initialize(site=_make_site())
 
     for tree in preset.tree_list:
@@ -410,7 +307,7 @@ def test_step_routes_mature_growth_via_elfving_stand_calibration(
         _wrapped,
     )
 
-    preset = build_elfving_2010_composite_preset(_make_config())
+    preset = build_elfving_2010_pipeline(_make_config())
     preset.initialize(site=_make_site())
     for tree in preset.tree_list:
         tree.diameter_cm = max(12.0, float(tree.diameter_cm or 0.0))
@@ -421,7 +318,7 @@ def test_step_routes_mature_growth_via_elfving_stand_calibration(
 
 
 def test_naslund_damage_index_is_applied_in_young_growth() -> None:
-    preset = build_elfving_2010_composite_preset(_make_config())
+    preset = build_elfving_2010_pipeline(_make_config())
     preset.initialize(site=_make_site())
     for tree in preset.tree_list:
         tree.diameter_cm = min(8.0, float(tree.diameter_cm or 8.0))
@@ -434,7 +331,7 @@ def test_naslund_damage_index_is_applied_in_young_growth() -> None:
 
 
 def test_phase_over_smoothing_blend_function() -> None:
-    preset = build_elfving_2010_composite_preset(_make_config())
+    preset = build_elfving_2010_pipeline(_make_config())
     assert (
         preset._blend_phase_over_dbh(young_dbh_cm=8.0, mature_dbh_cm=12.0, mature_weight=0.0)
         == 8.0
@@ -453,7 +350,7 @@ def test_phase_over_smoothing_blend_function() -> None:
 def test_apply_soderberg_height_preserves_nystrom_height_for_young_ids(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    preset = build_elfving_2010_composite_preset(_make_config())
+    preset = build_elfving_2010_pipeline(_make_config())
     preset.initialize(site=_make_site())
     assert len(preset.tree_list) >= 2
 
@@ -487,7 +384,7 @@ def test_apply_soderberg_height_preserves_nystrom_height_for_young_ids(
 
 
 def test_rebuild_context_sets_site_index_from_dominant_species() -> None:
-    preset = build_elfving_2010_composite_preset(
+    preset = build_elfving_2010_pipeline(
         _make_config(
             species_to_plant=preset_module.TreeSpecies.Sweden.picea_abies,
             site_index_pine_m=18.0,
@@ -511,7 +408,7 @@ def test_rebuild_context_sets_site_index_from_dominant_species() -> None:
 def test_mortality_engine_application_reduces_tree_weights(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    preset = build_elfving_2010_composite_preset(_make_config())
+    preset = build_elfving_2010_pipeline(_make_config())
     preset.initialize(site=_make_site())
 
     def _fake_run(self, context):  # noqa: ANN001, ANN202
@@ -538,7 +435,7 @@ def test_mortality_engine_application_reduces_tree_weights(
 
 
 def test_step_validation_and_no_mortality_branch() -> None:
-    preset = build_elfving_2010_composite_preset(_make_config(apply_mortality=False))
+    preset = build_elfving_2010_pipeline(_make_config(apply_mortality=False))
     with pytest.raises(RuntimeError, match="initialized before calling step"):
         preset.step()
 
@@ -552,7 +449,7 @@ def test_step_validation_and_no_mortality_branch() -> None:
 
 
 def test_run_projection_validation_errors() -> None:
-    preset = build_elfving_2010_composite_preset(_make_config())
+    preset = build_elfving_2010_pipeline(_make_config())
     with pytest.raises(ValueError, match="n_steps must be > 0"):
         preset.run_projection(site=_make_site(), n_steps=0)
     with pytest.raises(RuntimeError, match="Provide site or call initialize"):
@@ -561,14 +458,14 @@ def test_run_projection_validation_errors() -> None:
 
 def test_build_mortality_config_uses_base_config_with_overrides() -> None:
     base = MortalityConfig(period_years=2.0, stochastic_seed=7)
-    config = Elfving2010CompositePresetConfig(
+    config = Elfving2010PipelineConfig(
         sample_trees=28,
         deterministic=True,
         random_seed=123,
         dt_years=7.0,
         mortality_config=base,
     )
-    preset = build_elfving_2010_composite_preset(config)
+    preset = build_elfving_2010_pipeline(config)
 
     cfg = preset._build_mortality_config()
     assert cfg.period_years == pytest.approx(7.0)
@@ -578,7 +475,7 @@ def test_build_mortality_config_uses_base_config_with_overrides() -> None:
 def test_value_standing_forest_cached_and_direct_bucking_paths(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    preset_cached = build_elfving_2010_composite_preset(_make_config())
+    preset_cached = build_elfving_2010_pipeline(_make_config())
     preset_cached.initialize(site=_make_site())
     for tree in preset_cached.tree_list:
         tree.species = TreeSpecies.Sweden.pinus_sylvestris
@@ -595,9 +492,7 @@ def test_value_standing_forest_cached_and_direct_bucking_paths(
     valuation_cached = preset_cached.value_standing_forest()
     assert valuation_cached["timber_valued_stems_per_ha"] > 0.0
 
-    preset_direct = build_elfving_2010_composite_preset(
-        _make_config(valuation_use_solution_cube=False)
-    )
+    preset_direct = build_elfving_2010_pipeline(_make_config(valuation_use_solution_cube=False))
     preset_direct.initialize(site=_make_site())
     for tree in preset_direct.tree_list:
         tree.species = TreeSpecies.Sweden.pinus_sylvestris
@@ -625,24 +520,17 @@ def test_solution_cube_management_and_lookup_branches(monkeypatch: pytest.Monkey
     fake_cube = object()
     cube_path = "/tmp/test_elfving_composite_cube.nc"
 
-    preset = build_elfving_2010_composite_preset(
-        _make_config(valuation_solution_cube_path=cube_path)
-    )
+    preset = build_elfving_2010_pipeline(_make_config(valuation_solution_cube_path=cube_path))
 
     monkeypatch.setattr(
-        preset_module.Elfving2010CompositePreset,
-        "ensure_recommended_valuation_solution_cube_file",
-        classmethod(lambda cls, **kwargs: kwargs["path"]),  # noqa: ARG005
+        preset_module.valuation_cube,
+        "ensure_cube_file",
+        lambda **kwargs: kwargs["path"],  # noqa: ARG005
     )
     monkeypatch.setattr(
-        preset_module.SolutionCube,
-        "load",
-        staticmethod(
-            lambda path, pricelist_to_verify=None: (
-                calls.__setitem__("load_path", path),
-                fake_cube,
-            )[1]  # noqa: ARG005
-        ),
+        preset_module.valuation_cube,
+        "load_cube",
+        lambda path: (calls.__setitem__("load_path", path), fake_cube)[1],  # noqa: ARG005
     )
 
     out = preset.ensure_valuation_solution_cube(path=cube_path, overwrite=True)
@@ -694,7 +582,7 @@ def test_solution_cube_management_and_lookup_branches(monkeypatch: pytest.Monkey
 
 
 def test_initial_dbh_age_fallback_and_naslund_helpers(monkeypatch: pytest.MonkeyPatch) -> None:
-    preset = build_elfving_2010_composite_preset(_make_config())
+    preset = build_elfving_2010_pipeline(_make_config())
     preset.initialize(site=_make_site())
 
     monkeypatch.setattr(
@@ -776,7 +664,7 @@ def test_initial_dbh_age_fallback_and_naslund_helpers(monkeypatch: pytest.Monkey
 
 
 def test_misc_internal_helpers_cover_region_and_structure_branches() -> None:
-    preset = build_elfving_2010_composite_preset(_make_config())
+    preset = build_elfving_2010_pipeline(_make_config())
     preset.initialize(site=_make_site())
 
     assert preset._bal_m2_ha_for_tree(Tree(diameter_cm=0.0, weight_n=1.0)) == pytest.approx(0.0)

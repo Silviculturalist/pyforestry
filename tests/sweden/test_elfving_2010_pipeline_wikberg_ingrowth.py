@@ -1,11 +1,16 @@
-"""Coverage for the Elfving 2010 composite preset ingrowth (recruitment) path."""
+"""Coverage for the Elfving 2010 composite preset's Wikberg 2004 ingrowth path.
+
+The preset is built around the Elfving (2010) growth model, but recruitment is
+delegated to the Wikberg (2004) ingrowth model via ``_apply_ingrowth``; these
+tests exercise that delegation, not an Elfving ingrowth model (there is none).
+"""
 
 from __future__ import annotations
 
 from pyforestry.base.helpers.primitives import SiteBase
-from pyforestry.sweden.simulation.presets import build_elfving_2010_composite_preset
-from pyforestry.sweden.simulation.presets.elfving_2010_composite import (
-    Elfving2010CompositePresetConfig,
+from pyforestry.sweden.simulation.presets import build_elfving_2010_pipeline
+from pyforestry.sweden.simulation.presets.elfving_2010_pipeline import (
+    Elfving2010PipelineConfig,
 )
 from pyforestry.sweden.site import Sweden, SwedishSite
 
@@ -34,15 +39,15 @@ def _site() -> _SiteDemo:
     )
 
 
-def _config(**overrides: object) -> Elfving2010CompositePresetConfig:
-    return Elfving2010CompositePresetConfig(
+def _config(**overrides: object) -> Elfving2010PipelineConfig:
+    return Elfving2010PipelineConfig(
         sample_trees=28, random_seed=42, deterministic=True, dt_years=5.0, **overrides
     )
 
 
 def test_apply_ingrowth_runs_full_path_when_gated_in() -> None:
     """With QMD>10 cm and high mean age, the Wikberg ingrowth path executes."""
-    preset = build_elfving_2010_composite_preset(_config())
+    preset = build_elfving_2010_pipeline(_config())
     preset.initialize(site=_site())
     for tree in preset.tree_list:
         tree.diameter_cm = 16.0
@@ -56,5 +61,5 @@ def test_apply_ingrowth_runs_full_path_when_gated_in() -> None:
 
 def test_apply_ingrowth_skips_when_not_gated() -> None:
     """Without trees/site the ingrowth gate short-circuits (no recruitment)."""
-    preset = build_elfving_2010_composite_preset(_config())
+    preset = build_elfving_2010_pipeline(_config())
     assert preset._apply_ingrowth() is None

@@ -9,7 +9,7 @@ from typing import Any, Callable, Mapping, Sequence
 
 from pyforestry.base.contracts import SourceReference
 from pyforestry.norway.simulation.policy import management_plan, scenario_factors
-from pyforestry.simulation.presets import ScenarioPresetBase
+from pyforestry.simulation.presets import ScenarioConfigBase
 
 RulesetFn = Callable[..., Mapping[str, float]]
 
@@ -26,11 +26,11 @@ def _stable_seed(preset_id: str, scenario_id: str, global_seed: int) -> int:
 
 
 @dataclass(frozen=True)
-class NorwayScenarioPreset(ScenarioPresetBase):
+class NorwayScenarioPreset(ScenarioConfigBase):
     """Minimal simulation preset contract for Norway scenarios.
 
     Shared guard-policy, artifact, and identity behaviour is inherited from
-    :class:`~pyforestry.simulation.presets.ScenarioPresetBase`; only the
+    :class:`~pyforestry.simulation.presets.ScenarioConfigBase`; only the
     Norway-specific seed, stage ordering, rulesets, and provenance live here.
     """
 

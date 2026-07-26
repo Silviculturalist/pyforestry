@@ -1,7 +1,7 @@
 """Composite Sweden stand-simulation preset using Söderberg (1986) mature growth.
 
 This preset reuses the regeneration, NYSKOG reconstruction, young-stand growth,
-mortality, and valuation workflow from ``Elfving2010CompositePreset`` while
+mortality, and valuation workflow from ``Elfving2010Pipeline`` while
 swapping the mature-tree growth model to ``Soderberg1986Model``.
 
 Söderberg (1986) does not include Elfving's stand-level basal-area correction
@@ -23,7 +23,7 @@ from pyforestry.sweden.adapters.soderberg_1986_growth import (
 from pyforestry.sweden.site import Sweden
 from pyforestry.sweden.volume.soderberg_1986_form_height import soderberg_1986_volume_m3
 
-from .elfving_2010_composite import Elfving2010CompositePreset, Elfving2010CompositePresetConfig
+from .elfving_2010_pipeline import Elfving2010Pipeline, Elfving2010PipelineConfig
 
 _SPRUCE_SET = {
     TreeSpecies.Sweden.picea_abies,
@@ -64,19 +64,19 @@ _RICH_FIELD_LAYERS = {
 
 
 @dataclass(frozen=True)
-class Soderberg1986CompositePresetConfig(Elfving2010CompositePresetConfig):
+class Soderberg1986PipelineConfig(Elfving2010PipelineConfig):
     """Configuration for the Söderberg 1986 composite preset."""
 
     soderberg_include_thinning_effect: bool = True
     use_soderberg_form_height_volume: bool = False
 
 
-class Soderberg1986CompositePreset(Elfving2010CompositePreset):
+class Soderberg1986Pipeline(Elfving2010Pipeline):
     """Stateful composite stand simulation using Söderberg (1986) mature growth."""
 
-    def __init__(self, config: Soderberg1986CompositePresetConfig | None = None) -> None:
+    def __init__(self, config: Soderberg1986PipelineConfig | None = None) -> None:
         """Initialize preset and replace mature growth model with Söderberg 1986."""
-        resolved_config = config or Soderberg1986CompositePresetConfig()
+        resolved_config = config or Soderberg1986PipelineConfig()
         super().__init__(config=resolved_config)
         self.config = resolved_config
         self._model = Soderberg1986Model(
@@ -269,15 +269,15 @@ class Soderberg1986CompositePreset(Elfving2010CompositePreset):
         self._ctx = ctx
 
 
-def build_soderberg_1986_composite_preset(
-    config: Soderberg1986CompositePresetConfig | None = None,
-) -> Soderberg1986CompositePreset:
+def build_soderberg_1986_pipeline(
+    config: Soderberg1986PipelineConfig | None = None,
+) -> Soderberg1986Pipeline:
     """Build the Söderberg 1986 composite Sweden preset for hybrid projection."""
-    return Soderberg1986CompositePreset(config=config)
+    return Soderberg1986Pipeline(config=config)
 
 
 __all__ = [
-    "Soderberg1986CompositePresetConfig",
-    "Soderberg1986CompositePreset",
-    "build_soderberg_1986_composite_preset",
+    "Soderberg1986PipelineConfig",
+    "Soderberg1986Pipeline",
+    "build_soderberg_1986_pipeline",
 ]

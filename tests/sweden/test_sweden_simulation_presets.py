@@ -8,7 +8,7 @@ import pytest
 
 import pyforestry.sweden.simulation.orchestration.runbook as runbook_module
 from pyforestry.sweden.simulation import (
-    build_baseline_preset,
+    build_baseline_scenario_config,
     emit_scenario_artifact_contract,
     load_scenario_summary,
     validate_artifact_contract,
@@ -27,11 +27,11 @@ from pyforestry.sweden.simulation.policy import (
     scenario_factors,
     supported_scenarios,
 )
-from pyforestry.sweden.simulation.presets import get_preset
+from pyforestry.sweden.simulation.presets import get_pipeline, get_scenario_config
 
 
 def test_sweden_preset_replay_is_deterministic_across_process_counts(tmp_path) -> None:
-    preset = build_baseline_preset()
+    preset = build_baseline_scenario_config()
     run_one = tmp_path / "run_p1"
     run_two = tmp_path / "run_p4"
 
@@ -63,7 +63,7 @@ def test_sweden_preset_replay_is_deterministic_across_process_counts(tmp_path) -
 
 
 def test_sweden_preset_writes_required_artifacts_and_schema(tmp_path) -> None:
-    preset = build_baseline_preset()
+    preset = build_baseline_scenario_config()
     output_dir = tmp_path / "artifact_run"
     result = emit_scenario_artifact_contract(
         preset=preset,
@@ -100,7 +100,7 @@ def test_policy_and_preset_lookups_cover_error_paths() -> None:
     assert management_plan("baseline")["thinning_ratio"] == pytest.approx(0.20)
     assert supported_scenarios() == ("baseline",)
     assert scenario_factors("baseline")["disturbance_factor"] == pytest.approx(1.0)
-    assert get_preset("baseline").scenario_id == "baseline"
+    assert get_scenario_config("baseline").scenario_id == "baseline"
 
     with pytest.raises(ValueError, match="Unsupported scenario_id"):
         management_intensity("unknown")
@@ -109,11 +109,11 @@ def test_policy_and_preset_lookups_cover_error_paths() -> None:
 
     # The storm-risk scenario was removed: its growth and disturbance multipliers
     # were invented, with no source behind them. It must not resolve anywhere.
-    for lookup in (management_intensity, scenario_factors, get_preset):
+    for lookup in (management_intensity, scenario_factors, get_scenario_config):
         with pytest.raises(ValueError, match="Unsupported scenario_id"):
             lookup("storm_risk_high")
     with pytest.raises(ValueError, match="Unsupported scenario_id"):
-        get_preset("unknown")
+        get_scenario_config("unknown")
     with pytest.raises(ValueError, match="n_stands must be > 0"):
         stand_id_series(0)
 
@@ -121,21 +121,21 @@ def test_policy_and_preset_lookups_cover_error_paths() -> None:
 def test_runbook_validation_and_fallback_summary_paths(tmp_path, monkeypatch) -> None:
     with pytest.raises(ValueError, match="n_steps must be > 0"):
         emit_scenario_artifact_contract(
-            preset=build_baseline_preset(),
+            preset=build_baseline_scenario_config(),
             global_seed=1,
             output_dir=tmp_path / "bad-steps",
             n_steps=0,
         )
     with pytest.raises(ValueError, match="n_stands must be > 0"):
         emit_scenario_artifact_contract(
-            preset=build_baseline_preset(),
+            preset=build_baseline_scenario_config(),
             global_seed=1,
             output_dir=tmp_path / "bad-stands",
             n_stands=0,
         )
     with pytest.raises(ValueError, match="processes must be > 0"):
         emit_scenario_artifact_contract(
-            preset=build_baseline_preset(),
+            preset=build_baseline_scenario_config(),
             global_seed=1,
             output_dir=tmp_path / "bad-procs",
             processes=0,
@@ -267,7 +267,7 @@ def test_artifact_contract_output_is_labelled_synthetic(tmp_path):
     consumer reading only the artifacts -- which is the point of an artifact
     contract -- has no other way to tell them apart from a projection.
     """
-    preset = build_baseline_preset()
+    preset = build_baseline_scenario_config()
     with pytest.warns(UserWarning, match="not a projection"):
         result = emit_scenario_artifact_contract(
             preset=preset,
@@ -283,3 +283,24 @@ def test_artifact_contract_output_is_labelled_synthetic(tmp_path):
 
     quality = json.loads(result.quality_report_path.read_text(encoding="utf-8"))
     assert quality["synthetic"] is True
+
+
+def test_get_pipeline_reaches_the_real_simulators() -> None:
+    """The lookup that ``get_preset`` could not be.
+
+    It was typed ``-> SwedenScenarioPreset`` and knew only ``"baseline"``, so the
+    one discovery entrypoint the package had returned the scenario configuration
+    and could reach neither of the two simulators.
+    """
+    from pyforestry.sweden.simulation.presets import (
+        Elfving2010Pipeline,
+        Soderberg1986Pipeline,
+    )
+
+    assert isinstance(get_pipeline("elfving_2010"), Elfving2010Pipeline)
+    assert isinstance(get_pipeline("soderberg_1986"), Soderberg1986Pipeline)
+
+
+def test_get_pipeline_names_the_alternatives_when_asked_for_an_unknown_one() -> None:
+    with pytest.raises(ValueError, match="Known pipelines: elfving_2010, soderberg_1986"):
+        get_pipeline("not_a_pipeline")

@@ -17,7 +17,7 @@ from .contracts import (
     ParityCase,
     SimulationPreset,
 )
-from .presets import ScenarioPresetBase
+from .presets import ScenarioConfigBase
 from .valuation import (
     CohortRemoval,
     EmptyVolumeDescriptor,
@@ -34,7 +34,7 @@ from .valuation import (
 
 __all__ = [
     "SimulationPreset",
-    "ScenarioPresetBase",
+    "ScenarioConfigBase",
     "ParityCase",
     "AssertionResult",
     "StandRemovalLedger",

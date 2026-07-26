@@ -2,19 +2,19 @@
 
 from __future__ import annotations
 
-from pyforestry.norway.simulation.presets import build_baseline_preset
+from pyforestry.norway.simulation.presets import build_baseline_scenario_config
 from pyforestry.norway.simulation.presets._common import (
     REQUIRED_ARTIFACTS,
     NorwayScenarioPreset,
 )
-from pyforestry.simulation.presets import ScenarioPresetBase
+from pyforestry.simulation.presets import ScenarioConfigBase
 
 
 def test_baseline_preset_builds_and_conforms() -> None:
-    """The baseline Norway preset is a ScenarioPresetBase with stable identity."""
-    preset = build_baseline_preset()
+    """The baseline Norway preset is a ScenarioConfigBase with stable identity."""
+    preset = build_baseline_scenario_config()
     assert isinstance(preset, NorwayScenarioPreset)
-    assert isinstance(preset, ScenarioPresetBase)
+    assert isinstance(preset, ScenarioConfigBase)
     assert preset.component_id == "norway_kuehne/baseline"
     assert preset.stages() == ("growth",)
     assert tuple(preset.required_artifacts()) == REQUIRED_ARTIFACTS
@@ -23,7 +23,7 @@ def test_baseline_preset_builds_and_conforms() -> None:
 
 def test_seed_strategy_is_deterministic() -> None:
     """Seed derivation is deterministic and global-seed sensitive."""
-    preset = build_baseline_preset()
+    preset = build_baseline_scenario_config()
     seed_a = preset.seed_strategy(global_seed=7)
     seed_b = preset.seed_strategy(global_seed=7)
     seed_c = preset.seed_strategy(global_seed=8)
@@ -34,7 +34,7 @@ def test_seed_strategy_is_deterministic() -> None:
 
 def test_guard_policy_and_rulesets() -> None:
     """Shared guard policy and bound rulesets are exposed as expected."""
-    preset = build_baseline_preset()
+    preset = build_baseline_scenario_config()
     guard = preset.guard_policy()
     assert guard == {"clamp_net_volume_to_zero": True, "reject_negative_inputs": True}
     rulesets = preset.rulesets()
@@ -49,7 +49,7 @@ def test_source_provenance() -> None:
     year that a reader would take for a citation; the models it drives carry the
     science and their own references.
     """
-    preset = build_baseline_preset()
+    preset = build_baseline_scenario_config()
     source = preset.source
     assert "Norway" in source.title
     assert source.author == "(none)"

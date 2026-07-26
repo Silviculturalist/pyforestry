@@ -2,7 +2,7 @@
 
 Regional preset bundles (Sweden, Norway, ...) share an identical guard policy,
 required-artifact accessor, and identity scheme, while differing in their seed
-derivation, stage ordering, rulesets, and provenance. :class:`ScenarioPresetBase`
+derivation, stage ordering, rulesets, and provenance. :class:`ScenarioConfigBase`
 captures the shared behaviour so each region only declares its own fields and
 region-specific logic.
 """
@@ -15,7 +15,7 @@ from pyforestry.base.contracts import Describable
 from pyforestry.simulation.contracts import SimulationPreset
 
 
-class ScenarioPresetBase(SimulationPreset):
+class ScenarioConfigBase(SimulationPreset):
     """Shared :class:`SimulationPreset` behaviour for regional scenario presets.
 
     Concrete subclasses are expected to be frozen dataclasses that declare the

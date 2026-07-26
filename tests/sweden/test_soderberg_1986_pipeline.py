@@ -8,8 +8,8 @@ from pyforestry.base.helpers.tree_species import TreeSpecies
 from pyforestry.sweden.adapters.elfving_2010 import Elfving2010Model
 from pyforestry.sweden.adapters.soderberg_1986_growth import Soderberg1986Model
 from pyforestry.sweden.simulation.presets import (
-    Soderberg1986CompositePresetConfig,
-    build_soderberg_1986_composite_preset,
+    Soderberg1986PipelineConfig,
+    build_soderberg_1986_pipeline,
 )
 from pyforestry.sweden.site import Sweden, SwedishSite
 
@@ -36,8 +36,8 @@ def _make_site() -> _SiteDemo:
     )
 
 
-def _make_config(seed: int = 42, **overrides: object) -> Soderberg1986CompositePresetConfig:
-    return Soderberg1986CompositePresetConfig(
+def _make_config(seed: int = 42, **overrides: object) -> Soderberg1986PipelineConfig:
+    return Soderberg1986PipelineConfig(
         sample_trees=28,
         random_seed=seed,
         deterministic=True,
@@ -47,7 +47,7 @@ def _make_config(seed: int = 42, **overrides: object) -> Soderberg1986CompositeP
 
 
 def test_soderberg_preset_initialization_returns_non_empty_tree_list() -> None:
-    preset = build_soderberg_1986_composite_preset(_make_config())
+    preset = build_soderberg_1986_pipeline(_make_config())
     trees = preset.initialize(site=_make_site())
     assert len(trees) > 0
     assert any((tree.diameter_cm or 0.0) > 0.0 for tree in trees)
@@ -55,8 +55,8 @@ def test_soderberg_preset_initialization_returns_non_empty_tree_list() -> None:
 
 def test_soderberg_run_projection_is_deterministic_with_fixed_seed() -> None:
     site = _make_site()
-    preset_one = build_soderberg_1986_composite_preset(_make_config(seed=2026))
-    preset_two = build_soderberg_1986_composite_preset(_make_config(seed=2026))
+    preset_one = build_soderberg_1986_pipeline(_make_config(seed=2026))
+    preset_two = build_soderberg_1986_pipeline(_make_config(seed=2026))
 
     out_one = preset_one.run_projection(site=site, n_steps=2)
     out_two = preset_two.run_projection(site=site, n_steps=2)
@@ -65,12 +65,12 @@ def test_soderberg_run_projection_is_deterministic_with_fixed_seed() -> None:
 
 
 def test_soderberg_preset_uses_soderberg_model() -> None:
-    preset = build_soderberg_1986_composite_preset(_make_config())
+    preset = build_soderberg_1986_pipeline(_make_config())
     assert isinstance(preset._model, Soderberg1986Model)
 
 
 def test_soderberg_rebuild_context_sets_canonical_attrs_and_avoids_legacy_aliases() -> None:
-    preset = build_soderberg_1986_composite_preset(_make_config())
+    preset = build_soderberg_1986_pipeline(_make_config())
     preset.initialize(site=_make_site())
     preset._rebuild_context()
 
@@ -102,7 +102,7 @@ def test_soderberg_rebuild_context_sets_canonical_attrs_and_avoids_legacy_aliase
 
 
 def test_soderberg_rebuild_context_uses_dynamic_conifer_site_index_selector() -> None:
-    preset = build_soderberg_1986_composite_preset(_make_config())
+    preset = build_soderberg_1986_pipeline(_make_config())
     preset.initialize(site=_make_site())
 
     for tree in preset.tree_list:
@@ -129,7 +129,7 @@ def test_soderberg_step_does_not_route_through_elfving_stand_calibration(
 
     monkeypatch.setattr(Elfving2010Model, "_apply_stand_calibration", _raise_if_called)
 
-    preset = build_soderberg_1986_composite_preset(_make_config())
+    preset = build_soderberg_1986_pipeline(_make_config())
     preset.initialize(site=_make_site())
     for tree in preset.tree_list:
         tree.diameter_cm = max(12.0, float(tree.diameter_cm or 0.0))
@@ -138,7 +138,7 @@ def test_soderberg_step_does_not_route_through_elfving_stand_calibration(
 
 
 def test_soderberg_preset_describable_metadata() -> None:
-    preset = build_soderberg_1986_composite_preset(_make_config())
+    preset = build_soderberg_1986_pipeline(_make_config())
     assert preset.component_id == "soderberg_1986_composite"
     # The preset cites the publication its growth model comes from, not itself:
     # "pyforestry contributors" with the model's year was not a citation anyone
@@ -150,9 +150,7 @@ def test_soderberg_preset_describable_metadata() -> None:
 
 
 def test_soderberg_value_standing_forest_uses_form_height_volume() -> None:
-    preset = build_soderberg_1986_composite_preset(
-        _make_config(use_soderberg_form_height_volume=True)
-    )
+    preset = build_soderberg_1986_pipeline(_make_config(use_soderberg_form_height_volume=True))
     preset.initialize(site=_make_site())
     for tree in preset.tree_list:
         tree.diameter_cm = max(12.0, float(tree.diameter_cm or 0.0))
@@ -171,9 +169,7 @@ def test_soderberg_value_standing_forest_uses_form_height_volume() -> None:
 
 
 def test_soderberg_value_standing_forest_form_height_empty_trees() -> None:
-    preset = build_soderberg_1986_composite_preset(
-        _make_config(use_soderberg_form_height_volume=True)
-    )
+    preset = build_soderberg_1986_pipeline(_make_config(use_soderberg_form_height_volume=True))
     preset.initialize(site=_make_site())
     result = preset.value_standing_forest(tree_list=[])
     assert result["standing_volume_m3_per_ha"] == 0.0
@@ -181,7 +177,7 @@ def test_soderberg_value_standing_forest_form_height_empty_trees() -> None:
 
 
 def test_soderberg_site_index_selector_no_conifers_falls_back_to_species_to_plant() -> None:
-    preset = build_soderberg_1986_composite_preset(_make_config())
+    preset = build_soderberg_1986_pipeline(_make_config())
     no_conifer = preset._site_index_species_for_soderberg(
         dominant_species=TreeSpecies.Sweden.betula_pendula,
         stand_structure={"prop_pine": 0.0, "prop_spruce": 0.0},
@@ -196,6 +192,6 @@ def test_soderberg_site_index_selector_no_conifers_falls_back_to_species_to_plan
 
 
 def test_soderberg_rebuild_context_requires_site() -> None:
-    preset = build_soderberg_1986_composite_preset(_make_config())
+    preset = build_soderberg_1986_pipeline(_make_config())
     with pytest.raises(RuntimeError, match="site is not set"):
         preset._rebuild_context()

@@ -15,7 +15,7 @@ pyforestry.sweden.simulation.presets.baseline module
 pyforestry.sweden.simulation.presets.elfving\_2010\_composite module
 --------------------------------------------------------------------
 
-.. automodule:: pyforestry.sweden.simulation.presets.elfving_2010_composite
+.. automodule:: pyforestry.sweden.simulation.presets.elfving_2010_pipeline
    :members:
    :undoc-members:
    :show-inheritance:
@@ -23,7 +23,7 @@ pyforestry.sweden.simulation.presets.elfving\_2010\_composite module
 pyforestry.sweden.simulation.presets.soderberg\_1986\_composite module
 ----------------------------------------------------------------------
 
-.. automodule:: pyforestry.sweden.simulation.presets.soderberg_1986_composite
+.. automodule:: pyforestry.sweden.simulation.presets.soderberg_1986_pipeline
    :members:
    :undoc-members:
    :show-inheritance:

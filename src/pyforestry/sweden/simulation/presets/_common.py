@@ -8,7 +8,7 @@ from hashlib import sha256
 from typing import Any, Callable, Mapping, Sequence
 
 from pyforestry.base.contracts import SourceReference
-from pyforestry.simulation.presets import ScenarioPresetBase
+from pyforestry.simulation.presets import ScenarioConfigBase
 from pyforestry.sweden.simulation.policy import management_plan, scenario_factors
 
 RulesetFn = Callable[..., Any]
@@ -22,11 +22,11 @@ def _stable_seed(*parts: object) -> int:
 
 
 @dataclass(frozen=True)
-class SwedenScenarioPreset(ScenarioPresetBase):
+class ScenarioConfig(ScenarioConfigBase):
     """Minimal simulation preset contract implementation for Sweden scenarios.
 
     Shared guard-policy, artifact, and identity behaviour is inherited from
-    :class:`~pyforestry.simulation.presets.ScenarioPresetBase`; only the
+    :class:`~pyforestry.simulation.presets.ScenarioConfigBase`; only the
     Sweden-specific seed, stage ordering, rulesets, and provenance live here.
     """
 

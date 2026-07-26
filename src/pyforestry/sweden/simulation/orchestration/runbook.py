@@ -39,7 +39,7 @@ from pyforestry.sweden.simulation.data import (
     stand_id_series,
 )
 from pyforestry.sweden.simulation.policy import management_intensity, scenario_factors
-from pyforestry.sweden.simulation.presets import SwedenScenarioPreset
+from pyforestry.sweden.simulation.presets import ScenarioConfig
 
 if TYPE_CHECKING:  # pragma: no cover
     pass
@@ -80,7 +80,7 @@ def _determinism_hash(rows: list[dict[str, Any]]) -> str:
 
 def _synthetic_summary_rows(
     *,
-    preset: SwedenScenarioPreset,
+    preset: ScenarioConfig,
     global_seed: int,
     n_steps: int,
     n_stands: int,
@@ -138,7 +138,7 @@ def _git_revision() -> str:
         return "unknown"
 
 
-def _provenance_metadata(preset: SwedenScenarioPreset) -> dict[str, Any]:
+def _provenance_metadata(preset: ScenarioConfig) -> dict[str, Any]:
     """Build provenance metadata from a preset's Describable properties."""
     provenance: dict[str, Any] = {"git_revision": _git_revision()}
     if hasattr(preset, "component_id") and hasattr(preset, "source"):
@@ -237,7 +237,7 @@ def validate_artifact_contract(output_dir: Path) -> None:
 
 def emit_scenario_artifact_contract(
     *,
-    preset: SwedenScenarioPreset,
+    preset: ScenarioConfig,
     global_seed: int,
     output_dir: Path,
     n_steps: int = 20,

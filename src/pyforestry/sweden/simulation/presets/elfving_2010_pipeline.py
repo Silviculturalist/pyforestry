@@ -60,6 +60,7 @@ from pyforestry.sweden.simulation.mortality import (
     MortalityStandConditions,
     MortalityTreeRecord,
 )
+from pyforestry.sweden.simulation.presets import valuation_cube
 from pyforestry.sweden.site import Sweden, SwedishSite
 from pyforestry.sweden.siteindex.hagglund_1970 import Hagglund_1970
 from pyforestry.sweden.systems.nystrom_soderberg_1987 import NystromSoderberg1987
@@ -111,10 +112,6 @@ _NYSKOG_SPECIES_MAP = {
     # Keep broadleaf valuation/bucking compatible with available price/timber support.
     "other_broadleaf": TreeSpecies.Sweden.betula_pubescens,
 }
-_VALUATION_CUBE_RECOMMENDED_SPECIES = (
-    TreeSpecies.Sweden.pinus_sylvestris.full_name,
-    TreeSpecies.Sweden.picea_abies.full_name,
-)
 
 
 def _to_ingrowth_species(species: TreeName | None) -> IngrowthSpeciesGroup:
@@ -131,7 +128,7 @@ def _to_ingrowth_species(species: TreeName | None) -> IngrowthSpeciesGroup:
 
 
 @dataclass(frozen=True)
-class Elfving2010CompositePresetConfig:
+class Elfving2010PipelineConfig:
     """Configuration for the Elfving 2010 composite preset."""
 
     regeneration_type: RegenerationType = RegenerationType.NATURAL
@@ -183,12 +180,12 @@ class Elfving2010CompositePresetConfig:
     valuation_cube_bark_step_mm: float = 1.0
 
 
-class Elfving2010CompositePreset:
+class Elfving2010Pipeline:
     """Stateful simulation preset combining NYSKOG, Nyström and Elfving 2010."""
 
-    def __init__(self, config: Elfving2010CompositePresetConfig | None = None) -> None:
+    def __init__(self, config: Elfving2010PipelineConfig | None = None) -> None:
         """Initialize with optional config overrides."""
-        self.config = config or Elfving2010CompositePresetConfig()
+        self.config = config or Elfving2010PipelineConfig()
         self._pricelist: Pricelist = create_pricelist_from_data(MELLANSKOG_2013_PRICE_DATA)
         self._model = Elfving2010Model()
         self._mortality_engine = MortalityEngine(config=self._build_mortality_config())
@@ -626,57 +623,6 @@ class Elfving2010CompositePreset:
             return "northern"
         return "southern"
 
-    @classmethod
-    def generate_recommended_valuation_solution_cube(
-        cls,
-        *,
-        workers: int = -1,
-        dbh_range_cm: tuple[float, float] = (10.0, 40.0),
-        height_range_m: tuple[float, float] = (8.0, 30.0),
-        dbh_step_cm: int = 5,
-        height_step_m: float = 2.0,
-    ) -> SolutionCube:
-        """Build a Mellanskog-2013 cube for the valuation species used by this preset."""
-        return SolutionCube.generate(
-            pricelist_data=MELLANSKOG_2013_PRICE_DATA,
-            taper_model=EdgrenNylinder1949,
-            timber_class=SweTimber,
-            species_list=list(_VALUATION_CUBE_RECOMMENDED_SPECIES),
-            dbh_range=(float(dbh_range_cm[0]), float(dbh_range_cm[1])),
-            height_range=(float(height_range_m[0]), float(height_range_m[1])),
-            dbh_step=max(1, int(dbh_step_cm)),
-            height_step=max(0.1, float(height_step_m)),
-            workers=int(workers),
-        )
-
-    @classmethod
-    def ensure_recommended_valuation_solution_cube_file(
-        cls,
-        *,
-        path: str,
-        overwrite: bool = False,
-        workers: int = -1,
-        dbh_range_cm: tuple[float, float] = (10.0, 40.0),
-        height_range_m: tuple[float, float] = (8.0, 30.0),
-        dbh_step_cm: int = 5,
-        height_step_m: float = 2.0,
-    ) -> str:
-        """Create a recommended valuation cube file unless it already exists."""
-        cube_path = Path(path)
-        if cube_path.exists() and not overwrite:
-            return str(cube_path)
-
-        cube_path.parent.mkdir(parents=True, exist_ok=True)
-        cube = cls.generate_recommended_valuation_solution_cube(
-            workers=workers,
-            dbh_range_cm=dbh_range_cm,
-            height_range_m=height_range_m,
-            dbh_step_cm=dbh_step_cm,
-            height_step_m=height_step_m,
-        )
-        cube.save(str(cube_path))
-        return str(cube_path)
-
     def ensure_valuation_solution_cube(
         self,
         *,
@@ -684,12 +630,18 @@ class Elfving2010CompositePreset:
         overwrite: bool = False,
         workers: int | None = None,
     ) -> SolutionCube:
-        """Ensure a valuation solution-cube file exists and load it into the preset."""
+        """Ensure the configured cube file exists, then load it into this pipeline.
+
+        The building and the loading live in
+        :mod:`~pyforestry.sweden.simulation.presets.valuation_cube`; this method
+        supplies the grid from the pipeline's config and keeps the result. It is
+        the only place the pipeline touches the filesystem.
+        """
         cube_path = path or self.config.valuation_solution_cube_path
         if not cube_path:
             raise ValueError("Pass `path` or set `valuation_solution_cube_path` in config.")
 
-        resolved_path = self.ensure_recommended_valuation_solution_cube_file(
+        resolved_path = valuation_cube.ensure_cube_file(
             path=cube_path,
             overwrite=overwrite,
             workers=(
@@ -702,10 +654,7 @@ class Elfving2010CompositePreset:
             dbh_step_cm=int(self.config.valuation_solution_cube_generate_dbh_step_cm),
             height_step_m=float(self.config.valuation_solution_cube_generate_height_step_m),
         )
-        self._valuation_solution_cube = SolutionCube.load(
-            resolved_path,
-            pricelist_to_verify=MELLANSKOG_2013_PRICE_DATA,
-        )
+        self._valuation_solution_cube = valuation_cube.load_cube(resolved_path)
         return self._valuation_solution_cube
 
     def _load_solution_cube(self) -> SolutionCube | None:
@@ -713,9 +662,8 @@ class Elfving2010CompositePreset:
         path = self.config.valuation_solution_cube_path
         if not path:
             return None
-        cube_path = Path(path)
-        if cube_path.exists():
-            return SolutionCube.load(path, pricelist_to_verify=MELLANSKOG_2013_PRICE_DATA)
+        if Path(path).exists():
+            return valuation_cube.load_cube(path)
         if self.config.valuation_solution_cube_autogenerate_if_missing:
             return self.ensure_valuation_solution_cube(path=path, overwrite=False)
         return None
@@ -1764,15 +1712,15 @@ class Elfving2010CompositePreset:
         }
 
 
-def build_elfving_2010_composite_preset(
-    config: Elfving2010CompositePresetConfig | None = None,
-) -> Elfving2010CompositePreset:
+def build_elfving_2010_pipeline(
+    config: Elfving2010PipelineConfig | None = None,
+) -> Elfving2010Pipeline:
     """Build the Elfving 2010 composite Sweden preset for hybrid projection."""
-    return Elfving2010CompositePreset(config=config)
+    return Elfving2010Pipeline(config=config)
 
 
 __all__ = [
-    "Elfving2010CompositePresetConfig",
-    "Elfving2010CompositePreset",
-    "build_elfving_2010_composite_preset",
+    "Elfving2010PipelineConfig",
+    "Elfving2010Pipeline",
+    "build_elfving_2010_pipeline",
 ]
