@@ -16,7 +16,7 @@ from __future__ import annotations
 
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field, replace
-from typing import Any, Protocol
+from typing import Any, Optional, Protocol
 
 import numpy as np
 
@@ -224,12 +224,23 @@ class MortalityEngine:
     """
 
     config: MortalityConfig = field(default_factory=MortalityConfig)
+    #: The random stream stochastic realisation draws from. Supply the run's --
+    #: ``ctx.rng.child("mortality").numpy`` -- so mortality follows the run's seed
+    #: instead of a second seed carried on the config. When it is omitted the
+    #: engine falls back to ``config.stochastic_seed``, which keeps a
+    #: directly-constructed engine reproducible on its own terms.
+    rng: Optional[np.random.Generator] = None
     _rng: np.random.Generator = field(init=False, repr=False)
     _tree_model: MortalityModel = field(init=False, repr=False)
 
     def __post_init__(self) -> None:
-        """Seed the realization RNG and build the one configured tree-model strategy."""
-        self._rng = np.random.default_rng(self.config.stochastic_seed)
+        """Take the injected random stream, or seed one from the config."""
+        if self.rng is not None:
+            self._rng = self.rng
+        else:
+            from pyforestry.simulation.services import RandomBundle
+
+            self._rng = RandomBundle(int(self.config.stochastic_seed or 0)).rng_for().numpy
         self._tree_model = self._build_tree_model()
 
     # -- provenance --------------------------------------------------------

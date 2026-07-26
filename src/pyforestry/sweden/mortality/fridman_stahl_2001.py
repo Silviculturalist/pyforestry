@@ -272,7 +272,14 @@ def fridman_stahl_2001_probabilities(
     event_occurred: bool | None = None
     p_basal_area_for_correction = p_basal_area
     if implementation_type == MortalityRealizationMode.STOCHASTIC:
-        generator = rng if rng is not None else random.Random()
+        if rng is None:
+            raise ValueError(
+                "Stochastic mortality needs a random stream: pass rng=. Falling "
+                "back to an unseeded random.Random() made the result "
+                "irreproducible without saying so, and made the run's own seed a "
+                "number that governed nothing. Use ctx.rng.child('mortality')."
+            )
+        generator = rng
         # Faithful to Fridman & Ståhl (2001), "Application": step I gives the
         # *probability of mortality* on the plot, and the paper directs that "if the
         # random number is less than the estimated probability, the tree will die".
@@ -365,11 +372,22 @@ class FridmanStahl2001Model:
 
     implementation_type: MortalityRealizationMode = MortalityRealizationMode.DETERMINISTIC
     stochastic_seed: int | None = None
+    #: The random stream stochastic runs draw from. Supply the run's --
+    #: ``ctx.rng.child("mortality")`` -- so mortality follows the run's seed
+    #: rather than a second seed carried here. When omitted, ``stochastic_seed``
+    #: opens one through the RNG service, which keeps a directly-constructed
+    #: model reproducible and its draws checkpointable.
+    rng: random.Random | None = None
     _rng: random.Random = field(init=False, repr=False)
 
     def __post_init__(self) -> None:
-        """Initialize deterministic RNG used by stochastic Fridman runs."""
-        self._rng = random.Random(self.stochastic_seed)
+        """Take the injected random stream, or open one from ``stochastic_seed``."""
+        if self.rng is not None:
+            self._rng = self.rng
+            return
+        from pyforestry.simulation.services import RandomBundle
+
+        self._rng = RandomBundle(int(self.stochastic_seed or 0)).rng_for()
 
     def predict_probabilities(
         self,

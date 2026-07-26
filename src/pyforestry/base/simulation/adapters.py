@@ -15,7 +15,6 @@ and the diameter distribution not at all.
 from __future__ import annotations
 
 import math
-import random
 from dataclasses import dataclass
 from math import pi, sqrt
 from typing import Any, Dict, List, Optional
@@ -23,6 +22,25 @@ from typing import Any, Dict, List, Optional
 from pyforestry.base.helpers import CircularPlot, Position, Tree
 from pyforestry.base.helpers.primitives import Stems
 from pyforestry.base.helpers.tree_species import TreeName
+
+
+def _adapter_rng(kwargs: Dict[str, Any], *, default_seed: int) -> Any:
+    """Return the caller's random stream, or open one from a seed.
+
+    An adapter reconstructing pseudo-positions is not a stochastic *model* -- the
+    coordinates support neighbourhood operations and claim nothing about where
+    the trees stood -- but it still draws, so the run that owns it should be able
+    to say from where. Pass ``rng=`` (``ctx.rng.child("adapters")``) to tie the
+    draws to the run's seed. ``seed=`` remains for a standalone call and opens a
+    stream through the same service, so an adapter's draws are checkpointable
+    either way; its default keeps the historical coordinates reproducible.
+    """
+    rng = kwargs.get("rng")
+    if rng is not None:
+        return rng
+    from pyforestry.simulation.services import RandomBundle
+
+    return RandomBundle(int(kwargs.get("seed", default_seed))).rng_for()
 
 
 class Adapter:
@@ -136,8 +154,7 @@ class AngleCountToSpatialPseudoTreesAdapter(AngleCountToPseudoTreesAdapter):
         """
         out = super().adapt(stand, **kwargs)
         plot: CircularPlot = out["plots"][0]
-        seed = kwargs.get("seed", 1337)
-        rng = random.Random(seed)
+        rng = _adapter_rng(kwargs, default_seed=1337)
         r = getattr(plot, "radius_m", sqrt(plot.area_m2 / pi))
         for t in plot.trees:
             rr = r * math.sqrt(rng.random())
@@ -265,8 +282,7 @@ class TreeListToSpatialAdapter(Adapter):
         Missing coordinates are drawn uniformly within the tree's own plot.
         Trees that already carry a position keep it.
         """
-        seed = kwargs.get("seed", 2027)
-        rng = random.Random(seed)
+        rng = _adapter_rng(kwargs, default_seed=2027)
         plots = []
         for p in stand.plots:
             plots.append(p)

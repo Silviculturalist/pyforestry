@@ -18,7 +18,6 @@ to a model, treat its output as a schema fixture and nothing else.
 from __future__ import annotations
 
 import json
-import random
 import subprocess
 import warnings
 from dataclasses import dataclass
@@ -26,6 +25,7 @@ from hashlib import sha256
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
+from pyforestry.simulation.services import RandomBundle
 from pyforestry.sweden.simulation.data import (
     MANIFEST_REQUIRED_KEYS,
     QUALITY_REPORT_FILENAME,
@@ -99,7 +99,7 @@ def _synthetic_summary_rows(
     rows: list[dict[str, Any]] = []
     for stand_id in stand_id_series(n_stands):
         seed = _stand_seed(preset_seed=preset_seed, stand_id=stand_id)
-        rng = random.Random(seed)
+        rng = RandomBundle(seed).rng_for()
 
         initial_volume = 120.0 + rng.random() * 80.0
         growth_per_step = 1.8 + rng.random() * 1.7

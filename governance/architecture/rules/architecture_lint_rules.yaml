@@ -42,3 +42,24 @@ rules:
     forbidden_edges:
       - from: "*/mortality/*.py, */siteindex/*.py, */volume/*.py, */bark/*.py, */biomass/*.py"
         to: "*/simulation/presets/*, */simulation/policy/*, */simulation/orchestration/*"
+
+  AL005:
+    name: No model constructs its own random generator
+    scope: All files under src/pyforestry/, except the RNG service
+    mode: blocking
+    description: >
+      A generator built where it is used cannot be seeded by the run that owns it
+      and cannot be checkpointed. Worse, when two of them are seeded from the same
+      scalar -- which the Elfving 2010 composite did, one NumPy and one stdlib --
+      the order in which the two are drawn from becomes an unwritten part of every
+      result: reorder two calls that touch different generators and the numbers
+      move, with nothing in the code saying they were coupled.
+
+      Stochastic kernels take rng as a parameter. Runs get theirs from
+      ctx.rng.child(...), which derives an independent stream per path from the
+      run's single seed, so two subsystems cannot disturb each other's draws
+      whatever order they run in. RandomBundle and KeyedRNG are the only modules
+      permitted to call a generator constructor.
+    checks:
+      - no_random_Random_construction
+      - no_numpy_default_rng_construction

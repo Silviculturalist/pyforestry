@@ -1,4 +1,4 @@
-"""Minimal architecture lint check (AL001-AL004).
+"""Minimal architecture lint check (AL001-AL005).
 
 Usage:
     python scripts/check_architecture_lint.py [--changed-only BASE_SHA]
@@ -256,6 +256,77 @@ def check_al004(paths: list[Path]) -> list[str]:
 
 
 # ---------------------------------------------------------------------------
+# AL005: No model constructs its own random generator
+# ---------------------------------------------------------------------------
+
+# A generator built where it is used cannot be seeded by the run that owns it,
+# cannot be checkpointed, and -- when two of them are seeded from the same scalar,
+# as the Elfving composite once did -- makes the interleaving of draws across
+# them an unwritten part of every result. Stochastic kernels take ``rng`` as a
+# parameter; runs get theirs from ``ctx.rng.child(...)``.
+AL005_CONSTRUCTORS = (
+    ("random", "Random"),
+    ("np.random", "default_rng"),
+    ("numpy.random", "default_rng"),
+    ("np.random", "RandomState"),
+    ("numpy.random", "RandomState"),
+    ("np.random", "SeedSequence"),
+    ("numpy.random", "SeedSequence"),
+)
+
+# The RNG service is where generators are supposed to be built.
+AL005_EXEMPT = ("simulation/services/keyed_rng.py", "simulation/services/rng_bundle.py")
+
+
+def _constructor_name(node: ast.Call) -> str | None:
+    """Return ``"module.attr"`` for a call like ``np.random.default_rng(...)``."""
+    func = node.func
+    if not isinstance(func, ast.Attribute):
+        return None
+    prefix_parts: list[str] = []
+    current: ast.expr = func.value
+    while isinstance(current, ast.Attribute):
+        prefix_parts.append(current.attr)
+        current = current.value
+    if isinstance(current, ast.Name):
+        prefix_parts.append(current.id)
+    else:
+        return None
+    prefix = ".".join(reversed(prefix_parts))
+    return f"{prefix}.{func.attr}"
+
+
+def check_al005(paths: list[Path]) -> list[str]:
+    """Check that no module outside the RNG service constructs a generator."""
+    wanted = {f"{module}.{attr}" for module, attr in AL005_CONSTRUCTORS}
+    violations = []
+    for path in paths:
+        if path.suffix != ".py":
+            continue
+        relative = path.relative_to(SRC_ROOT).as_posix()
+        if any(relative.endswith(exempt) for exempt in AL005_EXEMPT):
+            continue
+        try:
+            tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+        except (OSError, SyntaxError):  # pragma: no cover - unreadable/invalid file
+            continue
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.Call):
+                continue
+            name = _constructor_name(node)
+            if name in wanted:
+                violations.append(
+                    f"AL005: {relative}:{node.lineno} constructs a random generator "
+                    f"({name}). A generator built where it is used cannot be seeded by "
+                    "the run, cannot be checkpointed, and if a second one is seeded "
+                    "from the same scalar the order in which the two are drawn from "
+                    "silently becomes part of the result. Take rng as a parameter, or "
+                    "ask the run for a keyed stream: ctx.rng.child('mortality')."
+                )
+    return violations
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -307,6 +378,7 @@ def main() -> int:
     violations.extend(check_al002(paths))
     violations.extend(check_al003(paths))
     violations.extend(check_al004(paths))
+    violations.extend(check_al005(paths))
 
     if violations:
         print("VIOLATIONS FOUND:")
@@ -315,7 +387,7 @@ def main() -> int:
         print(f"\n{len(violations)} violation(s). FAIL.")
         return 1
     else:
-        for rule in ("AL001", "AL002", "AL003", "AL004"):
+        for rule in ("AL001", "AL002", "AL003", "AL004", "AL005"):
             print(f"{rule}: PASS")
         print("\nNo violations. PASS.")
         return 0

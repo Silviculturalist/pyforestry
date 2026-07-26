@@ -684,7 +684,7 @@ class Wikberg2004Ingrowth:  # pragma: no cover - legacy parity implementation
             number_small_trees, number_ingrowth_trees, mean_diameter_cm,
             spruce_small_tree_probability_out).
         """
-        rng = self._resolve_rng(rng)
+        rng = self._resolve_rng(rng, deterministic)
         lp = (
             -7.0172
             - 0.032 * common.basal_area_capped_m2_ha
@@ -769,7 +769,7 @@ class Wikberg2004Ingrowth:  # pragma: no cover - legacy parity implementation
             number_small_trees, number_ingrowth_trees, mean_diameter_cm,
             spruce_small_tree_probability_out).
         """
-        rng = self._resolve_rng(rng)
+        rng = self._resolve_rng(rng, deterministic)
         lp = (
             8.4197
             - 0.075 * common.basal_area_capped_m2_ha
@@ -854,7 +854,7 @@ class Wikberg2004Ingrowth:  # pragma: no cover - legacy parity implementation
             number_small_trees, number_ingrowth_trees, mean_diameter_cm,
             spruce_small_tree_probability_out).
         """
-        rng = self._resolve_rng(rng)
+        rng = self._resolve_rng(rng, deterministic)
         lp = (
             52.155
             - 0.1469 * common.basal_area_capped_m2_ha
@@ -930,7 +930,7 @@ class Wikberg2004Ingrowth:  # pragma: no cover - legacy parity implementation
             number_small_trees, number_ingrowth_trees, mean_diameter_cm,
             spruce_small_tree_probability_out).
         """
-        rng = self._resolve_rng(rng)
+        rng = self._resolve_rng(rng, deterministic)
         lp = (
             -1.0898
             - 0.027 * common.basal_area_capped_m2_ha
@@ -998,7 +998,7 @@ class Wikberg2004Ingrowth:  # pragma: no cover - legacy parity implementation
             number_small_trees, number_ingrowth_trees, mean_diameter_cm,
             spruce_small_tree_probability_out).
         """
-        rng = self._resolve_rng(rng)
+        rng = self._resolve_rng(rng, deterministic)
         lp = (
             33.976
             - 0.021 * common.basal_area_capped_m2_ha
@@ -1057,7 +1057,7 @@ class Wikberg2004Ingrowth:  # pragma: no cover - legacy parity implementation
             number_small_trees, number_ingrowth_trees, mean_diameter_cm,
             spruce_small_tree_probability_out).
         """
-        rng = self._resolve_rng(rng)
+        rng = self._resolve_rng(rng, deterministic)
         lp = (
             -9.3382
             - 0.0231 * common.basal_area_capped_m2_ha
@@ -1116,7 +1116,7 @@ class Wikberg2004Ingrowth:  # pragma: no cover - legacy parity implementation
             number_small_trees, number_ingrowth_trees, mean_diameter_cm,
             spruce_small_tree_probability_out).
         """
-        rng = self._resolve_rng(rng)
+        rng = self._resolve_rng(rng, deterministic)
         lp = (
             -12.506
             + 0.472 * common.temperature_sum_scaled
@@ -1346,9 +1346,25 @@ class Wikberg2004Ingrowth:  # pragma: no cover - legacy parity implementation
         return trees
 
     @staticmethod
-    def _resolve_rng(rng: random.Random | None) -> random.Random:
-        """Ensure a usable RNG when stochastic paths are requested."""
-        return rng if rng is not None else random.Random()
+    def _resolve_rng(rng: random.Random | None, deterministic: bool) -> random.Random | None:
+        """Return the caller's random stream, or say why one is required.
+
+        Deterministic ingrowth makes no draws, so it needs no stream and ``None``
+        passes through. Stochastic ingrowth used to fall back to an unseeded
+        ``random.Random()``, which made the result irreproducible without
+        reporting it and made the run's own seed a number that governed nothing.
+
+        Raises:
+            ValueError: If a stochastic run supplied no stream.
+        """
+        if deterministic:
+            return rng
+        if rng is None:
+            raise ValueError(
+                "Stochastic ingrowth needs a random stream: pass rng=. Use "
+                "ctx.rng.child('ingrowth') so the draws follow the run's seed."
+            )
+        return rng
 
     @staticmethod
     def _prob_from_logit(lp: float) -> float:

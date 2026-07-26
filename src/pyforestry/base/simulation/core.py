@@ -110,11 +110,13 @@ class SimulationContext:
     ) -> None:
         """Initialize a simulation context with inventory and initial state.
 
-        ``random_bundle`` is any object exposing ``snapshot()``/``restore(state)``
-        (a :class:`~pyforestry.simulation.services.RandomBundle`, in practice). It
-        is kept duck-typed so the base simulation layer does not depend on the
-        staged runtime. Supplying one is what makes :meth:`checkpoint` and
-        :meth:`from_checkpoint` reproduce a stochastic run.
+        ``random_bundle`` is any object exposing ``rng_for(*keys)``,
+        ``snapshot()`` and ``restore(state)`` (a
+        :class:`~pyforestry.simulation.services.RandomBundle`, in practice). It is
+        kept duck-typed so the base simulation layer does not depend on the
+        services package. Supplying one is what makes :meth:`checkpoint` and
+        :meth:`from_checkpoint` reproduce a stochastic run, and what lets a model
+        reach a keyed stream through :attr:`rng` instead of building its own.
         """
         if mode not in ("spatial", "tree_list", "diameter_class", "aggregate"):
             raise ValueError("mode must be 'spatial','tree_list','diameter_class', or 'aggregate'")
@@ -176,6 +178,35 @@ class SimulationContext:
     def site(self) -> Optional[Any]:
         """The stand's site reference, if any."""
         return self.stand.site
+
+    @property
+    def rng(self) -> Any:
+        """The run's root random stream. Derive sub-streams with ``.child(...)``.
+
+        Every stochastic kernel in this package takes its generator as a
+        parameter and none constructs one, because a generator built where it is
+        used cannot be seeded by the run, cannot be checkpointed, and -- when two
+        of them are seeded from the same scalar, as the Elfving composite once did
+        -- makes the interleaving of draws across them an unwritten part of the
+        result. Ask for a keyed stream instead::
+
+            rng = ctx.rng.child("mortality").child(str(species))
+
+        Raises:
+            RuntimeError: If the context was built without a random bundle. A run
+                that draws random numbers needs a seed, and defaulting to an
+                unseeded generator would make it silently irreproducible.
+        """
+        bundle = self.random_bundle
+        if bundle is None:
+            raise RuntimeError(
+                "This context has no random bundle, so it cannot supply a random "
+                "stream. Build it with a seed -- model.build_context(stand, "
+                "seed=42) -- or pass random_bundle= explicitly. Defaulting to an "
+                "unseeded generator would make the run irreproducible without "
+                "saying so."
+            )
+        return bundle.rng_for()
 
     @property
     def plots(self) -> List[CircularPlot]:

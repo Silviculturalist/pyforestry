@@ -14,7 +14,6 @@ pipeline (parameterized to reproduce the Heureka system's published behaviour):
 from __future__ import annotations
 
 import math
-import random
 from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Sequence
@@ -29,6 +28,7 @@ from pyforestry.base.helpers.tree import TreeUid
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies
 from pyforestry.base.pricelist import Pricelist, SolutionCube, create_pricelist_from_data
 from pyforestry.base.timber_bucking.nasberg_1985 import BuckingConfig, Nasberg_1985_BranchBound
+from pyforestry.simulation.services import RandomBundle
 from pyforestry.sweden.adapters.elfving_1982 import (
     HuginMeanHeightModel,
     NfiRegion,
@@ -197,8 +197,7 @@ class Elfving2010CompositePreset:
         self._trees: list[Tree] = []
         self._current_age_years: float = self.config.initial_age_years
         self._years_elapsed: float = 0.0
-        self._np_rng = np.random.default_rng(self.config.random_seed)
-        self._py_rng = random.Random(self.config.random_seed)
+        self._rng = RandomBundle(int(self.config.random_seed)).rng_for()
         self._regen_asinw: float = 0.0
         self._regen_q: float = 0.0
         self._last_phase_over_weight: float = 0.0
@@ -284,9 +283,11 @@ class Elfving2010CompositePreset:
         self._site = site
         self._current_age_years = self.config.initial_age_years
         self._years_elapsed = 0.0
-        self._np_rng = np.random.default_rng(self.config.random_seed)
-        self._py_rng = random.Random(self.config.random_seed)
-        self._mortality_engine = MortalityEngine(config=self._build_mortality_config())
+        self._rng = RandomBundle(int(self.config.random_seed)).rng_for()
+        self._mortality_engine = MortalityEngine(
+            config=self._build_mortality_config(),
+            rng=self._rng.child("mortality").numpy,
+        )
         self._last_phase_over_weight = 0.0
         self._last_damage_index_mean = 0.0
         self._last_damage_mortality_stems_per_ha = 0.0
@@ -588,7 +589,7 @@ class Elfving2010CompositePreset:
             if beta <= 0.0 or shape <= 0.0:
                 continue
             n_trees = max(1, int(round(self.config.sample_trees * stems_ha / total_stems)))
-            heights = beta * self._np_rng.weibull(shape, size=n_trees)
+            heights = beta * self._rng.child("regeneration").numpy.weibull(shape, size=n_trees)
             weight = stems_ha / n_trees
             for height in heights:
                 trees.append(
@@ -1427,7 +1428,7 @@ class Elfving2010CompositePreset:
             species_ba_m2_ha=species_ba,
             species_presence_10cm=species_presence,
             deterministic=self.config.ingrowth_deterministic,
-            rng=self._py_rng,
+            rng=self._rng.child("ingrowth"),
         )
 
         new_trees = ingrowth_to_plot_trees(result, plot_area_ha=1.0)

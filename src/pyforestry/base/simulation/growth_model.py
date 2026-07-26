@@ -214,6 +214,8 @@ class GrowthModel:
         adapter_kwargs: Optional[Dict[str, Any]] = None,
         attrs: Optional[Dict[str, Any]] = None,
         inputs: Optional[Any] = None,
+        seed: Optional[int] = None,
+        random_bundle: Optional[Any] = None,
     ) -> SimulationContext:
         """Build the working context this model will step.
 
@@ -242,6 +244,12 @@ class GrowthModel:
                 stand and knows its site should do -- the values are then typed at
                 the call site instead of round-tripping through a string-keyed
                 dict.
+            seed: Root seed for the run's random streams. Every stochastic kernel
+                draws from a stream keyed off this one, so the whole run is
+                reproducible from this single number. A run that draws without a
+                seed raises rather than quietly using an unseeded generator.
+            random_bundle: An existing bundle to use instead of building one from
+                ``seed``. Mutually exclusive with it.
 
         Returns:
             A :class:`SimulationContext` holding a working copy of the inventory,
@@ -388,6 +396,17 @@ class GrowthModel:
         if adapter_used is not None:
             context_attrs["inventory_adapter"] = adapter_used
 
+        if seed is not None and random_bundle is not None:
+            raise ValueError(
+                "Pass either seed= or random_bundle=, not both: a bundle already "
+                "carries its root seed, so supplying a second one has no defined "
+                "meaning."
+            )
+        if random_bundle is None and seed is not None:
+            from pyforestry.simulation.services import RandomBundle
+
+            random_bundle = RandomBundle(int(seed))
+
         ctx = SimulationContext(
             mode=mode,
             area_ha=stand.area_ha,
@@ -397,6 +416,7 @@ class GrowthModel:
             initial_state=state,
             model=self,
             initial_attrs=context_attrs,
+            random_bundle=random_bundle,
         )
         ctx.inputs = inputs if inputs is not None else self._resolve_inputs_or_explain(ctx)
         return ctx
