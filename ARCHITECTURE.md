@@ -211,6 +211,24 @@ Disallowed example:
 Runnable regional presets MUST live under:
 - `src/pyforestry/<region>/simulation/`
 
+Two unrelated things currently answer to "preset" in that package, and the
+distinction matters:
+
+- **Scenario presets** (`SwedenScenarioPreset`, `NorwayScenarioPreset`) are
+  *configuration*: a seed strategy, an ordered list of stage names, ruleset
+  callables and a required-artifact list. They satisfy the `SimulationPreset`
+  contract below. Nothing executes them yet — `guard_policy()` and `rulesets()`
+  have no runtime caller, and `stages()` is recorded into a manifest rather than
+  run. `emit_scenario_artifact_contract(...)` exercises the *artifact* contract
+  from synthetic numbers and runs no model; its output is a schema fixture.
+- **Composite pipelines** (`Elfving2010CompositePreset`,
+  `Soderberg1986CompositePreset`) are the runnable ones: stateful
+  `initialize()`/`step()`/`run_projection()` objects that drive published models
+  over a real `Stand`. They implement none of the `SimulationPreset` contract.
+
+Closing that gap — one preset concept with one runtime — is the subject of
+`ARCHITECTURE_PROPOSAL.md` Moves 3 and 9.
+
 Minimum preset contract:
 
 - Seed handling:

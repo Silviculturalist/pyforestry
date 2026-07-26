@@ -14,8 +14,8 @@ from .mortality import (
 )
 from .orchestration import (
     PresetRunResult,
+    emit_scenario_artifact_contract,
     load_scenario_summary,
-    run_sweden_preset,
     validate_artifact_contract,
 )
 from .presets import (
@@ -50,6 +50,6 @@ __all__ = [
     "build_soderberg_1986_composite_preset",
     "get_preset",
     "load_scenario_summary",
-    "run_sweden_preset",
+    "emit_scenario_artifact_contract",
     "validate_artifact_contract",
 ]

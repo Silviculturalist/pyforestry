@@ -9,8 +9,8 @@ import pytest
 import pyforestry.sweden.simulation.orchestration.runbook as runbook_module
 from pyforestry.sweden.simulation import (
     build_baseline_preset,
+    emit_scenario_artifact_contract,
     load_scenario_summary,
-    run_sweden_preset,
     validate_artifact_contract,
 )
 from pyforestry.sweden.simulation.data import (
@@ -35,7 +35,7 @@ def test_sweden_preset_replay_is_deterministic_across_process_counts(tmp_path) -
     run_one = tmp_path / "run_p1"
     run_two = tmp_path / "run_p4"
 
-    result_one = run_sweden_preset(
+    result_one = emit_scenario_artifact_contract(
         preset=preset,
         global_seed=20260212,
         output_dir=run_one,
@@ -43,7 +43,7 @@ def test_sweden_preset_replay_is_deterministic_across_process_counts(tmp_path) -
         n_stands=6,
         processes=1,
     )
-    result_two = run_sweden_preset(
+    result_two = emit_scenario_artifact_contract(
         preset=preset,
         global_seed=20260212,
         output_dir=run_two,
@@ -65,7 +65,7 @@ def test_sweden_preset_replay_is_deterministic_across_process_counts(tmp_path) -
 def test_sweden_preset_writes_required_artifacts_and_schema(tmp_path) -> None:
     preset = build_baseline_preset()
     output_dir = tmp_path / "artifact_run"
-    result = run_sweden_preset(
+    result = emit_scenario_artifact_contract(
         preset=preset,
         global_seed=20260212,
         output_dir=output_dir,
@@ -120,21 +120,21 @@ def test_policy_and_preset_lookups_cover_error_paths() -> None:
 
 def test_runbook_validation_and_fallback_summary_paths(tmp_path, monkeypatch) -> None:
     with pytest.raises(ValueError, match="n_steps must be > 0"):
-        run_sweden_preset(
+        emit_scenario_artifact_contract(
             preset=build_baseline_preset(),
             global_seed=1,
             output_dir=tmp_path / "bad-steps",
             n_steps=0,
         )
     with pytest.raises(ValueError, match="n_stands must be > 0"):
-        run_sweden_preset(
+        emit_scenario_artifact_contract(
             preset=build_baseline_preset(),
             global_seed=1,
             output_dir=tmp_path / "bad-stands",
             n_stands=0,
         )
     with pytest.raises(ValueError, match="processes must be > 0"):
-        run_sweden_preset(
+        emit_scenario_artifact_contract(
             preset=build_baseline_preset(),
             global_seed=1,
             output_dir=tmp_path / "bad-procs",
@@ -258,3 +258,28 @@ def test_runbook_parquet_paths_and_schema_key_errors(tmp_path, monkeypatch) -> N
     )
     with pytest.raises(ValueError, match="quality_report.json missing keys"):
         runbook_module.validate_artifact_contract(out)
+
+
+def test_artifact_contract_output_is_labelled_synthetic(tmp_path):
+    """The harness runs no model, and its artifacts must say so.
+
+    These are plausible-looking cubic metres produced by a seeded random walk. A
+    consumer reading only the artifacts -- which is the point of an artifact
+    contract -- has no other way to tell them apart from a projection.
+    """
+    preset = build_baseline_preset()
+    with pytest.warns(UserWarning, match="not a projection"):
+        result = emit_scenario_artifact_contract(
+            preset=preset,
+            global_seed=7,
+            output_dir=tmp_path,
+            n_steps=3,
+            n_stands=2,
+        )
+
+    manifest = json.loads(result.run_manifest_path.read_text(encoding="utf-8"))
+    assert manifest["synthetic"] is True
+    assert manifest["models_run"] == []
+
+    quality = json.loads(result.quality_report_path.read_text(encoding="utf-8"))
+    assert quality["synthetic"] is True

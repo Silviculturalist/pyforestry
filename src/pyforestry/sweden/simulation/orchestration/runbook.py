@@ -1,10 +1,26 @@
-"""MVP runbook for Sweden simulation presets."""
+"""Artifact-contract harness for Sweden scenario presets.
+
+**This module runs no forest model.** It exists to exercise the artifact contract
+-- that a preset run emits ``run_manifest.json``, ``scenario_summary.parquet`` and
+``quality_report.json``, with the required keys, reproducibly from a seed -- and
+it fills those artifacts with a synthetic random walk (see
+:func:`_synthetic_summary_rows`). No :class:`~pyforestry.base.helpers.stand.Stand`,
+no :class:`~pyforestry.base.simulation.GrowthModel` and no stage runtime is
+involved, and the preset's ``stages()``, ``rulesets()`` and ``guard_policy()`` are
+recorded rather than executed.
+
+The numbers it emits are plausible-looking cubic metres per hectare, so every
+artifact it writes is stamped ``"synthetic": true`` and
+:func:`emit_scenario_artifact_contract` warns when called. Until a preset is wired
+to a model, treat its output as a schema fixture and nothing else.
+"""
 
 from __future__ import annotations
 
 import json
 import random
 import subprocess
+import warnings
 from dataclasses import dataclass
 from hashlib import sha256
 from pathlib import Path
@@ -62,14 +78,20 @@ def _determinism_hash(rows: list[dict[str, Any]]) -> str:
     return sha256(payload.encode("utf-8")).hexdigest()
 
 
-def _summary_rows(
+def _synthetic_summary_rows(
     *,
     preset: SwedenScenarioPreset,
     global_seed: int,
     n_steps: int,
     n_stands: int,
 ) -> list[dict[str, Any]]:
-    """Generate deterministic stand-level summary rows for an MVP run."""
+    """Generate synthetic stand-level summary rows to populate the artifact schema.
+
+    These volumes are a seeded random walk, not a projection: no stand, no growth
+    model and no equation is involved. They exist so the artifact contract can be
+    exercised end to end, and they are deterministic in the seed so the
+    determinism check is meaningful about the *harness*, not about any model.
+    """
     preset_seed = preset.seed_strategy(global_seed=global_seed)
     factors = scenario_factors(preset.scenario_id)
     thinning_ratio = management_intensity(preset.scenario_id)
@@ -213,7 +235,7 @@ def validate_artifact_contract(output_dir: Path) -> None:
     load_scenario_summary(output_dir / SCENARIO_SUMMARY_FILENAME)
 
 
-def run_sweden_preset(
+def emit_scenario_artifact_contract(
     *,
     preset: SwedenScenarioPreset,
     global_seed: int,
@@ -222,7 +244,31 @@ def run_sweden_preset(
     n_stands: int = 8,
     processes: int = 1,
 ) -> PresetRunResult:
-    """Execute a minimal Sweden scenario preset and emit required artifacts."""
+    """Emit a preset's artifact contract, filled with synthetic numbers.
+
+    This is a schema harness, **not** a simulation: see the module docstring. The
+    volumes in ``scenario_summary.parquet`` come from a seeded random walk, and
+    every artifact is stamped ``"synthetic": true`` so a downstream reader can
+    tell. To project a real stand, use a model adapter
+    (:class:`~pyforestry.sweden.blocks.elfving_2010.Elfving2010Model` and friends)
+    or one of the composite pipelines in
+    :mod:`pyforestry.sweden.simulation.presets`.
+
+    Args:
+        preset: The scenario preset whose identity, seed strategy, stages and
+            required artifacts are recorded into the manifest.
+        global_seed: Seed the preset derives its own from.
+        output_dir: Directory to write the three artifacts into; created if absent.
+        n_steps: Number of synthetic growth periods per stand.
+        n_stands: Number of synthetic stands.
+        processes: Recorded in the manifest; the harness is single-process.
+
+    Returns:
+        The resolved paths of the three artifacts.
+
+    Raises:
+        ValueError: If ``n_steps``, ``n_stands`` or ``processes`` is not positive.
+    """
     if n_steps <= 0:
         raise ValueError("n_steps must be > 0")
     if n_stands <= 0:
@@ -230,9 +276,17 @@ def run_sweden_preset(
     if processes <= 0:
         raise ValueError("processes must be > 0")
 
+    warnings.warn(
+        "emit_scenario_artifact_contract writes an artifact-contract fixture: the "
+        "volumes it reports are a seeded random walk, not a projection. No stand, "
+        "growth model or stage runtime is involved, and the preset's stages(), "
+        "rulesets() and guard_policy() are recorded rather than executed.",
+        stacklevel=2,
+    )
+
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    rows = _summary_rows(
+    rows = _synthetic_summary_rows(
         preset=preset,
         global_seed=global_seed,
         n_steps=n_steps,
@@ -248,6 +302,10 @@ def run_sweden_preset(
         manifest_path,
         {
             "schema_version": RUN_MANIFEST_SCHEMA_VERSION,
+            # No model produced these numbers. Stamped into the artifact itself so
+            # a consumer that never reads this module still knows.
+            "synthetic": True,
+            "models_run": [],
             "preset_id": preset.preset_id,
             "scenario_id": preset.scenario_id,
             "global_seed": int(global_seed),
@@ -268,10 +326,12 @@ def run_sweden_preset(
         quality_path,
         {
             "schema_version": QUALITY_REPORT_SCHEMA_VERSION,
+            "synthetic": True,
             "required_artifacts": list(REQUIRED_ARTIFACTS),
             "artifacts_present": artifacts_present,
             "row_count": int(len(rows)),
             "columns": list(SCENARIO_SUMMARY_COLUMNS),
+            # Reproducibility of the harness, not of any model.
             "determinism_hash": determinism_hash,
         },
     )
