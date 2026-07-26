@@ -6,6 +6,24 @@ citations (covered by the earlier reference review). 432 files / +93.8k lines vs
 Every finding below was verified by executing it against the installed package, not by
 reading alone. Probe scripts are quoted inline.
 
+> **Status: closed, except where noted.** Every finding below is fixed; see
+> `ARCHITECTURE_PROPOSAL.md` for the commit each landed in. Two are deliberate
+> non-fixes, argued rather than deferred:
+>
+> * **B6** — the Sweden/Norway `management_rulesets` share a key whose value means
+>   different things. Both are 20-line stubs; unifying them would standardise an
+>   accident. Fix when either grows a real ruleset.
+> * **C1 (part)** — the god class lost its filesystem work and its misleading name,
+>   but `step()` still hand-codes its phase order. That order is scientifically
+>   load-bearing (mortality before growth, so the stand calibration targets survived
+>   basal area), so it needs its own change against the parity tests.
+>
+> The review's own suggested order was followed. Working through it surfaced four
+> further defects it had not found — a diameter-class inventory keyed only by
+> `"TOTAL"` reporting the stand as empty, two unseeded RNG fallbacks, and a module
+> that could not be imported first — each made visible by the structure that
+> replaced the thing being reviewed.
+
 ---
 
 ## A. Abstraction defects that produce wrong numbers

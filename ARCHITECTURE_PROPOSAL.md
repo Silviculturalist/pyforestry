@@ -4,6 +4,40 @@ Companion to `STRUCTURAL_REVIEW.md`. That document lists defects; this one propo
 structure that makes most of them unrepresentable. Each move is independently shippable
 and ordered so no step depends on a later one.
 
+> **Status: all ten moves are done.** Both forks were decided as recommended —
+> `Stand` is the state; `services` and `valuation` stayed, `model_view` and `dp` went.
+> The five state representations are one, the three schedulers are one, and the seven
+> concepts a projection needed are `pf.project(...)`.
+>
+> | Move | Landed in |
+> |---|---|
+> | 5 — one provenance import path | `194855d` |
+> | 7 — `Tree.uid` populated | `118f168` |
+> | 10 — docstring gate measures content (`AL004`) | `8045492` |
+> | 1 — one state object | `550bd49` (estimator), `90605c6` (container) |
+> | 4 — `blocks/` → `systems/` + `adapters/` | `78c3fd0` |
+> | 2 — typed model inputs | `7fb7eaf` |
+> | 3 — one pipeline | `6cb0f1b` |
+> | 6 — one keyed RNG, injected (`AL005`) | `4ece3c9` |
+> | 9 — "preset" renamed; C1's file I/O lifted | `d0df6b8` |
+> | 8 — `pf.project(...)` | `e403e3d` |
+>
+> Four bugs surfaced that the review had not found, each of which the new structure
+> made visible: a diameter-class inventory keyed only by `"TOTAL"` reported the
+> stand as empty (so a diameter-class model driven from an aggregate stand read a
+> stand of nothing and reported success); `run_pipeline` written the obvious way
+> hangs on a pipeline with no growth step; two unseeded `random.Random()` fallbacks
+> made stochastic ingrowth and mortality silently irreproducible; and
+> `import pyforestry.base.aggregation` as a program's first import failed outright.
+>
+> **What remains:** C1's other half. `Elfving2010Pipeline` is 1,726 lines and its
+> `step()` still hand-codes the phase order. That order carries scientific coupling
+> the code documents in place — mortality is predicted *before* growth so the
+> Elfving stand calibration targets survived rather than gross basal area — so
+> decomposing it into `Step` objects is worth doing on its own, against the parity
+> tests, rather than alongside a rename. B6 (the Sweden/Norway ruleset key) is left
+> alone deliberately: unifying two stubs standardises an accident.
+
 ---
 
 ## The diagnosis in one line
