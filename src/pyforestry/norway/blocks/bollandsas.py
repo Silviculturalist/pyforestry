@@ -5,11 +5,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Mapping, Optional
 
-from pyforestry.base.contracts import FormulaDescriptor
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.helpers import Stand
 from pyforestry.base.simulation import GrowthModel, Requirements, SimulationContext
 from pyforestry.norway.growth.bollandsas_2008 import Bollandsas2008
-from pyforestry.simulation.contracts import SourceReference
 
 
 @dataclass(frozen=True)

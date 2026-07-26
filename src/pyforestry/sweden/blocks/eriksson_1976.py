@@ -24,7 +24,7 @@ from dataclasses import dataclass, field, replace
 from functools import lru_cache
 from typing import Any, Dict, List, Literal, Mapping, Optional, Sequence, Tuple
 
-from pyforestry.base.contracts import FormulaDescriptor
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.helpers import Age, SiteIndexValue, Stand, Stems
 from pyforestry.base.helpers.tree_species import TreeSpecies
 from pyforestry.base.simulation import (
@@ -34,7 +34,6 @@ from pyforestry.base.simulation import (
     SimulationContext,
     TriggerSpec,
 )
-from pyforestry.simulation.contracts import SourceReference
 from pyforestry.sweden.blocks.elfving_hagglund_1975 import ElfvingHagglundInitialStand
 from pyforestry.sweden.siteindex.hagglund_1970 import Hagglund_1970
 

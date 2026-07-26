@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Mapping, Sequence
 
-from pyforestry.simulation.contracts import FormulaModuleDescriptor, SourceReference
+from pyforestry.base.contracts import FormulaModuleDescriptor, SourceReference
 
 from .features import *  # noqa: F401, F403
 from .features import (

@@ -17,11 +17,11 @@ from enum import Enum
 from math import exp, log, sqrt
 from typing import Mapping, Sequence
 
+from pyforestry.base.contracts import SourceReference
 from pyforestry.base.helpers.primitives import QuadraticMeanDiameter, SiteIndexValue
 from pyforestry.base.helpers.stand import Stand
 from pyforestry.base.helpers.tree import Tree
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies, parse_tree_species
-from pyforestry.simulation.contracts import SourceReference
 from pyforestry.sweden.site.enums import Sweden
 from pyforestry.sweden.site.swedish_site import SwedishSite
 from pyforestry.sweden.siteindex.validation import validate_hagglund_1970_h100_site_index

@@ -22,12 +22,12 @@ from typing import Any, Sequence
 import numpy as np
 import pandas as pd
 
+from pyforestry.base.contracts import Describable, SourceReference
 from pyforestry.base.helpers import CircularPlot, Stand, Tree
 from pyforestry.base.helpers.primitives import Age, SiteIndexValue
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies
 from pyforestry.base.pricelist import Pricelist, SolutionCube, create_pricelist_from_data
 from pyforestry.base.timber_bucking.nasberg_1985 import BuckingConfig, Nasberg_1985_BranchBound
-from pyforestry.simulation.contracts import Describable, SourceReference
 from pyforestry.sweden.bark.soderberg_1992 import soderberg_1992_bark_thickness_bh_mm
 from pyforestry.sweden.blocks.elfving_1982 import (
     HuginMeanHeightModel,

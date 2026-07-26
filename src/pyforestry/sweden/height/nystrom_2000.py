@@ -9,9 +9,9 @@ from __future__ import annotations
 
 from math import exp, log
 
+from pyforestry.base.contracts import SourceReference
 from pyforestry.base.helpers.primitives import Age, AgeMeasurement
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies
-from pyforestry.simulation.contracts import SourceReference
 from pyforestry.sweden.site.enums import Sweden
 
 _PINE_SPECIES = {

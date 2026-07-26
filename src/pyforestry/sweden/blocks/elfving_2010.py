@@ -19,7 +19,7 @@ from dataclasses import dataclass
 from math import exp, log, sqrt
 from typing import Sequence
 
-from pyforestry.base.contracts import FormulaDescriptor
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.helpers import Tree, TreeName, TreeSpecies
 from pyforestry.base.helpers.primitives import (
     QuadraticMeanDiameter,
@@ -30,7 +30,6 @@ from pyforestry.base.helpers.primitives import (
     diameter_to_basal_area_cm2,
 )
 from pyforestry.base.simulation import GrowthModel, Requirements, SimulationContext
-from pyforestry.simulation.contracts import SourceReference
 from pyforestry.sweden.growth.elfving_2010.features import (
     BIRCH_SPECIES as _BIRCH_SPECIES,
 )

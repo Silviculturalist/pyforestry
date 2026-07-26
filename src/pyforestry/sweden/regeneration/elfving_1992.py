@@ -22,9 +22,9 @@ from __future__ import annotations
 from math import exp, sin, sqrt
 from typing import Optional
 
+from pyforestry.base.contracts import SourceReference
 from pyforestry.base.helpers.primitives import SiteIndexValue
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies
-from pyforestry.simulation.contracts import SourceReference
 from pyforestry.sweden.site.enums import Sweden
 from pyforestry.sweden.siteindex.translate.jonson_index import jonson_index_from_site_index
 from pyforestry.sweden.siteindex.validation import validate_hagglund_1970_h100_site_index

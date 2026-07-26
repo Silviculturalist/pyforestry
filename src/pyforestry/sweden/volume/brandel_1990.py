@@ -32,7 +32,7 @@ import math
 from copy import deepcopy
 from typing import Dict, List, Optional, Protocol, Union, runtime_checkable
 
-from pyforestry.simulation.contracts import SourceReference
+from pyforestry.base.contracts import SourceReference
 
 
 @runtime_checkable

@@ -3,11 +3,8 @@
 from .contracts import (
     ActionEvent,
     AssertionResult,
-    Describable,
-    FormulaModuleDescriptor,
     ParityCase,
     SimulationPreset,
-    SourceReference,
     StageContract,
 )
 from .dp import (
@@ -71,9 +68,6 @@ __all__ = [
     "Stage",
     "StageAction",
     "StageContract",
-    "Describable",
-    "FormulaModuleDescriptor",
-    "SourceReference",
     "SimulationPreset",
     "ScenarioPresetBase",
     "ParityCase",

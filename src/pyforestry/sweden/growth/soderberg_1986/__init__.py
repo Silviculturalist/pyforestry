@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Mapping, Sequence
 
-from pyforestry.simulation.contracts import FormulaModuleDescriptor
+from pyforestry.base.contracts import FormulaModuleDescriptor
 
 from .equations import soderberg_1986_tree_diameter_growth_cm
 
@@ -20,7 +20,7 @@ class _Soderberg1986GrowthDescriptor:
     @property
     def source(self) -> "SourceReference":  # noqa: F821
         """Bibliographic provenance."""
-        from pyforestry.simulation.contracts import SourceReference
+        from pyforestry.base.contracts import SourceReference
 
         return SourceReference(
             author="Söderberg, U.",

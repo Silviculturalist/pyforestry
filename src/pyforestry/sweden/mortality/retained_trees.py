@@ -67,7 +67,7 @@ class _Descriptor:
     @property
     def source(self):
         """Bibliographic provenance for this formula module."""
-        from pyforestry.simulation.contracts import SourceReference
+        from pyforestry.base.contracts import SourceReference
 
         return SourceReference(
             author="(none)",

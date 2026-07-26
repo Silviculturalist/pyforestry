@@ -11,7 +11,8 @@ from __future__ import annotations
 
 from typing import Mapping, Sequence
 
-from pyforestry.simulation.contracts import Describable, SimulationPreset
+from pyforestry.base.contracts import Describable
+from pyforestry.simulation.contracts import SimulationPreset
 
 
 class ScenarioPresetBase(SimulationPreset):

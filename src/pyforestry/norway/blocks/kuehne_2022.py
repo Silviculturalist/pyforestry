@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional
 
-from pyforestry.base.contracts import FormulaDescriptor
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.helpers import Age, Stand
 from pyforestry.base.simulation import GrowthModel, Requirements, SimulationContext
 from pyforestry.norway.growth.kuehne_2022 import (
@@ -18,7 +18,6 @@ from pyforestry.norway.siteindex.kuehne_2022 import (
     kuehne_2022_height_trajectory_and_si_scots_pine_norway,
     kuehne_2022_height_trajectory_scots_pine_norway,
 )
-from pyforestry.simulation.contracts import SourceReference
 
 
 @dataclass(frozen=True)

@@ -23,7 +23,7 @@ _DESCRIPTOR_MODULES = {
 }
 
 if TYPE_CHECKING:  # pragma: no cover - typing only
-    from pyforestry.simulation.contracts import FormulaModuleDescriptor
+    from pyforestry.base.contracts import FormulaModuleDescriptor
 
     ELFVING_2010: FormulaModuleDescriptor
     SODERBERG_1986: FormulaModuleDescriptor

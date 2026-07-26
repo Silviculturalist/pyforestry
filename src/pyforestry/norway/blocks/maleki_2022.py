@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional
 
-from pyforestry.base.contracts import FormulaDescriptor
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.helpers import Age, Stand, TreeSpecies
 from pyforestry.base.helpers.primitives import (
     AgeMeasurement,
@@ -26,7 +26,6 @@ from pyforestry.norway.growth.maleki_2022 import (
     maleki_2022_stem_density,
     maleki_2022_stem_survival,
 )
-from pyforestry.simulation.contracts import SourceReference
 
 
 @dataclass(frozen=True)

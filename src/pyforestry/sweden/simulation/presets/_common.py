@@ -7,7 +7,7 @@ from functools import partial
 from hashlib import sha256
 from typing import Any, Callable, Mapping, Sequence
 
-from pyforestry.simulation.contracts import SourceReference
+from pyforestry.base.contracts import SourceReference
 from pyforestry.simulation.presets import ScenarioPresetBase
 from pyforestry.sweden.simulation.policy import management_plan, scenario_factors
 

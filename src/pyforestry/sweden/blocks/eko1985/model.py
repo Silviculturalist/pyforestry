@@ -12,7 +12,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Mapping, MutableSequence, Sequence
 
-from pyforestry.base.contracts import FormulaDescriptor
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.helpers import (
     Age,
     AgeMeasurement,
@@ -31,7 +31,6 @@ from pyforestry.base.simulation import (
     Requirements,
     SimulationContext,
 )
-from pyforestry.simulation.contracts import SourceReference
 from pyforestry.sweden.blocks.eko1985.cohorts import (
     BeechEngineCohort,
     BirchEngineCohort,

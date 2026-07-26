@@ -7,8 +7,8 @@ import warnings
 from dataclasses import dataclass
 from typing import Any
 
+from pyforestry.base.contracts import SourceReference
 from pyforestry.base.helpers.tree_species import TreeSpecies
-from pyforestry.simulation.contracts import SourceReference
 
 from ._common import (
     mean_tree_age_years,

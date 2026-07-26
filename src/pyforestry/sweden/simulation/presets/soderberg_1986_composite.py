@@ -13,9 +13,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Sequence
 
+from pyforestry.base.contracts import Describable, SourceReference
 from pyforestry.base.helpers import CircularPlot, Stand, Tree
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies
-from pyforestry.simulation.contracts import Describable, SourceReference
 from pyforestry.sweden.blocks.soderberg_1986_growth import Soderberg1986Config, Soderberg1986Model
 from pyforestry.sweden.site import Sweden
 from pyforestry.sweden.volume.soderberg_1986_form_height import soderberg_1986_volume_m3

@@ -20,9 +20,9 @@ import warnings
 from dataclasses import dataclass
 from typing import Dict, Union
 
+from pyforestry.base.contracts import SourceReference
 from pyforestry.base.helpers.primitives import SiteIndexValue
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies
-from pyforestry.simulation.contracts import SourceReference
 from pyforestry.sweden._model_input_normalization import (
     coerce_species as _coerce_species_shared,
 )

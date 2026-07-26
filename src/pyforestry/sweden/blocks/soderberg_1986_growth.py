@@ -13,11 +13,10 @@ from __future__ import annotations
 import warnings
 from dataclasses import dataclass
 
-from pyforestry.base.contracts import FormulaDescriptor
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.helpers import TreeSpecies
 from pyforestry.base.helpers.primitives import diameter_to_basal_area_cm2
 from pyforestry.base.simulation import GrowthModel, Requirements, SimulationContext
-from pyforestry.simulation.contracts import SourceReference
 from pyforestry.sweden.growth.soderberg_1986.equations import (
     _active_site_index_m,
     _coefficients_for_formula_species,  # noqa: F401 -- re-exported for tests

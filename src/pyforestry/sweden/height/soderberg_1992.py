@@ -17,8 +17,8 @@ import warnings
 from dataclasses import dataclass
 from typing import Dict, Union
 
+from pyforestry.base.contracts import SourceReference
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies
-from pyforestry.simulation.contracts import SourceReference
 from pyforestry.sweden._model_input_normalization import (
     PINE_GROUP as _PINE_GROUP,
 )

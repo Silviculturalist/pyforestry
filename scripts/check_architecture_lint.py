@@ -138,11 +138,16 @@ EQUATION_PACKAGES = {
 }
 
 # Region-generic forbidden import patterns. Any region's simulation policy,
-# presets, and orchestration packages are forbidden in equation and block modules.
+# presets, and orchestration packages are forbidden in equation and block modules,
+# and so is the shared runtime's contracts module: the provenance vocabulary it used
+# to re-export lives in ``pyforestry.base.contracts``, and an equation module that
+# reaches up into the simulation tier for it inverts the dependency direction
+# ARCHITECTURE.md defines (equations -> primitives; simulation -> equations).
 FORBIDDEN_SIMULATION_SUFFIXES = (
     ".simulation.presets",
     ".simulation.policy",
     ".simulation.orchestration",
+    ".simulation.contracts",
 )
 
 

@@ -24,8 +24,7 @@ from dataclasses import dataclass
 from math import exp
 from typing import Sequence
 
-from pyforestry.base.contracts import FormulaDescriptor
-from pyforestry.simulation.contracts import SourceReference
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 
 # Residual release effect decays linearly to zero over this many years.
 _RRE_DECAY_PER_YEAR = 0.0333

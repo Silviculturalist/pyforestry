@@ -6,9 +6,9 @@ from enum import Enum
 from math import exp, log
 from typing import Sequence
 
+from pyforestry.base.contracts import SourceReference
 from pyforestry.base.helpers.tree import Tree
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies
-from pyforestry.simulation.contracts import SourceReference
 
 
 class SaplingSpeciesGroup(Enum):

@@ -7,8 +7,8 @@ from functools import partial
 from hashlib import sha256
 from typing import Any, Callable, Mapping, Sequence
 
+from pyforestry.base.contracts import SourceReference
 from pyforestry.norway.simulation.policy import management_plan, scenario_factors
-from pyforestry.simulation.contracts import SourceReference
 from pyforestry.simulation.presets import ScenarioPresetBase
 
 RulesetFn = Callable[..., Mapping[str, float]]

@@ -340,7 +340,7 @@ class _Descriptor:
 
     @property
     def source(self):
-        from pyforestry.simulation.contracts import SourceReference
+        from pyforestry.base.contracts import SourceReference
 
         return SourceReference(
             author=("Johansson, U., Ekö, P.-M., Elfving, B., Johansson, T. & Nilsson, U."),

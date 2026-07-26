@@ -1,13 +1,13 @@
 """Simulation-runtime contracts: stages, presets, parity, and execution.
 
-The provenance/introspection vocabulary (:class:`SourceReference`,
-:class:`Describable`, :class:`FormulaModuleDescriptor`) lives at the base level
-in :mod:`pyforestry.base.contracts` because formula modules across every region
-expose it. It is re-exported here so existing ``pyforestry.simulation.contracts``
-imports keep working and the simulation tier offers a single contracts surface.
-
-Source:
-    Internal pyforestry simulation architecture and runtime contracts.
+This module holds only what the *runtime* defines. The provenance/introspection
+vocabulary (:class:`~pyforestry.base.contracts.SourceReference`,
+:class:`~pyforestry.base.contracts.Describable`,
+:class:`~pyforestry.base.contracts.FormulaModuleDescriptor`) lives in
+:mod:`pyforestry.base.contracts` and is *not* re-exported here: formula and domain
+modules across every region expose that vocabulary, and nothing above ``base``
+should have to import from the simulation tier to obtain it. Import it from
+:mod:`pyforestry.base.contracts` directly.
 """
 
 from __future__ import annotations
@@ -15,8 +15,6 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from types import MappingProxyType
 from typing import Any, Callable, FrozenSet, Mapping, Optional, Protocol, Sequence
-
-from pyforestry.base.contracts import Describable, FormulaModuleDescriptor, SourceReference
 
 # ---------------------------------------------------------------------------
 # Retained data types
@@ -111,10 +109,6 @@ __all__ = [
     "ActionEvent",
     "AssertionResult",
     "StageContract",
-    # Introspection tier (re-exported from pyforestry.base.contracts)
-    "Describable",
-    "FormulaModuleDescriptor",
-    "SourceReference",
     # Execution tier
     "ParityCase",
     "SimulationPreset",
