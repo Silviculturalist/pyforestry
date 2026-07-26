@@ -250,7 +250,7 @@ def emit_scenario_artifact_contract(
     volumes in ``scenario_summary.parquet`` come from a seeded random walk, and
     every artifact is stamped ``"synthetic": true`` so a downstream reader can
     tell. To project a real stand, use a model adapter
-    (:class:`~pyforestry.sweden.blocks.elfving_2010.Elfving2010Model` and friends)
+    (:class:`~pyforestry.sweden.adapters.elfving_2010.Elfving2010Model` and friends)
     or one of the composite pipelines in
     :mod:`pyforestry.sweden.simulation.presets`.
 

@@ -12,8 +12,8 @@ from pyforestry.base.helpers import (
     Tree,
     TreeSpecies,
 )
-from pyforestry.sweden.blocks import eriksson_1976 as e
-from pyforestry.sweden.blocks.eriksson_1976 import (
+from pyforestry.sweden.systems import eriksson_1976 as e
+from pyforestry.sweden.systems.eriksson_1976 import (
     Eriksson1976ManagementSchedule,
     Eriksson1976Model,
     Eriksson1976Stand,

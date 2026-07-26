@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import warnings
 from dataclasses import dataclass
-from math import exp, log, sqrt
+from math import exp, log, pi, sqrt
 from typing import Sequence
 
 from pyforestry.base.contracts import FormulaDescriptor, SourceReference
@@ -870,7 +870,7 @@ class Elfving2010Model(GrowthModel):
             stems = new_stems_dict.get(key)
             if stems is None or float(stems) <= 0 or float(ba) <= 0:
                 continue
-            qmd_val = sqrt((40000.0 * float(ba)) / (3.141592653589793 * float(stems)))
+            qmd_val = sqrt((40000.0 * float(ba)) / (pi * float(stems)))
             new_qmd_dict[key] = QuadraticMeanDiameter(qmd_val)
 
         ctx._metrics = {

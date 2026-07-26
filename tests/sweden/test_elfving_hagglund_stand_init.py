@@ -2,8 +2,8 @@ import pytest
 
 from pyforestry.base.helpers import Age, SiteIndexValue
 from pyforestry.base.helpers.tree_species import TreeSpecies
-from pyforestry.sweden.blocks.elfving_hagglund_1975 import ElfvingHagglundInitialStand
 from pyforestry.sweden.siteindex.hagglund_1970 import Hagglund_1970
+from pyforestry.sweden.systems.elfving_hagglund_1975 import ElfvingHagglundInitialStand
 
 # ---------------------------------------------------------------------------
 # Helpers

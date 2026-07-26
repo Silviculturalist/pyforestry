@@ -4,7 +4,7 @@ import pytest
 
 from pyforestry.base.helpers import Age, Stand, TreeSpecies
 from pyforestry.base.helpers.primitives import StandBasalArea, Stems
-from pyforestry.sweden.blocks.eko1985 import (
+from pyforestry.sweden.systems.eko1985 import (
     DominantHeightObservation,
     Eko1985Cohort,
     Eko1985Model,

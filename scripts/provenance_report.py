@@ -5,7 +5,7 @@ Usage:
 
 Auto-discovers:
 - All DESCRIPTOR objects in equation packages (scans for modules with DESCRIPTOR attribute).
-- All GrowthModel subclasses with Describable properties (scans blocks/ packages).
+- All GrowthModel subclasses with Describable properties (scans adapters/ and systems/).
 - All preset classes/factories with Describable properties (scans simulation/presets/).
 
 Outputs a provenance table for audit, documentation, and catalog use.
@@ -42,6 +42,11 @@ _EQUATION_PACKAGES = [
     "ingrowth",
     "regeneration",
 ]
+
+# Packages where GrowthModel subclasses live: the runtime bindings in
+# ``adapters/`` and, for a self-contained published system that ships its own
+# binding, ``systems/``.
+_MODEL_TIERS = ["adapters", "systems"]
 
 
 def _scan_package_for_descriptors(package_name: str) -> list[str]:
@@ -158,7 +163,7 @@ def _extract_preset(instance: object, module_path: str) -> dict[str, Any] | None
 
 
 def discover_all() -> list[dict[str, Any]]:
-    """Auto-discover all equations, blocks, and presets across all regions."""
+    """Auto-discover all equations, models, and presets across all regions."""
     entries: list[dict[str, Any]] = []
 
     # 1. Scan equation packages for DESCRIPTOR objects
@@ -170,33 +175,34 @@ def discover_all() -> list[dict[str, Any]]:
                 if entry:
                     entries.append(entry)
 
-    # 2. Scan blocks/ for GrowthModel subclasses
+    # 2. Scan adapters/ and systems/ for GrowthModel subclasses
     from pyforestry.base.simulation.growth_model import GrowthModel
 
     for region in _REGIONS:
-        blocks_pkg = f"{region}.blocks"
-        try:
-            pkg = importlib.import_module(blocks_pkg)
-        except ImportError:
-            continue
-        for _importer, modname, _ispkg in pkgutil.walk_packages(
-            pkg.__path__, prefix=blocks_pkg + "."
-        ):
-            if "._" in modname:
-                continue
+        for tier in _MODEL_TIERS:
+            model_pkg = f"{region}.{tier}"
             try:
-                mod = importlib.import_module(modname)
-            except Exception:
+                pkg = importlib.import_module(model_pkg)
+            except ImportError:
                 continue
-            for _name, obj in inspect.getmembers(mod, inspect.isclass):
-                if (
-                    issubclass(obj, GrowthModel)
-                    and obj is not GrowthModel
-                    and obj.__module__ == modname
-                ):
-                    entry = _extract_block(obj, modname)
-                    if entry:
-                        entries.append(entry)
+            for _importer, modname, _ispkg in pkgutil.walk_packages(
+                pkg.__path__, prefix=model_pkg + "."
+            ):
+                if "._" in modname:
+                    continue
+                try:
+                    mod = importlib.import_module(modname)
+                except Exception:
+                    continue
+                for _name, obj in inspect.getmembers(mod, inspect.isclass):
+                    if (
+                        issubclass(obj, GrowthModel)
+                        and obj is not GrowthModel
+                        and obj.__module__ == modname
+                    ):
+                        entry = _extract_block(obj, modname)
+                        if entry:
+                            entries.append(entry)
 
     # 3. Scan simulation/presets/ for preset classes
     for region in _REGIONS:

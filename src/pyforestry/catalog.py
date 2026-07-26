@@ -38,8 +38,8 @@ from pyforestry.base.contracts import SourceReference
 _MODEL_ROOTS = ("pyforestry.base", "pyforestry.sweden", "pyforestry.norway")
 
 # Subpackage names that hold data, geometry, or runtime glue rather than
-# scientific descriptors. Skipped to keep discovery fast and focused. ``blocks``
-# is intentionally *not* skipped: its composed model adapters publish
+# scientific descriptors. Skipped to keep discovery fast and focused. ``adapters``
+# and ``systems`` are intentionally *not* skipped: their model bindings publish
 # ``kind="model"`` descriptors that the catalog surfaces alongside formulas.
 # Neither are ``geo`` (Odin 1983, Eriksson 1986) or ``helpers`` (the base science
 # listed above) — both carry published models, so both are scanned.
@@ -126,8 +126,8 @@ def _entry_from_module(module_name: str) -> Optional[ModelEntry]:
         component_id=str(descriptor.component_id),
         module=module_name,
         region=region,
-        # A "model" descriptor lives under blocks/ but may declare its scientific
-        # domain (e.g. "growth"); fall back to the path segment otherwise.
+        # A "model" descriptor lives under adapters/ or systems/ but may declare
+        # its scientific domain (e.g. "growth"); fall back to the path segment.
         domain=str(getattr(descriptor, "domain", None) or path_domain),
         source=descriptor.source,
         species_groups={k: frozenset(v) for k, v in dict(descriptor.species_groups).items()},

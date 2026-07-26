@@ -137,9 +137,9 @@ class FormulaDescriptor:
 
     ``kind`` distinguishes the two tiers the catalog surfaces: ``"formula"`` for
     equation/kernel modules (the default) and ``"model"`` for composed, runnable
-    model adapters (the ``blocks/`` tier). A ``"model"`` descriptor may set
-    ``domain`` to the scientific domain it belongs to (e.g. ``"growth"``, since
-    its module path lives under ``blocks/``) and list the formula
+    models (the ``adapters/`` and ``systems/`` tiers). A ``"model"`` descriptor
+    may set ``domain`` to the scientific domain it belongs to (e.g. ``"growth"``,
+    since its module path lives under ``adapters/``) and list the formula
     ``component_id``s it ``composes``.
     """
 

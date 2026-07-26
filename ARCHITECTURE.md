@@ -45,7 +45,7 @@ The architecture is split into five contexts. Each context has strict boundaries
   - Cross-model orchestration.
   - Scenario rulesets.
 - Primary package paths:
-  - Domain packages outside `*/blocks` and outside `*/simulation`, for example:
+  - Domain packages outside `*/adapters`, `*/systems` and `*/simulation`, for example:
     - `src/pyforestry/sweden/growth/`
     - `src/pyforestry/sweden/mortality/`
     - `src/pyforestry/sweden/siteindex/`
@@ -56,23 +56,33 @@ The architecture is split into five contexts. Each context has strict boundaries
     - `src/pyforestry/sweden/ingrowth/`
     - `src/pyforestry/sweden/regeneration/`
 
-### Context 3: Block Context (regional `/blocks`)
+### Context 3: Model Context (regional `/adapters` and `/systems`)
 
-- Owns:
-  - Composable building blocks for regional model families.
-  - `GrowthModel` adapters that compose domain equations into simulation-facing APIs.
-  - Self-contained published model systems (e.g., Eko 1985, Eriksson 1976).
+Two kinds of module live here, in separate directories because the question you
+ask of each is different: a system is checked against its publication, an
+adapter against the runtime contract.
+
+- `*/adapters/` owns:
+  - `GrowthModel` bindings that compose domain equations into simulation-facing APIs.
   - Cross-domain reconstruction workflows (e.g., NYSKOG).
+  - No scientific coefficient literals. AL001 enforces this in both regions with
+    no exception list; the alternatives (`*/systems/`, a domain package) are
+    well-defined, so an exception would only record a misfiling.
+- `*/systems/` owns:
+  - Whole published growth-and-yield systems reproduced end to end (Eriksson 1976,
+    Persson 1992, Petterson 1955, Ekö 1985, Elfving & Hägglund 1975).
+  - Their coefficients, and the `GrowthModel` that drives them: the parts of these
+    systems were fitted together and only reproduce the printed yield tables when
+    used together, so a self-contained system owns its own interface.
 - Must define:
   - Simulation-facing interfaces that bind runtime contracts to domain equations.
-  - Backward-compatible entrypoints where required.
 - Must not define:
-  - New equation internals (these belong in domain packages).
+  - New standalone equations (these belong in domain packages).
   - Long-lived orchestration policy.
   - Scenario rulesets.
 - Primary package paths:
-  - `src/pyforestry/<region>/blocks/`
-  - Current concrete example: `src/pyforestry/sweden/blocks/`
+  - `src/pyforestry/<region>/adapters/`
+  - `src/pyforestry/sweden/systems/` (Norway ships no whole system yet)
 
 ### Context 4: Simulation Policy + Runtime Context
 
@@ -156,17 +166,20 @@ The following rules are mandatory:
 6. Non-formula-specific environment constraints (including clamping) MUST belong to simulation context.
 7. Rulesets MUST be defined and applied in simulation global context.
 
-## `/blocks` Policy
+## `/adapters` and `/systems` Policy
 
-- `src/pyforestry/<region>/blocks/` contains composable building blocks:
-  - `GrowthModel` adapters that compose equations from domain packages.
-  - Self-contained published model systems where equations are interdependent.
-  - Cross-domain reconstruction workflows.
-- New equation internals MUST NOT be placed directly in `blocks/`.
-  Individual equations belong in domain packages (`growth/`, `mortality/`, etc.)
-  and are composed by blocks.
-- Blocks contain real adapter or model-system code (classes and functions).
-  No facade delegation stubs remain; `install_formula_facade` has been removed.
+- `src/pyforestry/<region>/adapters/` contains `GrowthModel` bindings and
+  cross-domain reconstruction workflows. An adapter MUST NOT carry scientific
+  coefficient literals: AL001 fails the build on any it finds, in either region,
+  with no exception list and no budget.
+- `src/pyforestry/<region>/systems/` contains whole published growth-and-yield
+  systems, which MAY carry their own coefficients and MAY ship the `GrowthModel`
+  that drives them.
+- An individual published equation that stands on its own belongs in a domain
+  package (`growth/`, `mortality/`, `volume/`, …), not in either of these.
+- Both contain real code. No facade delegation stubs remain;
+  `install_formula_facade` has been removed, and so has the last compatibility
+  re-export, `norway/bollandsas.py`.
 
 ## Transitional Exceptions
 
@@ -174,10 +187,14 @@ No active transitional exceptions are currently registered in this document.
 
 Completed migrations:
 
-- All Sweden `/models` modules extracted and relocated to domain packages or `/blocks/`.
+- All Sweden `/models` modules extracted and relocated to domain packages or the
+  model tier.
 - Mortality orchestration moved from `sweden/mortality/manager.py` to
   `sweden/simulation/mortality/engine.py`.
-- `/models` renamed to `/blocks` across Sweden and Norway.
+- `/models` renamed to `/blocks` across Sweden and Norway, then split into
+  `/systems` (science) and `/adapters` (glue). The split retired AL001's
+  registry of seven exempted modules and its Sweden-only scoping: both existed
+  only because one directory held both kinds of module.
 - Eko 1985 re-expressed on the shared `StandComposite` + `StageRuntime` runtime
   (the flagship example of the two engine tiers above).
 - Provenance/introspection contracts moved to `base/contracts.py`; the orchestration

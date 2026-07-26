@@ -2,12 +2,12 @@ import pytest
 
 from pyforestry.base.helpers import CircularPlot, Stand, Tree, TreeSpecies
 from pyforestry.base.helpers.primitives import Age
-from pyforestry.norway.blocks import (
+from pyforestry.norway.adapters import (
     KuehnePineAdapterConfig,
     KuehnePineGrowthModel,
     KuehnePineModel,
 )
-from pyforestry.norway.blocks.kuehne_2022 import (
+from pyforestry.norway.adapters.kuehne_2022 import (
     kuehne_2022_height_trajectory_and_si_scots_pine_norway,
 )
 

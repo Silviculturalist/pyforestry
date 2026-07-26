@@ -6,13 +6,13 @@ import pytest
 from pyforestry.base.helpers import CircularPlot, Stand, Tree
 from pyforestry.base.helpers.primitives import Age, SiteBase
 from pyforestry.base.helpers.tree_species import TreeSpecies
-from pyforestry.sweden.bark.soderberg_1992 import soderberg_1992_bark_thickness_bh_mm
-from pyforestry.sweden.blocks.elfving_1982 import NyskogReconstruction, RegenerationType
-from pyforestry.sweden.blocks.elfving_2010 import (
+from pyforestry.sweden.adapters.elfving_1982 import NyskogReconstruction, RegenerationType
+from pyforestry.sweden.adapters.elfving_2010 import (
     Elfving2010Model,
     stand_basal_area_growth_elfving_2009,
 )
-from pyforestry.sweden.blocks.soderberg_1986_growth import Soderberg1986Model
+from pyforestry.sweden.adapters.soderberg_1986_growth import Soderberg1986Model
+from pyforestry.sweden.bark.soderberg_1992 import soderberg_1992_bark_thickness_bh_mm
 from pyforestry.sweden.height.nystrom_2000 import sapling_height_growth_m
 from pyforestry.sweden.height.soderberg_1992 import (
     soderberg_1992_height_stand_age_m,

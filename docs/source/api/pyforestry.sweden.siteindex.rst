@@ -13,7 +13,7 @@ Subpackages
 Submodules
 ----------
 
-pyforestry.sweden.siteindex.carbonnier\_1975 module
+pyforestry.sweden.siteindex.carbonnier\_1971 module
 ---------------------------------------------------
 
 .. automodule:: pyforestry.sweden.siteindex.carbonnier_1971

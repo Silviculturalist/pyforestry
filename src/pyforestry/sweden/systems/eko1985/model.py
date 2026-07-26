@@ -31,7 +31,8 @@ from pyforestry.base.simulation import (
     Requirements,
     SimulationContext,
 )
-from pyforestry.sweden.blocks.eko1985.cohorts import (
+from pyforestry.sweden.site.swedish_site import SwedishSite
+from pyforestry.sweden.systems.eko1985.cohorts import (
     BeechEngineCohort,
     BirchEngineCohort,
     BroadleafEngineCohort,
@@ -40,14 +41,14 @@ from pyforestry.sweden.blocks.eko1985.cohorts import (
     SpruceEngineCohort,
     _engine_cohort_factory,
 )
-from pyforestry.sweden.blocks.eko1985.engine import (
+from pyforestry.sweden.systems.eko1985.engine import (
     EngineStand,
     EngineStandPart,
 )
-from pyforestry.sweden.blocks.eko1985.engine import (
+from pyforestry.sweden.systems.eko1985.engine import (
     _species_label as _engine_species_label,
 )
-from pyforestry.sweden.blocks.eko1985.site_context import (
+from pyforestry.sweden.systems.eko1985.site_context import (
     DominantHeightObservation,
     Eko1985SiteContext,
     EkoStandSite,
@@ -59,7 +60,6 @@ from pyforestry.sweden.blocks.eko1985.site_context import (
     _safe_sum,
     qmd_cm,
 )
-from pyforestry.sweden.site.swedish_site import SwedishSite
 
 # Site/context and engine core helpers are extracted in formulas/eko1985/.
 _species_label = _engine_species_label

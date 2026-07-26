@@ -12,6 +12,7 @@ Exit code 0 = pass, 1 = violations found.
 from __future__ import annotations
 
 import ast
+import math
 import subprocess
 import sys
 from pathlib import Path
@@ -19,109 +20,99 @@ from pathlib import Path
 SRC_ROOT = Path(__file__).resolve().parents[1] / "src" / "pyforestry"
 
 # ---------------------------------------------------------------------------
-# AL001: No formula-heavy internals in */models/
+# AL001: No scientific coefficients in */adapters/
 # ---------------------------------------------------------------------------
 
-# Facade modules must contain only install_formula_facade and nothing else.
-# Currently scoped to Sweden where facade pattern is enforced.
-# Norway blocks use a different adapter pattern (explicit GrowthModel subclasses).
-AL001_SCOPE = SRC_ROOT / "sweden" / "blocks"
+# An adapter binds published equations to the simulation runtime: it reads a
+# Stand, calls kernels from a domain package, writes results back. It does not
+# own numbers. A whole published growth-and-yield system does own its numbers,
+# and lives in */systems/ (or a domain package, for a standalone equation).
+#
+# This rule used to be a Sweden-only budget of ten coefficients with a registry
+# of seven exempted modules, because */blocks/ held both kinds of module in one
+# directory and the check had no way to tell them apart. Splitting the directory
+# removed the ambiguity, so the rule needs neither a registry nor a budget: any
+# fitted coefficient found under */adapters/ is a coefficient in the wrong place,
+# in either region.
+AL001_ADAPTER_DIRECTORY = "adapters"
 
-# A block module may legitimately hold equations only when it is one of the
-# self-contained published model systems ARCHITECTURE.md (Context 3) names. Every
-# other block module must delegate its equations to a domain package; a new entry
-# here is an architecture decision, not a lint tweak, and anything that does not
-# belong on this list belongs in the exception register with an owner and exit
-# criteria (governance/architecture/exceptions/architecture_exceptions.yaml).
-AL001_SELF_CONTAINED_MODEL_SYSTEMS = frozenset(
-    {
-        "eko1985/cohorts.py",
-        "eko1985/engine.py",
-        "elfving_hagglund_1975.py",
-        "eriksson_1976.py",
-        "nystrom_soderberg_1987.py",
-        "persson_1992.py",
-        "petterson_1955.py",
-    }
-)
-
-# Below this many scientific coefficient literals a module is treated as an
-# adapter that merely passes a few constants through, not an equation kernel.
-AL001_COEFFICIENT_BUDGET = 10
+# Values that read like coefficients to a decimal-place test but are not fitted
+# to anything: unit and scale factors. A regression coefficient is essentially
+# never an exact power of ten, so excluding them costs no detection power.
+_UNIT_FACTOR_MANTISSAS = frozenset({1.0, -1.0})
 
 
-def _scientific_coefficient_count(tree: ast.AST) -> int:
-    """Count float literals precise enough to be fitted model coefficients.
+def _is_unit_factor(value: float) -> bool:
+    """Return True for exact powers of ten (``1e-4``, ``0.001``, ``100.0``).
+
+    These are the unit conversions an adapter legitimately carries -- cm² to m²,
+    per-hectare scaling -- and no fitted coefficient lands on one.
+    """
+    if value == 0.0:
+        return False
+    exponent = math.log10(abs(value))
+    if exponent != int(exponent):
+        return False
+    return abs(value) / 10 ** int(exponent) in _UNIT_FACTOR_MANTISSAS
+
+
+def _scientific_coefficients(tree: ast.AST) -> list[tuple[int, float]]:
+    """Return ``(lineno, value)`` for float literals that look fitted.
 
     Three or more significant decimals is the discriminator: regression
     coefficients look like ``0.0094`` or ``-0.42759``, whereas the constants an
     adapter legitimately carries (unit factors, ``0.5``, ``100.0``) do not.
     """
-    count = 0
+    found = []
     for node in ast.walk(tree):
-        if isinstance(node, ast.Constant) and isinstance(node.value, float):
-            text = repr(node.value)
-            if "." in text and len(text.split(".")[1].rstrip("0")) >= 3:
-                count += 1
-    return count
+        if not (isinstance(node, ast.Constant) and isinstance(node.value, float)):
+            continue
+        if _is_unit_factor(node.value):
+            continue
+        text = repr(node.value)
+        if "." in text and len(text.split(".")[1].rstrip("0")) >= 3:
+            found.append((node.lineno, node.value))
+    return found
 
 
 def check_al001(paths: list[Path]) -> list[str]:
-    """Check that model/block modules are either thin facades or legitimate blocks.
+    """Check that no adapter module carries scientific coefficient literals.
 
-    A module under */models/ (future */blocks/) must be one of:
-    - A thin facade using install_formula_facade (no class/function definitions).
-    - A legitimate block: a self-contained model system, GrowthModel adapter, or
-      cross-domain reconstruction workflow. These may contain classes and functions.
-
-    The rule prevents accidental introduction of new formula-heavy code in modules
-    that are supposed to be facades while allowing real block content.
+    Applies to every ``*/adapters/`` package in every region. There is no
+    exception list: a module that needs to hold coefficients is a published
+    system or a domain equation module, and belongs in ``*/systems/`` or a
+    domain package respectively.
     """
     violations = []
     for path in paths:
-        if path.name.startswith("_") or path.name == "__init__.py":
+        if path.suffix != ".py" or path.name == "__init__.py":
             continue
-        # AL001 currently scoped to Sweden models only
+        if AL001_ADAPTER_DIRECTORY not in path.parts:
+            continue
         try:
-            path.relative_to(AL001_SCOPE)
-        except ValueError:
+            tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+        except (OSError, SyntaxError):  # pragma: no cover - unreadable/invalid file
             continue
-        text = path.read_text(encoding="utf-8")
-        # Modules using install_formula_facade must stay thin
-        if "install_formula_facade" in text:
-            if "class " in text:
-                violations.append(f"AL001: {path.name} is a facade but contains class definitions")
-            if "\ndef " in text:
-                violations.append(
-                    f"AL001: {path.name} is a facade but contains function definitions"
-                )
+        coefficients = _scientific_coefficients(tree)
+        if not coefficients:
             continue
-
-        # Every other block module is a legitimate block only so long as it does
-        # not carry the equations itself. Blocks compose domain equations; the
-        # coefficients belong in a domain package (ARCHITECTURE.md Context 2).
-        try:
-            tree = ast.parse(text, filename=str(path))
-        except SyntaxError:
-            continue
-        coefficients = _scientific_coefficient_count(tree)
-        if coefficients <= AL001_COEFFICIENT_BUDGET:
-            continue
-        relative = path.relative_to(AL001_SCOPE).as_posix()
-        if relative in AL001_SELF_CONTAINED_MODEL_SYSTEMS:
-            continue
+        sites = ", ".join(f"line {lineno}: {value!r}" for lineno, value in coefficients[:5])
+        if len(coefficients) > 5:
+            sites += f", and {len(coefficients) - 5} more"
+        relative = path.relative_to(SRC_ROOT).as_posix()
         violations.append(
-            f"AL001: {relative} holds {coefficients} scientific coefficient literals "
-            "but is not a registered self-contained model system. Move the equations "
-            "into a domain package (e.g. */growth, */regeneration, */height) and keep "
-            "the block as the composing facade."
+            f"AL001: {relative} holds {len(coefficients)} scientific coefficient "
+            f"literal(s) ({sites}). An adapter binds equations to the runtime; it does "
+            "not own numbers. Move them into a domain package (e.g. */growth, */height, "
+            "*/volume) or, if this is a whole published growth-and-yield system, into "
+            "*/systems/."
         )
     return violations
 
 
 # ---------------------------------------------------------------------------
 # AL002: Equation modules must not import from simulation policy
-# AL003: Block modules must not import from simulation policy
+# AL003: Adapter and system modules must not import from simulation policy
 # ---------------------------------------------------------------------------
 
 # Domain equation packages (must not depend on simulation policy).
@@ -160,9 +151,9 @@ def _is_equation_module(path: Path) -> bool:
     return False
 
 
-def _is_block_module(path: Path) -> bool:
-    """Return True if path is inside a blocks/ package."""
-    return "blocks" in path.parts
+def _is_model_module(path: Path) -> bool:
+    """Return True if path is inside an adapters/ or systems/ package."""
+    return "adapters" in path.parts or "systems" in path.parts
 
 
 def _is_forbidden_import(module_name: str) -> bool:
@@ -209,18 +200,18 @@ def check_al002(paths: list[Path]) -> list[str]:
 
 
 def check_al003(paths: list[Path]) -> list[str]:
-    """Check that block modules do not import from simulation policy."""
+    """Check that adapter and system modules do not import from simulation policy."""
     violations = []
     for path in paths:
         if not path.suffix == ".py":
             continue
-        if not _is_block_module(path):
+        if not _is_model_module(path):
             continue
         for module_name in _extract_imports(path):
             if _is_forbidden_import(module_name):
                 violations.append(
                     f"AL003: {path.name} imports {module_name} "
-                    f"(block modules must not import from simulation policy)"
+                    f"(adapter and system modules must not import from simulation policy)"
                 )
     return violations
 

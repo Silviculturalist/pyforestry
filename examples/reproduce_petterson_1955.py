@@ -4,7 +4,7 @@ Petterson, H. (1955). *Barrskogens volymproduktion*. Meddelanden från Statens
 skogsforskningsinstitut, Band 45:1.  Part XIV of that volume tabulates a large
 family of production tables ("P-tables").  This script regenerates a
 representative table for each of the four species/region variants with
-:mod:`pyforestry.sweden.blocks.petterson_1955` and compares the result, cell by
+:mod:`pyforestry.sweden.systems.petterson_1955` and compares the result, cell by
 cell, against the published numbers.
 
 Run::
@@ -21,7 +21,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import List, Sequence, Tuple
 
-from pyforestry.sweden.blocks.petterson_1955 import (
+from pyforestry.sweden.systems.petterson_1955 import (
     PettersonStandInit,
     PettersonThinningProgram,
     petterson_simulate,

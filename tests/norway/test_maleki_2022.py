@@ -10,8 +10,8 @@ from pyforestry.base.helpers.primitives import (
     StandBasalArea,
     Stems,
 )
-from pyforestry.norway.blocks import Maleki2022Config, Maleki2022GrowthModel
-from pyforestry.norway.blocks.maleki_2022 import Maleki2022ModelNorway
+from pyforestry.norway.adapters import Maleki2022Config, Maleki2022GrowthModel
+from pyforestry.norway.adapters.maleki_2022 import Maleki2022ModelNorway
 from pyforestry.norway.growth.maleki_2022 import (
     Maleki2022Species,
     maleki_2022_basal_area_projection,

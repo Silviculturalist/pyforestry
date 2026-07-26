@@ -34,8 +34,8 @@ from pyforestry.base.simulation import (
     SimulationContext,
     TriggerSpec,
 )
-from pyforestry.sweden.blocks.elfving_hagglund_1975 import ElfvingHagglundInitialStand
 from pyforestry.sweden.siteindex.hagglund_1970 import Hagglund_1970
+from pyforestry.sweden.systems.elfving_hagglund_1975 import ElfvingHagglundInitialStand
 
 __all__ = [
     "StandInit",

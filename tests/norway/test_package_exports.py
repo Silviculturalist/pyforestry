@@ -14,12 +14,12 @@ def test_top_level_lazy_export_includes_norway():
 def test_norway_subpackage_exports():
     norway = importlib.import_module("pyforestry.norway")
     assert set(norway.__all__) == {
+        "adapters",
         "bark",
         "volume",
         "siteindex",
         "taper",
         "growth",
-        "blocks",
         "simulation",
     }
 
@@ -35,7 +35,7 @@ def test_norway_subpackage_exports():
     growth = importlib.import_module("pyforestry.norway.growth")
     assert "maleki_2022_stand_volume" in growth.__all__
 
-    models = importlib.import_module("pyforestry.norway.blocks")
+    models = importlib.import_module("pyforestry.norway.adapters")
     assert set(models.__all__) == {
         "Allen2020Model",
         "Allen2020Config",
@@ -51,8 +51,16 @@ def test_norway_subpackage_exports():
         "Maleki2022GrowthModel",
     }
 
-    legacy_bollandsas = importlib.import_module("pyforestry.norway.bollandsas")
-    assert legacy_bollandsas.Bollandsas2008 is models.Bollandsas2008
+
+def test_norway_has_no_top_level_compatibility_shim():
+    """``pyforestry.norway.bollandsas`` was a re-export of the adapter, nothing else.
+
+    ARCHITECTURE.md states that no facade delegation stubs remain; this asserts it
+    for the one that outlived the claim. The model is reachable as
+    ``pyforestry.norway.adapters.bollandsas_2008``.
+    """
+    with pytest.raises(ImportError):
+        importlib.import_module("pyforestry.norway.bollandsas")
 
 
 def test_norway_lazy_getattr_loads_subpackages_and_rejects_unknowns():

@@ -7,10 +7,10 @@ import pytest
 
 from pyforestry.base.helpers import Tree, TreeSpecies
 from pyforestry.base.helpers.primitives import Age, SiteIndexValue
-from pyforestry.sweden.blocks.elfving_2010 import (
+from pyforestry.sweden.adapters.elfving_2010 import (
     pine_ln_d2_growth as model_pine_ln_d2_growth,
 )
-from pyforestry.sweden.blocks.elfving_2010 import (
+from pyforestry.sweden.adapters.elfving_2010 import (
     stand_basal_area_growth_elfving_2009 as model_stand_basal_area_growth_elfving_2009,
 )
 from pyforestry.sweden.growth.elfving_2010.features import (

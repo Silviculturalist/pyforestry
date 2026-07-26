@@ -4,14 +4,14 @@ import pytest
 
 from pyforestry.base.helpers.tree import Tree
 from pyforestry.base.helpers.tree_species import TreeSpecies
-from pyforestry.sweden.blocks.elfving_1982 import (
+from pyforestry.sweden.adapters.elfving_1982 import (
     HuginCropTreeProbability,
     HuginMeanHeightModel,
     NfiRegion,
     NyskogReconstruction,
     RegenerationType,
 )
-from pyforestry.sweden.blocks.elfving_1982 import (
+from pyforestry.sweden.adapters.elfving_1982 import (
     nyskog_indicators_from_site as nyskog_indicators_model,
 )
 from pyforestry.sweden.regeneration.elfving_1982 import (

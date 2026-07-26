@@ -20,8 +20,8 @@ pyforestry.norway.siteindex.sharma\_2011 module
    :undoc-members:
    :show-inheritance:
 
-pyforestry.norway.siteindex.tveite\_1976 module
------------------------------------------------
+pyforestry.norway.siteindex.tveite module
+-----------------------------------------
 
 .. automodule:: pyforestry.norway.siteindex.tveite
    :members:

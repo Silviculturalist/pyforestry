@@ -1,6 +1,7 @@
 import pytest
 
-from pyforestry.sweden.blocks.eko1985 import (
+from pyforestry.sweden.site.enums import Sweden
+from pyforestry.sweden.systems.eko1985 import (
     BeechEngineCohort,
     BirchEngineCohort,
     BroadleafEngineCohort,
@@ -10,7 +11,6 @@ from pyforestry.sweden.blocks.eko1985 import (
     PineEngineCohort,
     SpruceEngineCohort,
 )
-from pyforestry.sweden.site.enums import Sweden
 
 
 def _latitude_for_region(region: str) -> float:

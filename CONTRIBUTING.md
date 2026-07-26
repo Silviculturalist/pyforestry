@@ -195,21 +195,25 @@ Preview the output in `docs/build/html` before submitting a PR.
 
 ### Directory Structure (Equations / Blocks / Presets)
 
-The codebase is organized in three composition levels:
+The codebase is organized in four composition levels:
 
 | Level | Location | Description |
 |---|---|---|
 | **Equations** | `<region>/growth/`, `mortality/`, `siteindex/`, `volume/`, `bark/`, `biomass/`, `height/`, `ingrowth/`, `regeneration/` | Individually usable published functions. Each module is a coherent group from one publication. |
-| **Blocks** | `<region>/blocks/` | Composable building blocks: `GrowthModel` adapters, self-contained model systems (e.g., Eko 1985), and cross-domain reconstruction workflows (e.g., NYSKOG). |
-| **Presets** | `<region>/simulation/presets/` | Runnable scenario compositions wiring blocks and equations into end-to-end simulation pipelines. |
+| **Systems** | `<region>/systems/` | Whole published growth-and-yield systems reproduced end to end (e.g., Ekö 1985, Eriksson 1976). These carry their own coefficients, because their parts were fitted together. |
+| **Adapters** | `<region>/adapters/` | `GrowthModel` bindings and cross-domain reconstruction workflows (e.g., NYSKOG). Glue: **no scientific coefficient literals**. |
+| **Presets** | `<region>/simulation/presets/` | Runnable scenario compositions wiring models and equations into end-to-end simulation pipelines. |
 
 When adding new code:
 
 * **New equations** go in domain packages (`growth/`, `mortality/`, `siteindex/`, etc.).
-* **New building blocks** (GrowthModel adapters, multi-equation workflows) go in `<region>/blocks/`.
+* **A whole published G&Y system** whose equations only agree with the printed yield tables
+  when used together goes in `<region>/systems/`.
+* **New adapters** (GrowthModel bindings, multi-equation workflows) go in `<region>/adapters/`.
 * **New presets** go in `<region>/simulation/presets/`.
-* Do not place new equation internals directly in `blocks/` -- equations should be individually
-  importable from their domain package.
+* Do not place coefficients in `adapters/`. AL001 fails the build on any float with three or
+  more significant decimals that is not a unit factor, in either region, with no exception
+  list -- because there are always two right answers instead: a domain package, or `systems/`.
 
 Recommended equation references:
 
@@ -217,10 +221,10 @@ Recommended equation references:
 * `src/pyforestry/sweden/siteindex/hagglund_1970.py`
 * `src/pyforestry/sweden/growth/elfving_2010/kernels.py`
 
-Recommended block references:
+Recommended model references:
 
-* `src/pyforestry/sweden/blocks/elfving_2010.py` (GrowthModel adapter composing domain equations)
-* `src/pyforestry/sweden/blocks/eko1985/` (self-contained stand-level model system)
+* `src/pyforestry/sweden/adapters/elfving_2010.py` (GrowthModel binding composing domain equations)
+* `src/pyforestry/sweden/systems/eko1985/` (self-contained stand-level model system)
 
 ### Prefer
 
@@ -240,8 +244,8 @@ Recommended block references:
   equations in one place.
 * Public parameters that are accepted but not used in published equations, unless clearly
   documented as compatibility-only.
-* Placing new equation internals directly in `blocks/` -- individual equations should live
-  in domain packages and be composed by blocks.
+* Placing coefficients in `adapters/` -- individual equations should live in domain packages
+  and be composed by the adapter; a whole published system goes in `systems/`.
 
 ## Naming Conventions
 

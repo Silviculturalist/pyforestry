@@ -29,15 +29,14 @@ from pyforestry.base.helpers.tree import TreeUid
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies
 from pyforestry.base.pricelist import Pricelist, SolutionCube, create_pricelist_from_data
 from pyforestry.base.timber_bucking.nasberg_1985 import BuckingConfig, Nasberg_1985_BranchBound
-from pyforestry.sweden.bark.soderberg_1992 import soderberg_1992_bark_thickness_bh_mm
-from pyforestry.sweden.blocks.elfving_1982 import (
+from pyforestry.sweden.adapters.elfving_1982 import (
     HuginMeanHeightModel,
     NfiRegion,
     NyskogReconstruction,
     RegenerationType,
 )
-from pyforestry.sweden.blocks.elfving_2010 import Elfving2010Model
-from pyforestry.sweden.blocks.nystrom_soderberg_1987 import NystromSoderberg1987
+from pyforestry.sweden.adapters.elfving_2010 import Elfving2010Model
+from pyforestry.sweden.bark.soderberg_1992 import soderberg_1992_bark_thickness_bh_mm
 from pyforestry.sweden.height.nystrom_2000 import sapling_height_growth_m
 from pyforestry.sweden.height.soderberg_1992 import soderberg_1992_height_tree_age_m
 from pyforestry.sweden.ingrowth.wikberg_2004 import (
@@ -63,6 +62,7 @@ from pyforestry.sweden.simulation.mortality import (
 )
 from pyforestry.sweden.site import Sweden, SwedishSite
 from pyforestry.sweden.siteindex.hagglund_1970 import Hagglund_1970
+from pyforestry.sweden.systems.nystrom_soderberg_1987 import NystromSoderberg1987
 from pyforestry.sweden.taper import EdgrenNylinder1949
 from pyforestry.sweden.timber import SweTimber
 

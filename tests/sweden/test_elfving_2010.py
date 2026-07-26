@@ -2,7 +2,7 @@ import math
 
 import pytest
 
-import pyforestry.sweden.blocks.elfving_2010 as elfving_2010_module
+import pyforestry.sweden.adapters.elfving_2010 as elfving_2010_module
 from pyforestry.base.helpers import CircularPlot, Stand, Tree, TreeSpecies
 from pyforestry.base.helpers.primitives import (
     Age,
@@ -13,7 +13,7 @@ from pyforestry.base.helpers.primitives import (
     basal_area_growth_cm2_to_diameter_growth_cm,
     diameter_growth_to_basal_area_growth_cm2,
 )
-from pyforestry.sweden.blocks.elfving_2010 import (
+from pyforestry.sweden.adapters.elfving_2010 import (
     Elfving2010Model,
     stand_basal_area_growth_elfving_2009,
 )

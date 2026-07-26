@@ -15,7 +15,7 @@ primitives rather than a bespoke container:
 ``EngineStand`` remains a thin Eko-specific facade over that runtime, preserving
 the historical call surface (``grow``/``thin``/``stand_ba``/``parts``/``get_qmd``/
 ``get_mai``/``_volume_for``) used by
-:class:`~pyforestry.sweden.blocks.eko1985.model.Eko1985Stand`.
+:class:`~pyforestry.sweden.systems.eko1985.model.Eko1985Stand`.
 
 Eko 1985 growth couples every cohort to every other cohort through competition
 (``HK``) and cross-species mortality, so the update is intrinsically a

@@ -3,7 +3,7 @@ import pytest
 
 from pyforestry.base.helpers import CircularPlot, Stand, Tree, TreeSpecies
 from pyforestry.base.helpers.primitives import StandBasalArea
-from pyforestry.norway.blocks.bollandsas import (
+from pyforestry.norway.adapters.bollandsas_2008 import (
     Bollandsas2008,
     Bollandsas2008AdapterConfig,
     Bollandsas2008GrowthModel,

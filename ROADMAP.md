@@ -11,7 +11,10 @@
 Strategic stance for this roadmap:
 
 - Vision-first and non-timeboxed.
-- Restructuring complete: equations in domain packages, building blocks in `/blocks/`, `formulas/` removed.
+- Restructuring complete: equations in domain packages, `formulas/` removed. `/blocks/`
+  has since been split into `/systems/` (whole published G&Y systems, which own their
+  coefficients) and `/adapters/` (runtime glue, which owns none). Entries below that
+  predate the split still say `/blocks/`; they record what was true when written.
 - Governance enforcement, determinism hardening, and catalog expansion are the current priorities.
 
 Who this roadmap is for:
@@ -1082,7 +1085,7 @@ import pandas as pd
 
 from pyforestry.base.simulation import ContextEnsemble, SimulationContext
 from pyforestry.simulation.services import run_parallel
-from pyforestry.sweden.blocks.elfving_2010 import Elfving2010Model
+from pyforestry.sweden.adapters.elfving_2010 import Elfving2010Model
 
 @dataclass(frozen=True)
 class RunConfig:
@@ -1650,7 +1653,7 @@ The roadmap should be backed by rule IDs so failures are actionable.
 
 | Rule ID | Rule | Scope | Fail condition (example) |
 |---|---|---|---|
-| `AL001` | No new formula-heavy internals in `*/blocks` | Changed files under `src/pyforestry/*/blocks/` | New equation kernels added directly in `/blocks` |
+| `AL001` | No scientific coefficients in `*/adapters` | Changed files under `src/pyforestry/*/adapters/` | A float with 3+ significant decimals that is not a unit factor, in either region |
 | `AL002` | Context dependency direction must be valid | Python import graph for changed modules | Formula kernel imports scenario policy or integration/reporting modules |
 | `AL003` | Scenario policy must reside in simulation policy packages | New ruleset/dispatch logic | Policy logic added in formula kernel or adapter internals |
 | `AL004` | Exception registry required for non-conforming modules | PR metadata + policy files | Architectural exception introduced without owner + exit criteria |
@@ -1785,7 +1788,7 @@ from multiprocessing import get_context
 from pyforestry.sweden.simulation.presets import SwedenBaselinePreset
 from pyforestry.sweden.simulation.policy import BaselineRuleset, StormHighRuleset
 from pyforestry.sweden.simulation.dataset import load_inventory_dataset
-from pyforestry.sweden.blocks.elfving_2010 import Elfving2010ModelAdapter
+from pyforestry.sweden.adapters.elfving_2010 import Elfving2010ModelAdapter
 from pyforestry.simulation.runtime import SimulationContext, StepRunner
 from pyforestry.simulation.results import ResultCollector
 

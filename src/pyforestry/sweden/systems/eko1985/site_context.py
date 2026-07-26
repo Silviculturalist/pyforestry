@@ -458,7 +458,7 @@ class EkoStandSite:
         reproduces the recovered ProdMod2 program, which applies the Nord+Mellan
         function to every region for both (its volume table is region-identical
         there). See
-        :meth:`~pyforestry.sweden.blocks.eko1985.cohorts.BroadleafEngineCohort.get_volume`.
+        :meth:`~pyforestry.sweden.systems.eko1985.cohorts.BroadleafEngineCohort.get_volume`.
         """
         self.latitude = float(latitude or 0.0)
         self.altitude = float(altitude or 0.0)

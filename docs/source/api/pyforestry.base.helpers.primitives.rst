@@ -44,6 +44,14 @@ pyforestry.base.helpers.primitives.diameter\_cm module
    :undoc-members:
    :show-inheritance:
 
+pyforestry.base.helpers.primitives.loreys\_mean\_height module
+--------------------------------------------------------------
+
+.. automodule:: pyforestry.base.helpers.primitives.loreys_mean_height
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pyforestry.base.helpers.primitives.qmd module
 ---------------------------------------------
 

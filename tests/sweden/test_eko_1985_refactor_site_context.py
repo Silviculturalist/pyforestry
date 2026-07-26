@@ -3,7 +3,11 @@ from typing import cast
 import pytest
 
 from pyforestry.base.helpers import Age, SiteIndexValue, TreeSpecies
-from pyforestry.sweden.blocks.eko1985 import (
+from pyforestry.sweden.site.enums import Sweden
+from pyforestry.sweden.site.swedish_site import SwedishSite
+from pyforestry.sweden.siteindex.carbonnier_1971 import CarbonnierHeightModel
+from pyforestry.sweden.siteindex.hagglund_1970 import Hagglund_1970
+from pyforestry.sweden.systems.eko1985 import (
     DominantHeightObservation,
     Eko1985SiteContext,
     EkoStandSite,
@@ -11,16 +15,12 @@ from pyforestry.sweden.blocks.eko1985 import (
     EngineStandPart,
     RegionSE,
 )
-from pyforestry.sweden.blocks.eko1985 import (
+from pyforestry.sweden.systems.eko1985 import (
     Eko1985SiteContext as ExtractedEko1985SiteContext,
 )
-from pyforestry.sweden.blocks.eko1985 import EkoStandSite as ExtractedEkoStandSite
-from pyforestry.sweden.blocks.eko1985 import EngineStand as ExtractedEngineStand
-from pyforestry.sweden.blocks.eko1985 import EngineStandPart as ExtractedEngineStandPart
-from pyforestry.sweden.site.enums import Sweden
-from pyforestry.sweden.site.swedish_site import SwedishSite
-from pyforestry.sweden.siteindex.carbonnier_1971 import CarbonnierHeightModel
-from pyforestry.sweden.siteindex.hagglund_1970 import Hagglund_1970
+from pyforestry.sweden.systems.eko1985 import EkoStandSite as ExtractedEkoStandSite
+from pyforestry.sweden.systems.eko1985 import EngineStand as ExtractedEngineStand
+from pyforestry.sweden.systems.eko1985 import EngineStandPart as ExtractedEngineStandPart
 
 
 def test_model_site_context_exports_use_extracted_formula_types():

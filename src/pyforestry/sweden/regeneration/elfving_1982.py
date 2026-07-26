@@ -1,7 +1,7 @@
 """Extracted HUGIN (Elfving 1982) formulas and NYSKOG reconstruction kernels.
 
 These are the kernel equations behind
-:mod:`pyforestry.sweden.blocks.elfving_1982`, which carries the catalog
+:mod:`pyforestry.sweden.adapters.elfving_1982`, which carries the catalog
 descriptor for the pair; the per-function docstrings below cite the section of
 the report each formula comes from.
 

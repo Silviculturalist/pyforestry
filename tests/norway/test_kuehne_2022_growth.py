@@ -4,7 +4,7 @@ import pytest
 
 from pyforestry.base.helpers import CircularPlot, Stand, Tree, TreeSpecies
 from pyforestry.base.helpers.primitives import Age
-from pyforestry.norway.blocks.kuehne_2022 import KuehnePineAdapterConfig, KuehnePineGrowthModel
+from pyforestry.norway.adapters.kuehne_2022 import KuehnePineAdapterConfig, KuehnePineGrowthModel
 from pyforestry.norway.growth.kuehne_2022 import (
     kuehne_2022_basal_area,
     kuehne_2022_basal_area_after_thinning_ratio,

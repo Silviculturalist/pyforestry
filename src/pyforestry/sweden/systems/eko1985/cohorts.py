@@ -16,14 +16,14 @@ from math import exp
 from typing import TYPE_CHECKING
 
 from pyforestry.base.helpers import TreeName, TreeSpecies
-from pyforestry.sweden.blocks.eko1985.engine import EngineStandPart
-from pyforestry.sweden.blocks.eko1985.site_context import (
+from pyforestry.sweden.systems.eko1985.engine import EngineStandPart
+from pyforestry.sweden.systems.eko1985.site_context import (
     EkoStandSite,
     _safe_log,
 )
 
 if TYPE_CHECKING:
-    from pyforestry.sweden.blocks.eko1985.model import Eko1985Cohort
+    from pyforestry.sweden.systems.eko1985.model import Eko1985Cohort
 
 
 def _engine_cohort_factory(cohort: Eko1985Cohort, site: EkoStandSite):

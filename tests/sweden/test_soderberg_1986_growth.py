@@ -2,7 +2,7 @@ import math
 
 import pytest
 
-import pyforestry.sweden.blocks.soderberg_1986_growth as growth_module
+import pyforestry.sweden.adapters.soderberg_1986_growth as growth_module
 from pyforestry.base.helpers import CircularPlot, Stand, Tree
 from pyforestry.base.helpers.primitives import (
     Age,
@@ -13,7 +13,7 @@ from pyforestry.base.helpers.primitives import (
 )
 from pyforestry.base.helpers.tree_species import TreeSpecies
 from pyforestry.base.simulation import SimulationContext
-from pyforestry.sweden.blocks.soderberg_1986_growth import (
+from pyforestry.sweden.adapters.soderberg_1986_growth import (
     Soderberg1986Config,
     Soderberg1986Model,
     soderberg_1986_tree_diameter_growth_cm,

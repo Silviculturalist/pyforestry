@@ -12,7 +12,7 @@ pyforestry.norway.growth.allen\_2020 module
    :undoc-members:
    :show-inheritance:
 
-pyforestry.norway.growth.bollandsas\_2006 module
+pyforestry.norway.growth.bollandsas\_2008 module
 ------------------------------------------------
 
 .. automodule:: pyforestry.norway.growth.bollandsas_2008

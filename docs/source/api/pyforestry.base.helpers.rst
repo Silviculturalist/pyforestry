@@ -28,6 +28,14 @@ pyforestry.base.helpers.bucking module
    :undoc-members:
    :show-inheritance:
 
+pyforestry.base.helpers.height\_models module
+---------------------------------------------
+
+.. automodule:: pyforestry.base.helpers.height_models
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pyforestry.base.helpers.plot module
 -----------------------------------
 
@@ -44,10 +52,26 @@ pyforestry.base.helpers.stand module
    :undoc-members:
    :show-inheritance:
 
+pyforestry.base.helpers.top\_height module
+------------------------------------------
+
+.. automodule:: pyforestry.base.helpers.top_height
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pyforestry.base.helpers.tree module
 -----------------------------------
 
 .. automodule:: pyforestry.base.helpers.tree
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyforestry.base.helpers.tree\_metrics module
+--------------------------------------------
+
+.. automodule:: pyforestry.base.helpers.tree_metrics
    :members:
    :undoc-members:
    :show-inheritance:

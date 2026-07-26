@@ -13,7 +13,7 @@ from dataclasses import FrozenInstanceError
 import pytest
 
 from pyforestry.base.helpers import Stand
-from pyforestry.sweden.blocks.petterson_1955 import (
+from pyforestry.sweden.systems.petterson_1955 import (
     PETTERSON_VARIANTS,
     Petterson1955Model,
     Petterson1955Stand,

@@ -30,8 +30,8 @@ from math import exp, log
 
 import pytest
 
-from pyforestry.sweden.blocks.eko1985 import EkoStandSite, EngineStand
-from pyforestry.sweden.blocks.eko1985.cohorts import (
+from pyforestry.sweden.systems.eko1985 import EkoStandSite, EngineStand
+from pyforestry.sweden.systems.eko1985.cohorts import (
     BeechEngineCohort,
     BirchEngineCohort,
     BroadleafEngineCohort,

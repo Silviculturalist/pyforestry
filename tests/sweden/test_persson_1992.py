@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from pyforestry.sweden.blocks.persson_1992 import (
+from pyforestry.sweden.systems.persson_1992 import (
     Persson1992Model,
     Persson1992Stand,
     PerssonSimulationResult,
@@ -854,7 +854,7 @@ class TestPersson1992Model:
 
 class TestDescriptor:
     def test_descriptor_present(self):
-        from pyforestry.sweden.blocks.persson_1992 import DESCRIPTOR
+        from pyforestry.sweden.systems.persson_1992 import DESCRIPTOR
 
         assert DESCRIPTOR.component_id == "persson_1992_model"
         assert DESCRIPTOR.kind == "model"

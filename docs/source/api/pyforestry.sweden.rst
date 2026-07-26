@@ -7,9 +7,9 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   pyforestry.sweden.adapters
    pyforestry.sweden.bark
    pyforestry.sweden.biomass
-   pyforestry.sweden.blocks
    pyforestry.sweden.geo
    pyforestry.sweden.growth
    pyforestry.sweden.height
@@ -22,6 +22,7 @@ Subpackages
    pyforestry.sweden.simulation
    pyforestry.sweden.site
    pyforestry.sweden.siteindex
+   pyforestry.sweden.systems
    pyforestry.sweden.taper
    pyforestry.sweden.timber
    pyforestry.sweden.volume

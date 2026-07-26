@@ -7,7 +7,8 @@
 > `simulate_stand`, `simulate_portfolio`, `optimize_policy`, `NotebookSession`
 > and `SimulationService` are **not implemented**, and the `forestsim/` layout in
 > §15 is not this package's layout. The `*/models` packages it refers to were
-> renamed to `*/blocks`.
+> renamed to `*/blocks`, then split into `*/systems` (whole published G&Y
+> systems) and `*/adapters` (runtime glue).
 >
 > For what the package actually offers today, read `ARCHITECTURE.md` (the
 > canonical current policy), `ROADMAP.md` (direction, with `[CP]`/`[TD]` status
@@ -19,7 +20,8 @@
 
 Current implementation (repository state):
 
-- Regional `*/blocks` modules expose simulation-facing adapters.
+- Regional `*/adapters` modules expose simulation-facing model bindings;
+  `*/systems` holds whole published growth-and-yield systems.
 - Sweden preset execution uses `SimulationPreset` contracts and
   `run_sweden_preset(...)` orchestration -- note that this runbook emits an
   artifact contract from synthetic numbers and runs no model; see
@@ -29,8 +31,9 @@ Current implementation (repository state):
 
 Target architecture (this document):
 
-- Keep `*/blocks` as thin typed adapters.
-- Keep formula internals and coefficient-heavy kernels outside `*/blocks`.
+- Keep `*/adapters` as thin typed bindings.
+- Keep formula internals and coefficient-heavy kernels outside `*/adapters`.
+  (Both are now enforced by AL001 rather than asserted here.)
 - Stabilize unified runtime/preset/optimizer contracts across regions.
 
 ## 1) Use a 4-layer architecture, not just 2
@@ -898,7 +901,7 @@ Notes:
 
 - Inputs/outputs are explicit and frozen.
 - Illegal combinations fail at construction time or type-check time.
-- Formula internals stay out of `*/blocks`.
+- Formula internals stay out of `*/adapters`.
 
 ### 18.2 Thin model adapter (Model API Context)
 
@@ -944,7 +947,7 @@ can expose this behavior without changing its public constructor.
 ```python
 from pyforestry.base.helpers import CircularPlot, Stand, Tree, TreeSpecies
 from pyforestry.base.simulation import SimulationSetup
-from pyforestry.sweden.blocks.eriksson_1976 import (
+from pyforestry.sweden.systems.eriksson_1976 import (
     Eriksson1976ManagementSchedule,
     Eriksson1976Model,
     StandInit,

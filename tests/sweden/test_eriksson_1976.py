@@ -5,7 +5,7 @@ from typing import Any, Mapping, Sequence
 
 import pytest
 
-from pyforestry.sweden.blocks.eriksson_1976 import StandInit, ThinningProgram, simulate
+from pyforestry.sweden.systems.eriksson_1976 import StandInit, ThinningProgram, simulate
 
 FIXTURE_PATH = Path(__file__).parent / "fixtures" / "eriksson_1976_yield_tables.json"
 

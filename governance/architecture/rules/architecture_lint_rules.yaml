@@ -6,29 +6,29 @@
 
 rules:
   AL001:
-    name: No new formula-heavy internals in */models (or */blocks)
-    scope: Changed files under src/pyforestry/*/models/
+    name: No scientific coefficients in */adapters
+    scope: Changed files under src/pyforestry/*/adapters/
     mode: blocking  # for changed files
     description: >
-      Model facade modules must remain thin delegations (install_formula_facade).
-      New coefficient blocks, equation kernels, or scientific formula functions
-      must not be added directly in model/block modules.
+      An adapter binds published equations to the simulation runtime: it reads a
+      Stand, calls kernels from a domain package, and writes results back. It does
+      not own numbers. Any float literal carrying three or more significant
+      decimals -- what a fitted regression coefficient looks like -- is a
+      violation, excluding exact powers of ten, which are unit and scale factors
+      no coefficient lands on.
 
-      Enforced in two parts. A module using install_formula_facade must define no
-      classes or functions. Any other block module is checked for scientific
-      coefficient literals (floats carrying three or more significant decimals,
-      which is what fitted regression coefficients look like); more than
-      AL001_COEFFICIENT_BUDGET of them means the module holds equations rather
-      than composing them. The only modules allowed to do so are the
-      self-contained published model systems ARCHITECTURE.md Context 3 names,
-      listed in AL001_SELF_CONTAINED_MODEL_SYSTEMS in the check script. Anything
-      else must move its equations into a domain package, or be entered in the
-      exception register with an owner and exit criteria.
+      There is no exception list and no budget. A module that needs to hold
+      coefficients is either a whole published growth-and-yield system, which goes
+      in */systems/, or a standalone published equation, which goes in a domain
+      package (growth/, mortality/, volume/, ...). Both alternatives are
+      well-defined, so an exception register would only record a misfiling.
+
+      This replaces the earlier form of AL001, which was scoped to Sweden and
+      carried a registry of seven exempted modules. Both existed because */blocks/
+      held systems and adapters in one directory and the check could not tell them
+      apart; splitting the directory removed the need for either.
     checks:
-      - no_class_definitions          # facade modules only
-      - no_function_definitions       # facade modules only
-      - uses_install_formula_facade
-      - coefficient_budget            # non-facade block modules
+      - no_scientific_coefficient_literals   # */adapters/ in every region
 
   AL002:
     name: Context dependency direction must be valid
@@ -37,7 +37,8 @@ rules:
     description: >
       Formula/equation modules must not import from simulation policy or
       orchestration packages. Allowed direction: equations -> primitives;
-      blocks -> equations + primitives; simulation -> blocks + equations.
+      adapters/systems -> equations + primitives; simulation -> adapters/systems
+      + equations.
     forbidden_edges:
       - from: "*/mortality/*.py, */siteindex/*.py, */volume/*.py, */bark/*.py, */biomass/*.py"
         to: "*/simulation/presets/*, */simulation/policy/*, */simulation/orchestration/*"

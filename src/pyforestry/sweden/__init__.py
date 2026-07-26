@@ -11,9 +11,9 @@ from typing import TYPE_CHECKING
 from .helpers import tree_species_extension as _  # noqa: F401
 
 __all__ = [
+    "adapters",
     "bark",
     "biomass",
-    "blocks",
     "geo",
     "growth",
     "height",
@@ -26,6 +26,7 @@ __all__ = [
     "simulation",
     "site",
     "siteindex",
+    "systems",
     "taper",
     "timber",
     "volume",
@@ -33,9 +34,9 @@ __all__ = [
 
 if TYPE_CHECKING:  # pragma: no cover - typing only
     from . import (  # noqa: F401
+        adapters,
         bark,
         biomass,
-        blocks,
         geo,
         growth,
         height,
@@ -48,6 +49,7 @@ if TYPE_CHECKING:  # pragma: no cover - typing only
         simulation,
         site,
         siteindex,
+        systems,
         taper,
         timber,
         volume,

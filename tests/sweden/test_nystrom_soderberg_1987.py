@@ -3,7 +3,7 @@ import math
 import pytest
 
 from pyforestry.base.helpers.tree_species import TreeSpecies
-from pyforestry.sweden.blocks.nystrom_soderberg_1987 import NystromSoderberg1987
+from pyforestry.sweden.systems.nystrom_soderberg_1987 import NystromSoderberg1987
 
 
 def test_age_at_breast_height_pine():

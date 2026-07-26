@@ -1,7 +1,7 @@
 import math
 
 from pyforestry.base.helpers.tree_species import TreeSpecies
-from pyforestry.sweden.blocks.elfving_1982 import (
+from pyforestry.sweden.adapters.elfving_1982 import (
     NfiRegion,
     NyskogReconstruction,
     RegenerationType,

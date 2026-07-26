@@ -4,7 +4,7 @@ import pytest
 
 from pyforestry.base.helpers import CircularPlot, Stand, Tree, TreeSpecies
 from pyforestry.base.helpers.primitives import Age
-from pyforestry.norway.blocks.allen_2020 import (
+from pyforestry.norway.adapters.allen_2020 import (
     Allen2020Config,
     Allen2020GrowthModel,
     Allen2020Model,

@@ -20,6 +20,14 @@ pyforestry.sweden.growth.elfving\_2010.kernels module
    :undoc-members:
    :show-inheritance:
 
+pyforestry.sweden.growth.elfving\_2010.thinning\_response module
+----------------------------------------------------------------
+
+.. automodule:: pyforestry.sweden.growth.elfving_2010.thinning_response
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

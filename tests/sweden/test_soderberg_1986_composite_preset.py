@@ -5,8 +5,8 @@ import pytest
 
 from pyforestry.base.helpers.primitives import SiteBase
 from pyforestry.base.helpers.tree_species import TreeSpecies
-from pyforestry.sweden.blocks.elfving_2010 import Elfving2010Model
-from pyforestry.sweden.blocks.soderberg_1986_growth import Soderberg1986Model
+from pyforestry.sweden.adapters.elfving_2010 import Elfving2010Model
+from pyforestry.sweden.adapters.soderberg_1986_growth import Soderberg1986Model
 from pyforestry.sweden.simulation.presets import (
     Soderberg1986CompositePresetConfig,
     build_soderberg_1986_composite_preset,
