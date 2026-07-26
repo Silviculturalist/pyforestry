@@ -7,7 +7,6 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   pyforestry.simulation.dp
    pyforestry.simulation.services
    pyforestry.simulation.valuation
 
@@ -22,26 +21,18 @@ pyforestry.simulation.contracts module
    :undoc-members:
    :show-inheritance:
 
-pyforestry.simulation.growth\_module module
--------------------------------------------
-
-.. automodule:: pyforestry.simulation.growth_module
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pyforestry.simulation.model\_view module
-----------------------------------------
-
-.. automodule:: pyforestry.simulation.model_view
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 pyforestry.simulation.presets module
 ------------------------------------
 
 .. automodule:: pyforestry.simulation.presets
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyforestry.simulation.stage\_runtime module
+-------------------------------------------
+
+.. automodule:: pyforestry.simulation.stage_runtime
    :members:
    :undoc-members:
    :show-inheritance:
