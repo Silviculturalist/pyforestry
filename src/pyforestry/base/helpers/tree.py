@@ -1,11 +1,26 @@
 """Classes for representing individual and aggregated tree records."""
 
+from itertools import count
 from typing import Any, Dict, Optional, Union
 
 from pyforestry.base.contracts import ImputedValue, SourceReference
 
 from .primitives import Age, Diameter_cm, Position
 from .tree_species import TreeName, parse_tree_species
+
+#: Type of a :attr:`Tree.uid`. Callers may supply their own inventory keys, so an
+#: identifier is whatever they use; the automatic ones are strings.
+TreeUid = Union[int, str]
+
+# Serial number behind the automatic ``uid``. Rendered with a ``"t"`` prefix so an
+# auto-assigned identifier cannot collide with a caller's own integer keys, and so
+# it reads as an identifier rather than a measurement in a repr.
+_UID_COUNTER = count(1)
+
+
+def _next_uid() -> str:
+    """Return the next automatic tree identifier, e.g. ``"t42"``."""
+    return f"t{next(_UID_COUNTER)}"
 
 
 class Tree:
@@ -43,8 +58,13 @@ class Tree:
         the influence-zone overlap competition indices; see
         :mod:`pyforestry.base.competition`. Left ``None`` unless measured or
         supplied by a crown model.
-    uid : int | None
-        A unique identifier for the Tree object.
+    uid : int | str
+        Stable identifier for this record. Supply your own to carry an inventory's
+        keys through; otherwise one is assigned automatically (``"t1"``, ``"t2"``,
+        …), so every tree can always be tracked across a simulation step, a
+        checkpoint or a serialisation round trip without falling back to
+        :func:`id`, which means nothing outside one process. A copied tree keeps
+        its uid: it is the same tree, in a later state.
     """
 
     def __init__(
@@ -82,7 +102,9 @@ class Tree:
         mortality : float | None, optional
             Optional mortality fraction (0-1) for this tree record.
         uid : int | str | None, optional
-            Optional unique identifier for the tree.
+            Stable identifier for this record. Defaults to an automatically
+            assigned ``"t<n>"``; pass your own to carry an inventory's keys
+            through.
         imputed : dict[str, ImputedValue] | None, optional
             Pre-existing modelled values keyed by attribute name.
         crown_radius_m : float | None, optional
@@ -106,7 +128,7 @@ class Tree:
         self.diameter_cm = diameter_cm
         self.height_m = height_m
         self.imputed: Dict[str, ImputedValue] = dict(imputed) if imputed else {}
-        self.uid = uid
+        self.uid: TreeUid = _next_uid() if uid is None else uid
         self.weight_n = weight_n
         self.is_overstorey = is_overstorey
         self.mortality = mortality

@@ -164,3 +164,26 @@ def test_a_stand_that_cannot_supply_stems_says_so():
     assert _AggregateModel().can_build(stand)[0] is False
     with pytest.raises(ValueError, match="does not supply Stems"):
         _AggregateModel().build_context(stand)
+
+
+def test_every_tree_gets_a_stable_identifier():
+    """A tree record must be trackable without falling back to id().
+
+    ``Tree.uid`` existed but was never populated, so the Elfving composite keyed
+    its per-step bookkeeping on CPython object identity -- which is meaningless
+    across a checkpoint, a serialisation round trip, or a separate process.
+    """
+    a, b = Tree(species=SPRUCE, diameter_cm=20.0), Tree(species=SPRUCE, diameter_cm=20.0)
+    assert a.uid and b.uid
+    assert a.uid != b.uid
+
+    # A caller's own inventory keys win, and cannot collide with the automatic
+    # ones, which are always "t" followed by a serial number.
+    assert Tree(species=SPRUCE, uid="plot7-stem3").uid == "plot7-stem3"
+    assert Tree(species=SPRUCE, uid=1).uid == 1
+    assert str(a.uid).startswith("t")
+
+    # A copy is the same tree in a later state, so it keeps its identity.
+    import copy
+
+    assert copy.deepcopy(a).uid == a.uid

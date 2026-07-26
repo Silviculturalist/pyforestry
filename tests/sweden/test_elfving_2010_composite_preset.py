@@ -119,8 +119,8 @@ def test_handover_rule_dbh_threshold_10cm() -> None:
     trees[0].diameter_cm = 9.99
     trees[1].diameter_cm = 10.0
     young_ids = preset._young_tree_ids(trees)
-    assert id(trees[0]) in young_ids
-    assert id(trees[1]) not in young_ids
+    assert trees[0].uid in young_ids
+    assert trees[1].uid not in young_ids
 
 
 def test_standing_valuation_runs_with_mellanskog_2013() -> None:
@@ -477,7 +477,7 @@ def test_apply_soderberg_height_preserves_nystrom_height_for_young_ids(
 
     preset._apply_soderberg_height_and_bark(
         fallback_age_years=20.0,
-        preserve_height_tree_ids={id(young_tree)},
+        preserve_height_tree_ids={young_tree.uid},
     )
 
     assert young_tree.height_m == pytest.approx(9.0)

@@ -25,6 +25,7 @@ import pandas as pd
 from pyforestry.base.contracts import Describable, SourceReference
 from pyforestry.base.helpers import CircularPlot, Stand, Tree
 from pyforestry.base.helpers.primitives import Age, SiteIndexValue
+from pyforestry.base.helpers.tree import TreeUid
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies
 from pyforestry.base.pricelist import Pricelist, SolutionCube, create_pricelist_from_data
 from pyforestry.base.timber_bucking.nasberg_1985 import BuckingConfig, Nasberg_1985_BranchBound
@@ -381,9 +382,9 @@ class Elfving2010CompositePreset:
             self._apply_nystrom_young_growth(young_ids=young_ids, dt_years=dt)
 
         young_dbh_after_nystrom = {
-            id(tree): float(tree.diameter_cm or 0.0)
+            tree.uid: float(tree.diameter_cm or 0.0)
             for tree in self._trees
-            if id(tree) in young_ids
+            if tree.uid in young_ids
         }
         self._last_phase_over_weight = self._phase_over_weight(
             self._weighted_mean_height_m(self._trees),
@@ -408,7 +409,7 @@ class Elfving2010CompositePreset:
         self._ctx.update_step(dt)
 
         for tree in self._trees:
-            tree_id = id(tree)
+            tree_id = tree.uid
             if tree_id in young_dbh_after_nystrom:
                 tree.diameter_cm = self._blend_phase_over_dbh(
                     young_dbh_cm=float(young_dbh_after_nystrom[tree_id]),
@@ -864,12 +865,12 @@ class Elfving2010CompositePreset:
         ctx.state["t"] = float(self._years_elapsed)
         self._ctx = ctx
 
-    def _young_tree_ids(self, trees: list[Tree]) -> set[int]:
+    def _young_tree_ids(self, trees: list[Tree]) -> set[TreeUid]:
         """Return object ids for trees below the configured phase-over DBH threshold."""
         if self._phase_over_weight(self._weighted_mean_height_m(trees)) >= 0.999:
             return set()
         handover = float(self.config.handover_dbh_cm)
-        return {id(tree) for tree in trees if float(tree.diameter_cm or 0.0) < handover}
+        return {tree.uid for tree in trees if float(tree.diameter_cm or 0.0) < handover}
 
     def _weighted_mean_height_m(self, trees: list[Tree]) -> float:
         """Return weighted arithmetic mean tree height for phase-over classification."""
@@ -985,7 +986,7 @@ class Elfving2010CompositePreset:
                 age_bh = max(1.0, self.config.initial_age_years - 1.0)
             tree.age = Age.DBH(age_bh)
 
-    def _apply_nystrom_young_growth(self, *, young_ids: set[int], dt_years: float) -> None:
+    def _apply_nystrom_young_growth(self, *, young_ids: set[TreeUid], dt_years: float) -> None:
         """Advance height and DBH for trees still in the young-stand phase."""
         if self._site is None:
             raise RuntimeError("site is not set")
@@ -1000,13 +1001,13 @@ class Elfving2010CompositePreset:
             self._last_damage_mortality_stems_per_ha = 0.0
             return
 
-        young_trees = [tree for tree in self._trees if id(tree) in young_ids]
+        young_trees = [tree for tree in self._trees if tree.uid in young_ids]
         damage_by_group = self._naslund_damage_by_group(young_trees)
         damage_index_sum = 0.0
         damage_index_count = 0.0
 
         for tree in self._trees:
-            if id(tree) not in young_ids or tree.species is None or tree.height_m is None:
+            if tree.uid not in young_ids or tree.species is None or tree.height_m is None:
                 continue
             species_group = self._naslund_species_group(tree.species)
             damage_index = float(damage_by_group.get(species_group, 0.0))
@@ -1040,7 +1041,7 @@ class Elfving2010CompositePreset:
         shrubs = int(self._site.field_layer == Sweden.FieldLayer.HIGH_HERB_WITH_SHRUBS_BLUEBERRY)
         herb_grass = int(self._site.field_layer == Sweden.FieldLayer.BROADLEAVED_GRASS)
         for tree in self._trees:
-            if id(tree) not in young_ids or tree.species is None or tree.height_m is None:
+            if tree.uid not in young_ids or tree.species is None or tree.height_m is None:
                 continue
             tree.diameter_cm = NystromSoderberg1987.dbh_from_height(
                 height_dm=float(tree.height_m) * 10.0,
@@ -1065,7 +1066,7 @@ class Elfving2010CompositePreset:
         removed_stems = 0.0
         if self.config.use_naslund_damage_mortality:
             for tree in self._trees:
-                if id(tree) not in young_ids or tree.species is None or tree.height_m is None:
+                if tree.uid not in young_ids or tree.species is None or tree.height_m is None:
                     continue
                 species_group = self._naslund_species_group(tree.species)
                 damage_index = float(damage_by_group.get(species_group, 0.0))
@@ -1218,7 +1219,7 @@ class Elfving2010CompositePreset:
         bal_map_m2_ha: dict[int, float] = {}
         cumulative_bal = 0.0
         for tree in sorted_by_dbh:
-            bal_map_m2_ha[id(tree)] = cumulative_bal
+            bal_map_m2_ha[tree.uid] = cumulative_bal
             cumulative_bal += self._bal_m2_ha_for_tree(tree)
 
         species_ba_m2_ha: dict[TreeName, float] = {}
@@ -1256,7 +1257,7 @@ class Elfving2010CompositePreset:
             MortalityTreeRecord(
                 species=tree.species,
                 diameter_cm=float(tree.diameter_cm or 0.0),
-                bal=float(bal_map_m2_ha.get(id(tree), 0.0)),
+                bal=float(bal_map_m2_ha.get(tree.uid, 0.0)),
                 stems_per_tree=float(tree.weight_n or 0.0),
                 age_total_years=float(tree.age)
                 if tree.age is not None
@@ -1525,7 +1526,7 @@ class Elfving2010CompositePreset:
         self,
         *,
         fallback_age_years: float,
-        preserve_height_tree_ids: set[int] | None = None,
+        preserve_height_tree_ids: set[TreeUid] | None = None,
     ) -> None:
         """Refresh tree bark and mature-tree heights using Söderberg (1992) functions."""
         if self._site is None:
@@ -1554,7 +1555,7 @@ class Elfving2010CompositePreset:
                 continue
             age_bh_years = float(tree.age) if tree.age is not None else float(fallback_age_years)
             age_bh_years = max(2.0, age_bh_years)
-            if id(tree) not in preserve_ids:
+            if tree.uid not in preserve_ids:
                 tree.height_m = soderberg_1992_height_tree_age_m(
                     species=tree.species,
                     diameter_cm=diameter_cm,
