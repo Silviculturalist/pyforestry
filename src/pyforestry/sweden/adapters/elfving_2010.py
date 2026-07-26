@@ -75,12 +75,6 @@ from pyforestry.sweden.growth.elfving_2010.features import (
     species_group as _species_group,
 )
 from pyforestry.sweden.growth.elfving_2010.features import (
-    split_edge_flags as _split_edge_flags,
-)
-from pyforestry.sweden.growth.elfving_2010.features import (
-    thinning_flags as _thinning_flags,
-)
-from pyforestry.sweden.growth.elfving_2010.features import (
     tree_age_bh_years as _tree_age_bh_years,
 )
 from pyforestry.sweden.growth.elfving_2010.features import (
@@ -124,6 +118,47 @@ class Elfving2010Config:
 
 
 # ---------------------------------------------------------------------------
+# Run inputs
+# ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class Elfving2010Inputs:
+    """What the Elfving functions need to know about the site, resolved once.
+
+    These are facts about *where the stand is*, not about what has happened to it
+    during a run: latitude does not change because five years passed. They are
+    read at :meth:`Elfving2010Model.build_context` from the stand's
+    :class:`~pyforestry.sweden.site.swedish_site.SwedishSite` where it carries
+    them typed, and from ``ctx.attrs`` where it does not.
+
+    Units are in the field names because the equations are unit-specific and the
+    names are the only place a caller sees them: metres, degree-days, decimal
+    degrees, metres above sea level, kilometres, m²/ha.
+
+    Deliberately *not* here: ``thinning_simulated``, ``thinning_history`` and
+    ``fertilized_remaining_years``. A thinning or a fertilisation performed during
+    the run changes those, and a model that had frozen them at build time would
+    stop responding to its own management. ``thinned_0_10_years`` and
+    ``thinned_11_30_years`` do belong here -- they describe the stand's history
+    *before* the run, which is an input.
+    """
+
+    site_index_m: float
+    temperature_sum_dd: float
+    latitude_deg: float
+    altitude_m: float
+    distance_to_coast_km: float
+    dominant_species: TreeName | None = None
+    field_estimated_basal_area_m2_ha: float | None = None
+    is_split_plot: bool = False
+    is_edge_plot: bool = False
+    thinned_0_10_years: bool = False
+    thinned_11_25_years: bool = False
+    thinned_11_30_years: bool = False
+
+
+# ---------------------------------------------------------------------------
 # Growth model adapter
 # ---------------------------------------------------------------------------
 
@@ -157,6 +192,108 @@ class Elfving2010Model(GrowthModel):
     def requirements(self) -> Requirements:
         """Declare that this model accepts either inventory mode and needs site data."""
         return Requirements(inventory="either", require_site=True)
+
+    Inputs = Elfving2010Inputs
+
+    def resolve_inputs(self, ctx: SimulationContext) -> Elfving2010Inputs:
+        """Read the site inputs once, at build time, instead of once per kernel call.
+
+        Every value here used to be re-read from ``ctx.attrs`` on each step, with a
+        default supplied at the point of use -- so an absent temperature sum
+        surfaced as a ``ValueError`` from inside a growth kernel, and a mistyped
+        ``latitiude_deg`` was indistinguishable from a site that had none. Now a
+        missing required input fails here, named, before any growth is computed.
+
+        Site index is resolved from the stand as it stands at build time. Where
+        neither ``attrs`` nor a dominant species determines it, the fallback picks
+        between the site's pine and spruce indices by which group carries more
+        basal area; resolving that once means a projection keeps the site quality
+        it started with, rather than switching curves partway through because the
+        mixture drifted. Site index is a property of the site, not of the crop
+        standing on it.
+
+        Raises:
+            ValueError: If temperature sum, latitude/altitude or site index cannot
+                be resolved.
+        """
+        site = ctx.site if isinstance(ctx.site, SwedishSite) else None
+        latitude_deg, altitude_m = _resolve_latitude_altitude(site, ctx)
+        pine_ba, spruce_ba = self._pine_spruce_basal_area(ctx)
+        thinned_11_25 = bool(ctx.attrs.get("thinned_11_25_years", False))
+        return Elfving2010Inputs(
+            site_index_m=_resolve_site_index_m(
+                site=site, ctx=ctx, pine_ba=pine_ba, spruce_ba=spruce_ba
+            ),
+            temperature_sum_dd=_resolve_temperature_sum(site, ctx),
+            latitude_deg=latitude_deg,
+            altitude_m=altitude_m,
+            distance_to_coast_km=_distance_to_coast_km(site, ctx),
+            dominant_species=ctx.attrs.get("dominant_species"),
+            field_estimated_basal_area_m2_ha=_field_estimated_basal_area_m2_ha(ctx),
+            is_split_plot=bool(ctx.attrs.get("is_split_plot", ctx.attrs.get("split", False))),
+            is_edge_plot=bool(ctx.attrs.get("is_edge_plot", ctx.attrs.get("edge", False))),
+            thinned_0_10_years=bool(ctx.attrs.get("thinned_0_10_years", False)),
+            thinned_11_25_years=thinned_11_25,
+            thinned_11_30_years=bool(ctx.attrs.get("thinned_11_30_years", thinned_11_25)),
+        )
+
+    @staticmethod
+    def _pine_spruce_basal_area(ctx: SimulationContext) -> tuple[float | None, float | None]:
+        """Return pine and spruce basal area (m²/ha), or ``(None, None)`` without trees.
+
+        Only used to break a tie between the site's two site indices; a context
+        holding no tree list has no mixture to break it with.
+        """
+        if ctx.mode not in ("tree_list", "spatial"):
+            return (None, None)
+        pine_ba = 0.0
+        spruce_ba = 0.0
+        for plot in ctx.plots:
+            expansion = _plot_expansion_factor(plot.area_ha, plot.occlusion)
+            for tree in plot.trees:
+                diameter = float(getattr(tree, "diameter_cm", 0.0) or 0.0)
+                if diameter <= 0:
+                    continue
+                ba_m2_ha = (
+                    diameter_to_basal_area_cm2(diameter)
+                    * 1.0e-4
+                    * float(getattr(tree, "weight_n", 1.0) or 1.0)
+                    * expansion
+                )
+                group = _species_group(tree.species)
+                if group == "pine":
+                    pine_ba += ba_m2_ha
+                elif group == "spruce":
+                    spruce_ba += ba_m2_ha
+        return (pine_ba, spruce_ba)
+
+    def _thinning_flags(
+        self, ctx: SimulationContext, inputs: Elfving2010Inputs
+    ) -> tuple[int, int]:
+        """Combine the stand's pre-run thinning history with the run's own thinnings.
+
+        The history is an input and comes from :class:`Elfving2010Inputs`. Whether
+        a thinning has been *simulated* is run state and is read live: once the
+        run has thinned the stand itself, the response is carried by the Elfving
+        (2009) continuous multiplier instead of these indicators, so both go to
+        zero.
+        """
+        if self.config.include_thinning_effect and ctx.attrs.get("thinning_simulated") is True:
+            return (0, 0)
+        return (int(inputs.thinned_0_10_years), int(inputs.thinned_11_30_years))
+
+    def _inputs(self, ctx: SimulationContext) -> Elfving2010Inputs:
+        """Return this context's resolved inputs, resolving them if it has none.
+
+        A context built through :meth:`build_context` always has them. One
+        constructed directly -- as several tests do -- may not, and resolving on
+        first use keeps that working without a second code path for reading them.
+        """
+        inputs = getattr(ctx, "inputs", None)
+        if not isinstance(inputs, Elfving2010Inputs):
+            inputs = self.resolve_inputs(ctx)
+            ctx.inputs = inputs
+        return inputs
 
     def update_step(self, ctx: SimulationContext, dt: float) -> None:
         """Advance one simulation step and route to tree-list or aggregate update."""
@@ -374,30 +511,20 @@ class Elfving2010Model(GrowthModel):
             )
             group_ba[_species_group(tree.species)] += ba_m2_ha
 
-        pine_ba = group_ba["pine"]
-        spruce_ba = group_ba["spruce"]
-
-        ts = _resolve_temperature_sum(site, ctx)
-        lat, alt = _resolve_latitude_altitude(site, ctx)
+        inputs = self._inputs(ctx)
+        ts = inputs.temperature_sum_dd
+        lat, alt = inputs.latitude_deg, inputs.altitude_m
         rich, herb = _vegetation_flags(site.field_layer if site is not None else None)
         gotland = int(site is not None and site.county == Sweden.County.GOTLAND)
-        split, edge = _split_edge_flags(ctx)
-        field_ba = _field_estimated_basal_area_m2_ha(ctx)
+        split, edge = int(inputs.is_split_plot), int(inputs.is_edge_plot)
+        field_ba = inputs.field_estimated_basal_area_m2_ha
         if field_ba is None or field_ba <= 0:
             field_ba = basal_area_total
-        thinned_0_10_years_flag, thinned_10_30_years_flag = _thinning_flags(
-            ctx, self.config.include_thinning_effect
-        )
-        thinned_11_25_years_flag = int(bool(ctx.attrs.get("thinned_11_25_years", False)))
+        thinned_0_10_years_flag, thinned_10_30_years_flag = self._thinning_flags(ctx, inputs)
+        thinned_11_25_years_flag = int(inputs.thinned_11_25_years)
         fertilized = _fertilization_flag(ctx)
-        distance_to_coast_km = _distance_to_coast_km(site, ctx)
-
-        site_index_m = _resolve_site_index_m(
-            site=site,
-            ctx=ctx,
-            pine_ba=pine_ba,
-            spruce_ba=spruce_ba,
-        )
+        distance_to_coast_km = inputs.distance_to_coast_km
+        site_index_m = inputs.site_index_m
 
         # Overstorey classification (if needed)
         mean_age_total = _mean_age_total(trees, expansions, site_index_m, lat)
@@ -515,7 +642,8 @@ class Elfving2010Model(GrowthModel):
         scale: float,
     ) -> None:
         """Apply stand calibration and update tree diameters."""
-        lat, _alt = _resolve_latitude_altitude(site, ctx)
+        inputs = self._inputs(ctx)
+        lat = inputs.latitude_deg
 
         basal_area_all = 0.0
         contorta_ba = 0.0
@@ -549,7 +677,7 @@ class Elfving2010Model(GrowthModel):
         )
         diameter_limit_overstorey = 1.8 * (dominant_mean + 8.0) if dominant_mean > 0 else 1.0e6
 
-        ts = _resolve_temperature_sum(site, ctx)
+        ts = inputs.temperature_sum_dd
         veg = (
             float(site.field_layer.value.index)
             if site is not None and site.field_layer is not None
@@ -562,11 +690,9 @@ class Elfving2010Model(GrowthModel):
             and site.soil_texture in {Sweden.SoilTextureSediment.PEAT, Sweden.SoilTextureTill.PEAT}
         )
         ditch = int(site is not None and bool(site.ditched))
-        split, edge = _split_edge_flags(ctx)
+        split, edge = int(inputs.is_split_plot), int(inputs.is_edge_plot)
         fert = _fertilization_flag(ctx)
-        thinned_0_10_years_flag, thinned_10_30_years_flag = _thinning_flags(
-            ctx, self.config.include_thinning_effect
-        )
+        thinned_0_10_years_flag, thinned_10_30_years_flag = self._thinning_flags(ctx, inputs)
 
         surrounding_basal_area = field_ba if ctx.state.get("t", 0.0) <= 0.0 else basal_area_all
         ln_relative_basal_area = (
@@ -765,7 +891,8 @@ class Elfving2010Model(GrowthModel):
         spruce_share = spruce_ba / ba_total if ba_total > 0 else 0.0
         birch_share = birch_ba / ba_total if ba_total > 0 else 0.0
 
-        ts = _resolve_temperature_sum(site, ctx)
+        inputs = self._inputs(ctx)
+        ts = inputs.temperature_sum_dd
         veg = (
             float(site.field_layer.value.index)
             if site is not None and site.field_layer is not None
@@ -778,24 +905,16 @@ class Elfving2010Model(GrowthModel):
             and site.soil_texture in {Sweden.SoilTextureSediment.PEAT, Sweden.SoilTextureTill.PEAT}
         )
         ditch = int(site is not None and bool(site.ditched))
-        split, edge = _split_edge_flags(ctx)
+        split, edge = int(inputs.is_split_plot), int(inputs.is_edge_plot)
         fert = _fertilization_flag(ctx)
-        thinned_0_10_years_flag, thinned_10_30_years_flag = _thinning_flags(
-            ctx, self.config.include_thinning_effect
-        )
+        thinned_0_10_years_flag, thinned_10_30_years_flag = self._thinning_flags(ctx, inputs)
 
-        site_index_m = _resolve_site_index_m(
-            site=site,
-            ctx=ctx,
-            pine_ba=pine_ba,
-            spruce_ba=spruce_ba,
-        )
-        site_index_adj = site_index_m
+        site_index_adj = inputs.site_index_m
         if contorta_ba > 0 and ba_total > 0:
             site_index_adj += 3.0 * contorta_ba / ba_total
         site_index_adj *= self.config.site_index_adjustment_factor
 
-        field_ba = _field_estimated_basal_area_m2_ha(ctx)
+        field_ba = inputs.field_estimated_basal_area_m2_ha
         if field_ba is None or field_ba <= 0:
             field_ba = ba_total
 
@@ -872,6 +991,7 @@ class Elfving2010Model(GrowthModel):
 
 __all__ = [
     "Elfving2010Config",
+    "Elfving2010Inputs",
     "Elfving2010Model",
     "stand_basal_area_growth_elfving_2009",
     "pine_ln_d2_growth",

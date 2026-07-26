@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import warnings
 from dataclasses import dataclass
-from typing import Any, Dict, List, Literal, Optional, Tuple
+from typing import Any, ClassVar, Dict, List, Literal, Optional, Tuple
 
 from pyforestry.base.contracts import SourceReference
 from pyforestry.base.helpers import Stand
@@ -212,6 +212,8 @@ class GrowthModel:
         mode_hint: Optional[str] = None,
         use_adapter: Optional[str] = None,
         adapter_kwargs: Optional[Dict[str, Any]] = None,
+        attrs: Optional[Dict[str, Any]] = None,
+        inputs: Optional[Any] = None,
     ) -> SimulationContext:
         """Build the working context this model will step.
 
@@ -230,15 +232,26 @@ class GrowthModel:
             use_adapter: Name of a specific registered adapter to convert
                 angle-count tallies with, instead of the preferred-order default.
             adapter_kwargs: Extra keyword arguments forwarded to the adapter.
+            attrs: Site and history values the stand does not carry typed, merged
+                over :meth:`default_attrs`. Pass them here rather than writing them
+                onto ``ctx.attrs`` afterwards: :meth:`resolve_inputs` runs during
+                this call, so anything set later is too late to be resolved or
+                checked.
+            inputs: An already-built :attr:`Inputs` instance. Supplying it skips
+                resolution entirely, which is what a caller that constructed the
+                stand and knows its site should do -- the values are then typed at
+                the call site instead of round-tripping through a string-keyed
+                dict.
 
         Returns:
             A :class:`SimulationContext` holding a working copy of the inventory,
-            the model's initial state, and an ``inventory_origin`` attribute
-            recording how the representation was obtained.
+            the model's initial state, the model's resolved ``inputs``, and an
+            ``inventory_origin`` attribute recording how the representation was
+            obtained.
 
         Raises:
             ValueError: If ``use_adapter`` names an adapter that cannot adapt
-                ``stand``.
+                ``stand``, or if a required model input cannot be resolved.
         """
         req = self.requirements()
         adapter_kwargs = adapter_kwargs or {}
@@ -364,14 +377,16 @@ class GrowthModel:
             origin = "angle_count_aggregate" if stand.use_angle_count else "aggregate"
 
         state = self.init_state_stub()
-        attrs = self.default_attrs()
+        context_attrs = self.default_attrs()
+        if attrs:
+            context_attrs.update(attrs)
 
         # Provenance: what the inventory in this context actually came from. Only
         # record an adapter when one really ran -- claiming a measured tree list was
         # reconstructed from angle-count tallies is worse than saying nothing.
-        attrs["inventory_origin"] = origin
+        context_attrs["inventory_origin"] = origin
         if adapter_used is not None:
-            attrs["inventory_adapter"] = adapter_used
+            context_attrs["inventory_adapter"] = adapter_used
 
         ctx = SimulationContext(
             mode=mode,
@@ -381,9 +396,50 @@ class GrowthModel:
             inventory=inventory,
             initial_state=state,
             model=self,
-            initial_attrs=attrs,
+            initial_attrs=context_attrs,
         )
+        ctx.inputs = inputs if inputs is not None else self._resolve_inputs_or_explain(ctx)
         return ctx
+
+    # ------------------------------- Inputs -----------------------------------
+
+    #: The frozen dataclass this model resolves its run inputs into, or ``None``
+    #: for a model that reads ``ctx.attrs`` directly. Declaring it is what lets a
+    #: caller ask "which models can I run on the data I have?" without running one.
+    Inputs: ClassVar[Optional[type]] = None
+
+    def resolve_inputs(self, ctx: SimulationContext) -> Optional[Any]:
+        """Resolve this model's run inputs, once, while the context is being built.
+
+        Return an instance of :attr:`Inputs` -- the site and plot facts that hold
+        for the whole run, read out of the stand's typed :class:`Site` where it
+        has them and out of ``ctx.attrs`` where it does not. Raise for anything
+        required and absent.
+
+        The point is *where* it raises. Reading inputs with ``attrs.get(key,
+        default)`` at the moment a kernel needs them means a missing input either
+        surfaces twenty frames into a step or, worse, silently becomes its
+        default; and a mistyped key is indistinguishable from an absent one. Doing
+        it here turns both into a named error at ``build_context``, before any
+        time has been simulated.
+
+        Values that a step can *change* -- whether a thinning has been simulated,
+        how many fertilised years remain -- are run state and do not belong here.
+        Freeze those and the model stops responding to its own management.
+
+        Returns:
+            The resolved inputs, or ``None`` if this model declares none.
+        """
+        return None
+
+    def _resolve_inputs_or_explain(self, ctx: SimulationContext) -> Optional[Any]:
+        """Call :meth:`resolve_inputs`, naming the model if it cannot."""
+        try:
+            return self.resolve_inputs(ctx)
+        except (KeyError, TypeError, ValueError) as exc:
+            raise type(exc)(
+                f"{type(self).__name__} cannot resolve its inputs from this stand: {exc}"
+            ) from exc
 
     # ------------------------------ Behavior ----------------------------------
 

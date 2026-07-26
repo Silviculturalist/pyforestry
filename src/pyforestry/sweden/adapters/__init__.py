@@ -28,11 +28,12 @@ from .elfving_1982 import (
     NyskogReconstructionSummary,
     RegenerationType,
 )
-from .elfving_2010 import Elfving2010Config, Elfving2010Model
+from .elfving_2010 import Elfving2010Config, Elfving2010Inputs, Elfving2010Model
 from .soderberg_1986_growth import Soderberg1986Config, Soderberg1986Model
 
 __all__ = [
     "Elfving2010Config",
+    "Elfving2010Inputs",
     "Elfving2010Model",
     "HuginCropTreeProbability",
     "HuginMeanHeightModel",

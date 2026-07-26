@@ -503,8 +503,9 @@ def test_rebuild_context_sets_site_index_from_dominant_species() -> None:
     preset._rebuild_context()
 
     assert preset._ctx is not None
-    assert preset._ctx.attrs["site_index_m"] == pytest.approx(32.0)
-    assert preset._ctx.attrs["dominant_species"] is preset_module.TreeSpecies.Sweden.picea_abies
+    inputs = preset._ctx.inputs
+    assert inputs.site_index_m == pytest.approx(32.0)
+    assert inputs.dominant_species is preset_module.TreeSpecies.Sweden.picea_abies
 
 
 def test_mortality_engine_application_reduces_tree_weights(

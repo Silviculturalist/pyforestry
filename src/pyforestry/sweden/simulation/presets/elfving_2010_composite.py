@@ -35,7 +35,7 @@ from pyforestry.sweden.adapters.elfving_1982 import (
     NyskogReconstruction,
     RegenerationType,
 )
-from pyforestry.sweden.adapters.elfving_2010 import Elfving2010Model
+from pyforestry.sweden.adapters.elfving_2010 import Elfving2010Inputs, Elfving2010Model
 from pyforestry.sweden.bark.soderberg_1992 import soderberg_1992_bark_thickness_bh_mm
 from pyforestry.sweden.height.nystrom_2000 import sapling_height_growth_m
 from pyforestry.sweden.height.soderberg_1992 import soderberg_1992_height_tree_age_m
@@ -836,7 +836,15 @@ class Elfving2010CompositePreset:
         return result
 
     def _rebuild_context(self) -> None:
-        """Rebuild tree-list simulation context from current in-memory trees."""
+        """Rebuild tree-list simulation context from current in-memory trees.
+
+        The site facts the growth model needs are handed over as
+        :class:`Elfving2010Inputs`, typed and complete. They used to be twelve
+        string keys written onto ``ctx.attrs`` after the context was built, where
+        a mistyped name was indistinguishable from a site that had none of that
+        value and only surfaced as a default -- or an exception -- once a growth
+        kernel reached for it.
+        """
         if self._site is None:
             raise RuntimeError("site is not set")
         stand_structure = self._stand_structure()
@@ -845,22 +853,25 @@ class Elfving2010CompositePreset:
         )
         plot = CircularPlot(id=1, area_m2=10000.0, trees=self._trees)
         stand = Stand(site=self._site, plots=[plot])
-        ctx = self._model.build_context(stand, mode_hint="tree_list")
-        ctx.attrs.update(
-            {
-                "site_index_m": float(self._site_index_for_species(dominant_species)),
-                "dominant_species": dominant_species,
-                "temperature_sum_dd": self._temperature_sum(),
-                "latitude_deg": float(self._site.latitude),
-                "altitude_m": float(self._site.altitude or 0.0),
-                "distance_to_coast_km": float(
-                    getattr(self._site, "distance_to_coast", 50.0) or 50.0
-                ),
-                "field_estimated_basal_area_m2_ha": self._basal_area_m2_ha(self._trees),
-                "thinned_0_10_years": False,
-                "thinned_11_25_years": False,
-                "thinned_11_30_years": False,
-            }
+        ctx = self._model.build_context(
+            stand,
+            mode_hint="tree_list",
+            inputs=Elfving2010Inputs(
+                site_index_m=float(self._site_index_for_species(dominant_species)),
+                temperature_sum_dd=self._temperature_sum(),
+                latitude_deg=float(self._site.latitude),
+                altitude_m=float(self._site.altitude or 0.0),
+                distance_to_coast_km=float(getattr(self._site, "distance_to_coast", 50.0) or 50.0),
+                dominant_species=dominant_species,
+                field_estimated_basal_area_m2_ha=self._basal_area_m2_ha(self._trees),
+                # This pipeline starts from a bare regeneration, so there is no
+                # pre-run thinning history to declare; thinnings it performs
+                # itself are carried by ctx.attrs["thinning_simulated"] and the
+                # Elfving (2009) continuous response instead.
+                thinned_0_10_years=False,
+                thinned_11_25_years=False,
+                thinned_11_30_years=False,
+            ),
         )
         ctx.state["t"] = float(self._years_elapsed)
         self._ctx = ctx

@@ -1369,24 +1369,11 @@ def _build_simple_stand():
 
 def test_elfving_model_scales_with_dt():
     model = Elfving2010Model()
-    stand_5 = _build_simple_stand()
-    ctx_5 = model.build_context(stand_5, mode_hint="tree_list")
-    ctx_5.attrs.update(
-        {
-            "site_index_m": 20.0,
-            "temperature_sum_dd": 1200.0,
-            "latitude_deg": 60.0,
-            "altitude_m": 100.0,
-            "vegetation_index": 1.5,
-            "field_estimated_basal_area_m2_ha": 20.0,
-        }
-    )
+    ctx_5 = _build_tree_list_context(model)
     model.update_step(ctx_5, 5.0)
     inc_5 = ctx_5.plots[0].trees[0].diameter_cm - 20.0
 
-    stand_10 = _build_simple_stand()
-    ctx_10 = model.build_context(stand_10, mode_hint="tree_list")
-    ctx_10.attrs.update(ctx_5.attrs)
+    ctx_10 = _build_tree_list_context(model)
     model.update_step(ctx_10, 10.0)
     inc_10 = ctx_10.plots[0].trees[0].diameter_cm - 20.0
 
@@ -1400,7 +1387,6 @@ def _build_tree_list_context(
     include_field_ba: bool = True,
 ):
     stand = stand or _build_simple_stand()
-    ctx = model.build_context(stand, mode_hint="tree_list")
     attrs = {
         "site_index_m": 20.0,
         "temperature_sum_dd": 1200.0,
@@ -1410,21 +1396,24 @@ def _build_tree_list_context(
     }
     if include_field_ba:
         attrs["field_estimated_basal_area_m2_ha"] = 20.0
-    ctx.attrs.update(attrs)
-    return ctx
+    # Passed to build_context, not written afterwards: inputs are resolved during
+    # the build, so anything set later is too late to be resolved or checked.
+    return model.build_context(stand, mode_hint="tree_list", attrs=attrs)
 
 
 def _build_aggregate_context(model: Elfving2010Model):
-    ctx = model.build_context(_build_simple_stand(), mode_hint="aggregate")
-    ctx.attrs.update(
-        {
+    return model.build_context(
+        _build_simple_stand(),
+        mode_hint="aggregate",
+        attrs={
             "site_index_m": 20.0,
             "temperature_sum_dd": 1200.0,
+            "latitude_deg": 60.0,
+            "altitude_m": 100.0,
             "mean_age_total_years": 50.0,
             "vegetation_index": 1.5,
-        }
+        },
     )
-    return ctx
 
 
 def _set_species_metrics(ctx) -> None:
@@ -1497,7 +1486,7 @@ def test_thinning_response_inactive_without_simulated_thinning():
 
 def test_elfving_model_rejects_non_positive_dt():
     model = Elfving2010Model()
-    ctx = model.build_context(_build_simple_stand(), mode_hint="tree_list")
+    ctx = _build_tree_list_context(model)
     with pytest.raises(ValueError, match="dt must be positive"):
         model.update_step(ctx, 0.0)
 
@@ -1508,7 +1497,7 @@ def test_update_step_tree_list_handles_empty_tree_inventory():
         site=_DummySite(latitude=60.0, longitude=15.0),
         plots=[CircularPlot(id=1, area_m2=100.0, trees=[])],
     )
-    ctx = model.build_context(stand, mode_hint="tree_list")
+    ctx = _build_tree_list_context(model, stand)
     model.update_step(ctx, 5.0)
     assert ctx.state["years_since_thin"] == pytest.approx(5.0)
 

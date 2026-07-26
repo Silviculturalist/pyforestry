@@ -130,6 +130,10 @@ class SimulationContext:
 
         self.state: Dict[str, Any] = dict(initial_state)
         self.attrs: Dict[str, Any] = dict(initial_attrs or {})
+        #: The model's typed run inputs, resolved once by
+        #: :meth:`GrowthModel.build_context`. ``None`` for a model that has not
+        #: declared an ``Inputs`` type and still reads ``attrs`` directly.
+        self.inputs: Any = None
         self.history: List[HistoryEntry] = []
         self.state.setdefault("t", 0.0)
         self.state.setdefault("last_dt", 0.0)
