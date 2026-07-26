@@ -33,6 +33,45 @@ class SourceReference:
     note: str = ""
 
 
+@dataclass(frozen=True)
+class ImputedValue:
+    """A modelled value for one attribute, with its provenance.
+
+    Lives here rather than next to the imputers because
+    :class:`~pyforestry.base.helpers.tree.Tree` stores these, and a leaf data
+    class must not depend on the imputation package that fills them in.
+
+    Attributes:
+        attribute: The attribute this value stands in for, e.g. ``"height_m"``.
+        value: The modelled value, in the attribute's own units.
+        imputer_id: ``component_id`` of the imputer that produced it.
+        source: The publication behind that imputer. A user-supplied callable
+            carries the ``"(none)"``/year-0 sentinel, so an uncited value is
+            visibly uncited rather than silently unattributed.
+    """
+
+    attribute: str
+    value: float
+    imputer_id: str
+    source: SourceReference
+
+    def __post_init__(self) -> None:
+        """Reject a non-finite or unnamed value."""
+        if not self.attribute:
+            raise ValueError("attribute must be a non-empty name.")
+        if self.value != self.value or self.value in (float("inf"), float("-inf")):
+            raise ValueError(f"Imputed {self.attribute} must be finite, got {self.value!r}.")
+
+    @property
+    def is_cited(self) -> bool:
+        """Whether this value traces to a publication rather than a bare callable."""
+        return self.source.author != "(none)"
+
+    def __float__(self) -> float:
+        """Return the value, so an ImputedValue can be used in arithmetic."""
+        return float(self.value)
+
+
 class Describable(Protocol):
     """Any component that declares its identity and provenance."""
 
@@ -118,5 +157,6 @@ __all__ = [
     "Describable",
     "FormulaDescriptor",
     "FormulaModuleDescriptor",
+    "ImputedValue",
     "SourceReference",
 ]

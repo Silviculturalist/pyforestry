@@ -1,7 +1,7 @@
 """Eighteen individual-tree competition indices, each attributed to its own author.
 
 Seven distance-independent and eleven spatially explicit indices, spanning
-Staebler (1951) to Schroder & Gadow (1999). Every index is a pure function of a
+Staebler (1951) to Schröder & Gadow (1999). Every index is a pure function of a
 :class:`~pyforestry.base.competition.neighbourhood.Neighbourhood`, and every one
 carries the citation of the paper that *proposed* it -- reachable as
 :func:`index_source` or ``INDEX_REGISTRY[name].source``. The set was assembled
@@ -43,6 +43,7 @@ __all__ = [
     "INDEX_REGISTRY",
     "CompetitionIndex",
     "index_source",
+    "resolve_index",
     "NON_SPATIAL_INDICES",
     "SPATIAL_INDICES",
     "alemdag_almdg",
@@ -83,7 +84,7 @@ def basal_area_sum_ba_gj(n: Neighbourhood) -> float:
         Competitor basal area in m^2/ha.
     """
     n.require("plot_area_ha")
-    return sum(n.competitor_basal_areas_m2()) / n.plot_area_ha  # type: ignore[operator]
+    return sum(n.weighted_competitor_basal_areas_m2()) / n.plot_area_ha  # type: ignore[operator]
 
 
 def basal_area_of_larger_bal(n: Neighbourhood) -> float:
@@ -100,7 +101,7 @@ def basal_area_of_larger_bal(n: Neighbourhood) -> float:
     """
     n.require("plot_area_ha")
     larger = n.larger_competitor_mask()
-    areas = n.competitor_basal_areas_m2()
+    areas = n.weighted_competitor_basal_areas_m2()
     return sum(g for g, is_larger in zip(areas, larger, strict=True) if is_larger) / (
         n.plot_area_ha  # type: ignore[operator]
     )
@@ -118,7 +119,8 @@ def sum_diameter_ratio_sdr(n: Neighbourhood) -> float:
         The index in ha^-1.
     """
     n.require("plot_area_ha")
-    return (sum(n.competitor_dbh_cm) / n.subject_dbh_cm) / n.plot_area_ha  # type: ignore[operator]
+    summed = sum(w * d for w, d in zip(n.weights, n.competitor_dbh_cm, strict=True))
+    return (summed / n.subject_dbh_cm) / n.plot_area_ha  # type: ignore[operator]
 
 
 def diameter_ratio_drg(n: Neighbourhood) -> float:
@@ -149,7 +151,7 @@ def basal_area_ratio_bar(n: Neighbourhood) -> float:
         The index in ha^-1.
     """
     n.require("plot_area_ha")
-    return (sum(n.competitor_basal_areas_m2()) / n.subject_basal_area_m2) / (
+    return (sum(n.weighted_competitor_basal_areas_m2()) / n.subject_basal_area_m2) / (
         n.plot_area_ha  # type: ignore[operator]
     )
 
@@ -172,7 +174,7 @@ def bal_ratio_balr(n: Neighbourhood) -> float:
 
 
 def balmod(n: Neighbourhood) -> float:
-    """``BALMOD``: BALr scaled by relative spacing. Schroder & Gadow (1999).
+    """``BALMOD``: BALr scaled by relative spacing. Schröder & Gadow (1999).
 
     ``[sum(g_j for d_j > d_i) / G] / RS`` with ``RS = sqrt(S/N) / H_dom`` (``S``
     in m^2). Dividing by relative spacing lets the index distinguish stands that
@@ -394,6 +396,11 @@ def alemdag_almdg(n: Neighbourhood) -> float:
     exert equal influence along the line joining them, so each summand is an
     area weighted by that competitor's share of the total size-over-distance.
 
+    Like ``dr_g`` and ``SBAr``, a *high* value means *less* competition: it is
+    the space left to the subject, not the pressure on it. The weights sum to
+    one, so this is a mean rather than a sum -- losing half the competitors to a
+    plot boundary leaves it unchanged, which is why it is not edge-corrected.
+
     Args:
         n: The neighbourhood. Needs ``distances_m``.
 
@@ -481,35 +488,55 @@ class CompetitionIndex:
         source: The publication that proposed *this index*. Not the review it was
             collected from -- see
             :data:`pyforestry.base.competition.sources.INDEX_SET_REVIEW` for that.
-        spatial: Whether the index needs stem-to-stem distances.
+        spatial: Whether the index belongs to Table 2's spatially explicit group,
+            i.e. whether its value depends on a distance-based competitor
+            selection. True for every index in :data:`SPATIAL_INDICES` and false
+            for every index in :data:`NON_SPATIAL_INDICES`, so the flag and the
+            grouping never disagree. ``SBAr`` is spatial on this reading even
+            though its arithmetic has no distance term: its competitor set is
+            distance-defined, and it is the one index whose formula and grouping
+            come apart.
+        additive: Whether the index is a plain sum over competitors, and so
+            scales with the share of the competition zone that was observed.
+            Only additive indices can be edge-corrected by dividing by
+            ``observed_zone_fraction``; ``SBAr`` (a ratio) and ``Almdg`` (a
+            weight-normalised mean of areas) are unchanged when half the
+            competitors are lost, so dividing them would invent competition.
     """
 
     abbreviation: str
     compute: Callable[[Neighbourhood], float]
     source: SourceReference
     spatial: bool
+    additive: bool
 
     def __call__(self, neighbourhood: Neighbourhood) -> float:
         """Evaluate the index."""
         return self.compute(neighbourhood)
 
 
-def _entry(abbrev: str, fn: Callable[[Neighbourhood], float], spatial: bool) -> CompetitionIndex:
+def _entry(
+    abbrev: str,
+    fn: Callable[[Neighbourhood], float],
+    spatial: bool,
+    additive: bool,
+) -> CompetitionIndex:
     """Bind a kernel to its own primary citation."""
-    return CompetitionIndex(abbrev, fn, INDEX_SOURCES[abbrev], spatial)
+    return CompetitionIndex(abbrev, fn, INDEX_SOURCES[abbrev], spatial, additive)
 
 
-#: Non-spatial indices, keyed by the abbreviation used in the literature.
+#: Non-spatial indices, keyed by the abbreviation used in the literature. None of
+#: these is ever edge-corrected, so ``additive`` is irrelevant and set false.
 NON_SPATIAL_INDICES: Dict[str, CompetitionIndex] = {
     entry.abbreviation: entry
     for entry in (
-        _entry("BA-gj", basal_area_sum_ba_gj, False),
-        _entry("BAL", basal_area_of_larger_bal, False),
-        _entry("Sdr", sum_diameter_ratio_sdr, False),
-        _entry("drg", diameter_ratio_drg, False),
-        _entry("BAr", basal_area_ratio_bar, False),
-        _entry("BALr", bal_ratio_balr, False),
-        _entry("BALMOD", balmod, False),
+        _entry("BA-gj", basal_area_sum_ba_gj, False, False),
+        _entry("BAL", basal_area_of_larger_bal, False, False),
+        _entry("Sdr", sum_diameter_ratio_sdr, False, False),
+        _entry("drg", diameter_ratio_drg, False, False),
+        _entry("BAr", basal_area_ratio_bar, False, False),
+        _entry("BALr", bal_ratio_balr, False, False),
+        _entry("BALMOD", balmod, False, False),
     )
 }
 
@@ -517,27 +544,40 @@ NON_SPATIAL_INDICES: Dict[str, CompetitionIndex] = {
 SPATIAL_INDICES: Dict[str, CompetitionIndex] = {
     entry.abbreviation: entry
     for entry in (
-        _entry("Sl", staebler_sl, True),
-        _entry("SOr", gerrard_sor, True),
-        _entry("SOdr", bella_sodr, True),
-        _entry("SBAr", daniels_sbar, False),
-        _entry("Heg", hegyi, True),
-        _entry("SAng1", lin_sang1, True),
-        _entry("SAng2", rouvinen_kuuluvainen_sang2, True),
-        _entry("SdrAng", rouvinen_kuuluvainen_sdrang, True),
-        _entry("Almdg", alemdag_almdg, True),
-        _entry("Sdrl1", lorimer_sdrl1, True),
-        _entry("Sdrl2", martin_ek_sdrl2, True),
+        _entry("Sl", staebler_sl, True, True),
+        _entry("SOr", gerrard_sor, True, True),
+        _entry("SOdr", bella_sodr, True, True),
+        _entry("SBAr", daniels_sbar, True, False),
+        _entry("Heg", hegyi, True, True),
+        _entry("SAng1", lin_sang1, True, True),
+        _entry("SAng2", rouvinen_kuuluvainen_sang2, True, True),
+        _entry("SdrAng", rouvinen_kuuluvainen_sdrang, True, True),
+        _entry("Almdg", alemdag_almdg, True, False),
+        _entry("Sdrl1", lorimer_sdrl1, True, True),
+        _entry("Sdrl2", martin_ek_sdrl2, True, True),
     )
 }
 
 #: Every index, keyed by abbreviation.
 INDEX_REGISTRY: Dict[str, CompetitionIndex] = {**NON_SPATIAL_INDICES, **SPATIAL_INDICES}
 
+#: Case-insensitive lookup, built once rather than per call.
+_BY_LOWER_NAME: Dict[str, str] = {k.lower(): k for k in INDEX_REGISTRY}
 
-def _resolve(name: str) -> CompetitionIndex:
-    """Look an index up by abbreviation, case-insensitively."""
-    key = {k.lower(): k for k in INDEX_REGISTRY}.get(name.lower())
+
+def resolve_index(name: str) -> CompetitionIndex:
+    """Look an index up by abbreviation, case-insensitively.
+
+    Args:
+        name: The abbreviation, e.g. ``"Heg"`` or ``"heg"``.
+
+    Returns:
+        The registry entry, carrying the kernel, its citation and its flags.
+
+    Raises:
+        KeyError: If ``name`` is not one of the eighteen indices.
+    """
+    key = _BY_LOWER_NAME.get(str(name).lower())
     if key is None:
         raise KeyError(f"Unknown competition index {name!r}. Known: {sorted(INDEX_REGISTRY)}")
     return INDEX_REGISTRY[key]
@@ -556,7 +596,7 @@ def compute_index(name: str, neighbourhood: Neighbourhood) -> float:
     Raises:
         KeyError: If ``name`` is not one of the eighteen indices.
     """
-    return _resolve(name).compute(neighbourhood)
+    return resolve_index(name).compute(neighbourhood)
 
 
 def index_source(name: str) -> SourceReference:
@@ -572,4 +612,4 @@ def index_source(name: str) -> SourceReference:
     Raises:
         KeyError: If ``name`` is not one of the eighteen indices.
     """
-    return _resolve(name).source
+    return resolve_index(name).source

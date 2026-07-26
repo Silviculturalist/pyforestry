@@ -371,36 +371,66 @@ def test_lee_gadow_radius_is_a_multiple_of_mean_spacing():
         LeeGadowRadius().select(0, CAND, SelectionContext())
 
 
-def test_bitterlich_limiting_distance_grows_with_the_subject():
-    """l_ij <= 50 * d_i(m) / sqrt(BAF), the angle-count limiting distance.
+def test_bitterlich_limiting_distance_belongs_to_the_competitor():
+    """l_ij <= 50 * d_j(m) / sqrt(BAF): each neighbour has its own limit.
 
-    A 20 cm subject at BAF 2 reaches 7.07 m. Reading the paper's ``d_i`` as cm
-    without converting would give 1.0 m and silently drop most competitors.
+    Bitterlich's whole mechanism is that a big tree is tallied from further
+    away. Using the *subject's* diameter -- as Maleki et al. (2015) Table 1
+    prints it -- gives every neighbour one radius and inverts that.
     """
-    sel = BitterlichBAF(basal_area_factor=2.0).select(0, CAND, CTX)
-    assert sel.zone_radius_m == pytest.approx(7.0711, abs=1e-4)
-    assert sel.zone_radius_m == pytest.approx(20.0 / (2.0 * sqrt(2.0)))
-    assert sel.indices == (1, 2, 3, 4)  # every neighbour is inside 7.07 m
-
+    limit = BitterlichBAF(2.0).limiting_distance_m
+    assert limit(20.0) == pytest.approx(20.0 / (2.0 * sqrt(2.0)))
     # The limit is exactly where the angle-count relation puts the tree on the edge.
-    limit = sel.zone_radius_m
-    assert 10000.0 * (0.20 / (2.0 * limit)) ** 2 == pytest.approx(2.0)
+    assert 10000.0 * (0.20 / (2.0 * limit(20.0))) ** 2 == pytest.approx(2.0)
+    # A bigger stem is tallied from further away.
+    assert limit(60.0) > limit(20.0)
 
-    # A larger subject reaches further; a larger BAF reaches less far.
-    bigger = BitterlichBAF(2.0).select(3, CAND, CTX).zone_radius_m
-    assert bigger > limit
-    coarser = BitterlichBAF(4.0).select(0, CAND, CTX).zone_radius_m
-    assert coarser < limit
+    # DIAMS/DISTS: 30 cm at 3 m and 25 cm at 4 m are well inside their own
+    # limits (10.6 m, 8.8 m); the 5 cm stem at 2 m is outside its 1.77 m limit
+    # even though it is the closest tree of all.
+    sel = BitterlichBAF(basal_area_factor=2.0).select(0, CAND, CTX)
+    assert sel.indices == (1, 2, 3)
+    assert 4 not in sel.indices
 
     with pytest.raises(ValueError):
         BitterlichBAF(basal_area_factor=0.0)
+
+
+def test_bitterlich_keeps_a_large_distant_stem_a_subject_radius_would_drop():
+    """The case that distinguishes the two readings, stated as a bare fact."""
+    cand = Candidates(diameters_cm=(20.0, 60.0, 10.0), distances_m=(0.0, 9.0, 4.0))
+    sel = BitterlichBAF(2.0).select(0, cand, CTX)
+    # 60 cm competes out to 21.2 m; 10 cm stops at 3.5 m.
+    assert sel.indices == (1,)
+    # A subject-diameter radius (7.07 m for a 20 cm subject) gives exactly the
+    # opposite set, which is why this is not a matter of taste.
+    subject_radius_m = 20.0 / (2.0 * sqrt(2.0))
+    assert 9.0 > subject_radius_m > 4.0
+
+
+def test_variable_reach_selectors_declare_no_zone_radius():
+    """A reach found in the data is not a zone fixed before it.
+
+    Substituting it would make Sdrl1 self-referential and the edge correction
+    circular, so these selectors report ``zone_radius_m=None`` and expose the
+    reach separately.
+    """
+    for selector in (NearestNeighbours(n=2), BitterlichBAF(2.0), SearchCone(80.0)):
+        sel = selector.select(0, CAND, CTX)
+        assert sel.zone_radius_m is None, type(selector).__name__
+        assert sel.reach_m == pytest.approx(max(sel.distances_m))
+    # A radius rule does define one, and still reports how far it reached.
+    fixed = FixedRadius(6.0).select(0, CAND, CTX)
+    assert fixed.zone_radius_m == pytest.approx(6.0)
+    assert fixed.reach_m == pytest.approx(5.0)
 
 
 def test_nearest_neighbours_takes_the_closest_n():
     """The two closest qualifying stems, in input order."""
     sel = NearestNeighbours(n=2).select(0, CAND, CTX)
     assert sel.indices == (1, 4)  # 3 m and 2 m
-    assert sel.zone_radius_m == pytest.approx(3.0)
+    assert sel.zone_radius_m is None
+    assert sel.reach_m == pytest.approx(3.0)
     with pytest.raises(ValueError):
         NearestNeighbours(n=0)
 
@@ -459,13 +489,43 @@ def test_api_does_not_edge_correct_non_spatial_indices():
         assert a.indices["BAL"] == pytest.approx(b.indices["BAL"])
 
 
+def test_non_spatial_indices_ignore_the_selector_entirely():
+    """BAL is the plot's basal area in larger trees, not the selector's.
+
+    The selector chooses competitors for the *spatially explicit* indices only.
+    Letting it truncate BAL would make the most widely used distance-independent
+    index shrink with the search radius: a subject whose neighbours all sit
+    beyond the radius would report BAL = 0 on a plot with 9 m2/ha above it.
+    """
+    plot = _demo_plot()
+    tight = competition_indices(plot, selector=FixedRadius(1.0), edge_correction=None)
+    wide = competition_indices(plot, selector=FixedRadius(50.0), edge_correction=None)
+    assert tight[0].n_competitors == 0  # nothing within 1 m
+    assert wide[0].n_competitors == 4
+
+    for name in NON_SPATIAL_INDICES:
+        if name == "BALMOD":  # needs a dominant height, not supplied here
+            continue
+        for a, b in zip(tight, wide, strict=True):
+            assert a.indices[name] == pytest.approx(b.indices[name]), name
+
+    # And the value is the whole plot's, computed here from scratch.
+    subject = plot.trees[0]
+    larger = [t for t in plot.trees if float(t.diameter_cm) > float(subject.diameter_cm)]
+    expected = sum(_g(float(t.diameter_cm)) for t in larger) / plot.area_ha
+    assert tight[0].indices["BAL"] == pytest.approx(expected)
+    assert tight[0].indices["BAL"] > 0.0
+
+
 def test_api_skips_spatial_indices_without_positions():
     """A bare tree list still yields every distance-independent index."""
     trees = [Tree(diameter_cm=d) for d in (20.0, 30.0, 15.0)]
     result = competition_indices(trees, plot_area_ha=0.05)[0]
-    assert set(result.indices) == set(NON_SPATIAL_INDICES) - {"BALMOD"} | {"SBAr"}
+    assert set(result.indices) == set(NON_SPATIAL_INDICES) - {"BALMOD"}
     assert "Heg" in result.skipped
     assert "distances_m" in result.skipped["Heg"]
+    # SBAr is grouped with the spatial indices, so it goes too.
+    assert "SBAr" in result.skipped
 
 
 def test_api_crown_radius_from_callable_overrides_the_attribute():
@@ -515,7 +575,10 @@ def test_api_is_discoverable_in_the_catalog():
     # The package itself has no publication; it collects eighteen that do.
     assert entry.source.author == "(none)"
     assert entry.source.year == 0
-    assert set(entry.composes) == set(INDEX_REGISTRY)
+    # `composes` names catalogued component_ids. Index abbreviations are not
+    # catalogued models, so listing them there would be dangling references.
+    catalogued = {model.component_id for model in catalog.list_models()}
+    assert set(entry.composes) <= catalogued
 
 
 # ---------------------------------------------------------------------------
@@ -543,7 +606,7 @@ def test_index_sources_match_the_originals():
         "drg": ("Hamilton", 1986),
         "BAr": ("Corona", 1989),
         "BALr": ("Vanclay", 1991),
-        "BALMOD": ("Schroder", 1999),
+        "BALMOD": ("Schröder", 1999),
         "Sl": ("Staebler", 1951),
         "SOr": ("Gerrard", 1969),
         "SOdr": ("Bella", 1971),
@@ -578,6 +641,42 @@ def test_index_registry_entries_expose_formula_and_source():
     assert INDEX_REGISTRY["BAL"].spatial is False
     n = Neighbourhood(subject_dbh_cm=20.0, competitor_dbh_cm=(25.0,), distances_m=(4.0,))
     assert entry(n) == pytest.approx(compute_index("Heg", n))
+
+
+def test_spatial_flag_and_grouping_never_disagree():
+    """One classification, not two: ``.spatial`` mirrors dict membership.
+
+    ``SBAr`` used to be registered ``spatial=False`` inside SPATIAL_INDICES, so
+    the flag said 8 non-spatial and the docs said 7, and the edge correction
+    keyed off the grouping while the API reported the flag.
+    """
+    for name, entry in NON_SPATIAL_INDICES.items():
+        assert entry.spatial is False, name
+    for name, entry in SPATIAL_INDICES.items():
+        assert entry.spatial is True, name
+    assert len(NON_SPATIAL_INDICES) == 7
+    assert len(SPATIAL_INDICES) == 11
+    assert sum(1 for e in INDEX_REGISTRY.values() if not e.spatial) == 7
+
+
+def test_only_additive_indices_are_flagged_edge_correctable():
+    """A ratio and a weight-normalised mean do not scale with the observed share."""
+    assert INDEX_REGISTRY["SBAr"].additive is False
+    assert INDEX_REGISTRY["Almdg"].additive is False
+    for name in ("Heg", "Sl", "SOr", "SOdr", "SAng1", "SAng2", "SdrAng", "Sdrl1", "Sdrl2"):
+        assert INDEX_REGISTRY[name].additive is True, name
+
+    # The property the flag encodes: halving the competitor set halves an
+    # additive index and leaves the other two alone.
+    full = Neighbourhood(
+        subject_dbh_cm=20.0, competitor_dbh_cm=(25.0,) * 8, distances_m=(4.0,) * 8
+    )
+    half = Neighbourhood(
+        subject_dbh_cm=20.0, competitor_dbh_cm=(25.0,) * 4, distances_m=(4.0,) * 4
+    )
+    assert compute_index("Heg", full) == pytest.approx(2 * compute_index("Heg", half))
+    assert compute_index("SBAr", full) == pytest.approx(compute_index("SBAr", half))
+    assert compute_index("Almdg", full) == pytest.approx(compute_index("Almdg", half))
 
 
 def test_the_review_is_cited_only_as_the_source_of_the_set():
@@ -627,11 +726,18 @@ def test_lee_gadow_k_is_settable(k, expected):
     assert LeeGadowRadius(k).select(0, CAND, CTX).zone_radius_m == pytest.approx(expected)
 
 
-@pytest.mark.parametrize("baf,expected", [(1.0, 10.0), (2.0, 7.0711), (4.0, 5.0)])
-def test_bitterlich_baf_is_settable(baf, expected):
-    """BAF 1, 2 and 4 are the values the comparison tests."""
-    got = BitterlichBAF(baf).select(0, CAND, CTX).zone_radius_m
-    assert got == pytest.approx(expected, abs=1e-4)
+@pytest.mark.parametrize(
+    "baf,expected_limit,expected_indices",
+    [(1.0, 10.0, (1, 2, 3, 4)), (2.0, 7.0711, (1, 2, 3)), (4.0, 5.0, (1, 3))],
+)
+def test_bitterlich_baf_is_settable(baf, expected_limit, expected_indices):
+    """BAF 1, 2 and 4 are the values the comparison tests.
+
+    ``expected_limit`` is the limiting distance for a 20 cm stem; a coarser
+    gauge pulls every limit in, so fewer neighbours survive.
+    """
+    assert BitterlichBAF(baf).limiting_distance_m(20.0) == pytest.approx(expected_limit, abs=1e-4)
+    assert BitterlichBAF(baf).select(0, CAND, CTX).indices == expected_indices
 
 
 def test_bitterlich_gauge_angles_match_the_published_table():
@@ -813,3 +919,191 @@ def test_search_cone_uses_imputed_heights_through_the_api():
         stand.plots[0], indices=["Heg"], selector=SearchCone(100.0), edge_correction=None
     )
     assert results[0].n_competitors == 2
+
+
+# ---------------------------------------------------------------------------
+# Population, geometry and weighting: what a "plot" means to the API
+# ---------------------------------------------------------------------------
+
+
+def _ring(centre_x: float, n: int, radius_m: float, diameter_cm: float, prefix: str):
+    """``n`` trees of one size evenly spaced on a circle."""
+    from math import cos, sin
+
+    return [
+        Tree(
+            position=(centre_x + radius_m * cos(2 * pi * k / n), radius_m * sin(2 * pi * k / n)),
+            diameter_cm=diameter_cm,
+            uid=f"{prefix}{k}",
+        )
+        for k in range(n)
+    ]
+
+
+def test_default_call_reports_the_plot_bal_not_a_truncated_one():
+    """The default FixedRadius(10 m) must not silently zero BAL on a wider plot."""
+    trees = [Tree(position=(0.0, 0.0), diameter_cm=25.0, uid="c")]
+    trees += _ring(0.0, 12, 15.0, 35.0, "r")  # all beyond the default 10 m
+    plot = CircularPlot(id=1, position=Position(0.0, 0.0), radius_m=20.0, trees=trees)
+
+    result = competition_indices(plot)[0]
+    expected = 12 * _g(35.0) / plot.area_ha
+    assert result.n_competitors == 0  # nothing inside the default zone
+    assert result.indices["BAL"] == pytest.approx(expected)
+    assert result.indices["BAL"] > 9.0
+
+
+def test_a_stand_is_processed_one_plot_at_a_time():
+    """Stem coordinates are plot-local; trees on other plots are not competitors."""
+    plot_a = CircularPlot(
+        id=1,
+        position=Position(0.0, 0.0),
+        radius_m=10.0,
+        trees=[
+            Tree(position=(0.0, 0.0), diameter_cm=20.0, uid="a0"),
+            Tree(position=(2.0, 0.0), diameter_cm=30.0, uid="a1"),
+        ],
+    )
+    plot_b = CircularPlot(
+        id=2,
+        position=Position(0.0, 0.0),
+        radius_m=10.0,
+        trees=[
+            Tree(position=(0.5, 0.0), diameter_cm=22.0, uid="b0"),
+            Tree(position=(-2.0, 0.0), diameter_cm=35.0, uid="b1"),
+        ],
+    )
+    stand = Stand(plots=[plot_a, plot_b])
+
+    via_stand = competition_indices(stand, indices=["Heg", "BAL"], edge_correction=None)
+    assert [r.tree.uid for r in via_stand] == ["a0", "a1", "b0", "b1"]
+
+    for plot, offset in ((plot_a, 0), (plot_b, 2)):
+        alone = competition_indices(plot, indices=["Heg", "BAL"], edge_correction=None)
+        for k, expected in enumerate(alone):
+            got = via_stand[offset + k]
+            assert got.n_competitors == expected.n_competitors
+            assert got.indices["Heg"] == pytest.approx(expected.indices["Heg"])
+            assert got.indices["BAL"] == pytest.approx(expected.indices["BAL"])
+
+
+def test_occlusion_shrinks_the_area_the_trees_are_expanded_over():
+    """A plot that only searched half its area reports twice the density."""
+    trees = [Tree(position=(0.0, 0.0), diameter_cm=20.0, uid="c")]
+    trees += _ring(0.0, 5, 4.0, 25.0, "r")
+    clear = CircularPlot(id=1, position=Position(0.0, 0.0), radius_m=10.0, trees=trees)
+    occluded = CircularPlot(
+        id=2, position=Position(0.0, 0.0), radius_m=10.0, trees=trees, occlusion=0.5
+    )
+    a = competition_indices(clear, indices=["BAL", "BA-gj"], edge_correction=None)[0]
+    b = competition_indices(occluded, indices=["BAL", "BA-gj"], edge_correction=None)[0]
+    assert b.indices["BAL"] == pytest.approx(2.0 * a.indices["BAL"])
+    assert b.indices["BA-gj"] == pytest.approx(2.0 * a.indices["BA-gj"])
+
+
+def test_weight_n_counts_towards_the_per_hectare_indices():
+    """A record standing for ten stems contributes ten stems of basal area."""
+    single = [
+        Tree(position=(0.0, 0.0), diameter_cm=20.0),
+        Tree(position=(3.0, 0.0), diameter_cm=40.0),
+    ]
+    tenfold = [
+        Tree(position=(0.0, 0.0), diameter_cm=20.0),
+        Tree(position=(3.0, 0.0), diameter_cm=40.0, weight_n=10.0),
+    ]
+    plot_a = CircularPlot(id=1, position=Position(0.0, 0.0), radius_m=10.0, trees=single)
+    plot_b = CircularPlot(id=2, position=Position(0.0, 0.0), radius_m=10.0, trees=tenfold)
+    a = competition_indices(plot_a, indices=["BAL", "Sdr", "Heg"], edge_correction=None)[0]
+    b = competition_indices(plot_b, indices=["BAL", "Sdr", "Heg"], edge_correction=None)[0]
+    assert b.indices["BAL"] == pytest.approx(10.0 * a.indices["BAL"])
+    assert b.indices["Sdr"] == pytest.approx(10.0 * a.indices["Sdr"])
+    # The spatial indices are per-stem geometry: one record, one position.
+    assert b.indices["Heg"] == pytest.approx(a.indices["Heg"])
+
+
+def test_a_subject_outside_its_plot_is_not_edge_corrected():
+    """The zone would be wholly unobserved, and dividing by that share is a crash."""
+    trees = [
+        Tree(position=(60.0, 0.0), diameter_cm=20.0, uid="far"),
+        Tree(position=(62.0, 0.0), diameter_cm=25.0, uid="far2"),
+        Tree(position=(0.0, 0.0), diameter_cm=30.0, uid="in"),
+    ]
+    plot = CircularPlot(id=1, position=Position(0.0, 0.0), radius_m=20.0, trees=trees)
+    with pytest.warns(UserWarning, match="outside its"):
+        results = competition_indices(plot, indices=["Heg"], selector=FixedRadius(5.0))
+    assert results[0].observed_zone_fraction == 1.0
+    assert results[0].edge_corrected is False
+    assert results[0].indices["Heg"] == pytest.approx(25.0 / (20.0 * 2.0))
+
+
+def test_edge_correction_leaves_the_non_additive_indices_alone():
+    """SBAr and Almdg are reported raw however truncated the zone is."""
+    trees = [Tree(position=(14.0, 0.0), diameter_cm=20.0, uid="edge")]
+    trees += _ring(14.0, 6, 5.0, 25.0, "r")  # every ring tree stays inside the plot
+    plot = CircularPlot(id=1, position=Position(0.0, 0.0), radius_m=20.0, trees=trees)
+    raw = competition_indices(plot, selector=FixedRadius(10.0), edge_correction=None)[0]
+    corrected = competition_indices(plot, selector=FixedRadius(10.0))[0]
+
+    assert 0.0 < corrected.observed_zone_fraction < 1.0
+    assert corrected.edge_corrected is True
+    assert corrected.indices["SBAr"] == pytest.approx(raw.indices["SBAr"])
+    assert corrected.indices["Almdg"] == pytest.approx(raw.indices["Almdg"])
+    assert corrected.indices["Heg"] == pytest.approx(
+        raw.indices["Heg"] / corrected.observed_zone_fraction
+    )
+
+
+def test_no_edge_correction_without_a_zone_fixed_in_advance():
+    """A reach read off the data cannot correct the truncation that produced it."""
+    trees = [Tree(position=(14.0, 0.0), diameter_cm=20.0, uid="edge")]
+    trees += _ring(14.0, 6, 5.0, 25.0, "r")  # every ring tree stays inside the plot
+    plot = CircularPlot(id=1, position=Position(0.0, 0.0), radius_m=20.0, trees=trees)
+    result = competition_indices(plot, indices=["Heg"], selector=NearestNeighbours(3))[0]
+    assert result.zone_radius_m is None
+    assert result.edge_corrected is False
+    assert result.observed_zone_fraction == 1.0
+    # Sdrl1 needs a real CZR, so it is reported as unavailable rather than guessed.
+    with_sdrl1 = competition_indices(plot, indices=["Sdrl1"], selector=NearestNeighbours(3))[0]
+    assert "Sdrl1" in with_sdrl1.skipped
+
+
+def test_unmapped_trees_keep_the_plot_indices_and_warn():
+    """A tree with no position still counts towards BAL; it just cannot be placed."""
+    trees = [
+        Tree(position=(0.0, 0.0), diameter_cm=20.0, uid="c"),
+        Tree(position=(3.0, 0.0), diameter_cm=30.0, uid="a"),
+        Tree(diameter_cm=40.0, uid="nowhere"),
+    ]
+    plot = CircularPlot(id=1, position=Position(0.0, 0.0), radius_m=10.0, trees=trees)
+    with pytest.warns(UserWarning, match="no position"):
+        results = competition_indices(plot, indices=["BAL", "Heg"], edge_correction=None)
+
+    expected = (_g(30.0) + _g(40.0)) / plot.area_ha
+    assert results[0].indices["BAL"] == pytest.approx(expected)
+    # The mapped subject still gets its spatial indices from the mapped trees.
+    assert results[0].indices["Heg"] == pytest.approx(30.0 / (20.0 * 3.0))
+    # The unmapped tree gets the plot indices and nothing spatial.
+    assert "BAL" in results[2].indices
+    assert "Heg" in results[2].skipped
+
+
+def test_duplicate_stem_coordinates_are_dropped_with_a_warning():
+    """Rounded coordinates must not take the whole call down with them."""
+    trees = [
+        Tree(position=(0.0, 0.0), diameter_cm=20.0, uid="c"),
+        Tree(position=(0.0, 0.0), diameter_cm=25.0, uid="stacked"),
+        Tree(position=(3.0, 0.0), diameter_cm=30.0, uid="a"),
+    ]
+    plot = CircularPlot(id=1, position=Position(0.0, 0.0), radius_m=10.0, trees=trees)
+    with pytest.warns(UserWarning, match="coordinates exactly"):
+        results = competition_indices(plot, indices=["Heg", "BAL"], edge_correction=None)
+    assert results[0].n_competitors == 1
+    assert results[0].indices["Heg"] == pytest.approx(30.0 / (20.0 * 3.0))
+    # The stacked tree is still part of the plot for the per-hectare indices.
+    assert results[0].indices["BAL"] == pytest.approx((_g(25.0) + _g(30.0)) / plot.area_ha)
+
+
+def test_a_misspelled_index_is_an_error_not_a_silent_skip():
+    """A typo must not turn into an index that quietly never appears."""
+    with pytest.raises(KeyError, match="Unknown competition index"):
+        competition_indices(_demo_plot(), indices=["Hegyi"])

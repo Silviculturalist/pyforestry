@@ -52,8 +52,10 @@ INDEX_SOURCES = {
     "Sdr": SourceReference(
         author="Lorimer, C.G.",
         year=1983,
-        title="Tests of age-independent competition indices for individual trees in natural "
-        "hardwood stands",
+        title=(
+            "Tests of age-independent competition indices for individual trees in natural "
+            "hardwood stands"
+        ),
         note="Forest Ecology and Management 6:343-360.",
     ),
     "drg": SourceReference(
@@ -82,7 +84,7 @@ INDEX_SOURCES = {
         note="Forest Ecology and Management 42:143-168.",
     ),
     "BALMOD": SourceReference(
-        author="Schroder, J. & von Gadow, K.",
+        author="Schröder, J. & von Gadow, K.",
         year=1999,
         title="Testing a new competition index for Maritime pine in northwestern Spain",
         note="Canadian Journal of Forest Research 29:280-283.",
@@ -162,15 +164,6 @@ INDEX_SOURCES = {
             "FMR-X-108, Ottawa."
         ),
     ),
-    "Sdrl1": SourceReference(
-        author="Lorimer, C.G.",
-        year=1983,
-        title=(
-            "Tests of age-independent competition indices for individual trees in natural "
-            "hardwood stands"
-        ),
-        note="Forest Ecology and Management 6:343-360.",
-    ),
     "Sdrl2": SourceReference(
         author="Martin, G.L. & Ek, A.R.",
         year=1984,
@@ -186,6 +179,7 @@ INDEX_SOURCES = {
     ),
 }
 INDEX_SOURCES["SdrAng"] = INDEX_SOURCES["SAng2"]  # same paper, second index
+INDEX_SOURCES["Sdrl1"] = INDEX_SOURCES["Sdr"]  # same paper, second index
 
 #: Primary citation for each competitor-selection rule that has one.
 SELECTOR_SOURCES = {
@@ -203,7 +197,7 @@ SELECTOR_SOURCES = {
     "LeeGadowRadius": SourceReference(
         author="Lee, W.K. & von Gadow, K.",
         year=1997,
-        title="Iterative Bestimmung der Konkurrenzbaeume in Pinus densiflora Bestaenden",
+        title="Iterative Bestimmung der Konkurrenzbäume in Pinus densiflora Beständen",
         note="Allgemeine Forst- und Jagdzeitung 168(3-4):41-44.",
     ),
     "SearchCone": SourceReference(
@@ -220,12 +214,14 @@ SELECTOR_SOURCES = {
     "BitterlichBAF": SourceReference(
         author="Bitterlich, W.",
         year=1952,
-        title="Die Winkelzaehlmessung",
+        title="Die Winkelzählmessung",
         note=(
             "Allgemeine Forst- und Holzwirtschaftliche Zeitung 63:33-36. Variable-radius "
             "competitor selection. Citation as given by Maleki et al. (2015); not verified "
             "against an independent record. The angle-count principle itself is Bitterlich "
-            "(1948), 'Die Winkelzaehlprobe'."
+            "(1948), 'Die Winkelzählprobe'. The limiting distance here is the competitor's, "
+            "against the subject's as printed by Maleki et al. (2015) Table 1 -- see "
+            "BitterlichBAF."
         ),
     ),
 }

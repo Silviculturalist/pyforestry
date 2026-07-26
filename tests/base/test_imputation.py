@@ -7,9 +7,12 @@ migration is provably behaviour-preserving.
 """
 
 import copy
+import inspect
+import pathlib
 
 import pytest
 
+import pyforestry.base.helpers.tree
 from pyforestry.base.competition import MeanHeightRadius, competition_indices
 from pyforestry.base.helpers import CircularPlot, Stand, Tree
 from pyforestry.base.helpers.primitives import Position
@@ -304,10 +307,58 @@ def test_imputation_is_discoverable_in_the_catalog():
     assert entry.domain == "imputation"
     assert entry.source.author == "(none)"
     assert entry.source.year == 0
-    assert "naslund_height_imputer" in entry.composes
+    # `composes` names catalogued models, so it points at the curve itself,
+    # not at the imputer id that wraps it.
+    assert "naslund_1936_height_curve" in entry.composes
+    catalogued = {model.component_id for model in catalog.list_models()}
+    assert set(entry.composes) <= catalogued
 
 
 def test_tree_repr_shows_imputed_attributes():
     tree = Tree(diameter_cm=20.0)
     tree.set_imputed("height_m", 14.0, NaslundHeightImputer())
     assert "imputed=['height_m']" in repr(tree)
+
+
+# ---------------------------------------------------------------------------
+# Layering and argument handling
+# ---------------------------------------------------------------------------
+
+
+def test_imputed_value_lives_in_contracts_so_tree_stays_a_leaf():
+    """``helpers.tree`` must not depend on the package that fills its map.
+
+    ``ImputedValue`` sits in ``base.contracts`` -- which imports nothing from the
+    package -- so ``Tree`` can store one without pulling in ``base.imputation``,
+    which imports ``base.helpers.height_models`` right back.
+    """
+    from pyforestry.base import contracts
+    from pyforestry.base.contracts import ImputedValue as FromContracts
+    from pyforestry.base.imputation import ImputedValue as FromImputation
+
+    assert FromContracts is FromImputation
+    assert "ImputedValue" in contracts.__all__
+
+    source = pathlib.Path(inspect.getfile(pyforestry.base.helpers.tree)).read_text(
+        encoding="utf-8"
+    )
+    assert "pyforestry.base.imputation" not in source
+
+
+def test_impute_rejects_kwargs_it_cannot_apply():
+    """Constructor kwargs alongside a built imputer would be silently discarded."""
+    stand = _stand()
+    with pytest.raises(TypeError, match="already-built imputer"):
+        stand.impute("height_m", NaslundHeightImputer(), naslund_exponent="auto")
+    with pytest.raises(TypeError, match="already-built imputer"):
+        stand.impute("crown_radius_m", lambda t: 1.0, naslund_exponent="auto")
+    # Naming a registered imputer is exactly the case kwargs are for.
+    assert stand.impute("height_m", "naslund", naslund_exponent="auto") > 0
+
+
+def test_registered_names_reject_the_height_source_spellings():
+    """'measured' is a height *source*, not something that can impute."""
+    stand = _stand()
+    for name in ("measured", "measured+imputed"):
+        with pytest.raises(ValueError, match="cannot fill in one that is missing"):
+            stand.impute("height_m", name)

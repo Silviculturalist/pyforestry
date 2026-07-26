@@ -47,7 +47,10 @@ def register_imputer(
         name: Short name callers pass to ``stand.impute``, e.g. ``"naslund"``.
         factory: Zero-argument callable returning a fresh imputer.
         default: Whether this becomes the attribute's default, used when the
-            caller asks for the attribute without naming an imputer.
+            caller asks for the attribute without naming an imputer. The first
+            imputer registered for an attribute becomes its default whether or
+            not this is set, so a lone registration never leaves the attribute
+            without one.
         rejects: Names that are recognised but invalid for imputation, mapped to
             the reason. Requesting one raises :class:`ValueError` with that
             reason rather than an unhelpful "unknown name".
@@ -135,6 +138,6 @@ register_imputer(
             f"callable), not measured heights; {name!r} reads heights that are "
             "already there and so cannot fill in one that is missing."
         )
-        for name in ("measured", "measured+predicted")
+        for name in ("measured", "measured+imputed")
     },
 )

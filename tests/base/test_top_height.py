@@ -101,11 +101,14 @@ def test_callable_source_is_curve():
     assert src.height_at_diameter(10) == 11.3
 
 
-def test_measured_source_predicted_fallback():
+def test_measured_source_imputed_fallback():
     tree = Tree(species=PINE, diameter_cm=20.0)
     tree.set_imputed("height_m", 15.0, _fake_imputer())
     assert resolve_height_source("measured").height_for(tree) is None
-    assert resolve_height_source("measured+predicted").height_for(tree) == 15.0
+    assert resolve_height_source("measured+imputed").height_for(tree) == 15.0
+    # The old spelling went out with Tree.predicted_height_m; no alias.
+    with pytest.raises(ValueError, match="Unknown height source"):
+        resolve_height_source("measured+predicted")
 
 
 def _fake_imputer():

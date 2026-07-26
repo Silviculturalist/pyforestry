@@ -21,7 +21,7 @@ Auto-generated from ``pyforestry.catalog`` (83 models). Regenerate with ``python
      - formula
      - base
      - competition
-     - (none) (0) Individual-tree competition indices (pyforestry collection) (composes Almdg, BA-gj, BAL, BALMOD, BALr, BAr, Heg, SAng1, SAng2, SBAr, SOdr, SOr, Sdr, SdrAng, Sdrl1, Sdrl2, Sl, drg)
+     - (none) (0) Individual-tree competition indices (pyforestry collection)
    * - ``garcia_1998_top_height``
      - formula
      - base
@@ -36,7 +36,7 @@ Auto-generated from ``pyforestry.catalog`` (83 models). Regenerate with ``python
      - formula
      - base
      - imputation
-     - (none) (0) Tree attribute imputation (pyforestry mechanism) (composes naslund_height_imputer)
+     - (none) (0) Tree attribute imputation (pyforestry mechanism) (composes naslund_1936_height_curve)
    * - ``bitterlich_1948_angle_count``
      - formula
      - base

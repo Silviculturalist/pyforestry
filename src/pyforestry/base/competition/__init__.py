@@ -2,7 +2,7 @@
 
 Eighteen indices -- seven distance-independent and eleven spatially explicit --
 each attributed to the paper that proposed it, from Staebler (1951) through to
-Schroder & Gadow (1999). Alongside them are the competitor-selection rules they
+Schröder & Gadow (1999). Alongside them are the competitor-selection rules they
 are used with, because an index value is only interpretable next to the rule that
 chose its competitors.
 
@@ -40,10 +40,22 @@ Three layers:
 * :func:`~pyforestry.base.competition.api.competition_indices` -- the entry point
   over a tree list, a ``CircularPlot`` or a ``Stand``.
 
+The distance-independent indices always see the whole plot: ``BAL`` is the basal
+area per hectare in trees larger than the subject, and restricting it to the
+selector's competitors would make it shrink with the search radius and stop being
+the published quantity. Each subject therefore gets two neighbourhoods -- the
+selector's for the spatial indices, the plot's for the rest. Every per-hectare
+quantity honours ``Tree.weight_n`` and ``CircularPlot.occlusion``, and a
+``Stand`` is processed one plot at a time, since stem coordinates are plot-local.
+
 Distance-dependent indices are biased low for trees near a plot boundary, whose
 competition zone is partly unobserved. Every result reports
-``observed_zone_fraction``, and by default the spatial indices are divided by it
-(proportional-area weighting).
+``observed_zone_fraction``, and by default the *additive* spatial indices are
+divided by it (proportional-area weighting). ``SBAr`` and ``Almdg`` are left
+alone: a ratio and a weight-normalised mean do not scale with the observed
+share. So are selections with no zone fixed in advance
+(:class:`SearchCone`, :class:`NearestNeighbours`, :class:`BitterlichBAF`), whose
+reach is an outcome of the data rather than a radius to correct against.
 
 This package holds no science of its own. The set of eighteen was assembled and
 compared by Maleki, Kiviste & Korjus (2015), which is why these particular
@@ -82,6 +94,7 @@ from .indices import (
     lin_sang1,
     lorimer_sdrl1,
     martin_ek_sdrl2,
+    resolve_index,
     rouvinen_kuuluvainen_sang2,
     rouvinen_kuuluvainen_sdrang,
     staebler_sl,
@@ -146,6 +159,7 @@ __all__ = [
     "lorimer_sdrl1",
     "martin_ek_sdrl2",
     "mean_spacing_m",
+    "resolve_index",
     "rouvinen_kuuluvainen_sang2",
     "rouvinen_kuuluvainen_sdrang",
     "staebler_sl",
@@ -166,7 +180,9 @@ DESCRIPTOR = FormulaDescriptor(
             "particular set assembled here follows the comparison in Maleki, Kiviste & "
             "Korjus (2015), Forest Systems 24(2) e023, doi:10.5424/fs/2015242-05742 -- "
             "see `INDEX_SET_REVIEW`; that review supplies the selection and the "
-            "abbreviations, not the science."
+            "abbreviations, not the science. The eighteen abbreviations are listed by "
+            "`sorted(INDEX_REGISTRY)`; `composes` is empty because they are index names, "
+            "not catalogued component_ids."
         ),
     ),
     species_groups={},
@@ -177,6 +193,6 @@ DESCRIPTOR = FormulaDescriptor(
         "basal_area": "m2/ha",
     },
     kernel_names=("competition_indices", "compute_index", "index_source"),
-    composes=tuple(sorted(INDEX_REGISTRY)),
+    composes=(),
     domain="competition",
 )

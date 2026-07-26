@@ -16,6 +16,7 @@ __all__ = [
     "circle_intersection_area",
     "circle_overlap_length",
     "fraction_of_circle_inside_circle",
+    "mean_spacing_m",
 ]
 
 
@@ -97,9 +98,14 @@ def fraction_of_circle_inside_circle(
         boundary_radius_m: Radius of the plot (m).
 
     Returns:
-        A fraction in ``(0, 1]``. ``1.0`` when the zone lies wholly inside the
-        plot. Never returns ``0.0``: a competition zone is centred on a tree that
-        is itself in the plot, so some of it is always inside.
+        A fraction in ``[0, 1]``. ``1.0`` when the zone lies wholly inside the
+        plot. For a tree that is itself inside the plot the result is always
+        positive, since the zone is centred on it; ``0.0`` is only reachable for
+        a centre further out than ``boundary_radius_m + circle_radius_m``, which
+        means the point and the boundary do not describe the same thing. Callers
+        that divide by this must handle that case --
+        :func:`~pyforestry.base.competition.api.competition_indices` refuses to
+        make an edge statement about a tree outside its plot.
 
     Raises:
         ValueError: If any argument is negative, or the zone radius is zero.

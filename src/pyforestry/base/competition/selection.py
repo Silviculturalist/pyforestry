@@ -22,8 +22,8 @@ fixed value -- the defaults are one study's choices, and are meant to be varied:
 2. :class:`LeeGadowRadius` -- a dynamic radius ``k * sqrt(10000 / N)``, i.e. a
    multiple of mean spacing, after Lee & von Gadow (1997).
 3. :class:`BitterlichBAF` -- variable-radius selection after Bitterlich (1952):
-   a tree competes when it falls inside the angle-count limiting distance
-   ``50 * d_i / sqrt(BAF)``, ``d_i`` in metres.
+   a tree competes when it falls inside *its own* angle-count limiting distance
+   ``50 * d_j / sqrt(BAF)``, ``d_j`` in metres.
 4. :class:`SearchCone` -- the reversed search-cone / angular-height method after
    Pretzsch (2009), with the apex at the subject's stem base or crown base.
 5. :class:`NearestNeighbours` -- the ``n`` closest stems; plain geometry.
@@ -37,10 +37,15 @@ and 2, so reproducing those needs both.
 Each rule that implements somebody's published proposal exposes it as
 ``.source``; :func:`selector_source` reads it, returning ``None`` for the two
 that are plain geometry.
+
+Only the radius rules (1 and 2) define a competition *zone* -- a circle fixed
+before the data are seen. The variable-reach rules (3, 4, 5) report
+``Selection.zone_radius_m = None``, which means Lorimer's ``Sdrl1`` and the
+proportional-area edge correction do not apply to them; see :class:`Selection`.
 """
 
 from dataclasses import dataclass
-from math import degrees, pi, radians, sqrt, tan
+from math import asin, degrees, pi, radians, sqrt, tan
 from typing import List, Optional, Protocol, Sequence, Tuple
 
 from .geometry import mean_spacing_m
@@ -121,12 +126,21 @@ class Selection:
         indices: Positions of the selected competitors in the caller's tree list.
         distances_m: Distance from the subject to each selected competitor (m).
         zone_radius_m: The competition-zone radius that was applied (m), or
-            ``None`` for a selector that does not define one.
+            ``None`` for a selector whose zone is not a circle fixed ahead of the
+            data. Lorimer's ``Sdrl1`` and the proportional-area edge correction
+            both need such a radius, so both are unavailable when it is ``None``
+            -- substituting the reach below would make them circular, since a
+            neighbourhood truncated by the plot boundary reaches less far and
+            would report itself as needing less correction.
+        reach_m: Distance to the farthest retained competitor (m), or ``None``
+            when nothing was retained. Descriptive only: it says how far this
+            subject's selection actually went.
     """
 
     indices: Tuple[int, ...]
     distances_m: Tuple[float, ...]
     zone_radius_m: Optional[float] = None
+    reach_m: Optional[float] = None
 
 
 class CompetitorSelector(Protocol):
@@ -227,7 +241,7 @@ class FixedRadius:
         idx, dist = _screen(
             subject_index, candidates, within, self.min_size_ratio, self.elimination_angle_deg
         )
-        return Selection(tuple(idx), tuple(dist), self.radius_m)
+        return Selection(tuple(idx), tuple(dist), self.radius_m, max(dist) if dist else None)
 
 
 @dataclass(frozen=True)
@@ -303,18 +317,32 @@ class LeeGadowRadius:
 class BitterlichBAF:
     """Variable-radius competitor selection. Bitterlich (1952).
 
-    A neighbour competes when it falls inside the limiting distance of an
-    angle-count sweep taken from the subject tree,
-    ``l_ij <= 50 * d_i / sqrt(BAF)`` with ``d_i`` in **metres**. Equivalently,
-    for ``d_i`` in cm, ``l_ij <= d_i / (2 * sqrt(BAF))``.
+    An angle-count sweep is taken from the subject tree, and a **neighbour**
+    competes when its own stem subtends at least the gauge angle, i.e. when
 
-    That is the standard Bitterlich relation: a tree sits exactly on the limit
-    when ``BAF = 10000 * (d_i / (2 * l_ij))^2``. The 2015 comparison writes it
-    with ``d_i`` in cm against a footnote defining ``d`` in cm, which only
-    balances once the diameter is converted -- at BAF 2 a 20 cm subject reaches
-    7.07 m, not 1.0 m. Its own BAF-to-angle table corroborates the conversion:
-    BAF 1, 2 and 4 correspond to gauge angles of 1.15, 1.62 and 2.30 degrees,
-    which is ``2 * arcsin(sqrt(BAF / 10000))``.
+        ``l_ij <= 50 * d_j / sqrt(BAF)`` with ``d_j`` in **metres**
+
+    equivalently ``l_ij <= d_j / (2 * sqrt(BAF))`` for ``d_j`` in cm. A tree sits
+    exactly on the limit when ``BAF = 10000 * (d_j / (2 * l_ij))^2``. The
+    limiting distance therefore belongs to the competitor, not to the subject:
+    at BAF 2 a 60 cm neighbour competes out to 21.2 m while a 10 cm one stops at
+    3.5 m, which is the whole point of a variable-radius sample -- large trees
+    are counted from further away.
+
+    Two departures from the 2015 comparison's Table 1, both to follow Bitterlich:
+
+    * It prints the *subject's* diameter in the limiting distance. That gives
+      every neighbour one radius set by the subject's size, which inverts the
+      method: the 60 cm neighbour above would be excluded and the 10 cm one kept.
+    * It writes the diameter in cm against a footnote defining ``d`` in cm, which
+      only balances once the diameter is converted -- at BAF 2 a 20 cm stem
+      reaches 7.07 m, not 1.0 m. The paper's own BAF-to-angle table corroborates
+      the conversion: BAF 1, 2 and 4 correspond to gauge angles of 1.15, 1.62 and
+      2.30 degrees, which is ``2 * arcsin(sqrt(BAF / 10000))``.
+
+    Because each neighbour carries its own limiting distance, the selected zone
+    is not a circle and :attr:`Selection.zone_radius_m` is ``None``; see
+    :class:`Selection` for what that costs.
 
     Attributes:
         basal_area_factor: The BAF in m^2/ha; the 2015 comparison tests 1, 2, 4.
@@ -339,22 +367,28 @@ class BitterlichBAF:
     @property
     def gauge_angle_deg(self) -> float:
         """The angle-count gauge angle this BAF corresponds to (degrees)."""
-        from math import asin
-
         return degrees(2.0 * asin(sqrt(self.basal_area_factor / 10000.0)))
+
+    def limiting_distance_m(self, diameter_cm: float) -> float:
+        """Farthest distance at which a stem of ``diameter_cm`` is still tallied (m)."""
+        return 50.0 * (float(diameter_cm) / 100.0) / sqrt(self.basal_area_factor)
 
     def select(
         self, subject_index: int, candidates: Candidates, context: SelectionContext
     ) -> Selection:
-        """Select every tree inside the subject's angle-count limiting distance."""
-        limit_m = (
-            50.0 * (candidates.diameters_cm[subject_index] / 100.0) / sqrt(self.basal_area_factor)
-        )
-        within = [d <= limit_m for d in candidates.distances_m]
+        """Select every tree inside its own angle-count limiting distance."""
+        within = [
+            distance <= self.limiting_distance_m(diameter)
+            for diameter, distance in zip(
+                candidates.diameters_cm, candidates.distances_m, strict=True
+            )
+        ]
         idx, dist = _screen(
             subject_index, candidates, within, self.min_size_ratio, self.elimination_angle_deg
         )
-        return Selection(tuple(idx), tuple(dist), limit_m)
+        # Each neighbour has its own limiting distance, so the selected zone is
+        # not a circle and has no radius to correct against.
+        return Selection(tuple(idx), tuple(dist), None, max(dist) if dist else None)
 
 
 @dataclass(frozen=True)
@@ -446,9 +480,8 @@ class SearchCone:
             subject_index, candidates, within, self.min_size_ratio, self.elimination_angle_deg
         )
         # The cone's reach depends on each neighbour's own height, so there is no
-        # single radius; report the farthest retained competitor as the reach.
-        reach = max(dist) if dist else None
-        return Selection(tuple(idx), tuple(dist), reach)
+        # zone radius -- only how far this subject's selection happened to go.
+        return Selection(tuple(idx), tuple(dist), None, max(dist) if dist else None)
 
 
 @dataclass(frozen=True)
@@ -484,10 +517,9 @@ class NearestNeighbours:
         order.sort(key=lambda k: idx[k])
         chosen_idx = tuple(idx[k] for k in order)
         chosen_dist = tuple(dist[k] for k in order)
-        # No single radius defines this zone, but the farthest retained competitor
-        # is the effective reach, which the edge correction can use.
-        reach = max(chosen_dist) if chosen_dist else None
-        return Selection(chosen_idx, chosen_dist, reach)
+        # A count is not a zone: how far the n-th neighbour sits is an outcome of
+        # the data, not a radius fixed in advance.
+        return Selection(chosen_idx, chosen_dist, None, max(chosen_dist) if chosen_dist else None)
 
 
 def selector_source(selector: object):

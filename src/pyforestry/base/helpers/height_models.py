@@ -282,11 +282,11 @@ class HeightSource:
 
 
 class MeasuredHeightSource(HeightSource):
-    """Use each tree's measured ``height_m`` (optionally a predicted fallback).
+    """Use each tree's measured ``height_m`` (optionally an imputed fallback).
 
     Parameters
     ----------
-    use_predicted_fallback:
+    use_imputed_fallback:
         When ``True`` and a tree has no measured ``height_m``, fall back to an
         imputed height from ``Tree.imputed`` (a modelled value). Defaults to
         ``False``, i.e. measured heights only.
@@ -294,14 +294,14 @@ class MeasuredHeightSource(HeightSource):
 
     is_curve = False
 
-    def __init__(self, use_predicted_fallback: bool = False):
-        """Store whether a predicted-height fallback is allowed."""
-        self.use_predicted_fallback = use_predicted_fallback
+    def __init__(self, use_imputed_fallback: bool = False):
+        """Store whether an imputed-height fallback is allowed."""
+        self.use_imputed_fallback = use_imputed_fallback
 
     def height_for(self, tree) -> Optional[float]:  # noqa: ANN001
         """Return the tree's measured height, or an imputed height if allowed."""
         height = getattr(tree, "height_m", None)
-        if height is None and self.use_predicted_fallback:
+        if height is None and self.use_imputed_fallback:
             entry = getattr(tree, "imputed", {}).get("height_m")
             height = None if entry is None else entry.value
         return None if height is None else float(height)
@@ -352,7 +352,7 @@ def resolve_height_source(
         One of:
 
         * ``"measured"`` -- measured heights only;
-        * ``"measured+predicted"`` -- measured, falling back to predicted;
+        * ``"measured+imputed"`` -- measured, falling back to ``Tree.imputed``;
         * ``"naslund"`` -- fit a :class:`NaslundHeightCurve` from ``fit_trees``;
         * a callable ``f(diameter_cm) -> height_m``;
         * a :class:`NaslundHeightCurve`; or
@@ -379,8 +379,8 @@ def resolve_height_source(
         key = source.lower()
         if key == "measured":
             return MeasuredHeightSource()
-        if key in ("measured+predicted", "measured_predicted"):
-            return MeasuredHeightSource(use_predicted_fallback=True)
+        if key in ("measured+imputed", "measured_imputed"):
+            return MeasuredHeightSource(use_imputed_fallback=True)
         if key in ("naslund", "näslund"):
             diameters = [getattr(t, "diameter_cm", None) for t in (fit_trees or [])]
             heights = [getattr(t, "height_m", None) for t in (fit_trees or [])]

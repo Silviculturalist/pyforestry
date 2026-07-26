@@ -2,8 +2,7 @@
 
 from typing import Any, Dict, Optional, Union
 
-from pyforestry.base.contracts import SourceReference
-from pyforestry.base.imputation.values import ImputedValue
+from pyforestry.base.contracts import ImputedValue, SourceReference
 
 from .primitives import Age, Diameter_cm, Position
 from .tree_species import TreeName, parse_tree_species

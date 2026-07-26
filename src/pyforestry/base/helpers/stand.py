@@ -959,8 +959,11 @@ class Stand:
             When ``True``, replace an existing imputed value; otherwise keep any
             already present.
         **imputer_kwargs:
-            Passed to a registered imputer's constructor, e.g.
-            ``naslund_exponent="auto"``.
+            Passed to a *registered* imputer's constructor, e.g.
+            ``naslund_exponent="auto"``. Only meaningful when ``imputer`` names a
+            registered imputer (or is left to the default); an already-built
+            imputer or a callable is used as given, so passing both is an error
+            rather than a silently discarded argument.
 
         Returns
         -------
@@ -971,6 +974,9 @@ class Stand:
         ------
         KeyError
             If no imputer is registered for ``attribute`` and none was given.
+        TypeError
+            If ``imputer_kwargs`` accompany an already-built imputer or a
+            callable, which cannot be reconfigured from them.
         ValueError
             If the imputer cannot be fitted from the available trees, or
             ``which`` is not recognised.
@@ -983,6 +989,15 @@ class Stand:
         all_trees = [tree for plot in self.plots for tree in plot.trees]
         resolved = resolve_imputer(attribute, imputer)
         if imputer_kwargs:
+            # Reconstructing from kwargs is only valid when the registry built the
+            # imputer from a name; doing it to a caller-supplied instance or
+            # callable would throw that object away.
+            if not (imputer is None or isinstance(imputer, str)):
+                raise TypeError(
+                    f"impute({attribute!r}, ...) got {sorted(imputer_kwargs)} alongside an "
+                    "already-built imputer. Configure the imputer itself, or name a "
+                    "registered one and pass its constructor arguments here."
+                )
             resolved = type(resolved)(**imputer_kwargs)  # type: ignore[call-arg]
 
         context: dict = {"stand": self}

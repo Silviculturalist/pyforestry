@@ -8,7 +8,7 @@ mechanism for all of them.
 
 The rule is that **plain attributes are measurements**. A modelled value never
 overwrites one; it goes in ``Tree.imputed`` as an
-:class:`~pyforestry.base.imputation.values.ImputedValue` carrying the imputer
+:class:`~pyforestry.base.contracts.ImputedValue` carrying the imputer
 that produced it and that imputer's citation, and
 :meth:`~pyforestry.base.helpers.tree.Tree.value_of` resolves the two::
 
@@ -29,7 +29,7 @@ the Näslund curve that already lives in
 :mod:`pyforestry.base.helpers.height_models`.
 """
 
-from pyforestry.base.contracts import FormulaDescriptor, SourceReference
+from pyforestry.base.contracts import FormulaDescriptor, ImputedValue, SourceReference
 
 from .height import NaslundHeightImputer
 from .imputer import UNCITED, CallableImputer, Imputer, uncited_source
@@ -40,7 +40,6 @@ from .registry import (
     register_imputer,
     resolve_imputer,
 )
-from .values import ImputedValue
 
 __all__ = [
     "UNCITED",
@@ -67,13 +66,14 @@ DESCRIPTOR = FormulaDescriptor(
             "mechanism for recording modelled tree attributes with their provenance, "
             "not a model. year=0 is a sentinel for 'not applicable', not a citation "
             "date. Each registered imputer carries its own citation on `.source`; the "
-            "only one shipped wraps Näslund (1936), already catalogued as "
-            "naslund_1936_height_curve."
+            "only one shipped wraps Näslund (1936). Imputer component_ids are listed "
+            "by `imputers_for(attribute)`; `composes` names the catalogued models "
+            "behind them."
         ),
     ),
     species_groups={},
     units={"height_m": "m", "crown_radius_m": "m"},
     kernel_names=("resolve_imputer", "register_imputer"),
-    composes=("naslund_height_imputer",),
+    composes=("naslund_1936_height_curve",),
     domain="imputation",
 )
