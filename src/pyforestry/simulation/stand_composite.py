@@ -198,11 +198,7 @@ class StandPart:
     disturbance_overrides: Optional[Mapping[str, Any]] = None
 
     def __post_init__(self) -> None:
-        """Post init.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Copy the mappings in, and reject a part with no name."""
         if not self.name:
             raise ValueError("Stand parts require a non-empty name.")
         if not isinstance(self.context, Mapping):
@@ -366,18 +362,11 @@ class StandComposite:
         model_id: Optional[str] = None,
         telemetry: Optional[TelemetryPublisher] = None,
     ) -> None:
-        """Init.
+        """Create a composite with shared constraints, RNG and telemetry.
 
-        Args:
-            parts: Parameter for `StandComposite.__init__`.
-            budget: Parameter for `StandComposite.__init__`.
-            harvest_cap: Parameter for `StandComposite.__init__`.
-            seed: Parameter for `StandComposite.__init__`.
-            model_id: Parameter for `StandComposite.__init__`.
-            telemetry: Parameter for `StandComposite.__init__`.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
+        ``budget`` and ``harvest_cap`` are enforced across the whole composite
+        during :meth:`dispatch`, and ``seed`` roots the keyed RNG every part
+        draws from.
         """
         self._parts: Dict[str, StandPart] = {}
         self.budget = budget

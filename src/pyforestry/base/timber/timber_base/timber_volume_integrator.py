@@ -1,7 +1,4 @@
-"""Timber Volume Integrator utilities and interfaces.
-
-Source: Internal pyforestry implementation.
-"""
+"""Timber Volume Integrator utilities and interfaces."""
 
 import numpy as np
 from scipy.integrate import quad

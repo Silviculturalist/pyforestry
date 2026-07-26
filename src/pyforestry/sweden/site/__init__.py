@@ -11,12 +11,6 @@ __all__ = ["SwedishSite", "Sweden"]
 def __getattr__(name):
     """Getattr.
 
-    Args:
-        name: Parameter for `__getattr__`.
-
-    Returns:
-        Result produced by this callable.
-
     Source:
         Swedish forestry domain models and helper implementations curated in pyforestry.
     """

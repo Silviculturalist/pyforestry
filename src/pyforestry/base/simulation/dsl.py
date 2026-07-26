@@ -1,7 +1,4 @@
-"""Dsl utilities and interfaces.
-
-Source: Internal pyforestry simulation architecture and runtime contracts.
-"""
+"""Dsl utilities and interfaces."""
 
 # pyforestry/base/simulation/dsl.py
 from __future__ import annotations
@@ -16,10 +13,9 @@ CheckPhase = Literal["pre", "post"]
 
 @dataclass
 class TriggerSpec:
-    """Trigger spec container and behavior.
+    """A condition to test each step, and the action to run when it holds.
 
-    Source:
-        Internal pyforestry simulation architecture and runtime contracts.
+    ``once=True`` disarms the trigger after it first fires.
     """
 
     name: str
@@ -32,11 +28,7 @@ class TriggerSpec:
 
 @dataclass
 class ScheduledOp:
-    """Scheduled op container and behavior.
-
-    Source:
-        Internal pyforestry simulation architecture and runtime contracts.
-    """
+    """An action to run at one fixed point on the simulation clock."""
 
     name: str
     t: float
@@ -45,11 +37,7 @@ class ScheduledOp:
 
 @dataclass
 class SimulationSetup:
-    """Simulation setup container and behavior.
-
-    Source:
-        Internal pyforestry simulation architecture and runtime contracts.
-    """
+    """A fixed-step run: a clock, plus triggers and scheduled operations."""
 
     start_t: float
     end_t: float
@@ -58,17 +46,7 @@ class SimulationSetup:
     schedule: List[ScheduledOp] = field(default_factory=list)
 
     def run(self, ctx: SimulationContext) -> None:
-        """Run.
-
-        Args:
-            ctx: Parameter for `SimulationSetup.run`.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Step ``ctx`` from ``start_t`` to ``end_t``, firing triggers and schedule."""
         ctx.state["t"] = self.start_t
         while ctx.state["t"] < self.end_t - 1e-12:
             self._eval_triggers(ctx, phase="pre")
@@ -81,18 +59,7 @@ class SimulationSetup:
             self._eval_triggers(ctx, phase="post")
 
     def _eval_triggers(self, ctx: SimulationContext, phase: CheckPhase) -> None:
-        """Eval triggers.
-
-        Args:
-            ctx: Parameter for `SimulationSetup._eval_triggers`.
-            phase: Parameter for `SimulationSetup._eval_triggers`.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Fire every armed trigger whose predicate holds in ``phase``."""
         for trg in self.triggers:
             if trg.check_phase != phase or not trg._armed:
                 continue

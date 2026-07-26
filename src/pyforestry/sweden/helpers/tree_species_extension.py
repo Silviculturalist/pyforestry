@@ -1,7 +1,4 @@
-"""Tree Species Extension utilities and interfaces.
-
-Source: Internal pyforestry implementation.
-"""
+"""Tree Species Extension utilities and interfaces."""
 
 from pyforestry.base.helpers.tree_species import (
     ACER_PLATANOIDES,

@@ -19,11 +19,7 @@ class KeyedRNG:
     seed: int
 
     def __post_init__(self) -> None:
-        """Post init.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Seed this stream's generator from its derived seed."""
         self._random = random.Random(self.seed)
 
     def random(self) -> float:
@@ -71,15 +67,5 @@ class KeyedRNG:
             self._random.random()
 
     def __getattr__(self, name: str):  # pragma: no cover - passthrough
-        """Getattr.
-
-        Args:
-            name: Parameter for `KeyedRNG.__getattr__`.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Getattr."""
         return getattr(self._random, name)

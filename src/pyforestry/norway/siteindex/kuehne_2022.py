@@ -129,9 +129,6 @@ class _Wrapper:
     def __init__(self, fn: Callable):
         """Init.
 
-        Args:
-            fn: Parameter for `_Wrapper.__init__`.
-
         Source:
             Forestry model implementation for Norwegian conditions as provided
             by pyforestry equation modules.

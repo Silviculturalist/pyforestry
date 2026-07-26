@@ -42,11 +42,7 @@ class TreeRemoval:
     metadata: MutableMapping[str, Any] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
-        """Post init.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Validate the record and resolve the stem weight it stands for."""
         if not self.cohort_id:
             raise ValueError("Tree removals require a cohort identifier.")
         if not isinstance(self.tree, Tree):
@@ -128,11 +124,7 @@ class CohortRemoval:
     trees: list[TreeRemoval] = field(default_factory=list)
 
     def __post_init__(self) -> None:
-        """Post init.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Validate the cohort and stamp its species into the metadata."""
         if not self.identifier:
             raise ValueError("Cohort removals require an identifier.")
         self.species = _normalise_species(self.species)
@@ -186,11 +178,7 @@ class StandRemovalLedger:
     cohorts: MutableMapping[str, CohortRemoval] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
-        """Post init.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Copy the mappings in so the ledger owns its own state."""
         self.metadata = dict(self.metadata)
         self.cohorts = dict(self.cohorts)
         if self.stand_id:

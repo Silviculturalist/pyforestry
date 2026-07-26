@@ -1,7 +1,4 @@
-"""Taper utilities and interfaces.
-
-Source: Internal pyforestry implementation.
-"""
+"""Taper utilities and interfaces."""
 
 from typing import Union
 
@@ -46,17 +43,7 @@ class Taper:
 
     def get_diameter_vectorised(self, h_array: Union[npt.ArrayLike, np.ndarray]) -> np.ndarray:
         # --- CORRECTED: Vectorize the wrapper method to ensure height checks are applied ---
-        """Get diameter vectorised.
-
-        Args:
-            h_array: Parameter for `Taper.get_diameter_vectorised`.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry implementation.
-        """
+        """Get diameter vectorised."""
         f = np.vectorize(self.get_diameter_at_height, otypes=[np.float32])
         return f(h_array)
 

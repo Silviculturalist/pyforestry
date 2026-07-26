@@ -1,6 +1,14 @@
-"""Adapters utilities and interfaces.
+"""Convert a stand into an inventory representation a model can step.
 
-Source: Internal pyforestry simulation architecture and runtime contracts.
+An angle-count stand carries tallies, not stems; a model that needs a tree list
+or diameter classes cannot read it directly. These adapters bridge that gap, and
+:meth:`GrowthModel.build_context` picks one automatically and records which ran
+in ``ctx.attrs["inventory_adapter"]``, because a reconstructed inventory is not
+the same evidence as a measured one.
+
+The pseudo-tree adapters are the strongest claim here: they place every stem of a
+species at the stand QMD, which reproduces the basal area and stem count exactly
+and the diameter distribution not at all.
 """
 
 # pyforestry/base/simulation/adapters.py
@@ -24,31 +32,15 @@ class Adapter:
     target_mode: str  # "spatial" | "tree_list" | "diameter_class" | "aggregate"
 
     def can_adapt(self, stand) -> bool:  # noqa: ANN001
-        """Can adapt.
-
-        Args:
-            stand: Parameter for `Adapter.can_adapt`.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Whether this adapter can produce its target mode from ``stand``."""
         raise NotImplementedError
 
     def adapt(self, stand, **kwargs) -> Dict[str, Any]:  # noqa: ANN001
-        """Adapt.
-
-        Args:
-            stand: Parameter for `Adapter.adapt`.
-            **kwargs: Parameter for `Adapter.adapt`.
+        """Build the inventory payload for :class:`SimulationContext`.
 
         Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
+            A single-key mapping -- ``{"plots": ...}``, ``{"dclass": ...}`` or
+            ``{"metrics": ...}`` -- matching this adapter's ``target_mode``.
         """
         raise NotImplementedError
 
@@ -65,34 +57,20 @@ class AngleCountToPseudoTreesAdapter(Adapter):
     replicas_per_species: int = 32
 
     def can_adapt(self, stand) -> bool:  # noqa: ANN001
-        """Can adapt.
-
-        Args:
-            stand: Parameter for `AngleCountToPseudoTreesAdapter.can_adapt`.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Whether the stand has the angle-count basal-area and stem estimates."""
         if not getattr(stand, "use_angle_count", False):
             return False
         metrics = getattr(stand, "_metric_estimates", {})
         return "BasalArea" in metrics and "Stems" in metrics and len(metrics["BasalArea"]) > 0
 
     def adapt(self, stand, **kwargs) -> Dict[str, Any]:  # noqa: ANN001
-        """Adapt.
+        """Replicate each species' stems as identical trees at the stand QMD.
 
-        Args:
-            stand: Parameter for `AngleCountToPseudoTreesAdapter.adapt`.
-            **kwargs: Parameter for `AngleCountToPseudoTreesAdapter.adapt`.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
+        Reproduces basal area and stem count exactly and the diameter
+        distribution not at all: every surrogate stem of a species carries the
+        same diameter. Splitting the stems over ``replicas_per_species`` records
+        exists so per-tree operations (thinning a fraction, removing the
+        smallest) have something to bite on, not to represent variation.
         """
         reps = int(kwargs.get("replicas_per_species", self.replicas_per_species))
         if reps <= 0:
@@ -150,17 +128,11 @@ class AngleCountToSpatialPseudoTreesAdapter(AngleCountToPseudoTreesAdapter):
     target_mode: str = "spatial"
 
     def adapt(self, stand, **kwargs) -> Dict[str, Any]:  # noqa: ANN001
-        """Adapt.
+        """Place the surrogate stems at uniform random positions in a 1 ha plot.
 
-        Args:
-            stand: Parameter for `AngleCountToSpatialPseudoTreesAdapter.adapt`.
-            **kwargs: Parameter for `AngleCountToSpatialPseudoTreesAdapter.adapt`.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
+        The coordinates are drawn, not observed: they support neighbourhood
+        operations that need *some* geometry, and say nothing about where the
+        tallied trees actually stood.
         """
         out = super().adapt(stand, **kwargs)
         plot: CircularPlot = out["plots"][0]
@@ -187,17 +159,7 @@ class AngleCountToDiameterClassAdapter(Adapter):
     target_mode: str = "diameter_class"
 
     def can_adapt(self, stand) -> bool:  # noqa: ANN001
-        """Can adapt.
-
-        Args:
-            stand: Parameter for `AngleCountToDiameterClassAdapter.can_adapt`.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Whether the stand carries angle-count basal-area and stem estimates."""
         return (
             bool(getattr(stand, "use_angle_count", False))
             and "BasalArea" in stand._metric_estimates
@@ -205,17 +167,10 @@ class AngleCountToDiameterClassAdapter(Adapter):
         )
 
     def adapt(self, stand, **kwargs) -> Dict[str, Any]:  # noqa: ANN001
-        """Adapt.
+        """Bin each species into a single class at its own QMD.
 
-        Args:
-            stand: Parameter for `AngleCountToDiameterClassAdapter.adapt`.
-            **kwargs: Parameter for `AngleCountToDiameterClassAdapter.adapt`.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
+        A relascope tally supports one class per species and no more; the width
+        of the real distribution is not in the data.
         """
         stand._ensure_qmd_estimates()
         ba_dict = stand._metric_estimates["BasalArea"]
@@ -246,31 +201,14 @@ class TreeListToDiameterClassAdapter(Adapter):
     bin_width_cm: float = 2.0
 
     def can_adapt(self, stand) -> bool:  # noqa: ANN001
-        """Can adapt.
-
-        Args:
-            stand: Parameter for `TreeListToDiameterClassAdapter.can_adapt`.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Whether the stand holds measured trees rather than angle-count tallies."""
         return (not getattr(stand, "use_angle_count", False)) and any(p.trees for p in stand.plots)
 
     def adapt(self, stand, **kwargs) -> Dict[str, Any]:  # noqa: ANN001
-        """Adapt.
+        """Histogram the measured stems into fixed-width diameter classes.
 
-        Args:
-            stand: Parameter for `TreeListToDiameterClassAdapter.adapt`.
-            **kwargs: Parameter for `TreeListToDiameterClassAdapter.adapt`.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
+        Each tree contributes ``weight_n`` stems per hectare of its plot's
+        effective (post-occlusion) area to the class its diameter falls in.
         """
         bin_w = float(kwargs.get("bin_width_cm", self.bin_width_cm))
         per_sp: Dict[Any, List[tuple[float, float, float]]] = {}
@@ -318,31 +256,14 @@ class TreeListToSpatialAdapter(Adapter):
     target_mode: str = "spatial"
 
     def can_adapt(self, stand) -> bool:  # noqa: ANN001
-        """Can adapt.
-
-        Args:
-            stand: Parameter for `TreeListToSpatialAdapter.can_adapt`.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Whether the stand holds measured trees rather than angle-count tallies."""
         return (not getattr(stand, "use_angle_count", False)) and any(p.trees for p in stand.plots)
 
     def adapt(self, stand, **kwargs) -> Dict[str, Any]:  # noqa: ANN001
-        """Adapt.
+        """Fill in a position for every tree that lacks one.
 
-        Args:
-            stand: Parameter for `TreeListToSpatialAdapter.adapt`.
-            **kwargs: Parameter for `TreeListToSpatialAdapter.adapt`.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
+        Missing coordinates are drawn uniformly within the tree's own plot.
+        Trees that already carry a position keep it.
         """
         seed = kwargs.get("seed", 2027)
         rng = random.Random(seed)
@@ -362,18 +283,10 @@ class TreeListToSpatialAdapter(Adapter):
 
 
 class AdapterRegistry:
-    """Adapter registry container and behavior.
-
-    Source:
-        Internal pyforestry simulation architecture and runtime contracts.
-    """
+    """Named lookup for the inventory adapters ``build_context`` chooses from."""
 
     def __init__(self):
-        """Init.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Register the built-in adapters."""
         self._by_name: Dict[str, Adapter] = {}
         self.register(AngleCountToPseudoTreesAdapter())
         self.register(AngleCountToSpatialPseudoTreesAdapter())
@@ -382,57 +295,20 @@ class AdapterRegistry:
         self.register(TreeListToSpatialAdapter())
 
     def register(self, adapter: Adapter) -> None:
-        """Register.
-
-        Args:
-            adapter: Parameter for `AdapterRegistry.register`.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Add ``adapter`` under its own ``name``, replacing any previous one."""
         self._by_name[adapter.name] = adapter
 
     def get(self, name: str) -> Optional[Adapter]:
-        """Get.
-
-        Args:
-            name: Parameter for `AdapterRegistry.get`.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Get."""
         return self._by_name.get(name)
 
     def find_for(self, target_mode: str) -> List[Adapter]:
-        """Find for.
-
-        Args:
-            target_mode: Parameter for `AdapterRegistry.find_for`.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Find for."""
         return [a for a in self._by_name.values() if a.target_mode == target_mode]
 
     @staticmethod
     def default() -> "AdapterRegistry":
-        """Default.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Default."""
         if not hasattr(AdapterRegistry, "_DEFAULT"):
             AdapterRegistry._DEFAULT = AdapterRegistry()  # type: ignore[attr-defined]
         return AdapterRegistry._DEFAULT  # type: ignore[attr-defined]

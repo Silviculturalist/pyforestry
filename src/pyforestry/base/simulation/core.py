@@ -273,6 +273,23 @@ class SimulationContext:
         }
 
     @property
+    def diameter_classes(self) -> Dict[Any, Dict[str, List[float]]]:
+        """The diameter-class inventory, keyed by species.
+
+        Each entry holds ``bin_mids_cm`` and a matching ``n_per_ha``. This is a
+        copy: mutate it freely and hand it back through
+        :meth:`set_diameter_class`, which revalidates and refreshes the metrics.
+
+        Raises:
+            RuntimeError: If the context is not in diameter-class mode.
+        """
+        self._require_mode("diameter_classes", "diameter_class")
+        return {
+            key: {name: list(values) for name, values in rec.items()}
+            for key, rec in self._dclass.items()
+        }
+
+    @property
     def metrics(self) -> MetricView:
         """Return a read-only copy of the current metrics."""
         m = self._metrics

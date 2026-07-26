@@ -1,7 +1,4 @@
-"""Init   utilities and interfaces.
-
-Source: Internal pyforestry simulation architecture and runtime contracts.
-"""
+"""Init   utilities and interfaces."""
 
 # pyforestry/base/simulation/__init__.py
 from .adapters import (

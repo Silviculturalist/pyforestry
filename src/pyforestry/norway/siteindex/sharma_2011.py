@@ -114,9 +114,6 @@ class _HeightTrajectoryWrapper:
     def __init__(self, fn: Callable):
         """Init.
 
-        Args:
-            fn: Parameter for `_HeightTrajectoryWrapper.__init__`.
-
         Source:
             Forestry model implementation for Norwegian conditions as provided
             by pyforestry equation modules.

@@ -67,38 +67,17 @@ class Position:
 
     # Convenience tuple-like access for callers that expect iterable positions
     def __iter__(self):
-        """Iter.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry implementation.
-        """
+        """Iter."""
         yield from (self.X, self.Y)
 
     @property
     def x(self) -> float:
-        """X.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry implementation.
-        """
+        """X."""
         return self.X
 
     @property
     def y(self) -> float:
-        """Y.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry implementation.
-        """
+        """Y."""
         return self.Y
 
     @staticmethod

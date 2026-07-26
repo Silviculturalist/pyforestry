@@ -24,16 +24,7 @@ class TelemetryPublisher:
         seed: int,
         sink: Optional[Callable[[TelemetryEvent], None]] = None,
     ) -> None:
-        """Init.
-
-        Args:
-            model_id: Parameter for `TelemetryPublisher.__init__`.
-            seed: Parameter for `TelemetryPublisher.__init__`.
-            sink: Parameter for `TelemetryPublisher.__init__`.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Record the run identity every published event is stamped with."""
         self.model_id = model_id or "unknown"
         self.seed = int(seed)
         self._events: List[TelemetryEvent] = []

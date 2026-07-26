@@ -1,4 +1,4 @@
-"""Minimal architecture lint check (AL001 + AL002).
+"""Minimal architecture lint check (AL001-AL004).
 
 Usage:
     python scripts/check_architecture_lint.py [--changed-only BASE_SHA]
@@ -226,6 +226,45 @@ def check_al003(paths: list[Path]) -> list[str]:
 
 
 # ---------------------------------------------------------------------------
+# AL004: No generated placeholder docstrings
+# ---------------------------------------------------------------------------
+
+# Fingerprints of a docstring generator that was run over this codebase. Each
+# states only that a parameter is a parameter, that a callable returns, or that
+# runtime plumbing belongs to the runtime -- while satisfying the docstring
+# coverage gate, which measures presence rather than content. 161 of them
+# accumulated on the package's most important classes, where `help()` was worse
+# than nothing because the output looked documented.
+GENERATED_DOCSTRING_MARKERS = (
+    "Parameter for `",
+    "Result produced by this callable",
+    "Internal pyforestry simulation architecture and runtime contracts",
+)
+
+
+def check_al004(paths: list[Path]) -> list[str]:
+    """Check that no generated placeholder docstrings have been reintroduced."""
+    violations = []
+    for path in paths:
+        if path.suffix != ".py":
+            continue
+        try:
+            text = path.read_text(encoding="utf-8")
+        except OSError:  # pragma: no cover - unreadable file
+            continue
+        for marker in GENERATED_DOCSTRING_MARKERS:
+            count = text.count(marker)
+            if count:
+                violations.append(
+                    f"AL004: {path.name} contains {count} generated placeholder "
+                    f"docstring(s) ({marker!r}). Docstring coverage measures presence; "
+                    "write what the callable does, what its arguments mean, and what "
+                    "it returns -- or leave it undocumented and let the gate say so."
+                )
+    return violations
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -276,6 +315,7 @@ def main() -> int:
     violations.extend(check_al001(paths))
     violations.extend(check_al002(paths))
     violations.extend(check_al003(paths))
+    violations.extend(check_al004(paths))
 
     if violations:
         print("VIOLATIONS FOUND:")
@@ -284,9 +324,8 @@ def main() -> int:
         print(f"\n{len(violations)} violation(s). FAIL.")
         return 1
     else:
-        print("AL001: PASS")
-        print("AL002: PASS")
-        print("AL003: PASS")
+        for rule in ("AL001", "AL002", "AL003", "AL004"):
+            print(f"{rule}: PASS")
         print("\nNo violations. PASS.")
         return 0
 

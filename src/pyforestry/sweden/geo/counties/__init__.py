@@ -1,7 +1,4 @@
-"""Init   utilities and interfaces.
-
-Source: Internal pyforestry implementation.
-"""
+"""Init   utilities and interfaces."""
 
 import os
 

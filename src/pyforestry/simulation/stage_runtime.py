@@ -66,16 +66,7 @@ class Stage:
         order: Optional[int] = None,
         contract: Optional[StageContract] = None,
     ) -> None:
-        """Init.
-
-        Args:
-            name: Parameter for `Stage.__init__`.
-            order: Parameter for `Stage.__init__`.
-            contract: Parameter for `Stage.__init__`.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Override this stage's class-level name, order or contract."""
         if name is not None:
             self.name = name
         if order is not None:
@@ -242,14 +233,7 @@ class ManagementStage(Stage):
         *,
         rulesets: Optional[RulesetMapping] = None,
     ) -> None:
-        """Init.
-
-        Args:
-            rulesets: Parameter for `ManagementStage.__init__`.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Bind the selection rulesets, keyed by the stage name they filter."""
         super().__init__()
         self._rulesets: Dict[str, Ruleset] = {}
         if rulesets:
@@ -310,18 +294,11 @@ class ManagementStage(Stage):
         affordances: Tuple[StageAction, ...],
         chosen: Optional[Iterable[Union[StageAction, str]]],
     ) -> Tuple[StageAction, ...]:
-        """Normalize selection.
+        """Resolve a ruleset's return value into affordances of ``stage``.
 
-        Args:
-            stage: Parameter for `ManagementStage._normalize_selection`.
-            affordances: Parameter for `ManagementStage._normalize_selection`.
-            chosen: Parameter for `ManagementStage._normalize_selection`.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
+        A ruleset may return the affordance objects it was given or just their
+        names. Returning an action belonging to another stage is an error, as is
+        naming one that was never offered.
         """
         if chosen is None:
             return ()
@@ -355,19 +332,7 @@ class GrowthStage(ActionStage):
         module: "StageRuntime",
         rng: KeyedRNG,
     ) -> Iterable[StandAction]:
-        """Build actions.
-
-        Args:
-            part: Parameter for `GrowthStage.build_actions`.
-            module: Parameter for `GrowthStage.build_actions`.
-            rng: Parameter for `GrowthStage.build_actions`.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Yield the growth actions declared in the part's growth parameters."""
         parameters = part.growth_parameters
         raw_actions = parameters.get("actions", ())
         for raw in raw_actions:
@@ -387,19 +352,7 @@ class DisturbanceStage(ActionStage):
         module: "StageRuntime",
         rng: KeyedRNG,
     ) -> Iterable[StandAction]:
-        """Build actions.
-
-        Args:
-            part: Parameter for `DisturbanceStage.build_actions`.
-            module: Parameter for `DisturbanceStage.build_actions`.
-            rng: Parameter for `DisturbanceStage.build_actions`.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Yield the disturbance actions declared in the part's parameters."""
         parameters = part.disturbance_parameters
         raw_actions = parameters.get("actions", ())
         for raw in raw_actions:
@@ -413,14 +366,7 @@ class ValuationStage(Stage):
     order = 40
 
     def __init__(self, *, connector: Optional[VolumeConnector] = None) -> None:
-        """Init.
-
-        Args:
-            connector: Parameter for `ValuationStage.__init__`.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Take the volume connector that prices removals, or build the default."""
         super().__init__()
         self._connector = connector or VolumeConnector()
 
@@ -454,18 +400,9 @@ class ValuationStage(Stage):
         module: "StageRuntime",
         rng: Optional[KeyedRNG] = None,
     ) -> None:
-        """Run.
+        """Price whatever ``part`` has removed, and add it to the part's cash.
 
-        Args:
-            part: Parameter for `ValuationStage.run`.
-            module: Parameter for `ValuationStage.run`.
-            rng: Parameter for `ValuationStage.run`.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
+        Does nothing when the part has no removal ledger or an empty one.
         """
         ledger = self._locate_ledger(part)
         if ledger is None or ledger.is_empty:
@@ -492,15 +429,10 @@ class StageRuntime:
         stages: Optional[Sequence[Stage]] = None,
         management_rulesets: Optional[RulesetMapping] = None,
     ) -> None:
-        """Init.
+        """Order the stages and wire them to ``composite``.
 
-        Args:
-            composite: Parameter for `StageRuntime.__init__`.
-            stages: Parameter for `StageRuntime.__init__`.
-            management_rulesets: Parameter for `StageRuntime.__init__`.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
+        Stages run in ``order``; without an explicit list the default growth ->
+        management -> disturbance -> valuation sequence is used.
         """
         self.composite = composite
         if stages is None:

@@ -31,11 +31,7 @@ class StageContract:
     effects: FrozenSet[str] = field(default_factory=lambda: frozenset({"rng"}))
 
     def __post_init__(self) -> None:
-        """Freeze the mapping and set fields to immutable views.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Freeze the mapping and set fields to immutable views."""
         object.__setattr__(self, "type_metadata", MappingProxyType(dict(self.type_metadata)))
         object.__setattr__(self, "units", MappingProxyType(dict(self.units)))
         object.__setattr__(self, "effects", frozenset(self.effects))
@@ -64,11 +60,7 @@ class AssertionResult:
 
 
 class SimulationPreset(Protocol):
-    """Contract for runnable scenario preset bundles.
-
-    Source:
-        Internal pyforestry simulation architecture and runtime contracts.
-    """
+    """Contract for runnable scenario preset bundles."""
 
     preset_id: str
 
@@ -89,11 +81,7 @@ class SimulationPreset(Protocol):
 
 
 class ParityCase(Protocol):
-    """Contract for reproducible parity fixtures.
-
-    Source:
-        Internal pyforestry simulation architecture and runtime contracts.
-    """
+    """Contract for reproducible parity fixtures."""
 
     case_id: str
     inputs: Mapping[str, Any]

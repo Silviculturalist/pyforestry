@@ -1,7 +1,4 @@
-"""Init   utilities and interfaces.
-
-Source: Internal pyforestry implementation.
-"""
+"""Init   utilities and interfaces."""
 
 from .nasberg_1985 import Nasberg_1985_BranchBound
 

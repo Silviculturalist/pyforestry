@@ -1,6 +1,14 @@
-"""Growth Model utilities and interfaces.
+"""The growth-model interface every scientific model adapter implements.
 
-Source: Internal pyforestry simulation architecture and runtime contracts.
+A :class:`GrowthModel` binds a published model to the runtime: it declares what
+inventory it needs (:class:`Requirements`), turns a :class:`Stand` into the
+working copy it will step (:meth:`GrowthModel.build_context`), advances that copy
+(:meth:`GrowthModel.update_step`), and optionally exposes management actions.
+
+Implementers override ``requirements``, ``update_step``, ``component_id`` and
+``source``; everything else has a usable default. :class:`ExampleStandGeneralModel`
+at the bottom of this module is a minimal working reference, not a scientific
+model.
 """
 
 # pyforestry/base/simulation/growth_model.py
@@ -90,13 +98,15 @@ class GrowthModel:
     # ----------------------------- Factory ------------------------------------
 
     def requirements(self) -> Requirements:
-        """Requirements.
+        """Declare the inventory and site data this model needs.
 
         Returns:
-            Result produced by this callable.
+            The model's prerequisites. The declared ``inventory`` is authoritative:
+            :meth:`build_context` builds that representation rather than guessing
+            from what the stand happens to carry.
 
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
+        Raises:
+            NotImplementedError: Always; every model must declare its own.
         """
         raise NotImplementedError
 
@@ -107,18 +117,19 @@ class GrowthModel:
         allow_adapters: bool = True,
         mode_hint: Optional[str] = None,
     ) -> Tuple[bool, List[str]]:
-        """Can build.
+        """Check whether ``stand`` can supply what this model needs.
 
         Args:
-            stand: Parameter for `GrowthModel.can_build`.
-            allow_adapters: Parameter for `GrowthModel.can_build`.
-            mode_hint: Parameter for `GrowthModel.can_build`.
+            stand: The inventory to test.
+            allow_adapters: Whether angle-count tallies may be converted to the
+                required representation. ``False`` tests the stand as it stands.
+            mode_hint: Test against this mode instead of the declared requirement.
 
         Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
+            ``(ok, missing)``, where ``missing`` names each prerequisite the stand
+            cannot meet -- ``"site"``, ``"top_height"``, or a description of the
+            inventory representation it lacks. Call this before
+            :meth:`build_context` to get a list rather than an exception.
         """
         req = self.requirements()
         missing: List[str] = []
@@ -133,9 +144,6 @@ class GrowthModel:
 
             Returns:
                 ``True`` when plots contain trees and the stand is not angle-count based.
-
-            Source:
-                Internal pyforestry simulation architecture and runtime contracts.
             """
             return (not stand.use_angle_count) and any(p.trees for p in stand.plots)
 
@@ -144,9 +152,6 @@ class GrowthModel:
 
             Returns:
                 ``True`` when every tree has a non-null ``position`` value.
-
-            Source:
-                Internal pyforestry simulation architecture and runtime contracts.
             """
             if not _has_tree_list():
                 return False
@@ -161,9 +166,6 @@ class GrowthModel:
 
             Returns:
                 ``True`` when basal area and stem count can be converted to floats.
-
-            Source:
-                Internal pyforestry simulation architecture and runtime contracts.
             """
             try:
                 _ = float(stand.BasalArea)
@@ -386,54 +388,45 @@ class GrowthModel:
     # ------------------------------ Behavior ----------------------------------
 
     def default_attrs(self) -> Dict[str, Any]:
-        """Default attrs.
+        """Model-specific values seeded into ``ctx.attrs`` when a context is built.
 
         Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
+            Initial attributes. Empty by default; override to declare the site and
+            history inputs your ``update_step`` reads.
         """
         return {}
 
     def init_state_stub(self) -> Dict[str, Any]:
-        """Init state stub.
+        """Initial run state seeded into ``ctx.state``.
 
         Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
+            ``t`` (elapsed years) and ``years_since_thin``, which the runtime and
+            the thinning-response terms of several models both read.
         """
         return {"t": 0.0, "years_since_thin": 0.0}
 
     def update_step(self, ctx: SimulationContext, dt: float) -> None:
-        """Update step.
+        """Advance ``ctx`` by ``dt`` years. This is the model.
+
+        Write results into the representation ``ctx`` holds -- its plots, its
+        diameter classes, or its aggregate metrics -- because the context rebuilds
+        its metrics from that representation after every step.
 
         Args:
-            ctx: Parameter for `GrowthModel.update_step`.
-            dt: Parameter for `GrowthModel.update_step`.
+            ctx: The working copy to advance, in the mode this model requires.
+            dt: Length of the step in years.
 
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
+        Raises:
+            NotImplementedError: Always; every model must implement its own step.
         """
         raise NotImplementedError
 
     def grow(self, ctx: SimulationContext, dt: float) -> None:  # pragma: no cover - compatibility
-        """Grow.
+        """Deprecated alias for :meth:`update_step`.
 
         Args:
-            ctx: Parameter for `GrowthModel.grow`.
-            dt: Parameter for `GrowthModel.grow`.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
+            ctx: The working copy to advance.
+            dt: Length of the step in years.
         """
         warnings.warn(
             "GrowthModel.grow is deprecated; implement/update_step instead.",
@@ -443,13 +436,12 @@ class GrowthModel:
         self.update_step(ctx, dt)
 
     def available_actions(self) -> Dict[str, ActionSpec]:
-        """Available actions.
+        """Management actions this model exposes to :meth:`SimulationContext.do`.
 
         Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
+            Action specs by name. Empty by default; a model that supports thinning
+            or fertilisation declares it here, along with the inventory modes each
+            action needs.
         """
         return {}
 
@@ -458,10 +450,12 @@ class GrowthModel:
 
 
 class ExampleStandGeneralModel(GrowthModel):
-    """Example stand general model container and behavior.
+    """A minimal working :class:`GrowthModel`, for tests and as a template.
 
-    Source:
-        Internal pyforestry simulation architecture and runtime contracts.
+    Not a scientific model: growth is a fixed relative rate and mortality a fixed
+    annual fraction. It exists to show the shape of an implementation -- declaring
+    requirements, stepping each inventory mode, exposing actions with mode gates --
+    and to give the runtime something to exercise.
     """
 
     def __init__(
@@ -472,17 +466,15 @@ class ExampleStandGeneralModel(GrowthModel):
         fertilization_boost: float = 0.01,
         fertilization_years: float = 5.0,
     ) -> None:
-        """Init.
+        """Configure the illustrative growth and mortality rates.
 
         Args:
-            ba_rel_per_year: Parameter for `ExampleStandGeneralModel.__init__`.
-            mortality_rate_per_year: Parameter for `ExampleStandGeneralModel.__init__`.
-            diam_cm_inc_per_year: Parameter for `ExampleStandGeneralModel.__init__`.
-            fertilization_boost: Parameter for `ExampleStandGeneralModel.__init__`.
-            fertilization_years: Parameter for `ExampleStandGeneralModel.__init__`.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
+            ba_rel_per_year: Relative basal-area increment per year, aggregate mode.
+            mortality_rate_per_year: Fraction of stems lost per year.
+            diam_cm_inc_per_year: Diameter increment per year, per-tree and
+                diameter-class modes.
+            fertilization_boost: Extra relative BA growth while fertilised.
+            fertilization_years: Default duration of the fertilisation effect.
         """
         self.ba_rel = ba_rel_per_year
         self.mort = mortality_rate_per_year
@@ -491,39 +483,19 @@ class ExampleStandGeneralModel(GrowthModel):
         self.fert_years = fertilization_years
 
     def requirements(self) -> Requirements:
-        """Requirements.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Accept any representation; this model can step all four."""
         return Requirements(inventory="either")
 
     def default_attrs(self) -> Dict[str, Any]:
-        """Default attrs.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Seed the fertilisation countdown that :meth:`update_step` decrements."""
         return {"fertilized_remaining_years": 0.0}
 
     def update_step(self, ctx: SimulationContext, dt: float) -> None:
-        """Update step.
+        """Grow, and kill, at fixed rates in whichever mode ``ctx`` holds.
 
         Args:
-            ctx: Parameter for `ExampleStandGeneralModel.update_step`.
-            dt: Parameter for `ExampleStandGeneralModel.update_step`.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
+            ctx: The working copy to advance.
+            dt: Length of the step in years.
         """
         ctx.state["years_since_thin"] = ctx.state.get("years_since_thin", 0.0) + dt
         fert_extra = (
@@ -548,24 +520,18 @@ class ExampleStandGeneralModel(GrowthModel):
                     if t.weight_n is not None:
                         t.weight_n = float(t.weight_n) * (1.0 - self.mort * dt)
         else:  # diameter_class
-            dclass = ctx._dclass
+            dclass = ctx.diameter_classes
             for _, rec in dclass.items():
                 rec["bin_mids_cm"] = [float(m) + self.diam_inc * dt for m in rec["bin_mids_cm"]]
                 rec["n_per_ha"] = [float(n_i) * (1.0 - self.mort * dt) for n_i in rec["n_per_ha"]]
             ctx.set_diameter_class(dclass)
 
     def grow(self, ctx: SimulationContext, dt: float) -> None:  # pragma: no cover - compatibility
-        """Grow.
+        """Deprecated alias for :meth:`update_step`.
 
         Args:
-            ctx: Parameter for `ExampleStandGeneralModel.grow`.
-            dt: Parameter for `ExampleStandGeneralModel.grow`.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
+            ctx: The working copy to advance.
+            dt: Length of the step in years.
         """
         warnings.warn(
             "ExampleStandGeneralModel.grow is deprecated; use update_step instead.",
@@ -575,14 +541,7 @@ class ExampleStandGeneralModel(GrowthModel):
         self.update_step(ctx, dt)
 
     def available_actions(self) -> Dict[str, ActionSpec]:
-        """Available actions.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Available actions."""
         return {
             "fertilize": ActionSpec(
                 name="fertilize",
@@ -615,35 +574,13 @@ class ExampleStandGeneralModel(GrowthModel):
         }
 
     def _act_fertilize(self, ctx: SimulationContext, years: Optional[float] = None) -> None:
-        """Act fertilize.
-
-        Args:
-            ctx: Parameter for `ExampleStandGeneralModel._act_fertilize`.
-            years: Parameter for `ExampleStandGeneralModel._act_fertilize`.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Start (or restart) the fertilisation effect for ``years``."""
         ctx.attrs["fertilized_remaining_years"] = float(
             years if years is not None else self.fert_years
         )
 
     def _act_apply_mortality_rate(self, ctx: SimulationContext, rate: float) -> None:
-        """Act apply mortality rate.
-
-        Args:
-            ctx: Parameter for `ExampleStandGeneralModel._act_apply_mortality_rate`.
-            rate: Parameter for `ExampleStandGeneralModel._act_apply_mortality_rate`.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Remove ``rate`` of the stems, in whichever mode ``ctx`` holds."""
         if rate < 0 or rate > 1:
             raise ValueError("rate must be in [0,1]")
         if ctx.mode == "aggregate":
@@ -658,25 +595,14 @@ class ExampleStandGeneralModel(GrowthModel):
                         base_w = float(w_raw)
                     t.weight_n = base_w * (1.0 - rate)
         elif ctx.mode == "diameter_class":
-            dclass = ctx._dclass
+            dclass = ctx.diameter_classes
             for _, rec in dclass.items():
                 rec["n_per_ha"] = [float(n_i) * (1.0 - rate) for n_i in rec["n_per_ha"]]
             ctx.set_diameter_class(dclass)
         ctx.state["years_since_thin"] = 0.0
 
     def _act_thin_fraction(self, ctx: SimulationContext, fraction: float) -> None:
-        """Act thin fraction.
-
-        Args:
-            ctx: Parameter for `ExampleStandGeneralModel._act_thin_fraction`.
-            fraction: Parameter for `ExampleStandGeneralModel._act_thin_fraction`.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Thin from below: remove ``fraction`` of stems, smallest diameters first."""
         if not (0.0 < fraction < 1.0):
             raise ValueError("fraction must be in (0,1)")
         records = []
@@ -702,23 +628,12 @@ class ExampleStandGeneralModel(GrowthModel):
         ctx.state["years_since_thin"] = 0.0
 
     def _act_thin_smallest_classes(self, ctx: SimulationContext, fraction: float) -> None:
-        """Act thin smallest classes.
-
-        Args:
-            ctx: Parameter for `ExampleStandGeneralModel._act_thin_smallest_classes`.
-            fraction: Parameter for `ExampleStandGeneralModel._act_thin_smallest_classes`.
-
-        Returns:
-            Result produced by this callable.
-
-        Source:
-            Internal pyforestry simulation architecture and runtime contracts.
-        """
+        """Thin from below in diameter-class mode, emptying the smallest classes first."""
         if ctx.mode != "diameter_class":
             raise RuntimeError("thin_smallest_classes requires diameter_class")
         if not (0.0 < fraction < 1.0):
             raise ValueError("fraction must be in (0,1)")
-        dclass = ctx._dclass
+        dclass = ctx.diameter_classes
         total_n = float(ctx.metrics["Stems"]["TOTAL"])
         target = total_n * fraction
         removed = 0.0

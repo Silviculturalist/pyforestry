@@ -1,7 +1,4 @@
-"""Pricelist utilities and interfaces.
-
-Source: Internal pyforestry implementation.
-"""
+"""Pricelist utilities and interfaces."""
 
 from dataclasses import dataclass
 from enum import IntEnum
@@ -12,11 +9,7 @@ from pyforestry.base.helpers.tree_species import TreeName, parse_tree_species
 
 @dataclass
 class DiameterRange:
-    """Diameter range container and behavior.
-
-    Source:
-        Internal pyforestry implementation.
-    """
+    """Diameter range container and behavior."""
 
     Min: float
     Max: float
@@ -24,11 +17,7 @@ class DiameterRange:
 
 @dataclass
 class LengthRange:
-    """Length range container and behavior.
-
-    Source:
-        Internal pyforestry implementation.
-    """
+    """Length range container and behavior."""
 
     Min: float
     Max: float
@@ -41,16 +30,7 @@ class TimberPriceForDiameter:
     """
 
     def __init__(self, butt_price: float, middle_price: float, top_price: float):
-        """Init.
-
-        Args:
-            butt_price: Parameter for `TimberPriceForDiameter.__init__`.
-            middle_price: Parameter for `TimberPriceForDiameter.__init__`.
-            top_price: Parameter for `TimberPriceForDiameter.__init__`.
-
-        Source:
-            Internal pyforestry implementation.
-        """
+        """Init."""
         self.butt_price = butt_price
         self.middle_price = middle_price
         self.top_price = top_price
@@ -77,14 +57,7 @@ class LengthCorrections:
     """
 
     def __init__(self, corrections: Optional[Dict[int, Dict[int, int]]] = None):
-        """Init.
-
-        Args:
-            corrections: Parameter for `LengthCorrections.__init__`.
-
-        Source:
-            Internal pyforestry implementation.
-        """
+        """Init."""
         self.corrections = corrections or {}
 
     def get_length_correction(self, diameter: int, log_part: Optional[int], length: int) -> int:
@@ -111,27 +84,14 @@ class TimberPricelist:
 
     # Using your code's idea of enumerations: Butt = 0, Middle = 1, Top = 2 ...
     class LogParts(IntEnum):
-        """Log parts container and behavior.
-
-        Source:
-            Internal pyforestry implementation.
-        """
+        """Log parts container and behavior."""
 
         Butt = 0
         Middle = 1
         Top = 2
 
     def __init__(self, min_diameter: int, max_diameter: int, volume_type: str = "m3to"):
-        """Init.
-
-        Args:
-            min_diameter: Parameter for `TimberPricelist.__init__`.
-            max_diameter: Parameter for `TimberPricelist.__init__`.
-            volume_type: Parameter for `TimberPricelist.__init__`.
-
-        Source:
-            Internal pyforestry implementation.
-        """
+        """Init."""
         self.min_diameter = min_diameter
         self.max_diameter = max_diameter
         self.volume_type = volume_type  # e.g. "m3to" or "m3fub"
@@ -164,11 +124,7 @@ class TimberPricelist:
         """
 
         class LogWeights:
-            """Container for derived log-quality weight percentages.
-
-            Source:
-                Internal pyforestry implementation.
-            """
+            """Container for derived log-quality weight percentages."""
 
             pulpwoodPercentage = 0.0
             fuelWoodPercentage = 0.0
@@ -206,11 +162,7 @@ class PulpPricelist:
     """Placeholder for pulp prices per species."""
 
     def __init__(self):
-        """Init.
-
-        Source:
-            Internal pyforestry implementation.
-        """
+        """Init."""
         self._prices = {}
 
     def get_pulpwood_price(self, species: Union[str, TreeName]) -> int:
@@ -253,11 +205,7 @@ class Pricelist:
     """Holds the combined pulpwood, timber, etc. prices and constraints."""
 
     def __init__(self):
-        """Init.
-
-        Source:
-            Internal pyforestry implementation.
-        """
+        """Init."""
         self.Timber: Dict[str, TimberPricelist] = {}
         self.PulpLogDiameter = DiameterRange(5, 70)
         self.Pulp = PulpPricelist()

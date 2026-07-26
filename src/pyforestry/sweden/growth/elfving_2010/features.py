@@ -148,13 +148,6 @@ def resolve_site_index_m(
     def _to_site_index_m(value: object, *, parameter_name: str) -> float:
         """To site index m.
 
-        Args:
-            value: Parameter for `resolve_site_index_m._to_site_index_m`.
-            parameter_name: Parameter for `resolve_site_index_m._to_site_index_m`.
-
-        Returns:
-            Result produced by this callable.
-
         Source:
             Forestry equation implementation within pyforestry formulas modules
             and referenced scientific literature used by this package.

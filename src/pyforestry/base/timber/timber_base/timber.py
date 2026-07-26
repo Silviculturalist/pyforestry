@@ -16,20 +16,7 @@ class Timber:
         over_bark: Optional[bool] = None,
         stump_height_m: Optional[float] = 0.3,
     ):
-        """Init.
-
-        Args:
-            species: Parameter for `Timber.__init__`.
-            diameter_cm: Parameter for `Timber.__init__`.
-            height_m: Parameter for `Timber.__init__`.
-            double_bark_mm: Parameter for `Timber.__init__`.
-            crown_base_height_m: Parameter for `Timber.__init__`.
-            over_bark: Parameter for `Timber.__init__`.
-            stump_height_m: Parameter for `Timber.__init__`.
-
-        Source:
-            Internal pyforestry implementation.
-        """
+        """Init."""
         self.species = species.lower()
         self.diameter_cm = diameter_cm
         self.height_m = height_m
