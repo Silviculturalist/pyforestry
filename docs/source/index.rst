@@ -21,6 +21,7 @@ pyforestry Documentation
    notebooks/elfving_2010_preset
    notebooks/soderberg_1986_preset
    notebooks/young_stand
+   notebooks/competition_indices
    notebooks/FullStack_Callables_Guide
 
 ..
