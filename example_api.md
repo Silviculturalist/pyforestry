@@ -1,28 +1,36 @@
 # Example API v2: Presets, Mixed Models, Portfolio Runs, and Optimization
 
-This design keeps a typed model catalog while adding a production simulation runtime that supports:
-
-- user-defined presets
-- heterogeneous models across stands
-- regeneration lifecycle events
-- scoped configs (weather, market, pricing, management)
-- portfolio workflows (wood supply and holding valuation)
-- optimization workflows (for example GA over management policy)
+> **Status: aspirational design sketch. Almost nothing here exists.**
+>
+> This document proposes an API; it does not describe one. `StandState`,
+> `SimContext`, `Preset`, `ModelRouter`, `ConfigBundle`, `Event`, `Cycle`,
+> `simulate_stand`, `simulate_portfolio`, `optimize_policy`, `NotebookSession`
+> and `SimulationService` are **not implemented**, and the `forestsim/` layout in
+> §15 is not this package's layout. The `*/models` packages it refers to were
+> renamed to `*/blocks`.
+>
+> For what the package actually offers today, read `ARCHITECTURE.md` (the
+> canonical current policy), `ROADMAP.md` (direction, with `[CP]`/`[TD]` status
+> tags) and `ARCHITECTURE_PROPOSAL.md` (the concrete next moves, several of which
+> supersede sections here). The only runnable code below is §18.3, which uses the
+> real `Eriksson1976Model` API.
 
 ## Implementation Status (Current vs Target)
 
 Current implementation (repository state):
 
-- Regional `*/models` modules expose simulation-facing facades/adapters.
-- Sweden preset execution currently uses `SimulationPreset` contracts and
-  `run_sweden_preset(...)` orchestration.
-- Optimization contracts in this document are target-facing and not yet fully
-  implemented as runtime entrypoints.
+- Regional `*/blocks` modules expose simulation-facing adapters.
+- Sweden preset execution uses `SimulationPreset` contracts and
+  `run_sweden_preset(...)` orchestration -- note that this runbook emits an
+  artifact contract from synthetic numbers and runs no model; see
+  `STRUCTURAL_REVIEW.md` A2.
+- Optimization contracts in this document are target-facing and not implemented
+  as runtime entrypoints.
 
 Target architecture (this document):
 
-- Keep `*/models` as thin typed adapters.
-- Keep formula internals and coefficient-heavy kernels outside `*/models`.
+- Keep `*/blocks` as thin typed adapters.
+- Keep formula internals and coefficient-heavy kernels outside `*/blocks`.
 - Stabilize unified runtime/preset/optimizer contracts across regions.
 
 ## 1) Use a 4-layer architecture, not just 2
@@ -890,7 +898,7 @@ Notes:
 
 - Inputs/outputs are explicit and frozen.
 - Illegal combinations fail at construction time or type-check time.
-- Formula internals stay out of `*/models`.
+- Formula internals stay out of `*/blocks`.
 
 ### 18.2 Thin model adapter (Model API Context)
 

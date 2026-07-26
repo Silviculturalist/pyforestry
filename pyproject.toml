@@ -13,6 +13,11 @@ license         = {text = "MIT"}
 urls            = {Homepage = "https://github.com/Silviculturalist/pyforestry"}
 dependencies    = [
   "numpy",
+  # Imported at module scope by the simulation core, the ensemble engine, the
+  # solution cube and the Sweden presets, and returned from public APIs
+  # (SimulationContext.to_pandas, run_projection). It used to arrive only as a
+  # transitive geopandas dependency, so the package worked by accident.
+  "pandas",
   "tqdm",
   "xarray",
   "scipy>=1.5",
