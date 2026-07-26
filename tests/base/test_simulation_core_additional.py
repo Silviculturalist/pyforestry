@@ -239,7 +239,7 @@ def test_build_context_uses_requirements_inventory():
     assert ctx.mode == "spatial"
 
 
-def test_simulation_context_action_gating_and_phases():
+def test_simulation_context_action_gating_by_inventory_mode():
     model = DummyModel()
     metrics = {
         "BasalArea": {"TOTAL": StandBasalArea(10.0, species=None)},
@@ -268,13 +268,6 @@ def test_simulation_context_action_gating_and_phases():
                 params={},
                 requires_modes=["tree_list"],
             ),
-            "phase_ok": ActionSpec(
-                name="phase_ok",
-                description="",
-                fn=noop,
-                params={},
-                allowed_phases=["pre"],
-            ),
             "legacy_tree": ActionSpec(
                 name="legacy_tree",
                 description="",
@@ -290,8 +283,6 @@ def test_simulation_context_action_gating_and_phases():
         ctx.do("missing")
     with pytest.raises(RuntimeError, match="requires mode"):
         ctx.do("only_tree")
-    with pytest.raises(RuntimeError, match="not permitted"):
-        ctx.do("phase_ok", phase="post")
     with pytest.raises(RuntimeError, match="requires mode"):
         ctx.do("legacy_tree")
 
@@ -310,7 +301,7 @@ def test_simulation_context_invalid_mode():
         )
 
 
-def test_simulation_context_management_tuple_and_scale_stems():
+def test_simulation_context_scale_stems():
     model = DummyModel()
     metrics = {
         "BasalArea": {"TOTAL": StandBasalArea(10.0, species=None)},
@@ -333,7 +324,8 @@ def test_simulation_context_management_tuple_and_scale_stems():
     model.available_actions = lambda: {  # type: ignore[assignment]
         "noop": ActionSpec(name="noop", description="", fn=noop, params={})
     }
-    ctx.update_step(1.0, management={"pre": [("noop", {})], "post": ["noop"]})
+    ctx.do("noop")
+    ctx.update_step(1.0)
     ctx.scale_stems(0.5)
     assert float(ctx.metrics["Stems"]["TOTAL"]) == pytest.approx(50.0)
 
@@ -519,12 +511,10 @@ def test_context_ensemble_engine_paths():
         ens.update_step(1.0)
 
     ens.engine = PythonEngine()
-    ens.update_step(1.0, management={"pre": []})
+    ens.update_step(1.0)
     ens.do("fertilize", years=1.0)
     df = ens.to_pandas()
     assert "context_id" in df.columns
-    with pytest.raises(ValueError):
-        ens.update_step(1.0, management=[None, None])
 
 
 def test_batch_engine_not_implemented():

@@ -1,27 +1,16 @@
 """Eko 1985 engine expressed on the canonical simulation runtime.
 
-The Eko 1985 growth system runs on top of the package's shared simulation
-primitives rather than a bespoke container:
+Ekö 1985 growth couples every cohort to every other through competition (``HK``)
+and cross-species mortality, so the five-year update is intrinsically a
+whole-stand operation computed from one pre-growth snapshot. Mortality is part of
+that growth equation, not a separate phase.
 
-- cohorts are carried as
-  :class:`~pyforestry.simulation.stand_composite.StandPart` model views inside a
-  :class:`~pyforestry.simulation.stand_composite.StandComposite` (the canonical
-  part registry, aggregation, RNG, and telemetry);
-- the five-year whole-stand growth step runs as an :class:`Eko1985GrowthStage`
-  inside a :class:`~pyforestry.simulation.stage_runtime.StageRuntime`;
-- thinning is dispatched as a
-  :class:`~pyforestry.simulation.stand_composite.StandAction` over the composite.
-
-``EngineStand`` remains a thin Eko-specific facade over that runtime, preserving
-the historical call surface (``grow``/``thin``/``stand_ba``/``parts``/``get_qmd``/
-``get_mai``/``_volume_for``) used by
-:class:`~pyforestry.sweden.systems.eko1985.model.Eko1985Stand`.
-
-Eko 1985 growth couples every cohort to every other cohort through competition
-(``HK``) and cross-species mortality, so the update is intrinsically a
-whole-stand operation computed from a single pre-growth snapshot; mortality is
-part of that growth equation and therefore lives inside the growth stage rather
-than a separate disturbance stage.
+This used to be expressed on a per-part runtime: cohorts wrapped in ``StandPart``
+views inside a ``StandComposite``, stepped by a ``StageRuntime`` that called the
+growth stage once per part. Since the step is whole-stand, N-1 of those calls had
+to be made inert by an ``_armed`` latch, and thinning bypassed the runtime
+entirely. The wrapper cost three types and bought nothing: ``EngineStand`` already
+holds its cohorts in ``self.parts``, so it now iterates them directly.
 """
 
 from __future__ import annotations
@@ -30,8 +19,6 @@ from math import pi
 from typing import Mapping
 
 from pyforestry.base.helpers import TreeName, TreeSpecies
-from pyforestry.simulation.stage_runtime import Stage, StageRuntime
-from pyforestry.simulation.stand_composite import StandAction, StandComposite, StandPart
 
 from .site_context import EkoStandSite, _coerce_species, _safe_sum
 
@@ -115,184 +102,143 @@ def _resolve_removal(part: "EngineStandPart", removals: Mapping) -> float:
     return 0.0
 
 
-class Eko1985GrowthStage(Stage):
-    """Whole-stand Eko 1985 growth step expressed as a StageRuntime stage.
+def _grow_whole_stand(
+    stand: "EngineStand", years: float, apply_mortality: bool
+) -> dict[str, list[dict[str, float]]]:
+    """Advance every cohort by ``years`` from one shared pre-growth snapshot.
 
-    Eko 1985 growth couples every cohort to every other cohort, so the five-year
-    update is computed once for the whole stand from a single pre-growth snapshot
-    rather than independently per part. :meth:`StageRuntime.run_cycle` invokes
-    :meth:`run` once per part; the stage performs the whole-stand step on the
-    first invocation after :meth:`arm` and is otherwise inert, which keeps the
-    simultaneous-update semantics (and numeric parity with the legacy engine)
-    intact regardless of how many parts the cycle iterates.
+    Every cohort is read before any is written: competition (``HK``) and
+    cross-species mortality both depend on the state of the other cohorts, so a
+    cohort-at-a-time update would let the first cohort's growth feed the second
+    cohort's competition within the same period. That simultaneity is the reason
+    this is a whole-stand function rather than a per-cohort one.
     """
+    parts = stand.parts
 
-    name = "growth"
-    order = 10
+    stand._assign_current_state_metrics()
 
-    def __init__(self, stand: "EngineStand") -> None:
-        """Bind the stage to its owning :class:`EngineStand` facade."""
-        super().__init__()
-        self._stand = stand
-        self._years = 5.0
-        self._apply_mortality = True
-        self._armed = False
-        self.last_period: dict[str, list[dict[str, float]]] = {}
+    start_state = []
+    for p in parts:
+        vol0 = p.get_volume(ba=p.ba, qmd=p.qmd, age=p.age, stems=p.stems, hk=p.hk)
+        start_state.append(
+            {
+                "part": p,
+                "ba": p.ba,
+                "stems": p.stems,
+                "age": p.age,
+                "qmd": p.qmd,
+                "vol": vol0,
+            }
+        )
+        p.vol0 = vol0
 
-    def arm(self, years: float, apply_mortality: bool) -> None:
-        """Schedule a whole-stand step for the next :meth:`StageRuntime.run_cycle`."""
-        self._years = float(years)
-        self._apply_mortality = bool(apply_mortality)
-        self._armed = True
+    mortality = []
+    apply_caps = bool(getattr(stand.Site, "broadleaf_growth_prodmod", False))
+    for p in parts:
+        if apply_mortality:
+            baq_crowd, _dead_qmd_c, baq_other, _dead_qmd_o = p.get_mortality(increment=years)
+        else:
+            baq_crowd = baq_other = 0.0
+        # ProdMod2 parity: clamp the BAI's own basal area / stem inputs to the
+        # fitting-domain diameter limits. Applied around the call and restored so
+        # the (uncapped) state still drives mortality, competition and the update.
+        ba_saved, stems_saved = p.ba, p.stems
+        if apply_caps:
+            caps = p._bai_diameter_caps()
+            if caps is not None:
+                p.ba = min(p.ba, caps[0])
+                p.stems = min(p.stems, caps[1])
+        p.get_bai5(
+            ba_quotient_chronic_mortality=baq_crowd,
+            ba_quotient_acute_mortality=baq_other,
+        )
+        p.ba, p.stems = ba_saved, stems_saved
+        mortality.append(
+            {
+                "q_crowd": baq_crowd,
+                "q_other": baq_other,
+                "q_total": baq_crowd + baq_other,
+            }
+        )
 
-    def run(self, part, module, rng=None) -> None:
-        """Execute the armed whole-stand step exactly once per cycle."""
-        if not self._armed:
-            return
-        self._armed = False
-        self.last_period = self._grow_whole_stand(module.composite)
+    next_state = []
+    for idx, p in enumerate(parts):
+        q_total = mortality[idx]["q_total"] if apply_mortality else 0.0
+        if apply_mortality:
+            next_ba = (1.0 - q_total) * p.ba + p.bai5
+            next_stems = (1.0 - q_total) * p.stems
+            next_age = p.age + years
+        else:
+            next_ba = p.ba
+            next_stems = p.stems
+            next_age = p.age
+        next_qmd = stand.get_qmd(next_ba, next_stems)
+        next_state.append(
+            {
+                "part": p,
+                "ba": next_ba,
+                "stems": next_stems,
+                "age": next_age,
+                "qmd": next_qmd,
+            }
+        )
 
-    def _grow_whole_stand(self, composite: StandComposite) -> dict[str, list[dict[str, float]]]:
-        """Advance every cohort by ``self._years`` from a shared pre-growth snapshot."""
-        stand = self._stand
-        years = self._years
-        apply_mortality = self._apply_mortality
-        parts = [holder.model_view for holder in composite.parts]
+    for idx, _p in enumerate(parts):
+        ba_other = _safe_sum(ns["ba"] for j, ns in enumerate(next_state) if j != idx)
+        N_other = _safe_sum(ns["stems"] for j, ns in enumerate(next_state) if j != idx)
+        qmd_other = stand.get_qmd(ba_other, N_other)
+        hk_next = (qmd_other / (next_state[idx]["qmd"] or 1e-9)) * ba_other
+        next_state[idx]["hk"] = hk_next
 
-        stand._assign_current_state_metrics()
+    for idx, p in enumerate(parts):
+        ns = next_state[idx]
+        ns["vol"] = p.get_volume(
+            ba=ns["ba"],
+            qmd=ns["qmd"],
+            age=ns["age"],
+            stems=ns["stems"],
+            hk=ns["hk"],
+        )
+        ns["volume_increment"] = ns["vol"] - start_state[idx]["vol"]
 
-        start_state = []
-        for p in parts:
-            vol0 = p.get_volume(ba=p.ba, qmd=p.qmd, age=p.age, stems=p.stems, hk=p.hk)
-            start_state.append(
-                {
-                    "part": p,
-                    "ba": p.ba,
-                    "stems": p.stems,
-                    "age": p.age,
-                    "qmd": p.qmd,
-                    "vol": vol0,
-                }
-            )
-            p.vol0 = vol0
+    period: dict[str, list[dict[str, float]]] = {}
+    for idx, p in enumerate(parts):
+        ns = next_state[idx]
+        p.gross_volume_increment = ns["volume_increment"]
+        p.volume_increment = ns["volume_increment"]
+        p.ba = ns["ba"]
+        p.stems = ns["stems"]
+        p.qmd = ns["qmd"]
+        p.age = ns["age"]
+        p.hk = ns.get("hk", p.hk)
+        p.vol = ns["vol"]
+        key = p.trädslag
+        period.setdefault(key, []).append(
+            {
+                "N1": p.stems,
+                "ba1": p.ba,
+                "qmd1": p.qmd,
+                "vol1": p.vol,
+                "N0": start_state[idx]["stems"],
+                "ba0": start_state[idx]["ba"],
+                "qmd0": start_state[idx]["qmd"],
+                "vol0": start_state[idx]["vol"],
+            }
+        )
 
-        mortality = []
-        apply_caps = bool(getattr(stand.Site, "broadleaf_growth_prodmod", False))
-        for p in parts:
-            if apply_mortality:
-                baq_crowd, _dead_qmd_c, baq_other, _dead_qmd_o = p.get_mortality(increment=years)
-            else:
-                baq_crowd = baq_other = 0.0
-            # ProdMod2 parity: clamp the BAI's own basal area / stem inputs to the
-            # fitting-domain diameter limits. Applied around the call and restored so
-            # the (uncapped) state still drives mortality, competition and the update.
-            ba_saved, stems_saved = p.ba, p.stems
-            if apply_caps:
-                caps = p._bai_diameter_caps()
-                if caps is not None:
-                    p.ba = min(p.ba, caps[0])
-                    p.stems = min(p.stems, caps[1])
-            p.get_bai5(
-                ba_quotient_chronic_mortality=baq_crowd,
-                ba_quotient_acute_mortality=baq_other,
-            )
-            p.ba, p.stems = ba_saved, stems_saved
-            mortality.append(
-                {
-                    "q_crowd": baq_crowd,
-                    "q_other": baq_other,
-                    "q_total": baq_crowd + baq_other,
-                }
-            )
-
-        next_state = []
-        for idx, p in enumerate(parts):
-            q_total = mortality[idx]["q_total"] if apply_mortality else 0.0
-            if apply_mortality:
-                next_ba = (1.0 - q_total) * p.ba + p.bai5
-                next_stems = (1.0 - q_total) * p.stems
-                next_age = p.age + years
-            else:
-                next_ba = p.ba
-                next_stems = p.stems
-                next_age = p.age
-            next_qmd = stand.get_qmd(next_ba, next_stems)
-            next_state.append(
-                {
-                    "part": p,
-                    "ba": next_ba,
-                    "stems": next_stems,
-                    "age": next_age,
-                    "qmd": next_qmd,
-                }
-            )
-
-        for idx, _p in enumerate(parts):
-            ba_other = _safe_sum(ns["ba"] for j, ns in enumerate(next_state) if j != idx)
-            N_other = _safe_sum(ns["stems"] for j, ns in enumerate(next_state) if j != idx)
-            qmd_other = stand.get_qmd(ba_other, N_other)
-            hk_next = (qmd_other / (next_state[idx]["qmd"] or 1e-9)) * ba_other
-            next_state[idx]["hk"] = hk_next
-
-        for idx, p in enumerate(parts):
-            ns = next_state[idx]
-            ns["vol"] = p.get_volume(
-                ba=ns["ba"],
-                qmd=ns["qmd"],
-                age=ns["age"],
-                stems=ns["stems"],
-                hk=ns["hk"],
-            )
-            ns["volume_increment"] = ns["vol"] - start_state[idx]["vol"]
-
-        period: dict[str, list[dict[str, float]]] = {}
-        for idx, p in enumerate(parts):
-            ns = next_state[idx]
-            p.gross_volume_increment = ns["volume_increment"]
-            p.volume_increment = ns["volume_increment"]
-            p.ba = ns["ba"]
-            p.stems = ns["stems"]
-            p.qmd = ns["qmd"]
-            p.age = ns["age"]
-            p.hk = ns.get("hk", p.hk)
-            p.vol = ns["vol"]
-            key = p.trädslag
-            period.setdefault(key, []).append(
-                {
-                    "N1": p.stems,
-                    "ba1": p.ba,
-                    "qmd1": p.qmd,
-                    "vol1": p.vol,
-                    "N0": start_state[idx]["stems"],
-                    "ba0": start_state[idx]["ba"],
-                    "qmd0": start_state[idx]["qmd"],
-                    "vol0": start_state[idx]["vol"],
-                }
-            )
-
-        stand._assign_current_state_metrics()
-        return period
+    stand._assign_current_state_metrics()
+    return period
 
 
 class EngineStand:
-    """Thin Eko 1985 facade over a :class:`StandComposite` + :class:`StageRuntime`."""
+    """The Ekö 1985 stand: a list of species cohorts stepped together."""
 
     def __init__(self, parts: list["EngineStandPart"], site: EkoStandSite):
-        """Wire cohorts into a StandComposite and a growth-staged StageRuntime."""
+        """Bind cohorts to the stand they compete within."""
         self.parts = parts
         self.Site = site
         self.volume_scale: float | None = None
-
-        stand_parts: list[StandPart] = []
-        seen: set[str] = set()
-        for idx, cohort in enumerate(self.parts):
-            base = getattr(cohort.species, "full_name", None) or f"cohort_{idx}"
-            name = base if base not in seen else f"{base}#{idx}"
-            seen.add(name)
-            stand_parts.append(StandPart(name=name, model_view=cohort))
-        self.composite = StandComposite(stand_parts, model_id="eko_1985")
-        self._growth_stage = Eko1985GrowthStage(self)
-        self.module = StageRuntime(self.composite, stages=(self._growth_stage,))
+        self.last_period: dict[str, list[dict[str, float]]] = {}
 
         for p in self.parts:
             p.register_stand(self)
@@ -351,26 +297,19 @@ class EngineStand:
         return part.get_volume(ba=ba, qmd=qmd, age=age, stems=stems, hk=hk)
 
     def thin(self, removals: Mapping) -> None:
-        """Apply constant-QMD thinning, dispatched as a StandAction over the composite."""
-
-        def _apply_thin(part: StandPart) -> None:
-            """Remove the requested basal area from a single cohort at constant QMD."""
-            cohort = part.model_view
+        """Remove the requested basal area from each cohort at constant QMD."""
+        for cohort in self.parts:
             ba_out = max(0.0, min(_resolve_removal(cohort, removals), cohort.ba))
             if ba_out > 0.0 and cohort.qmd > 0:
                 stems_out = ba_out / (pi * (cohort.qmd / 200.0) ** 2)
                 cohort.ba -= ba_out
                 cohort.stems = max(0.0, cohort.stems - stems_out)
-
-        action = StandAction(name="thin_basal_area", handler=_apply_thin)
-        self.composite.dispatch([action], policy="broadcast")
         self._assign_current_state_metrics()
 
     def grow(self, years: float = 5.0, apply_mortality: bool = True):
-        """Advance the stand by ``years`` via the growth stage's whole-stand step."""
-        self._growth_stage.arm(years, apply_mortality)
-        self.module.run_cycle()
-        return self._growth_stage.last_period
+        """Advance the stand by ``years`` in one simultaneous whole-stand step."""
+        self.last_period = _grow_whole_stand(self, float(years), bool(apply_mortality))
+        return self.last_period
 
     def grow5(self, apply_mortality: bool = True):
         """Five-year convenience wrapper around :meth:`grow`."""
@@ -506,4 +445,4 @@ class EngineStandPart:
         raise NotImplementedError
 
 
-__all__ = ["Eko1985GrowthStage", "EngineStand", "EngineStandPart"]
+__all__ = ["EngineStand", "EngineStandPart"]

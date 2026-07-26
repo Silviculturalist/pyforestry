@@ -15,10 +15,8 @@ from typing import (
     Iterable,
     List,
     Mapping,
-    MutableMapping,
     Optional,
     ParamSpec,
-    Tuple,
     TypedDict,
     Union,
     cast,
@@ -60,8 +58,6 @@ class ActionSpec:
     requires_tree_list: bool = False
     # New: explicit allowed modes, e.g. ["tree_list","spatial"] or []
     requires_modes: Optional[List[str]] = None
-    # Optional: phases within update_step where this action is valid, e.g. ("pre","post")
-    allowed_phases: Optional[Tuple[str, ...]] = None
 
 
 @dataclass
@@ -197,49 +193,19 @@ class SimulationContext:
 
     # ------------------------------ Public API --------------------------------
 
-    def update_step(
-        self,
-        years: float,
-        *,
-        management: Optional[
-            Mapping[str, Iterable[Union[str, tuple[str, Mapping[str, Any]]]]]
-        ] = None,
-    ) -> None:
+    def update_step(self, years: float) -> None:
+        """Advance the model by ``years``, refresh the metrics, record the step.
+
+        This is the atom, not the schedule. Management used to be threaded through
+        here as a dict of ``{"pre": [...], "mid": [...], "post": [...]}`` action
+        names -- one of the three schedulers this package carried. It is now a
+        :class:`~pyforestry.base.simulation.pipeline.ManagementStep` placed where
+        you want it in a pipeline, which is the same capability with an ordering
+        you can read.
         """
-        Advance the simulation by ``years`` while allowing management hooks.
-
-        ``management`` can map phase names ("pre", "mid", "post") to an iterable of
-        action specifications. Each action specification may be a string (action name)
-        or a tuple of ``(name, kwargs_mapping)`` to pass parameters. Phases execute
-        in order: pre -> model update -> mid -> metrics refresh -> post. Actions are
-        dispatched through ``self.do`` so model-provided capabilities still gate them.
-        """
-
-        def _phase_actions(
-            phase: str, actions: Iterable[Union[str, tuple[str, Mapping[str, Any]]]]
-        ):
-            """Dispatch phase-specific actions by name and parameters."""
-            for item in actions:
-                if isinstance(item, tuple):
-                    name, params = item
-                    params = dict(params)
-                else:
-                    name, params = str(item), {}
-                self.do(name, phase=phase, **params)
-
-        mgmt: MutableMapping[str, Iterable[Union[str, tuple[str, Mapping[str, Any]]]]] = (
-            dict(management) if management else {}
-        )
-
         pre = self.snapshot()
-        t0 = self.state.get("t", 0.0)
-        t1 = t0 + years
-        self.state["t"] = t1
+        t1 = self.state.get("t", 0.0) + years
 
-        # Pre-update management
-        _phase_actions("pre", mgmt.get("pre", ()))
-
-        # Core model update
         if hasattr(self.model, "update_step"):
             self.model.update_step(self, years)  # type: ignore[call-arg]
         else:  # pragma: no cover - compatibility shim
@@ -247,45 +213,26 @@ class SimulationContext:
         self.state["t"] = t1
         self.state["last_dt"] = years
 
-        # Optional mid-phase hooks (after model update, before metric recompute)
-        _phase_actions("mid", mgmt.get("mid", ()))
-
         self._refresh_metrics()
         post = self.snapshot()
+        self._append_history("update_step", {"dt": years}, pre, post)
 
-        # Post-metric hooks (e.g. logging/valuation that depends on refreshed totals)
-        _phase_actions("post", mgmt.get("post", ()))
-
-        self._append_history(
-            "update_step",
-            {
-                "dt": years,
-                "management": {
-                    k: [str(a[0] if isinstance(a, tuple) else a) for a in v]
-                    for k, v in mgmt.items()
-                },
-            },
-            pre,
-            post,
-        )
-
-    def grow(self, years: float, **kwargs: Any) -> None:  # pragma: no cover - compatibility alias
+    def grow(self, years: float) -> None:  # pragma: no cover - compatibility alias
         """Compatibility alias for :meth:`update_step`."""
         warnings.warn(
             "SimulationContext.grow is deprecated; use update_step instead.",
             DeprecationWarning,
             stacklevel=2,
         )
-        self.update_step(years, **kwargs)
+        self.update_step(years)
 
-    def do(self, action: str, *, phase: Optional[str] = None, **kwargs: Any) -> None:
-        """Execute a named action with optional phase gating."""
+    def do(self, action: str, **kwargs: Any) -> None:
+        """Execute a capability the model declares, gated on the inventory mode."""
         actions = self.model.available_actions()
         if action not in actions:
             raise KeyError(f"Action '{action}' not available for this model.")
         spec: ActionSpec = actions[action]
 
-        # New gating
         requires_modes = set(spec.requires_modes or [])
         if spec.requires_tree_list:
             requires_modes.update({"tree_list", "spatial"})
@@ -294,18 +241,12 @@ class SimulationContext:
             raise RuntimeError(
                 f"Action '{action}' requires mode in {{{req_str}}}, got '{self.mode}'."
             )
-        if phase is not None and spec.allowed_phases:
-            if phase not in spec.allowed_phases:
-                allowed = ", ".join(spec.allowed_phases)
-                raise RuntimeError(
-                    f"Action '{action}' not permitted during '{phase}' phase (allowed: {allowed})."
-                )
 
         pre = self.snapshot()
         spec.fn(self, **kwargs)
         self._refresh_metrics()
         post = self.snapshot()
-        self._append_history(f"action:{action}", {"params": kwargs, "phase": phase}, pre, post)
+        self._append_history(f"action:{action}", {"params": kwargs}, pre, post)
 
     def snapshot(self) -> Dict[str, Any]:
         """Return a lightweight snapshot of state and aggregate totals."""

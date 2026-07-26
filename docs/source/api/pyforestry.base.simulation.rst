@@ -20,14 +20,6 @@ pyforestry.base.simulation.core module
    :undoc-members:
    :show-inheritance:
 
-pyforestry.base.simulation.dsl module
--------------------------------------
-
-.. automodule:: pyforestry.base.simulation.dsl
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 pyforestry.base.simulation.ensemble module
 ------------------------------------------
 
@@ -40,6 +32,14 @@ pyforestry.base.simulation.growth\_model module
 -----------------------------------------------
 
 .. automodule:: pyforestry.base.simulation.growth_model
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyforestry.base.simulation.pipeline module
+------------------------------------------
+
+.. automodule:: pyforestry.base.simulation.pipeline
    :members:
    :undoc-members:
    :show-inheritance:

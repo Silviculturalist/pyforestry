@@ -193,8 +193,8 @@ Minimum preset contract:
 
 * Seed handling:
   * Accept and persist global seed strategy.
-* Stage/ruleset declaration:
-  * Declare stages and rulesets explicitly.
+* Pipeline/policy declaration:
+  * Declare the ordered steps and the management policy explicitly.
 * Operation ordering:
   * Declare execution order outside formula internals.
 * Environment guards:

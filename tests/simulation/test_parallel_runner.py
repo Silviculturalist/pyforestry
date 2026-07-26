@@ -19,8 +19,8 @@ def test_parallel_runner_with_stub_context(monkeypatch):
             self.history = []
             self.telemetry = None
 
-        def update_step(self, dt, management=None):
-            delta = management.get("delta", 0.0) if management else 0.0
+        def update_step(self, dt):
+            delta = 0.0
             self.value += dt + delta
             self.history.append(self.value)
 
@@ -98,14 +98,14 @@ def test_run_parallel_empty_and_missing_model():
         run_parallel([NoModel()], dt=1.0)
 
 
-def test_run_parallel_management_and_telemetry(monkeypatch):
+def test_run_parallel_telemetry(monkeypatch):
     from pyforestry.simulation.services import parallel_runner
 
     class DummyCtx:
         def __init__(self):
             self.telemetry = types.SimpleNamespace(events=["evt"])
 
-        def update_step(self, dt, management=None):  # noqa: ARG002
+        def update_step(self, dt):  # noqa: ARG002
             return None
 
         def checkpoint(self, include_history=False, history_tail=None):  # noqa: ARG002
@@ -133,7 +133,6 @@ def test_run_parallel_management_and_telemetry(monkeypatch):
         dt=1.0,
         steps=1,
         processes=1,
-        management=[{"x": 1}],
         telemetry_sink=sink,
     )
     assert out

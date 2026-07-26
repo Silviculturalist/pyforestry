@@ -115,19 +115,28 @@ compete:
   `Eriksson1976Model`, `Eko1985Model`, and the Norway models). Presets drive
   this tier directly; it is the stable scientific-model interface.
 
-- **Orchestration tier — `StageRuntime`** (`src/pyforestry/simulation/`; formerly
-  `GrowthModule`, still importable under that deprecated alias). Runs ordered
-  `Stage`s (growth → management → disturbance → valuation) over a
-  `StandComposite` of `StandPart`s, with the shared RNG/telemetry/checkpoint
-  services. It sequences growth together with management, disturbance, and
-  valuation across multi-part stands.
+- **Scheduling tier — `run_pipeline`** (`src/pyforestry/base/simulation/pipeline.py`).
+  Runs an ordered sequence of `Step`s over the **whole stand**, one period at a
+  time. Management is one type — `Policy = Callable[[ctx], Sequence[Action]]` —
+  and everything that used to be a separate mechanism is a policy: a trigger is
+  a policy with an `if` (`when`), a schedule is a policy with a clock comparison
+  (`at_times`), a ruleset is a policy that reads a config.
 
-These tiers compose rather than replace one another. The reference example is
-Eko 1985: `Eko1985Model` is a `GrowthModel`, and internally it carries its
-species cohorts as `StandPart` model views inside a `StandComposite` and runs
-its whole-stand growth step as a stage inside a `StageRuntime`. A `StageRuntime`
-growth stage ultimately drives model growth — it does not supersede the
-`GrowthModel` interface.
+These tiers compose rather than replace one another: a `GrowthStep` calls
+`ctx.update_step(dt)`, which calls the model. The unit of scheduling is the
+stand, not a part of one, because every model in this package couples its parts
+to each other — Ekö 1985 through competition and cross-species mortality,
+Elfving through whole-stand basal-area calibration. A step that wants cohorts
+loops over them itself.
+
+This replaced three schedulers that did not know about each other:
+`ctx.update_step(years, management={...})`, `SimulationSetup(triggers=...)`, and
+`StageRuntime` over a `StandComposite` of `StandPart`s. `StageRuntime` scheduled
+*parts*, so its only consumer had to make N−1 of every N stage invocations inert
+with a latch and bypassed the dispatch machinery entirely for thinning; and
+`SimulationSetup` caught every exception a trigger raised and wrote it into the
+history as a row, so a management rule that was broken from the first step
+produced a full run of plausible numbers.
 
 Contracts are split by audience:
 
@@ -135,9 +144,8 @@ Contracts are split by audience:
   `FormulaModuleDescriptor`) lives in `src/pyforestry/base/contracts.py`, because
   formula/domain modules across every region expose it; nothing above `base`
   reaches into the simulation package for it.
-- Simulation-specific contracts (`StageContract`, `SimulationPreset`,
-  `ParityCase`, …) live in `src/pyforestry/simulation/contracts.py`, which also
-  re-exports the base provenance types for convenience.
+- Simulation-specific contracts (`SimulationPreset`, `ParityCase`, …) live in
+  `src/pyforestry/simulation/contracts.py`.
 
 ### Context 5: Integration/Application Context
 
@@ -195,10 +203,14 @@ Completed migrations:
   `/systems` (science) and `/adapters` (glue). The split retired AL001's
   registry of seven exempted modules and its Sweden-only scoping: both existed
   only because one directory held both kinds of module.
-- Eko 1985 re-expressed on the shared `StandComposite` + `StageRuntime` runtime
-  (the flagship example of the two engine tiers above).
+- Eko 1985 was re-expressed on a shared `StandComposite` + `StageRuntime`
+  runtime, then moved off it: that runtime scheduled parts and Ekö steps whole
+  stands, so the wrapper cost three types and an `_armed` latch and bought
+  nothing. `EngineStand` iterates its own cohorts.
 - Provenance/introspection contracts moved to `base/contracts.py`; the orchestration
-  runtime `GrowthModule` renamed to `StageRuntime` (old name kept as a deprecated alias).
+  runtime `GrowthModule` renamed to `StageRuntime`; both are now removed along with
+  `StandComposite`, `StandPart`, `SimulationSetup` and `CheckpointSerializer`,
+  replaced by `run_pipeline` (~2,500 lines net).
 
 Active package paths:
 

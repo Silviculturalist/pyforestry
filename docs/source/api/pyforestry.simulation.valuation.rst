@@ -12,6 +12,14 @@ pyforestry.simulation.valuation.removals module
    :undoc-members:
    :show-inheritance:
 
+pyforestry.simulation.valuation.step module
+-------------------------------------------
+
+.. automodule:: pyforestry.simulation.valuation.step
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pyforestry.simulation.valuation.volume module
 ---------------------------------------------
 

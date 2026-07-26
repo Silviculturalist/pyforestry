@@ -8,7 +8,7 @@ from typing import Any, Callable, List, Mapping, MutableMapping, Optional, Seque
 
 from pyforestry.base.simulation import ContextEnsemble, SimulationContext
 
-Task = Tuple[int, Mapping[str, Any], Optional[Mapping[str, Any]]]
+Task = Tuple[int, Mapping[str, Any]]
 Result = Tuple[int, Mapping[str, Any], Optional[MutableMapping[str, Any]], Optional[List[Any]]]
 
 
@@ -22,12 +22,12 @@ def _worker_run(
 ) -> List[Result]:
     """Restore contexts, run update steps, and return checkpoints with telemetry."""
     out: List[Result] = []
-    for idx, cp, mgmt in tasks:
+    for idx, cp in tasks:
         telemetry_payload: Optional[List[Any]] = None
         try:
             ctx = SimulationContext.from_checkpoint(model, cp)
             for _i in range(steps):
-                ctx.update_step(dt, management=mgmt)
+                ctx.update_step(dt)
             tp = getattr(ctx, "telemetry", None)
             if tp is not None and hasattr(tp, "events"):
                 telemetry_payload = list(tp.events)
@@ -61,7 +61,6 @@ def run_parallel(
     dt: float,
     steps: int = 1,
     processes: Optional[int] = None,
-    management: Optional[Sequence[Optional[Mapping[str, Any]]]] = None,
     write_back: bool = True,
     include_history: bool = False,
     history_tail: Optional[int] = None,
@@ -69,7 +68,12 @@ def run_parallel(
     max_processes: int = 8,
     telemetry_sink: Optional[Callable[[int, List[Any]], None]] = None,
 ) -> List[SimulationContext]:
-    """Execute steps of dt across contexts in parallel using checkpoints."""
+    """Execute steps of dt across contexts in parallel using checkpoints.
+
+    Growth only. Management is a per-context policy run through
+    :func:`~pyforestry.base.simulation.pipeline.run_pipeline`, and a policy is a
+    live callable that cannot cross a process boundary in a checkpoint.
+    """
     if isinstance(target, ContextEnsemble):
         ensemble = target
         contexts = list(ensemble.contexts)
@@ -86,24 +90,12 @@ def run_parallel(
     if model_obj is None:
         raise ValueError("Contexts must carry a 'model' attribute for parallel execution.")
 
-    if management is None:
-        mgmt = [None] * len(contexts)
-    else:
-        mgmt = list(management)
-        if len(mgmt) != len(contexts):  # pragma: no cover - defensive
-            raise ValueError("management list must match number of contexts.")
-
     procs = max(1, min(processes or mp.cpu_count(), len(contexts), max_processes))
 
-    tasks: List[Task] = []
-    for idx, (ctx, mg) in enumerate(zip(contexts, mgmt, strict=False)):
-        tasks.append(
-            (
-                idx,
-                ctx.checkpoint(include_history=include_history, history_tail=history_tail),
-                mg,
-            )
-        )
+    tasks: List[Task] = [
+        (idx, ctx.checkpoint(include_history=include_history, history_tail=history_tail))
+        for idx, ctx in enumerate(contexts)
+    ]
 
     if dispatcher is not None:
         buckets: List[List[Task]] = [[] for _ in range(procs)]

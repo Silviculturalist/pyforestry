@@ -29,22 +29,6 @@ pyforestry.simulation.presets module
    :undoc-members:
    :show-inheritance:
 
-pyforestry.simulation.stage\_runtime module
--------------------------------------------
-
-.. automodule:: pyforestry.simulation.stage_runtime
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pyforestry.simulation.stand\_composite module
----------------------------------------------
-
-.. automodule:: pyforestry.simulation.stand_composite
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Module contents
 ---------------
 

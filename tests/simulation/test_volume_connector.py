@@ -7,7 +7,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from pyforestry.base.helpers import Tree
+from pyforestry.base.helpers import CircularPlot, Stand, Tree
 from pyforestry.base.helpers.tree_species import PINUS_SYLVESTRIS
 from pyforestry.base.pricelist.pricelist import (
     LengthRange,
@@ -15,15 +15,16 @@ from pyforestry.base.pricelist.pricelist import (
     TimberPriceForDiameter,
     TimberPricelist,
 )
+from pyforestry.base.simulation import run_pipeline
+from pyforestry.base.simulation.growth_model import ExampleStandGeneralModel
 from pyforestry.base.taper.taper import Taper
 from pyforestry.base.timber.timber_base import Timber
 from pyforestry.base.timber_bucking.nasberg_1985 import BuckingConfig, QualityType
-from pyforestry.simulation import StandComposite, StandPart
-from pyforestry.simulation.stage_runtime import StageRuntime
 from pyforestry.simulation.valuation import (
     PieceRecord,
     StandRemovalLedger,
     TreeVolumeDescriptor,
+    ValuationStep,
     VolumeConnector,
     VolumeResult,
 )
@@ -89,8 +90,12 @@ def test_volume_connector_handles_empty_ledgers() -> None:
     assert result.metadata.get("reason") == "empty"
 
 
-def test_volume_connector_and_stage_produce_cash_flows(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Bucking conversion integrates with the valuation stage."""
+def test_volume_connector_and_step_produce_cash_flows(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Bucking conversion integrates with the valuation step.
+
+    This is what gives ``pyforestry.simulation.valuation`` a runtime consumer: a
+    pipeline that runs a :class:`ValuationStep` prices whatever the run removed.
+    """
 
     monkeypatch.setattr(
         Pricelist,
@@ -109,16 +114,15 @@ def test_volume_connector_and_stage_produce_cash_flows(monkeypatch: pytest.Monke
     tree = Tree(species=PINUS_SYLVESTRIS, diameter_cm=15.0, height_m=6.0, weight_n=1.0)
     ledger.record_tree("thin-2024", tree, metadata={"stump_height_m": 0.0})
 
-    class DummyView:
-        removal_ledger = ledger
+    class Settings:
         pricelist = _make_pricelist()
         taper_class = ConstantTaper
         bucking_config = BuckingConfig(use_downgrading=True, save_sections=True)
         min_diam_dead_wood = 16
 
-    view = DummyView()
+    settings = Settings()
     connector = VolumeConnector()
-    expected = connector.connect(view, ledger)
+    expected = connector.connect(settings, ledger)
 
     assert expected.total_value > 0.0
     assert len(expected.pieces) == 1
@@ -128,16 +132,35 @@ def test_volume_connector_and_stage_produce_cash_flows(monkeypatch: pytest.Monke
     assert piece.value == pytest.approx(expected.total_value, rel=1e-6)
     assert expected.volume_by_quality[QualityType.ButtLog] == pytest.approx(0.10603, rel=1e-4)
 
-    part = StandPart("north", model_view=view, context={"cash": 1.0})
-    composite = StandComposite([part])
-    module = StageRuntime(composite)
+    stand = Stand(area_ha=1.0, plots=[CircularPlot(id=1, area_m2=10_000.0, trees=[tree])])
+    ctx = ExampleStandGeneralModel().build_context(stand, mode_hint="tree_list")
+    ctx.attrs["removal_ledger"] = ledger
+    ctx.attrs["valuation_settings"] = settings
+    ctx.attrs["cash"] = 1.0
 
-    module.run_cycle()
+    run_pipeline(ctx, (ValuationStep(),), years=5.0, step=5.0)
 
-    valuation_ctx = part.context["valuation"]
-    assert valuation_ctx["total_value"] == pytest.approx(expected.total_value, rel=1e-6)
-    assert valuation_ctx["pieces"][0].volume_m3 == pytest.approx(piece.volume_m3, rel=1e-6)
-    assert part.context["cash"] == pytest.approx(1.0 + expected.total_value, rel=1e-6)
+    valuation = ctx.attrs["valuation"]
+    assert valuation["total_value"] == pytest.approx(expected.total_value, rel=1e-6)
+    assert valuation["pieces"][0].volume_m3 == pytest.approx(piece.volume_m3, rel=1e-6)
+    assert ctx.attrs["cash"] == pytest.approx(1.0 + expected.total_value, rel=1e-6)
+
+
+def test_valuation_step_does_nothing_without_a_ledger() -> None:
+    """The ordinary case for a step that did not thin."""
+    stand = Stand(area_ha=1.0, plots=[CircularPlot(id=1, area_m2=10_000.0, trees=[])])
+    ctx = ExampleStandGeneralModel().build_context(stand, mode_hint="tree_list")
+    run_pipeline(ctx, (ValuationStep(),), years=5.0, step=5.0)
+    assert "valuation" not in ctx.attrs
+    assert "cash" not in ctx.attrs
+
+
+def test_valuation_step_does_nothing_for_an_empty_ledger() -> None:
+    stand = Stand(area_ha=1.0, plots=[CircularPlot(id=1, area_m2=10_000.0, trees=[])])
+    ctx = ExampleStandGeneralModel().build_context(stand, mode_hint="tree_list")
+    ctx.attrs["removal_ledger"] = StandRemovalLedger("empty")
+    run_pipeline(ctx, (ValuationStep(),), years=5.0, step=5.0)
+    assert "valuation" not in ctx.attrs
 
 
 def test_piece_record_mapping_and_total_volume() -> None:

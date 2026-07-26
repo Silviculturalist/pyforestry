@@ -9,7 +9,7 @@ from .cohorts import (
     SpruceEngineCohort,
     _engine_cohort_factory,
 )
-from .engine import Eko1985GrowthStage, EngineStand, EngineStandPart
+from .engine import EngineStand, EngineStandPart
 from .model import Eko1985Cohort, Eko1985Model, Eko1985Stand, _species_label
 from .site_context import (
     DominantHeightObservation,
@@ -30,7 +30,6 @@ __all__ = [
     "BroadleafEngineCohort",
     "DominantHeightObservation",
     "Eko1985Cohort",
-    "Eko1985GrowthStage",
     "Eko1985Model",
     "Eko1985Stand",
     "EngineStand",

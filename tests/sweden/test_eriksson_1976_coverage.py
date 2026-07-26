@@ -420,20 +420,22 @@ def test_eriksson_management_schedule_and_model_adapter():
     events = schedule._age_events()
     assert len(events) == 2
 
-    schedule._queue_thinning(ctx, outtake=0.0, diameter_factor=None)
-    assert len(ctx.calls) == 0
-    schedule._queue_thinning(ctx, outtake=10.0, diameter_factor=0.9)
-    assert len(ctx.calls) == 1
+    # A zero outtake proposes nothing; a real one proposes one thinning action.
+    assert schedule._thinning_actions(0.0, None, "noop") == ()
+    proposed = schedule._thinning_actions(10.0, 0.9, "thin")
+    assert len(proposed) == 1
+    assert proposed[0].params["outtake"] == 10.0
+    assert proposed[0].params["diameter_factor"] == 0.9
 
-    triggers = schedule.triggers()
-    assert len(triggers) == 2
-    first = triggers[0]
+    policy = schedule.policy()
     ctx.state["t"] = 29.0
-    assert first.predicate(ctx) is False
+    assert policy(ctx) == ()
     ctx.state["t"] = 30.0
-    assert first.predicate(ctx) is True
-    first.action(ctx)
-    assert len(ctx.calls) == 2
+    fired = policy(ctx)
+    assert len(fired) == 1
+    for action in fired:
+        action(ctx)
+    assert len(ctx.calls) == 1
 
     ba_program = ThinningProgram(
         interval_type="basal_area",
@@ -447,16 +449,20 @@ def test_eriksson_management_schedule_and_model_adapter():
     ba_schedule = Eriksson1976ManagementSchedule(program=ba_program)
     ba_ctx = _DummyContext(ba_total=40.0)
     ba_schedule.initialize(ba_ctx)
-    trigger = ba_schedule.triggers()[0]
-    assert trigger.predicate(ba_ctx) is True
-    trigger.action(ba_ctx)
+    ba_policy = ba_schedule.policy()
+    assert len(ba_policy(ba_ctx)) == 1
     assert ba_ctx.state[ba_schedule._key("outtake_idx")] == 1
     assert ba_ctx.state[ba_schedule._key("interval_idx")] == 1
     assert ba_ctx.state[ba_schedule._key("gf_idx")] == 1
     assert ba_ctx.state[ba_schedule._key("ba_trigger")] > 0.0
 
+    # With the outtakes exhausted, the next time the threshold is reached the
+    # schedule disarms itself instead of thinning again. The basal area has to
+    # clear the new threshold for the policy to look at all -- the old
+    # ``TriggerSpec`` test called the action directly and skipped its predicate.
     ba_ctx.state[ba_schedule._key("outtake_idx")] = 10
-    trigger.action(ba_ctx)
+    ba_ctx.metrics["BasalArea"]["TOTAL"] = 1000.0
+    assert ba_policy(ba_ctx) == ()
     assert ba_ctx.state[ba_schedule._key("ba_trigger")] == float("inf")
 
     assert ba_schedule._residual_ba(30.0, 10.0, "percent") == 27.0
@@ -580,7 +586,7 @@ def test_eriksson_northern_error_toggle_and_height_intervals():
 
     # The simulation-framework adapter rejects dominant_height (no site context to invert).
     with pytest.raises(NotImplementedError):
-        Eriksson1976ManagementSchedule(program=prog_h).triggers()
+        Eriksson1976ManagementSchedule(program=prog_h).policy()
 
 
 def test_eriksson_initial_stand_auto_generation():

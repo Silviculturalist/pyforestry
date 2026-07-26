@@ -28,11 +28,14 @@ from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.helpers import Age, SiteIndexValue, Stand, Stems
 from pyforestry.base.helpers.tree_species import TreeSpecies
 from pyforestry.base.simulation import (
+    Action,
     ActionSpec,
     GrowthModel,
+    Policy,
     Requirements,
     SimulationContext,
-    TriggerSpec,
+    combine,
+    when,
 )
 from pyforestry.sweden.siteindex.hagglund_1970 import Hagglund_1970
 from pyforestry.sweden.systems.elfving_hagglund_1975 import ElfvingHagglundInitialStand
@@ -1461,12 +1464,19 @@ class Eriksson1976ManagementSchedule:
                 trigger = float("inf")
             ctx.state[self._key("ba_trigger")] = trigger
 
-    def triggers(self) -> List[TriggerSpec]:
-        """Return trigger specifications for the configured schedule."""
+    def policy(self) -> Policy:
+        """Return this schedule as a management policy for a simulation pipeline.
+
+        The schedule used to be handed out as a list of ``TriggerSpec`` objects
+        for ``SimulationSetup`` to evaluate. A policy is the same decision --
+        look at the stand, decide whether to thin -- expressed as the one type
+        the pipeline understands, and its exceptions are no longer swallowed
+        into a history row.
+        """
         if self.program.interval_type == "age":
-            return self._age_triggers()
+            return combine(*self._age_policies())
         if self.program.interval_type == "basal_area":
-            return [self._basal_area_trigger()]
+            return self._basal_area_policy()
         raise NotImplementedError(
             "Eriksson1976ManagementSchedule does not support 'dominant_height' schedules; "
             "convert to an age schedule first (Eriksson1976Stand and simulate() accept "
@@ -1501,22 +1511,26 @@ class Eriksson1976ManagementSchedule:
             age += interval
         return events
 
-    def _queue_thinning(
-        self, ctx: SimulationContext, outtake: float, diameter_factor: Optional[float]
-    ) -> None:
-        """Queue a thinning action on the simulation context."""
+    def _thinning_actions(
+        self, outtake: float, diameter_factor: Optional[float], name: str
+    ) -> Sequence[Action]:
+        """Return the thinning action for this outtake, or nothing if it is zero."""
         if outtake <= 0.0:
-            return
-        ctx.do(
-            self.action_name,
-            outtake=outtake,
-            outtake_type=self.program.outtake_type,
-            diameter_factor=diameter_factor,
+            return ()
+        return (
+            Action(
+                name=self.action_name,
+                params={
+                    "outtake": outtake,
+                    "outtake_type": self.program.outtake_type,
+                    "diameter_factor": diameter_factor,
+                },
+            ),
         )
 
-    def _age_triggers(self) -> List[TriggerSpec]:
-        """Build age-based thinning triggers."""
-        triggers: List[TriggerSpec] = []
+    def _age_policies(self) -> List[Policy]:
+        """Build one fire-once policy per scheduled thinning age."""
+        policies: List[Policy] = []
         for idx, (age, outtake, diameter_factor) in enumerate(self._age_events()):
             name = f"eriksson_thin_age_{idx}_{int(age)}"
 
@@ -1524,24 +1538,17 @@ class Eriksson1976ManagementSchedule:
                 """Return True when the age threshold is reached."""
                 return float(ctx.state.get("t", 0.0)) >= threshold
 
-            def _action(
+            def _propose(
                 ctx: SimulationContext,
                 outtake=outtake,
                 factor=diameter_factor,
-            ) -> None:
-                """Queue the thinning corresponding to this age trigger."""
-                self._queue_thinning(ctx, outtake, factor)
+                action_name=name,
+            ) -> Sequence[Action]:
+                """Propose the thinning corresponding to this age threshold."""
+                return self._thinning_actions(outtake, factor, action_name)
 
-            triggers.append(
-                TriggerSpec(
-                    name=name,
-                    check_phase="pre",
-                    predicate=_predicate,
-                    action=_action,
-                    once=True,
-                )
-            )
-        return triggers
+            policies.append(when(_predicate, _propose, once=True))
+        return policies
 
     @staticmethod
     def _residual_ba(current_ba: float, outtake: float, outtake_type: str) -> float:
@@ -1552,8 +1559,8 @@ class Eriksson1976ManagementSchedule:
             return max(0.0, outtake)
         return max(0.0, current_ba - outtake)
 
-    def _basal_area_trigger(self) -> TriggerSpec:
-        """Build a basal-area trigger specification."""
+    def _basal_area_policy(self) -> Policy:
+        """Build a policy that thins whenever basal area reaches the next threshold."""
         name = "eriksson_thin_ba"
 
         def _predicate(ctx: SimulationContext) -> bool:
@@ -1562,19 +1569,19 @@ class Eriksson1976ManagementSchedule:
             current_ba = float(ctx.metrics["BasalArea"]["TOTAL"])
             return current_ba >= trigger
 
-        def _action(ctx: SimulationContext) -> None:
-            """Queue a thinning and advance basal-area thresholds."""
+        def _propose(ctx: SimulationContext) -> Sequence[Action]:
+            """Propose a thinning and advance the basal-area thresholds."""
             outtake_idx = int(ctx.state.get(self._key("outtake_idx"), 0))
             if outtake_idx >= len(self.program.outtakes):
                 ctx.state[self._key("ba_trigger")] = float("inf")
-                return
+                return ()
             outtake = float(self.program.outtakes[outtake_idx])
             if outtake <= 0.0:
                 ctx.state[self._key("ba_trigger")] = float("inf")
-                return
+                return ()
             interval_idx = int(ctx.state.get(self._key("interval_idx"), 0))
             gf_idx = int(ctx.state.get(self._key("gf_idx"), 0))
-            self._queue_thinning(ctx, outtake, self._diameter_factor(gf_idx))
+            actions = self._thinning_actions(outtake, self._diameter_factor(gf_idx), name)
             ctx.state[self._key("outtake_idx")] = outtake_idx + 1
             ctx.state[self._key("interval_idx")] = interval_idx + 1
             ctx.state[self._key("gf_idx")] = gf_idx + 1
@@ -1586,18 +1593,13 @@ class Eriksson1976ManagementSchedule:
             )
             if interval < 1.0:
                 ctx.state[self._key("ba_trigger")] = float("inf")
-                return
+                return actions
             current_ba = float(ctx.metrics["BasalArea"]["TOTAL"])
             residual = self._residual_ba(current_ba, outtake, self.program.outtake_type)
             ctx.state[self._key("ba_trigger")] = residual + interval
+            return actions
 
-        return TriggerSpec(
-            name=name,
-            check_phase="pre",
-            predicate=_predicate,
-            action=_action,
-            once=False,
-        )
+        return when(_predicate, _propose)
 
 
 class Eriksson1976Model(GrowthModel):

@@ -16,15 +16,11 @@ from pyforestry.base.helpers import (
     parse_tree_species,
 )
 from pyforestry.base.simulation import (
-    ActionSpec,
     ContextEnsemble,
     ExampleStandGeneralModel,
     GrowthModel,
     PythonEngine,
     Requirements,
-    ScheduledOp,
-    SimulationSetup,
-    TriggerSpec,
 )
 from pyforestry.base.simulation.adapters import (
     AdapterRegistry,
@@ -697,37 +693,6 @@ def test_ensemble_batch_engine_path_and_logging():
             assert ba == pytest.approx(20.0 * (1.0 + model.ba_rel))
 
 
-def test_management_phase_respects_allowed_phases():
-    """Actions declare allowed_phases and should be gated per phase."""
-
-    class PhaseyModel(ExampleStandGeneralModel):
-        def available_actions(self):
-            actions = dict(super().available_actions())
-
-            def mark(ctx):
-                ctx.attrs.setdefault("markers", []).append(ctx.state.get("t", 0.0))
-
-            actions["mark_pre"] = ActionSpec(
-                name="mark_pre",
-                fn=mark,
-                requires_modes=[],
-                allowed_phases=("pre",),
-            )
-            return actions
-
-    model = PhaseyModel()
-    ctx = model.build_context(_tree_list_stand(), mode_hint="aggregate")
-    ctx.set_aggregate_metrics(ba_total=10.0, stems_total=100.0)
-
-    # Allowed in pre-phase
-    ctx.update_step(1.0, management={"pre": ["mark_pre"]})
-    assert ctx.attrs.get("markers") == [1.0]
-
-    # Blocked in disallowed phase
-    with pytest.raises(RuntimeError):
-        ctx.update_step(1.0, management={"post": ["mark_pre"]})
-
-
 def test_context_ensemble_engine_hint_selection():
     model = ExampleStandGeneralModel()
     ctx = model.build_context(_tree_list_stand(), mode_hint="aggregate")
@@ -782,7 +747,7 @@ def test_ensemble_engine_helpers(monkeypatch):
     assert float(out["n"][0]) == 2.0
 
 
-def test_context_ensemble_management_and_dataframe():
+def test_context_ensemble_steps_every_context_and_reports_one_table():
     model = ExampleStandGeneralModel()
     ctxs = []
     for _i in range(2):
@@ -791,91 +756,12 @@ def test_context_ensemble_management_and_dataframe():
         ctxs.append(ctx)
 
     ens = ContextEnsemble(ctxs, model=model)
-    ens.update_step(dt=0.5, management=[{"pre": []}, {"pre": []}])
-    ens.update_step(dt=0.5, management={"pre": []})
+    ens.update_step(dt=0.5)
+    ens.update_step(dt=0.5)
     ens.do("fertilize", years=1.0)
 
     df = ens.to_pandas()
     assert "context_id" in df.columns
-
-
-def test_simulation_setup_triggers_and_schedule():
-    model = ExampleStandGeneralModel()
-    ctx = model.build_context(_tree_list_stand(), mode_hint="aggregate")
-    ctx.set_aggregate_metrics(ba_total=10.0, stems_total=100.0)
-
-    fired = {"pre": 0, "post": 0}
-
-    def pre_predicate(_ctx):
-        return True
-
-    def pre_action(_ctx):
-        fired["pre"] += 1
-
-    def post_predicate(_ctx):
-        return _ctx.state.get("t", 0.0) >= 1.0
-
-    def post_action(_ctx):
-        fired["post"] += 1
-
-    def scheduled(ctx):
-        ctx.attrs["scheduled"] = True
-
-    setup = SimulationSetup(
-        start_t=0.0,
-        end_t=2.0,
-        dt=1.0,
-        triggers=[
-            TriggerSpec(
-                name="pre_once",
-                check_phase="pre",
-                predicate=pre_predicate,
-                action=pre_action,
-                once=True,
-            ),
-            TriggerSpec(
-                name="post",
-                check_phase="post",
-                predicate=post_predicate,
-                action=post_action,
-            ),
-        ],
-        schedule=[ScheduledOp(name="mark", t=1.0, fn=scheduled)],
-    )
-    setup.run(ctx)
-
-    assert fired["pre"] == 1
-    assert fired["post"] >= 1
-    assert ctx.attrs.get("scheduled") is True
-    ops = {entry.op for entry in ctx.history}
-    assert "scheduled_op" in ops
-    assert "trigger_fired" in ops
-
-
-def test_simulation_setup_trigger_error_recorded():
-    model = ExampleStandGeneralModel()
-    ctx = model.build_context(_tree_list_stand(), mode_hint="aggregate")
-    ctx.set_aggregate_metrics(ba_total=10.0, stems_total=100.0)
-
-    def bad_predicate(_ctx):
-        raise RuntimeError("boom")
-
-    setup = SimulationSetup(
-        start_t=0.0,
-        end_t=1.0,
-        dt=1.0,
-        triggers=[
-            TriggerSpec(
-                name="bad",
-                check_phase="pre",
-                predicate=bad_predicate,
-                action=lambda _ctx: None,
-            )
-        ],
-    )
-    setup.run(ctx)
-
-    assert any(entry.op == "trigger_error" for entry in ctx.history)
 
 
 def test_parallel_runner_round_trip():
@@ -980,7 +866,7 @@ def test_parallel_runner_missing_model_raises():
         run_parallel([NoModel()], dt=1.0)
 
 
-def test_parallel_runner_pool_branch_and_management_list(monkeypatch):
+def test_parallel_runner_pool_branch(monkeypatch):
     import pyforestry.simulation.services.parallel_runner as pr
     from pyforestry.simulation.services import run_parallel
 
@@ -1006,13 +892,11 @@ def test_parallel_runner_pool_branch_and_management_list(monkeypatch):
         ctx.set_aggregate_metrics(ba_total=10.0, stems_total=100.0)
         ctxs.append(ctx)
 
-    mgmt = [{"pre": []}, {"pre": []}]
     updated = run_parallel(
         ctxs,
         dt=0.5,
         steps=1,
         processes=2,
-        management=mgmt,
         write_back=False,
     )
     assert len(updated) == len(ctxs)

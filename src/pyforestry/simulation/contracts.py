@@ -1,4 +1,4 @@
-"""Simulation-runtime contracts: stages, presets, parity, and execution.
+"""Simulation-runtime contracts: presets and parity fixtures.
 
 This module holds only what the *runtime* defines. The provenance/introspection
 vocabulary (:class:`~pyforestry.base.contracts.SourceReference`,
@@ -12,38 +12,12 @@ should have to import from the simulation tier to obtain it. Import it from
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from types import MappingProxyType
-from typing import Any, Callable, FrozenSet, Mapping, Optional, Protocol, Sequence
+from dataclasses import dataclass
+from typing import Any, Callable, Mapping, Protocol, Sequence
 
 # ---------------------------------------------------------------------------
 # Retained data types
 # ---------------------------------------------------------------------------
-
-
-@dataclass(frozen=True)
-class StageContract:
-    """Describe the interfaces and side effects offered by a stage."""
-
-    type_metadata: Mapping[str, Any] = field(default_factory=dict)
-    units: Mapping[str, str] = field(default_factory=dict)
-    crs: Optional[str] = None
-    effects: FrozenSet[str] = field(default_factory=lambda: frozenset({"rng"}))
-
-    def __post_init__(self) -> None:
-        """Freeze the mapping and set fields to immutable views."""
-        object.__setattr__(self, "type_metadata", MappingProxyType(dict(self.type_metadata)))
-        object.__setattr__(self, "units", MappingProxyType(dict(self.units)))
-        object.__setattr__(self, "effects", frozenset(self.effects))
-
-
-@dataclass(frozen=True)
-class ActionEvent:
-    """Scenario-policy event describing one requested action."""
-
-    action: str
-    params: Mapping[str, Any] = field(default_factory=dict)
-    phase: Optional[str] = None
 
 
 @dataclass(frozen=True)
@@ -93,11 +67,7 @@ class ParityCase(Protocol):
 
 
 __all__ = [
-    # Data types
-    "ActionEvent",
     "AssertionResult",
-    "StageContract",
-    # Execution tier
     "ParityCase",
     "SimulationPreset",
 ]

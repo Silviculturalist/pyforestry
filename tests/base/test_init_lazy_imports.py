@@ -16,9 +16,9 @@ def test_top_level_lazy_imports():
 
 
 def test_helpers_simulation_exports():
-    sim_setup = helpers.SimulationSetup
-    assert sim_setup.__name__ == "SimulationSetup"
-    assert helpers.SimulationSetup is sim_setup
+    growth_model = helpers.GrowthModel
+    assert growth_model.__name__ == "GrowthModel"
+    assert helpers.GrowthModel is growth_model
 
     with pytest.raises(AttributeError):
         _ = helpers.not_a_helper

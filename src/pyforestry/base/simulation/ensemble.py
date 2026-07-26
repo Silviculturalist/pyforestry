@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict, List, Mapping, Optional, Sequence, Union, cast
+from typing import Any, Dict, List, Mapping, Optional, Union
 
 import numpy as np
 
@@ -98,26 +98,17 @@ class ContextEnsemble:
             chosen = _optional_jax_engine() or _optional_numba_engine() or PythonEngine()
         self.engine = chosen
 
-    def update_step(
-        self,
-        dt: float,
-        *,
-        management: Optional[
-            Union[Mapping[str, Any], Sequence[Optional[Mapping[str, Any]]]]
-        ] = None,
-    ) -> None:
-        """Advance all contexts by one step, batching aggregate contexts."""
+    def update_step(self, dt: float) -> None:
+        """Advance all contexts by one step, batching aggregate contexts.
+
+        Management is not threaded through here. An ensemble steps many contexts
+        together for speed; deciding *what to do* to each is a per-context policy,
+        so run a
+        :func:`~pyforestry.base.simulation.pipeline.run_pipeline` per context when
+        the runs need managing, and use the ensemble when they only need growing.
+        """
         if self.engine is None:
             raise RuntimeError("No batch engine configured for this ensemble.")
-        if management is None:
-            mgmt_list: List[Optional[Mapping[str, Any]]] = [None for _ in self.contexts]
-        elif isinstance(management, (list, tuple)):
-            if len(management) != len(self.contexts):  # pragma: no cover - defensive
-                raise ValueError("management list must match the number of contexts.")
-            mgmt_list = list(management)
-        else:
-            mgmt_item = cast(Mapping[str, Any], management)
-            mgmt_list = [mgmt_item for _ in self.contexts]
 
         engine = self.engine
         if engine is None:
@@ -130,9 +121,9 @@ class ContextEnsemble:
             for c in self.contexts
             if c.mode == "aggregate" and getattr(self.model, "has_batch_engine", lambda: False)()
         ]
-        other_ctxs = [(i, c) for i, c in enumerate(self.contexts) if c not in agg_ctxs]
-        for idx, c in other_ctxs:
-            c.update_step(dt, management=mgmt_list[idx])
+        other_ctxs = [c for c in self.contexts if c not in agg_ctxs]
+        for c in other_ctxs:
+            c.update_step(dt)
         if agg_ctxs:
             ba = np.array(
                 [float(c.metrics["BasalArea"]["TOTAL"]) for c in agg_ctxs],
@@ -163,16 +154,9 @@ class ContextEnsemble:
                 c.state["last_dt"] = dt
                 c._log_external_update("update_step", {"dt": dt})
 
-    def grow(
-        self,
-        dt: float,
-        *,
-        management: Optional[
-            Union[Mapping[str, Any], Sequence[Optional[Mapping[str, Any]]]]
-        ] = None,
-    ) -> None:  # pragma: no cover - compatibility
+    def grow(self, dt: float) -> None:  # pragma: no cover - compatibility
         """Backward-compatible alias for :meth:`update_step`."""
-        self.update_step(dt, management=management)
+        self.update_step(dt)
 
     def do(self, name: str, **kwargs: Any) -> None:
         """Execute an action on each context."""

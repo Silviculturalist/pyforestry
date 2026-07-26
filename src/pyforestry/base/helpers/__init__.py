@@ -52,9 +52,6 @@ _SIMULATION_EXPORTS = [
     "GrowthModel",
     "ExampleStandGeneralModel",
     "Requirements",
-    "SimulationSetup",
-    "TriggerSpec",
-    "ScheduledOp",
     "ContextEnsemble",
     "PythonEngine",
     "BatchEngine",
@@ -80,12 +77,9 @@ if TYPE_CHECKING:  # pragma: no cover - for static checkers only
         GrowthModel,
         PythonEngine,
         Requirements,
-        ScheduledOp,
         SimulationContext,
-        SimulationSetup,
         TreeListToDiameterClassAdapter,
         TreeListToSpatialAdapter,
-        TriggerSpec,
     )
 
 __all__ = [

@@ -4,14 +4,6 @@ pyforestry.simulation.services package
 Submodules
 ----------
 
-pyforestry.simulation.services.checkpoint module
-------------------------------------------------
-
-.. automodule:: pyforestry.simulation.services.checkpoint
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 pyforestry.simulation.services.keyed\_rng module
 ------------------------------------------------
 

@@ -1,64 +1,41 @@
-"""Staged simulation runtime: stages, composites, valuation and shared services."""
+"""Scenario presets, harvest valuation, and shared run services.
+
+What was here before -- ``StageRuntime``, ``Stage``, ``StandComposite``,
+``StandPart``, ``StandAction`` and their dispatch types -- was a per-part
+scheduling runtime. Every model in this package steps the whole stand, so its one
+consumer had to make N-1 of every N stage invocations inert with a latch, and
+bypassed the dispatch machinery entirely for thinning. The scheduler that
+replaced it is :mod:`pyforestry.base.simulation.pipeline`, which schedules stands.
+
+``CheckpointSerializer`` went with it: it serialised a composite, and
+:meth:`SimulationContext.checkpoint` is the checkpoint mechanism that has a
+consumer.
+"""
 
 from .contracts import (
-    ActionEvent,
     AssertionResult,
     ParityCase,
     SimulationPreset,
-    StageContract,
 )
 from .presets import ScenarioPresetBase
-from .stage_runtime import (
-    DisturbanceStage,
-    GrowthStage,
-    ManagementStage,
-    Stage,
-    StageAction,
-    StageRuntime,
-    ValuationStage,
-)
-from .stand_composite import (
-    DispatchRecord,
-    DispatchResult,
-    StandAction,
-    StandComposite,
-    StandPart,
-)
 from .valuation import (
     CohortRemoval,
     EmptyVolumeDescriptor,
+    HasRemovalLedger,
     PieceRecord,
     StandRemovalLedger,
     TreeRemoval,
     TreeVolumeDescriptor,
+    ValuationStep,
     VolumeConnector,
     VolumeDescriptor,
     VolumeResult,
 )
 
-# ``GrowthModule`` was renamed to ``StageRuntime``; keep the old name as a
-# deprecated alias for backward compatibility.
-GrowthModule = StageRuntime
-
 __all__ = [
-    "DispatchRecord",
-    "DispatchResult",
-    "StandAction",
-    "StandComposite",
-    "StandPart",
-    "StageRuntime",
-    "GrowthModule",
-    "GrowthStage",
-    "ManagementStage",
-    "DisturbanceStage",
-    "ValuationStage",
-    "Stage",
-    "StageAction",
-    "StageContract",
     "SimulationPreset",
     "ScenarioPresetBase",
     "ParityCase",
-    "ActionEvent",
     "AssertionResult",
     "StandRemovalLedger",
     "CohortRemoval",
@@ -69,4 +46,6 @@ __all__ = [
     "VolumeResult",
     "VolumeConnector",
     "PieceRecord",
+    "ValuationStep",
+    "HasRemovalLedger",
 ]
