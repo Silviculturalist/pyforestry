@@ -76,14 +76,14 @@ def test_period_is_an_ordered_tuple_of_named_phases() -> None:
         "begin_period",
         "young_stand_growth",
         "mortality_prediction",
-        "sync_model_view",
+        "sync_model_context",
         "mature_growth",
         "phase_over_blend",
         "mortality_realization",
         "age_advance",
         "ingrowth",
         "height_and_bark",
-        "sync_model_view",
+        "sync_model_context",
     )
 
 

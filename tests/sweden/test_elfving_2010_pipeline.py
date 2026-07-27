@@ -383,7 +383,7 @@ def test_apply_soderberg_height_preserves_nystrom_height_for_young_ids(
     assert mature_tree.double_bark_mm == pytest.approx(4.0)
 
 
-def test_refresh_model_view_sets_site_index_from_dominant_species() -> None:
+def test_refresh_model_context_sets_site_index_from_dominant_species() -> None:
     preset = build_elfving_2010_pipeline(
         _make_config(
             species_to_plant=preset_module.TreeSpecies.Sweden.picea_abies,
@@ -397,7 +397,7 @@ def test_refresh_model_view_sets_site_index_from_dominant_species() -> None:
         tree.species = preset_module.TreeSpecies.Sweden.picea_abies
         tree.diameter_cm = max(12.0, float(tree.diameter_cm or 0.0))
 
-    preset._refresh_model_view()
+    preset._refresh_model_context()
 
     assert preset._ctx is not None
     inputs = preset._ctx.inputs

@@ -9,44 +9,36 @@ prices what it removed is that caller.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Optional, Protocol, runtime_checkable
 
 from pyforestry.base.simulation import SimulationContext
 
 from .removals import StandRemovalLedger
-from .volume import VolumeConnector, VolumeResult
+from .volume import ValuationSettings, VolumeConnector, VolumeResult
 
-__all__ = ["HasRemovalLedger", "ValuationStep"]
-
-
-@runtime_checkable
-class HasRemovalLedger(Protocol):
-    """What a context must offer for :class:`ValuationStep` to price it.
-
-    One declared method. The stage this replaced looked in six places --
-    ``view.removal_ledger``, ``view.removals``, ``view.ledger``,
-    ``view.get_removal_ledger()``, ``part.context["valuation"]["ledger"]`` and
-    ``part.context["removal_ledger"]`` -- and returned ``None`` if none of them
-    held one, which means a view that implemented the protocol under a seventh
-    name was silently valued at zero and so was a view that implemented nothing.
-    Six conventions is no convention.
-    """
-
-    def removal_ledger(self) -> Optional[StandRemovalLedger]:
-        """Return the removals accumulated since the last valuation, if any."""
-        ...
+__all__ = ["ValuationStep"]
 
 
 @dataclass
 class ValuationStep:
     """Price whatever the run has removed, and add it to the run's cash.
 
-    Reads the ledger from ``ctx.attrs["removal_ledger"]`` -- the one place -- and
-    writes the priced result back to ``ctx.attrs["valuation"]``. Does nothing when
-    there is no ledger or it is empty, which is the ordinary case for a step that
-    did not thin.
+    The price list, taper and bucking config are constructor arguments, because
+    they are properties of the *pipeline* a caller assembles and do not change
+    between periods. Only the ledger comes off the context, at
+    ``ctx.attrs["removal_ledger"]`` -- the one place -- and the priced result goes
+    back to ``ctx.attrs["valuation"]``.
+
+    They used to be looked for on ``ctx.attrs["valuation_settings"]``, falling
+    back to "the context itself", which could not work: a
+    :class:`~pyforestry.base.simulation.core.SimulationContext` has no price list,
+    so the documented default raised ``AttributeError`` the first time a run
+    removed anything. A required argument cannot be forgotten.
+
+    Does nothing when there is no ledger or it is empty, which is the ordinary
+    case for a step that did not thin.
     """
 
+    settings: ValuationSettings
     connector: VolumeConnector = field(default_factory=VolumeConnector)
     name: str = "valuation"
 
@@ -60,7 +52,7 @@ class ValuationStep:
         ledger = ctx.attrs.get(self.LEDGER_KEY)
         if not isinstance(ledger, StandRemovalLedger) or ledger.is_empty:
             return
-        result: VolumeResult = self.connector.connect(self._descriptor_source(ctx), ledger)
+        result: VolumeResult = self.connector.connect(self.settings, ledger)
         ctx.attrs[self.RESULT_KEY] = {
             "ledger": ledger,
             "result": result,
@@ -72,13 +64,3 @@ class ValuationStep:
         ctx.attrs[self.CASH_KEY] = float(ctx.attrs.get(self.CASH_KEY, 0.0)) + float(
             result.total_value
         )
-
-    @staticmethod
-    def _descriptor_source(ctx: SimulationContext) -> Any:
-        """Return the object carrying the pricelist, taper and bucking settings.
-
-        ``ctx.attrs["valuation_settings"]`` when supplied, else the context
-        itself -- so a caller can hand over a settings object without the
-        connector reaching into the run for it.
-        """
-        return ctx.attrs.get("valuation_settings", ctx)

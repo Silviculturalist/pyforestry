@@ -21,11 +21,11 @@ from .presets import ScenarioConfigBase
 from .valuation import (
     CohortRemoval,
     EmptyVolumeDescriptor,
-    HasRemovalLedger,
     PieceRecord,
     StandRemovalLedger,
     TreeRemoval,
     TreeVolumeDescriptor,
+    ValuationSettings,
     ValuationStep,
     VolumeConnector,
     VolumeDescriptor,
@@ -46,6 +46,6 @@ __all__ = [
     "VolumeResult",
     "VolumeConnector",
     "PieceRecord",
+    "ValuationSettings",
     "ValuationStep",
-    "HasRemovalLedger",
 ]

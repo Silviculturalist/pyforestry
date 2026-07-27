@@ -370,7 +370,7 @@ class _MortalityPredictionStep(_PipelineStep):
 
 
 @dataclass(frozen=True)
-class _SyncModelViewStep(_PipelineStep):
+class _SyncModelContextStep(_PipelineStep):
     """Re-read the stand into the context the growth model steps.
 
     Placed twice: once before the mature step, because by then the young phase has
@@ -379,11 +379,11 @@ class _SyncModelViewStep(_PipelineStep):
     so the context a caller inspects afterwards agrees with the stand.
     """
 
-    name: str = "sync_model_view"
+    name: str = "sync_model_context"
 
     def run(self, ctx: SimulationContext, dt: float) -> None:
         """Refresh the stand's metrics and the model's resolved inputs."""
-        self.pipeline._refresh_model_view()
+        self.pipeline._refresh_model_context()
 
 
 @dataclass(frozen=True)
@@ -540,14 +540,14 @@ class Elfving2010Pipeline:
             _BeginPeriodStep(self),
             _YoungStandGrowthStep(self),
             _MortalityPredictionStep(self),
-            _SyncModelViewStep(self),
+            _SyncModelContextStep(self),
             _MatureGrowthStep(self),
             _PhaseOverBlendStep(self),
             _MortalityRealizationStep(self),
             _AgeAdvanceStep(self),
             _IngrowthStep(self),
             _HeightAndBarkStep(self),
-            _SyncModelViewStep(self),
+            _SyncModelContextStep(self),
         )
 
     @property
@@ -1121,9 +1121,9 @@ class Elfving2010Pipeline:
             mode_hint="tree_list",
             inputs=self._model_inputs(),
         )
-        self._refresh_model_view()
+        self._refresh_model_context()
 
-    def _refresh_model_view(self) -> None:
+    def _refresh_model_context(self) -> None:
         """Re-read the stand into the context the growth model steps.
 
         Two things in the context go stale when a phase changes the stand: the

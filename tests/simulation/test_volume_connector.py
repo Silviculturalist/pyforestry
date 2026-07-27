@@ -24,6 +24,7 @@ from pyforestry.simulation.valuation import (
     PieceRecord,
     StandRemovalLedger,
     TreeVolumeDescriptor,
+    ValuationSettings,
     ValuationStep,
     VolumeConnector,
     VolumeResult,
@@ -78,12 +79,27 @@ def test_removal_ledger_tracks_metadata_and_weights() -> None:
     assert removal.species_name == PINUS_SYLVESTRIS.full_name
 
 
+def _make_settings(**overrides) -> ValuationSettings:
+    kwargs = {
+        "pricelist": _make_pricelist(),
+        "taper_class": ConstantTaper,
+        "bucking_config": BuckingConfig(use_downgrading=True, save_sections=True),
+        "min_diam_dead_wood": 16.0,
+    }
+    kwargs.update(overrides)
+    return ValuationSettings(**kwargs)
+
+
 def test_volume_connector_handles_empty_ledgers() -> None:
-    """When no removals are present an empty descriptor is returned."""
+    """When no removals are present an empty descriptor is returned.
+
+    An empty ledger short-circuits before the settings are looked at, so nothing
+    has to be supplied to price nothing.
+    """
 
     ledger = StandRemovalLedger()
     connector = VolumeConnector()
-    result = connector.connect(object(), ledger)
+    result = connector.connect(None, ledger)
 
     assert result.total_value == 0.0
     assert result.pieces == ()
@@ -114,13 +130,7 @@ def test_volume_connector_and_step_produce_cash_flows(monkeypatch: pytest.Monkey
     tree = Tree(species=PINUS_SYLVESTRIS, diameter_cm=15.0, height_m=6.0, weight_n=1.0)
     ledger.record_tree("thin-2024", tree, metadata={"stump_height_m": 0.0})
 
-    class Settings:
-        pricelist = _make_pricelist()
-        taper_class = ConstantTaper
-        bucking_config = BuckingConfig(use_downgrading=True, save_sections=True)
-        min_diam_dead_wood = 16
-
-    settings = Settings()
+    settings = _make_settings()
     connector = VolumeConnector()
     expected = connector.connect(settings, ledger)
 
@@ -135,10 +145,9 @@ def test_volume_connector_and_step_produce_cash_flows(monkeypatch: pytest.Monkey
     stand = Stand(area_ha=1.0, plots=[CircularPlot(id=1, area_m2=10_000.0, trees=[tree])])
     ctx = ExampleStandGeneralModel().build_context(stand, mode_hint="tree_list")
     ctx.attrs["removal_ledger"] = ledger
-    ctx.attrs["valuation_settings"] = settings
     ctx.attrs["cash"] = 1.0
 
-    run_pipeline(ctx, (ValuationStep(),), years=5.0, step=5.0)
+    run_pipeline(ctx, (ValuationStep(settings),), years=5.0, step=5.0)
 
     valuation = ctx.attrs["valuation"]
     assert valuation["total_value"] == pytest.approx(expected.total_value, rel=1e-6)
@@ -150,7 +159,7 @@ def test_valuation_step_does_nothing_without_a_ledger() -> None:
     """The ordinary case for a step that did not thin."""
     stand = Stand(area_ha=1.0, plots=[CircularPlot(id=1, area_m2=10_000.0, trees=[])])
     ctx = ExampleStandGeneralModel().build_context(stand, mode_hint="tree_list")
-    run_pipeline(ctx, (ValuationStep(),), years=5.0, step=5.0)
+    run_pipeline(ctx, (ValuationStep(_make_settings()),), years=5.0, step=5.0)
     assert "valuation" not in ctx.attrs
     assert "cash" not in ctx.attrs
 
@@ -159,8 +168,19 @@ def test_valuation_step_does_nothing_for_an_empty_ledger() -> None:
     stand = Stand(area_ha=1.0, plots=[CircularPlot(id=1, area_m2=10_000.0, trees=[])])
     ctx = ExampleStandGeneralModel().build_context(stand, mode_hint="tree_list")
     ctx.attrs["removal_ledger"] = StandRemovalLedger("empty")
-    run_pipeline(ctx, (ValuationStep(),), years=5.0, step=5.0)
+    run_pipeline(ctx, (ValuationStep(_make_settings()),), years=5.0, step=5.0)
     assert "valuation" not in ctx.attrs
+
+
+def test_valuation_step_requires_its_settings() -> None:
+    """The settings are a constructor argument, so they cannot be forgotten.
+
+    They used to be read from ``ctx.attrs["valuation_settings"]`` with a
+    documented fallback to "the context itself" -- which has no price list, so a
+    run that removed anything raised ``AttributeError`` on the default path.
+    """
+    with pytest.raises(TypeError):
+        ValuationStep()  # type: ignore[call-arg]
 
 
 def test_piece_record_mapping_and_total_volume() -> None:
@@ -240,55 +260,51 @@ def test_tree_volume_descriptor_sections_fallback_and_quality_handling() -> None
     assert result.pieces[0].quality == QualityType.Undefined
 
 
-def test_volume_connector_resolvers_and_errors() -> None:
-    connector = VolumeConnector()
-    with pytest.raises(TypeError):
-        connector.describe(object(), object())
+def test_connector_rejects_a_non_ledger() -> None:
+    with pytest.raises(TypeError, match="StandRemovalLedger"):
+        VolumeConnector().describe(_make_settings(), object())
 
-    class NoPriceView:
+
+def test_connector_rejects_settings_that_are_not_settings() -> None:
+    """A duck that quacks is no longer enough.
+
+    The connector used to accept any object and hunt for ``pricelist`` or
+    ``price_list``, ``taper_class`` or ``get_taper_class()``, each optionally
+    callable -- so an object spelling one of them a seventh way was read as
+    supplying nothing at all.
+    """
+    ledger = StandRemovalLedger("stand-1")
+    ledger.record_tree(
+        "thin", Tree(species=PINUS_SYLVESTRIS, diameter_cm=15.0, height_m=6.0, weight_n=1.0)
+    )
+
+    class LooksRight:
+        pricelist = _make_pricelist()
         taper_class = ConstantTaper
 
-    with pytest.raises(AttributeError):
-        connector._resolve_pricelist(NoPriceView())
+    with pytest.raises(TypeError, match="ValuationSettings"):
+        VolumeConnector().describe(LooksRight(), ledger)
 
-    class CallableTaperView:
-        def taper_class(self):
-            return ConstantTaper
 
-    assert connector._resolve_taper_class(CallableTaperView()) is ConstantTaper
+def test_settings_validate_their_fields() -> None:
+    with pytest.raises(TypeError, match="pricelist"):
+        ValuationSettings(pricelist=object(), taper_class=ConstantTaper)  # type: ignore[arg-type]
+    with pytest.raises(TypeError, match="Taper"):
+        ValuationSettings(pricelist=_make_pricelist(), taper_class=object)  # type: ignore[arg-type]
+    with pytest.raises(TypeError, match="BuckingConfig"):
+        ValuationSettings(
+            pricelist=_make_pricelist(),
+            taper_class=ConstantTaper,
+            bucking_config="bad",  # type: ignore[arg-type]
+        )
 
-    class GetterTaperView:
-        taper_class = None
 
-        def get_taper_class(self):
-            return ConstantTaper
-
-    assert connector._resolve_taper_class(GetterTaperView()) is ConstantTaper
-
-    class BadTaperView:
-        taper_class = object()
-
-    with pytest.raises(AttributeError):
-        connector._resolve_taper_class(BadTaperView())
-
-    class CallableConfigView:
-        def bucking_config(self):
-            return BuckingConfig(save_sections=True)
-
-    assert connector._resolve_bucking_config(CallableConfigView()).save_sections
-
-    class DefaultConfigView:
-        pass
-
-    assert connector._resolve_bucking_config(DefaultConfigView()).save_sections
-
-    class BadConfigView:
-        bucking_config = "bad"
-
-    with pytest.raises(TypeError):
-        connector._resolve_bucking_config(BadConfigView())
-
-    class FalseConfigView:
-        bucking_config = BuckingConfig(save_sections=False)
-
-    assert connector._resolve_bucking_config(FalseConfigView()).save_sections
+def test_settings_force_sections_on() -> None:
+    """Piece records *are* the sections, so a config that drops them is corrected."""
+    settings = ValuationSettings(
+        pricelist=_make_pricelist(),
+        taper_class=ConstantTaper,
+        bucking_config=BuckingConfig(save_sections=False),
+    )
+    assert settings.bucking_config.save_sections
+    assert isinstance(settings.min_diam_dead_wood, float)

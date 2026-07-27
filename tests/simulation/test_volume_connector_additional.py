@@ -11,6 +11,7 @@ from pyforestry.simulation.valuation.volume import (
     EmptyVolumeDescriptor,
     PieceRecord,
     TreeVolumeDescriptor,
+    ValuationSettings,
     VolumeConnector,
     VolumeResult,
 )
@@ -117,78 +118,35 @@ def test_tree_volume_descriptor_fallback_piece_and_quality():
     assert result.volume_by_quality[QualityType.Undefined] >= 0.0
 
 
-def test_volume_connector_resolution_errors():
+def test_volume_connector_rejects_wrong_types():
     connector = VolumeConnector(bucker_cls=DummyBucker)
+    settings = ValuationSettings(pricelist=DummyPricelist(), taper_class=DummyTaper)
 
-    with pytest.raises(TypeError):
-        connector.describe(object(), "bad")
+    with pytest.raises(TypeError, match="StandRemovalLedger"):
+        connector.describe(settings, "bad")
 
-    class NoPricelist:
-        pass
-
-    with pytest.raises(AttributeError):
-        connector.describe(NoPricelist(), _ledger_with_tree())
-
-    class BadTaper:
-        pricelist = DummyPricelist()
-        taper_class = lambda self: None  # noqa: E731 - test hook
-
-    with pytest.raises(AttributeError):
-        connector.describe(BadTaper(), _ledger_with_tree())
-
-    class BadBucking:
+    class LooksLikeSettings:
         pricelist = DummyPricelist()
         taper_class = DummyTaper
-        bucking_config = "bad"
 
-    with pytest.raises(TypeError):
-        connector.describe(BadBucking(), _ledger_with_tree())
+    with pytest.raises(TypeError, match="ValuationSettings"):
+        connector.describe(LooksLikeSettings(), _ledger_with_tree())
 
-    class CallableBucking:
-        pricelist = DummyPricelist()
 
-        def taper_class(self):
-            return DummyTaper
+def test_volume_connector_uses_the_settings_it_is_given():
+    connector = VolumeConnector(bucker_cls=DummyBucker)
+    settings = ValuationSettings(
+        pricelist=DummyPricelist(),
+        taper_class=DummyTaper,
+        bucking_config=BuckingConfig(save_sections=False),
+        min_diam_dead_wood=3,
+    )
 
-        def bucking_config(self):
-            return None
+    descriptor = connector.describe(settings, _ledger_with_tree())
 
-    descriptor = connector.describe(CallableBucking(), _ledger_with_tree())
     assert isinstance(descriptor, TreeVolumeDescriptor)
-
-
-def test_volume_connector_resolve_helpers():
-    class PricelistCallable:
-        def pricelist(self):
-            return DummyPricelist()
-
-    class PricelistAlias:
-        price_list = DummyPricelist()
-
-    assert isinstance(VolumeConnector._resolve_pricelist(PricelistCallable()), Pricelist)
-    assert isinstance(VolumeConnector._resolve_pricelist(PricelistAlias()), Pricelist)
-
-    class TaperCallable:
-        def taper_class(self):
-            return DummyTaper
-
-    class TaperGetter:
-        taper_class = None
-
-        def get_taper_class(self):
-            return DummyTaper
-
-    assert VolumeConnector._resolve_taper_class(TaperCallable()) is DummyTaper
-    assert VolumeConnector._resolve_taper_class(TaperGetter()) is DummyTaper
-
-    class BuckingCallable:
-        def bucking_config(self):
-            return None
-
-    class BuckingConfigValue:
-        bucking_config = BuckingConfig(save_sections=False)
-
-    config = VolumeConnector._resolve_bucking_config(BuckingCallable())
-    assert isinstance(config, BuckingConfig)
-    assert config.save_sections is True
-    assert VolumeConnector._resolve_bucking_config(BuckingConfigValue()).save_sections is True
+    assert descriptor.pricelist is settings.pricelist
+    assert descriptor.taper_class is DummyTaper
+    assert descriptor.min_diam_dead_wood == pytest.approx(3.0)
+    # save_sections is corrected on the settings, not silently at each use site.
+    assert descriptor.bucking_config.save_sections is True

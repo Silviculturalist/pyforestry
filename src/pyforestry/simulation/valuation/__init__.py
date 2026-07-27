@@ -1,11 +1,12 @@
 """Valuation helpers for converting removals into marketable products."""
 
 from .removals import CohortRemoval, StandRemovalLedger, TreeRemoval
-from .step import HasRemovalLedger, ValuationStep
+from .step import ValuationStep
 from .volume import (
     EmptyVolumeDescriptor,
     PieceRecord,
     TreeVolumeDescriptor,
+    ValuationSettings,
     VolumeConnector,
     VolumeDescriptor,
     VolumeResult,
@@ -13,7 +14,7 @@ from .volume import (
 
 __all__ = [
     "CohortRemoval",
-    "HasRemovalLedger",
+    "ValuationSettings",
     "ValuationStep",
     "StandRemovalLedger",
     "TreeRemoval",

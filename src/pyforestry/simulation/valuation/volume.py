@@ -1,4 +1,18 @@
-"""Volume conversion utilities for valuation workflows."""
+"""Volume conversion utilities for valuation workflows.
+
+Pricing a removal needs three things the ledger does not carry: a price list, a
+taper function and a bucking configuration. They arrive as one typed
+:class:`ValuationSettings`.
+
+That used to be a ``model_view: Any`` -- a name left over from a subsystem this
+package no longer has -- resolved by ``getattr`` across four spellings
+(``pricelist`` or ``price_list``, ``taper_class`` or ``get_taper_class()``, each
+optionally callable). It is the defect :class:`~pyforestry.simulation.valuation.step.ValuationStep`
+was written to fix one layer up, where a ledger had been looked for in six
+places: several conventions for one value is no convention, and the failure mode
+is an object that implements a seventh spelling being read as implementing
+nothing.
+"""
 
 from __future__ import annotations
 
@@ -191,6 +205,52 @@ class TreeVolumeDescriptor(VolumeDescriptor):
         )
 
 
+@dataclass(frozen=True)
+class ValuationSettings:
+    """What pricing a removal needs beyond the removal itself.
+
+    One typed object, validated when it is built, so a misconfiguration is a
+    named error at the call site rather than an ``AttributeError`` raised the
+    first time a run happens to thin something.
+
+    Args:
+        pricelist: The price list to value the bucked assortments against.
+        taper_class: The :class:`~pyforestry.base.taper.Taper` subclass the bucker
+            takes stem dimensions from.
+        bucking_config: Bucking options. ``save_sections`` is forced on, because
+            the piece records this package reports are the sections.
+        min_diam_dead_wood: Minimum top diameter, in cm, below which wood is
+            treated as dead and not merchandised.
+
+    Raises:
+        TypeError: If any field is not of its declared type.
+    """
+
+    pricelist: Pricelist
+    taper_class: Type[Taper]
+    bucking_config: BuckingConfig = field(
+        default_factory=lambda: BuckingConfig(save_sections=True)
+    )
+    min_diam_dead_wood: float = 0.0
+
+    def __post_init__(self) -> None:
+        """Validate the settings and force ``save_sections`` on."""
+        if not isinstance(self.pricelist, Pricelist):
+            raise TypeError(f"pricelist must be a Pricelist, got {type(self.pricelist).__name__}.")
+        if not (isinstance(self.taper_class, type) and issubclass(self.taper_class, Taper)):
+            raise TypeError("taper_class must be a Taper subclass.")
+        if not isinstance(self.bucking_config, BuckingConfig):
+            raise TypeError(
+                f"bucking_config must be a BuckingConfig, got "
+                f"{type(self.bucking_config).__name__}."
+            )
+        if not self.bucking_config.save_sections:
+            object.__setattr__(
+                self, "bucking_config", replace(self.bucking_config, save_sections=True)
+            )
+        object.__setattr__(self, "min_diam_dead_wood", float(self.min_diam_dead_wood))
+
+
 class VolumeConnector:
     """Resolve removal ledgers into volume descriptors and valuation results."""
 
@@ -198,80 +258,43 @@ class VolumeConnector:
         """Create a connector with an optional bucker override."""
         self._bucker_cls = bucker_cls or Nasberg_1985_BranchBound
 
-    def describe(self, model_view: Any, ledger: StandRemovalLedger) -> VolumeDescriptor:
-        """Return the descriptor describing ``ledger`` for ``model_view``."""
+    def describe(
+        self, settings: ValuationSettings, ledger: StandRemovalLedger
+    ) -> VolumeDescriptor:
+        """Return the descriptor describing ``ledger`` priced under ``settings``.
 
+        Raises:
+            TypeError: If ``settings`` or ``ledger`` is not of its declared type.
+        """
         if not isinstance(ledger, StandRemovalLedger):
             raise TypeError("ledger must be a StandRemovalLedger instance.")
         if ledger.is_empty:
             return EmptyVolumeDescriptor(ledger=ledger, metadata=dict(ledger.metadata))
-
-        removals = tuple(ledger.iter_tree_removals())
-        pricelist = self._resolve_pricelist(model_view)
-        taper_class = self._resolve_taper_class(model_view)
-        config = self._resolve_bucking_config(model_view)
-        min_dead = float(getattr(model_view, "min_diam_dead_wood", 0.0))
+        if not isinstance(settings, ValuationSettings):
+            raise TypeError(
+                f"settings must be a ValuationSettings, got {type(settings).__name__}. "
+                "Build one with the price list, taper and bucking config to use."
+            )
 
         return TreeVolumeDescriptor(
             ledger=ledger,
-            removals=removals,
-            pricelist=pricelist,
-            taper_class=taper_class,
-            bucking_config=config,
+            removals=tuple(ledger.iter_tree_removals()),
+            pricelist=settings.pricelist,
+            taper_class=settings.taper_class,
+            bucking_config=settings.bucking_config,
             bucker_cls=self._bucker_cls,
-            min_diam_dead_wood=min_dead,
+            min_diam_dead_wood=settings.min_diam_dead_wood,
             metadata=dict(ledger.metadata),
         )
 
-    def connect(self, model_view: Any, ledger: StandRemovalLedger) -> VolumeResult:
-        """Return the evaluated volume result for ``ledger`` and ``model_view``."""
-
-        descriptor = self.describe(model_view, ledger)
-        return descriptor.evaluate()
-
-    @staticmethod
-    def _resolve_pricelist(model_view: Any) -> Pricelist:
-        """Resolve a pricelist from the model view."""
-        candidates = (
-            getattr(model_view, "pricelist", None),
-            getattr(model_view, "price_list", None),
-        )
-        for candidate in candidates:
-            resolved = candidate() if callable(candidate) else candidate
-            if isinstance(resolved, Pricelist):
-                return resolved
-        raise AttributeError("Model view must provide a Pricelist via 'pricelist'.")
-
-    @staticmethod
-    def _resolve_taper_class(model_view: Any) -> Type[Taper]:
-        """Resolve the taper class used to compute volumes."""
-        candidate = getattr(model_view, "taper_class", None)
-        if callable(candidate) and not isinstance(candidate, type):
-            candidate = candidate()
-        if candidate is None:
-            getter = getattr(model_view, "get_taper_class", None)
-            candidate = getter() if callable(getter) else None
-        if not isinstance(candidate, type) or not issubclass(candidate, Taper):
-            raise AttributeError("Model view must supply a taper_class derived from Taper.")
-        return candidate
-
-    @staticmethod
-    def _resolve_bucking_config(model_view: Any) -> BuckingConfig:
-        """Resolve or default the bucking configuration."""
-        candidate = getattr(model_view, "bucking_config", None)
-        if callable(candidate):
-            candidate = candidate()
-        if candidate is None:
-            return BuckingConfig(save_sections=True)
-        if not isinstance(candidate, BuckingConfig):
-            raise TypeError("bucking_config must be a BuckingConfig instance.")
-        if not candidate.save_sections:
-            candidate = replace(candidate, save_sections=True)
-        return candidate
+    def connect(self, settings: ValuationSettings, ledger: StandRemovalLedger) -> VolumeResult:
+        """Return the evaluated volume result for ``ledger`` under ``settings``."""
+        return self.describe(settings, ledger).evaluate()
 
 
 __all__ = [
     "PieceRecord",
+    "ValuationSettings",
     "VolumeResult",
     "VolumeDescriptor",
     "EmptyVolumeDescriptor",
