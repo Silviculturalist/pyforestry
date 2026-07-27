@@ -176,18 +176,16 @@ def test_soderberg_value_standing_forest_uses_form_height_volume() -> None:
     result = preset.value_standing_forest()
     assert set(result) == _VALUATION_KEYS
     assert result["standing_volume_m3_per_ha"] > 0.0
-    # This route bucks nothing, so no timber, no pulpwood sorting, no timber-valued
-    # stems -- and no value at all, because a form-height volume is over bark and
-    # every price list here is under bark.
+    # This route bucks nothing, so there is no timber and no timber-valued stem, and
+    # everything it does report is pulpwood.
     assert result["timber_volume_m3_per_ha"] == 0.0
-    assert result["pulp_volume_m3_per_ha"] == 0.0
     assert result["timber_valued_stems_per_ha"] == 0.0
-    assert result["standing_value_sek_per_ha"] == 0.0
-    assert result["value_per_m3_sek"] == 0.0
+    assert result["pulp_volume_m3_per_ha"] == pytest.approx(result["standing_volume_m3_per_ha"])
+    assert result["standing_value_sek_per_ha"] > 0.0
 
 
-def test_the_two_routes_declare_their_bark_basis() -> None:
-    """A volume column that changes basis has to say so, or it is not comparable."""
+def test_both_routes_report_volume_under_bark() -> None:
+    """One basis, so a volume column is comparable and a price list applies to it."""
     bucking = build_soderberg_1986_pipeline(_make_config())
     bucking.initialize(site=_make_site())
     form_height = build_soderberg_1986_pipeline(
@@ -196,7 +194,46 @@ def test_the_two_routes_declare_their_bark_basis() -> None:
     form_height.initialize(site=_make_site())
 
     assert bucking.value_standing_forest()["volume_over_bark"] == 0.0
-    assert form_height.value_standing_forest()["volume_over_bark"] == 1.0
+    assert form_height.value_standing_forest()["volume_over_bark"] == 0.0
+
+
+def test_form_height_volume_is_converted_to_under_bark() -> None:
+    """The conversion is the bark deduction it says it is, and it bites.
+
+    Holding the form height and rescaling the cross-section by the Söderberg (1992)
+    double bark: ``V_ub = V_ob * (d_ub / d_ob)^2``.
+    """
+    preset = build_soderberg_1986_pipeline(_make_config(use_soderberg_form_height_volume=True))
+    preset.initialize(site=_make_site())
+
+    tree = preset.tree_list[0]
+    tree.diameter_cm = 25.0
+    tree.double_bark_mm = 12.0
+    structure = preset._stand_structure()
+
+    converted = preset._form_height_volume_under_bark_m3(
+        tree=tree,
+        species=tree.species,
+        volume_over_bark_m3=1.0,
+        diameter_cm=25.0,
+        structure=structure,
+        mean_age_total_years=preset._mean_age_total_years(),
+    )
+    assert converted == pytest.approx((25.0 - 1.2) ** 2 / 25.0**2)
+    assert 0.85 < converted < 1.0
+
+    # A tree list from outside the pipeline may carry no bark; the conversion has to
+    # find some rather than quietly return an over-bark volume.
+    tree.double_bark_mm = 0.0
+    from_stand = preset._form_height_volume_under_bark_m3(
+        tree=tree,
+        species=tree.species,
+        volume_over_bark_m3=1.0,
+        diameter_cm=25.0,
+        structure=structure,
+        mean_age_total_years=preset._mean_age_total_years(),
+    )
+    assert 0.0 < from_stand < 1.0
 
 
 def test_soderberg_both_valuation_routes_report_the_same_figures() -> None:
@@ -217,10 +254,7 @@ def test_soderberg_value_standing_forest_form_height_empty_trees() -> None:
     preset.initialize(site=_make_site())
     result = preset.value_standing_forest(tree_list=[])
     assert set(result) == _VALUATION_KEYS
-    # Every figure is zero; the bark basis is not a figure but a property of the
-    # route, so it holds even with nothing to measure.
-    assert result["volume_over_bark"] == 1.0
-    assert all(value == 0.0 for key, value in result.items() if key != "volume_over_bark")
+    assert all(value == 0.0 for value in result.values())
 
 
 def test_soderberg_site_index_selector_no_conifers_falls_back_to_species_to_plant() -> None:

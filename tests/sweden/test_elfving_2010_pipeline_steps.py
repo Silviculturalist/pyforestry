@@ -123,6 +123,10 @@ def test_the_soderberg_pipeline_swaps_only_what_the_model_swap_needs() -> None:
         "_model_attrs": "so it takes the canonical attrs instead",
         "_site_index_species_for_soderberg": "picks the pine or spruce curve by mixture",
         "value_standing_forest": "optional Soderberg form-height volume route",
+        "_form_height_volume_under_bark_m3": (
+            "form height is over bark and the price lists are not; the conversion "
+            "is specific to this route"
+        ),
     }
     overridden = {
         name

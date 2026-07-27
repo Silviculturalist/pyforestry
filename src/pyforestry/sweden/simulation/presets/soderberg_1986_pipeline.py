@@ -12,8 +12,9 @@ Everything else it overrides is a consequence of that swap:
   :meth:`Soderberg1986Pipeline._model_attrs` supplies the canonical set and
   :meth:`Soderberg1986Pipeline._model_inputs` returns ``None``;
 * ``use_soderberg_form_height_volume`` swaps the reported volume for the Söderberg
-  form height, which is over bark and therefore not on the basis this package
-  prices with -- see :meth:`Soderberg1986Pipeline.value_standing_forest`.
+  form height, which is over bark and so has to be converted before this package's
+  under-bark price lists can touch it -- see
+  :meth:`Soderberg1986Pipeline.value_standing_forest`.
 
 That the eleven phases carried over unchanged is the check that the decomposition
 is an abstraction rather than one model's method list; a test asserts the two
@@ -32,6 +33,7 @@ from pyforestry.sweden.adapters.soderberg_1986_growth import (
     Soderberg1986Config,
     Soderberg1986Model,
 )
+from pyforestry.sweden.bark.soderberg_1992 import soderberg_1992_bark_thickness_bh_mm
 from pyforestry.sweden.site import Sweden
 from pyforestry.sweden.volume.soderberg_1986_form_height import soderberg_1986_volume_m3
 
@@ -80,10 +82,10 @@ class Soderberg1986PipelineConfig(Elfving2010PipelineConfig):
 
     soderberg_include_thinning_effect: bool = True
     #: Report volume from the Söderberg (1986) form-height equations instead of
-    #: bucking each tree. That volume is **over bark**, unlike everything else this
-    #: package reports, so the run gives up its valuation with it: the price lists
-    #: are under bark and there is no published under-bark form height to convert
-    #: with. See :meth:`Soderberg1986Pipeline.value_standing_forest`.
+    #: bucking each tree. Nothing is bucked, so everything is priced as pulpwood; and
+    #: because a form-height volume is over bark while the price lists are under
+    #: bark, it is converted first, by an approximation spelled out in
+    #: :meth:`Soderberg1986Pipeline._form_height_volume_under_bark_m3`.
     use_soderberg_form_height_volume: bool = False
 
 
@@ -140,30 +142,26 @@ class Soderberg1986Pipeline(Elfving2010Pipeline):
         the inherited valuation: Näsberg (1985) bucking against the Mellanskog 2013
         price list, with a Brandel volume for stems too small to buck.
 
-        Setting it makes this a volume route and nothing else. Volume comes from the
-        Söderberg (1986) form-height equations, which give a whole-stem volume with
-        no assortments to price -- so nothing is bucked, and no timber volume or
-        timber-valued stems are reported.
+        Setting it swaps the volume function and, with it, the pricing. Volume comes
+        from the Söderberg (1986) form-height equations, which give a whole-stem
+        volume with no assortments to price, so nothing is bucked: no timber volume
+        and no timber-valued stems are reported, and every cubic metre is priced as
+        pulpwood.
 
-        **No value is reported either, and that is the point.** The form height
-        multiplies the basal area implied by breast-height diameter *over* bark, so
-        its volume is over bark; every price list in this package is under bark
-        (``m3to`` for timber, m³fub for pulpwood). Pricing the one with the other
-        overstates value by the bark fraction -- ten to twenty per cent for Swedish
-        conifers -- which is what this route used to do, silently, by valuing
-        everything at the pulpwood price. There is no published under-bark form
-        height to convert with; an under-bark volume comes from a volume function
-        evaluated on an under-bark diameter, which is the inherited route.
-
-        For the same reason ``standing_volume_m3_per_ha`` from here is not
-        comparable with the inherited route's. The row says which basis it is on, in
-        ``volume_over_bark``.
+        The form height multiplies the basal area implied by breast-height diameter
+        *over* bark, so its volume is over bark, while every price list here is under
+        bark (``m3to`` for timber, m³fub for pulpwood). Pricing the one with the
+        other overstates value by the bark fraction. The volume is therefore
+        converted to under bark first, with the Söderberg (1992) double bark this
+        pipeline already carries on each tree -- see
+        :meth:`_form_height_volume_under_bark_m3`, which is where the approximation
+        that conversion involves is written down.
         """
         if not self.config.use_soderberg_form_height_volume:
             return super().value_standing_forest(tree_list)
 
         trees = tree_list if tree_list is not None else self._trees
-        totals = _ValuationTotals(volume_over_bark=True)
+        totals = _ValuationTotals()
         if not trees or self._site is None:
             return totals.as_row()
 
@@ -178,6 +176,7 @@ class Soderberg1986Pipeline(Elfving2010Pipeline):
         alt = float(site.altitude or 0.0)
         county = getattr(site, "county", None)
         maritime_flag, _ = self._climate_flags()
+        mean_age_total = self._mean_age_total_years()
 
         for tree in trees:
             d = float(tree.diameter_cm or 0.0)
@@ -189,7 +188,7 @@ class Soderberg1986Pipeline(Elfving2010Pipeline):
             sp = tree.species or TreeSpecies.Sweden.pinus_sylvestris
 
             try:
-                vol = soderberg_1986_volume_m3(
+                volume_over_bark_m3 = soderberg_1986_volume_m3(
                     species=sp,
                     diameter_cm=d,
                     age_bh_years=max(age_bh, 1.0),
@@ -211,18 +210,105 @@ class Soderberg1986Pipeline(Elfving2010Pipeline):
             except (ValueError, ZeroDivisionError):
                 continue
 
-            totals.volume_m3_per_ha += vol * w
+            volume_m3 = self._form_height_volume_under_bark_m3(
+                tree=tree,
+                species=sp,
+                volume_over_bark_m3=volume_over_bark_m3,
+                diameter_cm=d,
+                structure=structure,
+                mean_age_total_years=mean_age_total,
+            )
+            if volume_m3 <= 0.0:
+                continue
 
-        # Everything else stays zero, and each zero is a statement:
-        #   value_sek_per_ha            -- this volume is over bark and the price
-        #                                  lists are not; see the docstring.
-        #   timber_volume_m3_per_ha     -- nothing is bucked here.
-        #   pulp_volume_m3_per_ha       -- nor sorted to pulpwood.
-        #   timber_valued_stems_per_ha  -- used to report every stem with a diameter,
-        #                                  so the column meant "stems that produced
-        #                                  sawtimber" under the inherited route and
-        #                                  "stems" under this one.
+            valuation_sp = str(sp.full_name if hasattr(sp, "full_name") else sp)
+            pulp_price = float(self._pricelist.Pulp.get_pulpwood_price(valuation_sp))
+            totals.volume_m3_per_ha += volume_m3 * w
+            # All of it: this route sorts nothing, so everything it values is valued
+            # at the pulpwood price.
+            totals.pulp_volume_m3_per_ha += volume_m3 * w
+            totals.value_sek_per_ha += volume_m3 * pulp_price * w
+
+        # `timber_volume_m3_per_ha` and `timber_valued_stems_per_ha` stay zero:
+        # nothing here is bucked. The latter used to report every stem with a
+        # diameter, so one column meant "stems that produced sawtimber" under the
+        # inherited route and "stems" under this one.
         return totals.as_row()
+
+    def _form_height_volume_under_bark_m3(
+        self,
+        *,
+        tree: Tree,
+        species: TreeName,
+        volume_over_bark_m3: float,
+        diameter_cm: float,
+        structure: dict[str, object],
+        mean_age_total_years: float,
+    ) -> float:
+        """Convert a Söderberg (1986) form-height volume to under bark.
+
+        **This is an approximation, not a published function.** Söderberg (1986)
+        gives one form height, fitted on breast-height diameter over bark, and no
+        under-bark counterpart. What is done here holds that form height fixed and
+        rescales the cross-section it multiplies::
+
+            V_ub = V_ob * (d_ub / d_ob)^2,   d_ub = d_ob - double_bark / 10
+
+        with the double bark from Söderberg (1992), which this pipeline already puts
+        on every tree.
+
+        Two things it assumes, both worth knowing before comparing the result with a
+        measured volume:
+
+        * that bark takes the same share of the cross-section all the way up the
+          stem as it does at breast height. It does not -- bark thins with height --
+          so this over-deducts somewhat, and the more so for thick-barked pine.
+        * that form height, ``V/g``, is unchanged by the deduction. Feeding the
+          under-bark diameter to the form-height equation instead would be the other
+          approximation, and a worse one: the equation's diameter terms are fitted on
+          over-bark diameter, so it would answer for a genuinely smaller tree rather
+          than for this one with its bark off. Heureka takes an under-bark diameter
+          for its Brandel volumes, but with Brandel's own published under-bark
+          coefficients -- a different function, not a rescaling, and no such pair
+          exists here.
+
+        Args:
+            tree: The tree, read for the ``double_bark_mm`` the pipeline set on it.
+            species: Its species, already defaulted by the caller.
+            volume_over_bark_m3: The form-height volume to convert.
+            diameter_cm: Breast-height diameter over bark.
+            structure: The stand summary the bark function needs if the tree carries
+                no bark of its own.
+            mean_age_total_years: Basal-area-weighted stand age, likewise.
+
+        Returns:
+            Volume under bark in m³, or ``0.0`` if bark would consume the stem.
+        """
+        double_bark_mm = float(getattr(tree, "double_bark_mm", 0.0) or 0.0)
+        if double_bark_mm <= 0.0:
+            # Every tree the pipeline itself produces has been through the
+            # height-and-bark phase. A tree list handed in from outside may not have
+            # been, and leaving its bark at zero would quietly put one stem's
+            # over-bark volume into an under-bark total -- so compute it here from
+            # the same Söderberg (1992) function that phase uses.
+            double_bark_mm = soderberg_1992_bark_thickness_bh_mm(
+                species=species,
+                diameter_cm=diameter_cm,
+                max_diameter_cm=max(float(structure["max_diameter_cm"]), diameter_cm),
+                mean_age_total_years=mean_age_total_years,
+                site_index_pine_m=float(self.config.site_index_pine_m),
+                latitude_deg=float(self._site.latitude),
+                altitude_m=float(self._site.altitude or 0.0),
+                prop_pine=float(structure.get("prop_pine", 0.0)),
+                prop_spruce=float(structure.get("prop_spruce", 0.0)),
+                prop_birch=float(structure.get("prop_birch", 0.0)),
+                part_of_sweden=self._infer_part_of_sweden(),
+            )
+
+        diameter_under_bark_cm = diameter_cm - max(0.0, double_bark_mm) / 10.0
+        if diameter_under_bark_cm <= 0.0:
+            return 0.0
+        return float(volume_over_bark_m3) * (diameter_under_bark_cm / diameter_cm) ** 2
 
     def _site_index_species_for_soderberg(
         self,
