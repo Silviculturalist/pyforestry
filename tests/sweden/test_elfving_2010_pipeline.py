@@ -327,7 +327,7 @@ def test_naslund_damage_index_is_applied_in_young_growth() -> None:
     assert young_ids
     preset._apply_nystrom_young_growth(young_ids=young_ids, dt_years=5.0)
 
-    assert 0.0 <= preset._last_damage_index_mean <= 1.0
+    assert 0.0 <= preset._record.damage_index_mean <= 1.0
 
 
 def test_phase_over_smoothing_blend_function() -> None:
@@ -383,7 +383,7 @@ def test_apply_soderberg_height_preserves_nystrom_height_for_young_ids(
     assert mature_tree.double_bark_mm == pytest.approx(4.0)
 
 
-def test_rebuild_context_sets_site_index_from_dominant_species() -> None:
+def test_refresh_model_view_sets_site_index_from_dominant_species() -> None:
     preset = build_elfving_2010_pipeline(
         _make_config(
             species_to_plant=preset_module.TreeSpecies.Sweden.picea_abies,
@@ -397,7 +397,7 @@ def test_rebuild_context_sets_site_index_from_dominant_species() -> None:
         tree.species = preset_module.TreeSpecies.Sweden.picea_abies
         tree.diameter_cm = max(12.0, float(tree.diameter_cm or 0.0))
 
-    preset._rebuild_context()
+    preset._refresh_model_view()
 
     assert preset._ctx is not None
     inputs = preset._ctx.inputs
@@ -431,7 +431,7 @@ def test_mortality_engine_application_reduces_tree_weights(
     stems_after = sum(float(tree.weight_n or 0.0) for tree in preset.tree_list)
 
     assert stems_after < stems_before
-    assert preset._last_mortality_fraction_mean == pytest.approx(0.2)
+    assert preset._record.mortality_fraction_mean == pytest.approx(0.2)
 
 
 def test_step_validation_and_no_mortality_branch() -> None:
@@ -444,8 +444,8 @@ def test_step_validation_and_no_mortality_branch() -> None:
         preset.step(dt_years=0.0)
 
     preset.step(dt_years=5.0)
-    assert preset._last_mortality_fraction_mean == pytest.approx(0.0)
-    assert preset._last_mortality_stems_removed_per_ha == pytest.approx(0.0)
+    assert preset._record.mortality_fraction_mean == pytest.approx(0.0)
+    assert preset._record.mortality_stems_removed_per_ha == pytest.approx(0.0)
 
 
 def test_run_projection_validation_errors() -> None:
@@ -607,8 +607,8 @@ def test_initial_dbh_age_fallback_and_naslund_helpers(monkeypatch: pytest.Monkey
 
     preset.initialize(site=_make_site())
     preset._apply_nystrom_young_growth(young_ids=set(), dt_years=5.0)
-    assert preset._last_damage_index_mean == pytest.approx(0.0)
-    assert preset._last_damage_mortality_stems_per_ha == pytest.approx(0.0)
+    assert preset._record.damage_index_mean == pytest.approx(0.0)
+    assert preset._record.damage_mortality_stems_per_ha == pytest.approx(0.0)
 
     monkeypatch.setattr(
         preset,
@@ -616,7 +616,7 @@ def test_initial_dbh_age_fallback_and_naslund_helpers(monkeypatch: pytest.Monkey
         lambda trees: {"mean_height_m": 0.0},
     )
     preset._apply_nystrom_young_growth(young_ids={id(preset.tree_list[0])}, dt_years=5.0)
-    assert preset._last_damage_index_mean == pytest.approx(0.0)
+    assert preset._record.damage_index_mean == pytest.approx(0.0)
 
     assert (
         preset._naslund_species_group(TreeSpecies.Sweden.pinus_contorta)

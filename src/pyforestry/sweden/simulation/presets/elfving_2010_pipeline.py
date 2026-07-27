@@ -14,9 +14,9 @@ pipeline (parameterized to reproduce the Heureka system's published behaviour):
 from __future__ import annotations
 
 import math
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any, Mapping, Sequence
 
 import numpy as np
 import pandas as pd
@@ -27,6 +27,8 @@ from pyforestry.base.helpers.primitives import Age, SiteIndexValue
 from pyforestry.base.helpers.tree import TreeUid
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies
 from pyforestry.base.pricelist import Pricelist, SolutionCube, create_pricelist_from_data
+from pyforestry.base.simulation.core import SimulationContext
+from pyforestry.base.simulation.pipeline import Step
 from pyforestry.base.timber_bucking.nasberg_1985 import BuckingConfig, Nasberg_1985_BranchBound
 from pyforestry.simulation.services import RandomBundle
 from pyforestry.sweden.adapters.elfving_1982 import (
@@ -180,6 +182,274 @@ class Elfving2010PipelineConfig:
     valuation_cube_bark_step_mm: float = 1.0
 
 
+@dataclass
+class Elfving2010PeriodRecord:
+    """What one period produced, written by the phases that produced it.
+
+    These are results, not state. They used to be five ``_last_*`` attributes on the
+    pipeline, assigned from thirty-eight places -- a return value turned into an
+    instance variable. Nothing said when one was valid, so a phase that did not run
+    left the previous period's figures standing and :meth:`Elfving2010Pipeline._snapshot_row`
+    reported them as this period's. A record is built fresh each period, so a phase
+    that does nothing reports its zero rather than last time's number.
+
+    Two of the fields are not reported but carried: the young-tree set and their
+    post-Nyström diameters are what the phase-over blend needs from the young phase,
+    and the mature growth step runs between the two.
+    """
+
+    #: Trees below the handover DBH when the period started. The height/bark phase
+    #: recomputes its own set from the end-of-period stand, so this one is only the
+    #: young phase's own view.
+    young_uids: frozenset[TreeUid] = field(default_factory=frozenset)
+    #: Each young tree's DBH after the Nyström phase grew it and before the Elfving
+    #: step overwrote it. The blend needs both trajectories to interpolate between.
+    young_dbh_after_nystrom: dict[TreeUid, float] = field(default_factory=dict)
+    #: Weight given to the mature (Elfving) DBH trajectory this period, from the
+    #: stand's mean height. Measured after the young phase grew the heights.
+    phase_over_weight: float = 0.0
+    #: Mean Näslund (1986) damage index over the young trees, or zero with none.
+    damage_index_mean: float = 0.0
+    #: Stems/ha the Näslund damage pathway removed from the young trees.
+    damage_mortality_stems_per_ha: float = 0.0
+    #: Mean predicted per-tree mortality fraction for the period.
+    mortality_fraction_mean: float = 0.0
+    #: Stems/ha the realisation phase actually removed.
+    mortality_stems_removed_per_ha: float = 0.0
+
+
+# ---------------------------------------------------------------------------
+# The phases of one period
+#
+# Each is a :class:`~pyforestry.base.simulation.pipeline.Step`: it takes the run's
+# context and a period length, and advances the whole stand. They are bound to the
+# pipeline because the state they work on -- the config, the site, the composed
+# submodels -- is the pipeline's; what the *runtime* sees is an ordered tuple it can
+# read, which is what `step()` hand-coded in one 65-line method before.
+#
+# The order is part of the model, not an implementation detail, so each step below
+# says what it must come after and why. Reordering them changes the numbers.
+# ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class _PipelineStep:
+    """Base for the phases: a step bound to the pipeline whose stand it advances."""
+
+    pipeline: "Elfving2010Pipeline"
+
+
+@dataclass(frozen=True)
+class _BeginPeriodStep(_PipelineStep):
+    """Open a fresh :class:`Elfving2010PeriodRecord` for the period.
+
+    First, so that every figure the snapshot row reports is this period's. It is a
+    step rather than something ``step()`` does around the loop so that the tuple is
+    self-contained: driven through
+    :func:`~pyforestry.base.simulation.pipeline.run_pipeline`, it resets per period
+    just the same.
+    """
+
+    name: str = "begin_period"
+
+    def run(self, ctx: SimulationContext, dt: float) -> None:
+        """Discard the previous period's results."""
+        self.pipeline._record = Elfving2010PeriodRecord()
+
+
+@dataclass(frozen=True)
+class _YoungStandGrowthStep(_PipelineStep):
+    """Grow the trees still below the handover DBH with Nyström (2000).
+
+    First of the growth phases, because it decides which trees are young *before*
+    the Elfving step moves any diameters, and because the phase-over blend later in
+    the period interpolates between the diameter this phase produced and the one the
+    Elfving step produces from the same starting point. Both are recorded here for
+    it.
+
+    The mature-phase weight is also measured here rather than at the blend, because
+    it comes from the stand's mean height and this is the phase that changes heights.
+    """
+
+    name: str = "young_stand_growth"
+
+    def run(self, ctx: SimulationContext, dt: float) -> None:
+        """Apply Nyström height and DBH growth, then record what the blend needs."""
+        pipeline = self.pipeline
+        record = pipeline._record
+        record.young_uids = frozenset(pipeline._young_tree_ids(pipeline._trees))
+        pipeline._apply_nystrom_young_growth(
+            young_ids=set(record.young_uids),
+            dt_years=dt,
+        )
+        record.young_dbh_after_nystrom = {
+            tree.uid: float(tree.diameter_cm or 0.0)
+            for tree in pipeline._trees
+            if tree.uid in record.young_uids
+        }
+        record.phase_over_weight = pipeline._phase_over_weight(
+            pipeline._weighted_mean_height_m(pipeline._trees),
+        )
+
+
+@dataclass(frozen=True)
+class _MortalityPredictionStep(_PipelineStep):
+    """Predict the period's mortality onto ``tree.mortality``, removing nothing.
+
+    Before growth, and that is load-bearing. The Elfving stand calibration inside
+    the mature step multiplies each tree's growth by ``1 - tree.mortality``, so it
+    calibrates on survived rather than gross basal area. Predicting after growth
+    would calibrate the stand against stems that do not survive the period.
+    The stems themselves come out in :class:`_MortalityRealizationStep`, after
+    growth.
+    """
+
+    name: str = "mortality_prediction"
+
+    def run(self, ctx: SimulationContext, dt: float) -> None:
+        """Store per-tree mortality fractions for this period."""
+        pipeline = self.pipeline
+        if pipeline.config.apply_mortality:
+            pipeline._predict_mortality(dt_years=dt)
+            return
+        for tree in pipeline._trees:
+            tree.mortality = 0.0
+
+
+@dataclass(frozen=True)
+class _SyncModelViewStep(_PipelineStep):
+    """Re-read the stand into the context the growth model steps.
+
+    Placed twice: once before the mature step, because by then the young phase has
+    grown diameters and dropped damaged stems and the model's basal area and
+    dominant species have to be the current ones; and once at the end of the period,
+    so the context a caller inspects afterwards agrees with the stand.
+    """
+
+    name: str = "sync_model_view"
+
+    def run(self, ctx: SimulationContext, dt: float) -> None:
+        """Refresh the stand's metrics and the model's resolved inputs."""
+        self.pipeline._refresh_model_view()
+
+
+@dataclass(frozen=True)
+class _MatureGrowthStep(_PipelineStep):
+    """Advance every tree with the mature growth model for the period.
+
+    Elfving (2010) single-tree diameter increment plus the Elfving (2009)
+    whole-stand basal-area calibration; the Söderberg pipeline swaps the model and
+    keeps everything around it.
+    """
+
+    name: str = "mature_growth"
+
+    def run(self, ctx: SimulationContext, dt: float) -> None:
+        """Run the context's growth model over the whole stand."""
+        ctx.update_step(dt)
+
+
+@dataclass(frozen=True)
+class _PhaseOverBlendStep(_PipelineStep):
+    """Blend each young tree's two diameters into one.
+
+    Immediately after the mature step, which is the only moment both trajectories
+    exist: the young diameter is in the record, the mature one is on the tree, and
+    the next phase to touch diameters would see only the blend.
+    """
+
+    name: str = "phase_over_blend"
+
+    def run(self, ctx: SimulationContext, dt: float) -> None:
+        """Interpolate young and mature DBH at this period's phase-over weight."""
+        pipeline = self.pipeline
+        record = pipeline._record
+        for tree in pipeline._trees:
+            young_dbh_cm = record.young_dbh_after_nystrom.get(tree.uid)
+            if young_dbh_cm is None:
+                continue
+            tree.diameter_cm = pipeline._blend_phase_over_dbh(
+                young_dbh_cm=float(young_dbh_cm),
+                mature_dbh_cm=float(tree.diameter_cm or 0.0),
+                mature_weight=float(record.phase_over_weight),
+            )
+
+
+@dataclass(frozen=True)
+class _MortalityRealizationStep(_PipelineStep):
+    """Take out the stems :class:`_MortalityPredictionStep` marked.
+
+    After growth, because the growth the stand calibration produced was already
+    calibrated on the survivors; removing them earlier would take the same stems out
+    twice.
+    """
+
+    name: str = "mortality_realization"
+
+    def run(self, ctx: SimulationContext, dt: float) -> None:
+        """Scale weights by the survived fraction and drop emptied trees."""
+        if self.pipeline.config.apply_mortality:
+            self.pipeline._realize_mortality()
+
+
+@dataclass(frozen=True)
+class _AgeAdvanceStep(_PipelineStep):
+    """Advance the trees' breast-height ages and the pipeline's clock.
+
+    After mortality so the trees that died do not age first, and before ingrowth so
+    the recruits this period produces start at their own age rather than being aged
+    for a period they were not alive for.
+    """
+
+    name: str = "age_advance"
+
+    def run(self, ctx: SimulationContext, dt: float) -> None:
+        """Add ``dt`` years to every tree age and to the stand's own two counters."""
+        pipeline = self.pipeline
+        pipeline._increment_tree_ages(dt)
+        pipeline._years_elapsed += dt
+        pipeline._current_age_years += dt
+
+
+@dataclass(frozen=True)
+class _IngrowthStep(_PipelineStep):
+    """Recruit new trees with Wikberg (2004), if the config asks for it.
+
+    After mortality and the age advance, because the model is gated on the stand's
+    QMD and mean age and those are the end-of-period ones; before height and bark,
+    which is what gives the recruits theirs.
+    """
+
+    name: str = "ingrowth"
+
+    def run(self, ctx: SimulationContext, dt: float) -> None:
+        """Add the period's recruits to the stand."""
+        if self.pipeline.config.apply_ingrowth:
+            self.pipeline._apply_ingrowth()
+
+
+@dataclass(frozen=True)
+class _HeightAndBarkStep(_PipelineStep):
+    """Refresh heights and double bark thickness with Söderberg (1992).
+
+    Last, because it is a function of the end-of-period diameter, age and stand
+    structure -- so it has to see the diameters growth and the blend produced, the
+    ages the age step advanced, and the trees ingrowth added. Trees still in the
+    young phase keep the height Nyström gave them, or the blend would be damped by
+    a mature height function evaluated on a sapling.
+    """
+
+    name: str = "height_and_bark"
+
+    def run(self, ctx: SimulationContext, dt: float) -> None:
+        """Impute mature heights and bark, preserving young-phase heights."""
+        pipeline = self.pipeline
+        pipeline._apply_soderberg_height_and_bark(
+            fallback_age_years=pipeline._current_age_years,
+            preserve_height_tree_ids=pipeline._young_tree_ids(pipeline._trees),
+        )
+
+
 class Elfving2010Pipeline:
     """Stateful simulation preset combining NYSKOG, Nyström and Elfving 2010."""
 
@@ -190,22 +460,81 @@ class Elfving2010Pipeline:
         self._model = Elfving2010Model()
         self._mortality_engine = MortalityEngine(config=self._build_mortality_config())
         self._site: SwedishSite | None = None
-        self._ctx = None
-        self._trees: list[Tree] = []
+        self._ctx: SimulationContext | None = None
+        self._trees = []
         self._current_age_years: float = self.config.initial_age_years
         self._years_elapsed: float = 0.0
         self._rng = RandomBundle(int(self.config.random_seed)).rng_for()
         self._regen_asinw: float = 0.0
         self._regen_q: float = 0.0
-        self._last_phase_over_weight: float = 0.0
-        self._last_damage_index_mean: float = 0.0
-        self._last_damage_mortality_stems_per_ha: float = 0.0
-        self._last_mortality_fraction_mean: float = 0.0
-        self._last_mortality_stems_removed_per_ha: float = 0.0
+        self._record = Elfving2010PeriodRecord()
+        self._steps: tuple[Step, ...] = self._build_steps()
         self._valuation_solution_cube: SolutionCube | None = None
         self._valuation_lookup_cache: dict[
             tuple[str, int, int, int, str], tuple[float, float, bool]
         ] = {}
+
+    def _build_steps(self) -> tuple[Step, ...]:
+        """Return the phases of one period, in the order they run.
+
+        This is the whole schedule, as data. It used to be sixty-five lines of
+        ``step()`` with the ordering carried by statement order and one comment;
+        each phase now states in its own docstring what it must follow and why,
+        because the order is part of the model rather than an implementation
+        detail.
+        """
+        return (
+            _BeginPeriodStep(self),
+            _YoungStandGrowthStep(self),
+            _MortalityPredictionStep(self),
+            _SyncModelViewStep(self),
+            _MatureGrowthStep(self),
+            _PhaseOverBlendStep(self),
+            _MortalityRealizationStep(self),
+            _AgeAdvanceStep(self),
+            _IngrowthStep(self),
+            _HeightAndBarkStep(self),
+            _SyncModelViewStep(self),
+        )
+
+    @property
+    def steps(self) -> tuple[Step, ...]:
+        """The phases of one period, in order.
+
+        Each is a :class:`~pyforestry.base.simulation.pipeline.Step`, so the tuple
+        can be handed to :func:`~pyforestry.base.simulation.pipeline.run_pipeline`
+        as well as run by :meth:`step` -- the composite and the generic runtime
+        schedule the same objects rather than two look-alike orderings.
+        """
+        return self._steps
+
+    @property
+    def _trees(self) -> list[Tree]:
+        """The stand's trees.
+
+        Once :meth:`initialize` has built the run's context this *is* the context's
+        plot list, not a copy of it: ``build_context`` copies the plot container but
+        shares the ``Tree`` objects, so a phase that only grows a tree stays in sync
+        either way, and a phase that adds or removes one (ingrowth, mortality) would
+        not. Before there is a context it is a staging list, which is what
+        ``initialize`` fills before it has anywhere to put it.
+
+        The setter writes *through* to that list rather than replacing it, so
+        ``pipeline._trees = [...]`` -- which is how a caller thins a stand -- cannot
+        leave the context describing a stand that no longer exists. Keeping the two
+        in step is what removed two of the three context rebuilds per period.
+        """
+        if self._ctx is not None:
+            return self._ctx.stand.plots[0].trees
+        return self._staged_trees
+
+    @_trees.setter
+    def _trees(self, trees: list[Tree]) -> None:
+        """Replace the tree list, in place where the context owns it."""
+        if self._ctx is not None:
+            self._ctx.stand.plots[0].trees[:] = trees
+            return
+        self._staged_trees: list[Tree] = list(trees)
 
     # --- Introspection (Describable) ---
 
@@ -285,11 +614,7 @@ class Elfving2010Pipeline:
             config=self._build_mortality_config(),
             rng=self._rng.child("mortality").numpy,
         )
-        self._last_phase_over_weight = 0.0
-        self._last_damage_index_mean = 0.0
-        self._last_damage_mortality_stems_per_ha = 0.0
-        self._last_mortality_fraction_mean = 0.0
-        self._last_mortality_stems_removed_per_ha = 0.0
+        self._record = Elfving2010PeriodRecord()
         self._valuation_lookup_cache = {}
         self._valuation_solution_cube = self._load_solution_cube()
 
@@ -361,79 +686,27 @@ class Elfving2010Pipeline:
         self._trees = self._sample_tree_list(nyskog.stems_per_species, nyskog.weibull_params)
         self._apply_initial_dbh_and_age()
         self._apply_soderberg_height_and_bark(fallback_age_years=self.config.initial_age_years)
-        self._last_phase_over_weight = self._phase_over_weight(
+        self._record.phase_over_weight = self._phase_over_weight(
             self._weighted_mean_height_m(self._trees)
         )
-        self._rebuild_context()
+        self._build_context()
         return self._trees
 
     def step(self, *, dt_years: float | None = None) -> list[Tree]:
-        """Advance one hybrid step with Nyström (< handover dbh) and Elfving (>= handover)."""
+        """Advance one hybrid step with Nyström (< handover dbh) and Elfving (>= handover).
+
+        Runs :attr:`steps` in order over the run's one context. What each phase is
+        and what it must follow is on the phase; this method is the clock check and
+        the loop.
+        """
         if self._site is None or not self._trees:
             raise RuntimeError("Preset must be initialized before calling step().")
         dt = self.config.dt_years if dt_years is None else float(dt_years)
         if dt <= 0.0:
             raise ValueError("dt_years must be > 0.")
 
-        young_ids = self._young_tree_ids(self._trees)
-        # Run this unconditionally: with no young trees it does nothing except
-        # report a zero damage index and zero damage mortality for the period,
-        # which is the truth. Skipping it left the previous period's figures
-        # standing in the snapshot row.
-        self._apply_nystrom_young_growth(young_ids=young_ids, dt_years=dt)
-
-        young_dbh_after_nystrom = {
-            tree.uid: float(tree.diameter_cm or 0.0)
-            for tree in self._trees
-            if tree.uid in young_ids
-        }
-        self._last_phase_over_weight = self._phase_over_weight(
-            self._weighted_mean_height_m(self._trees),
-        )
-
-        # Predict period mortality on the start-of-period state and store it as
-        # per-tree mortality fractions BEFORE the growth step. The Elfving stand
-        # calibration inside update_step() multiplies growth by (1 - tree.mortality),
-        # so it calibrates on survived (not gross) basal area: assigning mortality
-        # before the whole-stand basal-area calibration makes the calibration target
-        # survived growth. The dead stems are only removed after growth, by
-        # _realize_mortality().
-        if self.config.apply_mortality:
-            self._predict_mortality(dt_years=dt)
-        else:
-            for tree in self._trees:
-                tree.mortality = 0.0
-            self._last_mortality_fraction_mean = 0.0
-            self._last_mortality_stems_removed_per_ha = 0.0
-
-        self._rebuild_context()
-        self._ctx.update_step(dt)
-
-        for tree in self._trees:
-            tree_id = tree.uid
-            if tree_id in young_dbh_after_nystrom:
-                tree.diameter_cm = self._blend_phase_over_dbh(
-                    young_dbh_cm=float(young_dbh_after_nystrom[tree_id]),
-                    mature_dbh_cm=float(tree.diameter_cm or 0.0),
-                    mature_weight=float(self._last_phase_over_weight),
-                )
-
-        if self.config.apply_mortality:
-            self._realize_mortality()
-
-        self._increment_tree_ages(dt)
-        self._years_elapsed += dt
-        self._current_age_years += dt
-
-        if self.config.apply_ingrowth:
-            self._apply_ingrowth()
-
-        young_height_ids = self._young_tree_ids(self._trees)
-        self._apply_soderberg_height_and_bark(
-            fallback_age_years=self._current_age_years,
-            preserve_height_tree_ids=young_height_ids,
-        )
-        self._rebuild_context()
+        for phase in self._steps:
+            phase.run(self._ctx, dt)
         return self._trees
 
     def run_projection(
@@ -787,46 +1060,97 @@ class Elfving2010Pipeline:
         self._valuation_lookup_cache[key] = result
         return result
 
-    def _rebuild_context(self) -> None:
-        """Rebuild tree-list simulation context from current in-memory trees.
+    def _build_context(self) -> None:
+        """Create the run's one context around the current tree list.
 
-        The site facts the growth model needs are handed over as
-        :class:`Elfving2010Inputs`, typed and complete. They used to be twelve
-        string keys written onto ``ctx.attrs`` after the context was built, where
-        a mistyped name was indistinguishable from a site that had none of that
-        value and only surfaced as a default -- or an exception -- once a growth
-        kernel reached for it.
+        Called once, at the end of :meth:`initialize`. The pipeline used to build a
+        fresh ``CircularPlot``, ``Stand`` and ``SimulationContext`` three times per
+        period and throw each away -- so the context's history, the thing it exists
+        to keep, never survived a step, and the stand it described had to be
+        reassembled before anything could read it.
+
+        Raises:
+            RuntimeError: If no site has been set.
         """
         if self._site is None:
             raise RuntimeError("site is not set")
-        stand_structure = self._stand_structure()
-        dominant_species = (
-            stand_structure["dominant_species"] if self._trees else self.config.species_to_plant
-        )
         plot = CircularPlot(id=1, area_m2=10000.0, trees=self._trees)
         stand = Stand(site=self._site, plots=[plot])
-        ctx = self._model.build_context(
+        self._ctx = self._model.build_context(
             stand,
             mode_hint="tree_list",
-            inputs=Elfving2010Inputs(
-                site_index_m=float(self._site_index_for_species(dominant_species)),
-                temperature_sum_dd=self._temperature_sum(),
-                latitude_deg=float(self._site.latitude),
-                altitude_m=float(self._site.altitude or 0.0),
-                distance_to_coast_km=float(getattr(self._site, "distance_to_coast", 50.0) or 50.0),
-                dominant_species=dominant_species,
-                field_estimated_basal_area_m2_ha=self._basal_area_m2_ha(self._trees),
-                # This pipeline starts from a bare regeneration, so there is no
-                # pre-run thinning history to declare; thinnings it performs
-                # itself are carried by ctx.attrs["thinning_simulated"] and the
-                # Elfving (2009) continuous response instead.
-                thinned_0_10_years=False,
-                thinned_11_25_years=False,
-                thinned_11_30_years=False,
-            ),
+            inputs=self._model_inputs(),
         )
+        self._refresh_model_view()
+
+    def _refresh_model_view(self) -> None:
+        """Re-read the stand into the context the growth model steps.
+
+        Two things in the context go stale when a phase changes the stand: the
+        stand's metric estimates, which the growth models read as their whole-stand
+        basal area, and the model's resolved inputs, two of which -- the dominant
+        species and the field-estimated basal area -- are facts about the crop
+        rather than about the site.
+
+        Raises:
+            RuntimeError: If called before :meth:`initialize` built a context.
+        """
+        ctx = self._ctx
+        if ctx is None:
+            raise RuntimeError("Pipeline has no context; call initialize(site=...) first.")
+        ctx.stand.refresh_metrics()
+        inputs = self._model_inputs()
+        if inputs is not None:
+            ctx.inputs = inputs
+        ctx.attrs.update(self._model_attrs())
+        # Elfving's growth kernels read ctx.state["t"] to decide between the
+        # field-estimated basal area (first period only) and the stand's own, so the
+        # context's clock has to agree with the pipeline's before the model steps.
         ctx.state["t"] = float(self._years_elapsed)
-        self._ctx = ctx
+
+    def _model_inputs(self) -> Any | None:
+        """The typed site and stand facts the growth model steps with, as of now.
+
+        These used to be twelve string keys written onto ``ctx.attrs`` after the
+        context was built, where a mistyped name was indistinguishable from a site
+        that had none of that value and only surfaced as a default -- or an
+        exception -- once a growth kernel reached for it.
+
+        Returns ``None`` for a model that declares no ``Inputs`` type and reads
+        ``ctx.attrs`` instead; see :meth:`_model_attrs`.
+        """
+        if self._site is None:
+            raise RuntimeError("site is not set")
+        dominant_species = (
+            self._stand_structure()["dominant_species"]
+            if self._trees
+            else self.config.species_to_plant
+        )
+        return Elfving2010Inputs(
+            site_index_m=float(self._site_index_for_species(dominant_species)),
+            temperature_sum_dd=self._temperature_sum(),
+            latitude_deg=float(self._site.latitude),
+            altitude_m=float(self._site.altitude or 0.0),
+            distance_to_coast_km=float(getattr(self._site, "distance_to_coast", 50.0) or 50.0),
+            dominant_species=dominant_species,
+            field_estimated_basal_area_m2_ha=self._basal_area_m2_ha(self._trees),
+            # This pipeline starts from a bare regeneration, so there is no pre-run
+            # thinning history to declare; thinnings it performs itself are carried
+            # by ctx.attrs["thinning_simulated"] and the Elfving (2009) continuous
+            # response instead.
+            thinned_0_10_years=False,
+            thinned_11_25_years=False,
+            thinned_11_30_years=False,
+        )
+
+    def _model_attrs(self) -> Mapping[str, Any]:
+        """The untyped run values the growth model reads from ``ctx.attrs``.
+
+        Empty here: Elfving 2010 declares an ``Inputs`` type, so everything it needs
+        is typed. A model that does not -- Söderberg 1986 -- overrides this, and the
+        dict is the honest record of which of the two contracts it is on.
+        """
+        return {}
 
     def _young_tree_ids(self, trees: list[Tree]) -> set[TreeUid]:
         """Return object ids for trees below the configured phase-over DBH threshold."""
@@ -950,18 +1274,27 @@ class Elfving2010Pipeline:
             tree.age = Age.DBH(age_bh)
 
     def _apply_nystrom_young_growth(self, *, young_ids: set[TreeUid], dt_years: float) -> None:
-        """Advance height and DBH for trees still in the young-stand phase."""
+        """Advance height and DBH for trees still in the young-stand phase.
+
+        Reports the period's mean damage index and damage mortality onto
+        :attr:`_record`, including the two cases where there is nothing to do: a
+        stand with no young trees left has a damage index of zero, not last
+        period's.
+
+        Raises:
+            RuntimeError: If no site has been set.
+        """
         if self._site is None:
             raise RuntimeError("site is not set")
         if not young_ids:
-            self._last_damage_index_mean = 0.0
-            self._last_damage_mortality_stems_per_ha = 0.0
+            self._record.damage_index_mean = 0.0
+            self._record.damage_mortality_stems_per_ha = 0.0
             return
 
         metrics = self._stand_metrics_for_nystrom(self._trees)
         if metrics["mean_height_m"] <= 0.0:
-            self._last_damage_index_mean = 0.0
-            self._last_damage_mortality_stems_per_ha = 0.0
+            self._record.damage_index_mean = 0.0
+            self._record.damage_mortality_stems_per_ha = 0.0
             return
 
         young_trees = [tree for tree in self._trees if tree.uid in young_ids]
@@ -995,7 +1328,7 @@ class Elfving2010Pipeline:
             )
             tree.height_m = max(0.3, current_height + float(growth_m))
 
-        self._last_damage_index_mean = (
+        self._record.damage_index_mean = (
             damage_index_sum / damage_index_count if damage_index_count > 0 else 0.0
         )
 
@@ -1050,7 +1383,7 @@ class Elfving2010Pipeline:
                 tree.weight_n = new_weight
                 removed_stems += old_weight - new_weight
 
-        self._last_damage_mortality_stems_per_ha = removed_stems
+        self._record.damage_mortality_stems_per_ha = removed_stems
         self._trees = [tree for tree in self._trees if float(tree.weight_n or 0.0) > 1.0e-9]
 
     @staticmethod
@@ -1158,8 +1491,7 @@ class Elfving2010Pipeline:
         for tree in self._trees:
             tree.mortality = 0.0
         if self._site is None or not self._trees:
-            self._last_mortality_fraction_mean = 0.0
-            self._last_mortality_stems_removed_per_ha = 0.0
+            self._record.mortality_fraction_mean = 0.0
             return
 
         mortality_trees = [
@@ -1170,8 +1502,7 @@ class Elfving2010Pipeline:
             and float(tree.weight_n or 0.0) > 0.0
         ]
         if not mortality_trees:
-            self._last_mortality_fraction_mean = 0.0
-            self._last_mortality_stems_removed_per_ha = 0.0
+            self._record.mortality_fraction_mean = 0.0
             return
 
         sorted_by_dbh = sorted(
@@ -1196,13 +1527,11 @@ class Elfving2010Pipeline:
 
         total_stems_per_ha = sum(float(tree.weight_n or 0.0) for tree in mortality_trees)
         if total_stems_per_ha <= 0.0:
-            self._last_mortality_fraction_mean = 0.0
-            self._last_mortality_stems_removed_per_ha = 0.0
+            self._record.mortality_fraction_mean = 0.0
             return
         total_basal_area_m2_ha = sum(self._bal_m2_ha_for_tree(tree) for tree in mortality_trees)
         if total_basal_area_m2_ha <= 0.0:
-            self._last_mortality_fraction_mean = 0.0
-            self._last_mortality_stems_removed_per_ha = 0.0
+            self._record.mortality_fraction_mean = 0.0
             return
         mean_diameter_arithmetic_cm = (
             sum(
@@ -1231,8 +1560,7 @@ class Elfving2010Pipeline:
             if tree.species is not None
         ]
         if not records:
-            self._last_mortality_fraction_mean = 0.0
-            self._last_mortality_stems_removed_per_ha = 0.0
+            self._record.mortality_fraction_mean = 0.0
             return
 
         structure = self._stand_structure()
@@ -1283,7 +1611,7 @@ class Elfving2010Pipeline:
             mortality_sum += mortality
             count += 1
 
-        self._last_mortality_fraction_mean = (mortality_sum / count) if count > 0 else 0.0
+        self._record.mortality_fraction_mean = (mortality_sum / count) if count > 0 else 0.0
 
     def _realize_mortality(self) -> None:
         """Remove the stems marked dead by :meth:`_predict_mortality`.
@@ -1302,7 +1630,7 @@ class Elfving2010Pipeline:
             tree.weight_n = old_weight * (1.0 - mortality)
             removed_stems_per_ha += old_weight - float(tree.weight_n or 0.0)
         self._trees = [tree for tree in self._trees if float(tree.weight_n or 0.0) > 1.0e-9]
-        self._last_mortality_stems_removed_per_ha = removed_stems_per_ha
+        self._record.mortality_stems_removed_per_ha = removed_stems_per_ha
 
     def _apply_ingrowth(self) -> None:
         """Add recruited trees via Wikberg 2004 ingrowth model.
@@ -1704,13 +2032,13 @@ class Elfving2010Pipeline:
             "handover_dbh_cm": float(self.config.handover_dbh_cm),
             "handover_mean_height_m": float(self.config.handover_mean_height_m),
             "handover_smoothing_width_m": float(self.config.handover_smoothing_width_m),
-            "phase_over_weight": float(self._last_phase_over_weight),
-            "young_damage_index_mean": float(self._last_damage_index_mean),
+            "phase_over_weight": float(self._record.phase_over_weight),
+            "young_damage_index_mean": float(self._record.damage_index_mean),
             "young_damage_mortality_stems_removed_per_ha": float(
-                self._last_damage_mortality_stems_per_ha
+                self._record.damage_mortality_stems_per_ha
             ),
-            "mortality_fraction_mean": float(self._last_mortality_fraction_mean),
-            "mortality_stems_removed_per_ha": float(self._last_mortality_stems_removed_per_ha),
+            "mortality_fraction_mean": float(self._record.mortality_fraction_mean),
+            "mortality_stems_removed_per_ha": float(self._record.mortality_stems_removed_per_ha),
             "young_stand_potential_q": float(self._regen_q),
         }
 

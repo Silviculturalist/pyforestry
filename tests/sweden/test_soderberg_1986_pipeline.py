@@ -69,10 +69,10 @@ def test_soderberg_preset_uses_soderberg_model() -> None:
     assert isinstance(preset._model, Soderberg1986Model)
 
 
-def test_soderberg_rebuild_context_sets_canonical_attrs_and_avoids_legacy_aliases() -> None:
+def test_soderberg_refresh_model_view_sets_canonical_attrs_and_avoids_legacy_aliases() -> None:
     preset = build_soderberg_1986_pipeline(_make_config())
     preset.initialize(site=_make_site())
-    preset._rebuild_context()
+    preset._refresh_model_view()
 
     attrs = preset._ctx.attrs
     for key in {
@@ -101,7 +101,7 @@ def test_soderberg_rebuild_context_sets_canonical_attrs_and_avoids_legacy_aliase
     assert attrs["site_index_species"] in {"pine", "spruce"}
 
 
-def test_soderberg_rebuild_context_uses_dynamic_conifer_site_index_selector() -> None:
+def test_soderberg_refresh_model_view_uses_dynamic_conifer_site_index_selector() -> None:
     preset = build_soderberg_1986_pipeline(_make_config())
     preset.initialize(site=_make_site())
 
@@ -109,13 +109,13 @@ def test_soderberg_rebuild_context_uses_dynamic_conifer_site_index_selector() ->
         tree.species = TreeSpecies.Sweden.picea_abies
         tree.diameter_cm = max(12.0, float(tree.diameter_cm or 0.0))
 
-    preset._rebuild_context()
+    preset._refresh_model_view()
     assert preset._ctx.attrs["site_index_species"] == "spruce"
 
     for tree in preset.tree_list:
         tree.species = TreeSpecies.Sweden.pinus_sylvestris
 
-    preset._rebuild_context()
+    preset._refresh_model_view()
     assert preset._ctx.attrs["site_index_species"] == "pine"
 
 
@@ -191,7 +191,13 @@ def test_soderberg_site_index_selector_no_conifers_falls_back_to_species_to_plan
     assert tie_spruce == "spruce"
 
 
-def test_soderberg_rebuild_context_requires_site() -> None:
+def test_soderberg_build_context_requires_site() -> None:
     preset = build_soderberg_1986_pipeline(_make_config())
     with pytest.raises(RuntimeError, match="site is not set"):
-        preset._rebuild_context()
+        preset._build_context()
+
+
+def test_soderberg_refresh_model_view_requires_a_context() -> None:
+    preset = build_soderberg_1986_pipeline(_make_config())
+    with pytest.raises(RuntimeError, match="call initialize"):
+        preset._refresh_model_view()

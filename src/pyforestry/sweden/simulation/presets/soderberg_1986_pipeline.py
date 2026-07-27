@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from typing import Sequence
 
 from pyforestry.base.contracts import Describable, SourceReference
-from pyforestry.base.helpers import CircularPlot, Stand, Tree
+from pyforestry.base.helpers import Tree
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies
 from pyforestry.sweden.adapters.soderberg_1986_growth import (
     Soderberg1986Config,
@@ -220,8 +220,27 @@ class Soderberg1986Pipeline(Elfving2010Pipeline):
             return "spruce" if self.config.species_to_plant in _SPRUCE_SET else "pine"
         return "spruce" if dominant_species in _SPRUCE_SET else "pine"
 
-    def _rebuild_context(self) -> None:
-        """Rebuild Söderberg canonical context from the current in-memory tree list."""
+    def _model_inputs(self) -> None:
+        """Declare that this model has no typed inputs to resolve.
+
+        Söderberg (1986) predates the ``Inputs`` contract in this package and reads
+        ``ctx.attrs`` directly, so everything it needs is in :meth:`_model_attrs`
+        instead. Returning ``None`` rather than the Elfving inputs is what stops the
+        wrong model's site facts being bound to this context.
+        """
+        return None
+
+    def _model_attrs(self) -> dict[str, object]:
+        """The canonical attribute set the Söderberg 1986 kernels read.
+
+        Re-read before every mature step because three of these follow the crop
+        rather than the site: the dominant species, the field-estimated basal area,
+        and ``site_index_species``, which picks the pine or the spruce curve from
+        whichever conifer group currently carries more basal area.
+
+        Raises:
+            RuntimeError: If no site has been set.
+        """
         if self._site is None:
             raise RuntimeError("site is not set")
 
@@ -239,34 +258,27 @@ class Soderberg1986Pipeline(Elfving2010Pipeline):
         soil_texture = getattr(self._site, "soil_texture", None)
         peat = bool(soil_texture in {Sweden.SoilTextureSediment.PEAT, Sweden.SoilTextureTill.PEAT})
 
-        plot = CircularPlot(id=1, area_m2=10000.0, trees=self._trees)
-        stand = Stand(site=self._site, plots=[plot])
-        ctx = self._model.build_context(stand, mode_hint="tree_list")
-        ctx.attrs.update(
-            {
-                "part_of_sweden": self._infer_part_of_sweden(),
-                "latitude_deg": float(self._site.latitude),
-                "altitude_m": float(self._site.altitude or 0.0),
-                "site_index_species": site_index_species,
-                "site_index_pine_m": float(self.config.site_index_pine_m),
-                "site_index_spruce_m": float(self.config.site_index_spruce_m),
-                "maritime": bool(maritime),
-                "south_east": bool(county in _SOUTH_EAST_COUNTIES),
-                "region5": bool(county in _REGION5_COUNTIES),
-                "rich": bool(self._site.field_layer in _RICH_FIELD_LAYERS),
-                "split": False,
-                "soil_moisture": self._site.soil_moisture or Sweden.SoilMoistureEnum.MESIC,
-                "peat": peat,
-                "fertilized_within_10_years": False,
-                "thinned_0_5_years": False,
-                "thinned_6_25_years": False,
-                "thinning_simulated": False,
-                "dominant_species": dominant_species,
-                "field_estimated_basal_area_m2_ha": self._basal_area_m2_ha(self._trees),
-            }
-        )
-        ctx.state["t"] = float(self._years_elapsed)
-        self._ctx = ctx
+        return {
+            "part_of_sweden": self._infer_part_of_sweden(),
+            "latitude_deg": float(self._site.latitude),
+            "altitude_m": float(self._site.altitude or 0.0),
+            "site_index_species": site_index_species,
+            "site_index_pine_m": float(self.config.site_index_pine_m),
+            "site_index_spruce_m": float(self.config.site_index_spruce_m),
+            "maritime": bool(maritime),
+            "south_east": bool(county in _SOUTH_EAST_COUNTIES),
+            "region5": bool(county in _REGION5_COUNTIES),
+            "rich": bool(self._site.field_layer in _RICH_FIELD_LAYERS),
+            "split": False,
+            "soil_moisture": self._site.soil_moisture or Sweden.SoilMoistureEnum.MESIC,
+            "peat": peat,
+            "fertilized_within_10_years": False,
+            "thinned_0_5_years": False,
+            "thinned_6_25_years": False,
+            "thinning_simulated": False,
+            "dominant_species": dominant_species,
+            "field_estimated_basal_area_m2_ha": self._basal_area_m2_ha(self._trees),
+        }
 
 
 def build_soderberg_1986_pipeline(
