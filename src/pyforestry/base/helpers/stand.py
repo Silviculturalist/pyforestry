@@ -627,6 +627,24 @@ class Stand:
         self._diameter_classes = normalized
         self._compute_diameter_class_estimates()
 
+    def metric_estimates(self) -> Dict[str, Dict[Any, Union[Stems, StandBasalArea]]]:
+        """Return this stand's stored per-metric, per-species estimates.
+
+        Keys are metric names (``"Stems"``, ``"BasalArea"``, ``"QMD"`` where it has
+        been derived); each maps species -- and ``"TOTAL"`` -- to the estimate.
+        Which of them are present depends on :attr:`representation`: an
+        angle-count stand whose tallies carry no diameters has no ``"Stems"`` at
+        all, so callers must handle absence rather than assume a zero.
+
+        The returned dict is the live store, not a copy: the simulation runtime
+        writes results back through it. Read it through this method rather than
+        through ``stand._metric_estimates``, which three modules outside this file
+        reached for directly, two of them defensively via ``getattr(stand,
+        "_metric_estimates", {})`` and one straight through ``[...]`` -- so the
+        same access had two failure modes depending on where it was written.
+        """
+        return self._metric_estimates
+
     def refresh_metrics(self) -> None:
         """Rebuild the metric estimates from whichever representation is active.
 

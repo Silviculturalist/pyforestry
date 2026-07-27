@@ -47,7 +47,7 @@ def _aggregate_metrics(stand: Stand) -> Dict[str, Any]:
     Raises:
         ValueError: If the stand cannot supply one of the required metrics.
     """
-    estimates = getattr(stand, "_metric_estimates", {})
+    estimates = stand.metric_estimates()
     out: Dict[str, Any] = {}
     for name, wrapper in (("BasalArea", StandBasalArea), ("Stems", Stems)):
         stored = estimates.get(name)
@@ -522,20 +522,6 @@ class GrowthModel(ABC):
         """
         raise NotImplementedError
 
-    def grow(self, ctx: SimulationContext, dt: float) -> None:  # pragma: no cover - compatibility
-        """Deprecated alias for :meth:`update_step`.
-
-        Args:
-            ctx: The working copy to advance.
-            dt: Length of the step in years.
-        """
-        warnings.warn(
-            "GrowthModel.grow is deprecated; implement/update_step instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        self.update_step(ctx, dt)
-
     def available_actions(self) -> Dict[str, ActionSpec]:
         """Management actions this model exposes to :meth:`SimulationContext.do`.
 
@@ -627,22 +613,8 @@ class ExampleStandGeneralModel(GrowthModel):
                 rec["n_per_ha"] = [float(n_i) * (1.0 - self.mort * dt) for n_i in rec["n_per_ha"]]
             ctx.set_diameter_class(dclass)
 
-    def grow(self, ctx: SimulationContext, dt: float) -> None:  # pragma: no cover - compatibility
-        """Deprecated alias for :meth:`update_step`.
-
-        Args:
-            ctx: The working copy to advance.
-            dt: Length of the step in years.
-        """
-        warnings.warn(
-            "ExampleStandGeneralModel.grow is deprecated; use update_step instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        self.update_step(ctx, dt)
-
     def available_actions(self) -> Dict[str, ActionSpec]:
-        """Available actions."""
+        """Fertilisation, mortality and two thinnings, each gated on the modes it needs."""
         return {
             "fertilize": ActionSpec(
                 name="fertilize",

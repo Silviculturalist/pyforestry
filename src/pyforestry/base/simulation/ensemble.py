@@ -154,10 +154,6 @@ class ContextEnsemble:
                 c.state["last_dt"] = dt
                 c._log_external_update("update_step", {"dt": dt})
 
-    def grow(self, dt: float) -> None:  # pragma: no cover - compatibility
-        """Backward-compatible alias for :meth:`update_step`."""
-        self.update_step(dt)
-
     def do(self, name: str, **kwargs: Any) -> None:
         """Execute an action on each context."""
         for c in self.contexts:

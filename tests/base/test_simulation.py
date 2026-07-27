@@ -549,15 +549,20 @@ def test_growth_model_build_context_invalid_adapter():
         )
 
 
-def test_growth_model_grow_deprecation_warning():
+def test_grow_is_gone_and_update_step_is_the_only_name():
+    """The deprecated alias is removed, not merely warned about.
+
+    ``grow`` existed three times -- on SimulationContext, on GrowthModel, and
+    re-implemented verbatim on ExampleStandGeneralModel -- alongside a
+    ``hasattr(model, "update_step")`` shim in update_step that could not fire
+    once update_step became abstract.
+    """
     model = ExampleStandGeneralModel()
     ctx = model.build_context(_tree_list_stand(), mode_hint="aggregate")
-    with pytest.warns(DeprecationWarning):
-        model.grow(ctx, 1.0)
 
-    base_model = _RequirementsModel()
-    with pytest.warns(DeprecationWarning):
-        base_model.grow(ctx, 1.0)
+    assert not hasattr(model, "grow")
+    assert not hasattr(ctx, "grow")
+    assert not hasattr(_RequirementsModel(), "grow")
 
 
 def test_adapter_registry_and_engines():

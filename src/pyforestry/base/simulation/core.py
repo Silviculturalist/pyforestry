@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import copy
-import warnings
 from dataclasses import dataclass, field
 
 # ----------------------------- Actions & History ------------------------------
@@ -48,15 +47,21 @@ ActionFn = Callable[Concatenate["SimulationContext", P], None]
 
 @dataclass(frozen=True)
 class ActionSpec:
-    """Declarative action descriptor with mode gating."""
+    """Declarative action descriptor with mode gating.
+
+    ``requires_modes`` is the gate: the inventory modes this action can run in,
+    or an empty list for one that works in all of them. A second field,
+    ``requires_tree_list``, used to mean ``["tree_list", "spatial"]`` and was
+    unioned with this one -- two spellings of the same gate, with nothing in the
+    package setting the older.
+    """
 
     name: str
     fn: Callable[..., None]
     description: str = ""
     params: Dict[str, Any] = field(default_factory=dict)
-    # Legacy toggle (mapped to {"tree_list","spatial"}); prefer requires_modes.
-    requires_tree_list: bool = False
-    # New: explicit allowed modes, e.g. ["tree_list","spatial"] or []
+    #: Inventory modes this action may run in, e.g. ``["tree_list", "spatial"]``.
+    #: ``None`` or ``[]`` means every mode.
     requires_modes: Optional[List[str]] = None
 
 
@@ -237,25 +242,13 @@ class SimulationContext:
         pre = self.snapshot()
         t1 = self.state.get("t", 0.0) + years
 
-        if hasattr(self.model, "update_step"):
-            self.model.update_step(self, years)  # type: ignore[call-arg]
-        else:  # pragma: no cover - compatibility shim
-            self.model.grow(self, years)  # type: ignore[call-arg]
+        self.model.update_step(self, years)
         self.state["t"] = t1
         self.state["last_dt"] = years
 
         self._refresh_metrics()
         post = self.snapshot()
         self._append_history("update_step", {"dt": years}, pre, post)
-
-    def grow(self, years: float) -> None:  # pragma: no cover - compatibility alias
-        """Compatibility alias for :meth:`update_step`."""
-        warnings.warn(
-            "SimulationContext.grow is deprecated; use update_step instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        self.update_step(years)
 
     def do(self, action: str, **kwargs: Any) -> None:
         """Execute a capability the model declares, gated on the inventory mode."""
@@ -265,8 +258,6 @@ class SimulationContext:
         spec: ActionSpec = actions[action]
 
         requires_modes = set(spec.requires_modes or [])
-        if spec.requires_tree_list:
-            requires_modes.update({"tree_list", "spatial"})
         if requires_modes and self.mode not in requires_modes:
             req_str = ", ".join(sorted(requires_modes))
             raise RuntimeError(
@@ -320,12 +311,12 @@ class SimulationContext:
     def _metrics(self) -> MetricMap:
         """The stand's metric estimates, in this module's three-key shape.
 
-        Reads through to :attr:`Stand._metric_estimates`; there is no second
+        Reads through to :meth:`Stand.metric_estimates`; there is no second
         store. ``Stand`` also computes BAWAD and Lorey's height, which this view
         drops because nothing in the runtime consumes them yet -- read them off
         ``ctx.stand`` when that changes.
         """
-        estimates = self.stand._metric_estimates
+        estimates = self.stand.metric_estimates()
         if "QMD" not in estimates:
             # Stand derives QMD lazily; force it here so every mode reports the
             # same three keys. An angle-count stand whose tallies carry no

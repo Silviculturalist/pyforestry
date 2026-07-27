@@ -300,7 +300,7 @@ def test_simulation_context_action_gating_by_inventory_mode():
                 description="",
                 fn=noop,
                 params={},
-                requires_tree_list=True,
+                requires_modes=["tree_list", "spatial"],
             ),
         }
 

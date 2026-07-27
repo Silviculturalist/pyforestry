@@ -78,7 +78,7 @@ class AngleCountToPseudoTreesAdapter(Adapter):
         """Whether the stand has the angle-count basal-area and stem estimates."""
         if not getattr(stand, "use_angle_count", False):
             return False
-        metrics = getattr(stand, "_metric_estimates", {})
+        metrics = stand.metric_estimates()
         return "BasalArea" in metrics and "Stems" in metrics and len(metrics["BasalArea"]) > 0
 
     def adapt(self, stand, **kwargs) -> Dict[str, Any]:  # noqa: ANN001
@@ -94,8 +94,8 @@ class AngleCountToPseudoTreesAdapter(Adapter):
         if reps <= 0:
             reps = self.replicas_per_species
         _ = stand.QMD  # ensure QMD ready
-        ba_dict = stand._metric_estimates["BasalArea"]
-        n_dict = stand._metric_estimates["Stems"]
+        ba_dict = stand.metric_estimates()["BasalArea"]
+        n_dict = stand.metric_estimates()["Stems"]
 
         plot = CircularPlot(id="ac_pseudo", area_m2=10_000.0, AngleCount=[], trees=[])
         species_keys = [k for k in ba_dict.keys() if isinstance(k, TreeName)]
@@ -179,8 +179,8 @@ class AngleCountToDiameterClassAdapter(Adapter):
         """Whether the stand carries angle-count basal-area and stem estimates."""
         return (
             bool(getattr(stand, "use_angle_count", False))
-            and "BasalArea" in stand._metric_estimates
-            and "Stems" in stand._metric_estimates
+            and "BasalArea" in stand.metric_estimates()
+            and "Stems" in stand.metric_estimates()
         )
 
     def adapt(self, stand, **kwargs) -> Dict[str, Any]:  # noqa: ANN001
@@ -190,8 +190,8 @@ class AngleCountToDiameterClassAdapter(Adapter):
         of the real distribution is not in the data.
         """
         stand._ensure_qmd_estimates()
-        ba_dict = stand._metric_estimates["BasalArea"]
-        n_dict = stand._metric_estimates["Stems"]
+        ba_dict = stand.metric_estimates()["BasalArea"]
+        n_dict = stand.metric_estimates()["Stems"]
         dclass: Dict[Any, Dict[str, List[float]]] = {}
         for key, _ in ba_dict.items():
             if key == "TOTAL":
