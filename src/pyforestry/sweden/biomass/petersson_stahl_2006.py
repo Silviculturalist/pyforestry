@@ -9,6 +9,8 @@ Source:
 
 import numpy as np
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
+
 
 class PeterssonStahl2006:
     """Functions for below-ground biomass of birch, pine, and spruce in Sweden.
@@ -364,41 +366,20 @@ class PeterssonStahl2006:
 # ---------------------------------------------------------------------------
 
 
-class _Descriptor:
-    """FormulaModuleDescriptor for Petersson, H. & Ståhl, G. (2006)."""
-
-    @property
-    def component_id(self):
-        return "petersson_stahl_2006_biomass"
-
-    @property
-    def source(self):
-        from pyforestry.base.contracts import SourceReference
-
-        return SourceReference(
-            author="Petersson, H. & Ståhl, G.",
-            year=2006,
-            title=(
-                "Functions for below-ground biomass of Pinus sylvestris, Picea abies, "
-                "Betula pendula and Betula pubescens in Sweden"
-            ),
-            note=(
-                "Scandinavian Journal of Forest Research 21(S7):84-93. "
-                "doi:10.1080/14004080500486864"
-            ),
-        )
-
-    @property
-    def species_groups(self):
-        return {}
-
-    @property
-    def units(self):
-        return {}
-
-    @property
-    def kernel_names(self):
-        return ["PeterssonStahl2006"]
-
-
-DESCRIPTOR = _Descriptor()
+DESCRIPTOR = FormulaDescriptor(
+    component_id="petersson_stahl_2006_biomass",
+    source=SourceReference(
+        author="Petersson, H. & Ståhl, G.",
+        year=2006,
+        title=(
+            "Functions for below-ground biomass of Pinus sylvestris, Picea abies, "
+            "Betula pendula and Betula pubescens in Sweden"
+        ),
+        note=(
+            "Scandinavian Journal of Forest Research 21(S7):84-93. doi:10.1080/14004080500486864"
+        ),
+    ),
+    species_groups={},
+    units={},
+    kernel_names=("PeterssonStahl2006",),
+)

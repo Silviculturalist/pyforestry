@@ -46,7 +46,21 @@ _MODEL_ROOTS = ("pyforestry.base", "pyforestry.sweden", "pyforestry.norway")
 # listed above) — both carry published models, so both are scanned.
 _SKIP_SEGMENTS = frozenset({"simulation", "pricelist", "timber", "site", "misc"})
 
-_DESCRIPTOR_ATTRS = ("component_id", "source", "species_groups", "units", "kernel_names")
+#: The full :class:`~pyforestry.base.contracts.FormulaModuleDescriptor` contract.
+#: This list is what discovery tests a candidate ``DESCRIPTOR`` against, so it and
+#: the Protocol have to name the same members -- they did not, and the three the
+#: Protocol omitted (``kind``, ``domain``, ``composes``) were the ones read below
+#: with ``getattr`` defaults.
+_DESCRIPTOR_ATTRS = (
+    "component_id",
+    "source",
+    "species_groups",
+    "units",
+    "kernel_names",
+    "kind",
+    "domain",
+    "composes",
+)
 
 
 @dataclass(frozen=True)
@@ -156,13 +170,13 @@ def _entry_from_module(module_name: str) -> Optional[ModelEntry]:
         region=region,
         # A "model" descriptor lives under adapters/ or systems/ but may declare
         # its scientific domain (e.g. "growth"); fall back to the path segment.
-        domain=str(getattr(descriptor, "domain", None) or path_domain),
+        domain=str(descriptor.domain or path_domain),
         source=descriptor.source,
         species_groups={k: frozenset(v) for k, v in dict(descriptor.species_groups).items()},
         units=dict(descriptor.units),
         kernel_names=tuple(descriptor.kernel_names),
-        kind=str(getattr(descriptor, "kind", "formula")),
-        composes=tuple(getattr(descriptor, "composes", ()) or ()),
+        kind=str(descriptor.kind),
+        composes=tuple(descriptor.composes or ()),
     )
 
 

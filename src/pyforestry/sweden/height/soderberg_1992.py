@@ -17,7 +17,7 @@ import warnings
 from dataclasses import dataclass
 from typing import Dict, Union
 
-from pyforestry.base.contracts import SourceReference
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies
 from pyforestry.sweden._model_input_normalization import (
     PINE_GROUP as _PINE_GROUP,
@@ -1347,37 +1347,19 @@ __all__ = ["soderberg_1992_height_stand_age_m", "soderberg_1992_height_tree_age_
 # ---------------------------------------------------------------------------
 
 
-class _Descriptor:
-    """FormulaModuleDescriptor for Soderberg (1992) height functions."""
-
-    @property
-    def component_id(self):
-        return "soderberg_1992_height"
-
-    @property
-    def source(self):
-        return SourceReference(
-            author="Söderberg, U.",
-            year=1992,
-            title="Funktioner för skogsbruksplanering",
-            note=(
-                "Sveriges lantbruksuniversitet, institutionen för skogstaxering, "
-                "Rapport nr 52, Umeå. Height, form height and bark thickness of "
-                "individual trees."
-            ),
-        )
-
-    @property
-    def species_groups(self):
-        return {}
-
-    @property
-    def units(self):
-        return {"diameter_cm": "cm", "age_years": "years", "return": "m"}
-
-    @property
-    def kernel_names(self):
-        return list(__all__)
-
-
-DESCRIPTOR = _Descriptor()
+DESCRIPTOR = FormulaDescriptor(
+    component_id="soderberg_1992_height",
+    source=SourceReference(
+        author="Söderberg, U.",
+        year=1992,
+        title="Funktioner för skogsbruksplanering",
+        note=(
+            "Sveriges lantbruksuniversitet, institutionen för skogstaxering, "
+            "Rapport nr 52, Umeå. Height, form height and bark thickness of "
+            "individual trees."
+        ),
+    ),
+    species_groups={},
+    units={"diameter_cm": "cm", "age_years": "years", "return": "m"},
+    kernel_names=list(__all__),
+)

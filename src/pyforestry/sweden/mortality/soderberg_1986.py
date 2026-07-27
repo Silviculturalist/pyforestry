@@ -7,6 +7,8 @@ import warnings
 from collections.abc import Sequence
 from typing import Any
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
+
 from ._common import (
     calibration_group,
     clamp_probability,
@@ -183,41 +185,21 @@ __all__ = ["calibrate_soderberg"]
 # ---------------------------------------------------------------------------
 
 
-class _Descriptor:
-    """FormulaModuleDescriptor for Söderberg, U. (1986)."""
-
-    @property
-    def component_id(self):
-        return "soderberg_1986_mortality_calibration"
-
-    @property
-    def source(self):
-        from pyforestry.base.contracts import SourceReference
-
-        return SourceReference(
-            author="Söderberg, U.",
-            year=1986,
-            title=(
-                "Funktioner för skogliga produktionsprognoser: tillväxt och formhöjd "
-                "för enskilda träd av inhemska trädslag i Sverige"
-            ),
-            note=(
-                "Report 14, Section of Forest Mensuration and Management, "
-                "Swedish University of Agricultural Sciences (SLU), Umeå."
-            ),
-        )
-
-    @property
-    def species_groups(self):
-        return {}
-
-    @property
-    def units(self):
-        return {}
-
-    @property
-    def kernel_names(self):
-        return ["calibrate_soderberg"]
-
-
-DESCRIPTOR = _Descriptor()
+DESCRIPTOR = FormulaDescriptor(
+    component_id="soderberg_1986_mortality_calibration",
+    source=SourceReference(
+        author="Söderberg, U.",
+        year=1986,
+        title=(
+            "Funktioner för skogliga produktionsprognoser: tillväxt och formhöjd "
+            "för enskilda träd av inhemska trädslag i Sverige"
+        ),
+        note=(
+            "Report 14, Section of Forest Mensuration and Management, "
+            "Swedish University of Agricultural Sciences (SLU), Umeå."
+        ),
+    ),
+    species_groups={},
+    units={},
+    kernel_names=("calibrate_soderberg",),
+)

@@ -7,7 +7,7 @@ import warnings
 from dataclasses import dataclass
 from typing import Any
 
-from pyforestry.base.contracts import SourceReference
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.helpers.tree_species import TreeSpecies
 
 from ._common import (
@@ -261,33 +261,15 @@ __all__ = [
 # ---------------------------------------------------------------------------
 
 
-class _Descriptor:
-    """FormulaModuleDescriptor for Elfving (2013) single-tree mortality."""
-
-    @property
-    def component_id(self):
-        return "elfving_2013_mortality"
-
-    @property
-    def source(self):
-        return SourceReference(
-            author="Elfving, B.",
-            year=2013,
-            title="Single-tree mortality functions for the Swedish forest",
-            note="PM 2013-05-02 (unpublished working memo).",
-        )
-
-    @property
-    def species_groups(self):
-        return {"pine": frozenset(), "spruce": frozenset(), "birch": frozenset()}
-
-    @property
-    def units(self):
-        return {"diameter_cm": "cm", "basal_area_m2_ha": "m²/ha", "return": "probability"}
-
-    @property
-    def kernel_names(self):
-        return ["elfving_2013_probabilities"]
-
-
-DESCRIPTOR = _Descriptor()
+DESCRIPTOR = FormulaDescriptor(
+    component_id="elfving_2013_mortality",
+    source=SourceReference(
+        author="Elfving, B.",
+        year=2013,
+        title="Single-tree mortality functions for the Swedish forest",
+        note="PM 2013-05-02 (unpublished working memo).",
+    ),
+    species_groups={"pine": frozenset(), "spruce": frozenset(), "birch": frozenset()},
+    units={"diameter_cm": "cm", "basal_area_m2_ha": "m²/ha", "return": "probability"},
+    kernel_names=("elfving_2013_probabilities",),
+)

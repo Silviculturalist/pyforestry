@@ -5,6 +5,8 @@ from __future__ import annotations
 from collections.abc import Sequence
 from typing import Any
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
+
 from ._common import (
     calibration_group,
     clamp_probability,
@@ -123,42 +125,22 @@ __all__ = ["calibrate_bengtsson"]
 # ---------------------------------------------------------------------------
 
 
-class _Descriptor:
-    """FormulaModuleDescriptor for Bengtsson (1978) low-density mortality functions."""
-
-    @property
-    def component_id(self):
-        return "bengtsson_mortality_calibration"
-
-    @property
-    def source(self):
-        from pyforestry.base.contracts import SourceReference
-
-        return SourceReference(
-            author="Bengtsson, G.",
-            year=1978,
-            title=(
-                "Beräkning av den naturliga avgången i avverkningsberäkningarna "
-                "för 1973 års skogsutrednings slutbetänkande"
-            ),
-            note=(
-                "In: Skog för framtid, SOU 1978:7, bilaga 6. Low-density stand "
-                "mortality; combined with Söderberg (1986) self-thinning mortality "
-                "in Elfving's (2010) established-stand mortality model."
-            ),
-        )
-
-    @property
-    def species_groups(self):
-        return {}
-
-    @property
-    def units(self):
-        return {}
-
-    @property
-    def kernel_names(self):
-        return ["calibrate_bengtsson"]
-
-
-DESCRIPTOR = _Descriptor()
+DESCRIPTOR = FormulaDescriptor(
+    component_id="bengtsson_mortality_calibration",
+    source=SourceReference(
+        author="Bengtsson, G.",
+        year=1978,
+        title=(
+            "Beräkning av den naturliga avgången i avverkningsberäkningarna "
+            "för 1973 års skogsutrednings slutbetänkande"
+        ),
+        note=(
+            "In: Skog för framtid, SOU 1978:7, bilaga 6. Low-density stand "
+            "mortality; combined with Söderberg (1986) self-thinning mortality "
+            "in Elfving's (2010) established-stand mortality model."
+        ),
+    ),
+    species_groups={},
+    units={},
+    kernel_names=("calibrate_bengtsson",),
+)

@@ -8,6 +8,8 @@ import warnings
 from dataclasses import dataclass, field
 from typing import Any
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
+
 from ._common import (
     clamp_probability,
     mean_tree_age_years,
@@ -417,39 +419,19 @@ __all__ = [
 # ---------------------------------------------------------------------------
 
 
-class _Descriptor:
-    """FormulaModuleDescriptor for Fridman, J. & Ståhl, G. (2001)."""
-
-    @property
-    def component_id(self):
-        return "fridman_stahl_2001_mortality"
-
-    @property
-    def source(self):
-        from pyforestry.base.contracts import SourceReference
-
-        return SourceReference(
-            author="Fridman, J. & Ståhl, G.",
-            year=2001,
-            title="A three-step approach for modelling tree mortality in Swedish forests",
-            note=(
-                "Scandinavian Journal of Forest Research 16(5):455-466 (2001). "
-                "Three-step plot/basal-area/tree mortality model reproduced from "
-                "the paper's Tables 6-13."
-            ),
-        )
-
-    @property
-    def species_groups(self):
-        return {}
-
-    @property
-    def units(self):
-        return {}
-
-    @property
-    def kernel_names(self):
-        return ["fridman_stahl_2001_probabilities", "FridmanStahl2001Model"]
-
-
-DESCRIPTOR = _Descriptor()
+DESCRIPTOR = FormulaDescriptor(
+    component_id="fridman_stahl_2001_mortality",
+    source=SourceReference(
+        author="Fridman, J. & Ståhl, G.",
+        year=2001,
+        title="A three-step approach for modelling tree mortality in Swedish forests",
+        note=(
+            "Scandinavian Journal of Forest Research 16(5):455-466 (2001). "
+            "Three-step plot/basal-area/tree mortality model reproduced from "
+            "the paper's Tables 6-13."
+        ),
+    ),
+    species_groups={},
+    units={},
+    kernel_names=("fridman_stahl_2001_probabilities", "FridmanStahl2001Model"),
+)

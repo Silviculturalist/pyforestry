@@ -1,5 +1,7 @@
 """Tree volume functions from Eriksson (1973)."""
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
+
 
 def eriksson_1973_volume_aspen_sweden(diameter_cm: float, height_m: float) -> float:
     """
@@ -70,38 +72,21 @@ def eriksson_1973_volume_lodgepole_pine_sweden(diameter_cm: float, height_m: flo
 # ---------------------------------------------------------------------------
 
 
-class _Descriptor:
-    """FormulaModuleDescriptor for Eriksson, H. (1973)."""
-
-    @property
-    def component_id(self):
-        return "eriksson_1973_volume"
-
-    @property
-    def source(self):
-        from pyforestry.base.contracts import SourceReference
-
-        return SourceReference(
-            author="Eriksson, H.",
-            year=1973,
-            title="Volymfunktioner för stående träd av ask, asp, klibbal och contortatall",
-            note=(
-                "Skogshögskolan, institutionen för skogsproduktion, Rapporter och "
-                "uppsatser nr 26, Stockholm, 26 s."
-            ),
-        )
-
-    @property
-    def species_groups(self):
-        return {}
-
-    @property
-    def units(self):
-        return {}
-
-    @property
-    def kernel_names(self):
-        return ["eriksson_1973_volume_aspen_sweden", "eriksson_1973_volume_lodgepole_pine_sweden"]
-
-
-DESCRIPTOR = _Descriptor()
+DESCRIPTOR = FormulaDescriptor(
+    component_id="eriksson_1973_volume",
+    source=SourceReference(
+        author="Eriksson, H.",
+        year=1973,
+        title="Volymfunktioner för stående träd av ask, asp, klibbal och contortatall",
+        note=(
+            "Skogshögskolan, institutionen för skogsproduktion, Rapporter och "
+            "uppsatser nr 26, Stockholm, 26 s."
+        ),
+    ),
+    species_groups={},
+    units={},
+    kernel_names=(
+        "eriksson_1973_volume_aspen_sweden",
+        "eriksson_1973_volume_lodgepole_pine_sweden",
+    ),
+)

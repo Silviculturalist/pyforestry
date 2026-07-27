@@ -22,6 +22,7 @@ from typing import Callable, Union, cast
 
 from numpy import exp, log
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.helpers import Age, AgeMeasurement, SiteIndexValue, TreeSpecies
 
 
@@ -572,49 +573,29 @@ class Hagglund_1970:
 # ---------------------------------------------------------------------------
 
 
-class _Descriptor:
-    """FormulaModuleDescriptor for Hagglund (1970) site index trajectories."""
-
-    @property
-    def component_id(self):
-        return "hagglund_1970_siteindex"
-
-    @property
-    def source(self):
-        from pyforestry.base.contracts import SourceReference
-
-        return SourceReference(
-            author="Hägglund, B.",
-            year=1972,
-            title="Om övre höjdens utveckling för gran i norra Sverige",
-            note=(
-                "Skogshögskolan, institutionen för skogsproduktion, Rapporter och uppsatser "
-                "nr 21. This module spans three of the author's publications and a single "
-                "reference cannot carry them all; each model is named for its own year. "
-                "Norway spruce, northern Sweden: Hägglund (1972), above. Norway spruce, "
-                "southern Sweden: Hägglund (1973) 'Om övre höjdens utveckling för gran i "
-                "södra Sverige', Rapporter och uppsatser nr 24. Scots pine: Hägglund (1974) "
-                "'Övre höjdens utveckling i tallbestånd', Rapporter och uppsatser nr 31. "
-                "There is no Hägglund (1970) site-index publication; the class name "
-                "Hagglund_1970 is a legacy identifier, not a citation."
-            ),
-        )
-
-    @property
-    def species_groups(self):
-        return {"pine": frozenset(), "spruce": frozenset()}
-
-    @property
-    def units(self):
-        return {
-            "dominant_height_m": "m",
-            "age_years": "years",
-            "return": "SiteIndexValue (m at age 100)",
-        }
-
-    @property
-    def kernel_names(self):
-        return ["Hagglund_1970", "HagglundSpruceModel", "HagglundPineModel"]
-
-
-DESCRIPTOR = _Descriptor()
+DESCRIPTOR = FormulaDescriptor(
+    component_id="hagglund_1970_siteindex",
+    source=SourceReference(
+        author="Hägglund, B.",
+        year=1972,
+        title="Om övre höjdens utveckling för gran i norra Sverige",
+        note=(
+            "Skogshögskolan, institutionen för skogsproduktion, Rapporter och uppsatser "
+            "nr 21. This module spans three of the author's publications and a single "
+            "reference cannot carry them all; each model is named for its own year. "
+            "Norway spruce, northern Sweden: Hägglund (1972), above. Norway spruce, "
+            "southern Sweden: Hägglund (1973) 'Om övre höjdens utveckling för gran i "
+            "södra Sverige', Rapporter och uppsatser nr 24. Scots pine: Hägglund (1974) "
+            "'Övre höjdens utveckling i tallbestånd', Rapporter och uppsatser nr 31. "
+            "There is no Hägglund (1970) site-index publication; the class name "
+            "Hagglund_1970 is a legacy identifier, not a citation."
+        ),
+    ),
+    species_groups={"pine": frozenset(), "spruce": frozenset()},
+    units={
+        "dominant_height_m": "m",
+        "age_years": "years",
+        "return": "SiteIndexValue (m at age 100)",
+    },
+    kernel_names=("Hagglund_1970", "HagglundSpruceModel", "HagglundPineModel"),
+)

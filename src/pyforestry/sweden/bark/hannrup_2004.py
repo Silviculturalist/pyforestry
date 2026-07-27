@@ -20,6 +20,7 @@ import math
 import warnings
 from typing import Union
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.helpers.primitives import Diameter_cm
 
 # --- Scots Pine Function ---
@@ -257,41 +258,21 @@ def Hannrup_2004_bark_picea_abies_sweden(
 # ---------------------------------------------------------------------------
 
 
-class _Descriptor:
-    """FormulaModuleDescriptor for Hannrup, B. (2004)."""
-
-    @property
-    def component_id(self):
-        return "hannrup_2004_bark"
-
-    @property
-    def source(self):
-        from pyforestry.base.contracts import SourceReference
-
-        return SourceReference(
-            author="Hannrup, B.",
-            year=2004,
-            title=(
-                "Funktioner för skattning av barkens tjocklek hos tall och gran "
-                "vid avverkning med skördare"
-            ),
-            note="Skogforsk, Arbetsrapport nr 575, Uppsala.",
-        )
-
-    @property
-    def species_groups(self):
-        return {}
-
-    @property
-    def units(self):
-        return {}
-
-    @property
-    def kernel_names(self):
-        return [
-            "Hannrup_2004_bark_picea_abies_sweden",
-            "Hannrup_2004_bark_pinus_sylvestris_sweden",
-        ]
-
-
-DESCRIPTOR = _Descriptor()
+DESCRIPTOR = FormulaDescriptor(
+    component_id="hannrup_2004_bark",
+    source=SourceReference(
+        author="Hannrup, B.",
+        year=2004,
+        title=(
+            "Funktioner för skattning av barkens tjocklek hos tall och gran "
+            "vid avverkning med skördare"
+        ),
+        note="Skogforsk, Arbetsrapport nr 575, Uppsala.",
+    ),
+    species_groups={},
+    units={},
+    kernel_names=(
+        "Hannrup_2004_bark_picea_abies_sweden",
+        "Hannrup_2004_bark_pinus_sylvestris_sweden",
+    ),
+)

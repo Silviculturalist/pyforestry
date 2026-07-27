@@ -4,6 +4,7 @@ import math
 import warnings
 from typing import Union
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.helpers import Age, AgeMeasurement, SiteIndexValue, TreeSpecies
 
 
@@ -98,42 +99,22 @@ def elfving_kiviste_1997_height_trajectory_sweden_pine(
 # ---------------------------------------------------------------------------
 
 
-class _Descriptor:
-    """FormulaModuleDescriptor for Elfving & Kiviste (1997)."""
-
-    @property
-    def component_id(self):
-        return "elfving_kiviste_1997"
-
-    @property
-    def source(self):
-        from pyforestry.base.contracts import SourceReference
-
-        return SourceReference(
-            author="Elfving, B., Kiviste, A.",
-            year=1997,
-            title=(
-                "Construction of site index equations for Pinus sylvestris L. "
-                "using permanent plot data in Sweden"
-            ),
-            note="Forest Ecology and Management 98:125-134.",
-        )
-
-    @property
-    def species_groups(self):
-        return {}
-
-    @property
-    def units(self):
-        return {
-            "dominant_height_m": "m",
-            "age_years": "years",
-            "return": "SiteIndexValue (m)",
-        }
-
-    @property
-    def kernel_names(self):
-        return ["elfving_kiviste_1997_height_trajectory_sweden_pine"]
-
-
-DESCRIPTOR = _Descriptor()
+DESCRIPTOR = FormulaDescriptor(
+    component_id="elfving_kiviste_1997",
+    source=SourceReference(
+        author="Elfving, B., Kiviste, A.",
+        year=1997,
+        title=(
+            "Construction of site index equations for Pinus sylvestris L. "
+            "using permanent plot data in Sweden"
+        ),
+        note="Forest Ecology and Management 98:125-134.",
+    ),
+    species_groups={},
+    units={
+        "dominant_height_m": "m",
+        "age_years": "years",
+        "return": "SiteIndexValue (m)",
+    },
+    kernel_names=("elfving_kiviste_1997_height_trajectory_sweden_pine",),
+)

@@ -17,7 +17,7 @@ from enum import Enum
 from math import exp, log, sqrt
 from typing import Mapping, Sequence
 
-from pyforestry.base.contracts import SourceReference
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.helpers.primitives import QuadraticMeanDiameter, SiteIndexValue
 from pyforestry.base.helpers.stand import Stand
 from pyforestry.base.helpers.tree import Tree
@@ -1802,43 +1802,25 @@ __all__ = [
 # ---------------------------------------------------------------------------
 
 
-class _Descriptor:
-    """FormulaModuleDescriptor for Wikberg (2004) ingrowth model."""
-
-    @property
-    def component_id(self):
-        return "wikberg_2004_ingrowth"
-
-    @property
-    def source(self):
-        return SourceReference(
-            author="Wikberg, P-E.",
-            year=2004,
-            title=("Occurrence, morphology and growth of understory saplings in Swedish forests"),
-            note=(
-                "Doctoral thesis. Acta Universitatis Agriculturae Sueciae, Silvestria 322, "
-                "Sveriges lantbruksuniversitet, Umeå. ISBN 91-576-6706-3."
-            ),
-        )
-
-    @property
-    def species_groups(self):
-        return {
-            "pine": frozenset({"Pinus sylvestris"}),
-            "spruce": frozenset({"Picea abies"}),
-            "birch": frozenset({"Betula pubescens", "Betula pendula"}),
-            "aspen": frozenset({"Populus tremula"}),
-            "beech": frozenset({"Fagus sylvatica"}),
-            "oak": frozenset({"Quercus robur"}),
-        }
-
-    @property
-    def units(self):
-        return {"basal_area_m2_ha": "m²/ha", "stems_ha": "stems/ha", "diameter_cm": "cm"}
-
-    @property
-    def kernel_names(self):
-        return ["ingrowth_predict", "build_common_data", "ingrowth_to_plot_trees"]
-
-
-DESCRIPTOR = _Descriptor()
+DESCRIPTOR = FormulaDescriptor(
+    component_id="wikberg_2004_ingrowth",
+    source=SourceReference(
+        author="Wikberg, P-E.",
+        year=2004,
+        title=("Occurrence, morphology and growth of understory saplings in Swedish forests"),
+        note=(
+            "Doctoral thesis. Acta Universitatis Agriculturae Sueciae, Silvestria 322, "
+            "Sveriges lantbruksuniversitet, Umeå. ISBN 91-576-6706-3."
+        ),
+    ),
+    species_groups={
+        "pine": frozenset({"Pinus sylvestris"}),
+        "spruce": frozenset({"Picea abies"}),
+        "birch": frozenset({"Betula pubescens", "Betula pendula"}),
+        "aspen": frozenset({"Populus tremula"}),
+        "beech": frozenset({"Fagus sylvatica"}),
+        "oak": frozenset({"Quercus robur"}),
+    },
+    units={"basal_area_m2_ha": "m²/ha", "stems_ha": "stems/ha", "diameter_cm": "cm"},
+    kernel_names=("ingrowth_predict", "build_common_data", "ingrowth_to_plot_trees"),
+)

@@ -4,6 +4,8 @@ import math
 import warnings
 from typing import Union
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
+
 # Imports added
 from pyforestry.base.helpers import Age, AgeMeasurement, SiteIndexValue, TreeSpecies
 
@@ -114,42 +116,22 @@ def johansson_1996_height_trajectory_sweden_aspen(
 # ---------------------------------------------------------------------------
 
 
-class _Descriptor:
-    """FormulaModuleDescriptor for Johansson (1996)."""
-
-    @property
-    def component_id(self):
-        return "johansson_1996"
-
-    @property
-    def source(self):
-        from pyforestry.base.contracts import SourceReference
-
-        return SourceReference(
-            author="Johansson, T.",
-            year=1996,
-            title=(
-                "Site index curves for European aspen (Populus tremula L.) "
-                "growing on forest land of different soils in Sweden"
-            ),
-            note="Silva Fennica 30(4):437-458.",
-        )
-
-    @property
-    def species_groups(self):
-        return {}
-
-    @property
-    def units(self):
-        return {
-            "dominant_height_m": "m",
-            "age_years": "years",
-            "return": "SiteIndexValue (m)",
-        }
-
-    @property
-    def kernel_names(self):
-        return ["johansson_1996_height_trajectory_sweden_aspen"]
-
-
-DESCRIPTOR = _Descriptor()
+DESCRIPTOR = FormulaDescriptor(
+    component_id="johansson_1996",
+    source=SourceReference(
+        author="Johansson, T.",
+        year=1996,
+        title=(
+            "Site index curves for European aspen (Populus tremula L.) "
+            "growing on forest land of different soils in Sweden"
+        ),
+        note="Silva Fennica 30(4):437-458.",
+    ),
+    species_groups={},
+    units={
+        "dominant_height_m": "m",
+        "age_years": "years",
+        "return": "SiteIndexValue (m)",
+    },
+    kernel_names=("johansson_1996_height_trajectory_sweden_aspen",),
+)

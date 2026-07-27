@@ -32,7 +32,7 @@ import math
 from copy import deepcopy
 from typing import Dict, List, Optional, Protocol, Union, runtime_checkable
 
-from pyforestry.base.contracts import SourceReference
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 
 
 @runtime_checkable
@@ -448,36 +448,18 @@ class BrandelVolume:
 # ---------------------------------------------------------------------------
 
 
-class _Descriptor:
-    """FormulaModuleDescriptor for Brandel (1990) volume functions."""
-
-    @property
-    def component_id(self):
-        return "brandel_1990_volume"
-
-    @property
-    def source(self):
-        return SourceReference(
-            author="Brandel, G.",
-            year=1990,
-            title="Volymfunktioner för enskilda träd: tall, gran och björk",
-            note=(
-                "Sveriges lantbruksuniversitet, institutionen för skogsproduktion, "
-                "Rapport nr 26, Garpenberg, 72 s. ISBN 91-576-4030-0."
-            ),
-        )
-
-    @property
-    def species_groups(self):
-        return {}
-
-    @property
-    def units(self):
-        return {"diameter_cm": "cm", "height_m": "m", "return": "m³"}
-
-    @property
-    def kernel_names(self):
-        return ["BrandelVolume"]
-
-
-DESCRIPTOR = _Descriptor()
+DESCRIPTOR = FormulaDescriptor(
+    component_id="brandel_1990_volume",
+    source=SourceReference(
+        author="Brandel, G.",
+        year=1990,
+        title="Volymfunktioner för enskilda träd: tall, gran och björk",
+        note=(
+            "Sveriges lantbruksuniversitet, institutionen för skogsproduktion, "
+            "Rapport nr 26, Garpenberg, 72 s. ISBN 91-576-4030-0."
+        ),
+    ),
+    species_groups={},
+    units={"diameter_cm": "cm", "height_m": "m", "return": "m³"},
+    kernel_names=("BrandelVolume",),
+)

@@ -9,6 +9,8 @@ Function ids (T-/G-/B-) follow the report (T=Tall/pine, G=Gran/spruce, B=Björk/
 
 import numpy as np
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
+
 
 # Scots pine (Pinus sylvestris) — stem over bark
 def Marklund_1988_T1(*, diameter_cm) -> float:
@@ -1844,55 +1846,30 @@ def Marklund_1988(species=None, component=None, *, timber=None, **kwargs):
     return results
 
 
-class _Descriptor:
-    """FormulaModuleDescriptor for Marklund, L.-G. (1988), Report 45."""
-
-    @property
-    def component_id(self):
-        """Stable identifier for this formula module."""
-        return "marklund_1988_biomass"
-
-    @property
-    def source(self):
-        """Bibliographic provenance for this formula module."""
-        from pyforestry.base.contracts import SourceReference
-
-        return SourceReference(
-            author="Marklund, L.-G.",
-            year=1988,
-            title="Biomassafunktioner för tall, gran och björk i Sverige",
-            appendix="Report 45",
-            note=(
-                "Sveriges lantbruksuniversitet, institutionen för skogstaxering, "
-                "Rapport 45, Umeå, 73 s. ISBN 91-576-3524-2. Dry-weight component "
-                "functions; constants include the bias correction for the log "
-                "back-transformation. Spruce functions largely follow Marklund (1987), "
-                "'Biomass functions for Norway spruce (Picea abies (L.) Karst.) in "
-                "Sweden', Rapport 43, with corrected constants."
-            ),
-        )
-
-    @property
-    def species_groups(self):
-        """Species groups and their constituent scientific names."""
-        return {
-            "pine": frozenset({"Pinus sylvestris"}),
-            "spruce": frozenset({"Picea abies"}),
-            "birch": frozenset({"Betula pendula", "Betula pubescens"}),
-        }
-
-    @property
-    def units(self):
-        """Unit contract for the module outputs."""
-        return {"output": "kg (dry weight)"}
-
-    @property
-    def kernel_names(self):
-        """Public callables exposed by this formula module."""
-        return ("Marklund_1988",)
-
-
-DESCRIPTOR = _Descriptor()
+DESCRIPTOR = FormulaDescriptor(
+    component_id="marklund_1988_biomass",
+    source=SourceReference(
+        author="Marklund, L.-G.",
+        year=1988,
+        title="Biomassafunktioner för tall, gran och björk i Sverige",
+        appendix="Report 45",
+        note=(
+            "Sveriges lantbruksuniversitet, institutionen för skogstaxering, "
+            "Rapport 45, Umeå, 73 s. ISBN 91-576-3524-2. Dry-weight component "
+            "functions; constants include the bias correction for the log "
+            "back-transformation. Spruce functions largely follow Marklund (1987), "
+            "'Biomass functions for Norway spruce (Picea abies (L.) Karst.) in "
+            "Sweden', Rapport 43, with corrected constants."
+        ),
+    ),
+    species_groups={
+        "pine": frozenset({"Pinus sylvestris"}),
+        "spruce": frozenset({"Picea abies"}),
+        "birch": frozenset({"Betula pendula", "Betula pubescens"}),
+    },
+    units={"output": "kg (dry weight)"},
+    kernel_names=("Marklund_1988",),
+)
 
 __all__ = [
     "Marklund_1988",

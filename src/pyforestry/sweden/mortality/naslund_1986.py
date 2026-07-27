@@ -6,7 +6,7 @@ from enum import Enum
 from math import exp, log
 from typing import Sequence
 
-from pyforestry.base.contracts import SourceReference
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.helpers.tree import Tree
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies
 
@@ -1018,46 +1018,28 @@ __all__ = [
 # ---------------------------------------------------------------------------
 
 
-class _Descriptor:
-    """FormulaModuleDescriptor for Naslund (1986) young-stand damage model."""
-
-    @property
-    def component_id(self):
-        return "naslund_1986_damage"
-
-    @property
-    def source(self):
-        return SourceReference(
-            author="Näslund, B.-Å.",
-            year=1986,
-            title=(
-                "Simulering av skador och avgång i ungskog och deras betydelse för "
-                "beståndsutvecklingen"
-            ),
-            note=(
-                "Sveriges lantbruksuniversitet, institutionen för skogsskötsel, "
-                "Rapporter nr 18, 147 s. Bert-Åke Näslund; not to be confused with "
-                "Manfred Näslund (volume functions, 1947)."
-            ),
-        )
-
-    @property
-    def species_groups(self):
-        return {
-            "pine": frozenset({"Pinus sylvestris"}),
-            "spruce": frozenset({"Picea abies"}),
-            "contorta": frozenset({"Pinus contorta"}),
-            "birch": frozenset({"Betula pubescens", "Betula pendula"}),
-            "aspen": frozenset({"Populus tremula"}),
-        }
-
-    @property
-    def units(self):
-        return {"height_m": "m", "return": "damage proportion"}
-
-    @property
-    def kernel_names(self):
-        return ["Naslund1986DamageModel"]
-
-
-DESCRIPTOR = _Descriptor()
+DESCRIPTOR = FormulaDescriptor(
+    component_id="naslund_1986_damage",
+    source=SourceReference(
+        author="Näslund, B.-Å.",
+        year=1986,
+        title=(
+            "Simulering av skador och avgång i ungskog och deras betydelse för "
+            "beståndsutvecklingen"
+        ),
+        note=(
+            "Sveriges lantbruksuniversitet, institutionen för skogsskötsel, "
+            "Rapporter nr 18, 147 s. Bert-Åke Näslund; not to be confused with "
+            "Manfred Näslund (volume functions, 1947)."
+        ),
+    ),
+    species_groups={
+        "pine": frozenset({"Pinus sylvestris"}),
+        "spruce": frozenset({"Picea abies"}),
+        "contorta": frozenset({"Pinus contorta"}),
+        "birch": frozenset({"Betula pubescens", "Betula pendula"}),
+        "aspen": frozenset({"Populus tremula"}),
+    },
+    units={"height_m": "m", "return": "damage proportion"},
+    kernel_names=("Naslund1986DamageModel",),
+)

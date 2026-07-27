@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import math
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
+
 from ._common import (
     clamp_probability,
     resolve_soil_moisture_code,
@@ -126,35 +128,15 @@ __all__ = ["root_rot_risk_thor_stahl_stenlid_2005"]
 # ---------------------------------------------------------------------------
 
 
-class _Descriptor:
-    """FormulaModuleDescriptor for Thor, M., Ståhl, G. & Stenlid, J. (2005)."""
-
-    @property
-    def component_id(self):
-        return "root_rot_thor_stahl_stenlid_2005"
-
-    @property
-    def source(self):
-        from pyforestry.base.contracts import SourceReference
-
-        return SourceReference(
-            author="Thor, M., Ståhl, G. & Stenlid, J.",
-            year=2005,
-            title="Modelling root rot incidence in Sweden using tree, site and stand variables",
-            note="Scandinavian Journal of Forest Research 20:165-176.",
-        )
-
-    @property
-    def species_groups(self):
-        return {}
-
-    @property
-    def units(self):
-        return {}
-
-    @property
-    def kernel_names(self):
-        return ["root_rot_risk_thor_stahl_stenlid_2005"]
-
-
-DESCRIPTOR = _Descriptor()
+DESCRIPTOR = FormulaDescriptor(
+    component_id="root_rot_thor_stahl_stenlid_2005",
+    source=SourceReference(
+        author="Thor, M., Ståhl, G. & Stenlid, J.",
+        year=2005,
+        title="Modelling root rot incidence in Sweden using tree, site and stand variables",
+        note="Scandinavian Journal of Forest Research 20:165-176.",
+    ),
+    species_groups={},
+    units={},
+    kernel_names=("root_rot_risk_thor_stahl_stenlid_2005",),
+)

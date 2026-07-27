@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.helpers.tree_species import TreeName
 
 from ._common import clamp_probability, species_key
@@ -56,47 +57,22 @@ __all__ = ["retained_tree_mortality_by_species"]
 # ---------------------------------------------------------------------------
 
 
-class _Descriptor:
-    """FormulaModuleDescriptor for retained-tree mortality (Elfving, unpublished)."""
-
-    @property
-    def component_id(self):
-        """Stable identifier for this formula module."""
-        return "retained_trees_mortality"
-
-    @property
-    def source(self):
-        """Bibliographic provenance for this formula module."""
-        from pyforestry.base.contracts import SourceReference
-
-        return SourceReference(
-            author="(none)",
-            year=0,
-            title="Retained-tree mortality window selection",
-            note=(
-                "No primary publication, and none is needed: the module holds no "
-                "coefficients. The caller supplies the year 1-5 and year 6-10 "
-                "mortality levels and this selects the applicable window and clamps "
-                "to [0, 1]. year=0 is a sentinel for 'not applicable', not a "
-                "citation date. It was previously attributed to B. Elfving on a "
-                "tentative basis; there is no equation here to attribute."
-            ),
-        )
-
-    @property
-    def species_groups(self):
-        """Species groups handled by this module (none)."""
-        return {}
-
-    @property
-    def units(self):
-        """Unit contract for this module (none)."""
-        return {}
-
-    @property
-    def kernel_names(self):
-        """Public kernel function names exposed by this module."""
-        return ["retained_tree_mortality_by_species"]
-
-
-DESCRIPTOR = _Descriptor()
+DESCRIPTOR = FormulaDescriptor(
+    component_id="retained_trees_mortality",
+    source=SourceReference(
+        author="(none)",
+        year=0,
+        title="Retained-tree mortality window selection",
+        note=(
+            "No primary publication, and none is needed: the module holds no "
+            "coefficients. The caller supplies the year 1-5 and year 6-10 "
+            "mortality levels and this selects the applicable window and clamps "
+            "to [0, 1]. year=0 is a sentinel for 'not applicable', not a "
+            "citation date. It was previously attributed to B. Elfving on a "
+            "tentative basis; there is no equation here to attribute."
+        ),
+    ),
+    species_groups={},
+    units={},
+    kernel_names=("retained_tree_mortality_by_species",),
+)

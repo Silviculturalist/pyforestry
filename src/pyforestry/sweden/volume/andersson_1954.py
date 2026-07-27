@@ -7,6 +7,8 @@ Source:
 
 import math
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
+
 
 def andersson_1954_volume_small_trees_birch_height_above_4_m(diameter_cm, height_m):
     """
@@ -125,40 +127,20 @@ def andersson_1954_volume_small_trees_spruce(diameter_cm, height_m):
 # ---------------------------------------------------------------------------
 
 
-class _Descriptor:
-    """FormulaModuleDescriptor for Andersson, S.-O. (1954)."""
-
-    @property
-    def component_id(self):
-        return "andersson_1954_volume"
-
-    @property
-    def source(self):
-        from pyforestry.base.contracts import SourceReference
-
-        return SourceReference(
-            author="Andersson, S.-O.",
-            year=1954,
-            title="Funktioner och tabeller för kubering av småträd",
-            note="Meddelanden från Statens skogsforskningsinstitut 44(12).",
-        )
-
-    @property
-    def species_groups(self):
-        return {}
-
-    @property
-    def units(self):
-        return {}
-
-    @property
-    def kernel_names(self):
-        return [
-            "andersson_1954_volume_small_trees_birch_height_above_4_m",
-            "andersson_1954_volume_small_trees_birch_under_diameter_5_cm",
-            "andersson_1954_volume_small_trees_pine",
-            "andersson_1954_volume_small_trees_spruce",
-        ]
-
-
-DESCRIPTOR = _Descriptor()
+DESCRIPTOR = FormulaDescriptor(
+    component_id="andersson_1954_volume",
+    source=SourceReference(
+        author="Andersson, S.-O.",
+        year=1954,
+        title="Funktioner och tabeller för kubering av småträd",
+        note="Meddelanden från Statens skogsforskningsinstitut 44(12).",
+    ),
+    species_groups={},
+    units={},
+    kernel_names=(
+        "andersson_1954_volume_small_trees_birch_height_above_4_m",
+        "andersson_1954_volume_small_trees_birch_under_diameter_5_cm",
+        "andersson_1954_volume_small_trees_pine",
+        "andersson_1954_volume_small_trees_spruce",
+    ),
+)

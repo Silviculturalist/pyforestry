@@ -20,7 +20,7 @@ import warnings
 from dataclasses import dataclass
 from typing import Dict, Union
 
-from pyforestry.base.contracts import SourceReference
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.helpers.primitives import SiteIndexValue
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies
 from pyforestry.sweden._model_input_normalization import (
@@ -600,36 +600,18 @@ __all__ = ["soderberg_1992_bark_thickness_bh_mm"]
 # ---------------------------------------------------------------------------
 
 
-class _Descriptor:
-    """FormulaModuleDescriptor for Soderberg (1992) bark thickness."""
-
-    @property
-    def component_id(self):
-        return "soderberg_1992_bark"
-
-    @property
-    def source(self):
-        return SourceReference(
-            author="Söderberg, U.",
-            year=1992,
-            title="Funktioner för skogsbruksplanering",
-            note=(
-                "Sveriges lantbruksuniversitet, institutionen för skogstaxering, "
-                "Rapport nr 52, Umeå. Bark thickness at breast height."
-            ),
-        )
-
-    @property
-    def species_groups(self):
-        return {}
-
-    @property
-    def units(self):
-        return {"diameter_cm": "cm", "return": "mm (double bark)"}
-
-    @property
-    def kernel_names(self):
-        return list(__all__)
-
-
-DESCRIPTOR = _Descriptor()
+DESCRIPTOR = FormulaDescriptor(
+    component_id="soderberg_1992_bark",
+    source=SourceReference(
+        author="Söderberg, U.",
+        year=1992,
+        title="Funktioner för skogsbruksplanering",
+        note=(
+            "Sveriges lantbruksuniversitet, institutionen för skogstaxering, "
+            "Rapport nr 52, Umeå. Bark thickness at breast height."
+        ),
+    ),
+    species_groups={},
+    units={"diameter_cm": "cm", "return": "mm (double bark)"},
+    kernel_names=list(__all__),
+)

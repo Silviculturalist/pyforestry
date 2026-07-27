@@ -2,6 +2,7 @@
 
 from typing import Optional
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.sweden.timber import SweTimber
 
 
@@ -538,38 +539,18 @@ class NaslundFormFactor:
 # ---------------------------------------------------------------------------
 
 
-class _Descriptor:
-    """FormulaModuleDescriptor for Näslund, M. (1947)."""
-
-    @property
-    def component_id(self):
-        return "naslund_1947_volume"
-
-    @property
-    def source(self):
-        from pyforestry.base.contracts import SourceReference
-
-        return SourceReference(
-            author="Näslund, M.",
-            year=1947,
-            title=(
-                "Funktioner och tabeller för kubering av stående träd: tall, gran "
-                "och björk i södra Sverige samt i hela landet"
-            ),
-            note="Meddelanden från Statens skogsforskningsinstitut 36(3).",
-        )
-
-    @property
-    def species_groups(self):
-        return {}
-
-    @property
-    def units(self):
-        return {}
-
-    @property
-    def kernel_names(self):
-        return ["NaslundVolume", "NaslundFormFactor"]
-
-
-DESCRIPTOR = _Descriptor()
+DESCRIPTOR = FormulaDescriptor(
+    component_id="naslund_1947_volume",
+    source=SourceReference(
+        author="Näslund, M.",
+        year=1947,
+        title=(
+            "Funktioner och tabeller för kubering av stående träd: tall, gran "
+            "och björk i södra Sverige samt i hela landet"
+        ),
+        note="Meddelanden från Statens skogsforskningsinstitut 36(3).",
+    ),
+    species_groups={},
+    units={},
+    kernel_names=("NaslundVolume", "NaslundFormFactor"),
+)

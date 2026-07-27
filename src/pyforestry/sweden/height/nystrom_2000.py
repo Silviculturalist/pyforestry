@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from math import exp, log
 
-from pyforestry.base.contracts import SourceReference
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.helpers.primitives import Age, AgeMeasurement
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies
 from pyforestry.sweden.site.enums import Sweden
@@ -321,37 +321,19 @@ __all__ = ["sapling_height_growth_m"]
 # ---------------------------------------------------------------------------
 
 
-class _Descriptor:
-    """FormulaModuleDescriptor for Nystrom (2000) sapling height growth."""
-
-    @property
-    def component_id(self):
-        return "nystrom_2000_height"
-
-    @property
-    def source(self):
-        return SourceReference(
-            author="Nyström, K.",
-            year=2000,
-            title="Funktioner för att skatta höjdtillväxten i ungskog",
-            note=(
-                "Sveriges lantbruksuniversitet, institutionen för skoglig "
-                "resurshushållning och geomatik, Arbetsrapport nr 68, Umeå. "
-                "Table 4, Model M2."
-            ),
-        )
-
-    @property
-    def species_groups(self):
-        return {"pine": frozenset(), "spruce": frozenset(), "birch": frozenset()}
-
-    @property
-    def units(self):
-        return {"height_m": "m", "site_index_m": "m", "return": "m"}
-
-    @property
-    def kernel_names(self):
-        return list(__all__)
-
-
-DESCRIPTOR = _Descriptor()
+DESCRIPTOR = FormulaDescriptor(
+    component_id="nystrom_2000_height",
+    source=SourceReference(
+        author="Nyström, K.",
+        year=2000,
+        title="Funktioner för att skatta höjdtillväxten i ungskog",
+        note=(
+            "Sveriges lantbruksuniversitet, institutionen för skoglig "
+            "resurshushållning och geomatik, Arbetsrapport nr 68, Umeå. "
+            "Table 4, Model M2."
+        ),
+    ),
+    species_groups={"pine": frozenset(), "spruce": frozenset(), "birch": frozenset()},
+    units={"height_m": "m", "site_index_m": "m", "return": "m"},
+    kernel_names=list(__all__),
+)

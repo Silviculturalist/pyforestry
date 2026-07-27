@@ -22,7 +22,7 @@ from __future__ import annotations
 from math import exp, sin, sqrt
 from typing import Optional
 
-from pyforestry.base.contracts import SourceReference
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.helpers.primitives import SiteIndexValue
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies
 from pyforestry.sweden.site.enums import Sweden
@@ -407,36 +407,18 @@ __all__ = ["Elfving1992Regeneration"]
 # ---------------------------------------------------------------------------
 
 
-class _Descriptor:
-    """FormulaModuleDescriptor for Elfving (1992) regeneration quality."""
-
-    @property
-    def component_id(self):
-        return "Elfving1992Regeneration"
-
-    @property
-    def source(self):
-        return SourceReference(
-            author="Elfving, B.",
-            year=1992,
-            title=("Återväxtens etablering och utveckling till röjningstidpunkten"),
-            note=(
-                "Sveriges lantbruksuniversitet, institutionen för skogsskötsel, "
-                "Arbetsrapporter nr 67, Umeå."
-            ),
-        )
-
-    @property
-    def species_groups(self):
-        return {}
-
-    @property
-    def units(self):
-        return {"latitude_deg": "degrees", "altitude_m": "m", "return": "SLH (stocking fraction)"}
-
-    @property
-    def kernel_names(self):
-        return list(__all__)
-
-
-DESCRIPTOR = _Descriptor()
+DESCRIPTOR = FormulaDescriptor(
+    component_id="Elfving1992Regeneration",
+    source=SourceReference(
+        author="Elfving, B.",
+        year=1992,
+        title=("Återväxtens etablering och utveckling till röjningstidpunkten"),
+        note=(
+            "Sveriges lantbruksuniversitet, institutionen för skogsskötsel, "
+            "Arbetsrapporter nr 67, Umeå."
+        ),
+    ),
+    species_groups={},
+    units={"latitude_deg": "degrees", "altitude_m": "m", "return": "SLH (stocking fraction)"},
+    kernel_names=list(__all__),
+)

@@ -7,6 +7,8 @@ import warnings
 from dataclasses import dataclass
 from typing import Any
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
+
 from ._common import (
     clamp_probability,
     mean_tree_age_years,
@@ -338,44 +340,24 @@ __all__ = [
 # ---------------------------------------------------------------------------
 
 
-class _Descriptor:
-    """FormulaModuleDescriptor for the Siipilehto et al. (2020) mortality functions."""
-
-    @property
-    def component_id(self):
-        return "siipilehto_2020_mortality"
-
-    @property
-    def source(self):
-        from pyforestry.base.contracts import SourceReference
-
-        return SourceReference(
-            author=(
-                "Siipilehto, J., Allen, M., Nilsson, U., Brunner, A., Huuskonen, S., "
-                "Haikarainen, S., Subramanian, N., Antón-Fernández, C., Holmström, E., "
-                "Andreassen, K. & Hynynen, J."
-            ),
-            year=2020,
-            title="Stand-level mortality models for Nordic boreal forests",
-            note=(
-                "Silva Fennica 54(5), article id 10414. "
-                "https://doi.org/10.14214/sf.10414. Two-step stand-level survival "
-                "model (Tables 5-6); per-tree distribution uses the step-III "
-                "functions of Fridman & Ståhl (2001). Historically labelled 'SNS'."
-            ),
-        )
-
-    @property
-    def species_groups(self):
-        return {}
-
-    @property
-    def units(self):
-        return {}
-
-    @property
-    def kernel_names(self):
-        return ["siipilehto_2020_probabilities", "Siipilehto2020MortalityModel"]
-
-
-DESCRIPTOR = _Descriptor()
+DESCRIPTOR = FormulaDescriptor(
+    component_id="siipilehto_2020_mortality",
+    source=SourceReference(
+        author=(
+            "Siipilehto, J., Allen, M., Nilsson, U., Brunner, A., Huuskonen, S., "
+            "Haikarainen, S., Subramanian, N., Antón-Fernández, C., Holmström, E., "
+            "Andreassen, K. & Hynynen, J."
+        ),
+        year=2020,
+        title="Stand-level mortality models for Nordic boreal forests",
+        note=(
+            "Silva Fennica 54(5), article id 10414. "
+            "https://doi.org/10.14214/sf.10414. Two-step stand-level survival "
+            "model (Tables 5-6); per-tree distribution uses the step-III "
+            "functions of Fridman & Ståhl (2001). Historically labelled 'SNS'."
+        ),
+    ),
+    species_groups={},
+    units={},
+    kernel_names=("siipilehto_2020_probabilities", "Siipilehto2020MortalityModel"),
+)

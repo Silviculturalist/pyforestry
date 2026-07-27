@@ -1,5 +1,7 @@
 """Volume equation for hybrid aspen from Johnsson (1953)."""
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
+
 
 def johnsson_1953_volume_hybrid_aspen(diameter_cm, height_m):
     """
@@ -41,35 +43,15 @@ def johnsson_1953_volume_hybrid_aspen(diameter_cm, height_m):
 # ---------------------------------------------------------------------------
 
 
-class _Descriptor:
-    """FormulaModuleDescriptor for Johnsson, H. (1953)."""
-
-    @property
-    def component_id(self):
-        return "johnsson_1953_volume"
-
-    @property
-    def source(self):
-        from pyforestry.base.contracts import SourceReference
-
-        return SourceReference(
-            author="Johnsson, H.",
-            year=1953,
-            title=("Hybridaspens ungdomsutveckling och ett försök till framtidsprognos"),
-            note="Svenska Skogsvårdsföreningens Tidskrift 51:73-96.",
-        )
-
-    @property
-    def species_groups(self):
-        return {}
-
-    @property
-    def units(self):
-        return {}
-
-    @property
-    def kernel_names(self):
-        return ["johnsson_1953_volume_hybrid_aspen"]
-
-
-DESCRIPTOR = _Descriptor()
+DESCRIPTOR = FormulaDescriptor(
+    component_id="johnsson_1953_volume",
+    source=SourceReference(
+        author="Johnsson, H.",
+        year=1953,
+        title=("Hybridaspens ungdomsutveckling och ett försök till framtidsprognos"),
+        note="Svenska Skogsvårdsföreningens Tidskrift 51:73-96.",
+    ),
+    species_groups={},
+    units={},
+    kernel_names=("johnsson_1953_volume_hybrid_aspen",),
+)

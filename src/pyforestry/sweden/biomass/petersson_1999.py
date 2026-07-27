@@ -6,6 +6,7 @@ import warnings
 
 import numpy as np
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.helpers import (
     Age,
     AgeMeasurement,
@@ -529,38 +530,18 @@ class Petersson1999:
 # ---------------------------------------------------------------------------
 
 
-class _Descriptor:
-    """FormulaModuleDescriptor for Petersson, H. (1999)."""
-
-    @property
-    def component_id(self):
-        return "petersson_1999_biomass"
-
-    @property
-    def source(self):
-        from pyforestry.base.contracts import SourceReference
-
-        return SourceReference(
-            author="Petersson, H.",
-            year=1999,
-            title=("Biomassafunktioner för trädfaktorer av tall, gran och björk i Sverige"),
-            note=(
-                "Sveriges lantbruksuniversitet, institutionen för skoglig "
-                "resurshushållning och geomatik, Arbetsrapport nr 59, Umeå."
-            ),
-        )
-
-    @property
-    def species_groups(self):
-        return {}
-
-    @property
-    def units(self):
-        return {}
-
-    @property
-    def kernel_names(self):
-        return ["Petersson1999"]
-
-
-DESCRIPTOR = _Descriptor()
+DESCRIPTOR = FormulaDescriptor(
+    component_id="petersson_1999_biomass",
+    source=SourceReference(
+        author="Petersson, H.",
+        year=1999,
+        title=("Biomassafunktioner för trädfaktorer av tall, gran och björk i Sverige"),
+        note=(
+            "Sveriges lantbruksuniversitet, institutionen för skoglig "
+            "resurshushållning och geomatik, Arbetsrapport nr 59, Umeå."
+        ),
+    ),
+    species_groups={},
+    units={},
+    kernel_names=("Petersson1999",),
+)

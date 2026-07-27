@@ -4,6 +4,8 @@ import math
 import warnings
 from typing import Union
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
+
 # Imports added
 from pyforestry.base.helpers import Age, AgeMeasurement, SiteIndexValue, TreeSpecies
 
@@ -175,45 +177,25 @@ def johansson_1999_height_trajectory_sweden_alnus_incana(
 # ---------------------------------------------------------------------------
 
 
-class _Descriptor:
-    """FormulaModuleDescriptor for Johansson (1999)."""
-
-    @property
-    def component_id(self):
-        return "johansson_1999"
-
-    @property
-    def source(self):
-        from pyforestry.base.contracts import SourceReference
-
-        return SourceReference(
-            author="Johansson, T.",
-            year=1999,
-            title=(
-                "Site index curves for common alder and grey alder growing on "
-                "different types of forest soil in Sweden"
-            ),
-            note="Scandinavian Journal of Forest Research 14:441-453.",
-        )
-
-    @property
-    def species_groups(self):
-        return {}
-
-    @property
-    def units(self):
-        return {
-            "dominant_height_m": "m",
-            "age_years": "years",
-            "return": "SiteIndexValue (m)",
-        }
-
-    @property
-    def kernel_names(self):
-        return [
-            "johansson_1999_height_trajectory_sweden_alnus_glutinosa",
-            "johansson_1999_height_trajectory_sweden_alnus_incana",
-        ]
-
-
-DESCRIPTOR = _Descriptor()
+DESCRIPTOR = FormulaDescriptor(
+    component_id="johansson_1999",
+    source=SourceReference(
+        author="Johansson, T.",
+        year=1999,
+        title=(
+            "Site index curves for common alder and grey alder growing on "
+            "different types of forest soil in Sweden"
+        ),
+        note="Scandinavian Journal of Forest Research 14:441-453.",
+    ),
+    species_groups={},
+    units={
+        "dominant_height_m": "m",
+        "age_years": "years",
+        "return": "SiteIndexValue (m)",
+    },
+    kernel_names=(
+        "johansson_1999_height_trajectory_sweden_alnus_glutinosa",
+        "johansson_1999_height_trajectory_sweden_alnus_incana",
+    ),
+)

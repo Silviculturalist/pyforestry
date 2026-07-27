@@ -87,9 +87,16 @@ class Describable(Protocol):
 class FormulaModuleDescriptor(Protocol):
     """Introspection contract for a formula module (not per-function).
 
-    Each formula package may expose a module-level ``DESCRIPTOR`` object
-    implementing this protocol. The descriptor sits next to the kernel
-    functions, not around them; kernel function signatures are not changed.
+    Each formula package exposes a module-level ``DESCRIPTOR`` object
+    implementing this protocol -- in practice a :class:`FormulaDescriptor`. The
+    descriptor sits next to the kernel functions, not around them; kernel
+    function signatures are not changed.
+
+    ``kind``, ``domain`` and ``composes`` are part of the contract because
+    :mod:`pyforestry.catalog` reads them. They were absent from this Protocol
+    while the catalog read all three with ``getattr`` defaults, so a descriptor
+    could satisfy the declared contract in full and still be unable to say it
+    was a model rather than a formula.
     """
 
     @property
@@ -115,6 +122,21 @@ class FormulaModuleDescriptor(Protocol):
     @property
     def kernel_names(self) -> Sequence[str]:
         """Public function names exposed by this formula module."""
+        ...
+
+    @property
+    def kind(self) -> str:
+        """``"formula"`` for an equation module, ``"model"`` for a composed model."""
+        ...
+
+    @property
+    def domain(self) -> Optional[str]:
+        """Scientific domain, when the module path does not already say it."""
+        ...
+
+    @property
+    def composes(self) -> Sequence[str]:
+        """``component_id``s of the formula modules a ``"model"`` descriptor composes."""
         ...
 
 

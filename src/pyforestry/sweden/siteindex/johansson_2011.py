@@ -4,6 +4,8 @@ import math
 import warnings
 from typing import Union
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
+
 # Imports added
 from pyforestry.base.helpers import Age, AgeMeasurement, SiteIndexValue, TreeSpecies
 
@@ -96,39 +98,19 @@ def johansson_2011_height_trajectory_sweden_poplar(
 # ---------------------------------------------------------------------------
 
 
-class _Descriptor:
-    """FormulaModuleDescriptor for Johansson (2011)."""
-
-    @property
-    def component_id(self):
-        return "johansson_2011"
-
-    @property
-    def source(self):
-        from pyforestry.base.contracts import SourceReference
-
-        return SourceReference(
-            author="Johansson, T.",
-            year=2011,
-            title="Site index curves for poplar growing on former farmland in Sweden",
-            note="Scandinavian Journal of Forest Research 26:161-170.",
-        )
-
-    @property
-    def species_groups(self):
-        return {}
-
-    @property
-    def units(self):
-        return {
-            "dominant_height_m": "m",
-            "age_years": "years",
-            "return": "SiteIndexValue (m)",
-        }
-
-    @property
-    def kernel_names(self):
-        return ["johansson_2011_height_trajectory_sweden_poplar"]
-
-
-DESCRIPTOR = _Descriptor()
+DESCRIPTOR = FormulaDescriptor(
+    component_id="johansson_2011",
+    source=SourceReference(
+        author="Johansson, T.",
+        year=2011,
+        title="Site index curves for poplar growing on former farmland in Sweden",
+        note="Scandinavian Journal of Forest Research 26:161-170.",
+    ),
+    species_groups={},
+    units={
+        "dominant_height_m": "m",
+        "age_years": "years",
+        "return": "SiteIndexValue (m)",
+    },
+    kernel_names=("johansson_2011_height_trajectory_sweden_poplar",),
+)

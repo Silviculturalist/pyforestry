@@ -6,6 +6,8 @@ Source:
     uppsatser nr 14, Stockholm, 118 s.
 """
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
+
 
 def matern_1975_volume_sweden_oak(diameter_cm, height_m):
     """
@@ -85,38 +87,18 @@ def matern_1975_volume_sweden_beech(diameter_cm, height_m):
 # ---------------------------------------------------------------------------
 
 
-class _Descriptor:
-    """FormulaModuleDescriptor for Matérn, B. (1975)."""
-
-    @property
-    def component_id(self):
-        return "matern_1975_volume"
-
-    @property
-    def source(self):
-        from pyforestry.base.contracts import SourceReference
-
-        return SourceReference(
-            author="Hagberg, E. & Matérn, B.",
-            year=1975,
-            title="Tabeller för kubering av ek och bok",
-            note=(
-                "Skogshögskolan, institutionen för skoglig matematisk statistik, "
-                "Rapporter och uppsatser nr 14, Stockholm, 118 s."
-            ),
-        )
-
-    @property
-    def species_groups(self):
-        return {}
-
-    @property
-    def units(self):
-        return {}
-
-    @property
-    def kernel_names(self):
-        return ["matern_1975_volume_sweden_oak", "matern_1975_volume_sweden_beech"]
-
-
-DESCRIPTOR = _Descriptor()
+DESCRIPTOR = FormulaDescriptor(
+    component_id="matern_1975_volume",
+    source=SourceReference(
+        author="Hagberg, E. & Matérn, B.",
+        year=1975,
+        title="Tabeller för kubering av ek och bok",
+        note=(
+            "Skogshögskolan, institutionen för skoglig matematisk statistik, "
+            "Rapporter och uppsatser nr 14, Stockholm, 118 s."
+        ),
+    ),
+    species_groups={},
+    units={},
+    kernel_names=("matern_1975_volume_sweden_oak", "matern_1975_volume_sweden_beech"),
+)

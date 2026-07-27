@@ -4,6 +4,7 @@ import warnings
 from math import exp
 from typing import Union
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.helpers import Age, AgeMeasurement, SiteIndexValue, TreeSpecies
 
 
@@ -123,42 +124,22 @@ def hagglund_remrod_1977_height_trajectories_lodgepole_pine(
 # ---------------------------------------------------------------------------
 
 
-class _Descriptor:
-    """FormulaModuleDescriptor for Hagglund & Remrod (1977)."""
-
-    @property
-    def component_id(self):
-        return "hagglund_remrod_1977"
-
-    @property
-    def source(self):
-        from pyforestry.base.contracts import SourceReference
-
-        return SourceReference(
-            author="Hägglund, B. & Remröd, J.",
-            year=1977,
-            title="Övre höjdens utveckling i bestånd med Pinus contorta",
-            note=(
-                "Sveriges lantbruksuniversitet, Rapport / Projekt HUGIN nr 4, "
-                "ISSN 0348-7024, Umeå, 27 bl."
-            ),
-        )
-
-    @property
-    def species_groups(self):
-        return {}
-
-    @property
-    def units(self):
-        return {
-            "dominant_height_m": "m",
-            "age_years": "years",
-            "return": "SiteIndexValue (m)",
-        }
-
-    @property
-    def kernel_names(self):
-        return ["hagglund_remrod_1977_height_trajectories_lodgepole_pine"]
-
-
-DESCRIPTOR = _Descriptor()
+DESCRIPTOR = FormulaDescriptor(
+    component_id="hagglund_remrod_1977",
+    source=SourceReference(
+        author="Hägglund, B. & Remröd, J.",
+        year=1977,
+        title="Övre höjdens utveckling i bestånd med Pinus contorta",
+        note=(
+            "Sveriges lantbruksuniversitet, Rapport / Projekt HUGIN nr 4, "
+            "ISSN 0348-7024, Umeå, 27 bl."
+        ),
+    ),
+    species_groups={},
+    units={
+        "dominant_height_m": "m",
+        "age_years": "years",
+        "return": "SiteIndexValue (m)",
+    },
+    kernel_names=("hagglund_remrod_1977_height_trajectories_lodgepole_pine",),
+)
