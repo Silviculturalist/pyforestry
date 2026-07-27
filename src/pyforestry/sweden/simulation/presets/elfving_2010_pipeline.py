@@ -183,6 +183,45 @@ class Elfving2010PipelineConfig:
 
 
 @dataclass
+class _ValuationTotals:
+    """What a standing-forest valuation adds up to, in one shape.
+
+    There are two valuation routes: bucked assortments priced through Näsberg
+    (1985), and whole-stem volume priced as pulpwood. They used to return two
+    different dicts -- six keys and four -- and :meth:`Elfving2010Pipeline._snapshot_row`
+    covered the difference with ``.get(key, 0.0)``, so a run that priced every cubic
+    metre as pulpwood reported nought pulp volume in its own report. Both routes
+    fill this now, and a route that cannot produce a figure says so by leaving it
+    zero rather than by omitting it.
+    """
+
+    value_sek_per_ha: float = 0.0
+    volume_m3_per_ha: float = 0.0
+    timber_volume_m3_per_ha: float = 0.0
+    pulp_volume_m3_per_ha: float = 0.0
+    #: Stems whose value came from a *bucking* solution. Zero for a route that does
+    #: not buck, which is a fact about the route rather than a missing number.
+    timber_valued_stems_per_ha: float = 0.0
+
+    def as_row(self) -> dict[str, float]:
+        """Return the reporting keys, with the unit value derived once.
+
+        Returns:
+            The six figures a projection row carries, whichever route produced them.
+        """
+        return {
+            "standing_value_sek_per_ha": self.value_sek_per_ha,
+            "standing_volume_m3_per_ha": self.volume_m3_per_ha,
+            "timber_volume_m3_per_ha": self.timber_volume_m3_per_ha,
+            "pulp_volume_m3_per_ha": self.pulp_volume_m3_per_ha,
+            "value_per_m3_sek": (
+                self.value_sek_per_ha / self.volume_m3_per_ha if self.volume_m3_per_ha > 0 else 0.0
+            ),
+            "timber_valued_stems_per_ha": self.timber_valued_stems_per_ha,
+        }
+
+
+@dataclass
 class Elfving2010PeriodRecord:
     """What one period produced, written by the phases that produced it.
 
@@ -744,11 +783,7 @@ class Elfving2010Pipeline:
         if self._site is None:
             raise RuntimeError("Preset must be initialized before valuation.")
         trees = self._trees if tree_list is None else tree_list
-        total_value_sek = 0.0
-        total_volume_m3 = 0.0
-        timber_volume_m3 = 0.0
-        pulp_volume_m3 = 0.0
-        timber_tree_count = 0.0
+        totals = _ValuationTotals()
         valuation_region = self._valuation_region()
 
         for tree in trees:
@@ -789,11 +824,11 @@ class Elfving2010Pipeline:
                 if cached is not None:
                     cached_value, cached_volume, has_timber_solution = cached
                     if has_timber_solution:
-                        total_value_sek += float(cached_value) * weight
-                        total_volume_m3 += float(cached_volume) * weight
-                        timber_volume_m3 += float(cached_volume) * weight
+                        totals.value_sek_per_ha += float(cached_value) * weight
+                        totals.volume_m3_per_ha += float(cached_volume) * weight
+                        totals.timber_volume_m3_per_ha += float(cached_volume) * weight
                         if cached_value > 0.0:
-                            timber_tree_count += weight
+                            totals.timber_valued_stems_per_ha += weight
                         continue
                 try:
                     bucker = Nasberg_1985_BranchBound(timber, self._pricelist, EdgrenNylinder1949)
@@ -806,11 +841,11 @@ class Elfving2010Pipeline:
                     vq = result.volume_per_quality
                     tree_timber_vol = sum(vq[1:4])  # ButtLog + MiddleLog + TopLog
                     tree_pulp_vol = vq[4] if len(vq) > 4 else 0.0
-                    total_value_sek += float(result.total_value) * weight
-                    total_volume_m3 += vol_ub * weight
-                    timber_volume_m3 += tree_timber_vol * weight
-                    pulp_volume_m3 += tree_pulp_vol * weight
-                    timber_tree_count += weight
+                    totals.value_sek_per_ha += float(result.total_value) * weight
+                    totals.volume_m3_per_ha += vol_ub * weight
+                    totals.timber_volume_m3_per_ha += tree_timber_vol * weight
+                    totals.pulp_volume_m3_per_ha += tree_pulp_vol * weight
+                    totals.timber_valued_stems_per_ha += weight
                     continue
                 except ValueError:
                     # Keep valuation stable for edge trees outside taper/bucking validity.
@@ -821,20 +856,11 @@ class Elfving2010Pipeline:
                 volume_m3 = float(timber.getvolume())
             except ValueError:
                 continue  # Skip trees too small for volume calculation
-            total_value_sek += volume_m3 * pulp_price * weight
-            total_volume_m3 += volume_m3 * weight
-            pulp_volume_m3 += volume_m3 * weight
+            totals.value_sek_per_ha += volume_m3 * pulp_price * weight
+            totals.volume_m3_per_ha += volume_m3 * weight
+            totals.pulp_volume_m3_per_ha += volume_m3 * weight
 
-        return {
-            "standing_value_sek_per_ha": total_value_sek,
-            "standing_volume_m3_per_ha": total_volume_m3,
-            "timber_volume_m3_per_ha": timber_volume_m3,
-            "pulp_volume_m3_per_ha": pulp_volume_m3,
-            "value_per_m3_sek": (
-                total_value_sek / total_volume_m3 if total_volume_m3 > 0 else 0.0
-            ),
-            "timber_valued_stems_per_ha": timber_tree_count,
-        }
+        return totals.as_row()
 
     # ------------------------------------------------------------------
     # Internal helpers
@@ -2015,8 +2041,11 @@ class Elfving2010Pipeline:
             "hq_m": float(hq_m),
             "basal_area_m2_ha": float(basal_area_m2_ha),
             "standing_volume_m3_per_ha": float(valuation["standing_volume_m3_per_ha"]),
-            "timber_volume_m3_per_ha": float(valuation.get("timber_volume_m3_per_ha", 0.0)),
-            "pulp_volume_m3_per_ha": float(valuation.get("pulp_volume_m3_per_ha", 0.0)),
+            # Indexed, not `.get(key, 0.0)`: every valuation route returns the same
+            # six keys now, so a missing one is a bug to raise on rather than a zero
+            # to print.
+            "timber_volume_m3_per_ha": float(valuation["timber_volume_m3_per_ha"]),
+            "pulp_volume_m3_per_ha": float(valuation["pulp_volume_m3_per_ha"]),
             "standing_value_sek_per_ha": float(valuation["standing_value_sek_per_ha"]),
             "value_per_m3_sek": float(valuation["value_per_m3_sek"]),
             "timber_valued_stems_per_ha": float(valuation["timber_valued_stems_per_ha"]),

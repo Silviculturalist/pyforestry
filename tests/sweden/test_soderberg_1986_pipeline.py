@@ -149,7 +149,23 @@ def test_soderberg_preset_describable_metadata() -> None:
     assert preset.components == (preset._model,)
 
 
+_VALUATION_KEYS = {
+    "standing_value_sek_per_ha",
+    "standing_volume_m3_per_ha",
+    "timber_volume_m3_per_ha",
+    "pulp_volume_m3_per_ha",
+    "value_per_m3_sek",
+    "timber_valued_stems_per_ha",
+}
+
+
 def test_soderberg_value_standing_forest_uses_form_height_volume() -> None:
+    """The form-height route reports the same six figures as the bucking route.
+
+    It used to return four of them, and `_snapshot_row` filled the other two with
+    `.get(key, 0.0)` -- so a run whose every cubic metre was priced as pulpwood
+    reported nought pulp volume.
+    """
     preset = build_soderberg_1986_pipeline(_make_config(use_soderberg_form_height_volume=True))
     preset.initialize(site=_make_site())
     for tree in preset.tree_list:
@@ -158,22 +174,35 @@ def test_soderberg_value_standing_forest_uses_form_height_volume() -> None:
         tree.age = max(20.0, float(tree.age or 0.0))
 
     result = preset.value_standing_forest()
-    assert set(result) == {
-        "standing_value_sek_per_ha",
-        "standing_volume_m3_per_ha",
-        "value_per_m3_sek",
-        "timber_valued_stems_per_ha",
-    }
+    assert set(result) == _VALUATION_KEYS
     assert result["standing_volume_m3_per_ha"] > 0.0
     assert result["value_per_m3_sek"] >= 0.0
+    # This route bucks nothing, so it has no timber and no timber-valued stems --
+    # and all its volume is the pulpwood it was priced as.
+    assert result["timber_volume_m3_per_ha"] == 0.0
+    assert result["timber_valued_stems_per_ha"] == 0.0
+    assert result["pulp_volume_m3_per_ha"] == pytest.approx(result["standing_volume_m3_per_ha"])
+
+
+def test_soderberg_both_valuation_routes_report_the_same_figures() -> None:
+    """One shape, so a projection column cannot mean two things by route."""
+    bucking = build_soderberg_1986_pipeline(_make_config())
+    bucking.initialize(site=_make_site())
+    form_height = build_soderberg_1986_pipeline(
+        _make_config(use_soderberg_form_height_volume=True)
+    )
+    form_height.initialize(site=_make_site())
+
+    assert set(bucking.value_standing_forest()) == _VALUATION_KEYS
+    assert set(form_height.value_standing_forest()) == _VALUATION_KEYS
 
 
 def test_soderberg_value_standing_forest_form_height_empty_trees() -> None:
     preset = build_soderberg_1986_pipeline(_make_config(use_soderberg_form_height_volume=True))
     preset.initialize(site=_make_site())
     result = preset.value_standing_forest(tree_list=[])
-    assert result["standing_volume_m3_per_ha"] == 0.0
-    assert result["value_per_m3_sek"] == 0.0
+    assert set(result) == _VALUATION_KEYS
+    assert all(value == 0.0 for value in result.values())
 
 
 def test_soderberg_site_index_selector_no_conifers_falls_back_to_species_to_plant() -> None:

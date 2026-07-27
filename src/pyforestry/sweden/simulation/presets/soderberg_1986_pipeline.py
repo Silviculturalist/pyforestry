@@ -1,11 +1,23 @@
 """Composite Sweden stand-simulation preset using Söderberg (1986) mature growth.
 
-This preset reuses the regeneration, NYSKOG reconstruction, young-stand growth,
-mortality, and valuation workflow from ``Elfving2010Pipeline`` while
-swapping the mature-tree growth model to ``Soderberg1986Model``.
+This preset runs the same period as ``Elfving2010Pipeline`` -- the same eleven
+phases in the same order, inherited rather than restated -- and changes what the
+mature-growth phase steps with. Söderberg (1986) has no equivalent of Elfving's
+stand-level basal-area correction, so mature growth comes straight from the tree
+equations.
 
-Söderberg (1986) does not include Elfving's stand-level basal-area correction
-function. Mature growth is therefore applied directly from the tree equations.
+Everything else it overrides is a consequence of that swap:
+
+* the growth model reads ``ctx.attrs`` rather than a typed ``Inputs``, so
+  :meth:`Soderberg1986Pipeline._model_attrs` supplies the canonical set and
+  :meth:`Soderberg1986Pipeline._model_inputs` returns ``None``;
+* ``use_soderberg_form_height_volume`` swaps the reported volume for the Söderberg
+  form height, which also means giving up bucking -- see
+  :meth:`Soderberg1986Pipeline.value_standing_forest`.
+
+That the eleven phases carried over unchanged is the check that the decomposition
+is an abstraction rather than one model's method list; a test asserts the two
+pipelines publish the same phases.
 """
 
 from __future__ import annotations
@@ -23,7 +35,11 @@ from pyforestry.sweden.adapters.soderberg_1986_growth import (
 from pyforestry.sweden.site import Sweden
 from pyforestry.sweden.volume.soderberg_1986_form_height import soderberg_1986_volume_m3
 
-from .elfving_2010_pipeline import Elfving2010Pipeline, Elfving2010PipelineConfig
+from .elfving_2010_pipeline import (
+    Elfving2010Pipeline,
+    Elfving2010PipelineConfig,
+    _ValuationTotals,
+)
 
 _SPRUCE_SET = {
     TreeSpecies.Sweden.picea_abies,
@@ -68,6 +84,11 @@ class Soderberg1986PipelineConfig(Elfving2010PipelineConfig):
     """Configuration for the Söderberg 1986 composite preset."""
 
     soderberg_include_thinning_effect: bool = True
+    #: Report volume from the Söderberg (1986) form-height equations instead of
+    #: bucking each tree. This also replaces the valuation: a form height gives a
+    #: whole-stem volume with no assortments to price, so everything is priced as
+    #: pulpwood and nothing is reported as timber. See
+    #: :meth:`Soderberg1986Pipeline.value_standing_forest`.
     use_soderberg_form_height_volume: bool = False
 
 
@@ -118,23 +139,32 @@ class Soderberg1986Pipeline(Elfving2010Pipeline):
         return (self._model,)  # Soderberg1986Model (Describable)
 
     def value_standing_forest(self, tree_list: list[Tree] | None = None) -> dict[str, float]:
-        """Estimate standing value/volume, optionally using Söderberg form height.
+        """Estimate standing value and volume for the living trees.
 
-        When ``use_soderberg_form_height_volume`` is True, uses Söderberg (1986)
-        form-height equations for volume instead of Brandel (1990). Falls back
-        to the inherited Brandel-based method otherwise.
+        With ``use_soderberg_form_height_volume`` unset -- the default -- this is
+        the inherited valuation: Näsberg (1985) bucking against the Mellanskog 2013
+        price list, with a Brandel volume for stems too small to buck.
+
+        Setting it swaps *both* halves, not just the volume function the name
+        mentions. Volume comes from the Söderberg (1986) form-height equations, and
+        because a form height gives a whole-stem volume with no assortments to price
+        it, every cubic metre is then priced as pulpwood. So this route reports no
+        timber volume and no timber-valued stems -- correctly, since it bucks
+        nothing -- and its ``value_per_m3_sek`` is close to flat. It is a
+        volume-comparison mode, not a second valuation.
+
+        The bark bases also differ, and only one of them is stated: the inherited
+        route is under bark throughout (see the base method), while the Söderberg
+        form-height module does not record which basis its form heights are on.
+        Comparing the two volumes assumes an answer this package does not have.
         """
         if not self.config.use_soderberg_form_height_volume:
             return super().value_standing_forest(tree_list)
 
         trees = tree_list if tree_list is not None else self._trees
+        totals = _ValuationTotals()
         if not trees or self._site is None:
-            return {
-                "standing_value_sek_per_ha": 0.0,
-                "standing_volume_m3_per_ha": 0.0,
-                "value_per_m3_sek": 0.0,
-                "timber_valued_stems_per_ha": 0.0,
-            }
+            return totals.as_row()
 
         site = self._site
         structure = self._stand_structure()
@@ -147,9 +177,6 @@ class Soderberg1986Pipeline(Elfving2010Pipeline):
         alt = float(site.altitude or 0.0)
         county = getattr(site, "county", None)
         maritime_flag, _ = self._climate_flags()
-
-        total_volume_m3 = 0.0
-        total_value_sek = 0.0
 
         for tree in trees:
             d = float(tree.diameter_cm or 0.0)
@@ -183,24 +210,20 @@ class Soderberg1986Pipeline(Elfving2010Pipeline):
             except (ValueError, ZeroDivisionError):
                 continue
 
-            total_volume_m3 += vol * w
-
-            # Simple pulpwood valuation fallback
             valuation_sp = str(sp.full_name if hasattr(sp, "full_name") else sp)
             pulp_price = float(self._pricelist.Pulp.get_pulpwood_price(valuation_sp))
-            total_value_sek += vol * pulp_price * w
+            totals.volume_m3_per_ha += vol * w
+            # All of it, because all of it is priced as pulpwood. This used to be
+            # left out of the result entirely, so the report said nought pulp volume
+            # for a run that had nothing else.
+            totals.pulp_volume_m3_per_ha += vol * w
+            totals.value_sek_per_ha += vol * pulp_price * w
 
-        valued_stems = sum(
-            float(t.weight_n or 0.0) for t in trees if float(t.diameter_cm or 0.0) > 0.0
-        )
-        return {
-            "standing_value_sek_per_ha": total_value_sek,
-            "standing_volume_m3_per_ha": total_volume_m3,
-            "value_per_m3_sek": (
-                total_value_sek / total_volume_m3 if total_volume_m3 > 0 else 0.0
-            ),
-            "timber_valued_stems_per_ha": valued_stems,
-        }
+        # `timber_valued_stems_per_ha` stays zero: nothing here is bucked. It used
+        # to report every stem with a diameter -- effectively `stems_per_ha` -- so
+        # one column meant "stems that produced sawtimber" under the default route
+        # and "stems" under this one.
+        return totals.as_row()
 
     def _site_index_species_for_soderberg(
         self,

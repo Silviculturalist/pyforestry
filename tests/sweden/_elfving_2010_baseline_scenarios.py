@@ -43,7 +43,9 @@ def make_site() -> BaselineSite:
 #: (all scenarios start at age 12 and grow past the handover), mortality prediction
 #: and realisation (``mortality``), the no-mortality branch (``no_mortality``),
 #: Wikberg ingrowth (``ingrowth``, which needs the long horizon to pass the QMD and
-#: mean-age gates), and the Söderberg mature-growth swap (``soderberg``).
+#: mean-age gates), and the Söderberg mature-growth swap (``soderberg``). Both
+#: valuation routes are covered: ``soderberg`` bucks through Näsberg 1985, and
+#: ``soderberg_form_height`` reports Söderberg form-height volume priced as pulpwood.
 SCENARIOS: tuple[tuple[str, str, Dict[str, Any], int], ...] = (
     (
         "mortality",
@@ -73,6 +75,16 @@ SCENARIOS: tuple[tuple[str, str, Dict[str, Any], int], ...] = (
         "soderberg",
         "soderberg",
         {"sample_trees": 24, "random_seed": 99},
+        10,
+    ),
+    (
+        "soderberg_form_height",
+        "soderberg",
+        {
+            "sample_trees": 24,
+            "random_seed": 99,
+            "use_soderberg_form_height_volume": True,
+        },
         10,
     ),
 )
