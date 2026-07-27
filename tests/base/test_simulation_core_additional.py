@@ -132,7 +132,11 @@ def test_growth_model_can_build_modes():
     fake_any = FakeStand()
     ok, missing = model.can_build(fake_any, allow_adapters=False)
     assert not ok
-    assert any("tree_list or aggregates" in item for item in missing)
+    # `can_build` reports the mode `build_context` would actually choose. For an
+    # "either" model on a stand with no trees that is "aggregate", so the message
+    # names the aggregates it lacks rather than the old disjunction "tree_list or
+    # aggregates", which described a choice the builder had already made.
+    assert any("aggregates" in item for item in missing)
 
 
 def test_growth_model_cannot_be_instantiated_incomplete():
@@ -591,3 +595,45 @@ def test_adapter_branch_coverage():
     assert tree_adapter.can_adapt(stand_tree) is True
     out = tree_adapter.adapt(stand_tree)
     assert out["dclass"]
+
+
+def test_can_build_and_build_context_agree_on_the_mode() -> None:
+    """One function decides the mode, so the check and the build cannot disagree.
+
+    ``can_build`` tested ``mode_hint or req.inventory`` and ``build_context``
+    re-derived the mode with different rules. For an ``"either"`` model on an
+    angle-count stand the first checked the ``"either"`` branch while the second
+    chose ``"aggregate"`` -- two answers to "what will this run do", kept in step
+    by hand.
+    """
+    from pyforestry.base.simulation.growth_model import ExampleStandGeneralModel, _select_mode
+
+    model = ExampleStandGeneralModel()
+    req = model.requirements()
+
+    def _trees() -> Stand:
+        plot = CircularPlot(
+            id=1,
+            area_m2=100.0,
+            trees=[
+                Tree(species=PICEA_ABIES, diameter_cm=20.0, height_m=15.0, position=(1.0, 1.0))
+            ],
+        )
+        return Stand(area_ha=1.0, plots=[plot])
+
+    for stand, hint in (
+        (_trees(), None),
+        (_trees(), "aggregate"),
+        (_trees(), "spatial"),
+        (_ac_stand(), None),
+        (_ac_stand(), "diameter_class"),
+    ):
+        expected = _select_mode(req, stand, hint)
+        ok, missing = model.can_build(stand, mode_hint=hint)
+        assert ok, missing
+        ctx = model.build_context(stand, mode_hint=hint)
+        # build_context may *downgrade* when no adapter can supply the asked-for
+        # representation; it must never silently pick a different one outright.
+        assert ctx.mode in (expected, "aggregate", "tree_list"), (stand, hint, ctx.mode)
+        if expected in ("aggregate", "diameter_class"):
+            assert ctx.mode == expected

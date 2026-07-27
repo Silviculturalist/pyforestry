@@ -231,7 +231,11 @@ def test_growth_model_can_build_branches():
 
     ok, missing = model.can_build(dummy, allow_adapters=False)
     assert not ok
-    assert any("tree_list or aggregates" in item for item in missing)
+    # `can_build` reports the mode `build_context` would actually choose. For an
+    # "either" model on a stand with no trees that is "aggregate", so the message
+    # names the aggregates it lacks rather than the old disjunction "tree_list or
+    # aggregates", which described a choice the builder had already made.
+    assert any("aggregates" in item for item in missing)
 
     ok, missing = model.can_build(_ac_stand(), allow_adapters=True, mode_hint="spatial")
     assert ok
