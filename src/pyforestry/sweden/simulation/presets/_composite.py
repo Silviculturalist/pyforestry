@@ -41,7 +41,7 @@ from pyforestry.base.helpers.tree import TreeUid
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies
 from pyforestry.base.pricelist import Pricelist, SolutionCube, create_pricelist_from_data
 from pyforestry.base.simulation.core import SimulationContext
-from pyforestry.base.simulation.pipeline import Step
+from pyforestry.base.simulation.pipeline import Step, run_pipeline
 from pyforestry.base.timber_bucking.nasberg_1985 import BuckingConfig, Nasberg_1985_BranchBound
 from pyforestry.simulation.services import RandomBundle
 from pyforestry.sweden.adapters.elfving_1982 import (
@@ -515,6 +515,24 @@ class _HeightAndBarkStep(_PipelineStep):
         )
 
 
+@dataclass(frozen=True)
+class _RecordSnapshotStep(_PipelineStep):
+    """Append this period's summary row to a caller's list.
+
+    Appended after the pipeline's own phases by :meth:`CompositePipeline.run_projection`,
+    so that a whole projection is one ``run_pipeline`` call rather than a loop
+    around :meth:`CompositePipeline.step`. It is not part of :attr:`CompositePipeline.steps`,
+    which is the model's period; recording is the caller's business.
+    """
+
+    rows: list[dict[str, float]] = field(default_factory=list)
+    name: str = "record_snapshot"
+
+    def run(self, ctx: SimulationContext, dt: float) -> None:
+        """Record the stand as it stands at the end of this period."""
+        self.rows.append(self.pipeline._snapshot_row(step_index=len(self.rows)))
+
+
 class CompositePipeline:
     """The Swedish composite stand workflow, with the mature growth model open.
 
@@ -799,21 +817,41 @@ class CompositePipeline:
         return self._trees
 
     def step(self, *, dt_years: float | None = None) -> list[Tree]:
-        """Advance one hybrid step with Nyström (< handover dbh) and Elfving (>= handover).
+        """Advance one period: the young phase, mature growth, mortality and the rest.
 
-        Runs :attr:`steps` in order over the run's one context. What each phase is
-        and what it must follow is on the phase; this method is the clock check and
-        the loop.
+        Hands :attr:`steps` to :func:`~pyforestry.base.simulation.pipeline.run_pipeline`
+        for one period. What each phase is and what it must follow is on the phase;
+        this method is the clock check.
+
+        It used to iterate ``self._steps`` itself, which meant the package still
+        had two schedulers after replacing three with one: the generic runner, and
+        this loop, which the ``steps`` docstring nonetheless claimed the runner
+        could drive. It can, and now does.
         """
-        if self._site is None or not self._trees:
-            raise RuntimeError("Preset must be initialized before calling step().")
+        dt = self._validated_dt(dt_years)
+        run_pipeline(self._require_context(), self._steps, years=dt, step=dt)
+        return self._trees
+
+    def _validated_dt(self, dt_years: float | None) -> float:
+        """Resolve the period length, defaulting to the config's.
+
+        Raises:
+            ValueError: If the resolved period is not positive.
+        """
         dt = self.config.dt_years if dt_years is None else float(dt_years)
         if dt <= 0.0:
             raise ValueError("dt_years must be > 0.")
+        return dt
 
-        for phase in self._steps:
-            phase.run(self._ctx, dt)
-        return self._trees
+    def _require_context(self) -> SimulationContext:
+        """Return the run's context.
+
+        Raises:
+            RuntimeError: If :meth:`initialize` has not been called.
+        """
+        if self._site is None or not self._trees or self._ctx is None:
+            raise RuntimeError("Preset must be initialized before stepping.")
+        return self._ctx
 
     def run_projection(
         self,
@@ -822,7 +860,17 @@ class CompositePipeline:
         n_steps: int = 20,
         dt_years: float | None = None,
     ) -> pd.DataFrame:
-        """Run a full projection and return one summary row per 5-year step."""
+        """Run a full projection and return one summary row per period.
+
+        The whole projection is one :func:`~pyforestry.base.simulation.pipeline.run_pipeline`
+        call over :attr:`steps` plus a recorder step, rather than a loop calling
+        :meth:`step` and taking a snapshot after each -- so the runner owns the
+        clock for a projection exactly as it does for a single period.
+
+        Raises:
+            ValueError: If ``n_steps`` or the resolved period is not positive.
+            RuntimeError: If no site was given and none was set.
+        """
         if n_steps <= 0:
             raise ValueError("n_steps must be > 0.")
         if site is not None:
@@ -830,14 +878,14 @@ class CompositePipeline:
         elif self._site is None or not self._trees:
             raise RuntimeError("Provide site or call initialize(...) before run_projection(...).")
 
-        dt = self.config.dt_years if dt_years is None else float(dt_years)
-        if dt <= 0.0:
-            raise ValueError("dt_years must be > 0.")
-
+        dt = self._validated_dt(dt_years)
         rows = [self._snapshot_row(step_index=0)]
-        for step_index in range(1, n_steps + 1):
-            self.step(dt_years=dt)
-            rows.append(self._snapshot_row(step_index=step_index))
+        run_pipeline(
+            self._require_context(),
+            (*self._steps, _RecordSnapshotStep(self, rows)),
+            years=dt * n_steps,
+            step=dt,
+        )
         return pd.DataFrame.from_records(rows)
 
     def value_standing_forest(self, tree_list: list[Tree] | None = None) -> dict[str, float]:

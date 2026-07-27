@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import pytest
 
+import pyforestry.sweden.simulation.presets._composite as preset_module
 from pyforestry.base.helpers.primitives import SiteBase
 from pyforestry.base.simulation.pipeline import run_pipeline
 from pyforestry.sweden.adapters.elfving_2010 import Elfving2010Model
@@ -279,6 +280,66 @@ def test_run_pipeline_drives_the_same_steps_to_the_same_numbers() -> None:
         assert float(left.diameter_cm or 0.0) == pytest.approx(float(right.diameter_cm or 0.0))
         assert float(left.height_m or 0.0) == pytest.approx(float(right.height_m or 0.0))
         assert float(left.weight_n or 0.0) == pytest.approx(float(right.weight_n or 0.0))
+
+
+def test_step_and_run_projection_go_through_the_generic_runner() -> None:
+    """There is one scheduler, and this is it.
+
+    ``step()`` iterated ``self._steps`` itself and ``run_projection`` looped over
+    ``step()``, so the package still had a second scheduler after replacing three
+    with one -- while the ``steps`` docstring claimed the generic runner could
+    drive the same objects. Both now call it.
+    """
+    calls: list[tuple[float, float]] = []
+    original = preset_module.run_pipeline
+
+    def _spy(ctx, pipeline, *, years, step, start_t=None):
+        calls.append((years, step))
+        return original(ctx, pipeline, years=years, step=step, start_t=start_t)
+
+    pipeline = _make_pipeline()
+    pipeline.initialize(site=_make_site())
+    with pytest.MonkeyPatch.context() as patch:
+        patch.setattr(preset_module, "run_pipeline", _spy)
+        pipeline.step(dt_years=5.0)
+        assert calls == [(5.0, 5.0)]
+
+        calls.clear()
+        pipeline.run_projection(n_steps=4, dt_years=5.0)
+        # One call for the whole projection, not one per period.
+        assert calls == [(20.0, 5.0)]
+
+
+def test_the_pipeline_clock_and_the_context_clock_agree() -> None:
+    """Two clocks advanced by different code have to land on the same number.
+
+    ``_AgeAdvanceStep`` moves the pipeline's ``_years_elapsed`` while
+    ``run_pipeline`` stamps ``ctx.state["t"]``. If they diverged, Elfving's
+    kernels -- which read ``ctx.state["t"]`` to decide whether to use the
+    field-estimated basal area -- would disagree with the tree ages.
+    """
+    pipeline = _make_pipeline()
+    pipeline.initialize(site=_make_site())
+    for _ in range(3):
+        pipeline.step(dt_years=5.0)
+        assert pipeline._ctx.state["t"] == pytest.approx(pipeline.years_elapsed)
+
+    assert pipeline.years_elapsed == pytest.approx(15.0)
+
+
+def test_run_projection_reports_one_row_per_period_plus_the_start() -> None:
+    """The recorder is a step, so the runner decides how many periods there are."""
+    for n_steps, dt in ((4, 5.0), (3, 0.1), (7, 2.5)):
+        pipeline = _make_pipeline()
+        table = pipeline.run_projection(site=_make_site(), n_steps=n_steps, dt_years=dt)
+        assert len(table) == n_steps + 1, f"n_steps={n_steps} dt={dt}"
+        assert list(table["step_index"]) == list(range(n_steps + 1))
+
+
+def test_the_recorder_is_not_part_of_the_model_s_period() -> None:
+    """``steps`` is the science; recording a row is the caller's business."""
+    pipeline = _make_pipeline()
+    assert "record_snapshot" not in {step.name for step in pipeline.steps}
 
 
 def test_the_context_survives_the_period_it_used_to_be_rebuilt_in() -> None:

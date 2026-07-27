@@ -437,7 +437,7 @@ def test_mortality_engine_application_reduces_tree_weights(
 
 def test_step_validation_and_no_mortality_branch() -> None:
     preset = build_elfving_2010_pipeline(_make_config(apply_mortality=False))
-    with pytest.raises(RuntimeError, match="initialized before calling step"):
+    with pytest.raises(RuntimeError, match="initialized before stepping"):
         preset.step()
 
     preset.initialize(site=_make_site())
