@@ -376,8 +376,11 @@ class Elfving2010Pipeline:
             raise ValueError("dt_years must be > 0.")
 
         young_ids = self._young_tree_ids(self._trees)
-        if young_ids:
-            self._apply_nystrom_young_growth(young_ids=young_ids, dt_years=dt)
+        # Run this unconditionally: with no young trees it does nothing except
+        # report a zero damage index and zero damage mortality for the period,
+        # which is the truth. Skipping it left the previous period's figures
+        # standing in the snapshot row.
+        self._apply_nystrom_young_growth(young_ids=young_ids, dt_years=dt)
 
         young_dbh_after_nystrom = {
             tree.uid: float(tree.diameter_cm or 0.0)
