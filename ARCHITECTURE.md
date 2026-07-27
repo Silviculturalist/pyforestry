@@ -129,6 +129,12 @@ to each other — Ekö 1985 through competition and cross-species mortality,
 Elfving through whole-stand basal-area calibration. A step that wants cohorts
 loops over them itself.
 
+`run_pipeline` is the only scheduler. The composite pipelines' `step()` and
+`run_projection()` call it rather than iterating their own `Step` tuples, so the
+clock has one owner; `ContextEnsemble` is not a third scheduler but a batch
+executor over many contexts, and delegates each context's period to the same
+place.
+
 This replaced three schedulers that did not know about each other:
 `ctx.update_step(years, management={...})`, `SimulationSetup(triggers=...)`, and
 `StageRuntime` over a `StandComposite` of `StandPart`s. `StageRuntime` scheduled
@@ -240,23 +246,33 @@ Disallowed example:
 Runnable regional presets MUST live under:
 - `src/pyforestry/<region>/simulation/`
 
-Two unrelated things currently answer to "preset" in that package, and the
-distinction matters:
+Two unrelated things live in that package, and the distinction matters. They no
+longer share a name:
 
-- **Scenario presets** (`SwedenScenarioPreset`, `NorwayScenarioPreset`) are
+- **Scenario configuration** (`ScenarioConfig`, one class in
+  `src/pyforestry/simulation/presets.py` that each region subclasses) is
   *configuration*: a seed strategy, an ordered list of stage names, ruleset
-  callables and a required-artifact list. They satisfy the `SimulationPreset`
-  contract below. Nothing executes them yet — `guard_policy()` and `rulesets()`
+  callables and a required-artifact list. It satisfies the `SimulationPreset`
+  contract below. **Nothing executes it** — `guard_policy()` and `rulesets()`
   have no runtime caller, and `stages()` is recorded into a manifest rather than
   run. `emit_scenario_artifact_contract(...)` exercises the *artifact* contract
-  from synthetic numbers and runs no model; its output is a schema fixture.
-- **Composite pipelines** (`Elfving2010CompositePreset`,
-  `Soderberg1986CompositePreset`) are the runnable ones: stateful
+  from synthetic numbers and runs no model; its output is a schema fixture. This
+  is the tier `ARCHITECTURE_PROPOSAL.md` Move 9 said should "either grow a
+  runtime or be deleted along with the mock runbook". It has done neither; the
+  decision is still open, and the code says plainly what it is meanwhile.
+- **Composite pipelines** (`CompositePipeline`, with `Elfving2010Pipeline` and
+  `Soderberg1986Pipeline` as siblings of it) are the runnable ones: stateful
   `initialize()`/`step()`/`run_projection()` objects that drive published models
-  over a real `Stand`. They implement none of the `SimulationPreset` contract.
+  over a real `Stand`. They implement none of the `SimulationPreset` contract,
+  and cannot: they build their own stand from a site rather than advancing one
+  handed to them, which is also why `pyforestry.project(stand, ...)` cannot drive
+  one. `get_pipeline()` reaches them, keyed by their own `component_id`s
+  (`"elfving_2010_composite"`), so no name means both a pipeline and the
+  growth model it drives.
 
-Closing that gap — one preset concept with one runtime — is the subject of
-`ARCHITECTURE_PROPOSAL.md` Moves 3 and 9.
+`CompositePipeline` owns the eleven-phase period both pipelines run; a subclass
+supplies the mature growth model and its provenance. Neither pipeline is the
+other's base class, which one of them used to be.
 
 Minimum preset contract:
 

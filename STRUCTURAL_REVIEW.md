@@ -623,3 +623,51 @@ These are the benchmark; the criticisms above are "make the rest look like this"
 | 8 | D1 replace the 161 generated docstrings | on the classes that matter most |
 | 9 | B2 decide the fate of `pyforestry.simulation` | 1,501 lines of public API with no caller |
 | 10 | C1 split `Elfving2010CompositePreset` | best done *after* 9 decides the target runtime |
+
+---
+
+## Second pass (adversarial review of this branch)
+
+A later review looked again at the three axes this document opened with —
+homogeneity, structure, and whether the abstractions fit — and found that a
+handful of the defects below had been closed only partway, plus several the first
+pass did not reach. What that pass changed:
+
+**Still-open items from this document, now closed**
+
+| Item | What was still true | Closed by |
+|---|---|---|
+| B1 | 26 modules still deferred the `SourceReference` import into a function body, 72 did not, and the split ran *within* packages | `6e7ea01` |
+| B2 | `ParityCase`/`AssertionResult` still exported with no implementer; `HasRemovalLedger` added a third | `98cd15c`, `5a69b5e` |
+| B4 | `SimulationPreset` still drove nothing — and still does; now it says so in its own docstring | `98cd15c` |
+| B5 | The rename reached Sweden only: Norway still had `NorwayScenarioPreset` | `98cd15c` |
+| B6 | Both regions still kept near-duplicate preset bases with divergent seed derivations | `98cd15c` |
+| C6 | The six-place ledger search was fixed, but the pricelist/taper resolution one layer down still searched four | `5a69b5e` |
+
+**Found by the second pass**
+
+| Finding | Closed by |
+|---|---|
+| `Soderberg1986Pipeline` subclassed `Elfving2010Pipeline` — one published model's runner as another's base class | `f7824f7` |
+| `step()`/`run_projection()` hand-rolled a loop, so "one scheduler" was still two | `375c78d` |
+| `MortalityEngine.components` returned `tuple[str, ...]`, so `_provenance` dropped seven mortality citations | `3c03575` |
+| `ValuationStep`'s documented default path raised `AttributeError` on any run that removed anything | `5a69b5e` |
+| `"elfving_2010"` named the growth model in one front door and the whole composite in the other | `93fc38a` |
+| The lint rules file and the gate disagreed about which rules exist and which block | `71bdf8a` |
+| 34 modules hand-rolled the descriptor protocol that `FormulaDescriptor` exists to remove | `6e7ea01` |
+| `can_build()` and `build_context()` decided the inventory mode by different rules | `416770e` |
+| Three modules read `Stand._metric_estimates` directly, two idioms, two failure modes | `99d3da1` |
+| `FormulaModuleDescriptor` declared five members; the catalog read eight | `6e7ea01` |
+| `snapshot()` branched on `stand.representation` while `checkpoint()` branched on `ctx.mode` | `3d96b78` |
+| Fifteen generated docstrings survived AL004 by a word, one of them miscrediting Morén & Perttu (1994) | `f05cb2d` |
+
+**Left open, deliberately**
+
+- The scenario-configuration tier (`ScenarioConfig`, `policy/`, `data/`,
+  `orchestration/runbook.py`, and all of `norway/simulation/`) still runs no
+  forest model. Move 9 said it should grow a runtime or be deleted; that decision
+  is the owner's, and the code now states its own status rather than implying a
+  runtime it does not have.
+- `ctx.attrs` remains the input contract for every model except Elfving 2010.
+  Migrating the rest to typed `Inputs` is real work on each model, not a
+  refactor.

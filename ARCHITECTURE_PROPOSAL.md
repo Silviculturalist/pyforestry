@@ -4,10 +4,31 @@ Companion to `STRUCTURAL_REVIEW.md`. That document lists defects; this one propo
 structure that makes most of them unrepresentable. Each move is independently shippable
 and ordered so no step depends on a later one.
 
-> **Status: all ten moves are done.** Both forks were decided as recommended —
-> `Stand` is the state; `services` and `valuation` stayed, `model_view` and `dp` went.
-> The five state representations are one, the three schedulers are one, and the seven
-> concepts a projection needed are `pf.project(...)`.
+> **Status: all ten moves shipped; three had exit conditions this table originally
+> overstated.** Both forks were decided as recommended — `Stand` is the state;
+> `services` and `valuation` stayed, `model_view` and `dp` went. The five state
+> representations are one, and the seven concepts a projection needed are
+> `pf.project(...)`.
+>
+> A later adversarial pass found that three moves had been marked done against
+> conditions written into their own text that were not yet met. Each is now closed
+> or, where the decision is genuinely open, recorded as open:
+>
+> - **Move 3 ("one scheduler")** — `run_pipeline` shipped, but the flagship did not
+>   use it: `Elfving2010Pipeline.step()` iterated its own `Step` tuple and
+>   `run_projection` looped over `step()`, so the package had two schedulers and
+>   the composite used the other. Both now call `run_pipeline` (`375c78d`).
+> - **Move 2 ("delete `ctx.attrs` as an interface")** — typed `Inputs` shipped and
+>   has exactly one adopter, `Elfving2010Model`. Söderberg 1986, Ekö 1985,
+>   Eriksson 1976 and all four Norway models still read `ctx.attrs`. The contract
+>   exists and is the recommended one; `ctx.attrs` is not deleted and will not be
+>   until those models are migrated, which is not scheduled.
+> - **Move 9 ("`ScenarioConfig` either grows a runtime or is deleted along with the
+>   mock runbook")** — the rename shipped, but the tier did neither. It is still
+>   configuration that nothing executes, fed to a harness that emits a seeded
+>   random walk. The duplication between the two regions' copies is gone
+>   (`98cd15c`) and every docstring now says plainly that it runs nothing, but the
+>   delete-or-wire decision is **open**.
 >
 > | Move | Landed in |
 > |---|---|
