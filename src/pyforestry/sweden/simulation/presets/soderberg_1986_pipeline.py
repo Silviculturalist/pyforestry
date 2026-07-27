@@ -12,8 +12,8 @@ Everything else it overrides is a consequence of that swap:
   :meth:`Soderberg1986Pipeline._model_attrs` supplies the canonical set and
   :meth:`Soderberg1986Pipeline._model_inputs` returns ``None``;
 * ``use_soderberg_form_height_volume`` swaps the reported volume for the Söderberg
-  form height, which also means giving up bucking -- see
-  :meth:`Soderberg1986Pipeline.value_standing_forest`.
+  form height, which is over bark and therefore not on the basis this package
+  prices with -- see :meth:`Soderberg1986Pipeline.value_standing_forest`.
 
 That the eleven phases carried over unchanged is the check that the decomposition
 is an abstraction rather than one model's method list; a test asserts the two
@@ -80,10 +80,10 @@ class Soderberg1986PipelineConfig(Elfving2010PipelineConfig):
 
     soderberg_include_thinning_effect: bool = True
     #: Report volume from the Söderberg (1986) form-height equations instead of
-    #: bucking each tree. This also replaces the valuation: a form height gives a
-    #: whole-stem volume with no assortments to price, so everything is priced as
-    #: pulpwood and nothing is reported as timber. See
-    #: :meth:`Soderberg1986Pipeline.value_standing_forest`.
+    #: bucking each tree. That volume is **over bark**, unlike everything else this
+    #: package reports, so the run gives up its valuation with it: the price lists
+    #: are under bark and there is no published under-bark form height to convert
+    #: with. See :meth:`Soderberg1986Pipeline.value_standing_forest`.
     use_soderberg_form_height_volume: bool = False
 
 
@@ -140,24 +140,30 @@ class Soderberg1986Pipeline(Elfving2010Pipeline):
         the inherited valuation: Näsberg (1985) bucking against the Mellanskog 2013
         price list, with a Brandel volume for stems too small to buck.
 
-        Setting it swaps *both* halves, not just the volume function the name
-        mentions. Volume comes from the Söderberg (1986) form-height equations, and
-        because a form height gives a whole-stem volume with no assortments to price
-        it, every cubic metre is then priced as pulpwood. So this route reports no
-        timber volume and no timber-valued stems -- correctly, since it bucks
-        nothing -- and its ``value_per_m3_sek`` is close to flat. It is a
-        volume-comparison mode, not a second valuation.
+        Setting it makes this a volume route and nothing else. Volume comes from the
+        Söderberg (1986) form-height equations, which give a whole-stem volume with
+        no assortments to price -- so nothing is bucked, and no timber volume or
+        timber-valued stems are reported.
 
-        The bark bases also differ, and only one of them is stated: the inherited
-        route is under bark throughout (see the base method), while the Söderberg
-        form-height module does not record which basis its form heights are on.
-        Comparing the two volumes assumes an answer this package does not have.
+        **No value is reported either, and that is the point.** The form height
+        multiplies the basal area implied by breast-height diameter *over* bark, so
+        its volume is over bark; every price list in this package is under bark
+        (``m3to`` for timber, m³fub for pulpwood). Pricing the one with the other
+        overstates value by the bark fraction -- ten to twenty per cent for Swedish
+        conifers -- which is what this route used to do, silently, by valuing
+        everything at the pulpwood price. There is no published under-bark form
+        height to convert with; an under-bark volume comes from a volume function
+        evaluated on an under-bark diameter, which is the inherited route.
+
+        For the same reason ``standing_volume_m3_per_ha`` from here is not
+        comparable with the inherited route's. The row says which basis it is on, in
+        ``volume_over_bark``.
         """
         if not self.config.use_soderberg_form_height_volume:
             return super().value_standing_forest(tree_list)
 
         trees = tree_list if tree_list is not None else self._trees
-        totals = _ValuationTotals()
+        totals = _ValuationTotals(volume_over_bark=True)
         if not trees or self._site is None:
             return totals.as_row()
 
@@ -205,19 +211,17 @@ class Soderberg1986Pipeline(Elfving2010Pipeline):
             except (ValueError, ZeroDivisionError):
                 continue
 
-            valuation_sp = str(sp.full_name if hasattr(sp, "full_name") else sp)
-            pulp_price = float(self._pricelist.Pulp.get_pulpwood_price(valuation_sp))
             totals.volume_m3_per_ha += vol * w
-            # All of it, because all of it is priced as pulpwood. This used to be
-            # left out of the result entirely, so the report said nought pulp volume
-            # for a run that had nothing else.
-            totals.pulp_volume_m3_per_ha += vol * w
-            totals.value_sek_per_ha += vol * pulp_price * w
 
-        # `timber_valued_stems_per_ha` stays zero: nothing here is bucked. It used
-        # to report every stem with a diameter -- effectively `stems_per_ha` -- so
-        # one column meant "stems that produced sawtimber" under the default route
-        # and "stems" under this one.
+        # Everything else stays zero, and each zero is a statement:
+        #   value_sek_per_ha            -- this volume is over bark and the price
+        #                                  lists are not; see the docstring.
+        #   timber_volume_m3_per_ha     -- nothing is bucked here.
+        #   pulp_volume_m3_per_ha       -- nor sorted to pulpwood.
+        #   timber_valued_stems_per_ha  -- used to report every stem with a diameter,
+        #                                  so the column meant "stems that produced
+        #                                  sawtimber" under the inherited route and
+        #                                  "stems" under this one.
         return totals.as_row()
 
     def _site_index_species_for_soderberg(

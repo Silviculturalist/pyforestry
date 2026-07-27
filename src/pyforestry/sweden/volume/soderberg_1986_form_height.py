@@ -6,6 +6,18 @@ height. With basal area in cm^2 and form height in m:
 
     volume_m3 = form_height_m * basal_area_cm2 / 10000
 
+**The volume is over bark.** The basal area it multiplies is the one implied by
+``diameter_cm``, and that is diameter at breast height *over* bark -- which is what
+the equation's own ``diameter_cm``/``max_diameter_cm`` ratio term is fitted on, and
+what Swedish stand data records. There is no under-bark form height here and none
+in the source: an under-bark volume comes from a volume function evaluated on an
+under-bark diameter (Brandel, Näslund), not from rescaling a form height.
+
+That matters wherever this is compared with, or substituted for, another volume:
+:mod:`pyforestry.base.timber_bucking` and the Swedish price lists are under bark
+(``m3to`` for timber, m³fub for pulpwood), so a volume from here is not on their
+basis and must not be priced with them.
+
 Source:
     Söderberg, U. (1986). *Funktioner för skogliga produktionsprognoser -
     Tillväxt och formhöjd för enskilda träd av inhemska trädslag i Sverige*.

@@ -209,12 +209,18 @@ class _ValuationTotals:
     #: Stems whose value came from a *bucking* solution. Zero for a route that does
     #: not buck, which is a fact about the route rather than a missing number.
     timber_valued_stems_per_ha: float = 0.0
+    #: Which bark basis :attr:`volume_m3_per_ha` is on. The bucking route is under
+    #: bark throughout; the Söderberg form-height route is over bark. The two differ
+    #: by the bark fraction -- ten to twenty per cent for Swedish conifers -- so the
+    #: basis rides along in the projection row rather than living only in a docstring
+    #: a reader has to know to go and find.
+    volume_over_bark: bool = False
 
     def as_row(self) -> dict[str, float]:
         """Return the reporting keys, with the unit value derived once.
 
         Returns:
-            The six figures a projection row carries, whichever route produced them.
+            The seven figures a projection row carries, whichever route produced them.
         """
         return {
             "standing_value_sek_per_ha": self.value_sek_per_ha,
@@ -225,6 +231,7 @@ class _ValuationTotals:
                 self.value_sek_per_ha / self.volume_m3_per_ha if self.volume_m3_per_ha > 0 else 0.0
             ),
             "timber_valued_stems_per_ha": self.timber_valued_stems_per_ha,
+            "volume_over_bark": 1.0 if self.volume_over_bark else 0.0,
         }
 
 
@@ -2053,6 +2060,7 @@ class Elfving2010Pipeline:
             # to print.
             "timber_volume_m3_per_ha": float(valuation["timber_volume_m3_per_ha"]),
             "pulp_volume_m3_per_ha": float(valuation["pulp_volume_m3_per_ha"]),
+            "volume_over_bark": float(valuation["volume_over_bark"]),
             "standing_value_sek_per_ha": float(valuation["standing_value_sek_per_ha"]),
             "value_per_m3_sek": float(valuation["value_per_m3_sek"]),
             "timber_valued_stems_per_ha": float(valuation["timber_valued_stems_per_ha"]),
