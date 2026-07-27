@@ -213,14 +213,30 @@ class SimulationContext:
             )
         return bundle.rng_for()
 
+    def holds_tree_list(self) -> bool:
+        """Whether this run's stand stores individual trees.
+
+        ``True`` for ``mode`` ``"tree_list"`` and ``"spatial"``, which are the
+        same storage and differ only in whether the model needs tree positions.
+
+        This is the one place the two vocabularies are reconciled. ``mode`` is the
+        *model's* requirement and ``stand.representation`` is the *stand's*
+        storage; they answer different questions but overlap in their values, and
+        methods here keyed off whichever came to hand -- :meth:`snapshot` branched
+        on the representation while :meth:`checkpoint` branched on the mode, so
+        the two would have described different stands the first time they
+        disagreed.
+        """
+        return self.stand.representation in ("tree_list", "angle_count")
+
     @property
     def plots(self) -> List[CircularPlot]:
         """The working copy's plots.
 
         Raises:
-            AttributeError: If the run is not in a tree-list representation.
+            AttributeError: If the run's stand holds no individual trees.
         """
-        if self.stand.representation not in ("tree_list", "angle_count"):
+        if not self.holds_tree_list():
             raise AttributeError(
                 f"This context is in {self.mode!r} mode, which holds no plots. "
                 f"Read ctx.diameter_classes or ctx.metrics instead."
@@ -272,7 +288,7 @@ class SimulationContext:
 
     def snapshot(self) -> Dict[str, Any]:
         """Return a lightweight snapshot of state and aggregate totals."""
-        if self.stand.representation in ("tree_list", "angle_count"):
+        if self.holds_tree_list():
             plots = self.stand.plots
             tree_stats = {
                 "n_plots": len(plots),
@@ -475,9 +491,9 @@ class SimulationContext:
         captured unless explicitly requested.
         """
 
-        if self.mode in ("tree_list", "spatial"):
+        if self.holds_tree_list():
             inventory = {"plots": copy.deepcopy(self.stand.plots)}
-        elif self.mode == "diameter_class":
+        elif self.stand.representation == "diameter_class":
             inventory = {"dclass": copy.deepcopy(self.stand.diameter_classes)}
         else:
             inventory = {"metrics": copy.deepcopy(dict(self._metrics))}

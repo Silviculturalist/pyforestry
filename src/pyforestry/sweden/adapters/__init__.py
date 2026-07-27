@@ -18,8 +18,6 @@ So: to check a number against a paper, open ``systems/`` or a domain package.
 To check how a model is driven, open this one.
 """
 
-from pyforestry.sweden.mortality.naslund_1986 import Naslund1986DamageModel
-
 from .elfving_1982 import (
     HuginCropTreeProbability,
     HuginMeanHeightModel,
@@ -37,7 +35,6 @@ __all__ = [
     "Elfving2010Model",
     "HuginCropTreeProbability",
     "HuginMeanHeightModel",
-    "Naslund1986DamageModel",
     "NfiRegion",
     "NyskogReconstruction",
     "NyskogReconstructionSummary",
