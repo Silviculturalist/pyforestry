@@ -8,12 +8,10 @@ formula/domain modules across every region expose them (for example a module's
 ``DESCRIPTOR``), so nothing above ``base`` should have to reach into the
 simulation package for this vocabulary.
 
-The simulation runtime re-exports these names from
-:mod:`pyforestry.simulation.contracts` for convenience and backward
-compatibility.
-
-Source:
-    Internal pyforestry architecture and runtime contracts.
+This is the only import path for these names. :mod:`pyforestry.simulation.contracts`
+holds what the *runtime* defines (:class:`~pyforestry.simulation.contracts.SimulationPreset`)
+and deliberately does not re-export this vocabulary, so that an equation module
+never has to import from the simulation tier to describe itself.
 """
 
 from __future__ import annotations

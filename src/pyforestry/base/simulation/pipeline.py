@@ -199,8 +199,12 @@ class GrowthStep:
         ctx.update_step(dt)
 
 
-#: Management, then growth. The order that every model in this package already
-#: hand-coded: you thin the stand you have, then grow what is left.
+#: Growth alone: the pipeline for a run with nothing to manage. Add a
+#: :class:`ManagementStep` *before* the growth step when there is a policy --
+#: you thin the stand you have, then grow what is left -- which is what
+#: :func:`pyforestry.projection.project` assembles when given ``policy=``. This
+#: constant cannot include one itself, because a management step needs a policy
+#: and there is no default policy.
 DEFAULT_PIPELINE: Tuple[Step, ...] = (GrowthStep(),)
 
 

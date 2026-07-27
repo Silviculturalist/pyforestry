@@ -253,10 +253,19 @@ def check_al003(paths: list[Path]) -> list[str]:
 # coverage gate, which measures presence rather than content. 161 of them
 # accumulated on the package's most important classes, where `help()` was worse
 # than nothing because the output looked documented.
+#
+# The last three markers were added after three survivors turned up that the
+# first three missed by a word: the generator also emitted "<Name> container and
+# behavior." summaries and "Internal pyforestry implementation." source blocks,
+# and one of the latter sat on Moren & Perttu (1994) -- a real publication
+# labelled as having none.
 GENERATED_DOCSTRING_MARKERS = (
     "Parameter for `",
     "Result produced by this callable",
     "Internal pyforestry simulation architecture and runtime contracts",
+    "Internal pyforestry architecture and runtime contracts",
+    "Internal pyforestry implementation",
+    "container and behavior",
 )
 
 

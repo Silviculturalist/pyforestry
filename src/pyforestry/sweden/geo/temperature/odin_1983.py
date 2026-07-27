@@ -43,10 +43,25 @@ def Odin_temperature_sum(latitude: float, altitude_m: float) -> float:
 
 
 class Moren_Perttu_radiation_1994:
-    """Moren perttu radiation 1994 container and behavior.
+    """Regional temperature and radiation indices for a Swedish site.
+
+    From latitude and altitude (and, for the continentality correction, mean July
+    and January temperatures) this computes temperature sums above a threshold,
+    growing-season duration and start, and global radiation over the growing
+    season -- each with a 1000 m and a 1500 m regional model.
 
     Source:
-        Internal pyforestry implementation.
+        Morén, A.-S. & Perttu, K. L. (1994). *Regional temperature and radiation
+        indices and their adjustment to horizontal and inclined forest land.*
+        Studia Forestalia Suecica 194. Sveriges lantbruksuniversitet, Uppsala.
+
+    Note:
+        This class predates the citation audit, and its docstring credited the
+        equations to pyforestry itself rather than to a publication -- it is a
+        second published model living in a module named for Odin (1983). The
+        attribution is corrected here; the coefficients have *not* been
+        re-verified against the primary source in this pass, so treat them as
+        untested against the paper.
     """
 
     def __init__(
@@ -438,6 +453,6 @@ DESCRIPTOR = FormulaDescriptor(
         "altitude_m": "m",
         "return": "degree-days above 5 C",
     },
-    kernel_names=("Odin_temperature_sum",),
+    kernel_names=("Odin_temperature_sum", "Moren_Perttu_radiation_1994"),
     domain="climate",
 )

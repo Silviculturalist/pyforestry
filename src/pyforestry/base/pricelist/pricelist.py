@@ -9,7 +9,7 @@ from pyforestry.base.helpers.tree_species import TreeName, parse_tree_species
 
 @dataclass
 class DiameterRange:
-    """Diameter range container and behavior."""
+    """The inclusive top-diameter span, in cm, over which an assortment is priced."""
 
     Min: float
     Max: float
@@ -17,7 +17,7 @@ class DiameterRange:
 
 @dataclass
 class LengthRange:
-    """Length range container and behavior."""
+    """The inclusive log-length span, in decimetres, an assortment accepts."""
 
     Min: float
     Max: float
@@ -84,7 +84,13 @@ class TimberPricelist:
 
     # Using your code's idea of enumerations: Butt = 0, Middle = 1, Top = 2 ...
     class LogParts(IntEnum):
-        """Log parts container and behavior."""
+        """Where along the stem a log came from, which is what it is priced by.
+
+        A butt log, a middle log and a top log of the same dimensions fetch
+        different prices, so every price lookup is keyed by this alongside the
+        diameter class. The integer values are the column order the price tables
+        use.
+        """
 
         Butt = 0
         Middle = 1

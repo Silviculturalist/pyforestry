@@ -1,6 +1,12 @@
-"""Enums utilities and interfaces.
+"""The Swedish site classifications, as enums.
 
-Source: Swedish forestry domain models and helper implementations curated in pyforestry.
+Every site factor the Swedish site-index and growth functions in this package
+take as a category -- field layer, bottom layer, soil moisture, texture, depth,
+lateral water, peat humification, county and climate zone -- is one enum here,
+each member wrapping a primitive from :mod:`.sweden_site_primitives` that carries
+the numeric code the functions index by along with Swedish and English names.
+
+:class:`Sweden` bundles them so a caller imports one name.
 """
 
 from enum import Enum
@@ -20,10 +26,12 @@ from .sweden_site_primitives import (
 
 
 class SwedenFieldLayer(Enum):
-    """Sweden field layer container and behavior.
+    """Ground vegetation class, and the site-index correction it carries.
 
-    Source:
-        Swedish forestry domain models and helper implementations curated in pyforestry.
+    The eighteen Swedish field-layer types, ordered from rich herb communities
+    down to lichen. Each member's :class:`Vegetation` value holds the code, the
+    Swedish and English names, and a numeric index used as a vegetation effect
+    by the site-index estimators in :mod:`pyforestry.sweden.siteindex.sis`.
     """
 
     HIGH_HERB_WITHOUT_SHRUBS = Vegetation(1, "Högört utan ris", "Rich-herb without shrubs", 4)
@@ -55,10 +63,11 @@ class SwedenFieldLayer(Enum):
 
 
 class SwedenBottomLayer(Enum):
-    """Sweden bottom layer container and behavior.
+    """Bottom-layer (moss and lichen) type of the site.
 
-    Source:
-        Swedish forestry domain models and helper implementations curated in pyforestry.
+    Read alongside the field layer by the site-index estimators; the lichen and
+    bogmoss types in particular separate dry and wet poor sites that share a
+    field layer.
     """
 
     LICHEN_TYPE = BottomLayerType(1, "Lichen type", "Lavtyp")
@@ -70,10 +79,11 @@ class SwedenBottomLayer(Enum):
 
 
 class SwedenSoilWater(Enum):
-    """Sweden soil water container and behavior.
+    """Whether, and for how long, seepage water moves through the soil.
 
-    Source:
-        Swedish forestry domain models and helper implementations curated in pyforestry.
+    ``MISSING``/``SHORTER_PERIODS``/``LONGER_PERIODS`` is the lateral water
+    movement class: moving water carries nutrients, so a site with longer
+    periods of seepage is more productive than its texture alone implies.
     """
 
     SELDOM_NEVER = SoilWaterCat(1, "saknas", "Seldom/never")
@@ -82,10 +92,10 @@ class SwedenSoilWater(Enum):
 
 
 class SwedenSoilDepth(Enum):
-    """Sweden soil depth container and behavior.
+    """Depth of the soil above bedrock, in five field classes.
 
-    Source:
-        Swedish forestry domain models and helper implementations curated in pyforestry.
+    Shallow soils and outcrops restrict rooting volume and available water, and
+    the site-index functions treat them as a productivity penalty.
     """
 
     DEEP = SoilDepthCat(
@@ -112,10 +122,12 @@ class SwedenSoilDepth(Enum):
 
 
 class SwedenSoilTextureTill(Enum):
-    """Sweden soil texture till container and behavior.
+    """Grain-size class of a *till* (moraine) soil.
 
-    Source:
-        Swedish forestry domain models and helper implementations curated in pyforestry.
+    Till is the unsorted glacial deposit covering most of Sweden. The parallel
+    :class:`SwedenSoilTextureSediment` covers sorted sediments; both share the
+    same nine codes so a caller can read one texture code without first knowing
+    which parent material it came from.
     """
 
     BOULDER = SoilTextureCategory(1, "Stenig/blockig morän", "Boulder rich/stony till", "Boulder")
@@ -130,10 +142,10 @@ class SwedenSoilTextureTill(Enum):
 
 
 class SwedenSoilTextureSediment(Enum):
-    """Sweden soil texture sediment container and behavior.
+    """Grain-size class of a sorted *sediment* soil.
 
-    Source:
-        Swedish forestry domain models and helper implementations curated in pyforestry.
+    The sediment counterpart of :class:`SwedenSoilTextureTill`, sharing its nine
+    codes and its coarse-to-fine ordering from boulders through clay to peat.
     """
 
     BOULDER = SoilTextureCategory(1, "Sten/block", "Boulders/stones", "Boulder")
@@ -148,10 +160,11 @@ class SwedenSoilTextureSediment(Enum):
 
 
 class SwedenSoilMoisture(Enum):
-    """Sweden soil moisture container and behavior.
+    """Site moisture class, defined by depth to the subsoil water table.
 
-    Source:
-        Swedish forestry domain models and helper implementations curated in pyforestry.
+    Dry through wet, as judged in the field from water-table depth and standing
+    water in hollows. An input to nearly every Swedish site-index and growth
+    function in this package.
     """
 
     DRY = SoilMoistureData(1, "torr", "Dry (subsoil water depth >2 m)")
@@ -164,10 +177,10 @@ class SwedenSoilMoisture(Enum):
 
 
 class SwedenPeatHumification(Enum):
-    """Sweden peat humification container and behavior.
+    """How far peat at the site has decomposed, on a four-step field scale.
 
-    Source:
-        Swedish forestry domain models and helper implementations curated in pyforestry.
+    Only meaningful where the texture is peat; higher humification means a
+    denser, more decomposed peat and a different nutrient supply.
     """
 
     NONE = PeatHumificationCat(0, "ingen", "None")
@@ -177,10 +190,13 @@ class SwedenPeatHumification(Enum):
 
 
 class SwedenCounty(Enum):
-    """Sweden county container and behavior.
+    """Administrative region, in the subdivision Swedish forestry functions use.
 
-    Source:
-        Swedish forestry domain models and helper implementations curated in pyforestry.
+    Not simply the 21 counties: the large northern counties are split into their
+    historical landscapes (Norrbotten into lappmark and kustland, Jämtland into
+    Jämtland and Härjedalen), because the growth and volume functions were
+    fitted with those divisions as regional terms. The codes are the ones
+    Söderberg (1986) and the site-index estimators index by.
     """
 
     NORRBOTTENS_LAPPMARK = CountyData(1, "Norrbottens lappmark (BD lappm)")
@@ -252,10 +268,10 @@ def county_flags_syz_t_area(county: Optional[SwedenCounty]) -> tuple[int, int, i
 
 
 class SwedenClimateZone(Enum):
-    """Sweden climate zone container and behavior.
+    """Maritime or continental climate region (M1-M3, K1-K3).
 
-    Source:
-        Swedish forestry domain models and helper implementations curated in pyforestry.
+    A coarse regional climate split used as a categorical term by several
+    Swedish functions. :meth:`from_code` looks a member up by its integer code.
     """
 
     M1 = ClimateZoneData(1, "M1", "Maritime, West coast")
@@ -275,10 +291,11 @@ class SwedenClimateZone(Enum):
 
 
 class Sweden:
-    """Sweden container and behavior.
+    """Namespace bundling every Swedish site classification under one name.
 
-    Source:
-        Swedish forestry domain models and helper implementations curated in pyforestry.
+    ``Sweden.FieldLayer``, ``Sweden.SoilMoistureEnum``, ``Sweden.County`` and the
+    rest are aliases for the enums defined above, so a caller imports one symbol
+    and reaches all of them. It holds no state and is never instantiated.
     """
 
     FieldLayer = SwedenFieldLayer

@@ -5,10 +5,16 @@ from scipy.integrate import quad
 
 
 class TimberVolumeIntegrator:
-    """Timber volume integrator container and behavior.
+    """Numerically integrate a taper curve into a stem volume.
 
-    Source:
-        Internal pyforestry implementation.
+    Given any :class:`~pyforestry.base.taper.Taper` that can report a diameter at
+    a height, this treats the stem as a stack of discs and integrates
+    ``pi * (d/2)**2`` over a height interval with :func:`scipy.integrate.quad`.
+    It carries no science of its own: the shape comes entirely from the taper
+    function passed in, which is where the published coefficients live.
+
+    Use it for a section volume between two heights, or for the whole stem
+    between the stump and the tip.
     """
 
     @staticmethod
