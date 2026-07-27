@@ -9,13 +9,18 @@ This package holds two unrelated kinds of thing, and they used to share the word
 * **Scenario configuration** -- :class:`ScenarioConfig` is a frozen dataclass of
   seeds, stage names, rulesets and required artifacts. It runs nothing.
 
-``get_scenario_config`` reaches the second. There is deliberately no single
-lookup that returns "a preset": the two have no common interface, and the one
-that used to exist was typed as returning the configuration, so it could not
-reach either simulator.
+``get_scenario_config`` reaches the second, ``get_pipeline`` the first. There is
+deliberately no single lookup that returns "a preset": the two have no common
+interface, and the one that used to exist was typed as returning the
+configuration, so it could not reach either simulator.
 """
 
+from __future__ import annotations
+
+from typing import Callable
+
 from ._common import ScenarioConfig
+from ._composite import CompositePipeline, CompositePipelineConfig
 from .baseline import build_baseline_scenario_config
 from .elfving_2010_pipeline import (
     Elfving2010Pipeline,
@@ -28,14 +33,31 @@ from .soderberg_1986_pipeline import (
     build_soderberg_1986_pipeline,
 )
 
-#: Every runnable pipeline, by the name a caller would type. This is what
-#: ``get_preset`` could not offer: it was typed to return a ``ScenarioConfig``,
-#: so the two real simulators were unreachable through the one discovery
-#: entrypoint the package had.
-PIPELINE_BUILDERS = {
-    "elfving_2010": build_elfving_2010_pipeline,
-    "soderberg_1986": build_soderberg_1986_pipeline,
+#: Every runnable pipeline, by the name a caller would type -- each pipeline's own
+#: ``component_id``.
+#:
+#: The keys used to be ``"elfving_2010"`` and ``"soderberg_1986"``, which are also
+#: the names ``pyforestry.project(model=...)`` accepts, where they mean the bare
+#: single-tree growth adapters. One string named two very different things through
+#: two entry points: ``project(model="elfving_2010")`` steps trees you supply with
+#: Elfving (2010) alone, while ``get_pipeline("elfving_2010")`` reconstructed a
+#: stand with NYSKOG and ran nine more models around it. Naming the composites
+#: after themselves removes the collision.
+PIPELINE_BUILDERS: dict[str, Callable[..., CompositePipeline]] = {
+    "elfving_2010_composite": build_elfving_2010_pipeline,
+    "soderberg_1986_composite": build_soderberg_1986_pipeline,
 }
+
+#: What the old, ambiguous pipeline keys mean now, for the error message.
+_RENAMED_PIPELINES = {
+    "elfving_2010": "elfving_2010_composite",
+    "soderberg_1986": "soderberg_1986_composite",
+}
+
+
+def available_pipelines() -> list[str]:
+    """Return every name :func:`get_pipeline` accepts, sorted."""
+    return sorted(PIPELINE_BUILDERS)
 
 
 def get_scenario_config(scenario_id: str) -> ScenarioConfig:
@@ -49,12 +71,22 @@ def get_scenario_config(scenario_id: str) -> ScenarioConfig:
     raise ValueError(f"Unsupported scenario_id: {scenario_id!r}. Known ids: 'baseline'.")
 
 
-def get_pipeline(name: str, config=None):
-    """Build a runnable pipeline by name.
+def get_pipeline(
+    name: str,
+    config: CompositePipelineConfig | None = None,
+) -> CompositePipeline:
+    """Build a runnable composite pipeline by name.
 
     Args:
-        name: One of :data:`PIPELINE_BUILDERS`.
+        name: One of :func:`available_pipelines`.
         config: The pipeline's own config dataclass, or ``None`` for its defaults.
+
+    Returns:
+        A stateful simulator: ``initialize(site=...)``, then ``step()`` or
+        ``run_projection(...)``. Unlike a
+        :class:`~pyforestry.base.simulation.growth_model.GrowthModel` it builds its
+        own stand from a site, which is why ``pyforestry.project(stand, ...)``
+        cannot drive one.
 
     Raises:
         ValueError: If ``name`` is not a known pipeline.
@@ -62,14 +94,22 @@ def get_pipeline(name: str, config=None):
     try:
         builder = PIPELINE_BUILDERS[name]
     except KeyError:
-        known = ", ".join(sorted(PIPELINE_BUILDERS))
-        raise ValueError(f"Unknown pipeline {name!r}. Known pipelines: {known}.") from None
+        known = ", ".join(available_pipelines())
+        renamed = _RENAMED_PIPELINES.get(name)
+        hint = (
+            f" Did you mean {renamed!r}? {name!r} now names only the single-tree "
+            f"growth model of the same publication, which pyforestry.project() runs."
+            if renamed
+            else ""
+        )
+        raise ValueError(f"Unknown pipeline {name!r}. Known pipelines: {known}.{hint}") from None
     return builder(config) if config is not None else builder()
 
 
 __all__ = [
     "PIPELINE_BUILDERS",
     "ScenarioConfig",
+    "available_pipelines",
     "build_baseline_scenario_config",
     "Elfving2010PipelineConfig",
     "Elfving2010Pipeline",

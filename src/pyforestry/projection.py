@@ -36,8 +36,9 @@ if TYPE_CHECKING:  # pragma: no cover - annotation only
     from pyforestry.base.helpers.stand import Stand
     from pyforestry.base.simulation.core import SimulationContext
     from pyforestry.base.simulation.growth_model import GrowthModel
+    from pyforestry.base.simulation.pipeline import Policy, Step
 
-__all__ = ["ProjectionResult", "available_models", "project"]
+__all__ = ["ProjectionResult", "available_models", "available_pipelines", "project"]
 
 
 @dataclass(frozen=True)
@@ -102,8 +103,27 @@ def _model_entries() -> Dict[str, Any]:
 
 
 def available_models() -> list[str]:
-    """Return every name :func:`project` accepts for ``model=``, sorted."""
+    """Return every name :func:`project` accepts for ``model=``, sorted.
+
+    These are single-tree/stand growth models: give one a :class:`Stand` and it
+    advances it. The *composite pipelines* -- which build their own stand from a
+    site and run nine models around a growth model -- are a different shape and
+    are not listed here; see :func:`available_pipelines`.
+    """
     return sorted(_model_entries())
+
+
+def available_pipelines() -> list[str]:
+    """Return every composite pipeline name, sorted.
+
+    A pipeline is not something :func:`project` can run: it reconstructs its own
+    stand from a site rather than advancing one you supply. Build it with
+    :func:`pyforestry.sweden.simulation.presets.get_pipeline` and drive it with
+    ``initialize(site=...)`` / ``run_projection(...)``.
+    """
+    from pyforestry.sweden.simulation.presets import available_pipelines as _sweden_pipelines
+
+    return sorted(_sweden_pipelines())
 
 
 def _resolve_model(name: str) -> "GrowthModel":
@@ -117,7 +137,16 @@ def _resolve_model(name: str) -> "GrowthModel":
     entry = entries.get(name)
     if entry is None:
         known = ", ".join(available_models())
-        raise ValueError(f"Unknown model {name!r}. Available models: {known}.")
+        pipelines = available_pipelines()
+        hint = (
+            f" {name!r} is a composite pipeline, not a growth model: it builds its own "
+            f"stand from a site, so project() cannot drive it. Use "
+            f"pyforestry.sweden.simulation.presets.get_pipeline({name!r}) instead."
+            if name in pipelines
+            else f" Composite pipelines ({', '.join(pipelines)}) are run through "
+            f"pyforestry.sweden.simulation.presets.get_pipeline() rather than project()."
+        )
+        raise ValueError(f"Unknown model {name!r}. Available models: {known}.{hint}")
 
     candidates = _growth_models_in(entry.module)
     for model_cls in candidates:
@@ -143,10 +172,10 @@ def project(
     years: float,
     step: Optional[float] = None,
     seed: Optional[int] = None,
-    policy: Optional[Any] = None,
+    policy: Optional["Policy"] = None,
     attrs: Optional[Mapping[str, Any]] = None,
     inputs: Optional[Any] = None,
-    pipeline: Optional[Sequence[Any]] = None,
+    pipeline: Optional[Sequence["Step"]] = None,
 ) -> ProjectionResult:
     """Project ``stand`` forward and return the result.
 
@@ -209,7 +238,7 @@ def project(
     )
 
     if pipeline is None:
-        steps: list[Any] = []
+        steps: list["Step"] = []
         if policy is not None:
             steps.append(ManagementStep(policy))
         steps.append(GrowthStep())

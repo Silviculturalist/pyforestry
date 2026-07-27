@@ -73,6 +73,27 @@ can be projected under several models and compared. For finer control, pass a
 management `policy` or an explicit `pipeline` of steps; the typed constructors
 (`Elfving2010Model`, `build_context`, `run_pipeline`) all remain available.
 
+## Projecting from a site: composite pipelines
+
+`project` advances a stand you already have. When you have a *site* instead and
+want a stand reconstructed and grown through a whole published workflow —
+regeneration, NYSKOG stand creation, young-stand growth, mortality, ingrowth,
+height and bark, valuation — that is a composite pipeline. It builds its own
+stand, which is why `project` cannot drive one:
+
+```python
+from pyforestry.sweden.simulation.presets import get_pipeline
+
+pipeline = get_pipeline("elfving_2010_composite")
+table = pipeline.run_projection(site=site, n_steps=20)
+
+pf.available_pipelines()   # every name `get_pipeline` accepts
+```
+
+The two namespaces are deliberately distinct: `"elfving_2010"` is the single-tree
+growth model, `"elfving_2010_composite"` the workflow that drives it alongside
+nine other published models.
+
 ## Finding a model
 With 60+ growth, yield, volume, bark, biomass, and site-index models, the model
 catalog lets you discover them without knowing the import path or citation:

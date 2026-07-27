@@ -297,10 +297,39 @@ def test_get_pipeline_reaches_the_real_simulators() -> None:
         Soderberg1986Pipeline,
     )
 
-    assert isinstance(get_pipeline("elfving_2010"), Elfving2010Pipeline)
-    assert isinstance(get_pipeline("soderberg_1986"), Soderberg1986Pipeline)
+    assert isinstance(get_pipeline("elfving_2010_composite"), Elfving2010Pipeline)
+    assert isinstance(get_pipeline("soderberg_1986_composite"), Soderberg1986Pipeline)
 
 
 def test_get_pipeline_names_the_alternatives_when_asked_for_an_unknown_one() -> None:
-    with pytest.raises(ValueError, match="Known pipelines: elfving_2010, soderberg_1986"):
+    with pytest.raises(
+        ValueError, match="Known pipelines: elfving_2010_composite, soderberg_1986_composite"
+    ):
         get_pipeline("not_a_pipeline")
+
+
+def test_the_pipeline_and_the_growth_model_no_longer_share_a_name() -> None:
+    """One string used to name two very different things through two front doors.
+
+    ``project(model="elfving_2010")`` steps trees the caller supplies with the
+    Elfving (2010) single-tree model. ``get_pipeline("elfving_2010")`` used to
+    reconstruct a stand with NYSKOG and run nine more published models around it.
+    Same key, different science, and nothing said so.
+    """
+    import pyforestry as pf
+
+    assert "elfving_2010" in pf.available_models()
+    assert "elfving_2010" not in pf.available_pipelines()
+    assert "elfving_2010_composite" in pf.available_pipelines()
+    assert "elfving_2010_composite" not in pf.available_models()
+
+    with pytest.raises(ValueError, match="elfving_2010_composite"):
+        get_pipeline("elfving_2010")
+
+
+def test_project_points_at_get_pipeline_for_a_composite() -> None:
+    """A pipeline builds its own stand, so project() cannot drive one -- and says so."""
+    import pyforestry as pf
+
+    with pytest.raises(ValueError, match="get_pipeline"):
+        pf.project(object(), model="elfving_2010_composite", years=5)
