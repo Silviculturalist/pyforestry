@@ -3,6 +3,11 @@
 # These rules enforce ownership boundaries defined in ARCHITECTURE.md.
 # Rules are promoted from advisory to blocking as migration progresses.
 # See ROADMAP.md Section 8 for the lint promotion matrix.
+#
+# This file is the documented half of the rule set; scripts/check_architecture_lint.py
+# is the enforcing half, and its `check_registry()` fails the run when the two
+# disagree about which rules exist or whether each blocks. Adding a rule to one
+# without the other is now a build failure rather than silent drift.
 
 rules:
   AL001:
@@ -31,17 +36,59 @@ rules:
       - no_scientific_coefficient_literals   # */adapters/ in every region
 
   AL002:
-    name: Context dependency direction must be valid
-    scope: Python import graph for changed modules
-    mode: advisory
+    name: Context dependency direction must be valid (equation modules)
+    scope: Python import graph for changed modules under a domain package
+    mode: blocking
     description: >
       Formula/equation modules must not import from simulation policy or
       orchestration packages. Allowed direction: equations -> primitives;
       adapters/systems -> equations + primitives; simulation -> adapters/systems
       + equations.
+
+      Registered advisory while the migration was in progress; the migration is
+      done and the codebase has been clean of this for the whole of it, so the
+      rule is now blocking -- which is also what the script always did to it.
     forbidden_edges:
-      - from: "*/mortality/*.py, */siteindex/*.py, */volume/*.py, */bark/*.py, */biomass/*.py"
-        to: "*/simulation/presets/*, */simulation/policy/*, */simulation/orchestration/*"
+      - from: "*/bark/*.py, */biomass/*.py, */growth/*.py, */height/*.py, */ingrowth/*.py,
+               */mortality/*.py, */regeneration/*.py, */siteindex/*.py, */taper/*.py,
+               */volume/*.py"
+        to: "*/simulation/presets/*, */simulation/policy/*, */simulation/orchestration/*,
+             */simulation/contracts.py"
+
+  AL003:
+    name: Context dependency direction must be valid (adapters and systems)
+    scope: Python import graph for changed modules under */adapters/ or */systems/
+    mode: blocking
+    description: >
+      The model tier binds equations to the runtime, so it may import equations
+      and primitives, but not the scenario policy, presets or orchestration that
+      drive it. An adapter that reads a ruleset has inverted the direction: the
+      simulation tier chooses models, not the other way round.
+
+      Same forbidden targets as AL002, applied to a different source set. Both
+      were one rule in ARCHITECTURE.md's prose and two functions in the script;
+      registering AL003 separately is what makes the second one visible.
+    forbidden_edges:
+      - from: "*/adapters/*.py, */systems/**/*.py"
+        to: "*/simulation/presets/*, */simulation/policy/*, */simulation/orchestration/*,
+             */simulation/contracts.py"
+
+  AL004:
+    name: No generated placeholder docstrings
+    scope: All files under src/pyforestry/
+    mode: blocking
+    description: >
+      Docstring coverage measures presence, not content, and 161 generated
+      docstrings once satisfied it on this package's most important classes --
+      each stating only that a parameter is a parameter or that a callable
+      returns. `help()` was then worse than nothing, because the output looked
+      documented.
+
+      This rule fails on the generator's fingerprints. Write what the callable
+      does, what its arguments mean and what it returns, or leave it undocumented
+      and let the coverage gate say so.
+    checks:
+      - no_generated_docstring_markers
 
   AL005:
     name: No model constructs its own random generator

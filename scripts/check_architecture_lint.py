@@ -6,18 +6,28 @@ Usage:
 Without --changed-only, checks all files. With --changed-only, checks only
 files modified since BASE_SHA.
 
-Exit code 0 = pass, 1 = violations found.
+Exit code 0 = pass, 1 = blocking violations found.
+
+The rule registry in ``governance/architecture/rules/architecture_lint_rules.yaml``
+documents these rules; :func:`check_registry` fails the run when it and this
+script disagree about which rules exist and whether each blocks. Nothing else kept
+them in sync, and they had drifted: AL003 and AL004 were enforced here while
+appearing in no rules file, and AL002 was registered ``advisory`` while ``main``
+failed the build on it like every other rule.
 """
 
 from __future__ import annotations
 
 import ast
 import math
+import re
 import subprocess
 import sys
 from pathlib import Path
 
-SRC_ROOT = Path(__file__).resolve().parents[1] / "src" / "pyforestry"
+REPO_ROOT = Path(__file__).resolve().parents[1]
+SRC_ROOT = REPO_ROOT / "src" / "pyforestry"
+RULES_FILE = REPO_ROOT / "governance" / "architecture" / "rules" / "architecture_lint_rules.yaml"
 
 # ---------------------------------------------------------------------------
 # AL001: No scientific coefficients in */adapters/
@@ -36,10 +46,19 @@ SRC_ROOT = Path(__file__).resolve().parents[1] / "src" / "pyforestry"
 # in either region.
 AL001_ADAPTER_DIRECTORY = "adapters"
 
-# Values that read like coefficients to a decimal-place test but are not fitted
-# to anything: unit and scale factors. A regression coefficient is essentially
-# never an exact power of ten, so excluding them costs no detection power.
-_UNIT_FACTOR_MANTISSAS = frozenset({1.0, -1.0})
+
+def _relative_to_src(path: Path) -> str | None:
+    """Return ``path`` relative to ``src/pyforestry/``, or ``None`` if outside it.
+
+    Every rule here is scoped to the package. In ``--changed-only`` mode the file
+    list is every changed ``.py`` in the repo, so the checks must be able to say
+    "not mine" about a test or a script rather than raising ``ValueError`` out of
+    ``relative_to`` and taking the whole gate down with them.
+    """
+    try:
+        return path.relative_to(SRC_ROOT).as_posix()
+    except ValueError:
+        return None
 
 
 def _is_unit_factor(value: float) -> bool:
@@ -53,7 +72,7 @@ def _is_unit_factor(value: float) -> bool:
     exponent = math.log10(abs(value))
     if exponent != int(exponent):
         return False
-    return abs(value) / 10 ** int(exponent) in _UNIT_FACTOR_MANTISSAS
+    return abs(value) / 10 ** int(exponent) == 1.0
 
 
 def _scientific_coefficients(tree: ast.AST) -> list[tuple[int, float]]:
@@ -78,14 +97,17 @@ def _scientific_coefficients(tree: ast.AST) -> list[tuple[int, float]]:
 def check_al001(paths: list[Path]) -> list[str]:
     """Check that no adapter module carries scientific coefficient literals.
 
-    Applies to every ``*/adapters/`` package in every region. There is no
-    exception list: a module that needs to hold coefficients is a published
-    system or a domain equation module, and belongs in ``*/systems/`` or a
-    domain package respectively.
+    Applies to every ``*/adapters/`` package in every region, ``__init__.py``
+    included. There is no exception list: a module that needs to hold
+    coefficients is a published system or a domain equation module, and belongs
+    in ``*/systems/`` or a domain package respectively. ``__init__.py`` used to
+    be skipped with no rationale, which left the one file in each adapter package
+    that the rule could not see -- a place to put coefficients where a blocking
+    check would still report PASS.
     """
     violations = []
     for path in paths:
-        if path.suffix != ".py" or path.name == "__init__.py":
+        if path.suffix != ".py":
             continue
         if AL001_ADAPTER_DIRECTORY not in path.parts:
             continue
@@ -99,7 +121,7 @@ def check_al001(paths: list[Path]) -> list[str]:
         sites = ", ".join(f"line {lineno}: {value!r}" for lineno, value in coefficients[:5])
         if len(coefficients) > 5:
             sites += f", and {len(coefficients) - 5} more"
-        relative = path.relative_to(SRC_ROOT).as_posix()
+        relative = _relative_to_src(path) or path.as_posix()
         violations.append(
             f"AL001: {relative} holds {len(coefficients)} scientific coefficient "
             f"literal(s) ({sites}). An adapter binds equations to the runtime; it does "
@@ -115,17 +137,22 @@ def check_al001(paths: list[Path]) -> list[str]:
 # AL003: Adapter and system modules must not import from simulation policy
 # ---------------------------------------------------------------------------
 
-# Domain equation packages (must not depend on simulation policy).
+# Domain equation packages (must not depend on simulation policy). This is the
+# set of directory names ARCHITECTURE.md Context 2 owns; keep it in step with the
+# packages that actually exist, since a domain package missing from here is simply
+# unchecked. ``taper`` was missing while ``sweden/taper`` and ``norway/taper``
+# both shipped.
 EQUATION_PACKAGES = {
-    "mortality",
-    "siteindex",
-    "volume",
     "bark",
     "biomass",
     "growth",
     "height",
     "ingrowth",
+    "mortality",
     "regeneration",
+    "siteindex",
+    "taper",
+    "volume",
 }
 
 # Region-generic forbidden import patterns. Any region's simulation policy,
@@ -303,7 +330,9 @@ def check_al005(paths: list[Path]) -> list[str]:
     for path in paths:
         if path.suffix != ".py":
             continue
-        relative = path.relative_to(SRC_ROOT).as_posix()
+        relative = _relative_to_src(path)
+        if relative is None:
+            continue
         if any(relative.endswith(exempt) for exempt in AL005_EXEMPT):
             continue
         try:
@@ -324,6 +353,80 @@ def check_al005(paths: list[Path]) -> list[str]:
                     "ask the run for a keyed stream: ctx.rng.child('mortality')."
                 )
     return violations
+
+
+# ---------------------------------------------------------------------------
+# Rule registry
+# ---------------------------------------------------------------------------
+
+#: Every rule this script enforces: id, the check, and whether a violation fails
+#: the build. This is the executable half of the registry; the YAML at
+#: :data:`RULES_FILE` is the documented half, and :func:`check_registry` fails
+#: when the two disagree, because nothing else did.
+RULES: tuple[tuple[str, str, object], ...] = (
+    ("AL001", "blocking", check_al001),
+    ("AL002", "blocking", check_al002),
+    ("AL003", "blocking", check_al003),
+    ("AL004", "blocking", check_al004),
+    ("AL005", "blocking", check_al005),
+)
+
+_YAML_RULE_RE = re.compile(r"^  (AL\d{3}):\s*$")
+_YAML_MODE_RE = re.compile(r"^    mode:\s*(\w+)")
+
+
+def _registered_rules() -> dict[str, str]:
+    """Return ``{rule_id: mode}`` as declared in the rules YAML.
+
+    Parsed with two regexes rather than a YAML library so the gate needs no
+    dependency the package does not already ship.
+    """
+    registered: dict[str, str] = {}
+    current: str | None = None
+    for line in RULES_FILE.read_text(encoding="utf-8").splitlines():
+        rule_match = _YAML_RULE_RE.match(line)
+        if rule_match:
+            current = rule_match.group(1)
+            continue
+        mode_match = _YAML_MODE_RE.match(line)
+        if mode_match and current is not None:
+            registered.setdefault(current, mode_match.group(1))
+    return registered
+
+
+def check_registry() -> list[str]:
+    """Check that the rules YAML and this script agree on rules and modes.
+
+    Returns:
+        One message per disagreement: a rule enforced but not registered, a rule
+        registered but not enforced, or a rule whose declared mode is not the one
+        ``main`` applies. A registry that does not describe the gate is worse than
+        no registry, because it is read as though it does.
+    """
+    if not RULES_FILE.exists():  # pragma: no cover - registry is version-controlled
+        return [f"REGISTRY: {RULES_FILE} is missing; it is the documented rule set."]
+    registered = _registered_rules()
+    enforced = {rule_id: mode for rule_id, mode, _check in RULES}
+    problems = []
+    for rule_id, mode in sorted(enforced.items()):
+        if rule_id not in registered:
+            problems.append(
+                f"REGISTRY: {rule_id} is enforced by this script but not registered in "
+                f"{RULES_FILE.name}. Add it, or stop enforcing it."
+            )
+        elif registered[rule_id] != mode:
+            problems.append(
+                f"REGISTRY: {rule_id} is registered as {registered[rule_id]!r} in "
+                f"{RULES_FILE.name} but enforced as {mode!r}. An 'advisory' rule that "
+                f"fails the build is not advisory."
+            )
+    for rule_id in sorted(registered):
+        if rule_id not in enforced:
+            problems.append(
+                f"REGISTRY: {rule_id} is registered in {RULES_FILE.name} but this script "
+                f"enforces nothing for it."
+            )
+    return problems
 
 
 # ---------------------------------------------------------------------------
@@ -373,24 +476,31 @@ def main() -> int:
     print(f"Architecture lint ({scope_label}): {len(paths)} files")
     print()
 
-    violations = []
-    violations.extend(check_al001(paths))
-    violations.extend(check_al002(paths))
-    violations.extend(check_al003(paths))
-    violations.extend(check_al004(paths))
-    violations.extend(check_al005(paths))
+    blocking: list[str] = list(check_registry())
+    advisory: list[str] = []
+    for rule_id, mode, check in RULES:
+        found = check(paths)  # type: ignore[operator]
+        if not found:
+            print(f"{rule_id}: PASS")
+        elif mode == "blocking":
+            blocking.extend(found)
+        else:
+            advisory.extend(found)
 
-    if violations:
-        print("VIOLATIONS FOUND:")
-        for v in violations:
-            print(f"  {v}")
-        print(f"\n{len(violations)} violation(s). FAIL.")
+    if advisory:
+        print("\nADVISORY (does not fail the build):")
+        for message in advisory:
+            print(f"  {message}")
+
+    if blocking:
+        print("\nVIOLATIONS FOUND:")
+        for message in blocking:
+            print(f"  {message}")
+        print(f"\n{len(blocking)} blocking violation(s). FAIL.")
         return 1
-    else:
-        for rule in ("AL001", "AL002", "AL003", "AL004", "AL005"):
-            print(f"{rule}: PASS")
-        print("\nNo violations. PASS.")
-        return 0
+
+    print("\nNo blocking violations. PASS.")
+    return 0
 
 
 if __name__ == "__main__":
