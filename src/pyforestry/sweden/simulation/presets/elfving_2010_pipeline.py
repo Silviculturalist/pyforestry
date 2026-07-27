@@ -69,6 +69,13 @@ from pyforestry.sweden.systems.nystrom_soderberg_1987 import NystromSoderberg198
 from pyforestry.sweden.taper import EdgrenNylinder1949
 from pyforestry.sweden.timber import SweTimber
 
+# Two of these three deliberately do not match the package-wide groups in
+# ``pyforestry.sweden._model_input_normalization``, so do not "unify" them without
+# checking: ``PINE_GROUP`` there also contains *Pinus mugo*, and ``BIRCH_GROUP``
+# does not contain the ``betula`` genus group that the NYSKOG species map produces.
+# ``_SPRUCE_SET`` does match, and the Söderberg pipeline imports it from here rather
+# than keeping a copy -- the two have to agree, because one picks the site-index
+# curve for growth and the other for reporting.
 _PINE_SET = {
     TreeSpecies.Sweden.pinus_sylvestris,
     TreeSpecies.Sweden.pinus_contorta,

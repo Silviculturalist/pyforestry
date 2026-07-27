@@ -18,7 +18,10 @@ from pyforestry.base.helpers.primitives import SiteBase
 from pyforestry.base.simulation.pipeline import run_pipeline
 from pyforestry.sweden.simulation.presets import (
     Elfving2010PipelineConfig,
+    Soderberg1986Pipeline,
+    Soderberg1986PipelineConfig,
     build_elfving_2010_pipeline,
+    build_soderberg_1986_pipeline,
 )
 from pyforestry.sweden.site import Sweden, SwedishSite
 
@@ -81,6 +84,54 @@ def test_period_is_an_ordered_tuple_of_named_phases() -> None:
         "ingrowth",
         "height_and_bark",
         "sync_model_view",
+    )
+
+
+def test_the_soderberg_pipeline_runs_the_same_phases() -> None:
+    """The decomposition is an abstraction, not one model's method list.
+
+    Söderberg 1986 swaps the mature growth model and everything a model that reads
+    ``ctx.attrs`` instead of a typed ``Inputs`` needs -- and inherits the period
+    whole. If the phases had to be restated to swap a model, they would be a
+    private schedule with a protocol's name on it.
+    """
+    elfving = _make_pipeline()
+    soderberg = build_soderberg_1986_pipeline(
+        Soderberg1986PipelineConfig(sample_trees=24, random_seed=2026, deterministic=True)
+    )
+
+    assert [step.name for step in soderberg.steps] == [step.name for step in elfving.steps]
+    assert [type(step) for step in soderberg.steps] == [type(step) for step in elfving.steps]
+    # Each step is bound to its own pipeline, or Söderberg would step Elfving's stand.
+    assert all(step.pipeline is soderberg for step in soderberg.steps)
+
+
+def test_the_soderberg_pipeline_swaps_only_what_the_model_swap_needs() -> None:
+    """Every override earns its place, and adding one is a decision, not a habit.
+
+    Söderberg's override of ``_rebuild_context`` used to restate the whole
+    plot/stand/context construction to change one dict. Pinning the list is what
+    makes the next copy of a parent method visible in review rather than in a
+    diff nobody reads.
+    """
+    reasons = {
+        "__init__": "builds Soderberg1986Model instead of Elfving2010Model",
+        "component_id": "its own identifier",
+        "source": "its own citation",
+        "components": "cites one model, not two",
+        "_model_inputs": "Soderberg1986Model declares no typed Inputs",
+        "_model_attrs": "so it takes the canonical attrs instead",
+        "_site_index_species_for_soderberg": "picks the pine or spruce curve by mixture",
+        "value_standing_forest": "optional Soderberg form-height volume route",
+    }
+    overridden = {
+        name
+        for name in vars(Soderberg1986Pipeline)
+        if not name.startswith("__") or name == "__init__"
+    }
+    assert overridden == set(reasons), (
+        "Söderberg's overrides changed. Each one is a copy of, or a divergence from, "
+        "the Elfving pipeline -- add it to `reasons` with why it cannot be inherited."
     )
 
 

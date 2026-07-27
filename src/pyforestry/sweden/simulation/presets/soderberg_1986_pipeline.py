@@ -36,16 +36,11 @@ from pyforestry.sweden.site import Sweden
 from pyforestry.sweden.volume.soderberg_1986_form_height import soderberg_1986_volume_m3
 
 from .elfving_2010_pipeline import (
+    _SPRUCE_SET,
     Elfving2010Pipeline,
     Elfving2010PipelineConfig,
     _ValuationTotals,
 )
-
-_SPRUCE_SET = {
-    TreeSpecies.Sweden.picea_abies,
-    TreeSpecies.Sweden.picea_sitchensis,
-    TreeSpecies.Sweden.picea_mariana,
-}
 
 _SOUTH_EAST_COUNTIES = {
     Sweden.County.KALMAR,
