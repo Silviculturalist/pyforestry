@@ -20,10 +20,19 @@ from typing import Any, Optional, Protocol
 
 import numpy as np
 
-from pyforestry.base.contracts import SourceReference
+from pyforestry.base.contracts import Describable, SourceReference
 from pyforestry.base.helpers.tree_species import TreeSpecies
 from pyforestry.sweden._model_input_normalization import (
     normalize_hagglund_h100_site_index_m as _normalize_hagglund_h100_site_index_m,
+)
+from pyforestry.sweden.mortality import (
+    bengtsson,
+    elfving_2013,
+    fridman_stahl_2001,
+    naslund_1986,
+    retained_trees,
+    siipilehto_2020,
+    soderberg_1986,
 )
 from pyforestry.sweden.mortality._common import (
     calibration_group,
@@ -271,16 +280,25 @@ class MortalityEngine:
         )
 
     @property
-    def components(self) -> tuple[str, ...]:
-        """Component ids of the mortality modules this engine can compose."""
+    def components(self) -> tuple[Describable, ...]:
+        """The mortality modules this engine can compose, each with its own citation.
+
+        Returns the modules' descriptors, not their ids. ``components`` means
+        ``Sequence[Describable]`` everywhere else in this package, and every
+        consumer reads ``component_id`` and ``source`` off each entry -- so
+        returning bare strings did not merely differ in type, it dropped the
+        citations. ``pyforestry.projection._provenance`` reported a run through
+        this engine as citing one thing, itself, and none of the seven papers
+        that produced the numbers.
+        """
         return (
-            "elfving_2013_mortality",
-            "fridman_stahl_2001_mortality",
-            "siipilehto_2020_mortality",
-            "soderberg_1986_mortality_calibration",
-            "bengtsson_mortality_calibration",
-            "naslund_1986_damage",
-            "retained_trees_mortality",
+            elfving_2013.DESCRIPTOR,
+            fridman_stahl_2001.DESCRIPTOR,
+            siipilehto_2020.DESCRIPTOR,
+            soderberg_1986.DESCRIPTOR,
+            bengtsson.DESCRIPTOR,
+            naslund_1986.DESCRIPTOR,
+            retained_trees.DESCRIPTOR,
         )
 
     # -- public API --------------------------------------------------------
