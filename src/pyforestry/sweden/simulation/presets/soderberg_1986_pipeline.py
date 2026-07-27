@@ -1,24 +1,26 @@
 """Composite Sweden stand-simulation preset using Söderberg (1986) mature growth.
 
-This preset runs the same period as ``Elfving2010Pipeline`` -- the same eleven
-phases in the same order, inherited rather than restated -- and changes what the
-mature-growth phase steps with. Söderberg (1986) has no equivalent of Elfving's
-stand-level basal-area correction, so mature growth comes straight from the tree
-equations.
+This preset runs the same period as the Elfving pipeline -- the same eleven
+phases in the same order, both inheriting them from
+:class:`~pyforestry.sweden.simulation.presets._composite.CompositePipeline` --
+and changes what the mature-growth phase steps with. Söderberg (1986) has no
+equivalent of Elfving's stand-level basal-area correction, so mature growth comes
+straight from the tree equations.
 
-Everything else it overrides is a consequence of that swap:
+Everything else it declares is a consequence of that swap:
 
 * the growth model reads ``ctx.attrs`` rather than a typed ``Inputs``, so
   :meth:`Soderberg1986Pipeline._model_attrs` supplies the canonical set and
-  :meth:`Soderberg1986Pipeline._model_inputs` returns ``None``;
+  :meth:`Soderberg1986Pipeline._model_inputs` is left at the composite's ``None``;
 * ``use_soderberg_form_height_volume`` swaps the reported volume for the Söderberg
   form height, which is over bark and so has to be converted before this package's
   under-bark price lists can touch it -- see
   :meth:`Soderberg1986Pipeline.value_standing_forest`.
 
-That the eleven phases carried over unchanged is the check that the decomposition
+That the eleven phases carry over unchanged is the check that the decomposition
 is an abstraction rather than one model's method list; a test asserts the two
-pipelines publish the same phases.
+pipelines publish the same phases. Until recently the check was weaker than it
+looked, because this class inherited them from ``Elfving2010Pipeline`` itself.
 """
 
 from __future__ import annotations
@@ -37,11 +39,11 @@ from pyforestry.sweden.bark.soderberg_1992 import soderberg_1992_bark_thickness_
 from pyforestry.sweden.site import Sweden
 from pyforestry.sweden.volume.soderberg_1986_form_height import soderberg_1986_volume_m3
 
-from .elfving_2010_pipeline import (
-    _SPRUCE_SET,
-    Elfving2010Pipeline,
-    Elfving2010PipelineConfig,
-    _ValuationTotals,
+from ._composite import (
+    SPRUCE_SET,
+    CompositePipeline,
+    CompositePipelineConfig,
+    ValuationTotals,
 )
 
 _SOUTH_EAST_COUNTIES = {
@@ -77,8 +79,12 @@ _RICH_FIELD_LAYERS = {
 
 
 @dataclass(frozen=True)
-class Soderberg1986PipelineConfig(Elfving2010PipelineConfig):
-    """Configuration for the Söderberg 1986 composite preset."""
+class Soderberg1986PipelineConfig(CompositePipelineConfig):
+    """Configuration for the Söderberg 1986 composite preset.
+
+    Extends the composite workflow's config, not the Elfving pipeline's -- which
+    it used to, and so carried whatever knobs Elfving added along with it.
+    """
 
     soderberg_include_thinning_effect: bool = True
     #: Report volume from the Söderberg (1986) form-height equations instead of
@@ -89,17 +95,24 @@ class Soderberg1986PipelineConfig(Elfving2010PipelineConfig):
     use_soderberg_form_height_volume: bool = False
 
 
-class Soderberg1986Pipeline(Elfving2010Pipeline):
+class Soderberg1986Pipeline(CompositePipeline):
     """Stateful composite stand simulation using Söderberg (1986) mature growth."""
 
     def __init__(self, config: Soderberg1986PipelineConfig | None = None) -> None:
-        """Initialize preset and replace mature growth model with Söderberg 1986."""
-        resolved_config = config or Soderberg1986PipelineConfig()
-        super().__init__(config=resolved_config)
-        self.config = resolved_config
-        self._model = Soderberg1986Model(
+        """Initialize the composite workflow with the Söderberg 1986 growth model."""
+        super().__init__(config=config or Soderberg1986PipelineConfig())
+
+    def _build_model(self) -> Soderberg1986Model:
+        """Söderberg (1986) single-tree growth, with no stand-level calibration.
+
+        Built by the composite's ``__init__`` through this hook. It used to be
+        built *after* ``super().__init__()`` had already constructed an
+        ``Elfving2010Model`` and handed it to the step tuple and the mortality
+        config -- one model made and discarded on every run.
+        """
+        return Soderberg1986Model(
             config=Soderberg1986Config(
-                include_thinning_effect=bool(resolved_config.soderberg_include_thinning_effect)
+                include_thinning_effect=bool(self.config.soderberg_include_thinning_effect)
             )
         )
 
@@ -124,16 +137,16 @@ class Soderberg1986Pipeline(Elfving2010Pipeline):
             "Sveriges lantbruksuniversitet, Umeå. Provenance of the growth model "
             "this preset projects with. The "
             "preset itself is a pyforestry composition and carries no separate "
-            "publication: it reuses the Elfving 2010 composite workflow (Elfving "
+            "publication: it drives the shared composite workflow (Elfving "
             "1982/NYSKOG reconstruction, Nyström 2000 young-stand, Elfving 2013 "
-            "mortality, valuation) and swaps mature growth to Söderberg (1986). "
-            "See `components` for each model's own provenance.",
+            "mortality, valuation) with Söderberg (1986) as the mature growth "
+            "model. See `components` for each model's own provenance.",
         )
 
     @property
     def components(self) -> Sequence[Describable]:
-        """Describable components composed by this preset."""
-        return (self._model,)  # Soderberg1986Model (Describable)
+        """The growth model, plus everything the composite workflow composes."""
+        return (self._model, *super().components)
 
     def value_standing_forest(self, tree_list: list[Tree] | None = None) -> dict[str, float]:
         """Estimate standing value and volume for the living trees.
@@ -161,7 +174,7 @@ class Soderberg1986Pipeline(Elfving2010Pipeline):
             return super().value_standing_forest(tree_list)
 
         trees = tree_list if tree_list is not None else self._trees
-        totals = _ValuationTotals()
+        totals = ValuationTotals()
         if not trees or self._site is None:
             return totals.as_row()
 
@@ -325,18 +338,8 @@ class Soderberg1986Pipeline(Elfving2010Pipeline):
         if prop_pine > prop_spruce:
             return "pine"
         if prop_pine <= 0.0 and prop_spruce <= 0.0:
-            return "spruce" if self.config.species_to_plant in _SPRUCE_SET else "pine"
-        return "spruce" if dominant_species in _SPRUCE_SET else "pine"
-
-    def _model_inputs(self) -> None:
-        """Declare that this model has no typed inputs to resolve.
-
-        Söderberg (1986) predates the ``Inputs`` contract in this package and reads
-        ``ctx.attrs`` directly, so everything it needs is in :meth:`_model_attrs`
-        instead. Returning ``None`` rather than the Elfving inputs is what stops the
-        wrong model's site facts being bound to this context.
-        """
-        return None
+            return "spruce" if self.config.species_to_plant in SPRUCE_SET else "pine"
+        return "spruce" if dominant_species in SPRUCE_SET else "pine"
 
     def _model_attrs(self) -> dict[str, object]:
         """The canonical attribute set the Söderberg 1986 kernels read.

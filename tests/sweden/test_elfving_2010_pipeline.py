@@ -6,6 +6,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
+import pyforestry.sweden.simulation.presets._composite as composite_module
 import pyforestry.sweden.simulation.presets.elfving_2010_pipeline as preset_module
 from pyforestry.base.helpers import Tree
 from pyforestry.base.helpers.primitives import SiteBase
@@ -166,7 +167,7 @@ def test_standing_valuation_uses_lookup_cache(monkeypatch: pytest.MonkeyPatch) -
         return _FakeBuckingResult()
 
     monkeypatch.setattr(
-        preset_module.Nasberg_1985_BranchBound,
+        composite_module.Nasberg_1985_BranchBound,
         "calculate_tree_value",
         _fake_calculate_tree_value,
     )
@@ -220,7 +221,7 @@ def test_standing_valuation_cube_lookup_miss_falls_back_and_caches(
         return _FakeBuckingResult()
 
     monkeypatch.setattr(
-        preset_module.Nasberg_1985_BranchBound,
+        composite_module.Nasberg_1985_BranchBound,
         "calculate_tree_value",
         _fake_calculate_tree_value,
     )
@@ -362,12 +363,12 @@ def test_apply_soderberg_height_preserves_nystrom_height_for_young_ids(
     mature_tree.height_m = 12.0
 
     monkeypatch.setattr(
-        preset_module,
+        composite_module,
         "soderberg_1992_height_tree_age_m",
         lambda **_kwargs: 1.25,
     )
     monkeypatch.setattr(
-        preset_module,
+        composite_module,
         "soderberg_1992_bark_thickness_bh_mm",
         lambda **_kwargs: 4.0,
     )
@@ -386,7 +387,7 @@ def test_apply_soderberg_height_preserves_nystrom_height_for_young_ids(
 def test_refresh_model_context_sets_site_index_from_dominant_species() -> None:
     preset = build_elfving_2010_pipeline(
         _make_config(
-            species_to_plant=preset_module.TreeSpecies.Sweden.picea_abies,
+            species_to_plant=composite_module.TreeSpecies.Sweden.picea_abies,
             site_index_pine_m=18.0,
             site_index_spruce_m=32.0,
         )
@@ -394,7 +395,7 @@ def test_refresh_model_context_sets_site_index_from_dominant_species() -> None:
     preset.initialize(site=_make_site())
 
     for tree in preset.tree_list:
-        tree.species = preset_module.TreeSpecies.Sweden.picea_abies
+        tree.species = composite_module.TreeSpecies.Sweden.picea_abies
         tree.diameter_cm = max(12.0, float(tree.diameter_cm or 0.0))
 
     preset._refresh_model_context()
@@ -402,7 +403,7 @@ def test_refresh_model_context_sets_site_index_from_dominant_species() -> None:
     assert preset._ctx is not None
     inputs = preset._ctx.inputs
     assert inputs.site_index_m == pytest.approx(32.0)
-    assert inputs.dominant_species is preset_module.TreeSpecies.Sweden.picea_abies
+    assert inputs.dominant_species is composite_module.TreeSpecies.Sweden.picea_abies
 
 
 def test_mortality_engine_application_reduces_tree_weights(
@@ -421,7 +422,7 @@ def test_mortality_engine_application_reduces_tree_weights(
             diagnostics={},
         )
 
-    monkeypatch.setattr(preset_module.MortalityEngine, "run", _fake_run)
+    monkeypatch.setattr(composite_module.MortalityEngine, "run", _fake_run)
 
     stems_before = sum(float(tree.weight_n or 0.0) for tree in preset.tree_list)
     # Mortality is now two-phase: predict fractions (used by growth calibration),
@@ -507,7 +508,7 @@ def test_value_standing_forest_cached_and_direct_bucking_paths(
         volume_per_quality = [0.0, 0.4, 0.3, 0.2, 0.2, 0.0, 0.0]
 
     monkeypatch.setattr(
-        preset_module.Nasberg_1985_BranchBound,
+        composite_module.Nasberg_1985_BranchBound,
         "calculate_tree_value",
         lambda self, *, min_diam_dead_wood, config=None: _FakeBuckingResult(),  # noqa: ARG005, ANN001
     )
@@ -523,12 +524,12 @@ def test_solution_cube_management_and_lookup_branches(monkeypatch: pytest.Monkey
     preset = build_elfving_2010_pipeline(_make_config(valuation_solution_cube_path=cube_path))
 
     monkeypatch.setattr(
-        preset_module.valuation_cube,
+        composite_module.valuation_cube,
         "ensure_cube_file",
         lambda **kwargs: kwargs["path"],  # noqa: ARG005
     )
     monkeypatch.setattr(
-        preset_module.valuation_cube,
+        composite_module.valuation_cube,
         "load_cube",
         lambda path: (calls.__setitem__("load_path", path), fake_cube)[1],  # noqa: ARG005
     )
@@ -565,7 +566,7 @@ def test_solution_cube_management_and_lookup_branches(monkeypatch: pytest.Monkey
         volume_per_quality = [0.0, 0.3, 0.2, 0.1, 0.2, 0.0, 0.0]
 
     monkeypatch.setattr(
-        preset_module.Nasberg_1985_BranchBound,
+        composite_module.Nasberg_1985_BranchBound,
         "calculate_tree_value",
         lambda self, *, min_diam_dead_wood, config=None: _FakeBuckingResult(),  # noqa: ARG005, ANN001
     )
@@ -586,12 +587,12 @@ def test_initial_dbh_age_fallback_and_naslund_helpers(monkeypatch: pytest.Monkey
     preset.initialize(site=_make_site())
 
     monkeypatch.setattr(
-        preset_module.NystromSoderberg1987,
+        composite_module.NystromSoderberg1987,
         "dbh_from_height",
         staticmethod(lambda **_kwargs: 5.0),
     )
     monkeypatch.setattr(
-        preset_module.NystromSoderberg1987,
+        composite_module.NystromSoderberg1987,
         "age_at_breast_height",
         staticmethod(lambda **_kwargs: -1.0),
     )
@@ -620,25 +621,25 @@ def test_initial_dbh_age_fallback_and_naslund_helpers(monkeypatch: pytest.Monkey
 
     assert (
         preset._naslund_species_group(TreeSpecies.Sweden.pinus_contorta)
-        is preset_module.SaplingSpeciesGroup.CONTORTA
+        is composite_module.SaplingSpeciesGroup.CONTORTA
     )
     assert (
         preset._naslund_species_group(TreeSpecies.Sweden.larix_sibirica)
-        is preset_module.SaplingSpeciesGroup.LARCH
+        is composite_module.SaplingSpeciesGroup.LARCH
     )
     assert (
         preset._naslund_species_group(TreeSpecies.Sweden.populus_tremula)
-        is preset_module.SaplingSpeciesGroup.ASPEN
+        is composite_module.SaplingSpeciesGroup.ASPEN
     )
 
     monkeypatch.setattr(
-        preset_module.Naslund1986DamageModel,
+        composite_module.Naslund1986DamageModel,
         "risk_of_damage",
         staticmethod(lambda **_kwargs: []),
     )
     assert (
         preset._naslund_expected_dead_fraction(
-            species_group=preset_module.SaplingSpeciesGroup.PINE,
+            species_group=composite_module.SaplingSpeciesGroup.PINE,
             tree_height_m=2.0,
             damage_index=0.4,
         )
@@ -646,17 +647,17 @@ def test_initial_dbh_age_fallback_and_naslund_helpers(monkeypatch: pytest.Monkey
     )
 
     monkeypatch.setattr(
-        preset_module.Naslund1986DamageModel,
+        composite_module.Naslund1986DamageModel,
         "risk_of_damage",
         staticmethod(lambda **_kwargs: [0.6, 0.4]),
     )
     monkeypatch.setattr(
-        preset_module.Naslund1986DamageModel,
+        composite_module.Naslund1986DamageModel,
         "damage_degree",
         staticmethod(lambda **_kwargs: (0.1, 0.2, 0.5)),
     )
     dead_fraction = preset._naslund_expected_dead_fraction(
-        species_group=preset_module.SaplingSpeciesGroup.PINE,
+        species_group=composite_module.SaplingSpeciesGroup.PINE,
         tree_height_m=2.0,
         damage_index=0.4,
     )

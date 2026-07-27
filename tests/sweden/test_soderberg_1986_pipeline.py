@@ -146,7 +146,10 @@ def test_soderberg_preset_describable_metadata() -> None:
     assert preset.source.author == "Söderberg, U."
     assert preset.source.year == 1986
     assert "pyforestry composition" in preset.source.note
-    assert preset.components == (preset._model,)
+    # Its own growth model, then everything the shared composite workflow composes.
+    # The mortality engine is in that list, and carries seven mortality papers.
+    assert preset.components[0] is preset._model
+    assert preset._mortality_engine in preset.components
 
 
 _VALUATION_KEYS = {
