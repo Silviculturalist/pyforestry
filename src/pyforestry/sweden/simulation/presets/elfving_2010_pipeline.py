@@ -2051,6 +2051,9 @@ def build_elfving_2010_pipeline(
 
 
 __all__ = [
+    # Declared because ``Elfving2010Pipeline.steps`` is now data a caller can add to,
+    # and a step they write has to name the type it reports into.
+    "Elfving2010PeriodRecord",
     "Elfving2010PipelineConfig",
     "Elfving2010Pipeline",
     "build_elfving_2010_pipeline",
