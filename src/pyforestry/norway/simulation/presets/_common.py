@@ -1,17 +1,16 @@
-"""Common base for Norwegian scenario presets."""
+"""Norway's scenario configuration: what it declares that the shared base does not."""
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from functools import partial
-from hashlib import sha256
-from typing import Any, Callable, Mapping, Sequence
+from typing import Mapping, Sequence
 
-from pyforestry.base.contracts import SourceReference
 from pyforestry.norway.simulation.policy import management_plan, scenario_factors
-from pyforestry.simulation.presets import ScenarioConfigBase
+from pyforestry.simulation.presets import RulesetFn
+from pyforestry.simulation.presets import ScenarioConfig as _ScenarioConfig
 
-RulesetFn = Callable[..., Mapping[str, float]]
+__all__ = ["REQUIRED_ARTIFACTS", "ScenarioConfig"]
 
 REQUIRED_ARTIFACTS = (
     "run_manifest.json",
@@ -19,29 +18,21 @@ REQUIRED_ARTIFACTS = (
 )
 
 
-def _stable_seed(preset_id: str, scenario_id: str, global_seed: int) -> int:
-    """Derive a deterministic seed from preset, scenario, and global seed."""
-    payload = f"{preset_id}:{scenario_id}:{global_seed}"
-    return int(sha256(payload.encode()).hexdigest()[:8], 16)
-
-
 @dataclass(frozen=True)
-class NorwayScenarioPreset(ScenarioConfigBase):
-    """Minimal simulation preset contract for Norway scenarios.
+class ScenarioConfig(_ScenarioConfig):
+    """Norway's scenario configuration.
 
-    Shared guard-policy, artifact, and identity behaviour is inherited from
-    :class:`~pyforestry.simulation.presets.ScenarioConfigBase`; only the
-    Norway-specific seed, stage ordering, rulesets, and provenance live here.
+    Declares the stage order and the rulesets; the seed derivation, guard flags,
+    artifact accessor, identity and provenance are
+    :class:`pyforestry.simulation.presets.ScenarioConfig`'s.
+
+    This was ``NorwayScenarioPreset`` -- the rename that separated "configuration"
+    (this) from "pipeline" (a simulator) reached Sweden and stopped there, so the
+    two regions called one concept two things. Runs nothing; see the base class.
     """
 
-    preset_id: str
-    scenario_id: str
-    _required_artifacts: tuple[str, ...] = field(default=REQUIRED_ARTIFACTS)
-
-    def seed_strategy(self, **kwargs: Any) -> int:
-        """Return a deterministic seed for a run."""
-        global_seed = int(kwargs["global_seed"])
-        return _stable_seed(self.preset_id, self.scenario_id, global_seed)
+    region: str = "Norway"
+    required_artifacts_: tuple[str, ...] = REQUIRED_ARTIFACTS
 
     def stages(self) -> Sequence[str]:
         """Return the ordered stage identifiers for execution."""
@@ -53,19 +44,3 @@ class NorwayScenarioPreset(ScenarioConfigBase):
             "management": partial(management_plan, self.scenario_id),
             "scenario": partial(scenario_factors, self.scenario_id),
         }
-
-    @property
-    def source(self) -> SourceReference:
-        """Bibliographic provenance for this preset."""
-        return SourceReference(
-            author="(none)",
-            year=0,
-            title=f"Norway scenario preset: {self.preset_id}",
-            note=(
-                "A scenario configuration authored in pyforestry, not a publication: "
-                "it selects management and scenario rulesets and cites nothing. "
-                "year=0 is a sentinel for 'not applicable', not a citation date. The "
-                "science belongs to the models the scenario drives, each of which "
-                "carries its own provenance."
-            ),
-        )

@@ -1,4 +1,4 @@
-"""Simulation-runtime contracts: presets and parity fixtures.
+"""Simulation-runtime contracts.
 
 This module holds only what the *runtime* defines. The provenance/introspection
 vocabulary (:class:`~pyforestry.base.contracts.SourceReference`,
@@ -8,33 +8,27 @@ vocabulary (:class:`~pyforestry.base.contracts.SourceReference`,
 modules across every region expose that vocabulary, and nothing above ``base``
 should have to import from the simulation tier to obtain it. Import it from
 :mod:`pyforestry.base.contracts` directly.
+
+``ParityCase`` and ``AssertionResult`` were removed rather than kept: a Protocol
+for reproducible parity fixtures with no implementer and no caller, exported from
+two ``__all__``s, reads as a contract something honours.
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import Any, Callable, Mapping, Protocol, Sequence
-
-# ---------------------------------------------------------------------------
-# Retained data types
-# ---------------------------------------------------------------------------
-
-
-@dataclass(frozen=True)
-class AssertionResult:
-    """Parity-case assertion result payload."""
-
-    passed: bool
-    details: str = ""
-
-
-# ---------------------------------------------------------------------------
-# Execution tier (runtime contracts)
-# ---------------------------------------------------------------------------
 
 
 class SimulationPreset(Protocol):
-    """Contract for runnable scenario preset bundles."""
+    """Contract for a regional scenario configuration.
+
+    Implemented by :class:`pyforestry.simulation.presets.ScenarioConfig`. Note
+    what this is *not*: nothing executes a ``SimulationPreset``. ``stages()`` is
+    recorded into a manifest, ``rulesets()`` and ``guard_policy()`` have no
+    runtime caller, and the harness that consumes the result fills it with
+    synthetic numbers. The runnable things are the composite pipelines under
+    ``<region>/simulation/presets/`` and :func:`pyforestry.project`.
+    """
 
     preset_id: str
 
@@ -45,29 +39,13 @@ class SimulationPreset(Protocol):
         """Return the ordered stage identifiers for execution."""
 
     def rulesets(self) -> Mapping[str, Callable[..., Any]]:
-        """Return scenario rulesets keyed by scenario id."""
+        """Return scenario rulesets keyed by concern."""
 
     def guard_policy(self) -> Mapping[str, object]:
         """Return runtime guard settings."""
 
     def required_artifacts(self) -> Sequence[str]:
-        """Return artifact ids that must be emitted by this preset."""
+        """Return artifact ids that must be emitted under this configuration."""
 
 
-class ParityCase(Protocol):
-    """Contract for reproducible parity fixtures."""
-
-    case_id: str
-    inputs: Mapping[str, Any]
-    expected: Mapping[str, Any]
-    tolerances: Mapping[str, float]
-
-    def assert_case(self, actual: Mapping[str, Any]) -> AssertionResult:
-        """Compare actual outputs with expected values and tolerances."""
-
-
-__all__ = [
-    "AssertionResult",
-    "ParityCase",
-    "SimulationPreset",
-]
+__all__ = ["SimulationPreset"]

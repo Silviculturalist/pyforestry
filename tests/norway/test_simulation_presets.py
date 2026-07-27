@@ -3,18 +3,15 @@
 from __future__ import annotations
 
 from pyforestry.norway.simulation.presets import build_baseline_scenario_config
-from pyforestry.norway.simulation.presets._common import (
-    REQUIRED_ARTIFACTS,
-    NorwayScenarioPreset,
-)
-from pyforestry.simulation.presets import ScenarioConfigBase
+from pyforestry.norway.simulation.presets._common import REQUIRED_ARTIFACTS, ScenarioConfig
+from pyforestry.simulation.presets import ScenarioConfig as SharedScenarioConfig
 
 
 def test_baseline_preset_builds_and_conforms() -> None:
-    """The baseline Norway preset is a ScenarioConfigBase with stable identity."""
+    """The baseline Norway configuration has a stable identity and shared behaviour."""
     preset = build_baseline_scenario_config()
-    assert isinstance(preset, NorwayScenarioPreset)
-    assert isinstance(preset, ScenarioConfigBase)
+    assert isinstance(preset, ScenarioConfig)
+    assert isinstance(preset, SharedScenarioConfig)
     assert preset.component_id == "norway_kuehne/baseline"
     assert preset.stages() == ("growth",)
     assert tuple(preset.required_artifacts()) == REQUIRED_ARTIFACTS

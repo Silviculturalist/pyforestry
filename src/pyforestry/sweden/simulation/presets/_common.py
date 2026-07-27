@@ -1,67 +1,39 @@
-"""Common preset implementation for Sweden simulation scenarios."""
+"""Sweden's scenario configuration: what it declares that the shared base does not."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 from functools import partial
-from hashlib import sha256
-from typing import Any, Callable, Mapping, Sequence
+from typing import Mapping, Sequence
 
-from pyforestry.base.contracts import SourceReference
-from pyforestry.simulation.presets import ScenarioConfigBase
+from pyforestry.simulation.presets import RulesetFn
+from pyforestry.simulation.presets import ScenarioConfig as _ScenarioConfig
 from pyforestry.sweden.simulation.policy import management_plan, scenario_factors
 
-RulesetFn = Callable[..., Any]
-
-
-def _stable_seed(*parts: object) -> int:
-    """Create a deterministic seed from arbitrary preset-identifying parts."""
-    token = "|".join(str(part) for part in parts)
-    digest = sha256(token.encode("utf-8")).hexdigest()
-    return int(digest[:16], 16) & 0x7FFFFFFF
+__all__ = ["ScenarioConfig"]
 
 
 @dataclass(frozen=True)
-class ScenarioConfig(ScenarioConfigBase):
-    """Minimal simulation preset contract implementation for Sweden scenarios.
+class ScenarioConfig(_ScenarioConfig):
+    """Sweden's scenario configuration.
 
-    Shared guard-policy, artifact, and identity behaviour is inherited from
-    :class:`~pyforestry.simulation.presets.ScenarioConfigBase`; only the
-    Sweden-specific seed, stage ordering, rulesets, and provenance live here.
+    Declares the stage order and the rulesets; the seed derivation, guard flags,
+    artifact accessor, identity and provenance are
+    :class:`pyforestry.simulation.presets.ScenarioConfig`'s, which is what Sweden
+    and Norway used to keep separate near-copies of.
+
+    Runs nothing -- see the base class.
     """
 
-    preset_id: str
-    scenario_id: str
-    _required_artifacts: tuple[str, ...]
-
-    def seed_strategy(self, **kwargs: Any) -> int:
-        """Derive a deterministic scenario seed from preset and global seed."""
-        global_seed = int(kwargs["global_seed"])
-        return _stable_seed(self.preset_id, self.scenario_id, global_seed)
+    region: str = "Sweden"
 
     def stages(self) -> Sequence[str]:
-        """Return the default ordered stage sequence for Sweden presets."""
+        """Return the default ordered stage sequence for Sweden configurations."""
         return ("growth", "disturbance", "valuation")
 
     def rulesets(self) -> Mapping[str, RulesetFn]:
-        """Return bound management/scenario ruleset callables for this preset."""
+        """Return bound management/scenario ruleset callables for this configuration."""
         return {
             "management": partial(management_plan, self.scenario_id),
             "scenario": partial(scenario_factors, self.scenario_id),
         }
-
-    @property
-    def source(self) -> SourceReference:
-        """Bibliographic provenance for this preset (there is none)."""
-        return SourceReference(
-            author="(none)",
-            year=0,
-            title=f"Sweden scenario preset: {self.preset_id}",
-            note=(
-                "A scenario configuration authored in pyforestry, not a publication: "
-                "it selects management and scenario rulesets and cites nothing. "
-                "year=0 is a sentinel for 'not applicable', not a citation date. The "
-                "science belongs to the models the scenario drives, each of which "
-                "carries its own provenance."
-            ),
-        )
