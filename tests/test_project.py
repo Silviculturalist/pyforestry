@@ -9,6 +9,7 @@ from __future__ import annotations
 import pytest
 
 import pyforestry as pf
+from pyforestry.base.helpers.primitives import Age, AgeMeasurement
 from pyforestry.base.simulation import Action, GrowthStep, ManagementStep, when
 from pyforestry.sweden.site import Sweden, SwedishSite
 
@@ -111,6 +112,28 @@ def test_the_same_stand_projects_identically_twice():
     first = pf.project(stand, model="elfving_2010", years=20, step=5, attrs=SITE_INDEX)
     second = pf.project(stand, model="elfving_2010", years=20, step=5, attrs=SITE_INDEX)
     assert float(first.stand.BasalArea) == pytest.approx(float(second.stand.BasalArea))
+
+
+def test_a_stand_whose_trees_carry_ages_can_be_projected():
+    """The copy has to survive the measurement types the models actually want.
+
+    Every stand above holds bare floats, so the deep copy never met an
+    ``AgeMeasurement`` -- and ``AgeMeasurement`` could not be deep-copied, which
+    made ``project`` raise ``TypeError`` on precisely the stand the Elfving and
+    Söderberg models read a tree age from.
+    """
+    stand = _stand()
+    for tree in stand.plots[0].trees:
+        tree.age = Age.DBH(45)
+    ages_before = [float(tree.age) for tree in stand.plots[0].trees]
+
+    result = pf.project(stand, model="elfving_2010", years=10, step=5, attrs=SITE_INDEX)
+
+    assert len(result.table) == 2
+    assert [float(tree.age) for tree in stand.plots[0].trees] == ages_before
+    projected = result.stand.plots[0].trees
+    assert all(isinstance(tree.age, AgeMeasurement) for tree in projected)
+    assert all(tree.age.code == Age.DBH.value for tree in projected)
 
 
 # ---------------------------------------------------------------------------
