@@ -7,22 +7,30 @@ Every finding below was verified by executing it against the installed package, 
 reading alone. Probe scripts are quoted inline.
 
 > **Status: closed, except where noted.** Every finding below is fixed; see
-> `ARCHITECTURE_PROPOSAL.md` for the commit each landed in. Two are deliberate
-> non-fixes, argued rather than deferred:
+> `ARCHITECTURE_PROPOSAL.md` for the commit each landed in. One is a deliberate
+> non-fix, argued rather than deferred:
 >
 > * **B6** — the Sweden/Norway `management_rulesets` share a key whose value means
 >   different things. Both are 20-line stubs; unifying them would standardise an
 >   accident. Fix when either grows a real ruleset.
-> * **C1 (part)** — the god class lost its filesystem work and its misleading name,
->   but `step()` still hand-codes its phase order. That order is scientifically
->   load-bearing (mortality before growth, so the stand calibration targets survived
->   basal area), so it needs its own change against the parity tests.
 >
-> The review's own suggested order was followed. Working through it surfaced four
+> C1 closed in two parts. The god class lost its filesystem work and its misleading
+> name first; then, in `dc6be12`, `step()` became an ordered tuple of `Step` objects
+> rather than eight hand-coded phases. The order it carried — mortality predicted
+> before growth, so the stand calibration targets survived rather than gross basal
+> area — is now stated on the steps that depend on it, and a fixture pinning four
+> whole projection tables, every column and row, proves the decomposition moved no
+> number. The twelve `_last_*` fields went with it, and C2's three context rebuilds
+> per period became one context per run.
+>
+> The review's own suggested order was followed. Working through it surfaced six
 > further defects it had not found — a diameter-class inventory keyed only by
-> `"TOTAL"` reporting the stand as empty, two unseeded RNG fallbacks, and a module
-> that could not be imported first — each made visible by the structure that
-> replaced the thing being reviewed.
+> `"TOTAL"` reporting the stand as empty, two unseeded RNG fallbacks, a module that
+> could not be imported first, a young-stand phase that stopped running and left
+> its last figures standing in every later report row, and three measurement
+> primitives that could not be deep-copied, which made `pf.project` raise on any
+> stand carrying a tree age — each made visible by the structure that replaced the
+> thing being reviewed.
 
 ---
 

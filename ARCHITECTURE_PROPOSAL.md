@@ -21,22 +21,34 @@ and ordered so no step depends on a later one.
 > | 6 — one keyed RNG, injected (`AL005`) | `4ece3c9` |
 > | 9 — "preset" renamed; C1's file I/O lifted | `d0df6b8` |
 > | 8 — `pf.project(...)` | `e403e3d` |
+> | 3/9 — the composites re-expressed as pipelines | `dc6be12` |
 >
-> Four bugs surfaced that the review had not found, each of which the new structure
+> C1's other half followed, in `e5d2777..dc6be12`: `Elfving2010Pipeline.step()` is
+> now an ordered tuple of `Step` objects instead of 65 lines of hand-coded phases,
+> each stating in its own docstring what it must follow and why. The twelve
+> `_last_*` fields became one per-period record, and the three context rebuilds per
+> period became one context per run — the pipeline's tree list *is* the context's
+> plot list — so `ctx.history` survives a step for the first time. Söderberg came
+> with it: its `_rebuild_context` override shrank to the one dict it actually
+> changed, which is the confirmation that the abstraction fits more than one model.
+> Proved pure against a fixture pinning four whole projection tables, every column
+> and row, to 1e-9.
+>
+> Six bugs surfaced that the review had not found, each of which the new structure
 > made visible: a diameter-class inventory keyed only by `"TOTAL"` reported the
 > stand as empty (so a diameter-class model driven from an aggregate stand read a
 > stand of nothing and reported success); `run_pipeline` written the obvious way
 > hangs on a pipeline with no growth step; two unseeded `random.Random()` fallbacks
-> made stochastic ingrowth and mortality silently irreproducible; and
-> `import pyforestry.base.aggregation` as a program's first import failed outright.
+> made stochastic ingrowth and mortality silently irreproducible;
+> `import pyforestry.base.aggregation` as a program's first import failed outright;
+> the young-stand phase stopped running once a stand outgrew it, leaving the last
+> young period's damage figures standing in every later snapshot row; and
+> `AgeMeasurement`, `TopHeightMeasurement` and `SiteIndexValue` could not be
+> deep-copied, so `pf.project` raised `TypeError` on any stand whose trees carried
+> an age — the stand its own growth models are written for.
 >
-> **What remains:** C1's other half. `Elfving2010Pipeline` is 1,726 lines and its
-> `step()` still hand-codes the phase order. That order carries scientific coupling
-> the code documents in place — mortality is predicted *before* growth so the
-> Elfving stand calibration targets survived rather than gross basal area — so
-> decomposing it into `Step` objects is worth doing on its own, against the parity
-> tests, rather than alongside a rename. B6 (the Sweden/Norway ruleset key) is left
-> alone deliberately: unifying two stubs standardises an accident.
+> **What remains:** B6 (the Sweden/Norway ruleset key) only, and deliberately:
+> unifying two stubs standardises an accident.
 
 ---
 
