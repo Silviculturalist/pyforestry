@@ -11,8 +11,9 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from pyforestry.base.simulation import SimulationContext
-from pyforestry.simulation.forcing import PRICE, ForcingSet, period_year
+from pyforestry.simulation.forcing import PRICE, ForcingSet, period_time, period_year
 
+from .cashflow import CASH_FLOWS_KEY, CashFlow
 from .removals import StandRemovalLedger
 from .volume import ValuationSettings, VolumeConnector, VolumeResult
 
@@ -80,3 +81,13 @@ class ValuationStep:
             "metadata": result.metadata,
         }
         ctx.attrs[self.CASH_KEY] = float(ctx.attrs.get(self.CASH_KEY, 0.0)) + total_value
+        # Keep the flows, not just the running total: a horizon NPV needs to know
+        # which year each one fell in, and a total cannot say.
+        ctx.attrs.setdefault(CASH_FLOWS_KEY, []).append(
+            CashFlow(
+                year=period_time(ctx),
+                amount=total_value,
+                price_factor=price_factor,
+                label=self.name,
+            )
+        )

@@ -38,6 +38,7 @@ from pyforestry.simulation.stages import (
     StageContext,
     build_pipeline,
 )
+from pyforestry.simulation.valuation.cashflow import CashFlow, cash_flows_of, net_present_value
 from pyforestry.simulation.valuation.volume import ValuationSettings
 
 __all__ = [
@@ -72,12 +73,66 @@ class ScenarioRunResult:
         manifest: The manifest payload, as written.
         contexts: One finished context per stand, in stand order, for a caller
             that wants the history rather than the summary.
+        forcings: The forcings this run applied, kept so a horizon calculation
+            can read a year-varying discount rate off the same set.
     """
 
     artifacts: ScenarioArtifacts
     rows: tuple[Mapping[str, Any], ...]
     manifest: Mapping[str, Any]
     contexts: tuple[SimulationContext, ...] = field(default=())
+    forcings: ForcingSet = field(default_factory=ForcingSet)
+
+    @property
+    def start_year(self) -> float:
+        """The calendar year the projection began in."""
+        return float(self.manifest["start_year"])
+
+    def cash_flows(self) -> tuple[tuple[int, tuple[CashFlow, ...]], ...]:
+        """Return each stand's revenue by year, as ``(stand_id, flows)``.
+
+        Empty for a run that never harvested, or one whose configuration declares
+        no valuation stage.
+        """
+        return tuple(
+            (int(row["stand_id"]), tuple(cash_flows_of(ctx.attrs)))
+            for row, ctx in zip(self.rows, self.contexts, strict=False)
+        )
+
+    def net_present_value(
+        self,
+        *,
+        discount_rate: Optional[float] = None,
+        base_year: Optional[float] = None,
+    ) -> dict[int, float]:
+        """Return each stand's discounted revenue over the horizon, by stand id.
+
+        The revenue in each entry is already nominal -- a
+        :data:`~pyforestry.simulation.forcing.PRICE` forcing was applied in the
+        year it was earned -- so discounting it here completes the pair: prices
+        move the money, the discount rate moves it in time, and the manifest
+        records both separately.
+
+        Args:
+            discount_rate: A flat annual rate. Ignored if the run applied a
+                :data:`~pyforestry.simulation.forcing.DISCOUNT` forcing, which
+                may vary by year.
+            base_year: The year to express the total in. Defaults to the run's
+                first.
+
+        Returns:
+            Stand id to net present value. Zero for a stand that earned nothing.
+        """
+        base = self.start_year if base_year is None else float(base_year)
+        return {
+            stand_id: net_present_value(
+                flows,
+                base_year=base,
+                discount_rate=discount_rate,
+                forcings=self.forcings,
+            )
+            for stand_id, flows in self.cash_flows()
+        }
 
 
 def _stand_seed(scenario_seed: int, stand_id: int) -> int:
@@ -282,4 +337,5 @@ def run_scenario(
         rows=tuple(rows),
         manifest=manifest,
         contexts=tuple(contexts),
+        forcings=applied_forcings,
     )

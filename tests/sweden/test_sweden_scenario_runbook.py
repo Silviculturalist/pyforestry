@@ -146,3 +146,64 @@ def test_scenario_config_lookup_and_error_paths() -> None:
         get_scenario_config("storm_risk_high")
     with pytest.raises(ValueError, match="Unsupported scenario_id"):
         get_scenario_config("unknown")
+
+
+def test_inflation_reaches_the_horizon_net_present_value(tmp_path, valuation) -> None:
+    """A price forcing moves the money; the discount rate moves it in time.
+
+    The composition the forcing mechanism exists for: a price index scales each
+    period's revenue in the year it was earned, and the horizon NPV discounts
+    those nominal flows back to the start of the run.
+    """
+    from pyforestry.base.contracts import SourceReference
+    from pyforestry.simulation.forcing import PRICE, AnnualForcing, ForcingSet
+
+    index = AnnualForcing(
+        PRICE,
+        {2025: 1.0, 2030: 1.104, 2035: 1.219, 2040: 1.346},
+        source=SourceReference(
+            author="Test fixture", year=2026, title="A price index, and says so"
+        ),
+    )
+
+    def _run(name, forcings):
+        return run_sweden_scenario(
+            global_seed=7,
+            output_dir=tmp_path / name,
+            stands=build_even_aged_stands(1),
+            n_steps=3,
+            step_years=5.0,
+            start_year=2025,
+            valuation=valuation,
+            thin_at_years=[10.0],
+            forcings=forcings,
+        )
+
+    flat = _run("flat", ForcingSet())
+    inflated = _run("inflated", ForcingSet([index]))
+
+    # The thinning falls in 2035, where the index stands at 1.219.
+    ((_stand_id, flat_flows),) = flat.cash_flows()
+    ((_stand_id, inflated_flows),) = inflated.cash_flows()
+    assert [f.year for f in flat_flows] == [2035.0]
+    assert inflated_flows[0].price_factor == pytest.approx(1.219)
+    assert inflated_flows[0].amount == pytest.approx(flat_flows[0].amount * 1.219)
+
+    npv_flat = flat.net_present_value(discount_rate=0.03)[1]
+    npv_inflated = inflated.net_present_value(discount_rate=0.03)[1]
+    assert npv_inflated == pytest.approx(npv_flat * 1.219)
+    # Discounted from 2035 back to the run's own first year, not to nothing.
+    assert npv_flat == pytest.approx(flat_flows[0].amount * 1.03**-10)
+    assert inflated.start_year == 2025.0
+
+
+def test_a_run_that_never_harvested_is_worth_nothing(tmp_path, valuation) -> None:
+    result = run_sweden_scenario(
+        global_seed=7,
+        output_dir=tmp_path / "run",
+        stands=build_even_aged_stands(1),
+        n_steps=2,
+        start_year=2025,
+        valuation=valuation,
+    )
+    assert result.net_present_value(discount_rate=0.03) == {1: 0.0}

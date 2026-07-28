@@ -54,6 +54,7 @@ __all__ = [
     "CALENDAR_YEAR_KEY",
     "AnnualForcing",
     "ConstantForcing",
+    "DISCOUNT",
     "DISTURBANCE",
     "Forcing",
     "ForcingSet",
@@ -61,6 +62,8 @@ __all__ = [
     "PRICE",
     "THINNING",
     "is_neutral_value",
+    "stated_choice",
+    "period_time",
     "period_year",
 ]
 
@@ -70,6 +73,10 @@ GROWTH = "growth"
 DISTURBANCE = "disturbance"
 THINNING = "thinning"
 PRICE = "price"
+#: A discount rate, read by :mod:`pyforestry.simulation.valuation.cashflow`. Unlike
+#: the others this is a rate rather than a multiplier, and it is a stated
+#: preference rather than a finding -- cite it with :func:`stated_choice`.
+DISCOUNT = "discount"
 
 #: Where the period's calendar year is stamped on the context. A projection's own
 #: clock is elapsed years from wherever the model started -- and some models start
@@ -82,9 +89,9 @@ def period_year(ctx: SimulationContext) -> float:
     """Return the calendar year of the period currently running.
 
     Stamped by :class:`~pyforestry.simulation.stages.CalendarStep`, which
-    :func:`~pyforestry.simulation.stages.build_pipeline` puts first. A run without
-    one has no calendar, and a year-keyed forcing would otherwise silently get
-    whatever year ``0`` maps to.
+    :func:`~pyforestry.simulation.stages.build_pipeline` puts first. Reading a
+    year-keyed forcing without one would silently take whatever value the series
+    holds at year zero, so this raises instead.
 
     Raises:
         RuntimeError: If no calendar was stamped.
@@ -99,12 +106,49 @@ def period_year(ctx: SimulationContext) -> float:
     return float(year)
 
 
+def period_time(ctx: SimulationContext) -> float:
+    """Return the period's calendar year, or the run's own clock if it has none.
+
+    For labelling rather than lookup. A cash flow needs to know *when* it
+    happened to be discounted, but a run with no calendar still has an ordering
+    -- its elapsed clock -- and that is a better answer than refusing to record
+    the flow at all. :func:`period_year` stays strict, because a forcing series
+    read at the wrong year is wrong quietly.
+    """
+    year = ctx.attrs.get(CALENDAR_YEAR_KEY)
+    return float(year) if year is not None else float(ctx.state.get("t", 0.0))
+
+
 #: What an :class:`AnnualForcing` does for a year its series does not cover.
 #: ``"raise"`` is the default because a run that steps past the end of a weather
 #: series is asking a question the series cannot answer, and the alternatives
 #: answer it silently: ``"hold"`` extends the nearest year's value, ``"neutral"``
 #: substitutes 1.0.
 _OUTSIDE_SERIES = ("raise", "hold", "neutral")
+
+
+def stated_choice(what: str) -> SourceReference:
+    """Cite a forcing that is a decision rather than a finding.
+
+    A discount rate, a thinning intensity, an assumed price level: the analyst
+    chose it, and no paper says it is so. This builds the ``(none)``/year-0
+    sentinel the package already uses for anything authored rather than
+    published, so such a forcing satisfies the citation rule *and* says plainly
+    in the run manifest that it is a choice.
+
+    Args:
+        what: What was chosen, e.g. ``"3% real discount rate"``.
+    """
+    return SourceReference(
+        author="(none)",
+        year=0,
+        title=f"Stated choice: {what}",
+        note=(
+            "A value chosen by whoever configured this run, not a finding: no "
+            "publication says it is so. year=0 is a sentinel for 'not applicable', "
+            "not a citation date."
+        ),
+    )
 
 
 def is_neutral_value(value: Any) -> bool:
