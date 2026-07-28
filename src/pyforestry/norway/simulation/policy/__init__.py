@@ -1,6 +1,21 @@
-"""Norwegian scenario and management policy rulesets."""
+"""Scenario and management policy rulesets for Norway.
 
-from .management_rulesets import management_plan
-from .scenario_rulesets import scenario_factors
+The values are Norway's; what the fields mean and how an unknown
+scenario id is handled is :mod:`pyforestry.simulation.policy`, because the two
+regions had answered both questions differently.
+"""
 
-__all__ = ["management_plan", "scenario_factors"]
+from .management_rulesets import (
+    management_intensity,
+    management_plan,
+    supported_management_scenarios,
+)
+from .scenario_rulesets import scenario_factors, supported_scenarios
+
+__all__ = [
+    "management_intensity",
+    "management_plan",
+    "scenario_factors",
+    "supported_management_scenarios",
+    "supported_scenarios",
+]

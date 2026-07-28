@@ -22,13 +22,19 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from hashlib import sha256
-from typing import Any, Callable, Mapping, Sequence
+from typing import Any, Callable, Mapping, Sequence, Union
 
 from pyforestry.base.contracts import Describable, SourceReference
 from pyforestry.simulation.contracts import SimulationPreset
+from pyforestry.simulation.policy import ManagementPlan, ScenarioFactors
 
-#: A ruleset maps a scenario id to the factors that scenario applies.
-RulesetFn = Callable[..., Mapping[str, float]]
+#: A ruleset is a callable bound to a scenario id that returns that scenario's
+#: knobs, typed: a :class:`~pyforestry.simulation.policy.ManagementPlan` or a
+#: :class:`~pyforestry.simulation.policy.ScenarioFactors`. It used to be
+#: ``Callable[..., Any]`` in Sweden and ``Callable[..., Mapping[str, float]]`` in
+#: Norway, which is how the two regions came to mean different quantities by the
+#: key ``thinning_ratio``.
+RulesetFn = Callable[[], Union[ManagementPlan, ScenarioFactors]]
 
 
 def stable_seed(*parts: object) -> int:

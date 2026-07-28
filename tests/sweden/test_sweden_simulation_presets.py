@@ -97,9 +97,9 @@ def test_sweden_preset_writes_required_artifacts_and_schema(tmp_path) -> None:
 def test_policy_and_preset_lookups_cover_error_paths() -> None:
     assert stand_id_series(3) == [1, 2, 3]
     assert management_intensity("baseline") == pytest.approx(0.20)
-    assert management_plan("baseline")["thinning_ratio"] == pytest.approx(0.20)
+    assert management_plan("baseline").thinning_ratio == pytest.approx(0.20)
     assert supported_scenarios() == ("baseline",)
-    assert scenario_factors("baseline")["disturbance_factor"] == pytest.approx(1.0)
+    assert scenario_factors("baseline").disturbance_factor == pytest.approx(1.0)
     assert get_scenario_config("baseline").scenario_id == "baseline"
 
     with pytest.raises(ValueError, match="Unsupported scenario_id"):

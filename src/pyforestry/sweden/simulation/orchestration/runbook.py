@@ -103,8 +103,8 @@ def _synthetic_summary_rows(
 
         initial_volume = 120.0 + rng.random() * 80.0
         growth_per_step = 1.8 + rng.random() * 1.7
-        gross_growth = growth_per_step * n_steps * factors["growth_factor"]
-        disturbance_ratio = (0.03 + rng.random() * 0.07) * factors["disturbance_factor"]
+        gross_growth = growth_per_step * n_steps * factors.growth_factor
+        disturbance_ratio = (0.03 + rng.random() * 0.07) * factors.disturbance_factor
         disturbance_loss = gross_growth * disturbance_ratio
         harvested_volume = (initial_volume + gross_growth) * thinning_ratio * 0.1
         net_volume = max(0.0, initial_volume + gross_growth - disturbance_loss - harvested_volume)

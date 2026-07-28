@@ -1,27 +1,27 @@
-"""Scenario-specific policy rulesets for Sweden simulation presets."""
+"""Scenario-factor rulesets for Sweden scenario configurations."""
 
 from __future__ import annotations
 
-from types import MappingProxyType
-from typing import Mapping
+from pyforestry.simulation.policy import ScenarioFactors, lookup_scenario
 
-_SCENARIO_FACTORS = {
-    "baseline": {
-        "growth_factor": 1.0,
-        "disturbance_factor": 1.0,
-    },
+__all__ = ["scenario_factors", "supported_scenarios"]
+
+#: Scenario overlays applied on top of the published models. Both default to 1.0,
+#: which is an exact no-op; see :class:`~pyforestry.simulation.policy.ScenarioFactors`.
+_SCENARIO_FACTORS: dict[str, ScenarioFactors] = {
+    "baseline": ScenarioFactors(growth_factor=1.0, disturbance_factor=1.0),
 }
 
 
 def supported_scenarios() -> tuple[str, ...]:
-    """Return scenario ids supported by the preset package."""
-    return tuple(_SCENARIO_FACTORS)
+    """Return scenario ids this ruleset covers."""
+    return tuple(sorted(_SCENARIO_FACTORS))
 
 
-def scenario_factors(scenario_id: str) -> Mapping[str, float]:
-    """Return growth/disturbance multipliers for the selected scenario."""
-    try:
-        factors = _SCENARIO_FACTORS[scenario_id]
-    except KeyError as exc:
-        raise ValueError(f"Unsupported scenario_id: {scenario_id!r}") from exc
-    return MappingProxyType(dict(factors))
+def scenario_factors(scenario_id: str) -> ScenarioFactors:
+    """Return the growth and disturbance overlays for the selected scenario.
+
+    Raises:
+        ValueError: If the scenario id is unknown.
+    """
+    return lookup_scenario(_SCENARIO_FACTORS, scenario_id, what="Sweden scenario factors")
