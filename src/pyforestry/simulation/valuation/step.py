@@ -11,6 +11,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from pyforestry.base.simulation import SimulationContext
+from pyforestry.simulation.forcing import PRICE, ForcingSet, period_year
 
 from .removals import StandRemovalLedger
 from .volume import ValuationSettings, VolumeConnector, VolumeResult
@@ -40,6 +41,7 @@ class ValuationStep:
 
     settings: ValuationSettings
     connector: VolumeConnector = field(default_factory=VolumeConnector)
+    forcings: ForcingSet = field(default_factory=ForcingSet)
     name: str = "valuation"
 
     #: Where the ledger is read from and the result is written to.
@@ -64,14 +66,17 @@ class ValuationStep:
         ctx.attrs[self.LEDGER_KEY] = StandRemovalLedger(
             stand_id=ledger.stand_id, metadata=dict(ledger.metadata)
         )
+        # A price forcing is inflation, or any other index on what a cubic metre
+        # fetches in the year this period falls in. 1.0 with none declared.
+        price_factor = self.forcings.multiplier(PRICE, period_year(ctx)) if self.forcings else 1.0
+        total_value = float(result.total_value) * price_factor
         ctx.attrs[self.RESULT_KEY] = {
             "ledger": ledger,
             "result": result,
             "pieces": result.pieces,
             "volume_by_quality": result.volume_by_quality,
-            "total_value": result.total_value,
+            "total_value": total_value,
+            "price_factor": price_factor,
             "metadata": result.metadata,
         }
-        ctx.attrs[self.CASH_KEY] = float(ctx.attrs.get(self.CASH_KEY, 0.0)) + float(
-            result.total_value
-        )
+        ctx.attrs[self.CASH_KEY] = float(ctx.attrs.get(self.CASH_KEY, 0.0)) + total_value

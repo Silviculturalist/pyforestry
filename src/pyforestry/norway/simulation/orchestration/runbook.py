@@ -28,6 +28,7 @@ from pyforestry.norway.adapters.kuehne_2022 import (
 )
 from pyforestry.norway.growth.kuehne_2022 import kuehne_2022_stand_volume
 from pyforestry.norway.simulation.presets import ScenarioConfig, build_baseline_scenario_config
+from pyforestry.simulation.forcing import ForcingSet
 from pyforestry.simulation.scenario import ScenarioRunResult, StandUnit, run_scenario
 
 __all__ = ["build_kuehne_stands", "kuehne_stand_volume", "run_norway_scenario"]
@@ -119,6 +120,8 @@ def run_norway_scenario(
     step_years: float = 5.0,
     disturbance_rate_per_year: float = 0.0,
     thin_at_years: Sequence[float] = (),
+    start_year: float = 0.0,
+    forcings: Optional[ForcingSet] = None,
 ) -> ScenarioRunResult:
     """Run a Norway scenario with the Kuehne (2022) pine model and write its artifacts.
 
@@ -137,6 +140,10 @@ def run_norway_scenario(
             disturbance rate is a finding and there is no source for one here.
             Zero, the default, makes the stage an exact no-op.
         thin_at_years: Clock times at which the management stage thins.
+        start_year: Calendar year the projection begins in, which is the year
+            a forcing series is read at.
+        forcings: Named values the run reads per period -- a weather
+            correction, a price index. This package ships none.
 
     Returns:
         The run result, including the written artifacts.
@@ -160,4 +167,6 @@ def run_norway_scenario(
         output_dir=output_dir,
         disturbance_rate_per_year=disturbance_rate_per_year,
         thin_at_years=thin_at_years,
+        start_year=start_year,
+        forcings=forcings,
     )

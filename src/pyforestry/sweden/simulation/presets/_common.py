@@ -6,9 +6,10 @@ from dataclasses import dataclass
 from functools import partial
 from typing import Mapping, Sequence
 
+from pyforestry.simulation.forcing import ForcingSet
 from pyforestry.simulation.presets import RulesetFn
 from pyforestry.simulation.presets import ScenarioConfig as _ScenarioConfig
-from pyforestry.sweden.simulation.policy import management_plan, scenario_factors
+from pyforestry.sweden.simulation.policy import management_plan, scenario_forcings
 
 __all__ = ["ScenarioConfig"]
 
@@ -44,5 +45,13 @@ class ScenarioConfig(_ScenarioConfig):
         """Return bound management/scenario ruleset callables for this configuration."""
         return {
             "management": partial(management_plan, self.scenario_id),
-            "scenario": partial(scenario_factors, self.scenario_id),
         }
+
+    def forcings(self) -> ForcingSet:
+        """Return the forcings this scenario declares -- none, in this package.
+
+        A forcing is imposed from outside the models, so it is a claim about the
+        world; a caller supplies its own to ``run_scenario`` and the manifest
+        records them with their citations.
+        """
+        return scenario_forcings(self.scenario_id)

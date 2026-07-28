@@ -22,6 +22,7 @@ from pyforestry.base.helpers.stand import Stand
 from pyforestry.base.helpers.tree import Tree
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies
 from pyforestry.base.simulation.core import SimulationContext
+from pyforestry.simulation.forcing import ForcingSet
 from pyforestry.simulation.scenario import ScenarioRunResult, StandUnit, run_scenario
 from pyforestry.simulation.valuation.removals import TreeRemoval
 from pyforestry.simulation.valuation.volume import ValuationSettings
@@ -173,6 +174,8 @@ def run_sweden_scenario(
     valuation: Optional[ValuationSettings] = None,
     disturbance_rate_per_year: float = 0.0,
     thin_at_years: Sequence[float] = (),
+    start_year: float = 0.0,
+    forcings: Optional[ForcingSet] = None,
 ) -> ScenarioRunResult:
     """Run a Sweden scenario with the Elfving (2010) model and write its artifacts.
 
@@ -195,6 +198,10 @@ def run_sweden_scenario(
             disturbance rate is a finding and there is no source for one here.
             Zero, the default, makes the stage an exact no-op.
         thin_at_years: Clock times at which the management stage thins.
+        start_year: Calendar year the projection begins in, which is the year
+            a forcing series is read at.
+        forcings: Named values the run reads per period -- a weather
+            correction, a price index. This package ships none.
 
     Returns:
         The run result, including the written artifacts.
@@ -216,4 +223,6 @@ def run_sweden_scenario(
         valuation=valuation,
         disturbance_rate_per_year=disturbance_rate_per_year,
         thin_at_years=thin_at_years,
+        start_year=start_year,
+        forcings=forcings,
     )

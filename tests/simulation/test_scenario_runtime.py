@@ -29,7 +29,13 @@ from pyforestry.simulation.artifacts import (
     load_scenario_summary,
     validate_artifact_contract,
 )
-from pyforestry.simulation.policy import ManagementPlan, ScenarioFactors
+from pyforestry.simulation.forcing import (
+    CALENDAR_YEAR_KEY,
+    GROWTH,
+    ConstantForcing,
+    ForcingSet,
+)
+from pyforestry.simulation.policy import ManagementPlan
 from pyforestry.simulation.presets import ScenarioConfig
 from pyforestry.simulation.scenario import StandUnit, run_scenario
 from pyforestry.simulation.stages import StageContext, build_pipeline, known_stages
@@ -76,10 +82,7 @@ class _Config(ScenarioConfig):
         return ("management", "disturbance", "growth")
 
     def rulesets(self):
-        return {
-            "management": lambda: ManagementPlan(thinning_ratio=0.25),
-            "scenario": lambda: ScenarioFactors(growth_factor=1.0, disturbance_factor=1.0),
-        }
+        return {"management": lambda: ManagementPlan(thinning_ratio=0.25)}
 
 
 def _config(**kwargs) -> _Config:
@@ -118,6 +121,7 @@ def _run(tmp_path, **kwargs):
         "n_steps": 4,
         "step_years": 5.0,
         "output_dir": tmp_path / "run",
+        "start_year": 2020.0,
     }
     config = params.pop("config", None) or kwargs.pop("config", None) or _config()
     params.update(kwargs)
@@ -152,33 +156,31 @@ def test_disturbance_stage_removes_and_is_reported_apart_from_harvest(tmp_path) 
     assert row["harvested_m3"] == pytest.approx(0.0)
 
 
-def test_scenario_growth_factor_scales_the_increment(tmp_path) -> None:
-    """The overlay is applied, and only to the increment."""
-
-    class _Warmer(_Config):
-        def rulesets(self):
-            return {
-                "management": lambda: ManagementPlan(thinning_ratio=0.25),
-                "scenario": lambda: ScenarioFactors(
-                    growth_factor=1.5,
-                    source=SourceReference(
-                        author="Test fixture",
-                        year=2026,
-                        title="An overlay invented by this test, and saying so",
-                    ),
+def test_a_growth_forcing_scales_the_increment(tmp_path) -> None:
+    """The forcing is applied, and only to the increment."""
+    warmer = ForcingSet(
+        [
+            ConstantForcing(
+                GROWTH,
+                1.5,
+                source=SourceReference(
+                    author="Test fixture",
+                    year=2026,
+                    title="A forcing invented by this test, and saying so",
                 ),
-            }
+            )
+        ]
+    )
+    baseline = _run(tmp_path / "a")
+    forced = _run(tmp_path / "b", forcings=warmer)
 
-    baseline = _run(tmp_path / "a", config=_config())
-    warmer = _run(tmp_path / "b", config=_Warmer(**_config().__dict__))
-
-    assert warmer.rows[0]["gross_growth_m3"] == pytest.approx(
+    assert forced.rows[0]["gross_growth_m3"] == pytest.approx(
         baseline.rows[0]["gross_growth_m3"] * 1.5
     )
-    assert warmer.rows[0]["initial_volume_m3"] == baseline.rows[0]["initial_volume_m3"]
+    assert forced.rows[0]["initial_volume_m3"] == baseline.rows[0]["initial_volume_m3"]
 
 
-def test_growth_factor_refuses_a_representation_it_cannot_scale() -> None:
+def test_a_growth_forcing_refuses_a_representation_it_cannot_scale() -> None:
     """Scaling 'the increment' is only defined for aggregate metrics."""
     from pyforestry.base.helpers.plot import CircularPlot
     from pyforestry.base.helpers.tree import Tree
@@ -196,8 +198,18 @@ def test_growth_factor_refuses_a_representation_it_cannot_scale() -> None:
         ],
     )
     ctx = ExampleStandGeneralModel().build_context(stand, mode_hint="tree_list")
-    with pytest.raises(ValueError, match="growth_factor"):
-        ScenarioGrowthStep(growth_factor=1.2).run(ctx, 5.0)
+    ctx.attrs[CALENDAR_YEAR_KEY] = 2020.0
+    forcings = ForcingSet(
+        [
+            ConstantForcing(
+                GROWTH,
+                1.2,
+                source=SourceReference(author="Test fixture", year=2026, title="Says so"),
+            )
+        ]
+    )
+    with pytest.raises(ValueError, match="growth forcing"):
+        ScenarioGrowthStep(forcings=forcings).run(ctx, 5.0)
 
 
 # --- the manifest says how the run was constructed ---------------------------
@@ -213,7 +225,7 @@ def test_manifest_records_the_construction(tmp_path) -> None:
 
     assert manifest["stages"] == ["management", "disturbance", "growth"]
     assert manifest["rulesets_applied"]["management"] == {"thinning_ratio": 0.25}
-    assert manifest["rulesets_applied"]["scenario"]["growth_factor"] == 1.0
+    assert manifest["forcings_applied"] == [], "this package ships no forcings"
     assert manifest["guard_policy"]["clamp_net_volume_to_zero"] is True
     assert manifest["thin_at_years"] == [10.0]
     assert manifest["disturbance_rate_per_year"] == pytest.approx(0.02)
@@ -294,6 +306,13 @@ def test_summary_columns_are_the_schema_s(tmp_path) -> None:
 def test_an_unknown_stage_is_named_rather_than_skipped() -> None:
     with pytest.raises(ValueError, match="Unknown stage"):
         build_pipeline(("growth", "teleport"), StageContext(volume=_volume))
+
+
+def test_the_calendar_step_is_prepended_and_not_a_declared_stage() -> None:
+    """Which years a run covers belongs to the run, not to the scenario."""
+    steps = build_pipeline(("growth",), StageContext(volume=_volume), start_year=2020)
+    assert [step.name for step in steps] == ["calendar", "growth"]
+    assert "calendar" not in known_stages()
 
 
 def test_known_stages_are_the_registry_s() -> None:

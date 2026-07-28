@@ -21,13 +21,19 @@ from pyforestry.norway.simulation.orchestration import (
 )
 from pyforestry.norway.simulation.policy import (
     management_intensity,
-    scenario_factors,
+    scenario_forcings,
     supported_scenarios,
 )
 from pyforestry.norway.simulation.presets import ScenarioConfig, build_baseline_scenario_config
 from pyforestry.norway.simulation.presets._common import REQUIRED_ARTIFACTS
 from pyforestry.simulation.artifacts import load_scenario_summary, validate_artifact_contract
-from pyforestry.simulation.policy import ManagementPlan, ScenarioFactors
+from pyforestry.simulation.forcing import (
+    DISTURBANCE,
+    GROWTH,
+    AnnualForcing,
+    ConstantForcing,
+    ForcingSet,
+)
 from pyforestry.simulation.presets import ScenarioConfig as SharedScenarioConfig
 
 # --- the configuration -------------------------------------------------------
@@ -63,7 +69,8 @@ def test_guard_policy_and_rulesets_are_exposed() -> None:
         "clamp_net_volume_to_zero": True,
         "reject_negative_inputs": True,
     }
-    assert set(config.rulesets()) == {"management", "scenario"}
+    assert set(config.rulesets()) == {"management"}
+    assert config.forcings() == ForcingSet(), "this package ships no forcings"
 
 
 def test_source_declares_that_it_is_not_a_publication() -> None:
@@ -126,69 +133,103 @@ def test_the_fabricated_climate_scenario_does_not_resolve() -> None:
     specific IPCC pathway, so the scenario read as a finding about Norwegian
     Scots pine that nobody had made.
     """
-    for lookup in (management_intensity, scenario_factors):
-        with pytest.raises(ValueError, match="Unsupported scenario_id"):
-            lookup("climate_rcp45")
+    with pytest.raises(ValueError, match="Unsupported scenario_id"):
+        management_intensity("climate_rcp45")
+    with pytest.raises(ValueError, match="Unsupported scenario_id"):
+        scenario_forcings("climate_rcp45")
 
 
-def test_every_shipped_scenario_overlay_is_neutral() -> None:
-    """Nothing shipped multiplies a published model's numbers.
-
-    The mechanism exists and is exercised below; what it must not do is arrive
-    preloaded with factors that have no paper behind them.
+def test_no_shipped_scenario_forces_anything() -> None:
+    """The mechanism exists and is exercised below; what it must not do is arrive
+    preloaded with numbers that have no paper behind them.
     """
     for scenario_id in supported_scenarios():
-        assert scenario_factors(scenario_id).is_neutral, scenario_id
+        assert scenario_forcings(scenario_id) == ForcingSet(), scenario_id
 
 
-def test_a_cited_overlay_raises_growth_and_disturbance(tmp_path) -> None:
-    """The overlay mechanism works -- for factors that say where they come from."""
-
-    class _CitedClimate(ScenarioConfig):
-        def rulesets(self):
-            return {
-                "management": lambda: ManagementPlan(thinning_ratio=0.20),
-                "scenario": lambda: ScenarioFactors(
-                    growth_factor=1.05,
-                    disturbance_factor=1.2,
-                    source=SourceReference(
-                        author="Test fixture",
-                        year=2026,
-                        title="An overlay invented by this test, and saying so",
-                    ),
-                ),
-            }
+def test_a_cited_forcing_raises_growth_and_disturbance(tmp_path) -> None:
+    """The forcing mechanism works -- for values that say where they come from."""
+    source = SourceReference(
+        author="Test fixture",
+        year=2026,
+        title="Forcings invented by this test, and saying so",
+    )
+    forcings = ForcingSet(
+        [
+            ConstantForcing(GROWTH, 1.05, source=source),
+            ConstantForcing(DISTURBANCE, 1.2, source=source),
+        ]
+    )
 
     baseline = run_norway_scenario(
         global_seed=1,
         output_dir=tmp_path / "base",
         n_stands=1,
         n_steps=6,
+        start_year=2020,
         disturbance_rate_per_year=0.004,
     )
-    cited = run_norway_scenario(
+    forced = run_norway_scenario(
         global_seed=1,
-        output_dir=tmp_path / "cited",
+        output_dir=tmp_path / "forced",
         n_stands=1,
         n_steps=6,
+        start_year=2020,
         disturbance_rate_per_year=0.004,
-        config=_CitedClimate(preset_id="norway_kuehne", scenario_id="baseline"),
+        forcings=forcings,
     )
 
-    assert cited.rows[0]["gross_growth_m3"] > baseline.rows[0]["gross_growth_m3"]
-    assert cited.rows[0]["disturbance_loss_m3"] > baseline.rows[0]["disturbance_loss_m3"]
+    assert forced.rows[0]["gross_growth_m3"] > baseline.rows[0]["gross_growth_m3"]
+    assert forced.rows[0]["disturbance_loss_m3"] > baseline.rows[0]["disturbance_loss_m3"]
 
-    manifest = json.loads(cited.artifacts.run_manifest_path.read_text(encoding="utf-8"))
-    applied = manifest["rulesets_applied"]["scenario"]
-    assert applied["growth_factor"] == 1.05
+    manifest = json.loads(forced.artifacts.run_manifest_path.read_text(encoding="utf-8"))
+    applied = {entry["name"]: entry for entry in manifest["forcings_applied"]}
+    assert applied[GROWTH]["value"] == 1.05
     # The citation travels with the number into the manifest, which is the point.
-    assert applied["source"]["year"] == 2026
+    assert applied[GROWTH]["source"]["year"] == 2026
 
 
-def test_an_uncited_overlay_is_refused() -> None:
-    """A multiplier on a published model must say where it comes from."""
-    with pytest.raises(ValueError, match="where the factors come from"):
-        ScenarioFactors(growth_factor=1.05)
+def test_a_year_by_year_forcing_varies_across_the_run(tmp_path) -> None:
+    """A weather correction is a series, not one number for the projection."""
+    source = SourceReference(author="Test fixture", year=2026, title="A series, and saying so")
+    weather = AnnualForcing(
+        GROWTH,
+        {2020: 1.04, 2025: 1.02, 2030: 0.98, 2035: 0.67},
+        outside_series="hold",
+        source=source,
+    )
+
+    flat = run_norway_scenario(
+        global_seed=1,
+        output_dir=tmp_path / "flat",
+        n_stands=1,
+        n_steps=4,
+        start_year=2020,
+        forcings=ForcingSet([ConstantForcing(GROWTH, 1.04, source=source)]),
+    )
+    varying = run_norway_scenario(
+        global_seed=1,
+        output_dir=tmp_path / "varying",
+        n_stands=1,
+        n_steps=4,
+        start_year=2020,
+        forcings=ForcingSet([weather]),
+    )
+
+    # Same first period, different afterwards: the series is read per period.
+    assert varying.rows[0]["gross_growth_m3"] != flat.rows[0]["gross_growth_m3"]
+
+    manifest = json.loads(varying.artifacts.run_manifest_path.read_text(encoding="utf-8"))
+    entry = manifest["forcings_applied"][0]
+    assert entry["resolution"] == "annual"
+    assert entry["series"]["2035"] == 0.67
+    assert manifest["start_year"] == 2020.0
+
+
+def test_an_uncited_forcing_is_refused() -> None:
+    """A value that changes a published model must say where it comes from."""
+    with pytest.raises(ValueError, match="where it comes from"):
+        ConstantForcing(GROWTH, 1.05)
 
 
 def test_the_volume_reporter_is_a_function_of_the_current_stand(tmp_path) -> None:

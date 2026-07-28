@@ -10,12 +10,12 @@ from .management_rulesets import (
     management_plan,
     supported_management_scenarios,
 )
-from .scenario_rulesets import scenario_factors, supported_scenarios
+from .scenario_rulesets import scenario_forcings, supported_scenarios
 
 __all__ = [
     "management_intensity",
     "management_plan",
-    "scenario_factors",
+    "scenario_forcings",
     "supported_management_scenarios",
     "supported_scenarios",
 ]

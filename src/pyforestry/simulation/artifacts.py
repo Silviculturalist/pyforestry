@@ -76,8 +76,10 @@ SCENARIO_SUMMARY_COLUMNS = (
 
 #: Version 1.0 carried ``synthetic``, because the only writer produced a random
 #: walk. It is gone: a run emits these artifacts or it does not run.
-#: ``models_run``, ``rulesets_applied`` and ``guard_policy`` are required because
-#: they are what makes the summary interpretable.
+#: ``models_run``, ``rulesets_applied``, ``forcings_applied`` and ``guard_policy``
+#: are required because they are what makes the summary interpretable. A forcing
+#: record carries its own citation, so a reader can see not just that growth was
+#: scaled but by whom it was said to be.
 MANIFEST_REQUIRED_KEYS = (
     "schema_version",
     "preset_id",
@@ -93,6 +95,7 @@ MANIFEST_REQUIRED_KEYS = (
     "required_artifacts",
     "stages",
     "rulesets_applied",
+    "forcings_applied",
     "guard_policy",
     "models_run",
     "provenance",

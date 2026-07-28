@@ -1,27 +1,37 @@
-"""Scenario-factor rulesets for Sweden scenario configurations."""
+"""Scenario forcings for Sweden configurations: none, by design.
+
+A forcing is an external factor imposed on a projection -- a weather correction,
+a disturbance rate, a price index -- and every one is a claim about the world.
+This package has no basis for such a number, so it ships none; a caller supplies
+them to :func:`~pyforestry.simulation.scenario.run_scenario` and they are
+recorded in the run manifest with their citations.
+
+A ``storm_risk_high`` scenario was deleted from here for carrying growth and
+disturbance multipliers that were invented, with no source behind them.
+:mod:`pyforestry.simulation.forcing` now enforces what that removal established.
+"""
 
 from __future__ import annotations
 
-from pyforestry.simulation.policy import ScenarioFactors, lookup_scenario
+from pyforestry.simulation.forcing import ForcingSet
+from pyforestry.simulation.policy import lookup_scenario
 
-__all__ = ["scenario_factors", "supported_scenarios"]
+__all__ = ["scenario_forcings", "supported_scenarios"]
 
-#: Scenario overlays applied on top of the published models. Both default to 1.0,
-#: which is an exact no-op; see :class:`~pyforestry.simulation.policy.ScenarioFactors`.
-_SCENARIO_FACTORS: dict[str, ScenarioFactors] = {
-    "baseline": ScenarioFactors(growth_factor=1.0, disturbance_factor=1.0),
+_SCENARIO_FORCINGS: dict[str, ForcingSet] = {
+    "baseline": ForcingSet(),
 }
 
 
 def supported_scenarios() -> tuple[str, ...]:
     """Return scenario ids this ruleset covers."""
-    return tuple(sorted(_SCENARIO_FACTORS))
+    return tuple(sorted(_SCENARIO_FORCINGS))
 
 
-def scenario_factors(scenario_id: str) -> ScenarioFactors:
-    """Return the growth and disturbance overlays for the selected scenario.
+def scenario_forcings(scenario_id: str) -> ForcingSet:
+    """Return the forcings this scenario declares.
 
     Raises:
         ValueError: If the scenario id is unknown.
     """
-    return lookup_scenario(_SCENARIO_FACTORS, scenario_id, what="Sweden scenario factors")
+    return lookup_scenario(_SCENARIO_FORCINGS, scenario_id, what="Sweden scenario forcings")

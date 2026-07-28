@@ -22,19 +22,20 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from hashlib import sha256
-from typing import Any, Callable, Mapping, Sequence, Union
+from typing import Any, Callable, Mapping, Sequence
 
 from pyforestry.base.contracts import Describable, SourceReference
 from pyforestry.simulation.contracts import SimulationPreset
-from pyforestry.simulation.policy import ManagementPlan, ScenarioFactors
+from pyforestry.simulation.forcing import ForcingSet
+from pyforestry.simulation.policy import ManagementPlan
 
-#: A ruleset is a callable bound to a scenario id that returns that scenario's
-#: knobs, typed: a :class:`~pyforestry.simulation.policy.ManagementPlan` or a
-#: :class:`~pyforestry.simulation.policy.ScenarioFactors`. It used to be
-#: ``Callable[..., Any]`` in Sweden and ``Callable[..., Mapping[str, float]]`` in
-#: Norway, which is how the two regions came to mean different quantities by the
-#: key ``thinning_ratio``.
-RulesetFn = Callable[[], Union[ManagementPlan, ScenarioFactors]]
+#: A ruleset is a callable bound to a scenario id returning that scenario's
+#: management plan, typed. It used to be ``Callable[..., Any]`` in Sweden and
+#: ``Callable[..., Mapping[str, float]]`` in Norway, which is how the two regions
+#: came to mean different quantities by the key ``thinning_ratio``. Forcings are
+#: declared separately, through :meth:`ScenarioConfig.forcings`, because they are
+#: values read per period rather than one payload per concern.
+RulesetFn = Callable[[], ManagementPlan]
 
 
 def stable_seed(*parts: object) -> int:
@@ -110,6 +111,18 @@ class ScenarioConfig(SimulationPreset):
             NotImplementedError: Always; a region declares its own rulesets.
         """
         raise NotImplementedError(f"{type(self).__name__} must declare its rulesets.")
+
+    def forcings(self) -> ForcingSet:
+        """Return the forcings this scenario declares.
+
+        A forcing is a named value the run reads for the period it is in -- a
+        weather correction, a disturbance rate, a price index -- imposed from
+        outside the models. Empty by default, which is what every scenario in
+        this package declares: each such number is a claim about the world, and
+        the package has no basis for one. Callers supply theirs to
+        :func:`~pyforestry.simulation.scenario.run_scenario`.
+        """
+        return ForcingSet()
 
     # --- Shared behaviour ----------------------------------------------------
 

@@ -10,16 +10,22 @@ Two of the four stages are the runtime's own (:class:`GrowthStep`,
 :class:`~pyforestry.simulation.valuation.step.ValuationStep`). Two are defined
 here because they are what a *scenario* adds on top of a published model:
 
-* :class:`ScenarioDisturbanceStep` -- an annual disturbance rate scaled by the
-  scenario's ``disturbance_factor``. None of the growth models in this package
-  predicts windthrow, fire or bark beetle, so this is an addition to the model
-  rather than a distortion of it.
-* :class:`ScenarioGrowthStep` -- growth, with the scenario's ``growth_factor``
-  applied to the period's *increment*. This one **is** a distortion of a
-  published model's prediction, which is why it is a separate named stage, why
-  it is an exact no-op at 1.0, why the factor is recorded in the run manifest,
-  and why it refuses to run on a representation where "the increment" is not a
+* :class:`ScenarioDisturbanceStep` -- an annual disturbance rate, scaled by any
+  :data:`~pyforestry.simulation.forcing.DISTURBANCE` forcing. None of the growth
+  models in this package predicts windthrow, fire or bark beetle, so this is an
+  addition to the model rather than a distortion of it.
+* :class:`ScenarioGrowthStep` -- growth, with any
+  :data:`~pyforestry.simulation.forcing.GROWTH` forcing applied to the period's
+  *increment*. This one **is** a distortion of a published model's prediction,
+  which is why it is a separate named stage, why it is an exact no-op when
+  nothing forces growth, why the forcing is recorded in the run manifest, and
+  why it refuses to run on a representation where "the increment" is not a
   well-defined thing to scale.
+
+Every step reads its forcings at the period's calendar year, which
+:class:`CalendarStep` stamps onto the context. That is what lets a forcing be a
+year-by-year series -- a weather correction, an inflation index -- rather than
+one number for the run.
 """
 
 from __future__ import annotations
@@ -29,24 +35,62 @@ from typing import Callable, Mapping, Optional, Sequence
 
 from pyforestry.base.simulation.core import SimulationContext
 from pyforestry.base.simulation.pipeline import Action, GrowthStep, ManagementStep, Step
-from pyforestry.simulation.policy import ManagementPlan, ScenarioFactors
+from pyforestry.simulation.forcing import (
+    CALENDAR_YEAR_KEY,
+    DISTURBANCE,
+    GROWTH,
+    THINNING,
+    ForcingSet,
+    period_year,
+)
+from pyforestry.simulation.policy import ManagementPlan
 from pyforestry.simulation.valuation.removals import StandRemovalLedger
 from pyforestry.simulation.valuation.step import ValuationStep
 from pyforestry.simulation.valuation.volume import ValuationSettings
 
 __all__ = [
+    "CALENDAR_YEAR_KEY",
     "STAGE_BUILDERS",
+    "CalendarStep",
     "ScenarioDisturbanceStep",
     "ScenarioGrowthStep",
     "StageContext",
     "ThinningStep",
     "build_pipeline",
     "known_stages",
+    "period_year",
 ]
+
 
 #: Where a step records the volume it removed, so the run's summary can report
 #: harvest and disturbance separately without either step knowing about the other.
 REMOVED_BY_STAGE_KEY = "removed_volume_m3_per_ha_by_stage"
+
+
+@dataclass(frozen=True)
+class CalendarStep:
+    """Stamp the period's calendar year onto the context, then advance it.
+
+    A projection's clock is elapsed years from wherever the model started, and
+    some models start it at the stand's age. A forcing series is keyed by
+    calendar year. This is the one place the two are reconciled: the run says
+    which calendar year it begins in, and every step afterwards reads
+    :func:`period_year`.
+
+    First in the pipeline, and installed by :func:`build_pipeline` rather than
+    named in a configuration's ``stages()``: which years a run covers is a
+    property of the run, not of the scenario's science.
+    """
+
+    start_year: float
+    name: str = "calendar"
+
+    def run(self, ctx: SimulationContext, dt: float) -> None:
+        """Stamp this period's year, then move the calendar on by ``dt``."""
+        current = ctx.attrs.get(CALENDAR_YEAR_KEY)
+        ctx.attrs[CALENDAR_YEAR_KEY] = (
+            float(self.start_year) if current is None else float(current) + float(dt)
+        )
 
 
 def record_removal(ctx: SimulationContext, stage: str, volume_m3_per_ha: float) -> None:
@@ -61,22 +105,24 @@ class StageContext:
 
     Args:
         management: The scenario's management plan, if it declares one.
-        factors: The scenario's growth and disturbance overlays.
+        forcings: The named multipliers this run applies, read at the period's
+            calendar year. An empty set -- the default -- leaves every model's
+            own prediction exactly as it is.
         guard_policy: Non-formula guard flags declared by the configuration.
         valuation: Price list, taper and bucking settings, when the run supplies
             them. A ``"valuation"`` stage without them is an error rather than a
             silently skipped stage.
         volume: How to read the stand's standing volume, in m³/ha.
-        disturbance_rate_per_year: The scenario's base annual disturbance rate,
-            before ``factors.disturbance_factor``. Zero -- the default -- makes
-            the disturbance stage an exact no-op.
+        disturbance_rate_per_year: The base annual disturbance rate, before any
+            :data:`~pyforestry.simulation.forcing.DISTURBANCE` forcing. Zero --
+            the default -- makes the disturbance stage an exact no-op.
         thin_at_years: Clock times at which the management stage thins. Empty --
             the default -- makes it an exact no-op.
     """
 
     volume: Callable[[SimulationContext], float]
     management: Optional[ManagementPlan] = None
-    factors: ScenarioFactors = field(default_factory=ScenarioFactors)
+    forcings: ForcingSet = field(default_factory=ForcingSet)
     guard_policy: Mapping[str, object] = field(default_factory=dict)
     valuation: Optional[ValuationSettings] = None
     disturbance_rate_per_year: float = 0.0
@@ -85,13 +131,16 @@ class StageContext:
 
 @dataclass(frozen=True)
 class ScenarioGrowthStep:
-    """Advance the model, then apply the scenario's growth factor to the increment.
+    """Advance the model, then apply this period's growth forcing to the increment.
 
-    At ``growth_factor == 1.0`` this is exactly :class:`GrowthStep`: the model's
-    own prediction, untouched. Above or below, the period's increment is scaled
-    and the stand is rewritten -- a scenario device, not science, which is why
-    :func:`build_pipeline` only ever produces this step when a factor other than
-    1.0 was configured, and why the manifest records the value.
+    With no forcing on :data:`~pyforestry.simulation.forcing.GROWTH` this is
+    exactly :class:`GrowthStep`: the model's own prediction, untouched. With one,
+    the period's increment is scaled and the stand rewritten -- a scenario
+    device, not science, which is why it is a distinct named step and why the
+    manifest records the forcing that drove it.
+
+    The factor is read per period, so a weather correction given as a series
+    (``{2014: 1.04, 2015: 1.02, ...}``) scales each period by its own year.
 
     Only aggregate stands can be adjusted this way: scaling "the increment" means
     scaling one basal-area and one stem number. On a tree list the same idea
@@ -99,24 +148,25 @@ class ScenarioGrowthStep:
     and belongs to a model.
     """
 
-    growth_factor: float = 1.0
+    forcings: ForcingSet = field(default_factory=ForcingSet)
     name: str = "growth"
 
     def run(self, ctx: SimulationContext, dt: float) -> None:
-        """Grow one period, scaling the increment by the scenario factor.
+        """Grow one period, scaling the increment by this year's growth forcing.
 
         Raises:
-            ValueError: If a factor other than 1.0 is configured for a stand that
-                is not in aggregate mode.
+            ValueError: If a forcing other than 1.0 applies to a stand that is
+                not in aggregate mode.
         """
-        if self.growth_factor == 1.0:
+        factor = self.forcings.multiplier(GROWTH, period_year(ctx)) if self.forcings else 1.0
+        if factor == 1.0:
             ctx.update_step(dt)
             return
         if ctx.mode != "aggregate":
             raise ValueError(
-                f"growth_factor={self.growth_factor!r} cannot be applied to a "
-                f"{ctx.mode!r} stand: scaling 'the increment' is only well defined "
-                "for aggregate basal area and stems. Use 1.0, run this scenario on an "
+                f"A growth forcing of {factor!r} cannot be applied to a {ctx.mode!r} "
+                "stand: scaling 'the increment' is only well defined for aggregate "
+                "basal area and stems. Drop the forcing, run this scenario on an "
                 "aggregate model, or express the effect inside a model variant."
             )
         ba_before = float(ctx.metrics["BasalArea"]["TOTAL"])
@@ -125,8 +175,8 @@ class ScenarioGrowthStep:
         ba_after = float(ctx.metrics["BasalArea"]["TOTAL"])
         stems_after = float(ctx.metrics["Stems"]["TOTAL"])
         ctx.set_aggregate_metrics(
-            ba_total=ba_before + (ba_after - ba_before) * self.growth_factor,
-            stems_total=stems_before + (stems_after - stems_before) * self.growth_factor,
+            ba_total=ba_before + (ba_after - ba_before) * factor,
+            stems_total=stems_before + (stems_after - stems_before) * factor,
         )
 
 
@@ -148,17 +198,19 @@ class ScenarioDisturbanceStep:
     """
 
     rate_per_year: float = 0.0
-    factor: float = 1.0
+    forcings: ForcingSet = field(default_factory=ForcingSet)
     name: str = "disturbance"
 
-    @property
-    def effective_rate_per_year(self) -> float:
-        """The annual rate actually applied, after the scenario factor."""
-        return float(self.rate_per_year) * float(self.factor)
+    def rate_in(self, year: float) -> float:
+        """The annual rate applied in ``year``, after any disturbance forcing."""
+        factor = self.forcings.multiplier(DISTURBANCE, year) if self.forcings else 1.0
+        return float(self.rate_per_year) * factor
 
     def run(self, ctx: SimulationContext, dt: float) -> None:
         """Remove the period's disturbance share, recording the volume lost."""
-        rate = self.effective_rate_per_year
+        if self.rate_per_year <= 0.0:
+            return
+        rate = self.rate_in(period_year(ctx))
         if rate <= 0.0:
             return
         removed_fraction = 1.0 - max(0.0, 1.0 - rate) ** float(dt)
@@ -183,8 +235,18 @@ class ThinningStep:
 
     thinning_ratio: float
     at_years: tuple[float, ...] = ()
+    forcings: ForcingSet = field(default_factory=ForcingSet)
     name: str = "management"
     tolerance: float = 1e-9
+
+    def ratio_in(self, year: float) -> float:
+        """The fraction removed in ``year``, after any thinning forcing.
+
+        Clamped to 1.0: a forcing that would take more than the stand holds takes
+        the stand.
+        """
+        factor = self.forcings.multiplier(THINNING, year) if self.forcings else 1.0
+        return min(1.0, float(self.thinning_ratio) * factor)
 
     def run(self, ctx: SimulationContext, dt: float) -> None:
         """Thin if the clock has reached one of the scheduled times."""
@@ -193,11 +255,12 @@ class ThinningStep:
         now = float(ctx.state.get("t", 0.0))
         if not any(abs(now - t) <= self.tolerance for t in self.at_years):
             return
+        ratio = self.ratio_in(period_year(ctx))
         _remove_fraction(
             ctx,
             self.name,
-            float(self.thinning_ratio),
-            {"thinning_ratio": float(self.thinning_ratio)},
+            ratio,
+            {"thinning_ratio": ratio},
             merchantable=True,
         )
 
@@ -298,17 +361,17 @@ def _remove_fraction(
 
 
 def _build_growth(stage: StageContext) -> Step:
-    """``"growth"``: the model, with the scenario's growth factor if it has one."""
-    if stage.factors.growth_factor == 1.0:
+    """``"growth"``: the model, with a growth forcing if the run declares one."""
+    if GROWTH not in stage.forcings.names():
         return GrowthStep()
-    return ScenarioGrowthStep(growth_factor=stage.factors.growth_factor)
+    return ScenarioGrowthStep(forcings=stage.forcings)
 
 
 def _build_disturbance(stage: StageContext) -> Step:
     """``"disturbance"``: the scenario's disturbance term, zero unless configured."""
     return ScenarioDisturbanceStep(
         rate_per_year=stage.disturbance_rate_per_year,
-        factor=stage.factors.disturbance_factor,
+        forcings=stage.forcings,
     )
 
 
@@ -319,6 +382,7 @@ def _build_management(stage: StageContext) -> Step:
     return ThinningStep(
         thinning_ratio=stage.management.thinning_ratio,
         at_years=stage.thin_at_years,
+        forcings=stage.forcings,
     )
 
 
@@ -336,7 +400,7 @@ def _build_valuation(stage: StageContext) -> Step:
             "ValuationSettings. Pass valuation=ValuationSettings(...) to run_scenario, "
             "or drop the stage from the configuration."
         )
-    return ValuationStep(stage.valuation)
+    return ValuationStep(settings=stage.valuation, forcings=stage.forcings)
 
 
 #: Stage name -> the step it builds. A configuration naming anything else fails
@@ -354,20 +418,31 @@ def known_stages() -> tuple[str, ...]:
     return tuple(sorted(STAGE_BUILDERS))
 
 
-def build_pipeline(stages: Sequence[str], stage_context: StageContext) -> tuple[Step, ...]:
+def build_pipeline(
+    stages: Sequence[str],
+    stage_context: StageContext,
+    *,
+    start_year: Optional[float] = None,
+) -> tuple[Step, ...]:
     """Resolve stage names into the ordered steps a period runs.
 
     Args:
         stages: The configuration's ``stages()``, in order.
         stage_context: What the builders may consult.
+        start_year: Calendar year the run begins in. When given, a
+            :class:`CalendarStep` is prepended so year-by-year forcings can be
+            read; it is not one of the configuration's stages, because which
+            years a run covers belongs to the run rather than to the scenario.
 
     Returns:
-        One step per name, in the same order.
+        One step per name, in the same order, after the calendar step if any.
 
     Raises:
         ValueError: If a name is not a known stage.
     """
     steps: list[Step] = []
+    if start_year is not None:
+        steps.append(CalendarStep(start_year=float(start_year)))
     for name in stages:
         try:
             builder = STAGE_BUILDERS[name]
