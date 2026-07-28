@@ -159,7 +159,14 @@ def test_scenario_growth_factor_scales_the_increment(tmp_path) -> None:
         def rulesets(self):
             return {
                 "management": lambda: ManagementPlan(thinning_ratio=0.25),
-                "scenario": lambda: ScenarioFactors(growth_factor=1.5),
+                "scenario": lambda: ScenarioFactors(
+                    growth_factor=1.5,
+                    source=SourceReference(
+                        author="Test fixture",
+                        year=2026,
+                        title="An overlay invented by this test, and saying so",
+                    ),
+                ),
             }
 
     baseline = _run(tmp_path / "a", config=_config())

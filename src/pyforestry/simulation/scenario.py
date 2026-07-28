@@ -146,9 +146,14 @@ def run_scenario(
         attrs: Extra model attributes, merged into every stand's context.
         valuation: Price list, taper and bucking settings. Required if the
             configuration declares a ``"valuation"`` stage.
-        disturbance_rate_per_year: The scenario's base annual disturbance rate,
-            before ``ScenarioFactors.disturbance_factor``. Zero -- the default --
-            makes the disturbance stage an exact no-op.
+        disturbance_rate_per_year: The annual share of the stand a scenario
+            disturbance removes, before ``ScenarioFactors.disturbance_factor``.
+            **The caller supplies this and it has no default source.** None of
+            these growth models predicts windthrow, fire or bark beetle, and this
+            package ships no disturbance rate for any region -- a rate belongs to
+            a risk model or an inventory of observed damage, and there is neither
+            here yet. Zero, the default, makes the stage an exact no-op; anything
+            else is the analyst's number and is recorded in the manifest as such.
         thin_at_years: Clock times at which the management stage thins.
 
     Returns:

@@ -16,15 +16,17 @@ __all__ = ["management_intensity", "management_plan", "supported_management_scen
 #: Norwegian thinning guide gives one, it belongs here.
 #: A scenario id names a *combination* -- a management intensity and a climate --
 #: so every id has to appear in both this table and the scenario-factor table.
-#: ``climate_rcp45`` is baseline management under RCP4.5; it was absent here, so
-#: configuring it raised as soon as the runner started resolving rulesets for
-#: real.
+#:
+#: These are management *choices*, not predictions: how hard the analyst thins is
+#: a decision, and "intensive" and "extensive" describe it rather than asserting
+#: a finding about the world. That is why they need no citation where a growth
+#: multiplier does. What they do need is a base, and Norway states none -- so
+#: Sweden's 0.20 stands in, and a Norwegian thinning guide replaces it.
 _BASE_THINNING_RATIO = 0.20
 _INTENSITY_MULTIPLIER: dict[str, float] = {
     "baseline": 1.0,
     "intensive": 1.2,
     "extensive": 0.7,
-    "climate_rcp45": 1.0,
 }
 
 _THINNING_RATIO: dict[str, float] = {

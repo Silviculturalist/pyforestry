@@ -13,14 +13,21 @@ import json
 
 import pytest
 
+from pyforestry.base.contracts import SourceReference
 from pyforestry.norway.simulation.orchestration import (
     build_kuehne_stands,
     kuehne_stand_volume,
     run_norway_scenario,
 )
+from pyforestry.norway.simulation.policy import (
+    management_intensity,
+    scenario_factors,
+    supported_scenarios,
+)
 from pyforestry.norway.simulation.presets import ScenarioConfig, build_baseline_scenario_config
 from pyforestry.norway.simulation.presets._common import REQUIRED_ARTIFACTS
 from pyforestry.simulation.artifacts import load_scenario_summary, validate_artifact_contract
+from pyforestry.simulation.policy import ManagementPlan, ScenarioFactors
 from pyforestry.simulation.presets import ScenarioConfig as SharedScenarioConfig
 
 # --- the configuration -------------------------------------------------------
@@ -111,12 +118,47 @@ def test_thinning_and_disturbance_are_reported_apart(tmp_path) -> None:
     assert disturbed.rows[0]["harvested_m3"] == pytest.approx(0.0)
 
 
-def test_the_climate_scenario_raises_growth_and_disturbance(tmp_path) -> None:
-    """``climate_rcp45`` is a real scenario the runtime applies, not a table entry.
+def test_the_fabricated_climate_scenario_does_not_resolve() -> None:
+    """``climate_rcp45`` is gone, like Sweden's ``storm_risk_high`` before it.
 
-    It was configured in the scenario-factor table and absent from the management
-    table, so building it raised the moment anything resolved rulesets for real.
+    It carried ``{growth 1.05, disturbance 1.2}`` from this package's first
+    commit with no source anywhere, under a name that asserts one -- RCP4.5 is a
+    specific IPCC pathway, so the scenario read as a finding about Norwegian
+    Scots pine that nobody had made.
     """
+    for lookup in (management_intensity, scenario_factors):
+        with pytest.raises(ValueError, match="Unsupported scenario_id"):
+            lookup("climate_rcp45")
+
+
+def test_every_shipped_scenario_overlay_is_neutral() -> None:
+    """Nothing shipped multiplies a published model's numbers.
+
+    The mechanism exists and is exercised below; what it must not do is arrive
+    preloaded with factors that have no paper behind them.
+    """
+    for scenario_id in supported_scenarios():
+        assert scenario_factors(scenario_id).is_neutral, scenario_id
+
+
+def test_a_cited_overlay_raises_growth_and_disturbance(tmp_path) -> None:
+    """The overlay mechanism works -- for factors that say where they come from."""
+
+    class _CitedClimate(ScenarioConfig):
+        def rulesets(self):
+            return {
+                "management": lambda: ManagementPlan(thinning_ratio=0.20),
+                "scenario": lambda: ScenarioFactors(
+                    growth_factor=1.05,
+                    disturbance_factor=1.2,
+                    source=SourceReference(
+                        author="Test fixture",
+                        year=2026,
+                        title="An overlay invented by this test, and saying so",
+                    ),
+                ),
+            }
+
     baseline = run_norway_scenario(
         global_seed=1,
         output_dir=tmp_path / "base",
@@ -124,23 +166,29 @@ def test_the_climate_scenario_raises_growth_and_disturbance(tmp_path) -> None:
         n_steps=6,
         disturbance_rate_per_year=0.004,
     )
-    rcp = run_norway_scenario(
+    cited = run_norway_scenario(
         global_seed=1,
-        output_dir=tmp_path / "rcp",
+        output_dir=tmp_path / "cited",
         n_stands=1,
         n_steps=6,
         disturbance_rate_per_year=0.004,
-        config=ScenarioConfig(preset_id="norway_kuehne", scenario_id="climate_rcp45"),
+        config=_CitedClimate(preset_id="norway_kuehne", scenario_id="baseline"),
     )
 
-    assert rcp.rows[0]["gross_growth_m3"] > baseline.rows[0]["gross_growth_m3"]
-    assert rcp.rows[0]["disturbance_loss_m3"] > baseline.rows[0]["disturbance_loss_m3"]
+    assert cited.rows[0]["gross_growth_m3"] > baseline.rows[0]["gross_growth_m3"]
+    assert cited.rows[0]["disturbance_loss_m3"] > baseline.rows[0]["disturbance_loss_m3"]
 
-    manifest = json.loads(rcp.artifacts.run_manifest_path.read_text(encoding="utf-8"))
-    assert manifest["rulesets_applied"]["scenario"] == {
-        "growth_factor": 1.05,
-        "disturbance_factor": 1.2,
-    }
+    manifest = json.loads(cited.artifacts.run_manifest_path.read_text(encoding="utf-8"))
+    applied = manifest["rulesets_applied"]["scenario"]
+    assert applied["growth_factor"] == 1.05
+    # The citation travels with the number into the manifest, which is the point.
+    assert applied["source"]["year"] == 2026
+
+
+def test_an_uncited_overlay_is_refused() -> None:
+    """A multiplier on a published model must say where it comes from."""
+    with pytest.raises(ValueError, match="where the factors come from"):
+        ScenarioFactors(growth_factor=1.05)
 
 
 def test_the_volume_reporter_is_a_function_of_the_current_stand(tmp_path) -> None:

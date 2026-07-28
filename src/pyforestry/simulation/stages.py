@@ -139,6 +139,12 @@ class ScenarioDisturbanceStep:
     ``<region>/mortality/`` and run inside the models that own them. This is the
     windthrow-and-fire term a *scenario* adds, and it is zero unless a run asks
     for it.
+
+    The rate is the caller's. This package ships none, for either region: a
+    disturbance rate is a finding -- from a risk model, or from an inventory of
+    observed damage -- and inventing one here would put a number under a
+    scenario's name with nothing behind it. The manifest records whatever the run
+    was given.
     """
 
     rate_per_year: float = 0.0

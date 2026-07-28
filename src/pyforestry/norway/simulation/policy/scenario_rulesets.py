@@ -6,16 +6,25 @@ from pyforestry.simulation.policy import ScenarioFactors, lookup_scenario
 
 __all__ = ["scenario_factors", "supported_scenarios"]
 
-#: Scenario overlays applied on top of the published models. Both default to 1.0,
-#: which is an exact no-op; see :class:`~pyforestry.simulation.policy.ScenarioFactors`.
-#: A scenario id names a *combination* -- a management intensity and a climate --
-#: so every id here also has to appear in the management table. The two intensity
-#: scenarios run under the baseline climate.
+#: Scenario overlays applied on top of the published models. Every entry here is
+#: neutral -- growth and disturbance factors of 1.0, which leave the models'
+#: own predictions untouched.
+#:
+#: There was a ``climate_rcp45`` entry carrying ``{growth 1.05, disturbance 1.2}``.
+#: It arrived in this package's first commit with no source, anywhere, and the
+#: name asserts one: RCP4.5 is a specific IPCC Representative Concentration
+#: Pathway, so a scenario called that reads as "these are the multipliers RCP4.5
+#: implies for Norwegian Scots pine". They were placeholders. Sweden had already
+#: deleted a ``storm_risk_high`` for exactly this, and the rule is now enforced
+#: rather than remembered: :class:`~pyforestry.simulation.policy.ScenarioFactors`
+#: refuses a non-neutral overlay without a SourceReference.
+#:
+#: A real climate scenario belongs here as soon as its factors have a paper
+#: behind them. Until then the runtime carries the mechanism and no claim.
 _SCENARIO_FACTORS: dict[str, ScenarioFactors] = {
-    "baseline": ScenarioFactors(growth_factor=1.0, disturbance_factor=1.0),
-    "intensive": ScenarioFactors(growth_factor=1.0, disturbance_factor=1.0),
-    "extensive": ScenarioFactors(growth_factor=1.0, disturbance_factor=1.0),
-    "climate_rcp45": ScenarioFactors(growth_factor=1.05, disturbance_factor=1.2),
+    "baseline": ScenarioFactors(),
+    "intensive": ScenarioFactors(),
+    "extensive": ScenarioFactors(),
 }
 
 

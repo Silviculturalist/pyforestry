@@ -189,8 +189,11 @@ def run_sweden_scenario(
         valuation: Price list, taper and bucking settings. Required if the
             configuration declares a ``"valuation"`` stage, which Sweden's
             baseline does.
-        disturbance_rate_per_year: Base annual disturbance rate, before the
-            scenario's ``disturbance_factor``.
+        disturbance_rate_per_year: Annual share of the stand a scenario
+            disturbance removes, before the scenario's ``disturbance_factor``.
+            Supplied by the caller; this package ships no rate, because a
+            disturbance rate is a finding and there is no source for one here.
+            Zero, the default, makes the stage an exact no-op.
         thin_at_years: Clock times at which the management stage thins.
 
     Returns:
