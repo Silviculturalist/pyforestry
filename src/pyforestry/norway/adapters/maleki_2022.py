@@ -187,6 +187,18 @@ class Maleki2022GrowthModel(GrowthModel):
         ctx.attrs["maleki_species"] = cfg.species.value
         ctx.attrs["maleki_h40_m"] = float(cfg.h40_m)
         ctx.attrs["dominant_height_m"] = float(cfg.dominant_height_m)
+        # Publish the volume at t0 as well as after each step. The equation is the
+        # same one update_step uses; a model that reports its volume only after
+        # being stepped cannot state where the stand started, which is the
+        # opening balance of every run summary.
+        ctx.attrs["stand_volume_m3_per_ha"] = float(
+            maleki_2022_stand_volume(
+                cfg.species,
+                float(cfg.dominant_height_m),
+                float(ctx.metrics["BasalArea"]["TOTAL"]),
+                Age.TOTAL(float(cfg.start_total_age_years)),
+            )
+        )
         return ctx
 
     def update_step(self, ctx: SimulationContext, dt: float) -> None:

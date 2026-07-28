@@ -28,8 +28,17 @@ class ScenarioConfig(_ScenarioConfig):
     region: str = "Sweden"
 
     def stages(self) -> Sequence[str]:
-        """Return the default ordered stage sequence for Sweden configurations."""
-        return ("growth", "disturbance", "valuation")
+        """Return the default ordered stage sequence for Sweden configurations.
+
+        Management, disturbance, growth, then valuation: thin the stand you have,
+        take the scenario's losses off what remains, grow the survivors, and price
+        what came out. Management and disturbance are exact no-ops unless the run
+        configures a thinning schedule or a disturbance rate.
+
+        ``"management"`` was absent while nothing executed any of these, so the
+        valuation stage had nothing to price even in principle.
+        """
+        return ("management", "disturbance", "growth", "valuation")
 
     def rulesets(self) -> Mapping[str, RulesetFn]:
         """Return bound management/scenario ruleset callables for this configuration."""

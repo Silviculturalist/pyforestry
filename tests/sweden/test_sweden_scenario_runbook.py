@@ -1,0 +1,148 @@
+"""Sweden's scenario runbook projects real stands.
+
+It used to emit the artifact contract from a seeded random walk, warn on every
+call, and stamp ``"synthetic": true`` into all three files. These tests assert
+that what it writes now is a projection: the Elfving (2010) model over a real
+tree list, priced through the valuation stage the configuration declares.
+"""
+
+from __future__ import annotations
+
+import json
+
+import pytest
+
+from pyforestry.base.pricelist import create_pricelist_from_data
+from pyforestry.simulation.artifacts import (
+    REQUIRED_ARTIFACTS,
+    load_scenario_summary,
+    validate_artifact_contract,
+)
+from pyforestry.simulation.valuation.volume import ValuationSettings
+from pyforestry.sweden.pricelist.data.mellanskog_2013 import MELLANSKOG_2013_PRICE_DATA
+from pyforestry.sweden.simulation.orchestration import (
+    brandel_stand_volume,
+    build_even_aged_stands,
+    run_sweden_scenario,
+    swedish_timber_factory,
+)
+from pyforestry.sweden.simulation.presets import get_scenario_config
+from pyforestry.sweden.taper import EdgrenNylinder1949
+
+
+@pytest.fixture(scope="module")
+def valuation() -> ValuationSettings:
+    return ValuationSettings(
+        pricelist=create_pricelist_from_data(MELLANSKOG_2013_PRICE_DATA),
+        taper_class=EdgrenNylinder1949,
+        timber_factory=swedish_timber_factory,
+    )
+
+
+def test_baseline_run_projects_a_real_stand(tmp_path, valuation) -> None:
+    result = run_sweden_scenario(
+        global_seed=20260728,
+        output_dir=tmp_path / "run",
+        stands=build_even_aged_stands(1),
+        n_steps=3,
+        valuation=valuation,
+    )
+
+    validate_artifact_contract(result.artifacts.output_dir)
+    for artifact in REQUIRED_ARTIFACTS:
+        assert (result.artifacts.output_dir / artifact).exists()
+
+    row = result.rows[0]
+    assert row["initial_volume_m3"] > 0.0
+    assert row["gross_growth_m3"] > 0.0, "a spruce stand at site index 26 grows"
+    assert row["net_volume_m3"] > row["initial_volume_m3"]
+
+    manifest = json.loads(result.artifacts.run_manifest_path.read_text(encoding="utf-8"))
+    assert manifest["region"] == "Sweden"
+    assert manifest["stages"] == ["management", "disturbance", "growth", "valuation"]
+    assert "synthetic" not in manifest
+    assert [entry["component_id"] for entry in manifest["models_run"]] == ["elfving_2010"]
+    assert manifest["models_run"][0]["year"] == 2010
+
+
+def test_thinning_is_priced_through_the_valuation_stage(tmp_path, valuation) -> None:
+    """The two halves of the valuation design, connected.
+
+    A thinning records the stems it removed into the ledger, and the valuation
+    stage prices them. Before the runtime existed the ledger was never
+    populated, so a pipeline that declared a valuation stage valued nothing.
+    """
+    result = run_sweden_scenario(
+        global_seed=20260728,
+        output_dir=tmp_path / "run",
+        stands=build_even_aged_stands(1),
+        n_steps=3,
+        valuation=valuation,
+        thin_at_years=[5.0],
+    )
+
+    row = result.rows[0]
+    assert row["harvested_m3"] > 0.0
+    ctx = result.contexts[0]
+    assert float(ctx.attrs["cash"]) > 0.0
+    assert ctx.attrs["valuation"]["pieces"]
+
+
+def test_disturbance_is_a_loss_not_a_harvest(tmp_path, valuation) -> None:
+    """Storm-thrown wood must not be reported as income."""
+    result = run_sweden_scenario(
+        global_seed=20260728,
+        output_dir=tmp_path / "run",
+        stands=build_even_aged_stands(1),
+        n_steps=3,
+        valuation=valuation,
+        disturbance_rate_per_year=0.01,
+    )
+
+    row = result.rows[0]
+    assert row["disturbance_loss_m3"] > 0.0
+    assert row["harvested_m3"] == pytest.approx(0.0)
+    assert "cash" not in result.contexts[0].attrs
+
+
+def test_the_volume_reporter_sees_a_thinning_immediately(tmp_path, valuation) -> None:
+    """A live reporter, not a value the model cached at its last step.
+
+    With a stale reporter every removal reads as zero and the volume it took
+    reappears inside the growth column.
+    """
+    stands = build_even_aged_stands(1)
+    model_ctx = run_sweden_scenario(
+        global_seed=1,
+        output_dir=tmp_path / "run",
+        stands=stands,
+        n_steps=1,
+        valuation=valuation,
+    ).contexts[0]
+
+    before = brandel_stand_volume(model_ctx)
+    for plot in model_ctx.plots:
+        for tree in plot.trees:
+            tree.weight_n = float(tree.weight_n) * 0.5
+    assert brandel_stand_volume(model_ctx) == pytest.approx(before * 0.5, rel=1e-9)
+
+
+def test_summary_is_loadable_and_keyed_by_stand(tmp_path, valuation) -> None:
+    result = run_sweden_scenario(
+        global_seed=20260728,
+        output_dir=tmp_path / "run",
+        stands=build_even_aged_stands(3),
+        n_steps=2,
+        valuation=valuation,
+    )
+    rows = load_scenario_summary(result.artifacts.scenario_summary_path)
+    assert [row["stand_id"] for row in rows] == [1, 2, 3]
+    assert {row["scenario_id"] for row in rows} == {"baseline"}
+
+
+def test_scenario_config_lookup_and_error_paths() -> None:
+    assert get_scenario_config("baseline").scenario_id == "baseline"
+    with pytest.raises(ValueError, match="Unsupported scenario_id"):
+        get_scenario_config("storm_risk_high")
+    with pytest.raises(ValueError, match="Unsupported scenario_id"):
+        get_scenario_config("unknown")

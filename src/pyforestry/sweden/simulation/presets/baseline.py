@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from pyforestry.sweden.simulation.data import REQUIRED_ARTIFACTS
+from pyforestry.simulation.artifacts import REQUIRED_ARTIFACTS
 from pyforestry.sweden.simulation.presets._common import ScenarioConfig
 
 

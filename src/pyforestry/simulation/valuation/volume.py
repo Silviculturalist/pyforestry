@@ -17,14 +17,20 @@ nothing.
 from __future__ import annotations
 
 from dataclasses import dataclass, field, replace
-from typing import Any, Dict, Mapping, MutableMapping, Tuple, Type
+from typing import Any, Callable, Dict, Mapping, MutableMapping, Tuple, Type
 
 from pyforestry.base.helpers.bucking import BuckingConfig, QualityType
 from pyforestry.base.pricelist import Pricelist
 from pyforestry.base.taper import Taper
+from pyforestry.base.timber import Timber
 from pyforestry.base.timber_bucking.nasberg_1985 import Nasberg_1985_BranchBound
 
 from .removals import StandRemovalLedger, TreeRemoval
+
+
+def _default_timber_factory(removal: "TreeRemoval") -> Timber:
+    """Build the base :class:`~pyforestry.base.timber.Timber` for a removal."""
+    return removal.to_timber()
 
 
 @dataclass(frozen=True)
@@ -129,6 +135,7 @@ class TreeVolumeDescriptor(VolumeDescriptor):
     )
     bucker_cls: Type[Nasberg_1985_BranchBound] = Nasberg_1985_BranchBound
     min_diam_dead_wood: float = 0.0
+    timber_factory: Callable[[TreeRemoval], Timber] = _default_timber_factory
 
     def evaluate(self) -> VolumeResult:  # type: ignore[override]
         """Run bucking and valuation over the recorded tree removals."""
@@ -146,7 +153,7 @@ class TreeVolumeDescriptor(VolumeDescriptor):
         volume_by_quality: Dict[QualityType, float] = {quality: 0.0 for quality in QualityType}
 
         for removal in self.removals:
-            timber = removal.to_timber()
+            timber = self.timber_factory(removal)
             bucker = self.bucker_cls(timber, self.pricelist, self.taper_class)
             result = bucker.calculate_tree_value(
                 min_diam_dead_wood=self.min_diam_dead_wood,
@@ -221,6 +228,12 @@ class ValuationSettings:
             the piece records this package reports are the sections.
         min_diam_dead_wood: Minimum top diameter, in cm, below which wood is
             treated as dead and not merchandised.
+        timber_factory: Builds the :class:`~pyforestry.base.timber.Timber` a
+            removal is bucked as. Defaults to the base ``Timber``; a region whose
+            taper needs its own subclass supplies one, which is what Sweden's
+            ``EdgrenNylinder1949`` requires -- it rejects anything that is not a
+            ``SweTimber``, so the default produced a ``ValueError`` from inside
+            the bucker rather than at configuration time.
 
     Raises:
         TypeError: If any field is not of its declared type.
@@ -232,6 +245,7 @@ class ValuationSettings:
         default_factory=lambda: BuckingConfig(save_sections=True)
     )
     min_diam_dead_wood: float = 0.0
+    timber_factory: Callable[["TreeRemoval"], Timber] = _default_timber_factory
 
     def __post_init__(self) -> None:
         """Validate the settings and force ``save_sections`` on."""
@@ -239,6 +253,8 @@ class ValuationSettings:
             raise TypeError(f"pricelist must be a Pricelist, got {type(self.pricelist).__name__}.")
         if not (isinstance(self.taper_class, type) and issubclass(self.taper_class, Taper)):
             raise TypeError("taper_class must be a Taper subclass.")
+        if not callable(self.timber_factory):
+            raise TypeError("timber_factory must be callable.")
         if not isinstance(self.bucking_config, BuckingConfig):
             raise TypeError(
                 f"bucking_config must be a BuckingConfig, got "
@@ -284,6 +300,7 @@ class VolumeConnector:
             bucking_config=settings.bucking_config,
             bucker_cls=self._bucker_cls,
             min_diam_dead_wood=settings.min_diam_dead_wood,
+            timber_factory=settings.timber_factory,
             metadata=dict(ledger.metadata),
         )
 

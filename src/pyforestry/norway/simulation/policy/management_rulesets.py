@@ -14,11 +14,17 @@ __all__ = ["management_intensity", "management_plan", "supported_management_scen
 #: Norway never stated. The multipliers are kept and applied to Sweden's stated
 #: base of 0.20, because there is no Norwegian base to apply them to; if a
 #: Norwegian thinning guide gives one, it belongs here.
+#: A scenario id names a *combination* -- a management intensity and a climate --
+#: so every id has to appear in both this table and the scenario-factor table.
+#: ``climate_rcp45`` is baseline management under RCP4.5; it was absent here, so
+#: configuring it raised as soon as the runner started resolving rulesets for
+#: real.
 _BASE_THINNING_RATIO = 0.20
 _INTENSITY_MULTIPLIER: dict[str, float] = {
     "baseline": 1.0,
     "intensive": 1.2,
     "extensive": 0.7,
+    "climate_rcp45": 1.0,
 }
 
 _THINNING_RATIO: dict[str, float] = {

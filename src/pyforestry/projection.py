@@ -257,40 +257,10 @@ def project(
 def _provenance(component: Any) -> Dict[str, Any]:
     """Collect the citations of a component and of everything it composes.
 
-    ``components`` is ``Sequence[Describable]``: each entry declares its own
-    ``component_id`` and ``source``, and each is descended into, so a composition
-    of compositions reports the papers at the bottom.
-
-    A component that declares ``components`` but whose entries are not
-    :class:`~pyforestry.base.contracts.Describable` raises. Skipping them is how
-    seven mortality citations went missing without a word -- the engine returned
-    bare id strings, which have no ``source``, so every one was dropped and the
-    run reported as citing only the composition itself.
-
-    Raises:
-        TypeError: If an entry of ``components`` does not describe itself.
+    One traversal, shared with the scenario runner so a ``ProjectionResult`` and a
+    run manifest report the same papers for the same models; see
+    :func:`pyforestry.simulation.provenance.collect_provenance`.
     """
-    provenance: Dict[str, Any] = {}
-    _collect_provenance(component, provenance, seen=set())
-    return provenance
+    from pyforestry.simulation.provenance import collect_provenance
 
-
-def _collect_provenance(component: Any, into: Dict[str, Any], seen: set[int]) -> None:
-    """Add ``component``'s citation to ``into``, then recurse into what it composes."""
-    if id(component) in seen:
-        return
-    seen.add(id(component))
-
-    component_id = getattr(component, "component_id", None)
-    source = getattr(component, "source", None)
-    if component_id is not None and source is not None:
-        into[str(component_id)] = source
-
-    for child in getattr(component, "components", ()) or ():
-        if getattr(child, "component_id", None) is None or getattr(child, "source", None) is None:
-            raise TypeError(
-                f"{type(component).__name__}.components must yield Describable objects "
-                f"(each with component_id and source), but one entry is "
-                f"{child!r}. Returning ids alone loses the citations they stand for."
-            )
-        _collect_provenance(child, into, seen)
+    return dict(collect_provenance(component))

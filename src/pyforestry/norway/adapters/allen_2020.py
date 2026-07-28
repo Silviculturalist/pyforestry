@@ -122,6 +122,17 @@ class Allen2020GrowthModel(GrowthModel):
         ctx.state["t"] = float(cfg.start_total_age_years)
         ctx.attrs["allen_h40_m"] = float(cfg.h40_m)
         ctx.attrs["dominant_height_m"] = float(cfg.dominant_height_m)
+        # Publish the volume at t0 as well as after each step. The equation is the
+        # same one update_step uses; a model that reports its volume only after
+        # being stepped cannot state where the stand started, which is the
+        # opening balance of every run summary.
+        ctx.attrs["stand_volume_m3_per_ha"] = float(
+            allen_2020_stand_volume(
+                float(ctx.metrics["BasalArea"]["TOTAL"]),
+                float(cfg.dominant_height_m),
+                Age.TOTAL(float(cfg.start_total_age_years)),
+            )
+        )
         return ctx
 
     def update_step(self, ctx: SimulationContext, dt: float) -> None:

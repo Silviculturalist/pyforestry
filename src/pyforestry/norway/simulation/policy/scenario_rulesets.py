@@ -8,8 +8,13 @@ __all__ = ["scenario_factors", "supported_scenarios"]
 
 #: Scenario overlays applied on top of the published models. Both default to 1.0,
 #: which is an exact no-op; see :class:`~pyforestry.simulation.policy.ScenarioFactors`.
+#: A scenario id names a *combination* -- a management intensity and a climate --
+#: so every id here also has to appear in the management table. The two intensity
+#: scenarios run under the baseline climate.
 _SCENARIO_FACTORS: dict[str, ScenarioFactors] = {
     "baseline": ScenarioFactors(growth_factor=1.0, disturbance_factor=1.0),
+    "intensive": ScenarioFactors(growth_factor=1.0, disturbance_factor=1.0),
+    "extensive": ScenarioFactors(growth_factor=1.0, disturbance_factor=1.0),
     "climate_rcp45": ScenarioFactors(growth_factor=1.05, disturbance_factor=1.2),
 }
 

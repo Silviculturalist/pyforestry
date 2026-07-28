@@ -48,11 +48,22 @@ class ValuationStep:
     CASH_KEY = "cash"
 
     def run(self, ctx: SimulationContext, dt: float) -> None:
-        """Price this period's removals into ``ctx.attrs``."""
+        """Price *this period's* removals into ``ctx.attrs``, then clear the ledger.
+
+        Clearing is what makes the step correct over more than one period. The
+        ledger accumulates as steps remove stems; pricing it without emptying it
+        re-prices every earlier period's removals again, so ``cash`` compounds
+        what was already banked and the bucking cost grows with the square of the
+        run length. Nothing ran this step for two periods until the scenario
+        runtime did, so neither showed.
+        """
         ledger = ctx.attrs.get(self.LEDGER_KEY)
         if not isinstance(ledger, StandRemovalLedger) or ledger.is_empty:
             return
         result: VolumeResult = self.connector.connect(self.settings, ledger)
+        ctx.attrs[self.LEDGER_KEY] = StandRemovalLedger(
+            stand_id=ledger.stand_id, metadata=dict(ledger.metadata)
+        )
         ctx.attrs[self.RESULT_KEY] = {
             "ledger": ledger,
             "result": result,
