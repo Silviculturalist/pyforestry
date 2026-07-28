@@ -661,13 +661,27 @@ pass did not reach. What that pass changed:
 | `snapshot()` branched on `stand.representation` while `checkpoint()` branched on `ctx.mode` | `3d96b78` |
 | Fifteen generated docstrings survived AL004 by a word, one of them miscrediting Morén & Perttu (1994) | `f05cb2d` |
 
+**Third pass: the scenario tier was wired (`fd51233`, `d0d7666`)**
+
+Move 9's open decision was taken — grow a runtime, not delete. `run_scenario()`
+executes `stages()`, `rulesets()`, `guard_policy()` and `seed_strategy()` over
+real models; the synthetic harness is gone; both regions have an entry point,
+which closes the asymmetry where Norway had the half that ran nothing and lacked
+the half that ran. Running it for real immediately surfaced four defects that
+could not show while nothing ran:
+
+| Defect | Consequence |
+|---|---|
+| Norway's management and scenario-factor tables covered disjoint scenario ids | `climate_rcp45` raised as soon as both were resolved |
+| `ValuationStep` priced the ledger without clearing it | `cash` compounded every earlier period; bucking cost grew with the square of run length (160s → 14s once fixed) |
+| Disturbance losses reached the valuation ledger | storm-thrown wood reported as income |
+| A volume reporter reading the model's cached volume | every removal read as zero and its volume reappeared inside growth |
+
 **Left open, deliberately**
 
-- The scenario-configuration tier (`ScenarioConfig`, `policy/`, `data/`,
-  `orchestration/runbook.py`, and all of `norway/simulation/`) still runs no
-  forest model. Move 9 said it should grow a runtime or be deleted; that decision
-  is the owner's, and the code now states its own status rather than implying a
-  runtime it does not have.
 - `ctx.attrs` remains the input contract for every model except Elfving 2010.
   Migrating the rest to typed `Inputs` is real work on each model, not a
   refactor.
+- Norway's `thinning_ratio` applies Sweden's stated base of 0.20 to Norway's
+  intensity multipliers, because Norway states no base of its own. A Norwegian
+  thinning guide would replace it.

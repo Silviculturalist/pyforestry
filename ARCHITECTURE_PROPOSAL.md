@@ -11,8 +11,8 @@ and ordered so no step depends on a later one.
 > `pf.project(...)`.
 >
 > A later adversarial pass found that three moves had been marked done against
-> conditions written into their own text that were not yet met. Each is now closed
-> or, where the decision is genuinely open, recorded as open:
+> conditions written into their own text that were not yet met. Two are now
+> closed; the third is recorded as what it is:
 >
 > - **Move 3 ("one scheduler")** — `run_pipeline` shipped, but the flagship did not
 >   use it: `Elfving2010Pipeline.step()` iterated its own `Step` tuple and
@@ -24,11 +24,12 @@ and ordered so no step depends on a later one.
 >   exists and is the recommended one; `ctx.attrs` is not deleted and will not be
 >   until those models are migrated, which is not scheduled.
 > - **Move 9 ("`ScenarioConfig` either grows a runtime or is deleted along with the
->   mock runbook")** — the rename shipped, but the tier did neither. It is still
->   configuration that nothing executes, fed to a harness that emits a seeded
->   random walk. The duplication between the two regions' copies is gone
->   (`98cd15c`) and every docstring now says plainly that it runs nothing, but the
->   delete-or-wire decision is **open**.
+>   mock runbook")** — the rename shipped, the tier did neither, and the
+>   duplication between the two regions' copies went first (`98cd15c`). The
+>   decision was then taken to wire it: `run_scenario()` executes `stages()`,
+>   `rulesets()`, `guard_policy()` and `seed_strategy()` over real models, the
+>   synthetic harness is deleted, and both regions have an entry point
+>   (`d0d7666`). **Closed.**
 >
 > | Move | Landed in |
 > |---|---|
@@ -68,8 +69,11 @@ and ordered so no step depends on a later one.
 > deep-copied, so `pf.project` raised `TypeError` on any stand whose trees carried
 > an age — the stand its own growth models are written for.
 >
-> **What remains:** B6 (the Sweden/Norway ruleset key) only, and deliberately:
-> unifying two stubs standardises an accident.
+> **What remained, B6 (the Sweden/Norway ruleset divergence), was closed in
+> `fd51233`** -- not by standardising two stubs but because wiring the runtime
+> made the divergence load-bearing: the same key named a fraction in one region
+> and a multiplier in the other, and one region defaulted silently where the
+> other raised.
 
 ---
 

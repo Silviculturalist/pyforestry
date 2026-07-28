@@ -100,8 +100,10 @@ adapter against the runtime contract.
   - Shared runtime:
     - `src/pyforestry/base/simulation/`
     - `src/pyforestry/simulation/`
-  - Regional simulation presets/orchestration (target):
-    - `src/pyforestry/<region>/simulation/`
+  - Regional scenario configuration and orchestration:
+    - `src/pyforestry/<region>/simulation/`, one per region, each with
+      `policy/`, `presets/` and `orchestration/`. Sweden additionally holds the
+      composite pipelines; Norway ships none yet.
 
 #### Engine tiers within the simulation runtime
 
@@ -150,8 +152,9 @@ Contracts are split by audience:
   `FormulaModuleDescriptor`) lives in `src/pyforestry/base/contracts.py`, because
   formula/domain modules across every region expose it; nothing above `base`
   reaches into the simulation package for it.
-- Simulation-specific contracts (`SimulationPreset`, `ParityCase`, …) live in
-  `src/pyforestry/simulation/contracts.py`.
+- Simulation-specific contracts (`SimulationPreset`) live in
+  `src/pyforestry/simulation/contracts.py`. `ParityCase` and `AssertionResult`
+  were removed: protocols with no implementer and no caller.
 
 ### Context 5: Integration/Application Context
 
@@ -253,13 +256,11 @@ longer share a name:
   `src/pyforestry/simulation/presets.py` that each region subclasses) is
   *configuration*: a seed strategy, an ordered list of stage names, ruleset
   callables and a required-artifact list. It satisfies the `SimulationPreset`
-  contract below. **Nothing executes it** — `guard_policy()` and `rulesets()`
-  have no runtime caller, and `stages()` is recorded into a manifest rather than
-  run. `emit_scenario_artifact_contract(...)` exercises the *artifact* contract
-  from synthetic numbers and runs no model; its output is a schema fixture. This
-  is the tier `ARCHITECTURE_PROPOSAL.md` Move 9 said should "either grow a
-  runtime or be deleted along with the mock runbook". It has done neither; the
-  decision is still open, and the code says plainly what it is meanwhile.
+  contract below, and `run_scenario()` executes all four of those: `stages()`
+  resolves to `Step` objects through `simulation/stages.py`, `rulesets()` and
+  `guard_policy()` are applied, and `seed_strategy()` seeds each stand. This is
+  the tier `ARCHITECTURE_PROPOSAL.md` Move 9 said should "either grow a runtime
+  or be deleted along with the mock runbook"; it grew one.
 - **Composite pipelines** (`CompositePipeline`, with `Elfving2010Pipeline` and
   `Soderberg1986Pipeline` as siblings of it) are the runnable ones: stateful
   `initialize()`/`step()`/`run_projection()` objects that drive published models
@@ -273,6 +274,13 @@ longer share a name:
 `CompositePipeline` owns the eleven-phase period both pipelines run; a subclass
 supplies the mature growth model and its provenance. Neither pipeline is the
 other's base class, which one of them used to be.
+
+The two tiers answer different questions and both are runnable. A pipeline is a
+*published workflow* — one stand, one composite of named models, the period fixed
+by the science. A scenario is a *study* — many stands, a stage order and rulesets
+chosen by the analyst, and a manifest recording every choice so the summary can
+be read back. `<region>/simulation/orchestration/` is the regional entry point
+into the second; both regions have one.
 
 Minimum preset contract:
 
