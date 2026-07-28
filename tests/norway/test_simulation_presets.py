@@ -16,6 +16,11 @@ import pytest
 from pyforestry.base.contracts import SourceReference
 from pyforestry.base.helpers.tree_species import TreeSpecies
 from pyforestry.base.pricelist import Pricelist
+from pyforestry.base.pricelist.pricelist import (
+    LengthRange,
+    TimberPriceForDiameter,
+    TimberPricelist,
+)
 from pyforestry.norway.simulation.orchestration import (
     build_kuehne_stands,
     kuehne_stand_volume,
@@ -28,6 +33,7 @@ from pyforestry.norway.simulation.policy import (
 )
 from pyforestry.norway.simulation.presets import ScenarioConfig, build_baseline_scenario_config
 from pyforestry.norway.simulation.presets._common import REQUIRED_ARTIFACTS
+from pyforestry.norway.taper.hansen_2023 import Hansen2023
 from pyforestry.simulation.artifacts import load_scenario_summary, validate_artifact_contract
 from pyforestry.simulation.forcing import (
     DISTURBANCE,
@@ -39,20 +45,29 @@ from pyforestry.simulation.forcing import (
 )
 from pyforestry.simulation.presets import ScenarioConfig as SharedScenarioConfig
 from pyforestry.simulation.valuation.volume import ValuationSettings
-from pyforestry.sweden.taper import EdgrenNylinder1949
 
 
 @pytest.fixture
 def norwegian_prices() -> ValuationSettings:
-    """A caller-supplied price list.
+    """A caller-supplied price list, with Norway's own taper.
 
-    This package ships none for Norway: a price list is regional market data,
-    not science, and inventing one would put numbers under Norway's name with
-    nothing behind them.
+    This package ships no Norwegian price list: that is regional market data, not
+    science, and inventing one would put numbers under Norway's name with nothing
+    behind them. The figures here are the test's, and the test says so.
     """
+    pine = TreeSpecies.Sweden.pinus_sylvestris.full_name
     pricelist = Pricelist()
-    pricelist.Pulp._prices[TreeSpecies.Sweden.pinus_sylvestris.full_name] = 320
-    return ValuationSettings(pricelist=pricelist, taper_class=EdgrenNylinder1949)
+    pricelist.Pulp._prices[pine] = 320
+    table = TimberPricelist(12, 40, volume_type="m3to")
+    for diameter in range(12, 41):
+        table.set_price_for_diameter(
+            diameter,
+            TimberPriceForDiameter(620 + diameter * 4, 560 + diameter * 4, 480 + diameter * 4),
+        )
+    pricelist.Timber[pine] = table
+    pricelist.TimberLogLength = LengthRange(3.4, 5.5)
+    pricelist.PulpLogLength = LengthRange(2.7, 5.5)
+    return ValuationSettings(pricelist=pricelist, taper_class=Hansen2023)
 
 
 # --- the configuration -------------------------------------------------------
@@ -304,8 +319,14 @@ def test_build_kuehne_stands_rejects_an_empty_run() -> None:
 # --- valuation, for a model that reports no stems ------------------------------
 
 
-def test_a_thinning_is_priced_though_there_are_no_stems(tmp_path, norwegian_prices) -> None:
-    """An aggregate model can be sold even though it cannot be bucked."""
+def test_a_thinning_is_bucked_at_the_stands_mean_tree(tmp_path, norwegian_prices) -> None:
+    """A stand-level model has no individual stems, but it has a mean one.
+
+    The Kuehne model steps a basal area and a stem count, so a thinning from it
+    has nothing to cut stem by stem. It does have a quadratic mean diameter, and
+    that describes a real tree -- bucking it gives an assortment split, which
+    pricing the whole removal as pulpwood never could.
+    """
     result = run_norway_scenario(
         global_seed=1,
         output_dir=tmp_path / "run",
@@ -320,9 +341,35 @@ def test_a_thinning_is_priced_though_there_are_no_stems(tmp_path, norwegian_pric
     ctx = result.contexts[0]
     assert float(ctx.attrs["cash"]) > 0.0
 
-    metadata = ctx.attrs["valuation"]["metadata"]
-    assert metadata["bucked"] is False
-    assert "no stems" in metadata["pricing"]
+    valuation = ctx.attrs["valuation"]
+    assert valuation["metadata"]["bucked"] is True
+    assert valuation["metadata"]["method"] == "mean tree"
+
+    # A real grade split, not everything at one price.
+    graded = {q: v for q, v in valuation["volume_by_quality"].items() if v > 0.0}
+    assert len(graded) >= 1
+    assert any(q.name != "Undefined" for q in graded)
+
+
+def test_the_bucked_total_is_the_models_own_volume(tmp_path, norwegian_prices) -> None:
+    """The mean tree decides the split; the model decides how much.
+
+    Scaling to the model's figure is what keeps an approximation of the grade
+    mix from becoming an error in the volume.
+    """
+    result = run_norway_scenario(
+        global_seed=1,
+        output_dir=tmp_path / "run",
+        n_stands=1,
+        n_steps=6,
+        start_year=2025,
+        valuation=norwegian_prices,
+        thin_at_years=[60.0],
+    )
+
+    valuation = result.contexts[0].attrs["valuation"]
+    bucked = sum(valuation["volume_by_quality"].values())
+    assert bucked == pytest.approx(result.rows[0]["harvested_m3"], rel=1e-9)
 
 
 def test_the_valuation_stage_needs_a_price_list(tmp_path) -> None:
@@ -368,18 +415,30 @@ def test_inflation_reaches_norways_horizon_npv(tmp_path, norwegian_prices) -> No
     assert npv_inflated > npv_flat > 0.0
 
 
-def test_a_stand_that_names_no_species_cannot_be_priced(tmp_path, norwegian_prices) -> None:
-    """A price list is per species, so an unnamed volume is refused rather than guessed."""
-    from dataclasses import replace as _replace
+def test_the_mean_tree_is_the_stands_qmd_and_the_models_height() -> None:
+    """What the reporter reads, and the one thing it has to approximate.
 
-    unnamed = [_replace(unit, species=None) for unit in build_kuehne_stands(1)]
-    with pytest.raises(ValueError, match="names no species"):
-        run_norway_scenario(
-            global_seed=1,
-            output_dir=tmp_path / "run",
-            stands=unnamed,
-            n_steps=6,
-            start_year=2025,
-            valuation=norwegian_prices,
-            thin_at_years=[60.0],
-        )
+    Kuehne (2022) predicts a *dominant* height trajectory and no mean height, so
+    the representative stem is given the dominant height. That overstates its
+    taper and shifts the grade split towards sawtimber; it does not affect how
+    much came out, which comes from the model's own volume function.
+    """
+    from pyforestry.norway.adapters.kuehne_2022 import (
+        KuehnePineAdapterConfig,
+        KuehnePineGrowthModel,
+    )
+    from pyforestry.norway.simulation.orchestration import kuehne_mean_tree
+
+    unit = build_kuehne_stands(1)[0]
+    model = KuehnePineGrowthModel(
+        KuehnePineAdapterConfig(dominant_height_m=12.0, start_total_age_years=40.0)
+    )
+    ctx = model.build_context(unit.stand, seed=1)
+    ctx.update_step(5.0)
+
+    mean_tree = kuehne_mean_tree(ctx, 0.2)
+
+    assert mean_tree.diameter_cm == pytest.approx(float(ctx.stand.QMD))
+    assert mean_tree.height_m == pytest.approx(float(ctx.attrs["kuehne_dominant_height_m"]))
+    assert mean_tree.species == TreeSpecies.Sweden.pinus_sylvestris
+    assert mean_tree.stems_removed == pytest.approx(float(ctx.metrics["Stems"]["TOTAL"]) * 0.2)

@@ -51,6 +51,8 @@ from pyforestry.simulation.valuation.volume import ValuationSettings
 __all__ = [
     "CALENDAR_YEAR_KEY",
     "STAND_SPECIES_KEY",
+    "MeanTree",
+    "MeanTreeReporter",
     "STAGE_BUILDERS",
     "CalendarStep",
     "ScenarioDisturbanceStep",
@@ -67,9 +69,32 @@ __all__ = [
 #: harvest and disturbance separately without either step knowing about the other.
 REMOVED_BY_STAGE_KEY = "removed_volume_m3_per_ha_by_stage"
 
-#: Where a run records the species a stand's bulk removals should be priced as.
+#: Where a run records the species a stand's mean-tree removals are priced as.
 #: Set from :attr:`~pyforestry.simulation.scenario.StandUnit.species`.
 STAND_SPECIES_KEY = "stand_species"
+
+
+@dataclass(frozen=True)
+class MeanTree:
+    """The representative stem a stand without individual stems can be bucked as.
+
+    Attributes:
+        species: What it is.
+        diameter_cm: Its diameter, normally the stand's quadratic mean diameter.
+        height_m: Its height. Lorey's mean height where the stand has one -- a
+            model that predicts only *dominant* height does not, and substituting
+            that overstates the stem.
+        stems_removed: How many such stems the removal takes out, per hectare.
+    """
+
+    species: Any
+    diameter_cm: float
+    height_m: float
+    stems_removed: float
+
+
+#: How a run reads its stand's mean tree, given the fraction being removed.
+MeanTreeReporter = Callable[[SimulationContext, float], Optional[MeanTree]]
 
 
 @dataclass(frozen=True)
@@ -123,6 +148,10 @@ class StageContext:
             the default -- makes the disturbance stage an exact no-op.
         thin_at_years: Clock times at which the management stage thins. Empty --
             the default -- makes it an exact no-op.
+        mean_tree: How to read the representative stem of a stand that holds no
+            individual ones, so an aggregate model's thinning can be bucked.
+            Only the run knows this: a model that predicts dominant height has no
+            mean height, and guessing one here would put a bias in every price.
     """
 
     volume: Callable[[SimulationContext], float]
@@ -132,6 +161,7 @@ class StageContext:
     valuation: Optional[ValuationSettings] = None
     disturbance_rate_per_year: float = 0.0
     thin_at_years: tuple[float, ...] = ()
+    mean_tree: Optional["MeanTreeReporter"] = None
 
 
 @dataclass(frozen=True)
@@ -242,9 +272,10 @@ class ThinningStep:
     at_years: tuple[float, ...] = ()
     forcings: ForcingSet = field(default_factory=ForcingSet)
     #: Whether to record what was removed for pricing. False when the pipeline
-    #: has no valuation stage: a ledger nobody reads is wasted work, and for an
-    #: aggregate stand it would demand a species the run never needs.
+    #: has no valuation stage: a ledger nobody reads is wasted work.
     records_removals: bool = False
+    #: How to read the mean stem of a stand that holds no individual ones.
+    mean_tree: Optional["MeanTreeReporter"] = None
     name: str = "management"
     tolerance: float = 1e-9
 
@@ -271,6 +302,7 @@ class ThinningStep:
             ratio,
             {"thinning_ratio": ratio},
             merchantable=self.records_removals,
+            mean_tree_reporter=self.mean_tree,
         )
 
 
@@ -296,6 +328,7 @@ def _record_removed(
     stage: str,
     removed_fraction: float,
     volume_removed_m3: float,
+    mean_tree: Optional["MeanTree"],
 ) -> None:
     """Add what a removal took out to the run's removal ledger.
 
@@ -304,10 +337,10 @@ def _record_removed(
     it removed. Without it the ledger stayed empty, so a pipeline that declared a
     valuation stage priced nothing and reported it as zero.
 
-    Both kinds of stand can say something. A tree list gives stems, which are
-    bucked into assortments. An aggregate stand gives a volume and no stems, so
-    it records that instead of nothing -- which is what left every aggregate
-    model, and therefore all of Norway, with no valuation stage that could work.
+    Both kinds of stand can say something, and both are bucked. A tree list gives
+    stems. An aggregate stand gives its *mean* stem and how many came out, which
+    is bucked once and scaled -- because a stand-level model still has a
+    quadratic mean diameter, and that is a real tree.
     """
     ledger = _ledger_for(ctx)
     cohort = f"{stage}@{float(ctx.state.get('t', 0.0)):g}"
@@ -323,55 +356,16 @@ def _record_removed(
                 ledger.record_tree(cohort, tree, weight=weight)
         return
 
-    if volume_removed_m3 <= 0.0:
+    if volume_removed_m3 <= 0.0 or mean_tree is None:
         return
-    ledger.record_volume(
+    ledger.record_mean_tree(
         cohort,
-        species=_dominant_species(ctx),
+        species=mean_tree.species,
+        diameter_cm=mean_tree.diameter_cm,
+        height_m=mean_tree.height_m,
+        stems=mean_tree.stems_removed,
         volume_m3=volume_removed_m3,
-        metadata={"from": "aggregate stand; no stems to buck"},
-    )
-
-
-def _dominant_species(ctx: SimulationContext) -> Any:
-    """Return the species carrying most basal area, for a stand without stems.
-
-    Three places to look, in order. What the run declared on its
-    :class:`~pyforestry.simulation.scenario.StandUnit` is authoritative: an
-    aggregate model's ``set_aggregate_metrics`` drops species detail by design,
-    so after one step the metrics cannot say. Failing that, a mixed stand keys
-    its metrics by species and the largest key wins; a single-species one may
-    still carry it on the total's value.
-
-    Raises:
-        ValueError: If none of the three names a species. A price list is per
-            species, so an unnamed volume cannot be priced, and guessing one
-            would put a number against a species nobody chose.
-    """
-    declared = ctx.attrs.get(STAND_SPECIES_KEY)
-    if declared is not None:
-        return declared
-
-    basal_area = ctx.metrics["BasalArea"]
-    by_species = {
-        species: float(value)
-        for species, value in basal_area.items()
-        if not isinstance(species, str)
-    }
-    if by_species:
-        return max(by_species, key=by_species.__getitem__)
-
-    total = basal_area.get("TOTAL")
-    species = getattr(total, "species", None)
-    if species is not None:
-        return species
-
-    raise ValueError(
-        "This aggregate stand names no species, so a removal from it cannot be "
-        "priced: a price list is per species. Declare it on the StandUnit "
-        "(StandUnit(stand_id=..., stand=..., species=...)), which is where a "
-        "whole-stand model's species has to live -- its metrics drop the detail "
-        "on the first step."
+        metadata={"from": "aggregate stand; bucked at its mean tree"},
     )
 
 
@@ -406,6 +400,7 @@ def _remove_fraction(
     params: Mapping[str, float],
     *,
     merchantable: bool,
+    mean_tree_reporter: Optional["MeanTreeReporter"] = None,
 ) -> None:
     """Remove ``fraction`` of the stand under ``stage``, recording what it took.
 
@@ -419,19 +414,28 @@ def _remove_fraction(
             sending disturbance there would report a stand as having *earned*
             what a storm took. False also when the pipeline has no valuation
             stage at all.
+        mean_tree_reporter: How to read the representative stem of a stand that
+            holds no individual ones. Required to price an aggregate model's
+            thinning.
     """
     if fraction <= 0.0:
         return
     before = _standing_volume(ctx)
-    # Stems are recorded before the removal, while they are still there to read;
-    # a bulk volume is recorded after, because it is the difference the removal
-    # made. Hence both around the action rather than one side of it.
-    if merchantable and ctx.holds_tree_list():
-        _record_removed(ctx, stage, fraction, volume_removed_m3=0.0)
+    # Stems are read before the removal, while they are still there; the mean
+    # tree likewise, since scaling the stand changes the stem count it reports.
+    # The volume removed is only known afterwards. Hence both sides of the action.
+    mean_tree = None
+    if merchantable:
+        if ctx.holds_tree_list():
+            _record_removed(ctx, stage, fraction, 0.0, None)
+        elif mean_tree_reporter is not None:
+            mean_tree = mean_tree_reporter(ctx, fraction)
+
     Action(name=stage, params=dict(params), apply=lambda c: _scale_stand(c, 1.0 - fraction))(ctx)
     removed_volume = max(0.0, before - _standing_volume(ctx))
+
     if merchantable and not ctx.holds_tree_list():
-        _record_removed(ctx, stage, fraction, volume_removed_m3=removed_volume)
+        _record_removed(ctx, stage, fraction, removed_volume, mean_tree)
     record_removal(ctx, stage, removed_volume)
 
 
@@ -464,6 +468,7 @@ def _build_management(stage: StageContext) -> Step:
         at_years=stage.thin_at_years,
         forcings=stage.forcings,
         records_removals=stage.valuation is not None,
+        mean_tree=stage.mean_tree,
     )
 
 

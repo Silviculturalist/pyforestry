@@ -24,8 +24,7 @@ from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies
 from pyforestry.base.simulation.core import SimulationContext
 from pyforestry.simulation.forcing import ForcingSet
 from pyforestry.simulation.scenario import ScenarioRunResult, StandUnit, run_scenario
-from pyforestry.simulation.valuation.removals import TreeRemoval
-from pyforestry.simulation.valuation.volume import ValuationSettings
+from pyforestry.simulation.valuation.volume import StemDimensions, ValuationSettings
 from pyforestry.sweden.adapters.elfving_2010 import Elfving2010Model
 from pyforestry.sweden.simulation.presets import ScenarioConfig, build_baseline_scenario_config
 from pyforestry.sweden.timber import SweTimber
@@ -38,13 +37,16 @@ __all__ = [
 ]
 
 
-def swedish_timber_factory(removal: TreeRemoval) -> SweTimber:
+def swedish_timber_factory(removal: StemDimensions) -> SweTimber:
     """Build the :class:`SweTimber` Sweden's taper functions require.
 
     ``EdgrenNylinder1949.validate`` rejects anything that is not a ``SweTimber``,
     so a Sweden valuation configured with the base ``Timber`` the ledger builds
     by default fails inside the bucker rather than at configuration time. Pass
     this as ``ValuationSettings(timber_factory=...)``.
+
+    Serves either kind of removal -- an individual stem or a stand's mean tree --
+    since both report a species, a diameter and a height.
     """
     return SweTimber(
         species=removal.species_name,

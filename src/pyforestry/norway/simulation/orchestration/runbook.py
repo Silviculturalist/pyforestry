@@ -30,9 +30,15 @@ from pyforestry.norway.growth.kuehne_2022 import kuehne_2022_stand_volume
 from pyforestry.norway.simulation.presets import ScenarioConfig, build_baseline_scenario_config
 from pyforestry.simulation.forcing import ForcingSet
 from pyforestry.simulation.scenario import ScenarioRunResult, StandUnit, run_scenario
+from pyforestry.simulation.stages import STAND_SPECIES_KEY, MeanTree
 from pyforestry.simulation.valuation.volume import ValuationSettings
 
-__all__ = ["build_kuehne_stands", "kuehne_stand_volume", "run_norway_scenario"]
+__all__ = [
+    "build_kuehne_stands",
+    "kuehne_mean_tree",
+    "kuehne_stand_volume",
+    "run_norway_scenario",
+]
 
 
 def kuehne_stand_volume(ctx: SimulationContext) -> float:
@@ -55,6 +61,38 @@ def kuehne_stand_volume(ctx: SimulationContext) -> float:
             float(ctx.attrs["kuehne_dominant_height_m"]),
             Age.TOTAL(float(ctx.state.get("t", 0.0))),
         )
+    )
+
+
+def kuehne_mean_tree(ctx: SimulationContext, removed_fraction: float) -> MeanTree:
+    """Return the stand's representative stem, so a thinning can be bucked.
+
+    The Kuehne model steps a basal area and a stem count, so a thinning from it
+    has no individual stems. It does have a quadratic mean diameter, which the
+    stand derives from those two, and the stem that diameter describes is a real
+    one: bucking it gives the assortment split a stand of that mean size yields.
+
+    **The height is the model's dominant height**, because Kuehne (2022) predicts
+    no other: its height function is a dominant-height trajectory. A mean stem is
+    shorter than a dominant one, so this overstates the representative stem's
+    taper and shifts its grade split towards sawtimber. What it does *not* affect
+    is how much came out: the descriptor scales the bucked grades so the total
+    matches the model's own volume function. Supply a mean-height relation
+    through ``mean_tree=`` if you have one for Norwegian Scots pine; this
+    package does not.
+
+    Args:
+        ctx: The run's context, read before the removal is applied.
+        removed_fraction: The share of the stand being taken out.
+
+    Returns:
+        The representative stem and how many of it come out.
+    """
+    return MeanTree(
+        species=ctx.attrs.get(STAND_SPECIES_KEY, TreeSpecies.Sweden.pinus_sylvestris),
+        diameter_cm=float(ctx.stand.QMD),
+        height_m=float(ctx.attrs["kuehne_dominant_height_m"]),
+        stems_removed=float(ctx.metrics["Stems"]["TOTAL"]) * float(removed_fraction),
     )
 
 
@@ -146,10 +184,10 @@ def run_norway_scenario(
             not science, and inventing one would put numbers under Norway's
             name with nothing behind them. Supply your own
             :class:`~pyforestry.simulation.valuation.volume.ValuationSettings`.
-            The Kuehne model is a stand-level one, so its removals are volume
-            without stems: nothing is bucked, and every cubic metre is priced
-            at the species' pulpwood price. The taper and bucking config are
-            therefore unused on this route and may be anything valid.
+            The Kuehne model is a stand-level one, so a thinning from it has no
+            individual stems -- it is bucked at the stand's mean tree instead,
+            once, and scaled to the volume the model says came out. See
+            :func:`kuehne_mean_tree` for what that assumes.
         disturbance_rate_per_year: Annual share of the stand a scenario
             disturbance removes, before the scenario's ``disturbance_factor``.
             Supplied by the caller; this package ships no rate, because a
@@ -186,4 +224,5 @@ def run_norway_scenario(
         thin_at_years=thin_at_years,
         start_year=start_year,
         forcings=forcings,
+        mean_tree=kuehne_mean_tree,
     )

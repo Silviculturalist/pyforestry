@@ -52,7 +52,7 @@ _NON_PROVENANCE_DESCRIPTORS = {
     "VolumeDescriptor",
     "EmptyVolumeDescriptor",
     "TreeVolumeDescriptor",
-    "BulkVolumeDescriptor",
+    "MeanTreeVolumeDescriptor",
 }
 
 

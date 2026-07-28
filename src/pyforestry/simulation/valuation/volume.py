@@ -4,10 +4,12 @@ Pricing a removal needs three things the ledger does not carry: a price list, a
 taper function and a bucking configuration. They arrive as one typed
 :class:`ValuationSettings`.
 
-Two routes, chosen by what the stand could report. A tree list is bucked into
-assortments and priced by grade (:class:`TreeVolumeDescriptor`); a bulk volume
-from an aggregate model has no stems to cut, so it is priced whole at the
-pulpwood price (:class:`BulkVolumeDescriptor`) and says so in its metadata.
+Two routes, chosen by what the stand could report. A tree list is bucked stem by
+stem and priced by grade (:class:`TreeVolumeDescriptor`). An aggregate model has
+no individual stems, but it has a quadratic mean diameter and a mean height, so
+its *representative* stem is bucked once and scaled up
+(:class:`MeanTreeVolumeDescriptor`) -- which gets a stand-level model a real
+assortment split rather than pulpwood for everything.
 
 That used to be a ``model_view: Any`` -- a name left over from a subsystem this
 package no longer has -- resolved by ``getattr`` across four spellings
@@ -22,7 +24,17 @@ nothing.
 from __future__ import annotations
 
 from dataclasses import dataclass, field, replace
-from typing import Any, Callable, Dict, Mapping, MutableMapping, Tuple, Type
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Mapping,
+    MutableMapping,
+    Protocol,
+    Tuple,
+    Type,
+    runtime_checkable,
+)
 
 from pyforestry.base.helpers.bucking import BuckingConfig, QualityType
 from pyforestry.base.pricelist import Pricelist
@@ -30,10 +42,40 @@ from pyforestry.base.taper import Taper
 from pyforestry.base.timber import Timber
 from pyforestry.base.timber_bucking.nasberg_1985 import Nasberg_1985_BranchBound
 
-from .removals import StandRemovalLedger, TreeRemoval, VolumeRemoval
+from .removals import MeanTreeRemoval, StandRemovalLedger, TreeRemoval
 
 
-def _default_timber_factory(removal: "TreeRemoval") -> Timber:
+@runtime_checkable
+class StemDimensions(Protocol):
+    """What a timber factory needs from a removal, of either kind.
+
+    :class:`~pyforestry.simulation.valuation.removals.TreeRemoval` and
+    :class:`~pyforestry.simulation.valuation.removals.MeanTreeRemoval` both
+    satisfy it, so one factory serves both routes -- a region whose taper needs
+    its own ``Timber`` subclass writes it once.
+    """
+
+    @property
+    def species_name(self) -> str:
+        """The species' full scientific name."""
+        ...
+
+    @property
+    def diameter_cm(self) -> float:
+        """Breast-height diameter, in cm."""
+        ...
+
+    @property
+    def height_m(self) -> float:
+        """Total height, in m."""
+        ...
+
+    def to_timber(self) -> Timber:
+        """Build the base timber for this stem."""
+        ...
+
+
+def _default_timber_factory(removal: StemDimensions) -> Timber:
     """Build the base :class:`~pyforestry.base.timber.Timber` for a removal."""
     return removal.to_timber()
 
@@ -140,7 +182,7 @@ class TreeVolumeDescriptor(VolumeDescriptor):
     )
     bucker_cls: Type[Nasberg_1985_BranchBound] = Nasberg_1985_BranchBound
     min_diam_dead_wood: float = 0.0
-    timber_factory: Callable[[TreeRemoval], Timber] = _default_timber_factory
+    timber_factory: Callable[[StemDimensions], Timber] = _default_timber_factory
 
     def evaluate(self) -> VolumeResult:  # type: ignore[override]
         """Run bucking and valuation over the recorded tree removals."""
@@ -234,11 +276,12 @@ class ValuationSettings:
         min_diam_dead_wood: Minimum top diameter, in cm, below which wood is
             treated as dead and not merchandised.
         timber_factory: Builds the :class:`~pyforestry.base.timber.Timber` a
-            removal is bucked as. Defaults to the base ``Timber``; a region whose
-            taper needs its own subclass supplies one, which is what Sweden's
-            ``EdgrenNylinder1949`` requires -- it rejects anything that is not a
-            ``SweTimber``, so the default produced a ``ValueError`` from inside
-            the bucker rather than at configuration time.
+            removal is bucked as, for either kind of removal -- an individual stem
+            or a stand's mean tree. Defaults to the base ``Timber``; a region
+            whose taper needs its own subclass supplies one, which is what
+            Sweden's ``EdgrenNylinder1949`` requires -- it rejects anything that
+            is not a ``SweTimber``, so the default produced a ``ValueError`` from
+            inside the bucker rather than at configuration time.
 
     Raises:
         TypeError: If any field is not of its declared type.
@@ -250,7 +293,7 @@ class ValuationSettings:
         default_factory=lambda: BuckingConfig(save_sections=True)
     )
     min_diam_dead_wood: float = 0.0
-    timber_factory: Callable[["TreeRemoval"], Timber] = _default_timber_factory
+    timber_factory: Callable[[StemDimensions], Timber] = _default_timber_factory
 
     def __post_init__(self) -> None:
         """Validate the settings and force ``save_sections`` on."""
@@ -273,59 +316,115 @@ class ValuationSettings:
 
 
 @dataclass(kw_only=True)
-class BulkVolumeDescriptor(VolumeDescriptor):
-    """Descriptor for removals that are a volume and nothing more.
+class MeanTreeVolumeDescriptor(VolumeDescriptor):
+    """Buck the stand's representative stem, and scale it to the stems removed.
 
-    An aggregate model steps a basal area and a stem count, so its thinning is
-    "this many cubic metres of pine" -- there is no stem to cut into logs, and
-    nothing to grade. Every cubic metre is therefore priced at the species'
-    pulpwood price, which is the only price in a price list that applies to
-    unsorted volume, and the pieces come back as
-    :attr:`~pyforestry.base.helpers.bucking.QualityType.Undefined`.
+    An aggregate model reports a basal area and a stem count, so a thinning from
+    it has no individual stems to cut. It does have a quadratic mean diameter and
+    a mean height, and the stem those describe is a real stem: bucking it once
+    gives the *proportions* of butt, middle, top and pulp a stand of that mean
+    size yields.
 
-    That understates what a real thinning of sawtimber-sized stems would fetch.
-    It is the honest figure available from a model that never knew the stems
-    existed, and the metadata says so, rather than a bucking of dimensions
-    nobody measured.
+    The proportions are then scaled so the total matches the volume the model's
+    own published volume function says came out. That division of labour is the
+    point:
+
+    * **how much** comes from the model -- exact, and unaffected by anything here;
+    * **which grades** comes from the mean tree -- an approximation, and named as
+      one in the metadata.
+
+    Two things it assumes, both worth knowing before comparing the result with a
+    bucked inventory:
+
+    * The mean tree's grade split is the stand's. It is not: value is convex in
+      diameter, so a stand with the same mean but a wider spread yields more
+      sawtimber than its mean tree suggests. This understates a heterogeneous
+      stand and is exact only for a uniform one.
+    * Whatever height the run supplied for the mean stem is the mean stem's. A
+      model that predicts only *dominant* height has none, and using that
+      overstates the stem's taper -- which is why the height is the run's to
+      supply rather than something guessed here.
     """
 
-    removals: Tuple[VolumeRemoval, ...]
+    removals: Tuple[MeanTreeRemoval, ...]
     pricelist: Pricelist
+    taper_class: Type[Taper]
+    bucking_config: BuckingConfig = field(
+        default_factory=lambda: BuckingConfig(save_sections=True)
+    )
+    bucker_cls: Type[Nasberg_1985_BranchBound] = Nasberg_1985_BranchBound
+    min_diam_dead_wood: float = 0.0
+    timber_factory: Callable[[StemDimensions], Timber] = _default_timber_factory
 
     def evaluate(self) -> VolumeResult:  # type: ignore[override]
-        """Price each bulk volume at its species' pulpwood price."""
+        """Buck each mean stem and scale its grades to the volume removed."""
+        config = self.bucking_config
+        if not isinstance(config, BuckingConfig):
+            raise TypeError("Bucking configuration must be a BuckingConfig instance.")
         if not self.removals:
             return super().evaluate()
+        if not config.save_sections:
+            config = replace(config, save_sections=True)
 
         pieces: list[PieceRecord] = []
         total_value = 0.0
         volume_by_quality: Dict[QualityType, float] = {quality: 0.0 for quality in QualityType}
+        scalings: list[float] = []
 
         for removal in self.removals:
-            price = float(self.pricelist.Pulp.get_pulpwood_price(removal.species_name))
-            value = price * removal.volume_m3
-            total_value += value
-            volume_by_quality[QualityType.Undefined] += removal.volume_m3
-            pieces.append(
-                PieceRecord(
-                    cohort_id=removal.cohort_id,
-                    species=removal.species_name,
-                    quality=QualityType.Undefined,
-                    length_m=0.0,
-                    top_diameter_cm=0.0,
-                    volume_m3=removal.volume_m3,
-                    value=value,
-                    weight=1.0,
-                )
+            timber = self.timber_factory(removal)
+            bucker = self.bucker_cls(timber, self.pricelist, self.taper_class)
+            result = bucker.calculate_tree_value(
+                min_diam_dead_wood=self.min_diam_dead_wood,
+                config=config,
             )
 
+            # The mean stem's own bucked volume, which the model's figure replaces.
+            bucked = float(sum(result.volume_per_quality))
+            if bucked <= 0.0:
+                # Too small to yield anything the price list buys. The volume is
+                # still gone from the stand; it simply earns nothing.
+                continue
+            # Scale so the total is the model's, and the mean tree only decides
+            # the split. removal.stems alone would double-count the difference
+            # between the bucked mean stem and the model's volume function.
+            scale = removal.volume_m3 / bucked
+            scalings.append(scale / removal.stems if removal.stems else scale)
+
+            total_value += float(result.total_value) * scale
+            for idx, volume in enumerate(result.volume_per_quality):
+                try:
+                    quality = QualityType(idx)
+                except ValueError:
+                    continue
+                volume_by_quality[quality] += float(volume) * scale
+
+            for section in result.sections or []:
+                pieces.append(
+                    PieceRecord(
+                        cohort_id=removal.cohort_id,
+                        species=removal.species_name,
+                        quality=section.quality,
+                        length_m=(section.end_point - section.start_point) / 10.0,
+                        top_diameter_cm=float(section.top_diameter),
+                        volume_m3=float(section.volume) * scale,
+                        value=float(section.value) * scale,
+                        weight=scale,
+                    )
+                )
+
         metadata = dict(self.metadata)
-        metadata.setdefault("bucked", False)
+        metadata.setdefault("bucked", True)
+        metadata.setdefault("method", "mean tree")
         metadata.setdefault(
             "pricing",
-            "Bulk volume at the pulpwood price: the stand model reports no stems, so "
-            "there are no dimensions to sort into assortments.",
+            "The stand's mean stem (QMD, mean height) bucked once and scaled so the "
+            "total matches the model's own volume. Grade split is the mean tree's, "
+            "which understates a stand whose diameters are widely spread.",
         )
+        if scalings:
+            metadata.setdefault("mean_stems_per_bucked_tree", float(sum(scalings) / len(scalings)))
+
         return VolumeResult(
             descriptor=self,
             pieces=tuple(pieces),
@@ -360,15 +459,20 @@ class VolumeConnector:
                 "Build one with the price list, taper and bucking config to use."
             )
 
-        # An aggregate model's removals are volume without stems. They cannot be
-        # bucked, so they take the bulk route rather than being dropped -- which
-        # is what left Norway with no valuation at all.
-        volumes = tuple(ledger.iter_volume_removals())
-        if volumes:
-            return BulkVolumeDescriptor(
+        # An aggregate model's removals have no individual stems, but they do
+        # have a mean tree, and that can be bucked. Taking this route rather than
+        # dropping them is what gave Norway a valuation at all.
+        mean_trees = tuple(ledger.iter_mean_tree_removals())
+        if mean_trees:
+            return MeanTreeVolumeDescriptor(
                 ledger=ledger,
-                removals=volumes,
+                removals=mean_trees,
                 pricelist=settings.pricelist,
+                taper_class=settings.taper_class,
+                bucking_config=settings.bucking_config,
+                bucker_cls=self._bucker_cls,
+                min_diam_dead_wood=settings.min_diam_dead_wood,
+                timber_factory=settings.timber_factory,
                 metadata=dict(ledger.metadata),
             )
 
@@ -390,7 +494,8 @@ class VolumeConnector:
 
 
 __all__ = [
-    "BulkVolumeDescriptor",
+    "MeanTreeVolumeDescriptor",
+    "StemDimensions",
     "PieceRecord",
     "ValuationSettings",
     "VolumeResult",

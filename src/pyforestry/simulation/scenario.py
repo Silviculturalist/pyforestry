@@ -36,6 +36,7 @@ from pyforestry.simulation.provenance import as_manifest_entries, collect_proven
 from pyforestry.simulation.stages import (
     REMOVED_BY_STAGE_KEY,
     STAND_SPECIES_KEY,
+    MeanTreeReporter,
     StageContext,
     build_pipeline,
 )
@@ -195,6 +196,7 @@ def run_scenario(
     thin_at_years: Sequence[float] = (),
     start_year: float = 0.0,
     forcings: Optional[ForcingSet] = None,
+    mean_tree: Optional[MeanTreeReporter] = None,
 ) -> ScenarioRunResult:
     """Run ``config`` over ``stands`` and write the three artifacts.
 
@@ -239,6 +241,11 @@ def run_scenario(
             replaces it. This package ships none: each is a claim about the
             world, and every one a run applies is recorded in its manifest with
             its citation.
+        mean_tree: How to read the representative stem of a stand that holds no
+            individual ones, so an aggregate model's thinning can still be
+            bucked. Required to value such a run: only the caller knows which
+            height its model predicts, and a model that gives dominant height has
+            no mean height to substitute.
 
     Returns:
         The artifacts, the rows, the manifest and the finished contexts.
@@ -265,6 +272,7 @@ def run_scenario(
         valuation=valuation,
         disturbance_rate_per_year=disturbance_rate_per_year,
         thin_at_years=tuple(float(t) for t in thin_at_years),
+        mean_tree=mean_tree,
     )
     pipeline = build_pipeline(config.stages(), stage_context, start_year=start_year)
 
