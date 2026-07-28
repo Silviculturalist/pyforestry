@@ -31,7 +31,7 @@ one number for the run.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Callable, Mapping, Optional, Sequence
+from typing import Any, Callable, Mapping, Optional, Sequence
 
 from pyforestry.base.simulation.core import SimulationContext
 from pyforestry.base.simulation.pipeline import Action, GrowthStep, ManagementStep, Step
@@ -50,6 +50,7 @@ from pyforestry.simulation.valuation.volume import ValuationSettings
 
 __all__ = [
     "CALENDAR_YEAR_KEY",
+    "STAND_SPECIES_KEY",
     "STAGE_BUILDERS",
     "CalendarStep",
     "ScenarioDisturbanceStep",
@@ -65,6 +66,10 @@ __all__ = [
 #: Where a step records the volume it removed, so the run's summary can report
 #: harvest and disturbance separately without either step knowing about the other.
 REMOVED_BY_STAGE_KEY = "removed_volume_m3_per_ha_by_stage"
+
+#: Where a run records the species a stand's bulk removals should be priced as.
+#: Set from :attr:`~pyforestry.simulation.scenario.StandUnit.species`.
+STAND_SPECIES_KEY = "stand_species"
 
 
 @dataclass(frozen=True)
@@ -236,6 +241,10 @@ class ThinningStep:
     thinning_ratio: float
     at_years: tuple[float, ...] = ()
     forcings: ForcingSet = field(default_factory=ForcingSet)
+    #: Whether to record what was removed for pricing. False when the pipeline
+    #: has no valuation stage: a ledger nobody reads is wasted work, and for an
+    #: aggregate stand it would demand a species the run never needs.
+    records_removals: bool = False
     name: str = "management"
     tolerance: float = 1e-9
 
@@ -261,7 +270,7 @@ class ThinningStep:
             self.name,
             ratio,
             {"thinning_ratio": ratio},
-            merchantable=True,
+            merchantable=self.records_removals,
         )
 
 
@@ -273,33 +282,97 @@ def _standing_volume(ctx: SimulationContext) -> float:
     return float(reporter(ctx))
 
 
-def _record_removed_trees(ctx: SimulationContext, stage: str, removed_fraction: float) -> None:
-    """Add the stems a removal took out to the run's removal ledger.
+def _ledger_for(ctx: SimulationContext) -> StandRemovalLedger:
+    """Return the run's removal ledger, creating it on first use."""
+    ledger = ctx.attrs.get(ValuationStep.LEDGER_KEY)
+    if not isinstance(ledger, StandRemovalLedger):
+        ledger = StandRemovalLedger(stand_id=str(ctx.attrs.get("stand_id", "")))
+        ctx.attrs[ValuationStep.LEDGER_KEY] = ledger
+    return ledger
+
+
+def _record_removed(
+    ctx: SimulationContext,
+    stage: str,
+    removed_fraction: float,
+    volume_removed_m3: float,
+) -> None:
+    """Add what a removal took out to the run's removal ledger.
 
     This is what connects the two halves of the valuation design: a step thins,
     and :class:`~pyforestry.simulation.valuation.step.ValuationStep` prices what
     it removed. Without it the ledger stayed empty, so a pipeline that declared a
     valuation stage priced nothing and reported it as zero.
 
-    Only meaningful for a tree list -- there is nothing to buck in an aggregate
-    basal area -- so an aggregate or diameter-class run simply records no pieces
-    and its valuation stage stays quiet.
+    Both kinds of stand can say something. A tree list gives stems, which are
+    bucked into assortments. An aggregate stand gives a volume and no stems, so
+    it records that instead of nothing -- which is what left every aggregate
+    model, and therefore all of Norway, with no valuation stage that could work.
     """
-    if not ctx.holds_tree_list():
-        return
-    ledger = ctx.attrs.get(ValuationStep.LEDGER_KEY)
-    if not isinstance(ledger, StandRemovalLedger):
-        ledger = StandRemovalLedger(stand_id=str(ctx.attrs.get("stand_id", "")))
-        ctx.attrs[ValuationStep.LEDGER_KEY] = ledger
+    ledger = _ledger_for(ctx)
     cohort = f"{stage}@{float(ctx.state.get('t', 0.0)):g}"
-    for plot in ctx.plots:
-        for tree in plot.trees:
-            if tree.species is None or tree.diameter_cm is None or tree.height_m is None:
-                continue
-            weight = float(tree.weight_n or 0.0) * removed_fraction
-            if weight <= 0.0:
-                continue
-            ledger.record_tree(cohort, tree, weight=weight)
+
+    if ctx.holds_tree_list():
+        for plot in ctx.plots:
+            for tree in plot.trees:
+                if tree.species is None or tree.diameter_cm is None or tree.height_m is None:
+                    continue
+                weight = float(tree.weight_n or 0.0) * removed_fraction
+                if weight <= 0.0:
+                    continue
+                ledger.record_tree(cohort, tree, weight=weight)
+        return
+
+    if volume_removed_m3 <= 0.0:
+        return
+    ledger.record_volume(
+        cohort,
+        species=_dominant_species(ctx),
+        volume_m3=volume_removed_m3,
+        metadata={"from": "aggregate stand; no stems to buck"},
+    )
+
+
+def _dominant_species(ctx: SimulationContext) -> Any:
+    """Return the species carrying most basal area, for a stand without stems.
+
+    Three places to look, in order. What the run declared on its
+    :class:`~pyforestry.simulation.scenario.StandUnit` is authoritative: an
+    aggregate model's ``set_aggregate_metrics`` drops species detail by design,
+    so after one step the metrics cannot say. Failing that, a mixed stand keys
+    its metrics by species and the largest key wins; a single-species one may
+    still carry it on the total's value.
+
+    Raises:
+        ValueError: If none of the three names a species. A price list is per
+            species, so an unnamed volume cannot be priced, and guessing one
+            would put a number against a species nobody chose.
+    """
+    declared = ctx.attrs.get(STAND_SPECIES_KEY)
+    if declared is not None:
+        return declared
+
+    basal_area = ctx.metrics["BasalArea"]
+    by_species = {
+        species: float(value)
+        for species, value in basal_area.items()
+        if not isinstance(species, str)
+    }
+    if by_species:
+        return max(by_species, key=by_species.__getitem__)
+
+    total = basal_area.get("TOTAL")
+    species = getattr(total, "species", None)
+    if species is not None:
+        return species
+
+    raise ValueError(
+        "This aggregate stand names no species, so a removal from it cannot be "
+        "priced: a price list is per species. Declare it on the StandUnit "
+        "(StandUnit(stand_id=..., stand=..., species=...)), which is where a "
+        "whole-stand model's species has to live -- its metrics drop the detail "
+        "on the first step."
+    )
 
 
 def _scale_stand(ctx: SimulationContext, survived: float) -> None:
@@ -341,18 +414,25 @@ def _remove_fraction(
     through :class:`Action`, so a caller reading the context sees it too.
 
     Args:
-        merchantable: Whether the removed stems reach the valuation ledger. A
-            thinning produces logs to price; a windthrow produces loss. Sending
-            disturbance to the valuation would report a stand as having *earned*
-            what a storm took.
+        merchantable: Whether what was removed reaches the valuation ledger. A
+            thinning produces logs to price; a windthrow produces loss, so
+            sending disturbance there would report a stand as having *earned*
+            what a storm took. False also when the pipeline has no valuation
+            stage at all.
     """
     if fraction <= 0.0:
         return
     before = _standing_volume(ctx)
-    if merchantable:
-        _record_removed_trees(ctx, stage, fraction)
+    # Stems are recorded before the removal, while they are still there to read;
+    # a bulk volume is recorded after, because it is the difference the removal
+    # made. Hence both around the action rather than one side of it.
+    if merchantable and ctx.holds_tree_list():
+        _record_removed(ctx, stage, fraction, volume_removed_m3=0.0)
     Action(name=stage, params=dict(params), apply=lambda c: _scale_stand(c, 1.0 - fraction))(ctx)
-    record_removal(ctx, stage, max(0.0, before - _standing_volume(ctx)))
+    removed_volume = max(0.0, before - _standing_volume(ctx))
+    if merchantable and not ctx.holds_tree_list():
+        _record_removed(ctx, stage, fraction, volume_removed_m3=removed_volume)
+    record_removal(ctx, stage, removed_volume)
 
 
 # ---------------------------------------------------------------------------
@@ -383,6 +463,7 @@ def _build_management(stage: StageContext) -> Step:
         thinning_ratio=stage.management.thinning_ratio,
         at_years=stage.thin_at_years,
         forcings=stage.forcings,
+        records_removals=stage.valuation is not None,
     )
 
 

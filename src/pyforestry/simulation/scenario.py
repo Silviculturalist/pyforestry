@@ -35,6 +35,7 @@ from pyforestry.simulation.presets import ScenarioConfig, stable_seed
 from pyforestry.simulation.provenance import as_manifest_entries, collect_provenance
 from pyforestry.simulation.stages import (
     REMOVED_BY_STAGE_KEY,
+    STAND_SPECIES_KEY,
     StageContext,
     build_pipeline,
 )
@@ -57,10 +58,23 @@ STAND_VOLUME_ATTR = "stand_volume_m3_per_ha"
 
 @dataclass(frozen=True)
 class StandUnit:
-    """One stand in a scenario run, with the id its summary row is keyed by."""
+    """One stand in a scenario run, with the id its summary row is keyed by.
+
+    Args:
+        stand_id: The id its summary row is keyed by.
+        stand: The inventory to project.
+        species: What the stand is, for pricing removals an *aggregate* model
+            produces. Such a model steps a whole-stand basal area, and
+            ``Stand.set_aggregate_metrics`` drops species detail by design --
+            a total genuinely has none -- so the species cannot be recovered from
+            the metrics after the first step. Whoever built the stand knows it;
+            this is where they say so. Unnecessary for a tree list, where every
+            stem carries its own.
+    """
 
     stand_id: int
     stand: Stand
+    species: Optional[Any] = None
 
 
 @dataclass(frozen=True)
@@ -271,6 +285,9 @@ def run_scenario(
             attrs=dict(attrs) if attrs else None,
         )
         ctx.attrs["_volume_reporter"] = volume
+        ctx.attrs["stand_id"] = unit.stand_id
+        if unit.species is not None:
+            ctx.attrs[STAND_SPECIES_KEY] = unit.species
 
         initial_volume = float(volume(ctx))
         if guard_policy.get("reject_negative_inputs") and initial_volume < 0.0:

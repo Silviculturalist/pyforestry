@@ -14,6 +14,8 @@ import json
 import pytest
 
 from pyforestry.base.contracts import SourceReference
+from pyforestry.base.helpers.tree_species import TreeSpecies
+from pyforestry.base.pricelist import Pricelist
 from pyforestry.norway.simulation.orchestration import (
     build_kuehne_stands,
     kuehne_stand_volume,
@@ -30,11 +32,28 @@ from pyforestry.simulation.artifacts import load_scenario_summary, validate_arti
 from pyforestry.simulation.forcing import (
     DISTURBANCE,
     GROWTH,
+    PRICE,
     AnnualForcing,
     ConstantForcing,
     ForcingSet,
 )
 from pyforestry.simulation.presets import ScenarioConfig as SharedScenarioConfig
+from pyforestry.simulation.valuation.volume import ValuationSettings
+from pyforestry.sweden.taper import EdgrenNylinder1949
+
+
+@pytest.fixture
+def norwegian_prices() -> ValuationSettings:
+    """A caller-supplied price list.
+
+    This package ships none for Norway: a price list is regional market data,
+    not science, and inventing one would put numbers under Norway's name with
+    nothing behind them.
+    """
+    pricelist = Pricelist()
+    pricelist.Pulp._prices[TreeSpecies.Sweden.pinus_sylvestris.full_name] = 320
+    return ValuationSettings(pricelist=pricelist, taper_class=EdgrenNylinder1949)
+
 
 # --- the configuration -------------------------------------------------------
 
@@ -49,11 +68,17 @@ def test_baseline_configuration_conforms_and_has_a_stable_identity() -> None:
 
 
 def test_stages_are_the_period_the_runtime_executes() -> None:
-    """``("growth",)`` was not Norway having nothing else to run."""
+    """The same period Sweden runs, valuation included.
+
+    ``("growth",)`` was not Norway having nothing else to run; and the later
+    ``("management", "disturbance", "growth")`` was not Norway having nothing to
+    sell. Its models are aggregate, and the removal ledger could only hold stems.
+    """
     assert build_baseline_scenario_config().stages() == (
         "management",
         "disturbance",
         "growth",
+        "valuation",
     )
 
 
@@ -85,9 +110,13 @@ def test_source_declares_that_it_is_not_a_publication() -> None:
 # --- the runtime -------------------------------------------------------------
 
 
-def test_baseline_run_projects_real_kuehne_stands(tmp_path) -> None:
+def test_baseline_run_projects_real_kuehne_stands(tmp_path, norwegian_prices) -> None:
     result = run_norway_scenario(
-        global_seed=20260728, output_dir=tmp_path / "run", n_stands=2, n_steps=6
+        global_seed=20260728,
+        output_dir=tmp_path / "run",
+        n_stands=2,
+        n_steps=6,
+        valuation=norwegian_prices,
     )
 
     validate_artifact_contract(result.artifacts.output_dir)
@@ -103,13 +132,14 @@ def test_baseline_run_projects_real_kuehne_stands(tmp_path) -> None:
     assert manifest["models_run"][0]["year"] == 2022
 
 
-def test_thinning_and_disturbance_are_reported_apart(tmp_path) -> None:
+def test_thinning_and_disturbance_are_reported_apart(tmp_path, norwegian_prices) -> None:
     thinned = run_norway_scenario(
         global_seed=1,
         output_dir=tmp_path / "thin",
         n_stands=1,
         n_steps=6,
         thin_at_years=[60.0],
+        valuation=norwegian_prices,
     )
     disturbed = run_norway_scenario(
         global_seed=1,
@@ -117,6 +147,7 @@ def test_thinning_and_disturbance_are_reported_apart(tmp_path) -> None:
         n_stands=1,
         n_steps=6,
         disturbance_rate_per_year=0.004,
+        valuation=norwegian_prices,
     )
 
     assert thinned.rows[0]["harvested_m3"] > 0.0
@@ -147,7 +178,7 @@ def test_no_shipped_scenario_forces_anything() -> None:
         assert scenario_forcings(scenario_id) == ForcingSet(), scenario_id
 
 
-def test_a_cited_forcing_raises_growth_and_disturbance(tmp_path) -> None:
+def test_a_cited_forcing_raises_growth_and_disturbance(tmp_path, norwegian_prices) -> None:
     """The forcing mechanism works -- for values that say where they come from."""
     source = SourceReference(
         author="Test fixture",
@@ -168,6 +199,7 @@ def test_a_cited_forcing_raises_growth_and_disturbance(tmp_path) -> None:
         n_steps=6,
         start_year=2020,
         disturbance_rate_per_year=0.004,
+        valuation=norwegian_prices,
     )
     forced = run_norway_scenario(
         global_seed=1,
@@ -177,6 +209,7 @@ def test_a_cited_forcing_raises_growth_and_disturbance(tmp_path) -> None:
         start_year=2020,
         disturbance_rate_per_year=0.004,
         forcings=forcings,
+        valuation=norwegian_prices,
     )
 
     assert forced.rows[0]["gross_growth_m3"] > baseline.rows[0]["gross_growth_m3"]
@@ -189,7 +222,7 @@ def test_a_cited_forcing_raises_growth_and_disturbance(tmp_path) -> None:
     assert applied[GROWTH]["source"]["year"] == 2026
 
 
-def test_a_year_by_year_forcing_varies_across_the_run(tmp_path) -> None:
+def test_a_year_by_year_forcing_varies_across_the_run(tmp_path, norwegian_prices) -> None:
     """A weather correction is a series, not one number for the projection."""
     source = SourceReference(author="Test fixture", year=2026, title="A series, and saying so")
     weather = AnnualForcing(
@@ -206,6 +239,7 @@ def test_a_year_by_year_forcing_varies_across_the_run(tmp_path) -> None:
         n_steps=4,
         start_year=2020,
         forcings=ForcingSet([ConstantForcing(GROWTH, 1.04, source=source)]),
+        valuation=norwegian_prices,
     )
     varying = run_norway_scenario(
         global_seed=1,
@@ -214,6 +248,7 @@ def test_a_year_by_year_forcing_varies_across_the_run(tmp_path) -> None:
         n_steps=4,
         start_year=2020,
         forcings=ForcingSet([weather]),
+        valuation=norwegian_prices,
     )
 
     # Same first period, different afterwards: the series is read per period.
@@ -232,18 +267,30 @@ def test_an_uncited_forcing_is_refused() -> None:
         ConstantForcing(GROWTH, 1.05)
 
 
-def test_the_volume_reporter_is_a_function_of_the_current_stand(tmp_path) -> None:
+def test_the_volume_reporter_is_a_function_of_the_current_stand(
+    tmp_path, norwegian_prices
+) -> None:
     """Not the value the model cached at its last step, which a thinning leaves stale."""
-    result = run_norway_scenario(global_seed=1, output_dir=tmp_path / "run", n_stands=1, n_steps=2)
+    result = run_norway_scenario(
+        global_seed=1,
+        output_dir=tmp_path / "run",
+        n_stands=1,
+        n_steps=2,
+        valuation=norwegian_prices,
+    )
     ctx = result.contexts[0]
     before = kuehne_stand_volume(ctx)
     ctx.scale_stems(0.5)
     assert kuehne_stand_volume(ctx) < before
 
 
-def test_summary_is_loadable_and_keyed_by_stand(tmp_path) -> None:
+def test_summary_is_loadable_and_keyed_by_stand(tmp_path, norwegian_prices) -> None:
     result = run_norway_scenario(
-        global_seed=20260728, output_dir=tmp_path / "run", n_stands=3, n_steps=2
+        global_seed=20260728,
+        output_dir=tmp_path / "run",
+        n_stands=3,
+        n_steps=2,
+        valuation=norwegian_prices,
     )
     rows = load_scenario_summary(result.artifacts.scenario_summary_path)
     assert [row["stand_id"] for row in rows] == [1, 2, 3]
@@ -252,3 +299,87 @@ def test_summary_is_loadable_and_keyed_by_stand(tmp_path) -> None:
 def test_build_kuehne_stands_rejects_an_empty_run() -> None:
     with pytest.raises(ValueError, match="n_stands must be > 0"):
         build_kuehne_stands(0)
+
+
+# --- valuation, for a model that reports no stems ------------------------------
+
+
+def test_a_thinning_is_priced_though_there_are_no_stems(tmp_path, norwegian_prices) -> None:
+    """An aggregate model can be sold even though it cannot be bucked."""
+    result = run_norway_scenario(
+        global_seed=1,
+        output_dir=tmp_path / "run",
+        n_stands=1,
+        n_steps=6,
+        start_year=2025,
+        valuation=norwegian_prices,
+        thin_at_years=[60.0],
+    )
+
+    assert result.rows[0]["harvested_m3"] > 0.0
+    ctx = result.contexts[0]
+    assert float(ctx.attrs["cash"]) > 0.0
+
+    metadata = ctx.attrs["valuation"]["metadata"]
+    assert metadata["bucked"] is False
+    assert "no stems" in metadata["pricing"]
+
+
+def test_the_valuation_stage_needs_a_price_list(tmp_path) -> None:
+    """Skipping it would report a run as having valued its removals at nothing."""
+    with pytest.raises(ValueError, match="ValuationSettings"):
+        run_norway_scenario(global_seed=1, output_dir=tmp_path / "run", n_stands=1, n_steps=2)
+
+
+def test_inflation_reaches_norways_horizon_npv(tmp_path, norwegian_prices) -> None:
+    """The same composition Sweden has: prices move the money, the rate moves time."""
+    index = AnnualForcing(
+        PRICE,
+        {year: 1.02 ** (year - 2025) for year in range(2025, 2061)},
+        source=SourceReference(author="Test fixture", year=2026, title="An index, and says so"),
+    )
+
+    def _run(name, forcings):
+        return run_norway_scenario(
+            global_seed=1,
+            output_dir=tmp_path / name,
+            n_stands=1,
+            n_steps=6,
+            start_year=2025,
+            step_years=5.0,
+            valuation=norwegian_prices,
+            thin_at_years=[60.0],
+            forcings=forcings,
+        )
+
+    flat = _run("flat", ForcingSet())
+    inflated = _run("inflated", ForcingSet([index]))
+
+    ((_stand, flat_flows),) = flat.cash_flows()
+    ((_stand, inflated_flows),) = inflated.cash_flows()
+    assert flat_flows and inflated_flows
+    assert inflated_flows[0].price_factor > 1.0
+    assert inflated_flows[0].amount == pytest.approx(
+        flat_flows[0].amount * inflated_flows[0].price_factor
+    )
+
+    npv_flat = flat.net_present_value(discount_rate=0.03)[1]
+    npv_inflated = inflated.net_present_value(discount_rate=0.03)[1]
+    assert npv_inflated > npv_flat > 0.0
+
+
+def test_a_stand_that_names_no_species_cannot_be_priced(tmp_path, norwegian_prices) -> None:
+    """A price list is per species, so an unnamed volume is refused rather than guessed."""
+    from dataclasses import replace as _replace
+
+    unnamed = [_replace(unit, species=None) for unit in build_kuehne_stands(1)]
+    with pytest.raises(ValueError, match="names no species"):
+        run_norway_scenario(
+            global_seed=1,
+            output_dir=tmp_path / "run",
+            stands=unnamed,
+            n_steps=6,
+            start_year=2025,
+            valuation=norwegian_prices,
+            thin_at_years=[60.0],
+        )

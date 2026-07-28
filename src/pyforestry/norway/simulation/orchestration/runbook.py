@@ -30,6 +30,7 @@ from pyforestry.norway.growth.kuehne_2022 import kuehne_2022_stand_volume
 from pyforestry.norway.simulation.presets import ScenarioConfig, build_baseline_scenario_config
 from pyforestry.simulation.forcing import ForcingSet
 from pyforestry.simulation.scenario import ScenarioRunResult, StandUnit, run_scenario
+from pyforestry.simulation.valuation.volume import ValuationSettings
 
 __all__ = ["build_kuehne_stands", "kuehne_stand_volume", "run_norway_scenario"]
 
@@ -97,6 +98,10 @@ def build_kuehne_stands(
     return [
         StandUnit(
             stand_id=stand_id,
+            # Declared here because a whole-stand model's metrics cannot carry it:
+            # set_aggregate_metrics drops species detail, by design, on the first
+            # step. Pricing a bulk removal needs to know what it was.
+            species=species,
             stand=Stand.from_aggregate_metrics(
                 {
                     "BasalArea": {"TOTAL": StandBasalArea(basal_area_m2_ha, species=species)},
@@ -118,6 +123,7 @@ def run_norway_scenario(
     n_stands: int = 8,
     n_steps: int = 10,
     step_years: float = 5.0,
+    valuation: Optional[ValuationSettings] = None,
     disturbance_rate_per_year: float = 0.0,
     thin_at_years: Sequence[float] = (),
     start_year: float = 0.0,
@@ -134,6 +140,16 @@ def run_norway_scenario(
         n_stands: How many default stands to build, if ``stands`` is not given.
         n_steps: Number of periods.
         step_years: Period length in years.
+        valuation: Price list and bucking settings. **Required**, because
+            Norway's scenario declares a valuation stage. This package ships
+            no Norwegian price list -- a price list is regional market data,
+            not science, and inventing one would put numbers under Norway's
+            name with nothing behind them. Supply your own
+            :class:`~pyforestry.simulation.valuation.volume.ValuationSettings`.
+            The Kuehne model is a stand-level one, so its removals are volume
+            without stems: nothing is bucked, and every cubic metre is priced
+            at the species' pulpwood price. The taper and bucking config are
+            therefore unused on this route and may be anything valid.
         disturbance_rate_per_year: Annual share of the stand a scenario
             disturbance removes, before the scenario's ``disturbance_factor``.
             Supplied by the caller; this package ships no rate, because a
@@ -165,6 +181,7 @@ def run_norway_scenario(
         n_steps=n_steps,
         step_years=step_years,
         output_dir=output_dir,
+        valuation=valuation,
         disturbance_rate_per_year=disturbance_rate_per_year,
         thin_at_years=thin_at_years,
         start_year=start_year,

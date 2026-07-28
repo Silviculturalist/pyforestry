@@ -4,6 +4,11 @@ Pricing a removal needs three things the ledger does not carry: a price list, a
 taper function and a bucking configuration. They arrive as one typed
 :class:`ValuationSettings`.
 
+Two routes, chosen by what the stand could report. A tree list is bucked into
+assortments and priced by grade (:class:`TreeVolumeDescriptor`); a bulk volume
+from an aggregate model has no stems to cut, so it is priced whole at the
+pulpwood price (:class:`BulkVolumeDescriptor`) and says so in its metadata.
+
 That used to be a ``model_view: Any`` -- a name left over from a subsystem this
 package no longer has -- resolved by ``getattr`` across four spellings
 (``pricelist`` or ``price_list``, ``taper_class`` or ``get_taper_class()``, each
@@ -25,7 +30,7 @@ from pyforestry.base.taper import Taper
 from pyforestry.base.timber import Timber
 from pyforestry.base.timber_bucking.nasberg_1985 import Nasberg_1985_BranchBound
 
-from .removals import StandRemovalLedger, TreeRemoval
+from .removals import StandRemovalLedger, TreeRemoval, VolumeRemoval
 
 
 def _default_timber_factory(removal: "TreeRemoval") -> Timber:
@@ -267,6 +272,69 @@ class ValuationSettings:
         object.__setattr__(self, "min_diam_dead_wood", float(self.min_diam_dead_wood))
 
 
+@dataclass(kw_only=True)
+class BulkVolumeDescriptor(VolumeDescriptor):
+    """Descriptor for removals that are a volume and nothing more.
+
+    An aggregate model steps a basal area and a stem count, so its thinning is
+    "this many cubic metres of pine" -- there is no stem to cut into logs, and
+    nothing to grade. Every cubic metre is therefore priced at the species'
+    pulpwood price, which is the only price in a price list that applies to
+    unsorted volume, and the pieces come back as
+    :attr:`~pyforestry.base.helpers.bucking.QualityType.Undefined`.
+
+    That understates what a real thinning of sawtimber-sized stems would fetch.
+    It is the honest figure available from a model that never knew the stems
+    existed, and the metadata says so, rather than a bucking of dimensions
+    nobody measured.
+    """
+
+    removals: Tuple[VolumeRemoval, ...]
+    pricelist: Pricelist
+
+    def evaluate(self) -> VolumeResult:  # type: ignore[override]
+        """Price each bulk volume at its species' pulpwood price."""
+        if not self.removals:
+            return super().evaluate()
+
+        pieces: list[PieceRecord] = []
+        total_value = 0.0
+        volume_by_quality: Dict[QualityType, float] = {quality: 0.0 for quality in QualityType}
+
+        for removal in self.removals:
+            price = float(self.pricelist.Pulp.get_pulpwood_price(removal.species_name))
+            value = price * removal.volume_m3
+            total_value += value
+            volume_by_quality[QualityType.Undefined] += removal.volume_m3
+            pieces.append(
+                PieceRecord(
+                    cohort_id=removal.cohort_id,
+                    species=removal.species_name,
+                    quality=QualityType.Undefined,
+                    length_m=0.0,
+                    top_diameter_cm=0.0,
+                    volume_m3=removal.volume_m3,
+                    value=value,
+                    weight=1.0,
+                )
+            )
+
+        metadata = dict(self.metadata)
+        metadata.setdefault("bucked", False)
+        metadata.setdefault(
+            "pricing",
+            "Bulk volume at the pulpwood price: the stand model reports no stems, so "
+            "there are no dimensions to sort into assortments.",
+        )
+        return VolumeResult(
+            descriptor=self,
+            pieces=tuple(pieces),
+            total_value=float(total_value),
+            volume_by_quality=volume_by_quality,
+            metadata=metadata,
+        )
+
+
 class VolumeConnector:
     """Resolve removal ledgers into volume descriptors and valuation results."""
 
@@ -292,6 +360,18 @@ class VolumeConnector:
                 "Build one with the price list, taper and bucking config to use."
             )
 
+        # An aggregate model's removals are volume without stems. They cannot be
+        # bucked, so they take the bulk route rather than being dropped -- which
+        # is what left Norway with no valuation at all.
+        volumes = tuple(ledger.iter_volume_removals())
+        if volumes:
+            return BulkVolumeDescriptor(
+                ledger=ledger,
+                removals=volumes,
+                pricelist=settings.pricelist,
+                metadata=dict(ledger.metadata),
+            )
+
         return TreeVolumeDescriptor(
             ledger=ledger,
             removals=tuple(ledger.iter_tree_removals()),
@@ -310,6 +390,7 @@ class VolumeConnector:
 
 
 __all__ = [
+    "BulkVolumeDescriptor",
     "PieceRecord",
     "ValuationSettings",
     "VolumeResult",

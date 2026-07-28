@@ -39,15 +39,21 @@ class ScenarioConfig(_ScenarioConfig):
     def stages(self) -> Sequence[str]:
         """Return the ordered stage identifiers for execution.
 
-        Management, then disturbance, then growth: you thin the stand you have,
-        take the scenario's losses off what remains, and grow the survivors. Both
-        of the first two are exact no-ops unless the run configures a thinning
-        schedule or a disturbance rate.
+        Management, disturbance, growth, then valuation: thin the stand you
+        have, take the scenario's losses off what remains, grow the survivors,
+        and price what came out. The first two are exact no-ops unless the run
+        configures a thinning schedule or a disturbance rate.
 
-        This used to be ``("growth",)`` -- not because Norway had nothing else to
-        run, but because nothing ran any of it.
+        The same period Sweden runs. It was ``("growth",)`` while nothing ran any
+        of it, and then ``("management", "disturbance", "growth")`` while
+        valuation could not work here: Norway's models are aggregate, and the
+        removal ledger could only hold stems, so there was nothing for a
+        valuation to price. It records bulk volume now.
+
+        Norway ships no price list, so a run that reaches this stage must supply
+        one -- see :func:`~pyforestry.norway.simulation.orchestration.run_norway_scenario`.
         """
-        return ("management", "disturbance", "growth")
+        return ("management", "disturbance", "growth", "valuation")
 
     def rulesets(self) -> Mapping[str, RulesetFn]:
         """Return scenario rulesets keyed by concern."""

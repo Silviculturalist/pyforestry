@@ -1,4 +1,18 @@
-"""Removal ledger data structures for stand valuation workflows."""
+"""What a run removed, in whatever detail the stand it came from could give.
+
+Two kinds, because two kinds of model produce removals:
+
+* :class:`TreeRemoval` -- a stem, with a diameter and a height, which can be
+  bucked into assortments and priced by grade. What a tree-list model gives.
+* :class:`VolumeRemoval` -- a volume of a species, and nothing more. What an
+  *aggregate* model gives: Kuehne (2022) and its siblings step a basal area and
+  a stem count, so a thinning there is m³ of pine, with no stem to cut into logs.
+
+The second existed nowhere, which is the whole reason Norway had no valuation
+stage: its models are aggregate, the ledger could only hold stems, so there was
+nothing for a valuation to price. A stand-level model cannot be bucked, but it
+can certainly be sold.
+"""
 
 from __future__ import annotations
 
@@ -115,6 +129,45 @@ class TreeRemoval:
 
 
 @dataclass
+class VolumeRemoval:
+    """Record the removal of a bulk volume, with no stems to cut it from.
+
+    What an aggregate model can say: this many cubic metres of this species came
+    out. There is no diameter and no height, so there is nothing to buck, and a
+    valuation prices the volume as a whole -- see
+    :class:`~pyforestry.simulation.valuation.volume.BulkVolumeDescriptor`, which
+    is explicit that no assortments are involved.
+
+    Attributes:
+        cohort_id: Which removal event this belongs to.
+        species: The species removed.
+        volume_m3: The volume, in the same unit the run reports.
+        metadata: Anything the caller wants carried through to the piece record.
+    """
+
+    cohort_id: str
+    species: TreeName | str
+    volume_m3: float
+    metadata: Dict[str, Any] = field(default_factory=dict)
+
+    def __post_init__(self) -> None:
+        """Normalise the species and reject a non-positive volume."""
+        self.species = _normalise_species(self.species)
+        self.volume_m3 = float(self.volume_m3)
+        if self.volume_m3 <= 0.0:
+            raise ValueError(
+                f"A volume removal must be positive, got {self.volume_m3!r} m3 for "
+                f"cohort {self.cohort_id!r}."
+            )
+        self.metadata = dict(self.metadata)
+
+    @property
+    def species_name(self) -> str:
+        """The species' full scientific name."""
+        return str(self.species.full_name)
+
+
+@dataclass
 class CohortRemoval:
     """Group a collection of removed trees for a cohort."""
 
@@ -176,11 +229,14 @@ class StandRemovalLedger:
     stand_id: Optional[str] = None
     metadata: MutableMapping[str, Any] = field(default_factory=dict)
     cohorts: MutableMapping[str, CohortRemoval] = field(default_factory=dict)
+    #: Bulk volume removals, from stands that hold no stems to buck.
+    volumes: list[VolumeRemoval] = field(default_factory=list)
 
     def __post_init__(self) -> None:
         """Copy the mappings in so the ledger owns its own state."""
         self.metadata = dict(self.metadata)
         self.cohorts = dict(self.cohorts)
+        self.volumes = list(self.volumes)
         if self.stand_id:
             self.metadata.setdefault("stand_id", self.stand_id)
 
@@ -233,17 +289,58 @@ class StandRemovalLedger:
 
         yield from self.cohorts.values()
 
+    def record_volume(
+        self,
+        identifier: str,
+        *,
+        species: TreeName | str,
+        volume_m3: float,
+        metadata: Optional[Mapping[str, Any]] = None,
+    ) -> VolumeRemoval:
+        """Record a bulk volume removal, for a stand that holds no stems.
+
+        Args:
+            identifier: The removal event, e.g. ``"management@2035"``.
+            species: What was removed.
+            volume_m3: How much.
+            metadata: Carried through to the piece record.
+
+        Returns:
+            The recorded removal.
+        """
+        removal = VolumeRemoval(
+            cohort_id=identifier,
+            species=species,
+            volume_m3=volume_m3,
+            metadata=dict(metadata or {}),
+        )
+        self.volumes.append(removal)
+        return removal
+
     def iter_tree_removals(self) -> Iterator[TreeRemoval]:
         """Yield tree removals across all cohorts."""
 
         for cohort in self.iter_cohorts():
             yield from cohort.iter_trees()
 
+    def iter_volume_removals(self) -> Iterator[VolumeRemoval]:
+        """Yield bulk volume removals, in the order they were recorded."""
+
+        yield from self.volumes
+
     @property
     def is_empty(self) -> bool:
-        """Return ``True`` when no tree removals are recorded."""
+        """Return ``True`` when nothing at all was recorded.
 
-        return all(cohort.tree_count == 0 for cohort in self.cohorts.values())
+        Both kinds count: a ledger holding only bulk volume is not empty, which
+        is what lets an aggregate model's thinning be priced.
+        """
+        return not self.volumes and all(cohort.tree_count == 0 for cohort in self.cohorts.values())
+
+    @property
+    def total_volume_m3(self) -> float:
+        """Return the bulk volume recorded, across every removal."""
+        return float(sum(removal.volume_m3 for removal in self.volumes))
 
     @property
     def tree_count(self) -> int:
