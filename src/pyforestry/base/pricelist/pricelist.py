@@ -1,10 +1,91 @@
-"""Pricelist utilities and interfaces."""
+"""Pricelist utilities and interfaces.
+
+A price list is where a projection's money comes from, so it carries a
+:class:`PricelistIdentity` -- a name, the currency its prices are quoted in, and
+who published it -- alongside the prices themselves. That is what lets a run
+manifest state what its revenue figures are in and which list produced them,
+rather than leaving two runs' money columns indistinguishable.
+"""
 
 from dataclasses import dataclass
 from enum import IntEnum
 from typing import Dict, Iterable, List, Optional, Sequence, Union
 
+from pyforestry.base.contracts import SourceReference
 from pyforestry.base.helpers.tree_species import TreeName, parse_tree_species
+
+
+@dataclass(frozen=True)
+class PricelistIdentity:
+    """Which price list a figure of money came from, and what money it is in.
+
+    A price list is what turns a volume into a sum, so every monetary figure a run
+    reports is a figure *in this list's currency, against this list's prices*. Two
+    runs' revenues are comparable only under the same list, which is why a run that
+    reports money records this:
+    :func:`~pyforestry.simulation.scenario.run_scenario` writes it into its
+    manifest's ``valuation`` block.
+
+    Args:
+        name: What the list is called, e.g. ``"Mellanskog 2013"``.
+        currency: The currency its prices are quoted in, e.g. ``"SEK"``. Per cubic
+            metre; which volume basis is each timber table's own business, declared
+            in :attr:`TimberPricelist.volume_type`, so it is not repeated here.
+        source: Who published it, and when. A price list is regional market data
+            with a publisher and a year, so this is a genuine citation rather than
+            a stated choice -- and a table assembled by whoever ran the model says
+            so through the ``(none)``/year-0 sentinel that
+            :data:`UNATTRIBUTED_PRICELIST_IDENTITY` carries.
+
+    Raises:
+        ValueError: If the name or the currency is blank. An unnamed list is a real
+            state, and :data:`UNATTRIBUTED_PRICELIST_IDENTITY` names itself as one;
+            an empty string in a manifest names nothing.
+    """
+
+    name: str
+    currency: str
+    source: SourceReference
+
+    def __post_init__(self) -> None:
+        """Reject a blank name or currency."""
+        if not self.name.strip():
+            raise ValueError(
+                "A price list's name must not be blank: it is what a run manifest "
+                "identifies the money columns by. Use UNATTRIBUTED_PRICELIST_IDENTITY "
+                "for a table nobody published."
+            )
+        if not self.currency.strip():
+            raise ValueError(
+                f"The price list {self.name!r} must say what currency its prices are in: "
+                "a revenue figure without one is not a figure anyone can compare."
+            )
+
+    @property
+    def is_cited(self) -> bool:
+        """Whether this list traces to a publisher rather than to whoever ran the model."""
+        return self.source.author != "(none)"
+
+
+#: What a price list carries when nobody has said whose it is -- a hand-built table
+#: in a test, or a caller's own figures. It is a real state rather than a missing
+#: one, so it is named: a run manifest reporting money against this says plainly
+#: that the prices are the analyst's, which is what keeps it apart from a run
+#: priced against a published list. The ``(none)``/year-0 form is the one the rest
+#: of the package uses for anything authored rather than published.
+UNATTRIBUTED_PRICELIST_IDENTITY = PricelistIdentity(
+    name="(unnamed price list)",
+    currency="(unspecified)",
+    source=SourceReference(
+        author="(none)",
+        year=0,
+        title="Prices supplied by whoever configured the run",
+        note=(
+            "No publisher named, so the figures this list produces are the caller's "
+            "own. year=0 is a sentinel for 'not applicable', not a citation date."
+        ),
+    ),
+)
 
 
 @dataclass
@@ -208,10 +289,25 @@ class PulpPricelist:
 
 
 class Pricelist:
-    """Holds the combined pulpwood, timber, etc. prices and constraints."""
+    """Holds the combined pulpwood, timber, etc. prices and constraints.
 
-    def __init__(self):
-        """Init."""
+    Alongside the prices it carries its :class:`PricelistIdentity`: what the list
+    is called, what money its prices are in, and who published it. Every monetary
+    figure a projection reports comes from here, so a run that records what it
+    earned records that too.
+    """
+
+    def __init__(self, *, identity: Optional[PricelistIdentity] = None):
+        """Init.
+
+        Args:
+            identity: Which list this is, what currency its prices are in, and who
+                published it. Defaults to
+                :data:`UNATTRIBUTED_PRICELIST_IDENTITY`, so a list built up
+                attribute by attribute -- which is what this constructor is for --
+                is visibly unattributed rather than silently so.
+        """
+        self.identity: PricelistIdentity = identity or UNATTRIBUTED_PRICELIST_IDENTITY
         self.Timber: Dict[str, TimberPricelist] = {}
         self.PulpLogDiameter = DiameterRange(5, 70)
         self.Pulp = PulpPricelist()
@@ -295,7 +391,10 @@ class Pricelist:
 
 
 def create_pricelist_from_data(
-    price_data: dict, species_to_load: Optional[Union[str, Sequence[str]]] = None
+    price_data: dict,
+    species_to_load: Optional[Union[str, Sequence[str]]] = None,
+    *,
+    identity: Optional[PricelistIdentity] = None,
 ) -> Pricelist:
     """
     Build a `Pricelist` from a dictionary.
@@ -309,13 +408,21 @@ def create_pricelist_from_data(
         * **str**   - load just that species.
         * **iterable** - load every species in the iterable; it is *not*
           an error if some of them have only pulp prices.
+    identity : PricelistIdentity | None, default None
+        Which list this data is, what currency it is in, and who published it. A
+        run manifest records it, so pass it whenever the figures will be reported:
+        the shipped example data publishes its own alongside the prices (see
+        ``MELLANSKOG_2013_IDENTITY``). It is deliberately *not* read out of
+        ``price_data``, which is hashed as-is to validate a
+        :class:`~pyforestry.base.pricelist.SolutionCube` against the prices it was
+        built from. Defaults to `UNATTRIBUTED_PRICELIST_IDENTITY`.
 
     Returns
     -------
     Pricelist
         A fully populated `Pricelist` instance.
     """
-    pricelist = Pricelist()
+    pricelist = Pricelist(identity=identity)
 
     # ---- common block ---------------------------------------------------
     try:

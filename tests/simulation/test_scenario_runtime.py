@@ -20,8 +20,10 @@ from pyforestry.base.helpers.primitives import StandBasalArea, Stems
 from pyforestry.base.helpers.stand import Stand
 from pyforestry.base.helpers.tree_species import TreeSpecies
 from pyforestry.base.pricelist.pricelist import (
+    UNATTRIBUTED_PRICELIST_IDENTITY,
     LengthRange,
     Pricelist,
+    PricelistIdentity,
     TimberPriceForDiameter,
     TimberPricelist,
 )
@@ -125,9 +127,9 @@ class _ConstantTaper(Taper):
         return max(0.0, h2_m - h1_m) * pi * radius * radius
 
 
-def _valuation() -> ValuationSettings:
+def _valuation(*, identity: PricelistIdentity | None = None) -> ValuationSettings:
     """A price list flat enough that the money in a test is arithmetic, not forestry."""
-    pricelist = Pricelist()
+    pricelist = Pricelist(identity=identity)
     table = TimberPricelist(10, 40, volume_type="m3fub")
     for diameter in range(10, 41):
         table.set_price_for_diameter(diameter, TimberPriceForDiameter(100, 100, 100))
@@ -370,7 +372,7 @@ def test_summary_columns_are_the_schema_s(tmp_path) -> None:
 # --- what a run was worth ----------------------------------------------------
 
 
-def _valuing_run(tmp_path, **kwargs):
+def _valuing_run(tmp_path, *, price_identity: PricelistIdentity | None = None, **kwargs):
     kwargs.setdefault("thin_at_years", [10.0])
     return _run(
         tmp_path,
@@ -380,7 +382,7 @@ def _valuing_run(tmp_path, **kwargs):
             region="Testland",
             required_artifacts_=REQUIRED_ARTIFACTS,
         ),
-        valuation=_valuation(),
+        valuation=_valuation(identity=price_identity),
         mean_tree=_mean_tree,
         **kwargs,
     )
@@ -404,6 +406,9 @@ def test_a_run_that_prices_nothing_says_so_rather_than_reporting_zero(tmp_path) 
     manifest = json.loads(result.artifacts.run_manifest_path.read_text(encoding="utf-8"))
     assert manifest["valuation"]["valued"] is False
     assert manifest["valuation"]["discount_rate"] is None
+    # And no price list, for the reason there is no rate: naming one would say the
+    # run priced its removals against it.
+    assert manifest["valuation"]["price_list"] is None
 
 
 def test_a_priced_run_writes_its_value_into_the_summary(tmp_path) -> None:
@@ -456,6 +461,50 @@ def test_the_manifest_records_the_rate_as_the_choice_it_is(tmp_path) -> None:
     assert valuation["discount_source"]["year"] == 0
     assert "0.03" in valuation["discount_source"]["title"]
     assert valuation["discount_source"]["note"] == stated_choice("x").note
+
+
+def test_the_manifest_records_which_price_list_the_money_is_in(tmp_path) -> None:
+    """A revenue figure is a figure in a currency, against somebody's prices.
+
+    Without this the summary's money columns are bare numbers: two runs' figures
+    are comparable only under the same price list, and nothing said which one
+    either used.
+    """
+    result = _valuing_run(
+        tmp_path,
+        discount_rate=0.03,
+        price_identity=PricelistIdentity(
+            name="Test fixture prices",
+            currency="SEK",
+            source=SourceReference(
+                author="Test fixture",
+                year=2026,
+                title="A price list invented by this test, and saying so",
+            ),
+        ),
+    )
+    manifest = json.loads(result.artifacts.run_manifest_path.read_text(encoding="utf-8"))
+    price_list = manifest["valuation"]["price_list"]
+
+    assert result.rows[0]["nominal_revenue"] > 0.0
+    assert price_list["name"] == "Test fixture prices"
+    assert price_list["currency"] == "SEK"
+    assert price_list["source"]["author"] == "Test fixture"
+    assert price_list["source"]["year"] == 2026
+
+
+def test_a_run_priced_against_its_own_table_says_so_in_the_manifest(tmp_path) -> None:
+    """Unattributed prices are recorded as unattributed, not left to be assumed."""
+    result = _valuing_run(tmp_path, discount_rate=0.03)
+    manifest = json.loads(result.artifacts.run_manifest_path.read_text(encoding="utf-8"))
+    price_list = manifest["valuation"]["price_list"]
+
+    assert price_list["name"] == UNATTRIBUTED_PRICELIST_IDENTITY.name
+    assert price_list["currency"] == UNATTRIBUTED_PRICELIST_IDENTITY.currency
+    # The same sentinel the discount rate uses, and for the same reason: the
+    # figures are the analyst's, and no publication says they are so.
+    assert price_list["source"]["author"] == "(none)"
+    assert price_list["source"]["year"] == 0
 
 
 def test_a_discount_forcing_supplies_a_rate_that_varies_by_year(tmp_path) -> None:

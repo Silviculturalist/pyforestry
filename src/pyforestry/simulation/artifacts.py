@@ -35,11 +35,16 @@ defeats the summary's purpose. The flag makes the three states distinguishable
 from the row alone: ``(False, 0)`` was not priced, ``(True, 0)`` was priced and
 earned nothing, ``(True, x)`` earned ``x``.
 
-**What the money is in** is the price list's own currency, which
-:class:`~pyforestry.base.pricelist.Pricelist` does not declare -- so neither can
-this schema. Two runs' figures are comparable only under the same price list, and
-which price list a run used is not recorded anywhere. The manifest records the
-discount rate and base year, which is the part this package does know.
+**What the money is in** is recorded rather than assumed.
+``valuation.price_list`` names the list a run priced against, states the currency
+its prices are quoted in and carries its publisher's citation -- read off the
+:class:`~pyforestry.base.pricelist.PricelistIdentity` that price list declares --
+while ``valuation.discount_rate`` and ``valuation.base_year`` say how that money
+was moved in time. Two runs' figures are comparable when those blocks agree, which
+a reader can now check: until a price list had an identity to record, the summary
+carried sums in an unnamed currency against prices from nowhere. A run priced
+against the analyst's own table says that here too, in the ``(none)``/year-0 form
+the rest of the package uses for anything authored rather than published.
 """
 
 from __future__ import annotations
@@ -75,13 +80,20 @@ __all__ = [
 #: Both bumped from ``"2.0"`` when the summary grew the three money columns and
 #: the manifest grew the ``valuation`` block that makes them readable. Adding a
 #: column is a break here by construction: :func:`load_scenario_summary` validates
-#: the column tuple exactly, so a 2.0 artifact does not load under 3.0 and is not
+#: the column tuple exactly, so a 2.0 artifact does not load under 3.x and is not
 #: made to. These files are the output of a run, not a store -- regenerating one
 #: costs a rerun, and a migration path would be a promise about numbers whose
-#: construction has changed. What 3.0 does owe a reader is a diagnosis rather than
+#: construction has changed. What 3.x does owe a reader is a diagnosis rather than
 #: two tuples to diff, which is what the loader gives.
-RUN_MANIFEST_SCHEMA_VERSION = "3.0"
-QUALITY_REPORT_SCHEMA_VERSION = "3.0"
+#:
+#: ``"3.1"`` added ``valuation.price_list``: the manifest now records which list
+#: produced the money columns and what currency they are in. A minor bump because
+#: the summary is untouched -- 3.0's columns are 3.1's, and a 3.0 file still loads
+#: -- while a 3.0 *manifest* is missing a block rather than unreadable, and the
+#: version is how a reader tells the two apart instead of guessing from an absent
+#: key.
+RUN_MANIFEST_SCHEMA_VERSION = "3.1"
+QUALITY_REPORT_SCHEMA_VERSION = "3.1"
 
 RUN_MANIFEST_FILENAME = "run_manifest.json"
 SCENARIO_SUMMARY_FILENAME = "scenario_summary.parquet"
@@ -106,7 +118,8 @@ SCENARIO_SUMMARY_COLUMNS = (
     # docstring: it is what keeps "earned nothing" apart from "never asked".
     "valued",
     # The revenue as earned, each period in the money of its own year -- a PRICE
-    # forcing, if the run declared one, is already in it.
+    # forcing, if the run declared one, is already in it. The currency is the one
+    # the manifest's ``valuation.price_list`` names.
     "nominal_revenue",
     # The same revenue discounted to the manifest's ``valuation.base_year``, which
     # is the run's first year.
@@ -123,8 +136,9 @@ _SCHEMA_2_0_COLUMNS = SCENARIO_SUMMARY_COLUMNS[:8]
 #: are required because they are what makes the summary interpretable. A forcing
 #: record carries its own citation, so a reader can see not just that growth was
 #: scaled but by whom it was said to be. ``valuation`` is required for the same
-#: reason the others are: a net present value without the rate it was discounted
-#: at, and the year it is expressed in, is not a number anyone can use.
+#: reason the others are: a net present value without the price list it was earned
+#: against, the rate it was discounted at and the year it is expressed in is not a
+#: number anyone can use.
 MANIFEST_REQUIRED_KEYS = (
     "schema_version",
     "preset_id",

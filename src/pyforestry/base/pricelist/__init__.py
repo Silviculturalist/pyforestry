@@ -1,10 +1,12 @@
 """Public API for pricelist utilities."""
 
 from .pricelist import (
+    UNATTRIBUTED_PRICELIST_IDENTITY,
     DiameterRange,
     LengthCorrections,
     LengthRange,
     Pricelist,
+    PricelistIdentity,
     PulpPricelist,
     TimberPriceForDiameter,
     TimberPricelist,
@@ -20,6 +22,8 @@ __all__ = [
     "TimberPricelist",
     "PulpPricelist",
     "Pricelist",
+    "PricelistIdentity",
+    "UNATTRIBUTED_PRICELIST_IDENTITY",
     "create_pricelist_from_data",
     "SolutionCube",
 ]

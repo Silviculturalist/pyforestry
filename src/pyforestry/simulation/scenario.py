@@ -14,8 +14,9 @@ policy, and writes the volume balance each stand actually produced.
 
 The manifest is the point. It records which models ran with which citations,
 which stages in which order, which ruleset values were applied, the guard policy,
-the discount rate and every seed -- so a summary row can be read back against the
-construction that produced it without rerunning anything.
+which price list the money is in, the discount rate and every seed -- so a summary
+row can be read back against the construction that produced it without rerunning
+anything.
 
 The discount rate is here rather than on :meth:`ScenarioRunResult.net_present_value`
 because the summary carries a net present value, and a figure in an artifact has
@@ -36,6 +37,7 @@ from pathlib import Path
 from typing import Any, Callable, Mapping, Optional, Sequence
 
 from pyforestry.base.helpers.stand import Stand
+from pyforestry.base.pricelist import PricelistIdentity
 from pyforestry.base.simulation.core import SimulationContext
 from pyforestry.base.simulation.growth_model import GrowthModel
 from pyforestry.base.simulation.pipeline import run_pipeline
@@ -218,18 +220,42 @@ def _valuation_manifest(
     discount_rate: Optional[float],
     from_forcing: bool,
     base_year: float,
+    identity: Optional[PricelistIdentity],
 ) -> dict[str, Any]:
     """Record what the summary's money columns were produced by.
 
-    A discount rate is a decision rather than a finding, so it is cited with the
+    Two things produce them, and both belong here. The **price list** is where the
+    money comes from -- what a cubic metre fetched, and in what currency -- so
+    ``price_list`` names it, states its currency and carries its citation. Without
+    it a revenue figure is a bare number: comparable with another run's only if
+    both were priced against the same table, which nothing recorded. The
+    **discount rate** then moves that money in time.
+
+    The two are cited differently, because they are different kinds of thing. A
+    discount rate is a decision rather than a finding, so it takes the
     ``(none)``/year-0 sentinel :func:`~pyforestry.simulation.forcing.stated_choice`
-    builds -- the same way a thinning intensity is. A rate that came from a
-    forcing is already cited in ``forcings_applied``, and is pointed at from here
-    rather than copied.
+    builds -- the same way a thinning intensity does. A price list is regional
+    market data with a publisher and a year, so it carries a real citation; a run
+    that priced against its own table says *that* in the same sentinel form,
+    through :data:`~pyforestry.base.pricelist.UNATTRIBUTED_PRICELIST_IDENTITY`.
+
+    A rate that came from a forcing is already cited in ``forcings_applied``, and
+    is pointed at from here rather than copied. ``price_list`` is ``None`` for a
+    run that priced nothing, for the reason ``discount_rate`` is: naming a list a
+    run never used would read as though it had.
     """
     return {
         "valued": values_removals,
         "base_year": float(base_year),
+        "price_list": (
+            None
+            if identity is None
+            else {
+                "name": identity.name,
+                "currency": identity.currency,
+                "source": as_manifest_source(identity.source),
+            }
+        ),
         "discount_rate": None if discount_rate is None else float(discount_rate),
         "discount_from_forcing": from_forcing,
         "discount_source": (
@@ -307,7 +333,10 @@ def run_scenario(
         output_dir: Where the artifacts go; created if absent.
         attrs: Extra model attributes, merged into every stand's context.
         valuation: Price list, taper and bucking settings. Required if the
-            configuration declares a ``"valuation"`` stage.
+            configuration declares a ``"valuation"`` stage. The price list's
+            :class:`~pyforestry.base.pricelist.PricelistIdentity` goes into the
+            manifest, so give it one: it is what says what currency the summary's
+            money is in and whose prices earned it.
         discount_rate: The annual rate the summary's net present value is
             discounted at, e.g. ``0.03``. Required if the configuration declares
             a ``"valuation"`` stage and no
@@ -473,6 +502,13 @@ def run_scenario(
             discount_rate=discount_rate,
             from_forcing=discount_from_forcing,
             base_year=float(start_year),
+            # Only for a run that priced something. A valuation stage cannot reach
+            # here without settings -- build_pipeline refuses that above -- and a
+            # price list supplied to a configuration that never values anything
+            # earned nothing, so recording it would misreport what the run did.
+            identity=(
+                valuation.pricelist.identity if values_removals and valuation is not None else None
+            ),
         ),
         "start_year": float(start_year),
         "disturbance_rate_per_year": float(disturbance_rate_per_year),

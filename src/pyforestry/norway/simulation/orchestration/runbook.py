@@ -184,7 +184,11 @@ def run_norway_scenario(
             no Norwegian price list -- a price list is regional market data,
             not science, and inventing one would put numbers under Norway's
             name with nothing behind them. Supply your own
-            :class:`~pyforestry.simulation.valuation.volume.ValuationSettings`.
+            :class:`~pyforestry.simulation.valuation.volume.ValuationSettings`,
+            and give its price list a
+            :class:`~pyforestry.base.pricelist.PricelistIdentity`: since the list
+            is yours, it is the only thing that can tell the manifest what
+            currency the summary's money is in.
             The Kuehne model is a stand-level one, so a thinning from it has no
             individual stems -- it is bucked at the stand's mean tree instead,
             once, and scaled to the volume the model says came out. See

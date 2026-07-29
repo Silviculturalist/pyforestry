@@ -194,7 +194,11 @@ def run_sweden_scenario(
         attrs: Site facts for the growth model, merged over the defaults.
         valuation: Price list, taper and bucking settings. Required if the
             configuration declares a ``"valuation"`` stage, which Sweden's
-            baseline does.
+            baseline does. Build the price list with its
+            :class:`~pyforestry.base.pricelist.PricelistIdentity` -- Sweden's
+            example prices ship theirs as
+            ``MELLANSKOG_2013_IDENTITY`` -- so the manifest records what currency
+            the summary's money is in and whose prices earned it.
         discount_rate: The annual rate the summary's net present value is
             discounted at. Required alongside ``valuation`` for the same reason
             it is: Sweden's baseline prices what it cuts, and a net present value

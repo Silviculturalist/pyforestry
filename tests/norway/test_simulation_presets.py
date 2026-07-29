@@ -18,6 +18,7 @@ from pyforestry.base.helpers.tree_species import TreeSpecies
 from pyforestry.base.pricelist import Pricelist
 from pyforestry.base.pricelist.pricelist import (
     LengthRange,
+    PricelistIdentity,
     TimberPriceForDiameter,
     TimberPricelist,
 )
@@ -53,10 +54,22 @@ def norwegian_prices() -> ValuationSettings:
 
     This package ships no Norwegian price list: that is regional market data, not
     science, and inventing one would put numbers under Norway's name with nothing
-    behind them. The figures here are the test's, and the test says so.
+    behind them. The figures here are the test's, and the test says so -- in the
+    identity as well as in this docstring, so a run priced against them reports
+    that in its manifest rather than leaving a reader to assume otherwise.
     """
     pine = TreeSpecies.Sweden.pinus_sylvestris.full_name
-    pricelist = Pricelist()
+    pricelist = Pricelist(
+        identity=PricelistIdentity(
+            name="Test fixture prices",
+            currency="NOK",
+            source=SourceReference(
+                author="Test fixture",
+                year=2026,
+                title="A price list invented by this test, and saying so",
+            ),
+        )
+    )
     pricelist.Pulp._prices[pine] = 320
     table = TimberPricelist(12, 40, volume_type="m3to")
     for diameter in range(12, 41):
@@ -387,6 +400,31 @@ def test_the_valuation_stage_needs_a_price_list(tmp_path) -> None:
     """Skipping it would report a run as having valued its removals at nothing."""
     with pytest.raises(ValueError, match="ValuationSettings"):
         run_norway_scenario(global_seed=1, output_dir=tmp_path / "run", n_stands=1, n_steps=2)
+
+
+def test_the_manifest_records_the_caller_s_price_list(tmp_path, norwegian_prices) -> None:
+    """Norway ships no list, so the one a run priced against is the caller's.
+
+    That is exactly why the manifest has to name it: the money in the summary is
+    in whatever currency the caller's table quotes, and nothing else in the run
+    knows what that is.
+    """
+    result = run_norway_scenario(
+        global_seed=1,
+        output_dir=tmp_path / "run",
+        n_stands=1,
+        n_steps=6,
+        start_year=2025,
+        valuation=norwegian_prices,
+        discount_rate=0.0,
+        thin_at_years=[60.0],
+    )
+
+    manifest = json.loads(result.artifacts.run_manifest_path.read_text(encoding="utf-8"))
+    price_list = manifest["valuation"]["price_list"]
+    assert price_list["currency"] == "NOK"
+    assert price_list["name"] == "Test fixture prices"
+    assert price_list["source"]["author"] == "Test fixture"
 
 
 def test_inflation_reaches_norways_horizon_npv(tmp_path, norwegian_prices) -> None:

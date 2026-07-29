@@ -6,11 +6,45 @@ Mellanskog for 2013, bundled as example data so the bucking optimiser has
 something to run against. They are not a recommendation and are long out of
 date; supply your own :class:`~pyforestry.base.pricelist.Pricelist` for real
 work.
+
+:data:`MELLANSKOG_2013_IDENTITY` is the list's identity -- its name, its currency
+and its publisher -- and travels with the prices as data. Build the price list as
+``create_pricelist_from_data(MELLANSKOG_2013_PRICE_DATA,
+identity=MELLANSKOG_2013_IDENTITY)`` so that a run reporting money says which
+list earned it.
 """
 
 # Use of TreeSpecies shorthand to avoid typos and situations e.g. Betula != Betula pendula.
 
+from pyforestry.base.contracts import SourceReference
 from pyforestry.base.helpers.tree_species import TreeSpecies
+
+# The leaf module rather than the package, which pulls in the SolutionCube and its
+# xarray/pandas stack for what is a dataclass import.
+from pyforestry.base.pricelist.pricelist import PricelistIdentity
+
+#: Whose list this is, what money its prices are in, and when it was published.
+#: Commercial market data has a publisher and a year rather than an author and a
+#: paper, and that is still a citation: these prices are somebody's published
+#: figures, not a value chosen by whoever configured a run, so this is a real
+#: :class:`~pyforestry.base.contracts.SourceReference` and not the stated-choice
+#: sentinel.
+MELLANSKOG_2013_IDENTITY = PricelistIdentity(
+    name="Mellanskog 2013",
+    currency="SEK",
+    source=SourceReference(
+        author="Mellanskog",
+        year=2013,
+        title="Timber and pulpwood price list, 2013",
+        note=(
+            "Commercial price-list data from the Swedish forest owners' association "
+            "Mellanskog, bundled as example data. Prices are in SEK per cubic metre "
+            "on the volume basis each species' table declares. Which regional list "
+            "and validity period these tables are taken from is not recorded here, "
+            "and the prices are long out of date: supply your own for real work."
+        ),
+    ),
+)
 
 MELLANSKOG_2013_PRICE_DATA = {
     "Common": {
@@ -95,4 +129,8 @@ MELLANSKOG_2013_PRICE_DATA = {
 # Backward-compatible alias for existing imports.
 Mellanskog_2013_price_data = MELLANSKOG_2013_PRICE_DATA
 
-__all__ = ["MELLANSKOG_2013_PRICE_DATA", "Mellanskog_2013_price_data"]
+__all__ = [
+    "MELLANSKOG_2013_IDENTITY",
+    "MELLANSKOG_2013_PRICE_DATA",
+    "Mellanskog_2013_price_data",
+]

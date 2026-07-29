@@ -63,7 +63,10 @@ from pyforestry.sweden.mortality.naslund_1986 import (
     SaplingSpeciesGroup,
 )
 from pyforestry.sweden.mortality.types import MortalityRealizationMode, MortalityTreeModel
-from pyforestry.sweden.pricelist.data.mellanskog_2013 import MELLANSKOG_2013_PRICE_DATA
+from pyforestry.sweden.pricelist.data.mellanskog_2013 import (
+    MELLANSKOG_2013_IDENTITY,
+    MELLANSKOG_2013_PRICE_DATA,
+)
 from pyforestry.sweden.regeneration.elfving_1992 import Elfving1992Regeneration
 from pyforestry.sweden.simulation.mortality import (
     MortalityConfig,
@@ -559,7 +562,9 @@ class CompositePipeline:
     def __init__(self, config: CompositePipelineConfig | None = None) -> None:
         """Initialize with optional config overrides."""
         self.config = config or CompositePipelineConfig()
-        self._pricelist: Pricelist = create_pricelist_from_data(MELLANSKOG_2013_PRICE_DATA)
+        self._pricelist: Pricelist = create_pricelist_from_data(
+            MELLANSKOG_2013_PRICE_DATA, identity=MELLANSKOG_2013_IDENTITY
+        )
         self._model = self._build_model()
         self._mortality_engine = MortalityEngine(config=self._build_mortality_config())
         self._site: SwedishSite | None = None

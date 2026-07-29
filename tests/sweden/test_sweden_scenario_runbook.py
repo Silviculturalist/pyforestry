@@ -19,7 +19,10 @@ from pyforestry.simulation.artifacts import (
     validate_artifact_contract,
 )
 from pyforestry.simulation.valuation.volume import ValuationSettings
-from pyforestry.sweden.pricelist.data.mellanskog_2013 import MELLANSKOG_2013_PRICE_DATA
+from pyforestry.sweden.pricelist.data.mellanskog_2013 import (
+    MELLANSKOG_2013_IDENTITY,
+    MELLANSKOG_2013_PRICE_DATA,
+)
 from pyforestry.sweden.simulation.orchestration import (
     brandel_stand_volume,
     build_even_aged_stands,
@@ -32,8 +35,11 @@ from pyforestry.sweden.taper import EdgrenNylinder1949
 
 @pytest.fixture(scope="module")
 def valuation() -> ValuationSettings:
+    """Sweden's example prices, with the identity that says whose they are."""
     return ValuationSettings(
-        pricelist=create_pricelist_from_data(MELLANSKOG_2013_PRICE_DATA),
+        pricelist=create_pricelist_from_data(
+            MELLANSKOG_2013_PRICE_DATA, identity=MELLANSKOG_2013_IDENTITY
+        ),
         taper_class=EdgrenNylinder1949,
         timber_factory=swedish_timber_factory,
     )
@@ -256,10 +262,18 @@ def test_the_baseline_writes_what_it_earned_into_its_artifact(tmp_path, valuatio
     # And the rate the column was discounted at is in the manifest, cited as the
     # decision it is rather than as a finding.
     manifest = json.loads(result.artifacts.run_manifest_path.read_text(encoding="utf-8"))
-    assert manifest["schema_version"] == "3.0"
+    assert manifest["schema_version"] == "3.1"
     assert manifest["valuation"]["discount_rate"] == pytest.approx(0.03)
     assert manifest["valuation"]["base_year"] == 2025.0
     assert manifest["valuation"]["discount_source"]["author"] == "(none)"
+
+    # The prices that earned it are cited too, and the currency they are quoted in
+    # is what the two money columns above are in.
+    price_list = manifest["valuation"]["price_list"]
+    assert price_list["name"] == "Mellanskog 2013"
+    assert price_list["currency"] == "SEK"
+    assert price_list["source"]["author"] == "Mellanskog"
+    assert price_list["source"]["year"] == 2013
 
     quality = json.loads(result.artifacts.quality_report_path.read_text(encoding="utf-8"))
     assert quality["value_consistency_checked"] is True
