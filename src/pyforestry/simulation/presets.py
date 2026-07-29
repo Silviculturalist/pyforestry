@@ -1,11 +1,14 @@
 """Shared scaffolding for regional scenario configurations.
 
-A scenario configuration is not a simulator. It is a frozen record of a seed
-strategy, an ordered list of stage names, ruleset callables and a required-artifact
-list -- the inputs a run *would* take. The runnable things in this package are the
-composite pipelines in ``<region>/simulation/presets/`` and
-:func:`pyforestry.project`; see :class:`ScenarioConfig` for what this tier does and
-does not do.
+A scenario configuration is a frozen declaration: a seed strategy, an ordered list
+of stage names, ruleset callables, forcings and a required-artifact list. It runs
+nothing *itself* -- :func:`pyforestry.simulation.scenario.run_scenario` runs it,
+resolving the stage names into steps, deriving each stand's seed from the strategy,
+and applying the rulesets and the guard policy. Holding the declaration apart from
+the runner is what lets a run manifest say how a run was constructed without the
+configuration knowing how a projection is stepped. The other runnable things in
+this package are the composite pipelines in ``<region>/simulation/presets/`` and
+:func:`pyforestry.project`.
 
 Sweden and Norway each had their own near-copy of this file. The two differed in
 ways that were not decisions: one class was called ``ScenarioConfig`` and the other
@@ -56,11 +59,16 @@ def stable_seed(*parts: object) -> int:
 class ScenarioConfig(SimulationPreset):
     """A region's scenario configuration: seeds, stage names, rulesets, artifacts.
 
-    **This runs nothing.** ``stages()`` is a list of names recorded into a
-    manifest, ``rulesets()`` and ``guard_policy()` have no runtime caller, and the
-    artifact harness that consumes it fills its outputs with a synthetic random
-    walk. Treat its output as a schema fixture. The runnable simulators are the
-    composite pipelines and :func:`pyforestry.project`.
+    A configuration declares and
+    :func:`~pyforestry.simulation.scenario.run_scenario` executes: ``stages()``
+    names the steps a period runs, in order; ``rulesets()`` supplies the
+    management plan; ``guard_policy()`` the non-formula guard flags; and
+    ``seed_strategy()`` each stand's seed. All four are read and applied by the
+    runner, and all four are written into the run manifest.
+
+    This said **"this runs nothing"** until the runtime existed, and it was true:
+    the only thing that consumed a configuration filled its artifacts with a
+    seeded random walk and stamped them ``synthetic``.
 
     A region subclasses this to declare its own stages, rulesets and identity;
     everything else -- the seed derivation, the guard flags, the artifact

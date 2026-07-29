@@ -7,7 +7,9 @@ This package holds two unrelated kinds of thing, and they used to share the word
   are stateful simulators. You initialize one on a site, step it, and read a
   projection out of it.
 * **Scenario configuration** -- :class:`ScenarioConfig` is a frozen dataclass of
-  seeds, stage names, rulesets and required artifacts. It runs nothing.
+  seeds, stage names, rulesets and required artifacts. It declares a run rather
+  than being one; :func:`~pyforestry.simulation.scenario.run_scenario` executes
+  it and writes the artifacts.
 
 ``get_scenario_config`` reaches the second, ``get_pipeline`` the first. There is
 deliberately no single lookup that returns "a preset": the two have no common
