@@ -11,6 +11,7 @@ the artifacts exist.
 from __future__ import annotations
 
 import json
+from math import pi, sqrt
 
 import pytest
 
@@ -18,27 +19,40 @@ from pyforestry.base.contracts import SourceReference
 from pyforestry.base.helpers.primitives import StandBasalArea, Stems
 from pyforestry.base.helpers.stand import Stand
 from pyforestry.base.helpers.tree_species import TreeSpecies
+from pyforestry.base.pricelist.pricelist import (
+    LengthRange,
+    Pricelist,
+    TimberPriceForDiameter,
+    TimberPricelist,
+)
 from pyforestry.base.simulation.core import SimulationContext
 from pyforestry.base.simulation.growth_model import GrowthModel, Requirements
+from pyforestry.base.taper.taper import Taper
+from pyforestry.base.timber.timber_base import Timber
 from pyforestry.simulation.artifacts import (
     MANIFEST_REQUIRED_KEYS,
     QUALITY_REPORT_REQUIRED_KEYS,
     REQUIRED_ARTIFACTS,
     SCENARIO_SUMMARY_COLUMNS,
+    check_value_consistency,
     check_volume_balance,
     load_scenario_summary,
     validate_artifact_contract,
 )
 from pyforestry.simulation.forcing import (
     CALENDAR_YEAR_KEY,
+    DISCOUNT,
     GROWTH,
+    AnnualForcing,
     ConstantForcing,
     ForcingSet,
+    stated_choice,
 )
 from pyforestry.simulation.policy import ManagementPlan
 from pyforestry.simulation.presets import ScenarioConfig
 from pyforestry.simulation.scenario import StandUnit, run_scenario
-from pyforestry.simulation.stages import StageContext, build_pipeline, known_stages
+from pyforestry.simulation.stages import MeanTree, StageContext, build_pipeline, known_stages
+from pyforestry.simulation.valuation.volume import ValuationSettings
 
 SPECIES = TreeSpecies.Sweden.picea_abies
 
@@ -83,6 +97,59 @@ class _Config(ScenarioConfig):
 
     def rulesets(self):
         return {"management": lambda: ManagementPlan(thinning_ratio=0.25)}
+
+
+class _ValuingConfig(_Config):
+    """The same, plus the stage that prices what the management stage removed."""
+
+    def stages(self):
+        return ("management", "disturbance", "growth", "valuation")
+
+
+class _ConstantTaper(Taper):
+    """A stem of constant diameter, so a test's bucking has no science in it."""
+
+    def __init__(self, timber: Timber):
+        self.diameter = timber.diameter_cm
+        self.height = timber.height_m
+        super().__init__(timber, self)
+
+    def get_diameter_at_height(self, height_m: float) -> float:  # type: ignore[override]
+        return self.diameter if 0 <= height_m <= self.height else 0.0
+
+    def get_height_at_diameter(self, diameter: float) -> float:  # type: ignore[override]
+        return self.height
+
+    def volume_section(self, h1_m: float, h2_m: float) -> float:  # type: ignore[override]
+        radius = self.diameter / 200
+        return max(0.0, h2_m - h1_m) * pi * radius * radius
+
+
+def _valuation() -> ValuationSettings:
+    """A price list flat enough that the money in a test is arithmetic, not forestry."""
+    pricelist = Pricelist()
+    table = TimberPricelist(10, 40, volume_type="m3fub")
+    for diameter in range(10, 41):
+        table.set_price_for_diameter(diameter, TimberPriceForDiameter(100, 100, 100))
+    pricelist.Timber[SPECIES.full_name] = table
+    pricelist.PulpLogLength = LengthRange(2.0, 2.0)
+    pricelist.TimberLogLength = LengthRange(2.0, 2.0)
+    pricelist.Pulp._prices[SPECIES.full_name] = 50
+    pricelist.LogCullPrice = 0
+    pricelist.FuelWoodPrice = 0
+    return ValuationSettings(pricelist=pricelist, taper_class=_ConstantTaper)
+
+
+def _mean_tree(ctx: SimulationContext, fraction: float) -> MeanTree:
+    """The stand's quadratic mean stem, which is what an aggregate model can offer."""
+    basal_area = float(ctx.metrics["BasalArea"]["TOTAL"])
+    stems = float(ctx.metrics["Stems"]["TOTAL"])
+    return MeanTree(
+        species=SPECIES,
+        diameter_cm=200.0 * sqrt(basal_area / (stems * pi)),
+        height_m=16.0,
+        stems_removed=stems * fraction,
+    )
 
 
 def _config(**kwargs) -> _Config:
@@ -298,6 +365,186 @@ def test_summary_columns_are_the_schema_s(tmp_path) -> None:
     result = _run(tmp_path)
     rows = load_scenario_summary(result.artifacts.scenario_summary_path)
     assert set(rows[0]) == set(SCENARIO_SUMMARY_COLUMNS)
+
+
+# --- what a run was worth ----------------------------------------------------
+
+
+def _valuing_run(tmp_path, **kwargs):
+    kwargs.setdefault("thin_at_years", [10.0])
+    return _run(
+        tmp_path,
+        config=_ValuingConfig(
+            preset_id="test",
+            scenario_id="baseline",
+            region="Testland",
+            required_artifacts_=REQUIRED_ARTIFACTS,
+        ),
+        valuation=_valuation(),
+        mean_tree=_mean_tree,
+        **kwargs,
+    )
+
+
+def test_a_run_that_prices_nothing_says_so_rather_than_reporting_zero(tmp_path) -> None:
+    """``valued`` is what keeps "earned nothing" apart from "never asked".
+
+    This configuration has no valuation stage, so it removes wood and never asks
+    what it fetched. A bare ``0`` beside a non-zero ``harvested_m3`` would read as
+    a stand that sold its thinning for nothing.
+    """
+    result = _run(tmp_path, thin_at_years=[10.0])
+    row = result.rows[0]
+
+    assert row["harvested_m3"] > 0.0, "the wood came out"
+    assert row["valued"] is False, "and nobody priced it"
+    assert row["nominal_revenue"] == 0.0
+    assert row["net_present_value"] == 0.0
+
+    manifest = json.loads(result.artifacts.run_manifest_path.read_text(encoding="utf-8"))
+    assert manifest["valuation"]["valued"] is False
+    assert manifest["valuation"]["discount_rate"] is None
+
+
+def test_a_priced_run_writes_its_value_into_the_summary(tmp_path) -> None:
+    """The point of the column: the number is in the artifact, not only in the result."""
+    result = _valuing_run(tmp_path, discount_rate=0.03)
+    row = result.rows[0]
+
+    assert row["valued"] is True
+    assert row["nominal_revenue"] > 0.0
+    # The thinning falls in 2030, ten years after the run's first year.
+    assert row["net_present_value"] == pytest.approx(row["nominal_revenue"] * 1.03**-10)
+    assert result.net_present_value()[1] == pytest.approx(row["net_present_value"])
+
+    rows = load_scenario_summary(result.artifacts.scenario_summary_path)
+    assert rows[0]["net_present_value"] == pytest.approx(row["net_present_value"])
+
+
+def test_a_priced_run_that_never_harvested_is_valued_at_zero(tmp_path) -> None:
+    """``(True, 0)``: it was priced, and it earned nothing. Not the same as unpriced."""
+    result = _valuing_run(tmp_path, discount_rate=0.03, thin_at_years=[])
+    row = result.rows[0]
+    assert row["harvested_m3"] == 0.0
+    assert row["valued"] is True
+    assert row["nominal_revenue"] == 0.0
+    assert row["net_present_value"] == 0.0
+
+
+def test_a_zero_rate_is_a_stated_preference_and_leaves_the_money_where_it_fell(
+    tmp_path,
+) -> None:
+    result = _valuing_run(tmp_path, discount_rate=0.0)
+    row = result.rows[0]
+    assert row["net_present_value"] == pytest.approx(row["nominal_revenue"])
+
+    manifest = json.loads(result.artifacts.run_manifest_path.read_text(encoding="utf-8"))
+    assert manifest["valuation"]["discount_rate"] == 0.0
+
+
+def test_the_manifest_records_the_rate_as_the_choice_it_is(tmp_path) -> None:
+    """A discount rate is nobody's finding, and the manifest must not imply it is."""
+    result = _valuing_run(tmp_path, discount_rate=0.03)
+    manifest = json.loads(result.artifacts.run_manifest_path.read_text(encoding="utf-8"))
+    valuation = manifest["valuation"]
+
+    assert valuation["valued"] is True
+    assert valuation["discount_rate"] == pytest.approx(0.03)
+    assert valuation["base_year"] == 2020.0
+    assert valuation["discount_from_forcing"] is False
+    assert valuation["discount_source"]["author"] == "(none)"
+    assert valuation["discount_source"]["year"] == 0
+    assert "0.03" in valuation["discount_source"]["title"]
+    assert valuation["discount_source"]["note"] == stated_choice("x").note
+
+
+def test_a_discount_forcing_supplies_a_rate_that_varies_by_year(tmp_path) -> None:
+    """A term structure is a forcing, because one exponent cannot express it."""
+    term_structure = AnnualForcing(
+        DISCOUNT,
+        {2020 + n: 0.02 if n < 5 else 0.05 for n in range(21)},
+        source=SourceReference(author="Test fixture", year=2026, title="A rate path, and says so"),
+    )
+    forced = _valuing_run(tmp_path / "forced", forcings=ForcingSet([term_structure]))
+    flat = _valuing_run(tmp_path / "flat", discount_rate=0.02)
+
+    # Five years at 2%, then five at 5%: less than ten years at 2% is worth.
+    assert 0.0 < forced.rows[0]["net_present_value"] < flat.rows[0]["net_present_value"]
+    assert forced.rows[0]["nominal_revenue"] == pytest.approx(flat.rows[0]["nominal_revenue"])
+
+    manifest = json.loads(forced.artifacts.run_manifest_path.read_text(encoding="utf-8"))
+    assert manifest["valuation"]["discount_from_forcing"] is True
+    assert manifest["valuation"]["discount_rate"] is None
+    # The citation is in forcings_applied rather than copied into two places.
+    assert manifest["valuation"]["discount_source"] is None
+    assert manifest["forcings_applied"][0]["source"]["year"] == 2026
+
+
+def test_a_priced_run_must_say_what_it_discounts_at(tmp_path) -> None:
+    """Otherwise the artifact carries a net present value with nothing behind it."""
+    with pytest.raises(ValueError, match="needs a rate to discount at"):
+        _valuing_run(tmp_path)
+
+
+def test_a_rate_without_anything_to_discount_is_refused(tmp_path) -> None:
+    """Recording it would say the run applied it."""
+    with pytest.raises(ValueError, match="declares no 'valuation' stage"):
+        _run(tmp_path, discount_rate=0.03)
+
+
+# --- the money identities ----------------------------------------------------
+
+
+def _money_row(**overrides) -> dict:
+    row = {
+        "stand_id": 1,
+        "harvested_m3": 10.0,
+        "valued": True,
+        "nominal_revenue": 100.0,
+        "net_present_value": 90.0,
+    }
+    row.update(overrides)
+    return row
+
+
+def test_value_consistency_accepts_all_three_states() -> None:
+    check_value_consistency(
+        [
+            _money_row(valued=False, nominal_revenue=0.0, net_present_value=0.0),
+            _money_row(harvested_m3=0.0, nominal_revenue=0.0, net_present_value=0.0),
+            _money_row(),
+        ]
+    )
+
+
+def test_revenue_on_a_row_nothing_priced_is_rejected() -> None:
+    with pytest.raises(ValueError, match="not valued"):
+        check_value_consistency([_money_row(valued=False)])
+
+
+def test_revenue_without_a_harvest_is_rejected() -> None:
+    """Only a merchantable removal reaches the ledger, so this cannot happen."""
+    with pytest.raises(ValueError, match="harvested nothing"):
+        check_value_consistency([_money_row(harvested_m3=0.0)])
+
+
+def test_a_money_figure_that_is_not_a_number_is_rejected() -> None:
+    with pytest.raises(ValueError, match="finite"):
+        check_value_consistency([_money_row(net_present_value=float("nan"))])
+
+
+def test_a_summary_from_the_previous_schema_is_named_rather_than_diffed(tmp_path) -> None:
+    """A 2.0 artifact does not load, and the reader is told what it is holding."""
+    import pandas as pd
+
+    path = tmp_path / "old_summary.parquet"
+    pd.DataFrame.from_records(
+        [{column: 0.0 for column in SCENARIO_SUMMARY_COLUMNS[:8]}],
+        columns=SCENARIO_SUMMARY_COLUMNS[:8],
+    ).to_parquet(path, index=False)
+
+    with pytest.raises(ValueError, match="schema 2.0 summary"):
+        load_scenario_summary(path)
 
 
 # --- failure modes -----------------------------------------------------------

@@ -174,6 +174,7 @@ def run_sweden_scenario(
     step_years: float = 5.0,
     attrs: Optional[Mapping[str, Any]] = None,
     valuation: Optional[ValuationSettings] = None,
+    discount_rate: Optional[float] = None,
     disturbance_rate_per_year: float = 0.0,
     thin_at_years: Sequence[float] = (),
     start_year: float = 0.0,
@@ -194,6 +195,11 @@ def run_sweden_scenario(
         valuation: Price list, taper and bucking settings. Required if the
             configuration declares a ``"valuation"`` stage, which Sweden's
             baseline does.
+        discount_rate: The annual rate the summary's net present value is
+            discounted at. Required alongside ``valuation`` for the same reason
+            it is: Sweden's baseline prices what it cuts, and a net present value
+            in an artifact has to say what it was discounted at. ``0.0`` states
+            no time preference.
         disturbance_rate_per_year: Annual share of the stand a scenario
             disturbance removes, before the scenario's ``disturbance_factor``.
             Supplied by the caller; this package ships no rate, because a
@@ -223,6 +229,7 @@ def run_sweden_scenario(
         output_dir=output_dir,
         attrs=resolved_attrs,
         valuation=valuation,
+        discount_rate=discount_rate,
         disturbance_rate_per_year=disturbance_rate_per_year,
         thin_at_years=thin_at_years,
         start_year=start_year,

@@ -46,6 +46,7 @@ def test_baseline_run_projects_a_real_stand(tmp_path, valuation) -> None:
         stands=build_even_aged_stands(1),
         n_steps=3,
         valuation=valuation,
+        discount_rate=0.0,
     )
 
     validate_artifact_contract(result.artifacts.output_dir)
@@ -78,6 +79,7 @@ def test_thinning_is_priced_through_the_valuation_stage(tmp_path, valuation) -> 
         stands=build_even_aged_stands(1),
         n_steps=3,
         valuation=valuation,
+        discount_rate=0.0,
         thin_at_years=[5.0],
     )
 
@@ -96,6 +98,7 @@ def test_disturbance_is_a_loss_not_a_harvest(tmp_path, valuation) -> None:
         stands=build_even_aged_stands(1),
         n_steps=3,
         valuation=valuation,
+        discount_rate=0.0,
         disturbance_rate_per_year=0.01,
     )
 
@@ -118,6 +121,7 @@ def test_the_volume_reporter_sees_a_thinning_immediately(tmp_path, valuation) ->
         stands=stands,
         n_steps=1,
         valuation=valuation,
+        discount_rate=0.0,
     ).contexts[0]
 
     before = brandel_stand_volume(model_ctx)
@@ -134,6 +138,7 @@ def test_summary_is_loadable_and_keyed_by_stand(tmp_path, valuation) -> None:
         stands=build_even_aged_stands(3),
         n_steps=2,
         valuation=valuation,
+        discount_rate=0.0,
     )
     rows = load_scenario_summary(result.artifacts.scenario_summary_path)
     assert [row["stand_id"] for row in rows] == [1, 2, 3]
@@ -175,6 +180,7 @@ def test_inflation_reaches_the_horizon_net_present_value(tmp_path, valuation) ->
             step_years=5.0,
             start_year=2025,
             valuation=valuation,
+            discount_rate=0.03,
             thin_at_years=[10.0],
             forcings=forcings,
         )
@@ -189,12 +195,17 @@ def test_inflation_reaches_the_horizon_net_present_value(tmp_path, valuation) ->
     assert inflated_flows[0].price_factor == pytest.approx(1.219)
     assert inflated_flows[0].amount == pytest.approx(flat_flows[0].amount * 1.219)
 
-    npv_flat = flat.net_present_value(discount_rate=0.03)[1]
-    npv_inflated = inflated.net_present_value(discount_rate=0.03)[1]
+    npv_flat = flat.net_present_value()[1]
+    npv_inflated = inflated.net_present_value()[1]
     assert npv_inflated == pytest.approx(npv_flat * 1.219)
     # Discounted from 2035 back to the run's own first year, not to nothing.
     assert npv_flat == pytest.approx(flat_flows[0].amount * 1.03**-10)
     assert inflated.start_year == 2025.0
+
+    # And it is in the artifact, which is the whole point of it being a column.
+    assert flat.rows[0]["net_present_value"] == pytest.approx(npv_flat)
+    assert flat.rows[0]["nominal_revenue"] == pytest.approx(flat_flows[0].amount)
+    assert flat.rows[0]["net_present_value"] < flat.rows[0]["nominal_revenue"]
 
 
 def test_a_run_that_never_harvested_is_worth_nothing(tmp_path, valuation) -> None:
@@ -205,5 +216,50 @@ def test_a_run_that_never_harvested_is_worth_nothing(tmp_path, valuation) -> Non
         n_steps=2,
         start_year=2025,
         valuation=valuation,
+        discount_rate=0.03,
     )
-    assert result.net_present_value(discount_rate=0.03) == {1: 0.0}
+    assert result.net_present_value() == {1: 0.0}
+    # Priced, and worth nothing -- which the row distinguishes from unpriced.
+    assert result.rows[0]["valued"] is True
+    assert result.rows[0]["net_present_value"] == 0.0
+
+
+def test_the_baseline_writes_what_it_earned_into_its_artifact(tmp_path, valuation) -> None:
+    """The summary is readable on its own: what came out, and what it was worth.
+
+    A net present value was reachable through ``ScenarioRunResult`` before this,
+    and reachable is not the same as recorded: the artifacts are how a run is read
+    back without rerunning it, and the money was the one part of the balance that
+    only existed in the process that produced it.
+    """
+    result = run_sweden_scenario(
+        global_seed=20260728,
+        output_dir=tmp_path / "run",
+        stands=build_even_aged_stands(2),
+        n_steps=4,
+        start_year=2025,
+        valuation=valuation,
+        discount_rate=0.03,
+        thin_at_years=[5.0],
+    )
+
+    rows = load_scenario_summary(result.artifacts.scenario_summary_path)
+    assert len(rows) == 2
+    for row in rows:
+        assert bool(row["valued"]) is True
+        assert row["harvested_m3"] > 0.0
+        assert row["nominal_revenue"] > 0.0
+        # The thinning falls in 2030, so discounting it back to 2025 costs something.
+        assert 0.0 < row["net_present_value"] < row["nominal_revenue"]
+        assert row["net_present_value"] == pytest.approx(row["nominal_revenue"] * 1.03**-5)
+
+    # And the rate the column was discounted at is in the manifest, cited as the
+    # decision it is rather than as a finding.
+    manifest = json.loads(result.artifacts.run_manifest_path.read_text(encoding="utf-8"))
+    assert manifest["schema_version"] == "3.0"
+    assert manifest["valuation"]["discount_rate"] == pytest.approx(0.03)
+    assert manifest["valuation"]["base_year"] == 2025.0
+    assert manifest["valuation"]["discount_source"]["author"] == "(none)"
+
+    quality = json.loads(result.artifacts.quality_report_path.read_text(encoding="utf-8"))
+    assert quality["value_consistency_checked"] is True

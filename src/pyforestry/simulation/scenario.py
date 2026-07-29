@@ -14,8 +14,19 @@ policy, and writes the volume balance each stand actually produced.
 
 The manifest is the point. It records which models ran with which citations,
 which stages in which order, which ruleset values were applied, the guard policy,
-and every seed -- so a summary row can be read back against the construction that
-produced it without rerunning anything.
+the discount rate and every seed -- so a summary row can be read back against the
+construction that produced it without rerunning anything.
+
+The discount rate is here rather than on :meth:`ScenarioRunResult.net_present_value`
+because the summary carries a net present value, and a figure in an artifact has
+to have been discounted at a rate the artifact records. As a call argument it was
+whatever the reader happened to pass, which is fine for exploring and useless in a
+file. A run that prices its removals must now state a rate -- ``0.0`` states that
+a krona at the end of the horizon is worth a krona now, which is a preference like
+any other -- or declare a
+:data:`~pyforestry.simulation.forcing.DISCOUNT` forcing for one that varies by
+year. The method remains, for asking the same run what it would be worth at
+another rate.
 """
 
 from __future__ import annotations
@@ -29,10 +40,14 @@ from pyforestry.base.simulation.core import SimulationContext
 from pyforestry.base.simulation.growth_model import GrowthModel
 from pyforestry.base.simulation.pipeline import run_pipeline
 from pyforestry.simulation.artifacts import ScenarioArtifacts, git_revision, write_artifacts
-from pyforestry.simulation.forcing import ForcingSet
+from pyforestry.simulation.forcing import DISCOUNT, ForcingSet, stated_choice
 from pyforestry.simulation.policy import ManagementPlan
 from pyforestry.simulation.presets import ScenarioConfig, stable_seed
-from pyforestry.simulation.provenance import as_manifest_entries, collect_provenance
+from pyforestry.simulation.provenance import (
+    as_manifest_entries,
+    as_manifest_source,
+    collect_provenance,
+)
 from pyforestry.simulation.stages import (
     REMOVED_BY_STAGE_KEY,
     STAND_SPECIES_KEY,
@@ -90,6 +105,10 @@ class ScenarioRunResult:
             that wants the history rather than the summary.
         forcings: The forcings this run applied, kept so a horizon calculation
             can read a year-varying discount rate off the same set.
+        discount_rate: The flat rate the run was configured with, and the one its
+            summary's ``net_present_value`` column was discounted at. ``None``
+            when a :data:`~pyforestry.simulation.forcing.DISCOUNT` forcing
+            supplied the rate instead, or when the run priced nothing.
     """
 
     artifacts: ScenarioArtifacts
@@ -97,6 +116,7 @@ class ScenarioRunResult:
     manifest: Mapping[str, Any]
     contexts: tuple[SimulationContext, ...] = field(default=())
     forcings: ForcingSet = field(default_factory=ForcingSet)
+    discount_rate: Optional[float] = None
 
     @property
     def start_year(self) -> float:
@@ -129,21 +149,25 @@ class ScenarioRunResult:
         records both separately.
 
         Args:
-            discount_rate: A flat annual rate. Ignored if the run applied a
-                :data:`~pyforestry.simulation.forcing.DISCOUNT` forcing, which
-                may vary by year.
+            discount_rate: A flat annual rate. Defaults to the rate the run was
+                configured with, so calling this with no arguments reproduces the
+                summary's ``net_present_value`` column. Pass one to ask what the
+                same run would be worth at a different rate. Ignored if the run
+                applied a :data:`~pyforestry.simulation.forcing.DISCOUNT` forcing,
+                which may vary by year.
             base_year: The year to express the total in. Defaults to the run's
-                first.
+                first, which is the year the summary column is expressed in.
 
         Returns:
             Stand id to net present value. Zero for a stand that earned nothing.
         """
+        rate = self.discount_rate if discount_rate is None else discount_rate
         base = self.start_year if base_year is None else float(base_year)
         return {
             stand_id: net_present_value(
                 flows,
                 base_year=base,
-                discount_rate=discount_rate,
+                discount_rate=rate,
                 forcings=self.forcings,
             )
             for stand_id, flows in self.cash_flows()
@@ -153,6 +177,67 @@ class ScenarioRunResult:
 def _stand_seed(scenario_seed: int, stand_id: int) -> int:
     """Derive a stand's seed from the scenario's, so order cannot affect it."""
     return stable_seed(scenario_seed, stand_id)
+
+
+def _check_discounting(
+    *,
+    values_removals: bool,
+    discount_rate: Optional[float],
+    from_forcing: bool,
+) -> None:
+    """Reject a run whose discounting and whose valuation stage disagree.
+
+    Raises:
+        ValueError: If a run that prices its removals states no rate to discount
+            them at, or a run that prices nothing states one anyway. The first
+            would put a net present value in an artifact with nothing behind it;
+            the second would put a rate in the manifest that discounted nothing,
+            which reads as though it had.
+    """
+    if values_removals and discount_rate is None and not from_forcing:
+        raise ValueError(
+            "This scenario declares a 'valuation' stage, so its summary carries a net "
+            "present value -- and that needs a rate to discount at. Pass "
+            "discount_rate=, or declare a DISCOUNT forcing for a rate that varies by "
+            "year. discount_rate=0.0 is a legitimate answer: it states that a krona at "
+            "the end of the horizon is worth a krona now. There is no default, because "
+            "a rate is a stated preference and no default would be anyone's."
+        )
+    if not values_removals and discount_rate is not None:
+        raise ValueError(
+            f"discount_rate={discount_rate!r} was given, but this scenario declares no "
+            "'valuation' stage, so nothing is priced and there would be nothing to "
+            "discount. Recording the rate in the manifest would say the run applied "
+            "it. Add 'valuation' to the configuration's stages, or drop the argument."
+        )
+
+
+def _valuation_manifest(
+    *,
+    values_removals: bool,
+    discount_rate: Optional[float],
+    from_forcing: bool,
+    base_year: float,
+) -> dict[str, Any]:
+    """Record what the summary's money columns were produced by.
+
+    A discount rate is a decision rather than a finding, so it is cited with the
+    ``(none)``/year-0 sentinel :func:`~pyforestry.simulation.forcing.stated_choice`
+    builds -- the same way a thinning intensity is. A rate that came from a
+    forcing is already cited in ``forcings_applied``, and is pointed at from here
+    rather than copied.
+    """
+    return {
+        "valued": values_removals,
+        "base_year": float(base_year),
+        "discount_rate": None if discount_rate is None else float(discount_rate),
+        "discount_from_forcing": from_forcing,
+        "discount_source": (
+            None
+            if discount_rate is None
+            else as_manifest_source(stated_choice(f"{discount_rate:g} annual discount rate"))
+        ),
+    }
 
 
 def _rulesets_applied(config: ScenarioConfig) -> dict[str, Any]:
@@ -192,6 +277,7 @@ def run_scenario(
     output_dir: Path,
     attrs: Optional[Mapping[str, Any]] = None,
     valuation: Optional[ValuationSettings] = None,
+    discount_rate: Optional[float] = None,
     disturbance_rate_per_year: float = 0.0,
     thin_at_years: Sequence[float] = (),
     start_year: float = 0.0,
@@ -222,6 +308,14 @@ def run_scenario(
         attrs: Extra model attributes, merged into every stand's context.
         valuation: Price list, taper and bucking settings. Required if the
             configuration declares a ``"valuation"`` stage.
+        discount_rate: The annual rate the summary's net present value is
+            discounted at, e.g. ``0.03``. Required if the configuration declares
+            a ``"valuation"`` stage and no
+            :data:`~pyforestry.simulation.forcing.DISCOUNT` forcing supplies a
+            year-varying one; rejected if it declares no such stage, since then
+            there is nothing to discount. ``0.0`` states no time preference. It
+            is a decision rather than a finding, and the manifest records it as
+            one.
         disturbance_rate_per_year: The annual share of the stand a scenario
             disturbance removes, before ``ScenarioFactors.disturbance_factor``.
             **The caller supplies this and it has no default source.** None of
@@ -252,7 +346,8 @@ def run_scenario(
 
     Raises:
         ValueError: If ``n_steps`` is not positive, no stands were given, a stage
-            name is unknown, or a guard rejects an input.
+            name is unknown, the discounting and the valuation stage disagree, or
+            a guard rejects an input.
     """
     if n_steps <= 0:
         raise ValueError(f"n_steps must be > 0, got {n_steps!r}.")
@@ -264,6 +359,10 @@ def run_scenario(
     management = _resolved_management(config)
     applied_forcings = config.forcings().merge(forcings or ForcingSet())
 
+    stage_names = tuple(config.stages())
+    values_removals = "valuation" in stage_names
+    discount_from_forcing = DISCOUNT in applied_forcings.names()
+
     stage_context = StageContext(
         volume=volume,
         management=management,
@@ -274,7 +373,15 @@ def run_scenario(
         thin_at_years=tuple(float(t) for t in thin_at_years),
         mean_tree=mean_tree,
     )
-    pipeline = build_pipeline(config.stages(), stage_context, start_year=start_year)
+    # After the pipeline, so a run that declares a valuation stage and supplies
+    # neither a price list nor a rate is told about the price list first: without
+    # one there is no revenue, and the rate is a refinement on revenue.
+    pipeline = build_pipeline(stage_names, stage_context, start_year=start_year)
+    _check_discounting(
+        values_removals=values_removals,
+        discount_rate=discount_rate,
+        from_forcing=discount_from_forcing,
+    )
 
     rows: list[dict[str, Any]] = []
     contexts: list[SimulationContext] = []
@@ -316,6 +423,13 @@ def run_scenario(
         # manifest records that the clamp was in force.
         gross_growth = net_volume - initial_volume + harvested + disturbed
 
+        # Empty unless a valuation stage priced a removal, so both figures are
+        # 0.0 for a run that declares no such stage -- which is what ``valued``
+        # is in the row to distinguish from a run that priced its removals and
+        # found them worth nothing.
+        flows = tuple(cash_flows_of(ctx.attrs))
+        nominal_revenue = float(sum(flow.amount for flow in flows))
+
         rows.append(
             {
                 "stand_id": int(unit.stand_id),
@@ -326,6 +440,14 @@ def run_scenario(
                 "disturbance_loss_m3": disturbed,
                 "harvested_m3": harvested,
                 "net_volume_m3": net_volume,
+                "valued": values_removals,
+                "nominal_revenue": nominal_revenue,
+                "net_present_value": net_present_value(
+                    flows,
+                    base_year=float(start_year),
+                    discount_rate=discount_rate,
+                    forcings=applied_forcings,
+                ),
             }
         )
         contexts.append(ctx)
@@ -342,10 +464,16 @@ def run_scenario(
         "step_years": float(step or 0.0),
         "n_stands": len(stands),
         "required_artifacts": list(config.required_artifacts()),
-        "stages": list(config.stages()),
+        "stages": list(stage_names),
         "rulesets_applied": _rulesets_applied(config),
         "forcings_applied": applied_forcings.as_manifest(),
         "guard_policy": {key: value for key, value in guard_policy.items()},
+        "valuation": _valuation_manifest(
+            values_removals=values_removals,
+            discount_rate=discount_rate,
+            from_forcing=discount_from_forcing,
+            base_year=float(start_year),
+        ),
         "start_year": float(start_year),
         "disturbance_rate_per_year": float(disturbance_rate_per_year),
         "thin_at_years": [float(t) for t in thin_at_years],
@@ -363,4 +491,5 @@ def run_scenario(
         manifest=manifest,
         contexts=tuple(contexts),
         forcings=applied_forcings,
+        discount_rate=discount_rate,
     )

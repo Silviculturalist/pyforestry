@@ -132,6 +132,7 @@ def test_baseline_run_projects_real_kuehne_stands(tmp_path, norwegian_prices) ->
         n_stands=2,
         n_steps=6,
         valuation=norwegian_prices,
+        discount_rate=0.0,
     )
 
     validate_artifact_contract(result.artifacts.output_dir)
@@ -155,6 +156,7 @@ def test_thinning_and_disturbance_are_reported_apart(tmp_path, norwegian_prices)
         n_steps=6,
         thin_at_years=[60.0],
         valuation=norwegian_prices,
+        discount_rate=0.0,
     )
     disturbed = run_norway_scenario(
         global_seed=1,
@@ -163,6 +165,7 @@ def test_thinning_and_disturbance_are_reported_apart(tmp_path, norwegian_prices)
         n_steps=6,
         disturbance_rate_per_year=0.004,
         valuation=norwegian_prices,
+        discount_rate=0.0,
     )
 
     assert thinned.rows[0]["harvested_m3"] > 0.0
@@ -215,6 +218,7 @@ def test_a_cited_forcing_raises_growth_and_disturbance(tmp_path, norwegian_price
         start_year=2020,
         disturbance_rate_per_year=0.004,
         valuation=norwegian_prices,
+        discount_rate=0.0,
     )
     forced = run_norway_scenario(
         global_seed=1,
@@ -225,6 +229,7 @@ def test_a_cited_forcing_raises_growth_and_disturbance(tmp_path, norwegian_price
         disturbance_rate_per_year=0.004,
         forcings=forcings,
         valuation=norwegian_prices,
+        discount_rate=0.0,
     )
 
     assert forced.rows[0]["gross_growth_m3"] > baseline.rows[0]["gross_growth_m3"]
@@ -255,6 +260,7 @@ def test_a_year_by_year_forcing_varies_across_the_run(tmp_path, norwegian_prices
         start_year=2020,
         forcings=ForcingSet([ConstantForcing(GROWTH, 1.04, source=source)]),
         valuation=norwegian_prices,
+        discount_rate=0.0,
     )
     varying = run_norway_scenario(
         global_seed=1,
@@ -264,6 +270,7 @@ def test_a_year_by_year_forcing_varies_across_the_run(tmp_path, norwegian_prices
         start_year=2020,
         forcings=ForcingSet([weather]),
         valuation=norwegian_prices,
+        discount_rate=0.0,
     )
 
     # Same first period, different afterwards: the series is read per period.
@@ -292,6 +299,7 @@ def test_the_volume_reporter_is_a_function_of_the_current_stand(
         n_stands=1,
         n_steps=2,
         valuation=norwegian_prices,
+        discount_rate=0.0,
     )
     ctx = result.contexts[0]
     before = kuehne_stand_volume(ctx)
@@ -306,6 +314,7 @@ def test_summary_is_loadable_and_keyed_by_stand(tmp_path, norwegian_prices) -> N
         n_stands=3,
         n_steps=2,
         valuation=norwegian_prices,
+        discount_rate=0.0,
     )
     rows = load_scenario_summary(result.artifacts.scenario_summary_path)
     assert [row["stand_id"] for row in rows] == [1, 2, 3]
@@ -334,6 +343,7 @@ def test_a_thinning_is_bucked_at_the_stands_mean_tree(tmp_path, norwegian_prices
         n_steps=6,
         start_year=2025,
         valuation=norwegian_prices,
+        discount_rate=0.0,
         thin_at_years=[60.0],
     )
 
@@ -364,6 +374,7 @@ def test_the_bucked_total_is_the_models_own_volume(tmp_path, norwegian_prices) -
         n_steps=6,
         start_year=2025,
         valuation=norwegian_prices,
+        discount_rate=0.0,
         thin_at_years=[60.0],
     )
 
@@ -395,6 +406,7 @@ def test_inflation_reaches_norways_horizon_npv(tmp_path, norwegian_prices) -> No
             start_year=2025,
             step_years=5.0,
             valuation=norwegian_prices,
+            discount_rate=0.03,
             thin_at_years=[60.0],
             forcings=forcings,
         )
@@ -410,9 +422,10 @@ def test_inflation_reaches_norways_horizon_npv(tmp_path, norwegian_prices) -> No
         flat_flows[0].amount * inflated_flows[0].price_factor
     )
 
-    npv_flat = flat.net_present_value(discount_rate=0.03)[1]
-    npv_inflated = inflated.net_present_value(discount_rate=0.03)[1]
+    npv_flat = flat.net_present_value()[1]
+    npv_inflated = inflated.net_present_value()[1]
     assert npv_inflated > npv_flat > 0.0
+    assert flat.rows[0]["net_present_value"] == pytest.approx(npv_flat)
 
 
 def test_the_mean_tree_is_the_stands_qmd_and_the_models_height() -> None:

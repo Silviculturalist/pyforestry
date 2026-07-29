@@ -162,6 +162,7 @@ def run_norway_scenario(
     n_steps: int = 10,
     step_years: float = 5.0,
     valuation: Optional[ValuationSettings] = None,
+    discount_rate: Optional[float] = None,
     disturbance_rate_per_year: float = 0.0,
     thin_at_years: Sequence[float] = (),
     start_year: float = 0.0,
@@ -188,6 +189,11 @@ def run_norway_scenario(
             individual stems -- it is bucked at the stand's mean tree instead,
             once, and scaled to the volume the model says came out. See
             :func:`kuehne_mean_tree` for what that assumes.
+        discount_rate: The annual rate the summary's net present value is
+            discounted at. **Required**, like ``valuation``, because Norway's
+            scenario declares a valuation stage and a net present value in an
+            artifact has to say what it was discounted at. ``0.0`` states no time
+            preference.
         disturbance_rate_per_year: Annual share of the stand a scenario
             disturbance removes, before the scenario's ``disturbance_factor``.
             Supplied by the caller; this package ships no rate, because a
@@ -220,6 +226,7 @@ def run_norway_scenario(
         step_years=step_years,
         output_dir=output_dir,
         valuation=valuation,
+        discount_rate=discount_rate,
         disturbance_rate_per_year=disturbance_rate_per_year,
         thin_at_years=thin_at_years,
         start_year=start_year,

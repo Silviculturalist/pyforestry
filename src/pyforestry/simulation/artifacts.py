@@ -7,7 +7,8 @@ These three files are how a run is read back without rerunning it:
   rulesets that were applied and their values, the guard policy, the seeds, and
   the git revision. This is the artifact's reason to exist. A number in the
   summary is only interpretable against the manifest that says what produced it.
-* ``scenario_summary.parquet`` -- one row per stand, with the volume balance.
+* ``scenario_summary.parquet`` -- one row per stand: the volume balance, and what
+  it was worth.
 * ``quality_report.json`` -- what was checked, and the determinism hash that lets
   two runs of the same configuration be compared without diffing floats.
 
@@ -19,8 +20,26 @@ Every field in the summary closes an identity::
     net_volume_m3 == initial_volume_m3 + gross_growth_m3
                      - disturbance_loss_m3 - harvested_m3
 
-:func:`validate_artifact_contract` checks it per row, so a run whose bookkeeping
+    valued is False  =>  nominal_revenue == 0 and net_present_value == 0
+    harvested_m3 == 0  =>  nominal_revenue == 0
+
+:func:`validate_artifact_contract` checks both per row, so a run whose bookkeeping
 does not add up fails at the point of writing rather than in whatever reads it.
+
+**Why ``valued`` is a column and not a null.** Not every run prices what it cuts:
+a configuration without a ``"valuation"`` stage removes wood and never asks what
+it fetched. Writing ``0`` for such a run beside a non-zero ``harvested_m3`` reads
+as *sold forty cubic metres for nothing*, and writing null leaves a reader unable
+to tell "earned nothing" from "never asked" without going to the manifest -- which
+defeats the summary's purpose. The flag makes the three states distinguishable
+from the row alone: ``(False, 0)`` was not priced, ``(True, 0)`` was priced and
+earned nothing, ``(True, x)`` earned ``x``.
+
+**What the money is in** is the price list's own currency, which
+:class:`~pyforestry.base.pricelist.Pricelist` does not declare -- so neither can
+this schema. Two runs' figures are comparable only under the same price list, and
+which price list a run used is not recorded anywhere. The manifest records the
+discount rate and base year, which is the part this package does know.
 """
 
 from __future__ import annotations
@@ -29,6 +48,7 @@ import json
 import subprocess
 from dataclasses import dataclass
 from hashlib import sha256
+from math import isfinite
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
@@ -43,6 +63,8 @@ __all__ = [
     "SCENARIO_SUMMARY_COLUMNS",
     "SCENARIO_SUMMARY_FILENAME",
     "ScenarioArtifacts",
+    "check_value_consistency",
+    "check_volume_balance",
     "determinism_hash",
     "git_revision",
     "load_scenario_summary",
@@ -50,8 +72,16 @@ __all__ = [
     "write_artifacts",
 ]
 
-RUN_MANIFEST_SCHEMA_VERSION = "2.0"
-QUALITY_REPORT_SCHEMA_VERSION = "2.0"
+#: Both bumped from ``"2.0"`` when the summary grew the three money columns and
+#: the manifest grew the ``valuation`` block that makes them readable. Adding a
+#: column is a break here by construction: :func:`load_scenario_summary` validates
+#: the column tuple exactly, so a 2.0 artifact does not load under 3.0 and is not
+#: made to. These files are the output of a run, not a store -- regenerating one
+#: costs a rerun, and a migration path would be a promise about numbers whose
+#: construction has changed. What 3.0 does owe a reader is a diagnosis rather than
+#: two tuples to diff, which is what the loader gives.
+RUN_MANIFEST_SCHEMA_VERSION = "3.0"
+QUALITY_REPORT_SCHEMA_VERSION = "3.0"
 
 RUN_MANIFEST_FILENAME = "run_manifest.json"
 SCENARIO_SUMMARY_FILENAME = "scenario_summary.parquet"
@@ -72,14 +102,29 @@ SCENARIO_SUMMARY_COLUMNS = (
     "disturbance_loss_m3",
     "harvested_m3",
     "net_volume_m3",
+    # Whether a valuation stage priced this run's removals at all. See the module
+    # docstring: it is what keeps "earned nothing" apart from "never asked".
+    "valued",
+    # The revenue as earned, each period in the money of its own year -- a PRICE
+    # forcing, if the run declared one, is already in it.
+    "nominal_revenue",
+    # The same revenue discounted to the manifest's ``valuation.base_year``, which
+    # is the run's first year.
+    "net_present_value",
 )
+
+#: The 2.0 columns, kept so that a reader holding a summary written before the
+#: money columns is told what it is holding.
+_SCHEMA_2_0_COLUMNS = SCENARIO_SUMMARY_COLUMNS[:8]
 
 #: Version 1.0 carried ``synthetic``, because the only writer produced a random
 #: walk. It is gone: a run emits these artifacts or it does not run.
 #: ``models_run``, ``rulesets_applied``, ``forcings_applied`` and ``guard_policy``
 #: are required because they are what makes the summary interpretable. A forcing
 #: record carries its own citation, so a reader can see not just that growth was
-#: scaled but by whom it was said to be.
+#: scaled but by whom it was said to be. ``valuation`` is required for the same
+#: reason the others are: a net present value without the rate it was discounted
+#: at, and the year it is expressed in, is not a number anyone can use.
 MANIFEST_REQUIRED_KEYS = (
     "schema_version",
     "preset_id",
@@ -97,6 +142,7 @@ MANIFEST_REQUIRED_KEYS = (
     "rulesets_applied",
     "forcings_applied",
     "guard_policy",
+    "valuation",
     "models_run",
     "provenance",
 )
@@ -109,6 +155,7 @@ QUALITY_REPORT_REQUIRED_KEYS = (
     "columns",
     "determinism_hash",
     "volume_balance_checked",
+    "value_consistency_checked",
 )
 
 #: Absolute m³/ha tolerance when checking the summary's volume identity.
@@ -191,6 +238,24 @@ def _write_summary(path: Path, rows: Sequence[Mapping[str, Any]]) -> str:
     return "pseudo_parquet_json_v1"
 
 
+def _columns_error(name: str, found: tuple[str, ...]) -> ValueError:
+    """Explain a column mismatch, naming the older schema where that is what it is.
+
+    An artifact written before the money columns fails this check, and "expected
+    these eleven, got these eight" leaves the reader to work out which eight.
+    """
+    if found == _SCHEMA_2_0_COLUMNS:
+        return ValueError(
+            f"{name} is a schema 2.0 summary: it was written before the run recorded "
+            "what it earned, so it carries the volume balance and nothing else. "
+            f"Schema {RUN_MANIFEST_SCHEMA_VERSION} adds {list(SCENARIO_SUMMARY_COLUMNS[8:])}. "
+            "There is no migration -- the missing columns are not derivable from the "
+            "row, only from the run. Rerun the scenario, or read this file with the "
+            "version of pyforestry that wrote it."
+        )
+    return ValueError(f"{name} columns mismatch: expected {SCENARIO_SUMMARY_COLUMNS}, got {found}")
+
+
 def load_scenario_summary(path: Path) -> list[dict[str, Any]]:
     """Load summary rows from a parquet artifact or its JSON fallback.
 
@@ -203,18 +268,12 @@ def load_scenario_summary(path: Path) -> list[dict[str, Any]]:
 
         frame = pd.read_parquet(path)
         if tuple(frame.columns) != SCENARIO_SUMMARY_COLUMNS:
-            raise ValueError(
-                f"{path.name} columns mismatch: expected {SCENARIO_SUMMARY_COLUMNS}, "
-                f"got {tuple(frame.columns)}"
-            )
+            raise _columns_error(path.name, tuple(frame.columns))
         return frame.to_dict(orient="records")
 
     payload = json.loads(path.read_text(encoding="utf-8"))
     if tuple(payload.get("columns", ())) != SCENARIO_SUMMARY_COLUMNS:
-        raise ValueError(
-            f"{path.name} fallback columns mismatch: expected {SCENARIO_SUMMARY_COLUMNS}, "
-            f"got {tuple(payload.get('columns', ()))}"
-        )
+        raise _columns_error(path.name, tuple(payload.get("columns", ())))
     rows = payload.get("rows")
     if not isinstance(rows, list):
         raise ValueError(f"{path.name} fallback rows must be a list")
@@ -246,12 +305,56 @@ def check_volume_balance(rows: Sequence[Mapping[str, Any]]) -> None:
             )
 
 
+def check_value_consistency(rows: Sequence[Mapping[str, Any]]) -> None:
+    """Check that every summary row's money says the same thing as the rest of it.
+
+    Two things are definitionally true of the schema, and both are checked:
+
+    * A row that was never valued reports no revenue. ``valued`` is False exactly
+      when the configuration declared no ``"valuation"`` stage, and then nothing
+      priced anything, so a non-zero figure beside it could only have come from
+      somewhere it should not have.
+    * A row that harvested nothing earned nothing. Revenue reaches a run through
+      the removal ledger, which only a merchantable removal writes to -- a storm
+      is a loss, not a sale. The converse is deliberately *not* required: a
+      thinning of stems too small to buck harvests volume and earns nothing.
+
+    Raises:
+        ValueError: If either fails, or a money figure is not a finite number.
+    """
+    for row in rows:
+        stand = row.get("stand_id")
+        valued = bool(row["valued"])
+        nominal = float(row["nominal_revenue"])
+        npv = float(row["net_present_value"])
+
+        if not (isfinite(nominal) and isfinite(npv)):
+            raise ValueError(
+                f"Stand {stand!r} reports a revenue of {nominal!r} and a net present "
+                f"value of {npv!r}; both must be finite numbers."
+            )
+        if not valued and (nominal != 0.0 or npv != 0.0):
+            raise ValueError(
+                f"Stand {stand!r} is marked as not valued -- its scenario declares no "
+                f"'valuation' stage -- but reports a revenue of {nominal:.9g} and a net "
+                f"present value of {npv:.9g}. Nothing priced its removals, so there is "
+                "nowhere for either figure to have come from."
+            )
+        if float(row["harvested_m3"]) == 0.0 and nominal != 0.0:
+            raise ValueError(
+                f"Stand {stand!r} harvested nothing but reports a revenue of "
+                f"{nominal:.9g}. Only a merchantable removal reaches the valuation "
+                "ledger, so revenue without harvest means something else wrote to it."
+            )
+
+
 def validate_artifact_contract(output_dir: Path) -> None:
     """Check that a run's output directory satisfies the artifact contract.
 
     Raises:
         ValueError: If an artifact is missing, a required key is absent, the
-            summary columns are wrong, or a row's volume balance does not close.
+            summary columns are wrong, or a row's volume balance or money does
+            not add up.
     """
     for name in REQUIRED_ARTIFACTS:
         if not (output_dir / name).exists():
@@ -267,7 +370,9 @@ def validate_artifact_contract(output_dir: Path) -> None:
     if missing:
         raise ValueError(f"{QUALITY_REPORT_FILENAME} missing keys: {missing}")
 
-    check_volume_balance(load_scenario_summary(output_dir / SCENARIO_SUMMARY_FILENAME))
+    rows = load_scenario_summary(output_dir / SCENARIO_SUMMARY_FILENAME)
+    check_volume_balance(rows)
+    check_value_consistency(rows)
 
 
 def write_artifacts(
@@ -319,6 +424,7 @@ def write_artifacts(
             "columns": list(SCENARIO_SUMMARY_COLUMNS),
             "determinism_hash": determinism_hash(rows),
             "volume_balance_checked": True,
+            "value_consistency_checked": True,
         },
     )
 
