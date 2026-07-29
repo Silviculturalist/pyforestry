@@ -49,6 +49,7 @@ from typing import Any, Iterable, Iterator, Mapping, Optional, Protocol, runtime
 
 from pyforestry.base.contracts import SourceReference
 from pyforestry.base.simulation.core import SimulationContext
+from pyforestry.simulation.provenance import as_manifest_source
 
 __all__ = [
     "CALENDAR_YEAR_KEY",
@@ -184,14 +185,7 @@ def _require_citation(name: str, values: Iterable[Any], source: Optional[SourceR
 
 def _source_manifest(source: Optional[SourceReference]) -> Optional[dict[str, Any]]:
     """Render a citation for the manifest, or ``None``."""
-    if source is None:
-        return None
-    return {
-        "author": source.author,
-        "year": source.year,
-        "title": source.title,
-        "note": source.note,
-    }
+    return as_manifest_source(source)
 
 
 def _jsonable(value: Any) -> Any:

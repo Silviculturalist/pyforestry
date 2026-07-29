@@ -10,11 +10,29 @@ should be.
 
 from __future__ import annotations
 
-from typing import Any, Dict, Mapping
+from typing import Any, Dict, Mapping, Optional
 
 from pyforestry.base.contracts import SourceReference
 
-__all__ = ["collect_provenance", "as_manifest_entries"]
+__all__ = ["as_manifest_entries", "as_manifest_source", "collect_provenance"]
+
+
+def as_manifest_source(source: Optional[SourceReference]) -> Optional[dict[str, Any]]:
+    """Render one citation as a manifest record, or ``None`` for no citation.
+
+    The single spelling of a citation in a run manifest. There were two -- this
+    module's, and a private one in :mod:`pyforestry.simulation.forcing` -- and a
+    third was about to be written for the discount rate. Several conventions for
+    one value is no convention.
+    """
+    if source is None:
+        return None
+    return {
+        "author": source.author,
+        "year": source.year,
+        "title": source.title,
+        "note": source.note,
+    }
 
 
 def collect_provenance(component: Any) -> Dict[str, SourceReference]:
@@ -58,12 +76,6 @@ def _collect(component: Any, into: Dict[str, SourceReference], seen: set[int]) -
 def as_manifest_entries(provenance: Mapping[str, SourceReference]) -> list[dict[str, Any]]:
     """Render collected citations as JSON-serialisable manifest entries."""
     return [
-        {
-            "component_id": component_id,
-            "author": source.author,
-            "year": source.year,
-            "title": source.title,
-            "note": source.note,
-        }
+        {"component_id": component_id, **(as_manifest_source(source) or {})}
         for component_id, source in sorted(provenance.items())
     ]
