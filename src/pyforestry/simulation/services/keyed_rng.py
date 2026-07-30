@@ -107,6 +107,23 @@ class KeyedRNG:
         for _ in range(int(steps)):
             self._random.random()
 
-    def __getattr__(self, name: str):  # pragma: no cover - passthrough
-        """Getattr."""
+    def __getattr__(self, name: str):
+        """Forward anything else to the scalar generator, e.g. ``gauss``.
+
+        ``_random`` is built in :meth:`__post_init__` rather than being a field,
+        so it is missing on an instance Python has allocated but not initialised
+        -- which is exactly what ``copy.deepcopy`` and ``pickle`` do before they
+        ask for ``__deepcopy__`` or ``__reduce_ex__``. Forwarding those lookups
+        blindly sent us to ``self._random``, which was itself missing, which came
+        back here: deep-copying or pickling a generator, or anything holding one,
+        was a ``RecursionError`` naming nothing. The dunder guard is the same one
+        :class:`~pyforestry.base.helpers.primitives.AgeMeasurement` and
+        :class:`~pyforestry.base.helpers.primitives.TopHeightMeasurement` carry.
+
+        Raises:
+            AttributeError: If the generator has no such attribute, or if this
+                instance has not been initialised.
+        """
+        if name.startswith("__") or name == "_random":
+            raise AttributeError(name)
         return getattr(self._random, name)

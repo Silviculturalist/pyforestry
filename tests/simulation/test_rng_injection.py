@@ -179,3 +179,47 @@ def test_no_source_module_outside_the_service_constructs_a_generator():
             if node.func.attr in ("Random", "default_rng", "RandomState"):
                 offenders.append(f"{relative}:{node.lineno}")
     assert not offenders, f"generators constructed outside the RNG service: {offenders}"
+
+
+def test_a_stream_can_be_copied_and_pickled():
+    """A generator, and anything holding one, must survive being copied.
+
+    ``KeyedRNG.__getattr__`` forwards unknown attributes to the scalar generator,
+    which ``__post_init__`` builds rather than declaring as a field. On the
+    uninitialised instance ``deepcopy`` and ``pickle`` allocate, that attribute
+    is missing too, so the lookup for ``__deepcopy__`` recursed into itself until
+    the stack ran out -- the same trap ``AgeMeasurement``, ``SiteIndexValue`` and
+    ``TopHeightMeasurement`` each carry a guard for. A context checkpoint
+    deep-copies its state and attrs, so anything that stashed a stream there took
+    a ``RecursionError`` naming nothing.
+    """
+    import copy
+    import pickle
+
+    from pyforestry.simulation.services import RandomBundle
+
+    bundle = RandomBundle(42)
+    stream = bundle.rng_for("mortality")
+    stream.random()
+
+    # Both taken before the reference draw, so each continues from one point.
+    clones = (copy.deepcopy(stream), pickle.loads(pickle.dumps(stream)))
+    next_draw = stream.random()
+    for clone in clones:
+        assert clone.path == stream.path
+        assert clone.seed == stream.seed
+        # Copied where it stood, not restarted.
+        assert clone.random() == next_draw
+
+    assert sorted(copy.deepcopy(bundle)._streams) == sorted(bundle._streams)
+
+
+def test_forwarding_to_the_scalar_generator_still_works():
+    """The guard must not cost the passthrough it protects."""
+    from pyforestry.simulation.services import RandomBundle
+
+    stream = RandomBundle(42).rng_for("growth")
+
+    assert isinstance(stream.gauss(0.0, 1.0), float)
+    with pytest.raises(AttributeError):
+        stream.no_such_method_on_random()
