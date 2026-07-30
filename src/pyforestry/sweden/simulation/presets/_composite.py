@@ -245,21 +245,23 @@ class BuckedStem:
     projection's assortment columns recorded which route a stem took rather than
     what came off it.
 
+    It carries no stem volume. What the *stand* holds is a question for a volume
+    function -- Brandel (1990) -- and what a stem *yields* is a question for the
+    taper and the price list; those are different studies on different measures,
+    and this is the second of them. See :class:`ValuationTotals`.
+
     Attributes:
         value_sek: What the bucking solution is worth, per stem.
-        volume_m3: The stem volume the value came off. Under bark, and *not* the
-            same measure in both routes: a stem bucked here reports the taper's
-            ``vol_sk_ub``, while one read out of a :class:`SolutionCube` reports
-            the sections the cube stored, since a cube keeps no stem volume.
-        timber_volume_m3: Butt, middle and top logs -- the sawtimber assortments.
-        pulp_volume_m3: Pulpwood.
+        timber_volume_m3: Butt, middle and top logs -- the sawtimber assortments,
+            on the basis the price list's own table declares (``m3to`` for the
+            Mellanskog list this package ships, ``m3fub`` for one that says so).
+        pulp_volume_m3: Pulpwood, m³fub.
         bucked: Whether a bucking solution was found at all. ``False`` is a real
             answer -- a stem outside the taper's validity -- and is remembered so
             the bin is not retried.
     """
 
     value_sek: float = 0.0
-    volume_m3: float = 0.0
     timber_volume_m3: float = 0.0
     pulp_volume_m3: float = 0.0
     bucked: bool = False
@@ -270,7 +272,6 @@ class BuckedStem:
         per_quality = result.volume_per_quality
         return cls(
             value_sek=float(result.total_value),
-            volume_m3=float(result.vol_sk_ub),
             timber_volume_m3=float(
                 sum(
                     per_quality[quality.value]
@@ -291,19 +292,42 @@ class BuckedStem:
 class ValuationTotals:
     """What a standing-forest valuation adds up to, in one shape.
 
-    There are two valuation routes: bucked assortments priced through Näsberg
-    (1985), and whole-stem volume priced as pulpwood. They used to return two
-    different dicts -- six keys and four -- and :meth:`CompositePipeline._snapshot_row`
-    covered the difference with ``.get(key, 0.0)``, so a run that priced every cubic
-    metre as pulpwood reported nought pulp volume in its own report. Both routes
-    fill this now, and a route that cannot produce a figure says so by leaving it
-    zero rather than by omitting it.
+    **Two measurement systems, reported side by side and never reconciled.**
+
+    * :attr:`volume_m3sk_per_ha` is what the stand *holds*, from a stem-volume
+      function -- Brandel (1990) here, Söderberg (1986) form height in the
+      pipeline that swaps it in. Skogskubikmeter: whole stem over bark, above
+      stump, top included. Every living stem contributes, whether or not it is
+      worth anything.
+    * :attr:`timber_volume_m3_per_ha` and :attr:`pulp_volume_m3fub_per_ha` are
+      what the stand *yields*, from the taper -- Edgren-Nylinder (1949) -- cut to
+      the price list's own log limits. Under bark, and only the merchantable part.
+
+    They come from different studies fitted to different data, and neither is a
+    correction of the other: Edgren-Nylinder carries forms for spruce and for pine
+    and gives every broadleaf the pine form, while Brandel has its own birch
+    functions. For a birch the two disagree by some four per cent -- its taper
+    yields *more* under-bark wood than Brandel says the under-bark stem holds.
+    Reported apart, that is visible. Netted against each other -- as an earlier
+    version did, capping the merchantable volume at the stem it came from -- it is
+    hidden, and the reader cannot tell which number moved.
+
+    So the assortments do not sum to the m3sk, and are not meant to. The
+    difference is bark, the unmerchantable top, the top-measured convention where
+    the price list uses one, and the disagreement between two studies, in unknown
+    proportion. As a rough guide, the merchantable share of m3sk runs 0.75 for
+    spruce, 0.79-0.82 for pine and 0.85-0.88 for birch.
     """
 
     value_sek_per_ha: float = 0.0
-    volume_m3_per_ha: float = 0.0
+    #: Skogskubikmeter over bark, from the stem-volume function. What is standing.
+    volume_m3sk_per_ha: float = 0.0
+    #: Sawtimber, on the basis the price list's table declares -- ``m3to`` for the
+    #: Mellanskog list this package ships. Zero for a route that does not buck.
     timber_volume_m3_per_ha: float = 0.0
-    pulp_volume_m3_per_ha: float = 0.0
+    #: Pulpwood, m³fub: solid volume under bark of the part that meets the price
+    #: list's minimum log diameter and length.
+    pulp_volume_m3fub_per_ha: float = 0.0
     #: Stems whose value came from a *bucking* solution. Zero for a route that does
     #: not buck, which is a fact about the route rather than a missing number.
     timber_valued_stems_per_ha: float = 0.0
@@ -312,30 +336,27 @@ class ValuationTotals:
     #: stand could lose half its stems between the tree list and the value column
     #: with nothing in the row saying so.
     unpriceable_stems_per_ha: float = 0.0
-    #: Which bark basis :attr:`volume_m3_per_ha` is on. The bucking route is under
-    #: bark throughout; the Söderberg form-height route is over bark. The two differ
-    #: by the bark fraction -- ten to twenty per cent for Swedish conifers -- so the
-    #: basis rides along in the projection row rather than living only in a docstring
-    #: a reader has to know to go and find.
-    volume_over_bark: bool = False
 
     def as_row(self) -> dict[str, float]:
         """Return the reporting keys, with the unit value derived once.
 
         Returns:
-            The eight figures a projection row carries, whichever route produced them.
+            The seven figures a projection row carries, whichever route produced
+            them. The unit value is per m3sk -- per cubic metre standing, which is
+            what a stand is measured in -- not per cubic metre sold.
         """
         return {
             "standing_value_sek_per_ha": self.value_sek_per_ha,
-            "standing_volume_m3_per_ha": self.volume_m3_per_ha,
+            "standing_volume_m3sk_per_ha": self.volume_m3sk_per_ha,
             "timber_volume_m3_per_ha": self.timber_volume_m3_per_ha,
-            "pulp_volume_m3_per_ha": self.pulp_volume_m3_per_ha,
-            "value_per_m3_sek": (
-                self.value_sek_per_ha / self.volume_m3_per_ha if self.volume_m3_per_ha > 0 else 0.0
+            "pulp_volume_m3fub_per_ha": self.pulp_volume_m3fub_per_ha,
+            "value_per_m3sk_sek": (
+                self.value_sek_per_ha / self.volume_m3sk_per_ha
+                if self.volume_m3sk_per_ha > 0
+                else 0.0
             ),
             "timber_valued_stems_per_ha": self.timber_valued_stems_per_ha,
             "unpriceable_stems_per_ha": self.unpriceable_stems_per_ha,
-            "volume_over_bark": 1.0 if self.volume_over_bark else 0.0,
         }
 
 
@@ -983,11 +1004,18 @@ class CompositePipeline:
         return pd.DataFrame.from_records(rows)
 
     def value_standing_forest(self, tree_list: list[Tree] | None = None) -> dict[str, float]:
-        """Estimate standing value/volume for all living trees at current step.
+        """Estimate what the stand holds and what it would fetch.
 
-        Volumes are under-bark throughout. For bucked trees the Nasberg 1985
-        result provides per-quality volumes. For non-timber trees the Brandel/
-        Andersson fallback uses ``over_bark=False`` to keep the same bark basis.
+        Two measures, kept apart. The **standing volume** is m3sk over bark from
+        Brandel (1990), taken for every living stem -- that is what the stand
+        holds, and a stem holds it whether or not anyone would buy it. The
+        **assortments** come from the taper and the price list: Näsberg (1985)
+        bucking where a stem reaches the timber tables' minimum diameter, and the
+        merchantable section otherwise. Those are under bark and merchantable
+        only.
+
+        The two do not add up, and are not netted against each other. See
+        :class:`ValuationTotals` for why.
         """
         if self._site is None:
             raise RuntimeError("Preset must be initialized before valuation.")
@@ -1010,13 +1038,33 @@ class CompositePipeline:
 
             valuation_species = self._valuation_species_name(species)
             bark_mm = float(getattr(tree, "double_bark_mm", 0.0) or 0.0)
+            # Over bark: m3sk includes it, by definition.
+            stem = SweTimber(
+                species=valuation_species,
+                diameter_cm=diameter_cm,
+                height_m=height_m,
+                double_bark_mm=bark_mm if bark_mm > 0 else None,
+                region=valuation_region,
+                over_bark=True,
+            )
+            try:
+                totals.volume_m3sk_per_ha += float(stem.getvolume()) * weight
+            except ValueError:
+                # Below the volume functions' domain -- a seedling, most often.
+                # It is standing wood this valuation cannot measure, so it is
+                # counted as such rather than dropped in silence.
+                totals.unpriceable_stems_per_ha += weight
+                continue
+
+            # The taper and the bucker work under bark, which is the basis every
+            # price list here quotes.
             timber = SweTimber(
                 species=valuation_species,
                 diameter_cm=diameter_cm,
                 height_m=height_m,
                 double_bark_mm=bark_mm if bark_mm > 0 else None,
                 region=valuation_region,
-                over_bark=False,  # Under-bark to match bucking result basis
+                over_bark=False,
             )
 
             timber_price_table = self._pricelist.Timber.get(valuation_species)
@@ -1035,9 +1083,8 @@ class CompositePipeline:
                 )
                 if cached is not None and cached.bucked:
                     totals.value_sek_per_ha += cached.value_sek * weight
-                    totals.volume_m3_per_ha += cached.volume_m3 * weight
                     totals.timber_volume_m3_per_ha += cached.timber_volume_m3 * weight
-                    totals.pulp_volume_m3_per_ha += cached.pulp_volume_m3 * weight
+                    totals.pulp_volume_m3fub_per_ha += cached.pulp_volume_m3 * weight
                     totals.timber_valued_stems_per_ha += weight
                     continue
                 try:
@@ -1049,9 +1096,8 @@ class CompositePipeline:
                         )
                     )
                     totals.value_sek_per_ha += bucked.value_sek * weight
-                    totals.volume_m3_per_ha += bucked.volume_m3 * weight
                     totals.timber_volume_m3_per_ha += bucked.timber_volume_m3 * weight
-                    totals.pulp_volume_m3_per_ha += bucked.pulp_volume_m3 * weight
+                    totals.pulp_volume_m3fub_per_ha += bucked.pulp_volume_m3 * weight
                     totals.timber_valued_stems_per_ha += weight
                     continue
                 except ValueError:
@@ -1059,21 +1105,13 @@ class CompositePipeline:
                     pass
 
             pulp_price = float(self._pricelist.Pulp.get_pulpwood_price(valuation_species))
-            try:
-                volume_m3 = float(timber.getvolume())
-            except ValueError:
-                # Below the volume functions' domain. The stem is standing wood
-                # this valuation cannot measure, so say so rather than drop it.
-                totals.unpriceable_stems_per_ha += weight
-                continue
-            pulp_volume_m3 = self._pulpwood_volume_m3(timber, stem_volume_m3=volume_m3)
-            totals.value_sek_per_ha += pulp_volume_m3 * pulp_price * weight
-            totals.volume_m3_per_ha += volume_m3 * weight
-            totals.pulp_volume_m3_per_ha += pulp_volume_m3 * weight
+            pulp_volume_m3fub = self._pulpwood_volume_m3fub(timber)
+            totals.value_sek_per_ha += pulp_volume_m3fub * pulp_price * weight
+            totals.pulp_volume_m3fub_per_ha += pulp_volume_m3fub * weight
 
         return totals.as_row()
 
-    def _pulpwood_volume_m3(self, timber: SweTimber, *, stem_volume_m3: float) -> float:
+    def _pulpwood_volume_m3fub(self, timber: SweTimber) -> float:
         """Volume of one stem that meets the price list's own pulp-log limits.
 
         The route that does not buck used to pay the pulpwood price on the whole
@@ -1085,24 +1123,26 @@ class CompositePipeline:
         taper at all -- a sapling -- was paid for in full for wood that yields no
         log of any assortment.
 
-        Capped at the stem it came from, because the taper and the volume function
-        are different studies and need not agree: Edgren-Nylinder (1949) carries
-        forms for spruce and for pine, and gives every broadleaf the pine form,
-        while the volume comes from Brandel's own birch functions. A birch
-        therefore tapers to some four per cent more wood than its volume function
-        says the whole stem holds, and a merchantable part larger than the stem is
-        not something to pay for.
+        Read off the taper alone, and *not* bounded by what the volume function
+        says the stem holds. Edgren-Nylinder (1949) carries forms for spruce and
+        for pine and gives every broadleaf the pine form, while the volume comes
+        from Brandel's own birch functions -- so for a birch the two disagree, and
+        the merchantable section comes out about four per cent *above* Brandel's
+        under-bark stem volume (1.04 at both 12 and 20 cm; spruce is 0.86-0.87 and
+        pine 0.97-0.98). Against m3sk over bark it is comfortably below, as it must
+        be, but that is bark covering the disagreement rather than resolving it.
+        Capping one measure with the other would report a birch as though the
+        taper had a birch form.
 
         Args:
             timber: The stem, under bark, as the valuation built it.
-            stem_volume_m3: What the volume function says the whole stem holds.
 
         Returns:
             The volume from the stump to the height where the stem narrows to the
             minimum pulp-log top diameter, or ``0.0`` for a stem that cannot give
             one log of the minimum length. The wood is still standing and still
-            counted in the volume column; it is simply not something the price
-            list buys.
+            counted in the m3sk column; it is simply not something the price list
+            buys.
         """
         min_top_diameter_cm = float(self._pricelist.PulpLogDiameter.Min)
         min_log_length_m = float(self._pricelist.PulpLogLength.Min)
@@ -1115,8 +1155,7 @@ class CompositePipeline:
             return 0.0
         if top_height_m - stump_height_m < min_log_length_m:
             return 0.0
-        merchantable_m3 = float(Taper.volume_section(taper, stump_height_m, top_height_m))
-        return max(0.0, min(merchantable_m3, float(stem_volume_m3)))
+        return max(0.0, float(Taper.volume_section(taper, stump_height_m, top_height_m)))
 
     # ------------------------------------------------------------------
     # Internal helpers
@@ -1300,20 +1339,8 @@ class CompositePipeline:
             value_q, sections_q = self._valuation_solution_cube.lookup(species, dbh_q, height_q)
             if float(value_q) > 0.0 or sections_q:
                 sections = [section for section in sections_q if isinstance(section, dict)]
-                volume_q = float(sum(float(section.get("volume", 0.0)) for section in sections))
-                if volume_q <= 0.0:
-                    timber_q = SweTimber(
-                        species=species,
-                        diameter_cm=dbh_q,
-                        height_m=height_q,
-                        double_bark_mm=bark_arg,
-                        region=region,
-                        over_bark=False,
-                    )
-                    volume_q = float(timber_q.getvolume())
                 result = BuckedStem(
                     value_sek=float(value_q),
-                    volume_m3=volume_q,
                     timber_volume_m3=_section_volume(sections, _TIMBER_QUALITIES),
                     pulp_volume_m3=_section_volume(sections, (QualityType.Pulp,)),
                     bucked=True,
@@ -2278,16 +2305,19 @@ class CompositePipeline:
             "qmd_cm": float(qmd_cm),
             "hq_m": float(hq_m),
             "basal_area_m2_ha": float(basal_area_m2_ha),
-            "standing_volume_m3_per_ha": float(valuation["standing_volume_m3_per_ha"]),
+            # What the stand holds, from the stem-volume function; then what it
+            # yields, from the taper and the price list. Two measures, side by
+            # side -- see `ValuationTotals`.
+            "standing_volume_m3sk_per_ha": float(valuation["standing_volume_m3sk_per_ha"]),
             # Indexed, not `.get(key, 0.0)`: every valuation route returns the same
-            # six keys now, so a missing one is a bug to raise on rather than a zero
-            # to print.
+            # seven keys now, so a missing one is a bug to raise on rather than a
+            # zero to print.
             "timber_volume_m3_per_ha": float(valuation["timber_volume_m3_per_ha"]),
-            "pulp_volume_m3_per_ha": float(valuation["pulp_volume_m3_per_ha"]),
-            "volume_over_bark": float(valuation["volume_over_bark"]),
+            "pulp_volume_m3fub_per_ha": float(valuation["pulp_volume_m3fub_per_ha"]),
             "standing_value_sek_per_ha": float(valuation["standing_value_sek_per_ha"]),
-            "value_per_m3_sek": float(valuation["value_per_m3_sek"]),
+            "value_per_m3sk_sek": float(valuation["value_per_m3sk_sek"]),
             "timber_valued_stems_per_ha": float(valuation["timber_valued_stems_per_ha"]),
+            "unpriceable_stems_per_ha": float(valuation["unpriceable_stems_per_ha"]),
             "pine_ba_share": (
                 float(group_ba["pine"] / basal_area_m2_ha) if basal_area_m2_ha > 0 else 0.0
             ),

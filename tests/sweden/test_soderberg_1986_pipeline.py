@@ -154,13 +154,12 @@ def test_soderberg_preset_describable_metadata() -> None:
 
 _VALUATION_KEYS = {
     "standing_value_sek_per_ha",
-    "standing_volume_m3_per_ha",
+    "standing_volume_m3sk_per_ha",
     "timber_volume_m3_per_ha",
-    "pulp_volume_m3_per_ha",
-    "value_per_m3_sek",
+    "pulp_volume_m3fub_per_ha",
+    "value_per_m3sk_sek",
     "timber_valued_stems_per_ha",
     "unpriceable_stems_per_ha",
-    "volume_over_bark",
 }
 
 
@@ -179,17 +178,28 @@ def test_soderberg_value_standing_forest_uses_form_height_volume() -> None:
 
     result = preset.value_standing_forest()
     assert set(result) == _VALUATION_KEYS
-    assert result["standing_volume_m3_per_ha"] > 0.0
+    assert result["standing_volume_m3sk_per_ha"] > 0.0
     # This route bucks nothing, so there is no timber and no timber-valued stem, and
     # everything it does report is pulpwood.
     assert result["timber_volume_m3_per_ha"] == 0.0
     assert result["timber_valued_stems_per_ha"] == 0.0
-    assert result["pulp_volume_m3_per_ha"] == pytest.approx(result["standing_volume_m3_per_ha"])
+    # Everything it reports is pulpwood -- but on the under-bark basis the price
+    # list quotes, so it sits below the over-bark m3sk by the bark fraction rather
+    # than equalling it.
+    assert 0.0 < result["pulp_volume_m3fub_per_ha"] < result["standing_volume_m3sk_per_ha"]
     assert result["standing_value_sek_per_ha"] > 0.0
 
 
-def test_both_routes_report_volume_under_bark() -> None:
-    """One basis, so a volume column is comparable and a price list applies to it."""
+def test_the_standing_volume_is_over_bark_and_the_priced_volume_is_not() -> None:
+    """Two measures, and each column says which it is in its own name.
+
+    The m3sk column is what the stand holds -- skogskubikmeter, over bark, by
+    definition -- whichever volume function produced it. The assortment columns are
+    what a price list would buy, which is under bark. There used to be one volume
+    column and a `volume_over_bark` flag beside it to say which basis it was on;
+    the flag was never set to True by either route, so it declared a distinction it
+    did not make.
+    """
     bucking = build_soderberg_1986_pipeline(_make_config())
     bucking.initialize(site=_make_site())
     form_height = build_soderberg_1986_pipeline(
@@ -197,8 +207,17 @@ def test_both_routes_report_volume_under_bark() -> None:
     )
     form_height.initialize(site=_make_site())
 
-    assert bucking.value_standing_forest()["volume_over_bark"] == 0.0
-    assert form_height.value_standing_forest()["volume_over_bark"] == 0.0
+    for preset in (bucking, form_height):
+        # A merchantable stand: the sample list starts as regeneration, which
+        # yields no logs at all and would make the comparison vacuous.
+        for tree in preset.tree_list:
+            tree.diameter_cm = max(20.0, float(tree.diameter_cm or 0.0))
+            tree.height_m = max(18.0, float(tree.height_m or 0.0))
+            tree.weight_n = max(1.0, float(tree.weight_n or 0.0))
+            tree.age = max(40.0, float(tree.age or 0.0))
+        row = preset.value_standing_forest()
+        sold = row["timber_volume_m3_per_ha"] + row["pulp_volume_m3fub_per_ha"]
+        assert row["standing_volume_m3sk_per_ha"] > sold > 0.0
 
 
 def test_form_height_volume_is_converted_to_under_bark() -> None:

@@ -416,8 +416,8 @@ class TestTheCacheReportsTheSameAssortmentsAsBuckingDoes:
         """A 15 cm spruce used to report 21.05 m3/ha of timber against 15.13."""
         totals = self._value(cached=True, diameter_cm=15.0, height_m=15.0)
 
-        assortments = totals["timber_volume_m3_per_ha"] + totals["pulp_volume_m3_per_ha"]
-        assert 0.0 < assortments < totals["standing_volume_m3_per_ha"]
+        assortments = totals["timber_volume_m3_per_ha"] + totals["pulp_volume_m3fub_per_ha"]
+        assert 0.0 < assortments < totals["standing_volume_m3sk_per_ha"]
 
 
 # --- stands at the edge of what the equations accept -------------------------
@@ -461,9 +461,9 @@ class TestDegenerateStands:
         ]
         totals = pipeline.value_standing_forest(saplings)
 
-        assert totals["standing_volume_m3_per_ha"] > 0.0
+        assert totals["standing_volume_m3sk_per_ha"] > 0.0
         assert totals["standing_value_sek_per_ha"] == pytest.approx(0.0)
-        assert totals["pulp_volume_m3_per_ha"] == pytest.approx(0.0)
+        assert totals["pulp_volume_m3fub_per_ha"] == pytest.approx(0.0)
         assert totals["timber_valued_stems_per_ha"] == pytest.approx(0.0)
         assert totals["timber_volume_m3_per_ha"] == pytest.approx(0.0)
 
@@ -477,10 +477,11 @@ class TestDegenerateStands:
         totals = pipeline.value_standing_forest(pole)
 
         assert totals["timber_volume_m3_per_ha"] == pytest.approx(0.0)
-        assert 0.0 < totals["pulp_volume_m3_per_ha"] < totals["standing_volume_m3_per_ha"]
-        # The merchantable share of a 10 cm spruce, against the bucking taper.
-        assert totals["pulp_volume_m3_per_ha"] / totals["standing_volume_m3_per_ha"] == (
-            pytest.approx(0.845, abs=0.02)
+        assert 0.0 < totals["pulp_volume_m3fub_per_ha"] < totals["standing_volume_m3sk_per_ha"]
+        # The merchantable share of a 10 cm spruce's m3sk: 0.87 of the under-bark
+        # stem, and the standing volume is over bark on top of that.
+        assert totals["pulp_volume_m3fub_per_ha"] / totals["standing_volume_m3sk_per_ha"] == (
+            pytest.approx(0.72, abs=0.02)
         )
 
     def test_trees_with_nothing_to_value_are_skipped(self):
@@ -497,7 +498,7 @@ class TestDegenerateStands:
         totals = pipeline.value_standing_forest(nothing)
 
         assert totals["standing_value_sek_per_ha"] == pytest.approx(0.0)
-        assert totals["standing_volume_m3_per_ha"] == pytest.approx(0.0)
+        assert totals["standing_volume_m3sk_per_ha"] == pytest.approx(0.0)
         assert totals["timber_valued_stems_per_ha"] == pytest.approx(0.0)
         # Skipped, but counted: the three stems that carry a weight are reported
         # rather than dropped. The fourth weighs nothing, so it is no stems.
@@ -507,7 +508,7 @@ class TestDegenerateStands:
         pipeline, _ = self._initialised()
         totals = pipeline.value_standing_forest([])
         assert totals["standing_value_sek_per_ha"] == pytest.approx(0.0)
-        assert totals["standing_volume_m3_per_ha"] == pytest.approx(0.0)
+        assert totals["standing_volume_m3sk_per_ha"] == pytest.approx(0.0)
 
     def test_a_merchantable_stand_is_worth_something(self):
         """The other side of the guards: the ordinary path still prices."""
@@ -520,7 +521,7 @@ class TestDegenerateStands:
         totals = pipeline.value_standing_forest(merchantable)
 
         assert totals["standing_value_sek_per_ha"] > 0.0
-        assert totals["standing_volume_m3_per_ha"] > 0.0
+        assert totals["standing_volume_m3sk_per_ha"] > 0.0
         assert totals["timber_valued_stems_per_ha"] > 0.0
 
     def test_valuing_before_initialisation_is_refused(self):

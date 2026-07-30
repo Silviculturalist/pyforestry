@@ -155,20 +155,26 @@ class Soderberg1986Pipeline(CompositePipeline):
         the inherited valuation: Näsberg (1985) bucking against the Mellanskog 2013
         price list, with a Brandel volume for stems too small to buck.
 
-        Setting it swaps the volume function and, with it, the pricing. Volume comes
-        from the Söderberg (1986) form-height equations, which give a whole-stem
-        volume with no assortments to price, so nothing is bucked: no timber volume
-        and no timber-valued stems are reported, and every cubic metre is priced as
-        pulpwood.
+        Setting it swaps the stem-volume function: the m3sk column then comes from
+        the Söderberg (1986) form-height equations rather than from Brandel. The
+        form height multiplies the basal area implied by breast-height diameter
+        *over* bark, so its output is over bark already, which is what m3sk means,
+        and it is reported as it comes.
 
-        The form height multiplies the basal area implied by breast-height diameter
-        *over* bark, so its volume is over bark, while every price list here is under
-        bark (``m3to`` for timber, m³fub for pulpwood). Pricing the one with the
-        other overstates value by the bark fraction. The volume is therefore
-        converted to under bark first, with the Söderberg (1992) double bark this
-        pipeline already carries on each tree -- see
-        :meth:`_form_height_volume_under_bark_m3`, which is where the approximation
-        that conversion involves is written down.
+        Pricing is a separate matter, and this route has no taper. It cannot buck,
+        so no timber volume and no timber-valued stems are reported; and it cannot
+        find where a stem narrows past the price list's minimum log diameter, so
+        every cubic metre it values is valued as pulpwood. Its pulpwood volume is
+        therefore the whole stem, an upper bound rather than a merchantable volume
+        -- the bucking route it inherits from bounds this properly, and the
+        difference is the unmerchantable top.
+
+        Since every price list here is under bark (``m3to`` for timber, m³fub for
+        pulpwood), the volume that is *priced* is converted to under bark first,
+        with the Söderberg (1992) double bark this pipeline already carries on each
+        tree -- see :meth:`_form_height_volume_under_bark_m3`, which is where the
+        approximation that conversion involves is written down. Pricing the
+        over-bark figure directly would overstate value by the bark fraction.
         """
         if not self.config.use_soderberg_form_height_volume:
             return super().value_standing_forest(tree_list)
@@ -236,10 +242,14 @@ class Soderberg1986Pipeline(CompositePipeline):
 
             valuation_sp = str(sp.full_name if hasattr(sp, "full_name") else sp)
             pulp_price = float(self._pricelist.Pulp.get_pulpwood_price(valuation_sp))
-            totals.volume_m3_per_ha += volume_m3 * w
+            # The form height's own output is over bark, which is what m3sk means.
+            totals.volume_m3sk_per_ha += volume_over_bark_m3 * w
             # All of it: this route sorts nothing, so everything it values is valued
-            # at the pulpwood price.
-            totals.pulp_volume_m3_per_ha += volume_m3 * w
+            # at the pulpwood price. Unlike the bucking route it has no taper, so it
+            # cannot find where the stem narrows past the price list's minimum log
+            # diameter -- its pulpwood volume is therefore the whole under-bark stem
+            # and is an upper bound, not a merchantable volume.
+            totals.pulp_volume_m3fub_per_ha += volume_m3 * w
             totals.value_sek_per_ha += volume_m3 * pulp_price * w
 
         # `timber_volume_m3_per_ha` and `timber_valued_stems_per_ha` stay zero:

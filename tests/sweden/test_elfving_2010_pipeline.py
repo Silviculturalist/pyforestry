@@ -130,8 +130,8 @@ def test_standing_valuation_runs_with_mellanskog_2013() -> None:
     valuation = preset.value_standing_forest()
 
     assert valuation["standing_value_sek_per_ha"] >= 0.0
-    assert valuation["standing_volume_m3_per_ha"] >= 0.0
-    assert valuation["value_per_m3_sek"] >= 0.0
+    assert valuation["standing_volume_m3sk_per_ha"] >= 0.0
+    assert valuation["value_per_m3sk_sek"] >= 0.0
 
 
 def test_standing_valuation_uses_lookup_cache(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -177,7 +177,9 @@ def test_standing_valuation_uses_lookup_cache(monkeypatch: pytest.MonkeyPatch) -
 
     assert calls["count"] == 1
     assert second["standing_value_sek_per_ha"] == pytest.approx(first["standing_value_sek_per_ha"])
-    assert second["standing_volume_m3_per_ha"] == pytest.approx(first["standing_volume_m3_per_ha"])
+    assert second["standing_volume_m3sk_per_ha"] == pytest.approx(
+        first["standing_volume_m3sk_per_ha"]
+    )
 
 
 def test_standing_valuation_cube_lookup_miss_falls_back_and_caches(
@@ -231,7 +233,9 @@ def test_standing_valuation_cube_lookup_miss_falls_back_and_caches(
 
     assert calls["count"] == 1
     assert second["standing_value_sek_per_ha"] == pytest.approx(first["standing_value_sek_per_ha"])
-    assert second["standing_volume_m3_per_ha"] == pytest.approx(first["standing_volume_m3_per_ha"])
+    assert second["standing_volume_m3sk_per_ha"] == pytest.approx(
+        first["standing_volume_m3sk_per_ha"]
+    )
 
 
 def test_load_solution_cube_autogenerates_when_missing(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -490,7 +494,6 @@ def test_value_standing_forest_cached_and_direct_bucking_paths(
         "_lookup_or_compute_timber_value_volume",
         lambda **_kwargs: composite_module.BuckedStem(
             value_sek=10.0,
-            volume_m3=0.5,
             timber_volume_m3=0.4,
             pulp_volume_m3=0.1,
             bucked=True,
@@ -563,7 +566,6 @@ def test_solution_cube_management_and_lookup_branches(monkeypatch: pytest.Monkey
         region="southern",
     )
     assert looked_up.value_sek == pytest.approx(42.0)
-    assert looked_up.volume_m3 == pytest.approx(0.7)
     assert looked_up.timber_volume_m3 == pytest.approx(0.5)
     assert looked_up.pulp_volume_m3 == pytest.approx(0.2)
     assert looked_up.bucked
@@ -592,8 +594,10 @@ def test_solution_cube_management_and_lookup_branches(monkeypatch: pytest.Monkey
         region="southern",
     )
     assert looked_up_miss.value_sek == pytest.approx(123.0)
-    assert looked_up_miss.volume_m3 == pytest.approx(0.9)
-    # ButtLog + MiddleLog + TopLog, and Pulp apart from them.
+    # ButtLog + MiddleLog + TopLog, and Pulp apart from them. The stem volume is
+    # no longer cached here: what the stand *holds* is Brandel's question, and
+    # this is only what the stem *yields*.
+    assert looked_up_miss.timber_volume_m3 == pytest.approx(0.6)
     assert looked_up_miss.timber_volume_m3 == pytest.approx(0.6)
     assert looked_up_miss.pulp_volume_m3 == pytest.approx(0.2)
     assert looked_up_miss.bucked
