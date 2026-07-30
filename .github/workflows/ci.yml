@@ -97,8 +97,14 @@ jobs:
 
       - name: Update coverage baseline
         run: |
+          # Floor, not round. The gate above is pytest-cov's --cov-fail-under, which
+          # compares the *precise* total: 96.68% does not pass a threshold of 97.
+          # Rounding here wrote back 97 for any coverage from 96.5% up, so the
+          # ratchet could set a baseline the very run that set it had just failed,
+          # and every later build failed until coverage genuinely reached 97.0.
+          # Flooring can only ever record a figure the run actually cleared.
           NEW=$(grep -o 'line-rate="[0-9.]*"' coverage.xml | head -1 | cut -d'"' -f2)
-          NEW=$(python -c "import sys; print(int(round(float(sys.argv[1])*100)))" "$NEW")
+          NEW=$(python -c "import sys; print(int(float(sys.argv[1])*100))" "$NEW")
           CUR=$(cat coverage_threshold.txt)
           if [ "$NEW" -gt "$CUR" ]; then
             echo "$NEW" > coverage_threshold.txt
