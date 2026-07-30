@@ -18,6 +18,7 @@ from pathlib import Path
 from typing import Any, Mapping, Optional, Sequence
 
 from pyforestry.base.helpers.plot import CircularPlot
+from pyforestry.base.helpers.primitives import Age, AgeMeasurement
 from pyforestry.base.helpers.stand import Stand
 from pyforestry.base.helpers.tree import Tree
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies
@@ -176,7 +177,10 @@ def run_sweden_scenario(
     valuation: Optional[ValuationSettings] = None,
     discount_rate: Optional[float] = None,
     disturbance_rate_per_year: float = 0.0,
-    thin_at_years: Sequence[float] = (),
+    thin_at_age: Optional[Sequence[AgeMeasurement]] = None,
+    thin_at_year: Optional[Sequence[float]] = None,
+    start_age: Optional[AgeMeasurement] = None,
+    time_to_breast_height: Optional[float] = None,
     start_year: float = 0.0,
     forcings: Optional[ForcingSet] = None,
 ) -> ScenarioRunResult:
@@ -209,7 +213,18 @@ def run_sweden_scenario(
             Supplied by the caller; this package ships no rate, because a
             disturbance rate is a finding and there is no source for one here.
             Zero, the default, makes the stage an exact no-op.
-        thin_at_years: Clock times at which the management stage thins.
+        thin_at_age: Stand ages at which the management stage thins, as
+            ``Age.TOTAL(60)`` or ``Age.DBH(47)``. The one to reach for. Defaults
+            to the age :func:`build_even_aged_stands` built the stands at, so a
+            run using the default inventory need only give the ages.
+        thin_at_year: Calendar years at which it thins instead, read against
+            ``start_year``. Mutually exclusive with ``thin_at_age``.
+        start_age: How old the stands are at the start. Defaults to
+            :data:`_BASELINE_AGE_YEARS` as a *total* age, which is what
+            :func:`build_even_aged_stands` gives its trees; supply it when passing
+            your own stands.
+        time_to_breast_height: Years to 1.3 m, needed only to schedule in one age
+            measure stands described in the other.
         start_year: Calendar year the projection begins in, which is the year
             a forcing series is read at.
         forcings: Named values the run reads per period -- a weather
@@ -235,7 +250,12 @@ def run_sweden_scenario(
         valuation=valuation,
         discount_rate=discount_rate,
         disturbance_rate_per_year=disturbance_rate_per_year,
-        thin_at_years=thin_at_years,
+        thin_at_age=thin_at_age,
+        thin_at_year=thin_at_year,
+        # The default stands are built at this total age, so a run that takes them
+        # and asks to thin at 60 gets what it asked for without restating it.
+        start_age=start_age if start_age is not None else Age.TOTAL(_BASELINE_AGE_YEARS),
+        time_to_breast_height=time_to_breast_height,
         start_year=start_year,
         forcings=forcings,
     )

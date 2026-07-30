@@ -12,6 +12,7 @@ import json
 
 import pytest
 
+from pyforestry.base.helpers.primitives import Age
 from pyforestry.base.pricelist import create_pricelist_from_data
 from pyforestry.simulation.artifacts import (
     REQUIRED_ARTIFACTS,
@@ -86,7 +87,7 @@ def test_thinning_is_priced_through_the_valuation_stage(tmp_path, valuation) -> 
         n_steps=3,
         valuation=valuation,
         discount_rate=0.0,
-        thin_at_years=[5.0],
+        thin_at_age=[Age.TOTAL(45.0)],
     )
 
     row = result.rows[0]
@@ -187,7 +188,7 @@ def test_inflation_reaches_the_horizon_net_present_value(tmp_path, valuation) ->
             start_year=2025,
             valuation=valuation,
             discount_rate=0.03,
-            thin_at_years=[10.0],
+            thin_at_age=[Age.TOTAL(50.0)],
             forcings=forcings,
         )
 
@@ -246,7 +247,7 @@ def test_the_baseline_writes_what_it_earned_into_its_artifact(tmp_path, valuatio
         start_year=2025,
         valuation=valuation,
         discount_rate=0.03,
-        thin_at_years=[5.0],
+        thin_at_age=[Age.TOTAL(45.0)],
     )
 
     rows = load_scenario_summary(result.artifacts.scenario_summary_path)
@@ -262,7 +263,7 @@ def test_the_baseline_writes_what_it_earned_into_its_artifact(tmp_path, valuatio
     # And the rate the column was discounted at is in the manifest, cited as the
     # decision it is rather than as a finding.
     manifest = json.loads(result.artifacts.run_manifest_path.read_text(encoding="utf-8"))
-    assert manifest["schema_version"] == "3.1"
+    assert manifest["schema_version"] == "3.2"
     assert manifest["valuation"]["discount_rate"] == pytest.approx(0.03)
     assert manifest["valuation"]["base_year"] == 2025.0
     assert manifest["valuation"]["discount_source"]["author"] == "(none)"

@@ -33,6 +33,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Callable, Mapping, Optional, Sequence
 
+from pyforestry.base.helpers.primitives import Age, AgeMeasurement
 from pyforestry.base.simulation.core import SimulationContext
 from pyforestry.base.simulation.pipeline import Action, GrowthStep, ManagementStep, Step
 from pyforestry.simulation.forcing import (
@@ -49,8 +50,13 @@ from pyforestry.simulation.valuation.step import ValuationStep
 from pyforestry.simulation.valuation.volume import ValuationSettings
 
 __all__ = [
+    "BY_AGE",
+    "BY_CALENDAR",
     "CALENDAR_YEAR_KEY",
+    "STAND_AGE_KEY",
     "STAND_SPECIES_KEY",
+    "STAND_START_AGE_KEY",
+    "THINNINGS_FIRED_KEY",
     "MeanTree",
     "MeanTreeReporter",
     "STAGE_BUILDERS",
@@ -58,11 +64,18 @@ __all__ = [
     "ScenarioDisturbanceStep",
     "ScenarioGrowthStep",
     "StageContext",
+    "ThinningSchedule",
     "ThinningStep",
     "build_pipeline",
     "known_stages",
+    "period_age",
     "period_year",
 ]
+
+#: A thinning schedule counted in stand age -- the recommended one.
+BY_AGE = "age"
+#: A thinning schedule counted in calendar years.
+BY_CALENDAR = "calendar"
 
 
 #: Where a step records the volume it removed, so the run's summary can report
@@ -72,6 +85,30 @@ REMOVED_BY_STAGE_KEY = "removed_volume_m3_per_ha_by_stage"
 #: Where a run records the species a stand's mean-tree removals are priced as.
 #: Set from :attr:`~pyforestry.simulation.scenario.StandUnit.species`.
 STAND_SPECIES_KEY = "stand_species"
+
+#: The age the stand starts the projection at, as an
+#: :class:`~pyforestry.base.helpers.primitives.AgeMeasurement` so it says whether
+#: it is counted from the seed or from breast height. Set per stand by
+#: :func:`~pyforestry.simulation.scenario.run_scenario`.
+STAND_START_AGE_KEY = "stand_start_age"
+
+#: The age the stand has reached in the period currently running, stamped by
+#: :class:`CalendarStep` in the same measure its start age was given in.
+STAND_AGE_KEY = "stand_age"
+
+#: Where :class:`ThinningStep` records the ages or years its thinnings actually
+#: fired at, so a run can be asked what it did rather than what it was asked for.
+THINNINGS_FIRED_KEY = "thinnings_fired"
+
+
+def period_age(ctx: SimulationContext) -> Optional[AgeMeasurement]:
+    """Return the stand's age at the start of the period currently running.
+
+    ``None`` for a run that never said how old its stands were, which is every
+    run that does not schedule by age.
+    """
+    age = ctx.attrs.get(STAND_AGE_KEY)
+    return age if isinstance(age, AgeMeasurement) else None
 
 
 @dataclass(frozen=True)
@@ -98,14 +135,115 @@ MeanTreeReporter = Callable[[SimulationContext, float], Optional[MeanTree]]
 
 
 @dataclass(frozen=True)
+class ThinningSchedule:
+    """When a scenario thins, in a measure that means the same thing everywhere.
+
+    A projection's own clock -- ``ctx.state["t"]`` -- is elapsed years from
+    wherever the model started, and *where a model starts it is the model's
+    business*: the Elfving (2010) adapter starts at zero, the Kuehne (2022) one at
+    the stand's total age. Scheduling against it therefore meant two different
+    things in the two regions under one parameter name and one sentence of
+    documentation, and asking Norway to thin at ``15`` -- fifteen years in --
+    silently did nothing at all, because that clock began at 40.
+
+    So a schedule says what its numbers are. Either:
+
+    * **by age** (:data:`BY_AGE`) -- the recommended one, because a silvicultural
+      prescription is a statement about how old the stand is, not about when the
+      analyst pressed start. The points are
+      :class:`~pyforestry.base.helpers.primitives.AgeMeasurement`, so they also
+      say whether they are counted from the seed or from breast height.
+    * **by calendar year** (:data:`BY_CALENDAR`) -- for a schedule tied to
+      something outside the stand, and read against the same calendar a
+      :mod:`~pyforestry.simulation.forcing` series is.
+
+    Attributes:
+        basis: :data:`BY_AGE` or :data:`BY_CALENDAR`.
+        points: The ages or years to thin at, sorted.
+        age_measure: ``Age.TOTAL`` or ``Age.DBH`` for an age schedule; ``None``
+            for a calendar one.
+    """
+
+    basis: str
+    points: tuple[float, ...] = ()
+    age_measure: Optional[Age] = None
+
+    def __post_init__(self) -> None:
+        """Sort the points and check the basis carries what it needs."""
+        if self.basis not in (BY_AGE, BY_CALENDAR):
+            raise ValueError(f"basis must be {BY_AGE!r} or {BY_CALENDAR!r}, got {self.basis!r}.")
+        if self.basis == BY_AGE and self.age_measure is None:
+            raise ValueError(
+                "An age schedule must say which age it means. Build its points with "
+                "Age.TOTAL(...) or Age.DBH(...), which carry that."
+            )
+        object.__setattr__(self, "points", tuple(sorted(float(p) for p in self.points)))
+
+    @classmethod
+    def by_age(cls, ages: Sequence[AgeMeasurement]) -> "ThinningSchedule":
+        """Build an age schedule from measurements that agree on what age they are.
+
+        Raises:
+            TypeError: If a point is a bare number. ``40`` does not say whether it
+                is counted from the seed or from breast height, and the two differ
+                by the years a stand took to reach 1.3 m.
+            ValueError: If the points mix total and breast-height ages.
+        """
+        measures = set()
+        for age in ages:
+            if not isinstance(age, AgeMeasurement):
+                raise TypeError(
+                    f"A thinning age must say which age it is, got {age!r}. Use "
+                    "Age.TOTAL(60) for age from the seed or Age.DBH(47) for age at "
+                    "breast height -- they differ by the time the stand took to reach "
+                    "1.3 m, which is a decade on a poor site."
+                )
+            measures.add(age.code)
+        if len(measures) > 1:
+            raise ValueError(
+                "A thinning schedule cannot mix total and breast-height ages: "
+                f"{[float(a) for a in ages]} were given in both measures. Convert them "
+                "to one."
+            )
+        measure = Age(measures.pop()) if measures else Age.TOTAL
+        return cls(basis=BY_AGE, points=tuple(float(a) for a in ages), age_measure=measure)
+
+    @classmethod
+    def by_calendar(cls, years: Sequence[float]) -> "ThinningSchedule":
+        """Build a calendar-year schedule, read against the run's ``start_year``."""
+        return cls(basis=BY_CALENDAR, points=tuple(float(y) for y in years))
+
+    def __bool__(self) -> bool:
+        """Whether this schedule thins at all."""
+        return bool(self.points)
+
+    def as_manifest(self) -> Mapping[str, Any]:
+        """Return this schedule as a manifest record."""
+        return {
+            "basis": self.basis,
+            "age_measure": self.age_measure.name if self.age_measure is not None else None,
+            "points": list(self.points),
+        }
+
+
+@dataclass(frozen=True)
 class CalendarStep:
-    """Stamp the period's calendar year onto the context, then advance it.
+    """Stamp the period's calendar year and the stand's age, then advance both.
 
     A projection's clock is elapsed years from wherever the model started, and
     some models start it at the stand's age. A forcing series is keyed by
-    calendar year. This is the one place the two are reconciled: the run says
-    which calendar year it begins in, and every step afterwards reads
-    :func:`period_year`.
+    calendar year, and a silvicultural prescription by stand age. This is the one
+    place all of them are reconciled: the run says which calendar year it begins
+    in and how old each stand is, and every step afterwards reads
+    :func:`period_year` or :func:`period_age` rather than the raw clock.
+
+    Both are stamped at the *start* of the period, so a step reading either gets
+    the year and age the period begins at, whatever order the stages run in. That
+    is why scheduling no longer depends on whether management is placed before or
+    after growth, which the elapsed clock quietly did.
+
+    The stand's start age comes off the context rather than this step, because one
+    pipeline runs every stand and real inventory is not all one age.
 
     First in the pipeline, and installed by :func:`build_pipeline` rather than
     named in a configuration's ``stages()``: which years a run covers is a
@@ -116,11 +254,22 @@ class CalendarStep:
     name: str = "calendar"
 
     def run(self, ctx: SimulationContext, dt: float) -> None:
-        """Stamp this period's year, then move the calendar on by ``dt``."""
+        """Stamp this period's year and stand age, then move both on by ``dt``."""
         current = ctx.attrs.get(CALENDAR_YEAR_KEY)
         ctx.attrs[CALENDAR_YEAR_KEY] = (
             float(self.start_year) if current is None else float(current) + float(dt)
         )
+
+        start_age = ctx.attrs.get(STAND_START_AGE_KEY)
+        if isinstance(start_age, AgeMeasurement):
+            reached = ctx.attrs.get(STAND_AGE_KEY)
+            ctx.attrs[STAND_AGE_KEY] = (
+                start_age
+                if not isinstance(reached, AgeMeasurement)
+                # A year of elapsed time adds a year to age from the seed and to age
+                # at breast height alike, so the measure carries through untouched.
+                else AgeMeasurement(float(reached) + float(dt), reached.code)
+            )
 
 
 def record_removal(ctx: SimulationContext, stage: str, volume_m3_per_ha: float) -> None:
@@ -142,12 +291,17 @@ class StageContext:
         valuation: Price list, taper and bucking settings, when the run supplies
             them. A ``"valuation"`` stage without them is an error rather than a
             silently skipped stage.
+        records_removals: Whether a thinning writes to the valuation ledger. True
+            exactly when the configuration declares a ``"valuation"`` stage --
+            which is what reads it. Keying this off the *settings* instead filled
+            a ledger nobody would price for any run that passed a price list to a
+            configuration that values nothing.
         volume: How to read the stand's standing volume, in m³/ha.
         disturbance_rate_per_year: The base annual disturbance rate, before any
             :data:`~pyforestry.simulation.forcing.DISTURBANCE` forcing. Zero --
             the default -- makes the disturbance stage an exact no-op.
-        thin_at_years: Clock times at which the management stage thins. Empty --
-            the default -- makes it an exact no-op.
+        schedule: When the management stage thins, in stand age or calendar
+            years. Empty -- the default -- makes it an exact no-op.
         mean_tree: How to read the representative stem of a stand that holds no
             individual ones, so an aggregate model's thinning can be bucked.
             Only the run knows this: a model that predicts dominant height has no
@@ -159,8 +313,9 @@ class StageContext:
     forcings: ForcingSet = field(default_factory=ForcingSet)
     guard_policy: Mapping[str, object] = field(default_factory=dict)
     valuation: Optional[ValuationSettings] = None
+    records_removals: bool = False
     disturbance_rate_per_year: float = 0.0
-    thin_at_years: tuple[float, ...] = ()
+    schedule: ThinningSchedule = field(default_factory=lambda: ThinningSchedule(basis=BY_CALENDAR))
     mean_tree: Optional["MeanTreeReporter"] = None
 
 
@@ -260,16 +415,24 @@ class ScenarioDisturbanceStep:
 
 @dataclass(frozen=True)
 class ThinningStep:
-    """Remove the scenario's thinning fraction, once, when the trigger fires.
+    """Remove the scenario's thinning fraction, once, when the schedule falls due.
 
     ``ManagementStep`` is the general mechanism -- a policy proposes actions and
     this is one policy's worth of it -- expressed as a step because a scenario's
     management is a fraction and a schedule rather than a callable a caller
     writes.
+
+    A scheduled point falls due in the period whose span **contains** it, rather
+    than in a period that begins exactly on it. Matching exactly meant that a
+    thinning asked for anywhere off the period grid -- age 24 of a run stepping
+    five years from 0 -- did nothing whatsoever, wrote a summary reporting no
+    harvest and no revenue, and passed the artifact contract, because a run that
+    harvests nothing legitimately earns nothing. There was no way to tell it from
+    a scenario that had deliberately not thinned.
     """
 
     thinning_ratio: float
-    at_years: tuple[float, ...] = ()
+    schedule: ThinningSchedule = field(default_factory=lambda: ThinningSchedule(basis=BY_CALENDAR))
     forcings: ForcingSet = field(default_factory=ForcingSet)
     #: Whether to record what was removed for pricing. False when the pipeline
     #: has no valuation stage: a ledger nobody reads is wasted work.
@@ -277,7 +440,6 @@ class ThinningStep:
     #: How to read the mean stem of a stand that holds no individual ones.
     mean_tree: Optional["MeanTreeReporter"] = None
     name: str = "management"
-    tolerance: float = 1e-9
 
     def ratio_in(self, year: float) -> float:
         """The fraction removed in ``year``, after any thinning forcing.
@@ -288,21 +450,59 @@ class ThinningStep:
         factor = self.forcings.multiplier(THINNING, year) if self.forcings else 1.0
         return min(1.0, float(self.thinning_ratio) * factor)
 
+    def _due(self, ctx: SimulationContext, dt: float) -> Optional[float]:
+        """Return the scheduled point this period covers, or ``None``.
+
+        Raises:
+            RuntimeError: If an age schedule is running against a stand whose age
+                was never declared, which :func:`run_scenario` refuses earlier.
+        """
+        if self.schedule.basis == BY_AGE:
+            reached = period_age(ctx)
+            if reached is None:
+                raise RuntimeError(
+                    "This run thins by stand age but no stand age was declared, so "
+                    "there is nothing to compare the schedule against. Pass "
+                    "start_age= to run_scenario, or an age on each StandUnit."
+                )
+            now = float(reached)
+        else:
+            now = period_year(ctx)
+        # Half-open, so a point on a period boundary falls due in exactly one
+        # period and never in two.
+        for point in self.schedule.points:
+            if now <= point < now + float(dt):
+                return point
+        return None
+
     def run(self, ctx: SimulationContext, dt: float) -> None:
-        """Thin if the clock has reached one of the scheduled times."""
-        if not self.at_years or self.thinning_ratio <= 0.0:
+        """Thin if this period's span covers one of the scheduled points."""
+        if not self.schedule or self.thinning_ratio <= 0.0:
             return
-        now = float(ctx.state.get("t", 0.0))
-        if not any(abs(now - t) <= self.tolerance for t in self.at_years):
+        due = self._due(ctx, dt)
+        if due is None:
             return
         ratio = self.ratio_in(period_year(ctx))
         _remove_fraction(
             ctx,
             self.name,
             ratio,
-            {"thinning_ratio": ratio},
+            {"thinning_ratio": ratio, "scheduled_at": due},
             merchantable=self.records_removals,
             mean_tree_reporter=self.mean_tree,
+        )
+        # What it actually did, beside what it was asked for: a point inside a
+        # period fires at the period's start, and the difference is the run's to
+        # see rather than infer from the step length.
+        fired = ctx.attrs.setdefault(THINNINGS_FIRED_KEY, [])
+        fired.append(
+            {
+                "basis": self.schedule.basis,
+                "scheduled_at": due,
+                "fired_at": float(period_age(ctx)) if self.schedule.basis == BY_AGE else None,
+                "calendar_year": period_year(ctx),
+                "ratio": ratio,
+            }
         )
 
 
@@ -346,14 +546,25 @@ def _record_removed(
     cohort = f"{stage}@{float(ctx.state.get('t', 0.0)):g}"
 
     if ctx.holds_tree_list():
+        skipped = 0.0
         for plot in ctx.plots:
             for tree in plot.trees:
-                if tree.species is None or tree.diameter_cm is None or tree.height_m is None:
-                    continue
                 weight = float(tree.weight_n or 0.0) * removed_fraction
+                if tree.species is None or tree.diameter_cm is None or tree.height_m is None:
+                    # Nothing to buck it from. Its volume may still have been
+                    # counted as harvested -- that depends on the run's volume
+                    # reporter, and one that imputes heights will count it -- so
+                    # the ledger says how many stems it could not price rather
+                    # than reporting a smaller harvest as simply worth less.
+                    skipped += max(0.0, weight)
+                    continue
                 if weight <= 0.0:
                     continue
                 ledger.record_tree(cohort, tree, weight=weight)
+        if skipped > 0.0:
+            ledger.metadata["stems_without_dimensions"] = (
+                float(ledger.metadata.get("stems_without_dimensions", 0.0)) + skipped
+            )
         return
 
     if volume_removed_m3 <= 0.0 or mean_tree is None:
@@ -465,9 +676,9 @@ def _build_management(stage: StageContext) -> Step:
         return ManagementStep(policy=lambda _ctx: (), name="management")
     return ThinningStep(
         thinning_ratio=stage.management.thinning_ratio,
-        at_years=stage.thin_at_years,
+        schedule=stage.schedule,
         forcings=stage.forcings,
-        records_removals=stage.valuation is not None,
+        records_removals=stage.records_removals,
         mean_tree=stage.mean_tree,
     )
 

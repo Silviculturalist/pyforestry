@@ -92,8 +92,14 @@ __all__ = [
 #: -- while a 3.0 *manifest* is missing a block rather than unreadable, and the
 #: version is how a reader tells the two apart instead of guessing from an absent
 #: key.
-RUN_MANIFEST_SCHEMA_VERSION = "3.1"
-QUALITY_REPORT_SCHEMA_VERSION = "3.1"
+#: ``"3.2"`` replaced ``thin_at_years`` with ``management_schedule``, which says
+#: what measure the thinning times are in. The old key was a bare list of numbers
+#: compared against each model's own clock, so the same manifest field meant
+#: elapsed years for Sweden's adapter and total stand age for Norway's. A minor
+#: bump again: the summary columns are untouched, and a reader tells a 3.1
+#: manifest from a 3.2 one by the version rather than by which key is missing.
+RUN_MANIFEST_SCHEMA_VERSION = "3.2"
+QUALITY_REPORT_SCHEMA_VERSION = "3.2"
 
 RUN_MANIFEST_FILENAME = "run_manifest.json"
 SCENARIO_SUMMARY_FILENAME = "scenario_summary.parquet"
@@ -191,10 +197,18 @@ class ScenarioArtifacts:
 
 
 def git_revision() -> str:
-    """Return the short git revision, or ``"unknown"`` outside a repository."""
+    """Return the short git revision of *this package*, or ``"unknown"``.
+
+    Resolved against the directory pyforestry is installed in, not the working
+    directory. Asking git where it happened to be invoked answers a different
+    question: run a projection from inside your own repository and the manifest
+    recorded *your* HEAD under ``provenance.git_revision``, which claims the run
+    was produced by code it was not. A wrong revision is worse than none, so an
+    installed copy outside a repository reports ``"unknown"`` and says nothing.
+    """
     try:
         result = subprocess.run(
-            ["git", "rev-parse", "--short", "HEAD"],
+            ["git", "-C", str(Path(__file__).resolve().parent), "rev-parse", "--short", "HEAD"],
             capture_output=True,
             text=True,
             timeout=5,
@@ -424,6 +438,14 @@ def write_artifacts(
             "scenario_summary_encoding": encoding,
         },
     )
+
+    # Run the row checks *before* writing the report that says they passed. Writing
+    # first left a quality report on disk asserting ``volume_balance_checked`` for a
+    # run whose balance had just failed, which is the one claim the file exists to
+    # make. The artifact-level checks still run afterwards, once all three files are
+    # there for them to look at.
+    check_volume_balance(rows)
+    check_value_consistency(rows)
 
     quality_path = output_dir / QUALITY_REPORT_FILENAME
     present = {name: (output_dir / name).exists() for name in REQUIRED_ARTIFACTS}

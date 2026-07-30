@@ -16,7 +16,7 @@ from math import pi, sqrt
 import pytest
 
 from pyforestry.base.contracts import SourceReference
-from pyforestry.base.helpers.primitives import StandBasalArea, Stems
+from pyforestry.base.helpers.primitives import Age, StandBasalArea, Stems
 from pyforestry.base.helpers.stand import Stand
 from pyforestry.base.helpers.tree_species import TreeSpecies
 from pyforestry.base.pricelist.pricelist import (
@@ -143,13 +143,23 @@ def _valuation(*, identity: PricelistIdentity | None = None) -> ValuationSetting
 
 
 def _mean_tree(ctx: SimulationContext, fraction: float) -> MeanTree:
-    """The stand's quadratic mean stem, which is what an aggregate model can offer."""
+    """The stand's quadratic mean stem, which is what an aggregate model can offer.
+
+    The height is the one that makes this fixture's cylinder hold exactly the
+    volume this fixture's reporter reports, so the mean tree and the stand volume
+    describe the same stand. A fixed height did not: the cylinder came to 16 m³
+    per unit of basal area while ``_volume`` reported ``VOLUME_PER_BA``, so the
+    mean stem bucked to 40% more wood than the model said the thinning removed --
+    which a real stem cannot do, and which the descriptor now refuses.
+    """
     basal_area = float(ctx.metrics["BasalArea"]["TOTAL"])
     stems = float(ctx.metrics["Stems"]["TOTAL"])
+    # A cylinder of this diameter has cross-section basal_area / stems, so its
+    # volume is height * basal_area / stems.
     return MeanTree(
         species=SPECIES,
         diameter_cm=200.0 * sqrt(basal_area / (stems * pi)),
-        height_m=16.0,
+        height_m=_volume(ctx) / basal_area,
         stems_removed=stems * fraction,
     )
 
@@ -211,7 +221,7 @@ def test_growth_runs_and_produces_the_model_s_numbers(tmp_path) -> None:
 
 
 def test_management_stage_thins_and_is_reported_apart_from_growth(tmp_path) -> None:
-    result = _run(tmp_path, thin_at_years=[10.0])
+    result = _run(tmp_path, thin_at_year=[2030.0])
     row = result.rows[0]
     assert row["harvested_m3"] > 0.0
     assert row["disturbance_loss_m3"] == pytest.approx(0.0)
@@ -286,7 +296,7 @@ def test_a_growth_forcing_refuses_a_representation_it_cannot_scale() -> None:
 
 def test_manifest_records_the_construction(tmp_path) -> None:
     """The artifact's reason to exist: reading a run back without rerunning it."""
-    result = _run(tmp_path, thin_at_years=[10.0], disturbance_rate_per_year=0.02)
+    result = _run(tmp_path, thin_at_year=[2030.0], disturbance_rate_per_year=0.02)
     manifest = json.loads(result.artifacts.run_manifest_path.read_text(encoding="utf-8"))
 
     for key in MANIFEST_REQUIRED_KEYS:
@@ -296,7 +306,8 @@ def test_manifest_records_the_construction(tmp_path) -> None:
     assert manifest["rulesets_applied"]["management"] == {"thinning_ratio": 0.25}
     assert manifest["forcings_applied"] == [], "this package ships no forcings"
     assert manifest["guard_policy"]["clamp_net_volume_to_zero"] is True
-    assert manifest["thin_at_years"] == [10.0]
+    assert manifest["management_schedule"]["basis"] == "calendar"
+    assert manifest["management_schedule"]["points"] == [2030.0]
     assert manifest["disturbance_rate_per_year"] == pytest.approx(0.02)
     assert manifest["scenario_seed"] != manifest["global_seed"]
     assert "synthetic" not in manifest, "nothing here is synthetic any more"
@@ -324,7 +335,7 @@ def test_quality_report_and_contract(tmp_path) -> None:
 
 
 def test_volume_balance_closes_for_every_row(tmp_path) -> None:
-    result = _run(tmp_path, thin_at_years=[10.0], disturbance_rate_per_year=0.01)
+    result = _run(tmp_path, thin_at_year=[2030.0], disturbance_rate_per_year=0.01)
     check_volume_balance(result.rows)  # raises if it does not
 
 
@@ -373,7 +384,7 @@ def test_summary_columns_are_the_schema_s(tmp_path) -> None:
 
 
 def _valuing_run(tmp_path, *, price_identity: PricelistIdentity | None = None, **kwargs):
-    kwargs.setdefault("thin_at_years", [10.0])
+    kwargs.setdefault("thin_at_year", [2030.0])
     return _run(
         tmp_path,
         config=_ValuingConfig(
@@ -395,7 +406,7 @@ def test_a_run_that_prices_nothing_says_so_rather_than_reporting_zero(tmp_path) 
     what it fetched. A bare ``0`` beside a non-zero ``harvested_m3`` would read as
     a stand that sold its thinning for nothing.
     """
-    result = _run(tmp_path, thin_at_years=[10.0])
+    result = _run(tmp_path, thin_at_year=[2030.0])
     row = result.rows[0]
 
     assert row["harvested_m3"] > 0.0, "the wood came out"
@@ -428,7 +439,7 @@ def test_a_priced_run_writes_its_value_into_the_summary(tmp_path) -> None:
 
 def test_a_priced_run_that_never_harvested_is_valued_at_zero(tmp_path) -> None:
     """``(True, 0)``: it was priced, and it earned nothing. Not the same as unpriced."""
-    result = _valuing_run(tmp_path, discount_rate=0.03, thin_at_years=[])
+    result = _valuing_run(tmp_path, discount_rate=0.03, thin_at_year=[])
     row = result.rows[0]
     assert row["harvested_m3"] == 0.0
     assert row["valued"] is True
@@ -626,3 +637,95 @@ def test_a_run_needs_stands_and_periods(tmp_path) -> None:
         _run(tmp_path, n_steps=0)
     with pytest.raises(ValueError, match="at least one stand"):
         _run(tmp_path, stands=[])
+
+
+# --- when a scenario thins ---------------------------------------------------
+
+
+def test_a_thinning_falls_due_in_the_period_that_covers_it(tmp_path) -> None:
+    """A schedule off the period grid thins, rather than silently doing nothing.
+
+    The run steps five years from 2020, so 2032 falls inside the period that
+    begins in 2030. Matching the clock exactly meant any year not landing on a
+    period boundary fired nothing at all, wrote a summary reporting no harvest
+    and no revenue, and passed the artifact contract -- indistinguishable from a
+    scenario that had chosen not to thin.
+    """
+    on_grid = _run(tmp_path / "on", thin_at_year=[2030.0])
+    off_grid = _run(tmp_path / "off", thin_at_year=[2032.0])
+
+    assert on_grid.rows[0]["harvested_m3"] > 0.0
+    assert off_grid.rows[0]["harvested_m3"] == pytest.approx(on_grid.rows[0]["harvested_m3"])
+
+    # And it says when it actually happened, not only what it was asked for.
+    fired = off_grid.thinnings()[0][1]
+    assert len(fired) == 1
+    assert fired[0]["scheduled_at"] == 2032.0
+    assert fired[0]["calendar_year"] == 2030.0
+
+
+def test_a_thinning_the_run_never_reaches_is_an_error(tmp_path) -> None:
+    """Not a quiet no-op: an unthinned summary reads like a deliberate choice."""
+    with pytest.raises(ValueError, match="never reaches 2099"):
+        _run(tmp_path, thin_at_year=[2099.0])
+
+
+def test_thinning_by_age_needs_to_know_how_old_the_stand_is(tmp_path) -> None:
+    """The model's own clock cannot answer it: adapters start it where they like."""
+    with pytest.raises(ValueError, match="nothing said how old it is"):
+        _run(tmp_path, thin_at_age=[Age.TOTAL(60.0)])
+
+
+def test_an_age_schedule_is_read_against_the_stand_s_own_age(tmp_path) -> None:
+    """Two stands of different ages thin in different years under one prescription."""
+    stands = [
+        StandUnit(stand_id=1, stand=_stands(2)[0].stand, age=Age.TOTAL(40.0)),
+        StandUnit(stand_id=2, stand=_stands(2)[1].stand, age=Age.TOTAL(50.0)),
+    ]
+    result = _run(tmp_path, stands=stands, thin_at_age=[Age.TOTAL(55.0)])
+
+    first, second = (fired for _, fired in result.thinnings())
+    assert first[0]["calendar_year"] == 2035.0, "the 40-year-old stand reaches 55 in 2035"
+    assert second[0]["calendar_year"] == 2025.0, "the 50-year-old stand reaches 55 in 2025"
+
+
+def test_an_age_must_say_which_age_it_is(tmp_path) -> None:
+    """40 does not say whether it is counted from the seed or from breast height."""
+    with pytest.raises(TypeError, match="Age.TOTAL"):
+        _run(tmp_path, thin_at_age=[40.0], start_age=Age.TOTAL(40.0))
+
+
+def test_scheduling_across_age_measures_needs_a_stated_bridge(tmp_path) -> None:
+    """The gap is the years to 1.3 m, which depends on species and site."""
+    with pytest.raises(ValueError, match="time_to_breast_height"):
+        _run(tmp_path, thin_at_age=[Age.DBH(50.0)], start_age=Age.TOTAL(40.0))
+
+    result = _run(
+        tmp_path / "bridged",
+        thin_at_age=[Age.DBH(50.0)],
+        start_age=Age.TOTAL(40.0),
+        time_to_breast_height=8.0,
+    )
+    assert result.rows[0]["harvested_m3"] > 0.0
+
+
+def test_a_run_cannot_thin_by_age_and_by_calendar_at_once(tmp_path) -> None:
+    """Two answers to one question, and nothing would say which the run meant."""
+    with pytest.raises(ValueError, match="not both"):
+        _run(tmp_path, thin_at_age=[Age.TOTAL(60.0)], thin_at_year=[2030.0])
+
+
+def test_the_manifest_says_what_measure_the_schedule_is_in(tmp_path) -> None:
+    """A bare list of numbers meant elapsed years in one region and age in another."""
+    result = _run(tmp_path, thin_at_age=[Age.TOTAL(55.0)], start_age=Age.TOTAL(40.0))
+    schedule = result.manifest["management_schedule"]
+    assert schedule["basis"] == "age"
+    assert schedule["age_measure"] == "TOTAL"
+    assert schedule["points"] == [55.0]
+    assert schedule["start_age"] == 40.0
+
+
+def test_valuation_settings_without_a_valuation_stage_are_refused(tmp_path) -> None:
+    """The same reason discount_rate is: the manifest would name an unused list."""
+    with pytest.raises(ValueError, match="declares no 'valuation' stage"):
+        _run(tmp_path, valuation=_valuation(), mean_tree=_mean_tree)
