@@ -2,7 +2,7 @@ import pytest
 
 from pyforestry.base.pricelist import create_pricelist_from_data
 from pyforestry.base.timber_bucking.nasberg_1985 import BuckingConfig, Nasberg_1985_BranchBound
-from pyforestry.sweden.pricelist.data.mellanskog_2013 import Mellanskog_2013_price_data
+from pyforestry.sweden.pricelist.data.mellanskog_2013 import MELLANSKOG_2013_PRICE_DATA
 from pyforestry.sweden.taper import EdgrenNylinder1949
 from pyforestry.sweden.timber.swe_timber import SweTimber
 
@@ -15,7 +15,7 @@ def test_log():
 @pytest.fixture
 def test_pricelist():
     return create_pricelist_from_data(
-        Mellanskog_2013_price_data, species_to_load="pinus sylvestris"
+        MELLANSKOG_2013_PRICE_DATA, species_to_load="pinus sylvestris"
     )
 
 

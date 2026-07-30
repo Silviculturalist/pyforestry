@@ -8,7 +8,7 @@ from pyforestry.base.helpers.tree_species import TreeSpecies
 
 # Imports from your project
 from pyforestry.base.pricelist.solutioncube import SolutionCube
-from pyforestry.sweden.pricelist.data.mellanskog_2013 import Mellanskog_2013_price_data
+from pyforestry.sweden.pricelist.data.mellanskog_2013 import MELLANSKOG_2013_PRICE_DATA
 from pyforestry.sweden.taper import EdgrenNylinder1949
 from pyforestry.sweden.timber import SweTimber
 
@@ -46,7 +46,7 @@ def mini_cube():
     mp.setattr(sc, "Pool", DummyPool)
     try:
         cube = SolutionCube.generate(
-            pricelist_data=Mellanskog_2013_price_data,
+            pricelist_data=MELLANSKOG_2013_PRICE_DATA,
             taper_model=EdgrenNylinder1949,
             timber_class=SweTimber,
             species_list=species_list,
@@ -116,12 +116,12 @@ def test_pricelist_hash_verification(mini_cube, tmp_path):
 
     # 1. Test that loading with the CORRECT pricelist passes
     try:
-        SolutionCube.load(file_path, pricelist_to_verify=Mellanskog_2013_price_data)
+        SolutionCube.load(file_path, pricelist_to_verify=MELLANSKOG_2013_PRICE_DATA)
     except ValueError:
         pytest.fail("Hash verification failed unexpectedly with the correct pricelist.")
 
     # 2. Test that loading with an INCORRECT pricelist fails
-    modified_pricelist = copy.deepcopy(Mellanskog_2013_price_data)
+    modified_pricelist = copy.deepcopy(MELLANSKOG_2013_PRICE_DATA)
     modified_pricelist["Common"]["TopDiameter"] = 99  # Introduce a change
 
     with pytest.raises(ValueError, match="Pricelist hash mismatch!"):

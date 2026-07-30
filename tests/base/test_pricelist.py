@@ -12,7 +12,7 @@ from pyforestry.base.pricelist import (
 )
 from pyforestry.sweden.pricelist.data.mellanskog_2013 import (
     MELLANSKOG_2013_IDENTITY,
-    Mellanskog_2013_price_data,
+    MELLANSKOG_2013_PRICE_DATA,
 )
 
 
@@ -23,7 +23,7 @@ def test_reexports():
 
 @pytest.fixture(scope="module")
 def pricelist() -> Pricelist:
-    return create_pricelist_from_data(Mellanskog_2013_price_data)
+    return create_pricelist_from_data(MELLANSKOG_2013_PRICE_DATA)
 
 
 def test_pulpwood_prices(pricelist):
@@ -112,7 +112,7 @@ def test_price_for_log_part_method(pricelist):
 def test_a_price_list_carries_the_identity_it_was_given():
     """It is what a run manifest reports the summary's money columns against."""
     priced = create_pricelist_from_data(
-        Mellanskog_2013_price_data, identity=MELLANSKOG_2013_IDENTITY
+        MELLANSKOG_2013_PRICE_DATA, identity=MELLANSKOG_2013_IDENTITY
     )
     assert priced.identity.name == "Mellanskog 2013"
     assert priced.identity.currency == "SEK"
@@ -124,7 +124,7 @@ def test_a_price_list_carries_the_identity_it_was_given():
 
 def test_a_price_list_nobody_named_says_so_rather_than_saying_nothing():
     """An unattributed list is a real state, and it names itself as one."""
-    from_data = create_pricelist_from_data(Mellanskog_2013_price_data)
+    from_data = create_pricelist_from_data(MELLANSKOG_2013_PRICE_DATA)
     assert Pricelist().identity is UNATTRIBUTED_PRICELIST_IDENTITY
     assert from_data.identity is UNATTRIBUTED_PRICELIST_IDENTITY
     assert UNATTRIBUTED_PRICELIST_IDENTITY.is_cited is False

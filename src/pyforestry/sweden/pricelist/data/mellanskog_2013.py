@@ -126,11 +126,7 @@ MELLANSKOG_2013_PRICE_DATA = {
     },
 }
 
-# Backward-compatible alias for existing imports.
-Mellanskog_2013_price_data = MELLANSKOG_2013_PRICE_DATA
-
 __all__ = [
     "MELLANSKOG_2013_IDENTITY",
     "MELLANSKOG_2013_PRICE_DATA",
-    "Mellanskog_2013_price_data",
 ]
