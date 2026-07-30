@@ -375,3 +375,104 @@ def test_the_context_and_the_pipeline_hold_one_tree_list() -> None:
     pipeline._trees = kept
     assert pipeline._ctx.stand.plots[0].trees == kept
     assert pipeline.tree_list is pipeline._ctx.stand.plots[0].trees
+
+
+# --- stands at the edge of what the equations accept -------------------------
+
+
+class TestDegenerateStands:
+    """Trees the published functions cannot describe, and stands with none at all.
+
+    Every one of these paths is a guard the pipeline already has -- a stem too
+    small for Brandel's volume functions, one outside the taper's validity, a
+    stand whose largest diameter is zero -- and none of them had a test. A
+    projection that raises on a sapling stand, or prices a stem it could not
+    buck, is a real failure, and nothing said it did not happen.
+    """
+
+    @staticmethod
+    def _initialised():
+        from pyforestry.base.helpers.tree_species import TreeSpecies
+
+        pipeline = _make_pipeline()
+        pipeline.initialize(site=_make_site())
+        return pipeline, TreeSpecies.Sweden.picea_abies
+
+    def test_a_stand_of_saplings_values_as_pulp_rather_than_raising(self):
+        """Too small to buck, so the taper route raises and the pulp route catches it.
+
+        The value is not zero -- a thousand saplings a hectare hold some wood --
+        but none of it came from a bucking solution, which is what separates the
+        two routes.
+        """
+        from pyforestry.base.helpers.tree import Tree
+
+        pipeline, spruce = self._initialised()
+        saplings = [
+            Tree(species=spruce, diameter_cm=0.4, height_m=1.4, age=5, weight_n=1000.0)
+            for _ in range(5)
+        ]
+        totals = pipeline.value_standing_forest(saplings)
+
+        assert totals["standing_value_sek_per_ha"] > 0.0
+        assert totals["standing_volume_m3_per_ha"] > 0.0
+        assert totals["timber_valued_stems_per_ha"] == pytest.approx(0.0)
+        assert totals["timber_volume_m3_per_ha"] == pytest.approx(0.0)
+
+    def test_trees_with_nothing_to_value_are_skipped(self):
+        """No species, no diameter, no height, no weight: four separate guards."""
+        from pyforestry.base.helpers.tree import Tree
+
+        pipeline, spruce = self._initialised()
+        nothing = [
+            Tree(species=None, diameter_cm=20.0, height_m=16.0, age=40, weight_n=100.0),
+            Tree(species=spruce, diameter_cm=0.0, height_m=16.0, age=40, weight_n=100.0),
+            Tree(species=spruce, diameter_cm=20.0, height_m=0.0, age=40, weight_n=100.0),
+            Tree(species=spruce, diameter_cm=20.0, height_m=16.0, age=40, weight_n=0.0),
+        ]
+        totals = pipeline.value_standing_forest(nothing)
+
+        assert totals["standing_value_sek_per_ha"] == pytest.approx(0.0)
+        assert totals["standing_volume_m3_per_ha"] == pytest.approx(0.0)
+        assert totals["timber_valued_stems_per_ha"] == pytest.approx(0.0)
+
+    def test_an_empty_tree_list_values_to_zero(self):
+        pipeline, _ = self._initialised()
+        totals = pipeline.value_standing_forest([])
+        assert totals["standing_value_sek_per_ha"] == pytest.approx(0.0)
+        assert totals["standing_volume_m3_per_ha"] == pytest.approx(0.0)
+
+    def test_a_merchantable_stand_is_worth_something(self):
+        """The other side of the guards: the ordinary path still prices."""
+        from pyforestry.base.helpers.tree import Tree
+
+        pipeline, spruce = self._initialised()
+        merchantable = [
+            Tree(species=spruce, diameter_cm=28.0, height_m=22.0, age=60, weight_n=200.0)
+        ]
+        totals = pipeline.value_standing_forest(merchantable)
+
+        assert totals["standing_value_sek_per_ha"] > 0.0
+        assert totals["standing_volume_m3_per_ha"] > 0.0
+        assert totals["timber_valued_stems_per_ha"] > 0.0
+
+    def test_valuing_before_initialisation_is_refused(self):
+        with pytest.raises(RuntimeError, match="initialized before valuation"):
+            _make_pipeline().value_standing_forest([])
+
+    def test_the_qmd_helpers_answer_zero_for_a_stand_with_nothing_in_it(self):
+        """Degenerate inputs get 0.0, not a division by zero."""
+        from pyforestry.base.helpers.tree import Tree
+        from pyforestry.base.helpers.tree_species import TreeSpecies
+
+        qmd = type(_make_pipeline())._qmd_cm_from_basal_area_and_stems
+        assert qmd(basal_area_m2_ha=0.0, stems_per_ha=1000.0) == pytest.approx(0.0)
+        assert qmd(basal_area_m2_ha=20.0, stems_per_ha=0.0) == pytest.approx(0.0)
+        assert qmd(basal_area_m2_ha=20.0, stems_per_ha=1000.0) > 0.0
+
+        spruce = TreeSpecies.Sweden.picea_abies
+        hq = type(_make_pipeline())._hq_height_m_from_tree_list
+        assert hq([], qmd_cm=0.0) == pytest.approx(0.0)
+        # A tree list with no usable stem cannot give a height for the QMD either.
+        unusable = [Tree(species=spruce, diameter_cm=0.0, height_m=0.0, weight_n=0.0)]
+        assert hq(unusable, qmd_cm=20.0) == pytest.approx(0.0)
