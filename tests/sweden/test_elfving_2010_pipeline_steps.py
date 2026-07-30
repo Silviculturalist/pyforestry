@@ -441,12 +441,16 @@ class TestDegenerateStands:
         pipeline.initialize(site=_make_site())
         return pipeline, TreeSpecies.Sweden.picea_abies
 
-    def test_a_stand_of_saplings_values_as_pulp_rather_than_raising(self):
-        """Too small to buck, so the taper route raises and the pulp route catches it.
+    def test_a_stand_of_saplings_holds_wood_but_is_worth_nothing(self):
+        """Too small to buck, and too small to yield a pulp log either.
 
-        The value is not zero -- a thousand saplings a hectare hold some wood --
-        but none of it came from a bucking solution, which is what separates the
-        two routes.
+        This test used to assert the stand was worth *something*, on the reasoning
+        that a thousand saplings a hectare hold some wood. They do -- and the
+        volume column still says so -- but the price list buys pulpwood logs of at
+        least five centimetres at the top and 2.7 m long, and a stem four
+        millimetres thick yields none. Paying the pulpwood price on the whole stem
+        anyway put tens of thousands of SEK per hectare into the first twenty
+        years of every projection.
         """
         from pyforestry.base.helpers.tree import Tree
 
@@ -457,10 +461,27 @@ class TestDegenerateStands:
         ]
         totals = pipeline.value_standing_forest(saplings)
 
-        assert totals["standing_value_sek_per_ha"] > 0.0
         assert totals["standing_volume_m3_per_ha"] > 0.0
+        assert totals["standing_value_sek_per_ha"] == pytest.approx(0.0)
+        assert totals["pulp_volume_m3_per_ha"] == pytest.approx(0.0)
         assert totals["timber_valued_stems_per_ha"] == pytest.approx(0.0)
         assert totals["timber_volume_m3_per_ha"] == pytest.approx(0.0)
+
+    def test_pulpwood_is_the_part_of_a_stem_the_price_list_would_buy(self):
+        """Not the whole stem: the top above five centimetres is not pulpwood."""
+        from pyforestry.base.helpers.tree import Tree
+
+        pipeline, spruce = self._initialised()
+        # Below the 13 cm timber minimum, so this takes the non-bucking route.
+        pole = [Tree(species=spruce, diameter_cm=10.0, height_m=11.0, age=30, weight_n=500.0)]
+        totals = pipeline.value_standing_forest(pole)
+
+        assert totals["timber_volume_m3_per_ha"] == pytest.approx(0.0)
+        assert 0.0 < totals["pulp_volume_m3_per_ha"] < totals["standing_volume_m3_per_ha"]
+        # The merchantable share of a 10 cm spruce, against the bucking taper.
+        assert totals["pulp_volume_m3_per_ha"] / totals["standing_volume_m3_per_ha"] == (
+            pytest.approx(0.845, abs=0.02)
+        )
 
     def test_trees_with_nothing_to_value_are_skipped(self):
         """No species, no diameter, no height, no weight: four separate guards."""
@@ -478,6 +499,9 @@ class TestDegenerateStands:
         assert totals["standing_value_sek_per_ha"] == pytest.approx(0.0)
         assert totals["standing_volume_m3_per_ha"] == pytest.approx(0.0)
         assert totals["timber_valued_stems_per_ha"] == pytest.approx(0.0)
+        # Skipped, but counted: the three stems that carry a weight are reported
+        # rather than dropped. The fourth weighs nothing, so it is no stems.
+        assert totals["unpriceable_stems_per_ha"] == pytest.approx(300.0)
 
     def test_an_empty_tree_list_values_to_zero(self):
         pipeline, _ = self._initialised()

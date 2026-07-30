@@ -43,6 +43,7 @@ from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies
 from pyforestry.base.pricelist import Pricelist, SolutionCube, create_pricelist_from_data
 from pyforestry.base.simulation.core import SimulationContext
 from pyforestry.base.simulation.pipeline import Step, run_pipeline
+from pyforestry.base.taper.taper import Taper
 from pyforestry.base.timber_bucking.nasberg_1985 import BuckingConfig, Nasberg_1985_BranchBound
 from pyforestry.simulation.services import RandomBundle
 from pyforestry.sweden.adapters.elfving_1982 import (
@@ -306,6 +307,11 @@ class ValuationTotals:
     #: Stems whose value came from a *bucking* solution. Zero for a route that does
     #: not buck, which is a fact about the route rather than a missing number.
     timber_valued_stems_per_ha: float = 0.0
+    #: Stems the valuation could not price at all -- no species, no dimensions, or
+    #: below the volume functions' domain. They used to be dropped silently, so a
+    #: stand could lose half its stems between the tree list and the value column
+    #: with nothing in the row saying so.
+    unpriceable_stems_per_ha: float = 0.0
     #: Which bark basis :attr:`volume_m3_per_ha` is on. The bucking route is under
     #: bark throughout; the Söderberg form-height route is over bark. The two differ
     #: by the bark fraction -- ten to twenty per cent for Swedish conifers -- so the
@@ -317,7 +323,7 @@ class ValuationTotals:
         """Return the reporting keys, with the unit value derived once.
 
         Returns:
-            The seven figures a projection row carries, whichever route produced them.
+            The eight figures a projection row carries, whichever route produced them.
         """
         return {
             "standing_value_sek_per_ha": self.value_sek_per_ha,
@@ -328,6 +334,7 @@ class ValuationTotals:
                 self.value_sek_per_ha / self.volume_m3_per_ha if self.volume_m3_per_ha > 0 else 0.0
             ),
             "timber_valued_stems_per_ha": self.timber_valued_stems_per_ha,
+            "unpriceable_stems_per_ha": self.unpriceable_stems_per_ha,
             "volume_over_bark": 1.0 if self.volume_over_bark else 0.0,
         }
 
@@ -990,12 +997,15 @@ class CompositePipeline:
 
         for tree in trees:
             species = tree.species
-            if species is None:
-                continue
             diameter_cm = float(tree.diameter_cm or 0.0)
             height_m = float(tree.height_m or 0.0)
             weight = float(tree.weight_n or 0.0)
-            if diameter_cm <= 0.0 or height_m <= 0.0 or weight <= 0.0:
+            if species is None or diameter_cm <= 0.0 or height_m <= 0.0:
+                # A stem with no species or no dimensions cannot be priced. It is
+                # still in the stand, so it is reported rather than dropped.
+                totals.unpriceable_stems_per_ha += weight
+                continue
+            if weight <= 0.0:
                 continue
 
             valuation_species = self._valuation_species_name(species)
@@ -1052,12 +1062,61 @@ class CompositePipeline:
             try:
                 volume_m3 = float(timber.getvolume())
             except ValueError:
-                continue  # Skip trees too small for volume calculation
-            totals.value_sek_per_ha += volume_m3 * pulp_price * weight
+                # Below the volume functions' domain. The stem is standing wood
+                # this valuation cannot measure, so say so rather than drop it.
+                totals.unpriceable_stems_per_ha += weight
+                continue
+            pulp_volume_m3 = self._pulpwood_volume_m3(timber, stem_volume_m3=volume_m3)
+            totals.value_sek_per_ha += pulp_volume_m3 * pulp_price * weight
             totals.volume_m3_per_ha += volume_m3 * weight
-            totals.pulp_volume_m3_per_ha += volume_m3 * weight
+            totals.pulp_volume_m3_per_ha += pulp_volume_m3 * weight
 
         return totals.as_row()
+
+    def _pulpwood_volume_m3(self, timber: SweTimber, *, stem_volume_m3: float) -> float:
+        """Volume of one stem that meets the price list's own pulp-log limits.
+
+        The route that does not buck used to pay the pulpwood price on the whole
+        under-bark stem, top and all, while the same price list declares a
+        minimum pulp-log top diameter and a minimum log length. Measured against
+        the taper the bucking route uses, the sellable share of a spruce is about
+        0.87 at 28 cm and 0.69 at 6 cm, so every stem below the timber diameter
+        was over-valued by a seventh to a third; and a stem too small for the
+        taper at all -- a sapling -- was paid for in full for wood that yields no
+        log of any assortment.
+
+        Capped at the stem it came from, because the taper and the volume function
+        are different studies and need not agree: Edgren-Nylinder (1949) carries
+        forms for spruce and for pine, and gives every broadleaf the pine form,
+        while the volume comes from Brandel's own birch functions. A birch
+        therefore tapers to some four per cent more wood than its volume function
+        says the whole stem holds, and a merchantable part larger than the stem is
+        not something to pay for.
+
+        Args:
+            timber: The stem, under bark, as the valuation built it.
+            stem_volume_m3: What the volume function says the whole stem holds.
+
+        Returns:
+            The volume from the stump to the height where the stem narrows to the
+            minimum pulp-log top diameter, or ``0.0`` for a stem that cannot give
+            one log of the minimum length. The wood is still standing and still
+            counted in the volume column; it is simply not something the price
+            list buys.
+        """
+        min_top_diameter_cm = float(self._pricelist.PulpLogDiameter.Min)
+        min_log_length_m = float(self._pricelist.PulpLogLength.Min)
+        stump_height_m = float(timber.stump_height_m or 0.0)
+        try:
+            taper = EdgrenNylinder1949(timber)
+            top_height_m = float(taper.get_height_at_diameter(min_top_diameter_cm))
+        except (ValueError, TypeError):
+            # Outside the taper's validity: a stem this small holds no log.
+            return 0.0
+        if top_height_m - stump_height_m < min_log_length_m:
+            return 0.0
+        merchantable_m3 = float(Taper.volume_section(taper, stump_height_m, top_height_m))
+        return max(0.0, min(merchantable_m3, float(stem_volume_m3)))
 
     # ------------------------------------------------------------------
     # Internal helpers
