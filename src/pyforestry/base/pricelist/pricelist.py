@@ -98,7 +98,15 @@ class DiameterRange:
 
 @dataclass
 class LengthRange:
-    """The inclusive log-length span, in decimetres, an assortment accepts."""
+    """The inclusive log-length span, in **metres**, an assortment accepts.
+
+    Metres because that is what every price list in this package states and what
+    the only consumer reads: ``Nasberg_1985_BranchBound`` converts these to
+    decimetres by multiplying by ten. This docstring used to say decimetres and
+    the :class:`Pricelist` defaults were written as decimetres --
+    ``LengthRange(30, 50)`` -- which the bucker then read as thirty to fifty
+    metres, so no log a Swedish forest grows could satisfy them.
+    """
 
     Min: float
     Max: float
@@ -315,8 +323,11 @@ class Pricelist:
         self.LogCullPrice: float = 50
         self.FuelWoodPrice: float = 25
         self.HighStumpHeight: float = 0.0
-        self.PulpLogLength = LengthRange(30, 50)
-        self.TimberLogLength = LengthRange(31, 55)
+        # Metres, like every price list this package ships and like the bucker
+        # reads them. Written as 30/50 and 31/55 they were decimetres, so a
+        # hand-built list demanded logs thirty metres long and got none.
+        self.PulpLogLength = LengthRange(3.0, 5.0)
+        self.TimberLogLength = LengthRange(3.1, 5.5)
 
     def load_from_dict(self, price_data: dict):
         """Loads and configures the entire pricelist from a dictionary."""

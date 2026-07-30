@@ -140,3 +140,21 @@ def test_an_identity_must_name_the_list_and_the_money():
         PricelistIdentity(name="   ", currency="SEK", source=source)
     with pytest.raises(ValueError, match="what currency"):
         PricelistIdentity(name="Test fixture prices", currency="", source=source)
+
+
+def test_log_lengths_are_metres_everywhere_they_are_set():
+    """The default list and a loaded one must state lengths in the same unit.
+
+    ``LengthRange`` documented decimetres, the ``Pricelist`` defaults were
+    written as decimetres, and every shipped price list plus the only consumer
+    -- ``Nasberg_1985_BranchBound``, which multiplies by ten to get decimetres --
+    used metres. A hand-built list therefore demanded pulpwood logs thirty metres
+    long, and no stem could yield one.
+    """
+    default = Pricelist()
+    loaded = create_pricelist_from_data(MELLANSKOG_2013_PRICE_DATA)
+
+    for pricelist in (default, loaded):
+        for span in (pricelist.PulpLogLength, pricelist.TimberLogLength):
+            assert 1.0 <= span.Min <= 10.0, f"{span} is not a log length in metres"
+            assert span.Min <= span.Max <= 10.0, f"{span} is not a log length in metres"
