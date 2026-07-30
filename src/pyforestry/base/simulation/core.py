@@ -509,6 +509,14 @@ class SimulationContext:
         rng_bundle = getattr(self, "random_bundle", None)
         if rng_bundle is not None and hasattr(rng_bundle, "snapshot"):
             payload["rng_state"] = rng_bundle.snapshot()
+            # The root seed too, not only the per-stream states: a stream reached
+            # for the first time after a restore derives its seed from the root,
+            # and without it that stream would be a different one. It is also what
+            # lets :meth:`from_checkpoint` rebuild a bundle when the caller has no
+            # way to hand one over -- a worker process, say.
+            root_seed = getattr(rng_bundle, "seed", None)
+            if root_seed is not None:
+                payload["rng_seed"] = int(root_seed)
         if include_history:
             if history_tail is not None:
                 history_slice = self.history[-int(history_tail) :]
@@ -529,19 +537,27 @@ class SimulationContext:
         Restore a context from ``checkpoint`` produced by :meth:`checkpoint`.
 
         ``model`` must be the growth model instance that will drive the context.
-        ``random_bundle`` receives any RNG state the checkpoint carries. Without it
-        a checkpoint's ``rng_state`` cannot be restored, and a stochastic run
-        resumed from it would silently diverge -- so that combination raises rather
-        than continuing with a fresh stream.
+        ``random_bundle`` receives any RNG state the checkpoint carries. Pass one
+        to restore into a bundle you already hold; otherwise a checkpoint that
+        records its root seed rebuilds an equivalent bundle here, which is what
+        lets a checkpoint cross a process boundary -- :func:`run_parallel` hands
+        one to a worker that has no bundle to give.
+
+        A checkpoint carrying RNG state but *no* seed still raises: resuming that
+        one without a bundle would silently continue on a fresh stream.
 
         Raises:
-            ValueError: If the checkpoint carries RNG state but no bundle was given
-                to restore it into.
+            ValueError: If the checkpoint carries RNG state that cannot be
+                restored -- no bundle given, and no root seed recorded.
         """
 
         payload = dict(checkpoint)
         mode = payload["mode"]
         inventory = payload["inventory"]
+        if random_bundle is None and "rng_state" in payload and "rng_seed" in payload:
+            from pyforestry.simulation.services import RandomBundle
+
+            random_bundle = RandomBundle(int(payload["rng_seed"]))
         ctx = cls(
             mode=mode,
             area_ha=payload.get("area_ha"),
