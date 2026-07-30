@@ -325,15 +325,29 @@ class MeanTreeVolumeDescriptor(VolumeDescriptor):
     gives the *proportions* of butt, middle, top and pulp a stand of that mean
     size yields.
 
-    The proportions are then scaled so the total matches the volume the model's
-    own published volume function says came out. That division of labour is the
-    point:
+    One stem's worth of logs, multiplied by how many came out -- the same
+    arithmetic :class:`TreeVolumeDescriptor` does with an expansion factor, so the
+    two routes report volume and value on the same basis.
 
-    * **how much** comes from the model -- exact, and unaffected by anything here;
-    * **which grades** comes from the mean tree -- an approximation, and named as
-      one in the metadata.
+    **This used to scale the grades so they summed to the model's own volume
+    figure**, on the reasoning that how much came out is the model's business and
+    only the split is the mean tree's. Those are not the same measure of volume.
+    A stand volume function reports m3sk -- stem volume over bark, on the wider
+    Nordic definition; the price list buys m3to, top-measured log volume, as
+    :attr:`TimberPricelist.volume_type` declares. Scaling m3to grades up to an
+    m3sk total pays m3to prices on m3sk cubic metres, about 21% more per removal
+    than the stem yields. Nothing caught it because it made priced volume equal
+    harvested volume by construction, and the tree-list route -- which prices
+    around 78% of what its own reporter counts -- was the only place the
+    difference showed.
 
-    Two things it assumes, both worth knowing before comparing the result with a
+    So the model's figure is no longer imposed on the logs. It still says how much
+    left the stand, which is what the summary's ``harvested_m3`` reports in m3sk;
+    the logs are what the mean stem yields in m3to.
+    ``share_of_removed_volume_sold`` is the ratio between them, so the conversion
+    is a number a reader can see instead of an assumption.
+
+    Three things it assumes, all worth knowing before comparing the result with a
     bucked inventory:
 
     * The mean tree's grade split is the stand's. It is not: value is convex in
@@ -343,7 +357,19 @@ class MeanTreeVolumeDescriptor(VolumeDescriptor):
     * Whatever height the run supplied for the mean stem is the mean stem's. A
       model that predicts only *dominant* height has none, and using that
       overstates the stem's taper -- which is why the height is the run's to
-      supply rather than something guessed here.
+      supply rather than something guessed here. That overstatement now shows up
+      where it can be seen, in the share of removed volume sold, rather than
+      being absorbed into a scale factor.
+    * The mean stem stands for every stem removed. A thinning from below takes
+      stems smaller than the mean, so pricing them all at the mean overstates the
+      grade split of a low thinning.
+
+    Raises:
+        ValueError: From :meth:`evaluate`, if a mean stem bucks to more log volume
+            than the model says came out of the stand. m3to is a narrower measure
+            than m3sk, so the logs cannot exceed the stem volume they came from;
+            when they do, the representative stem is too large for the removal --
+            most often a dominant height standing in for a mean one.
     """
 
     removals: Tuple[MeanTreeRemoval, ...]
@@ -357,7 +383,12 @@ class MeanTreeVolumeDescriptor(VolumeDescriptor):
     timber_factory: Callable[[StemDimensions], Timber] = _default_timber_factory
 
     def evaluate(self) -> VolumeResult:  # type: ignore[override]
-        """Buck each mean stem and scale its grades to the volume removed."""
+        """Buck each mean stem and multiply its grades by the stems removed.
+
+        Raises:
+            ValueError: If a mean stem's logs exceed the volume the model says was
+                removed, which no real stem can do.
+        """
         config = self.bucking_config
         if not isinstance(config, BuckingConfig):
             raise TypeError("Bucking configuration must be a BuckingConfig instance.")
@@ -369,7 +400,8 @@ class MeanTreeVolumeDescriptor(VolumeDescriptor):
         pieces: list[PieceRecord] = []
         total_value = 0.0
         volume_by_quality: Dict[QualityType, float] = {quality: 0.0 for quality in QualityType}
-        scalings: list[float] = []
+        removed_m3 = 0.0
+        sold_m3 = 0.0
 
         for removal in self.removals:
             timber = self.timber_factory(removal)
@@ -379,17 +411,28 @@ class MeanTreeVolumeDescriptor(VolumeDescriptor):
                 config=config,
             )
 
-            # The mean stem's own bucked volume, which the model's figure replaces.
+            # The mean stem's own bucked volume, in the price list's measure.
             bucked = float(sum(result.volume_per_quality))
+            removed_m3 += removal.volume_m3
             if bucked <= 0.0:
                 # Too small to yield anything the price list buys. The volume is
                 # still gone from the stand; it simply earns nothing.
                 continue
-            # Scale so the total is the model's, and the mean tree only decides
-            # the split. removal.stems alone would double-count the difference
-            # between the bucked mean stem and the model's volume function.
-            scale = removal.volume_m3 / bucked
-            scalings.append(scale / removal.stems if removal.stems else scale)
+            # One stem's worth of logs, times how many came out. The model's own
+            # figure stays what it is: how much left the stand, in its own measure.
+            scale = removal.stems
+            sold = bucked * scale
+            if sold > removal.volume_m3:
+                raise ValueError(
+                    f"The mean stem for cohort {removal.cohort_id!r} bucks to "
+                    f"{sold:.4f} m3/ha of logs, but the model says only "
+                    f"{removal.volume_m3:.4f} m3/ha came out of the stand. Log volume "
+                    "is the narrower measure, so it cannot exceed the stem volume it "
+                    f"came from. The stem given -- {removal.diameter_cm:.1f} cm by "
+                    f"{removal.height_m:.1f} m -- is too big for this removal; the usual "
+                    "cause is a dominant height standing in for a mean height."
+                )
+            sold_m3 += sold
 
             total_value += float(result.total_value) * scale
             for idx, volume in enumerate(result.volume_per_quality):
@@ -418,12 +461,17 @@ class MeanTreeVolumeDescriptor(VolumeDescriptor):
         metadata.setdefault("method", "mean tree")
         metadata.setdefault(
             "pricing",
-            "The stand's mean stem (QMD, mean height) bucked once and scaled so the "
-            "total matches the model's own volume. Grade split is the mean tree's, "
-            "which understates a stand whose diameters are widely spread.",
+            "The stand's mean stem (QMD, mean height) bucked once and multiplied by the "
+            "stems removed. Grade split is the mean tree's, which understates a stand "
+            "whose diameters are widely spread.",
         )
-        if scalings:
-            metadata.setdefault("mean_stems_per_bucked_tree", float(sum(scalings) / len(scalings)))
+        # What share of the volume that left the stand was sold as logs. The
+        # remainder is the difference between the measures: the model reports the
+        # wider stem volume, the price list buys top-measured logs. Reported rather
+        # than assumed, because how far below 1.0 it sits depends on the species,
+        # the taper and the height the run supplied for the mean stem.
+        if removed_m3 > 0.0:
+            metadata.setdefault("share_of_removed_volume_sold", sold_m3 / removed_m3)
 
         return VolumeResult(
             descriptor=self,
@@ -463,6 +511,20 @@ class VolumeConnector:
         # have a mean tree, and that can be bucked. Taking this route rather than
         # dropping them is what gave Norway a valuation at all.
         mean_trees = tuple(ledger.iter_mean_tree_removals())
+        stems = tuple(ledger.iter_tree_removals())
+        if mean_trees and stems:
+            # Nothing in the shipped runbooks produces both -- a removal is
+            # recorded one way or the other, by what the stand could report -- but
+            # both recorders are public, and this used to take the mean-tree route
+            # and drop the stems without a word. A ledger holding one 30 cm stem
+            # worth 22,821 and one small mean tree priced at 30.
+            raise ValueError(
+                f"This ledger holds {len(stems)} individual stem removal(s) and "
+                f"{len(mean_trees)} mean-tree removal(s). They are two ways of "
+                "describing what came out, and pricing both would count the same "
+                "wood twice while pricing either alone would silently lose the "
+                "other. Record a removal one way or the other."
+            )
         if mean_trees:
             return MeanTreeVolumeDescriptor(
                 ledger=ledger,
@@ -478,7 +540,7 @@ class VolumeConnector:
 
         return TreeVolumeDescriptor(
             ledger=ledger,
-            removals=tuple(ledger.iter_tree_removals()),
+            removals=stems,
             pricelist=settings.pricelist,
             taper_class=settings.taper_class,
             bucking_config=settings.bucking_config,

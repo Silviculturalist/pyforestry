@@ -14,6 +14,7 @@ import json
 import pytest
 
 from pyforestry.base.contracts import SourceReference
+from pyforestry.base.helpers.primitives import Age
 from pyforestry.base.helpers.tree_species import TreeSpecies
 from pyforestry.base.pricelist import Pricelist
 from pyforestry.base.pricelist.pricelist import (
@@ -167,7 +168,7 @@ def test_thinning_and_disturbance_are_reported_apart(tmp_path, norwegian_prices)
         output_dir=tmp_path / "thin",
         n_stands=1,
         n_steps=6,
-        thin_at_years=[60.0],
+        thin_at_age=[Age.TOTAL(60.0)],
         valuation=norwegian_prices,
         discount_rate=0.0,
     )
@@ -357,7 +358,7 @@ def test_a_thinning_is_bucked_at_the_stands_mean_tree(tmp_path, norwegian_prices
         start_year=2025,
         valuation=norwegian_prices,
         discount_rate=0.0,
-        thin_at_years=[60.0],
+        thin_at_age=[Age.TOTAL(60.0)],
     )
 
     assert result.rows[0]["harvested_m3"] > 0.0
@@ -374,11 +375,15 @@ def test_a_thinning_is_bucked_at_the_stands_mean_tree(tmp_path, norwegian_prices
     assert any(q.name != "Undefined" for q in graded)
 
 
-def test_the_bucked_total_is_the_models_own_volume(tmp_path, norwegian_prices) -> None:
-    """The mean tree decides the split; the model decides how much.
+def test_the_logs_are_a_narrower_measure_than_the_volume_removed(
+    tmp_path, norwegian_prices
+) -> None:
+    """A thinning sells less than it fells, because the two are measured differently.
 
-    Scaling to the model's figure is what keeps an approximation of the grade
-    mix from becoming an error in the volume.
+    ``harvested_m3`` is the model's own figure, in the m3sk a Nordic stand volume
+    function reports; the price list buys m3to, the narrower top-measured log
+    volume. This used to be an equality: the bucked grades were scaled up until
+    they summed to the model's m3sk, which paid m3to prices on m3sk cubic metres.
     """
     result = run_norway_scenario(
         global_seed=1,
@@ -388,12 +393,18 @@ def test_the_bucked_total_is_the_models_own_volume(tmp_path, norwegian_prices) -
         start_year=2025,
         valuation=norwegian_prices,
         discount_rate=0.0,
-        thin_at_years=[60.0],
+        thin_at_age=[Age.TOTAL(60.0)],
     )
 
     valuation = result.contexts[0].attrs["valuation"]
     bucked = sum(valuation["volume_by_quality"].values())
-    assert bucked == pytest.approx(result.rows[0]["harvested_m3"], rel=1e-9)
+    harvested = result.rows[0]["harvested_m3"]
+
+    assert 0.0 < bucked < harvested, "logs cannot exceed the stem volume they came from"
+    share = valuation["metadata"]["share_of_removed_volume_sold"]
+    assert share == pytest.approx(bucked / harvested, rel=1e-9)
+    # Reported rather than assumed, and in the range a real conversion falls in.
+    assert 0.7 < share < 1.0
 
 
 def test_the_valuation_stage_needs_a_price_list(tmp_path) -> None:
@@ -417,7 +428,7 @@ def test_the_manifest_records_the_caller_s_price_list(tmp_path, norwegian_prices
         start_year=2025,
         valuation=norwegian_prices,
         discount_rate=0.0,
-        thin_at_years=[60.0],
+        thin_at_age=[Age.TOTAL(60.0)],
     )
 
     manifest = json.loads(result.artifacts.run_manifest_path.read_text(encoding="utf-8"))
@@ -445,7 +456,7 @@ def test_inflation_reaches_norways_horizon_npv(tmp_path, norwegian_prices) -> No
             step_years=5.0,
             valuation=norwegian_prices,
             discount_rate=0.03,
-            thin_at_years=[60.0],
+            thin_at_age=[Age.TOTAL(60.0)],
             forcings=forcings,
         )
 
@@ -466,19 +477,24 @@ def test_inflation_reaches_norways_horizon_npv(tmp_path, norwegian_prices) -> No
     assert flat.rows[0]["net_present_value"] == pytest.approx(npv_flat)
 
 
-def test_the_mean_tree_is_the_stands_qmd_and_the_models_height() -> None:
-    """What the reporter reads, and the one thing it has to approximate.
+def test_the_mean_tree_is_the_stands_qmd_and_a_height_the_model_implies() -> None:
+    """What the reporter reads, and the one thing it has to derive.
 
-    Kuehne (2022) predicts a *dominant* height trajectory and no mean height, so
-    the representative stem is given the dominant height. That overstates its
-    taper and shifts the grade split towards sawtimber; it does not affect how
-    much came out, which comes from the model's own volume function.
+    Kuehne (2022) predicts a *dominant* height trajectory and no mean height.
+    Substituting the dominant one made the representative stem too big -- it
+    bucked to more wood than the model said the thinning removed, which no real
+    stem can do. So the height is inverted out of Brantseg (1967) instead, at the
+    stand's QMD, against the volume per stem the model itself reports: Brantseg is
+    one of the three functions Kuehne's volume equation is built on, so this is
+    the stem the model was already describing.
     """
     from pyforestry.norway.adapters.kuehne_2022 import (
         KuehnePineAdapterConfig,
         KuehnePineGrowthModel,
     )
+    from pyforestry.norway.growth.kuehne_2022 import kuehne_2022_stand_volume
     from pyforestry.norway.simulation.orchestration import kuehne_mean_tree
+    from pyforestry.norway.volume.brantseg_1967 import brantseg_1967_volume_scots_pine_norway
 
     unit = build_kuehne_stands(1)[0]
     model = KuehnePineGrowthModel(
@@ -489,7 +505,22 @@ def test_the_mean_tree_is_the_stands_qmd_and_the_models_height() -> None:
 
     mean_tree = kuehne_mean_tree(ctx, 0.2)
 
+    dominant_height = float(ctx.attrs["kuehne_dominant_height_m"])
     assert mean_tree.diameter_cm == pytest.approx(float(ctx.stand.QMD))
-    assert mean_tree.height_m == pytest.approx(float(ctx.attrs["kuehne_dominant_height_m"]))
     assert mean_tree.species == TreeSpecies.Sweden.pinus_sylvestris
     assert mean_tree.stems_removed == pytest.approx(float(ctx.metrics["Stems"]["TOTAL"]) * 0.2)
+
+    # A mean stem is shorter than a dominant one, and never taller.
+    assert 1.3 < mean_tree.height_m < dominant_height
+
+    # It is the height at which Brantseg gives the volume per stem the model
+    # reports for this removal, not a guess.
+    basal_area = float(ctx.metrics["BasalArea"]["TOTAL"])
+    age = Age.TOTAL(float(ctx.state["t"]))
+    removed = float(kuehne_2022_stand_volume(basal_area, dominant_height, age)) - float(
+        kuehne_2022_stand_volume(basal_area * 0.8, dominant_height, age)
+    )
+    implied = float(
+        brantseg_1967_volume_scots_pine_norway(mean_tree.height_m, mean_tree.diameter_cm).value
+    )
+    assert implied == pytest.approx(removed / mean_tree.stems_removed, rel=1e-6)

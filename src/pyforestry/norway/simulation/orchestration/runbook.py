@@ -18,7 +18,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Optional, Sequence
 
-from pyforestry.base.helpers.primitives import Age, StandBasalArea, Stems
+from pyforestry.base.helpers.primitives import Age, AgeMeasurement, StandBasalArea, Stems
 from pyforestry.base.helpers.stand import Stand
 from pyforestry.base.helpers.tree_species import TreeSpecies
 from pyforestry.base.simulation.core import SimulationContext
@@ -28,6 +28,7 @@ from pyforestry.norway.adapters.kuehne_2022 import (
 )
 from pyforestry.norway.growth.kuehne_2022 import kuehne_2022_stand_volume
 from pyforestry.norway.simulation.presets import ScenarioConfig, build_baseline_scenario_config
+from pyforestry.norway.volume.brantseg_1967 import brantseg_1967_volume_scots_pine_norway
 from pyforestry.simulation.forcing import ForcingSet
 from pyforestry.simulation.scenario import ScenarioRunResult, StandUnit, run_scenario
 from pyforestry.simulation.stages import STAND_SPECIES_KEY, MeanTree
@@ -42,7 +43,7 @@ __all__ = [
 
 
 def kuehne_stand_volume(ctx: SimulationContext) -> float:
-    """Return the stand's volume now, from Kuehne (2022) Eq. 10.
+    """Return the stand's volume now, from Kuehne (2022) Eq. 8.
 
     Evaluated on the context's *current* basal area, dominant height and age, so
     a thinning or a disturbance between two growth steps is visible immediately.
@@ -72,14 +73,22 @@ def kuehne_mean_tree(ctx: SimulationContext, removed_fraction: float) -> MeanTre
     stand derives from those two, and the stem that diameter describes is a real
     one: bucking it gives the assortment split a stand of that mean size yields.
 
-    **The height is the model's dominant height**, because Kuehne (2022) predicts
-    no other: its height function is a dominant-height trajectory. A mean stem is
-    shorter than a dominant one, so this overstates the representative stem's
-    taper and shifts its grade split towards sawtimber. What it does *not* affect
-    is how much came out: the descriptor scales the bucked grades so the total
-    matches the model's own volume function. Supply a mean-height relation
-    through ``mean_tree=`` if you have one for Norwegian Scots pine; this
-    package does not.
+    The height is the harder half, because Kuehne (2022) predicts only *dominant*
+    height -- its height function is a dominant-height trajectory -- and a mean
+    stem is shorter than a dominant one. Substituting the dominant height, which
+    this did, makes the representative stem too big: on the shipped baseline it
+    bucks to about 12% more wood than the model says the thinning removed, which
+    is impossible for a real stem and was previously absorbed unseen into a scale
+    factor.
+
+    So the height is *implied from the model instead*. The model states how much
+    volume came out and in how many stems, so the mean stem's volume is their
+    quotient; :func:`brantseg_1967_volume_scots_pine_norway` gives the volume of a
+    Scots pine of a given diameter and height, and this inverts it for the height
+    consistent with the model's own figures at the stand's QMD. That is not a new
+    height relation: Brantseg (1967) is one of the three single-tree functions
+    Kuehne's own volume equation is built on, so the stem this returns is the one
+    the model is already implicitly describing.
 
     Args:
         ctx: The run's context, read before the removal is applied.
@@ -88,12 +97,64 @@ def kuehne_mean_tree(ctx: SimulationContext, removed_fraction: float) -> MeanTre
     Returns:
         The representative stem and how many of it come out.
     """
+    stems_removed = float(ctx.metrics["Stems"]["TOTAL"]) * float(removed_fraction)
+    diameter_cm = float(ctx.stand.QMD)
+    dominant_height_m = float(ctx.attrs["kuehne_dominant_height_m"])
+
+    height_m = dominant_height_m
+    if stems_removed > 0.0:
+        # What the removal actually costs the stand, evaluated the way the run's
+        # own reporter will: Kuehne's volume goes as BA^0.969, so taking a fifth
+        # of the basal area does not take a fifth of the volume, and estimating it
+        # as one left the implied stem a little too tall.
+        basal_area = float(ctx.metrics["BasalArea"]["TOTAL"])
+        age = Age.TOTAL(float(ctx.state.get("t", 0.0)))
+        before = float(kuehne_2022_stand_volume(basal_area, dominant_height_m, age))
+        after = float(
+            kuehne_2022_stand_volume(
+                basal_area * (1.0 - float(removed_fraction)), dominant_height_m, age
+            )
+        )
+        implied = _height_for_stem_volume(diameter_cm, (before - after) / stems_removed)
+        if implied is not None:
+            # Never taller than the dominant height: the inversion is a mean, and a
+            # mean stem does not out-top the dominant one.
+            height_m = min(implied, dominant_height_m)
+
     return MeanTree(
         species=ctx.attrs.get(STAND_SPECIES_KEY, TreeSpecies.Sweden.pinus_sylvestris),
-        diameter_cm=float(ctx.stand.QMD),
-        height_m=float(ctx.attrs["kuehne_dominant_height_m"]),
-        stems_removed=float(ctx.metrics["Stems"]["TOTAL"]) * float(removed_fraction),
+        diameter_cm=diameter_cm,
+        height_m=height_m,
+        stems_removed=stems_removed,
     )
+
+
+def _height_for_stem_volume(diameter_cm: float, volume_m3: float) -> Optional[float]:
+    """Return the height at which a Scots pine of ``diameter_cm`` holds ``volume_m3``.
+
+    Brantseg (1967) is monotonic in height at a fixed diameter, so a bisection on
+    ``[1.4, 50]`` m finds it. ``None`` when the target volume lies outside what a
+    stem of that diameter can hold at any height in that range, which leaves the
+    caller's own height in place rather than substituting a fabricated one.
+    """
+    target = float(volume_m3)
+    if target <= 0.0 or diameter_cm <= 0.0:
+        return None
+
+    def stem_volume(height_m: float) -> float:
+        # AtomicVolume, in m3 -- the function reports dm3 internally and wraps it.
+        return float(brantseg_1967_volume_scots_pine_norway(height_m, diameter_cm).value)
+
+    low, high = 1.4, 50.0
+    if not (stem_volume(low) <= target <= stem_volume(high)):
+        return None
+    for _ in range(60):
+        mid = 0.5 * (low + high)
+        if stem_volume(mid) < target:
+            low = mid
+        else:
+            high = mid
+    return 0.5 * (low + high)
 
 
 #: The starting stand the Kuehne (2022) baseline projects from. Even-aged Scots
@@ -164,7 +225,10 @@ def run_norway_scenario(
     valuation: Optional[ValuationSettings] = None,
     discount_rate: Optional[float] = None,
     disturbance_rate_per_year: float = 0.0,
-    thin_at_years: Sequence[float] = (),
+    thin_at_age: Optional[Sequence[AgeMeasurement]] = None,
+    thin_at_year: Optional[Sequence[float]] = None,
+    start_age: Optional[AgeMeasurement] = None,
+    time_to_breast_height: Optional[float] = None,
     start_year: float = 0.0,
     forcings: Optional[ForcingSet] = None,
 ) -> ScenarioRunResult:
@@ -203,7 +267,19 @@ def run_norway_scenario(
             Supplied by the caller; this package ships no rate, because a
             disturbance rate is a finding and there is no source for one here.
             Zero, the default, makes the stage an exact no-op.
-        thin_at_years: Clock times at which the management stage thins.
+        thin_at_age: Stand ages at which the management stage thins, as
+            ``Age.TOTAL(60)``. The one to reach for, and especially here: the
+            Kuehne adapter starts its clock at the stand's total age, so the raw
+            clock times this replaces meant something different in Norway than in
+            Sweden under the same argument name. Defaults to the age
+            :func:`build_kuehne_stands` starts its stands at.
+        thin_at_year: Calendar years at which it thins instead, read against
+            ``start_year``. Mutually exclusive with ``thin_at_age``.
+        start_age: How old the stands are at the start. Defaults to
+            :data:`_BASELINE_AGE_YEARS` as a *total* age, which is what the
+            adapter is configured with; supply it when passing your own stands.
+        time_to_breast_height: Years to 1.3 m, needed only to schedule in one age
+            measure stands described in the other.
         start_year: Calendar year the projection begins in, which is the year
             a forcing series is read at.
         forcings: Named values the run reads per period -- a weather
@@ -232,7 +308,10 @@ def run_norway_scenario(
         valuation=valuation,
         discount_rate=discount_rate,
         disturbance_rate_per_year=disturbance_rate_per_year,
-        thin_at_years=thin_at_years,
+        thin_at_age=thin_at_age,
+        thin_at_year=thin_at_year,
+        start_age=start_age if start_age is not None else Age.TOTAL(_BASELINE_AGE_YEARS),
+        time_to_breast_height=time_to_breast_height,
         start_year=start_year,
         forcings=forcings,
         mean_tree=kuehne_mean_tree,

@@ -139,11 +139,14 @@ class MeanTreeRemoval:
     can be bucked like any other -- which is how a stand-level model gets an
     assortment split at all.
 
-    ``volume_m3`` is the total the *model* says was removed, and it is
-    authoritative: :class:`~pyforestry.simulation.valuation.volume.MeanTreeVolumeDescriptor`
-    scales the bucked mean stem's grades to it, so the published volume function
-    fixes how much came out and the mean tree only decides the split between
-    grades.
+    ``volume_m3`` is the total the *model* says left the stand, in the model's own
+    measure -- m3sk for the Nordic stand volume functions -- and it is what the
+    run's summary reports as harvested. It is deliberately **not** imposed on the
+    logs: :class:`~pyforestry.simulation.valuation.volume.MeanTreeVolumeDescriptor`
+    bucks the mean stem and multiplies by ``stems``, because a price list buys the
+    narrower m3to and scaling the grades up to an m3sk total pays m3to prices on
+    m3sk cubic metres. It is still the ceiling -- logs cannot exceed the stem
+    volume they came from -- and the descriptor raises if they do.
 
     Attributes:
         cohort_id: Which removal event this belongs to.
@@ -408,4 +411,4 @@ class StandRemovalLedger:
                 existing.record_tree(tree.tree, weight=tree.weight, metadata=tree.metadata)
 
 
-__all__ = ["TreeRemoval", "CohortRemoval", "StandRemovalLedger"]
+__all__ = ["TreeRemoval", "MeanTreeRemoval", "CohortRemoval", "StandRemovalLedger"]
