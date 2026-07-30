@@ -36,7 +36,12 @@ vary, and the type is deliberately open on all three:
   asked for them.
 
 Any forcing that is not exactly neutral must carry a :class:`SourceReference`.
-The package shipped one that did not: a ``climate_rcp45`` scenario whose
+What *neutral* means depends on the name: a multiplier leaves a model alone at
+``1.0``, a rate at ``0.0``. :func:`neutral_value` is the one place that is
+decided, and getting it wrong inverts the rule -- it once refused a ``DISCOUNT``
+of ``0.0`` while waving through ``1.0``, a 100%-a-year rate, with no source.
+
+The package shipped one forcing that carried no source: a ``climate_rcp45`` scenario whose
 multipliers arrived in the first commit with no source, under a name asserting a
 specific IPCC pathway. Every forcing a run applies is written into its manifest
 with its citation attached, which is what makes the run readable afterwards.
@@ -61,8 +66,10 @@ __all__ = [
     "ForcingSet",
     "GROWTH",
     "PRICE",
+    "RATE_FORCINGS",
     "THINNING",
     "is_neutral_value",
+    "neutral_value",
     "stated_choice",
     "period_time",
     "period_year",
@@ -124,7 +131,7 @@ def period_time(ctx: SimulationContext) -> float:
 #: ``"raise"`` is the default because a run that steps past the end of a weather
 #: series is asking a question the series cannot answer, and the alternatives
 #: answer it silently: ``"hold"`` extends the nearest year's value, ``"neutral"``
-#: substitutes 1.0.
+#: substitutes this name's no-op, see :func:`neutral_value`.
 _OUTSIDE_SERIES = ("raise", "hold", "neutral")
 
 
@@ -152,17 +159,45 @@ def stated_choice(what: str) -> SourceReference:
     )
 
 
-def is_neutral_value(value: Any) -> bool:
+#: Forcing names whose value is a *rate* rather than a multiplier, and which are
+#: therefore left alone at ``0.0`` instead of ``1.0``. A rate of 1.0 is 100% a
+#: year; a multiplier of 0.0 wipes the stand out. Getting this the wrong way round
+#: inverts the citation rule, which is what it did: :data:`DISCOUNT` at ``0.0`` --
+#: no time preference, the answer this package documents as legitimate -- was
+#: refused as uncited, while ``1.0``, a rate that leaves a cash flow five years out
+#: worth 3% of its face value, was waved through with no source at all. The rule is
+#: only worth having if it fails in the safe direction.
+RATE_FORCINGS = frozenset({DISCOUNT})
+
+
+def neutral_value(name: str) -> float:
+    """Return the value of ``name`` that changes nothing: ``0.0`` or ``1.0``.
+
+    Args:
+        name: The forcing's name. Anything not in :data:`RATE_FORCINGS` is taken
+            to be a multiplier, so a name a caller invents behaves like the four
+            the shipped steps read.
+    """
+    return 0.0 if name in RATE_FORCINGS else 1.0
+
+
+def is_neutral_value(value: Any, name: str = "") -> bool:
     """Whether ``value`` leaves a model's own prediction exactly as it is.
 
-    ``1.0``, or a mapping every one of whose values is neutral. Anything else --
-    a different number, a flag, a category -- changes something, and so needs a
-    citation.
+    Args:
+        value: The value to test, or a mapping every one of whose values is
+            tested.
+        name: The forcing it belongs to, which decides what neutral *means* --
+            see :func:`neutral_value`. Defaults to the multiplier sense.
+
+    Returns:
+        Whether the value is neutral. Anything else -- a different number, a
+        flag, a category -- changes something, and so needs a citation.
     """
     if isinstance(value, Mapping):
-        return all(is_neutral_value(item) for item in value.values())
+        return all(is_neutral_value(item, name) for item in value.values())
     if isinstance(value, (int, float)) and not isinstance(value, bool):
-        return float(value) == 1.0
+        return float(value) == neutral_value(name)
     return False
 
 
@@ -172,14 +207,17 @@ def _require_citation(name: str, values: Iterable[Any], source: Optional[SourceR
     Raises:
         ValueError: If any value is not neutral and no source is given.
     """
-    if all(is_neutral_value(value) for value in values):
+    if all(is_neutral_value(value, name) for value in values):
         return
     if source is None:
         raise ValueError(
-            f"The forcing {name!r} is not neutral, so it changes what a published model "
-            "predicts and must say where it comes from: pass source=SourceReference(...). "
-            "An uncited forcing under a scenario's name reads as that scenario's finding. "
-            "This package ships no forcings for exactly that reason."
+            f"The forcing {name!r} is not neutral -- it leaves a model alone at "
+            f"{neutral_value(name):g}, not at the value given -- so it changes what a "
+            "published model predicts and must say where it comes from: pass "
+            "source=SourceReference(...). A rate the analyst chose rather than read "
+            "in a paper is cited with stated_choice(...). An uncited forcing under a "
+            "scenario's name reads as that scenario's finding, and this package ships "
+            "no forcings for exactly that reason."
         )
 
 
@@ -222,7 +260,9 @@ class ConstantForcing:
     Args:
         name: What it is called -- :data:`GROWTH`, :data:`PRICE`, or any name a
             step of yours reads.
-        value: The value. Any type; ``1.0`` is an exact no-op and needs no source.
+        value: The value. Any type. Defaults to whatever leaves the models alone
+            for this name -- ``1.0`` for a multiplier, ``0.0`` for one of the
+            :data:`RATE_FORCINGS` -- which is an exact no-op and needs no source.
         source: Where it comes from. Required unless the value is neutral.
 
     Raises:
@@ -230,11 +270,13 @@ class ConstantForcing:
     """
 
     name: str
-    value: Any = 1.0
+    value: Any = None
     source: Optional[SourceReference] = None
 
     def __post_init__(self) -> None:
-        """Validate the value's citation."""
+        """Default the value to this name's no-op, then validate its citation."""
+        if self.value is None:
+            object.__setattr__(self, "value", neutral_value(self.name))
         _require_citation(self.name, (self.value,), self.source)
 
     def at(self, year: float) -> Any:
@@ -266,7 +308,7 @@ class AnnualForcing:
             may be any type -- a float, or a mapping keyed by species.
         outside_series: What to do for a year the series does not cover --
             ``"raise"`` (the default), ``"hold"`` the nearest year's value, or
-            ``"neutral"`` for 1.0.
+            ``"neutral"`` for this name's no-op (:func:`neutral_value`).
         source: Where the series comes from. Required unless every value is
             neutral.
 
@@ -305,7 +347,7 @@ class AnnualForcing:
         if key in self.series:
             return self.series[key]
         if self.outside_series == "neutral":
-            return 1.0
+            return neutral_value(self.name)
         if self.outside_series == "hold":
             years = list(self.series)
             return self.series[years[0] if key < years[0] else years[-1]]

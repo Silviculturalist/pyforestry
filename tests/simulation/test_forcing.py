@@ -13,12 +13,17 @@ import pytest
 from pyforestry.base.contracts import SourceReference
 from pyforestry.base.helpers.tree_species import TreeSpecies
 from pyforestry.simulation.forcing import (
+    DISCOUNT,
+    DISTURBANCE,
     GROWTH,
     PRICE,
+    THINNING,
     AnnualForcing,
     ConstantForcing,
     ForcingSet,
     is_neutral_value,
+    neutral_value,
+    stated_choice,
 )
 
 CITED = SourceReference(author="Test fixture", year=2026, title="Invented here, and saying so")
@@ -188,3 +193,49 @@ def test_a_forcing_renders_itself_with_its_citation() -> None:
 def test_a_per_species_forcing_renders_its_keys_as_strings() -> None:
     record = ConstantForcing(GROWTH, {SPRUCE: 1.06}, source=CITED).as_manifest()
     assert list(record["value"]) == [str(SPRUCE)]
+
+
+# --- what "neutral" means depends on what the forcing is ---------------------
+
+
+def test_a_rate_forcing_is_left_alone_at_zero_not_at_one() -> None:
+    """The citation rule has to fail in the safe direction, and it did not.
+
+    ``is_neutral_value`` tested ``== 1.0``, which is the no-op for a *multiplier*.
+    :data:`DISCOUNT` is a rate. So a discount rate of 0.0 -- no time preference,
+    the answer the package documents as legitimate -- was refused as an uncited
+    claim about the world, while 1.0, a rate that leaves money five years out
+    worth 3% of its face value, was accepted with no source at all.
+    """
+    assert neutral_value(DISCOUNT) == 0.0
+    assert neutral_value(GROWTH) == 1.0
+
+    # Stating no time preference needs no citation.
+    assert ConstantForcing(DISCOUNT, 0.0).value == 0.0
+    # Defaulting gets the no-op for the name, not a flat 1.0.
+    assert ConstantForcing(DISCOUNT).value == 0.0
+    assert ConstantForcing(GROWTH).value == 1.0
+
+    # A real rate is a stated choice, and has to say so.
+    with pytest.raises(ValueError, match="leaves a model alone at 0"):
+        ConstantForcing(DISCOUNT, 0.03)
+    assert ConstantForcing(DISCOUNT, 0.03, source=stated_choice("3% real")).value == 0.03
+
+    # And 1.0 is no longer waved through.
+    with pytest.raises(ValueError, match="leaves a model alone at 0"):
+        ConstantForcing(DISCOUNT, 1.0)
+
+
+def test_a_multiplier_forcing_keeps_its_own_no_op() -> None:
+    """Nothing about the four multiplier targets changes."""
+    for name in (GROWTH, DISTURBANCE, THINNING, PRICE):
+        assert neutral_value(name) == 1.0
+        assert ConstantForcing(name, 1.0).value == 1.0
+        with pytest.raises(ValueError):
+            ConstantForcing(name, 1.05)
+
+
+def test_a_name_a_caller_invents_behaves_like_a_multiplier() -> None:
+    """The open set of names still has one obvious default."""
+    assert neutral_value("nitrogen_response") == 1.0
+    assert ConstantForcing("nitrogen_response").value == 1.0
