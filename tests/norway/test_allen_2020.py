@@ -168,3 +168,66 @@ def test_allen_model_facade():
     assert float(si.reference_age) == 40.0
     assert float(Allen2020Model.stem_survival(1000.0, Age.TOTAL(40), Age.TOTAL(60), si)) < 1000.0
     assert float(Allen2020Model.stand_volume(30.0, 20.0, Age.TOTAL(60))) > 0.0
+
+
+# --- the input contracts these published equations declare --------------------
+
+
+class TestAllenInputContracts:
+    """Every guard the module raises, exercised.
+
+    The equations' domain of validity, expressed in code: an age that is not a
+    total age, a negative input, a period that runs backwards. None of it had a
+    test, so nothing said the contracts still held.
+    """
+
+    def test_an_age_must_be_a_total_age_measurement(self):
+        with pytest.raises(TypeError, match="must be an AgeMeasurement"):
+            allen_2020_stand_volume(20.0, 12.0, 40.0)
+        with pytest.raises(TypeError, match="must use Age.TOTAL"):
+            allen_2020_stand_volume(20.0, 12.0, Age.DBH(40.0))
+
+    def test_an_age_must_be_positive(self):
+        with pytest.raises(ValueError, match="must be positive"):
+            allen_2020_stand_volume(20.0, 12.0, Age.TOTAL(0.0))
+
+    def test_negative_inputs_are_refused(self):
+        with pytest.raises(ValueError, match="must be non-negative"):
+            allen_2020_stand_volume(-1.0, 12.0, Age.TOTAL(40.0))
+        with pytest.raises(ValueError, match="must be non-negative"):
+            allen_2020_quadratic_mean_diameter(-1.0, 1000.0)
+
+    def test_a_period_cannot_run_backwards(self):
+        with pytest.raises(ValueError, match="greater than or equal"):
+            allen_2020_stem_survival(2000.0, Age.TOTAL(60.0), Age.TOTAL(40.0), 17.0)
+        with pytest.raises(ValueError, match="greater than or equal"):
+            allen_2020_basal_area(
+                20.0, Age.TOTAL(60.0), Age.TOTAL(40.0), 12.0, 14.0, 2000.0, 1800.0
+            )
+
+    def test_a_period_of_no_length_returns_what_it_was_given(self):
+        same = Age.TOTAL(40.0)
+        assert float(allen_2020_stem_survival(2000.0, same, same, 17.0)) == pytest.approx(2000.0)
+        assert float(
+            allen_2020_basal_area(20.0, same, same, 12.0, 12.0, 2000.0, 2000.0)
+        ) == pytest.approx(20.0)
+
+    def test_an_empty_stand_stays_empty(self):
+        young, old = Age.TOTAL(40.0), Age.TOTAL(60.0)
+        assert float(allen_2020_stem_survival(0.0, young, old, 17.0)) == pytest.approx(0.0)
+        assert float(
+            allen_2020_basal_area(20.0, young, old, 12.0, 14.0, 0.0, 0.0)
+        ) == pytest.approx(0.0)
+        # A stand with no stems has no mean diameter either.
+        assert float(allen_2020_quadratic_mean_diameter(20.0, 0.0)) == pytest.approx(0.0)
+
+    def test_the_two_thinning_ratios_are_each_other_s_inverse(self):
+        for quotient in (0.6, 0.75, 0.9):
+            stems = allen_2020_stems_after_thinning_ratio(quotient)
+            assert allen_2020_basal_area_after_thinning_ratio(stems) == pytest.approx(quotient)
+
+    def test_a_thinning_quotient_outside_the_relation_is_refused(self):
+        with pytest.raises(ValueError, match="must be positive"):
+            allen_2020_basal_area_after_thinning_ratio(0.0)
+        with pytest.raises(ValueError, match="must be non-negative"):
+            allen_2020_stems_after_thinning_ratio(-0.1)

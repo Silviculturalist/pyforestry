@@ -947,3 +947,158 @@ class TestEdgeCases:
         stand = Persson1992Stand(init, program=prog, track_history=True).run()
         assert stand.done
         assert len(stand.rows) >= 2
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# The GrowthModel adapter, driven
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+class TestPersson1992ModelRuns:
+    """The adapter that plugs this system into the simulation runtime.
+
+    Its identity and requirements were asserted, but nothing had ever built a
+    context from it or stepped one, so the whole surface a runtime actually
+    touches -- ``build_context``, ``update_step``, the thinning action -- was
+    untested.
+    """
+
+    @staticmethod
+    def _init(**kwargs) -> PerssonStandInit:
+        base = {
+            "h100_m": 24.0,
+            "start_bh_age": 30.0,
+            "latitude": 60.0,
+            "stems": 2000.0,
+            "basal_area": 20.0,
+        }
+        base.update(kwargs)
+        return PerssonStandInit(**base)
+
+    @staticmethod
+    def _stand():
+        from pyforestry.base.helpers.primitives import StandBasalArea, Stems
+        from pyforestry.base.helpers.stand import Stand
+        from pyforestry.base.helpers.tree_species import TreeSpecies
+
+        pine = TreeSpecies.Sweden.pinus_sylvestris
+        return Stand.from_aggregate_metrics(
+            {
+                "BasalArea": {"TOTAL": StandBasalArea(20.0, species=pine)},
+                "Stems": {"TOTAL": Stems(2000.0, species=pine)},
+            },
+            area_ha=1.0,
+        )
+
+    def test_build_context_seeds_the_runtime_from_the_stand_model(self):
+        model = Persson1992Model()
+        ctx = model.build_context(self._stand(), init=self._init())
+
+        stand_model = ctx.attrs["persson_1992_stand"]
+        assert isinstance(stand_model, Persson1992Stand)
+        # The clock starts at the stand's breast-height age, not at zero.
+        assert ctx.state["t"] == pytest.approx(30.0)
+        assert ctx.state["years_since_thin"] == 0.0
+        assert float(ctx.metrics["BasalArea"]["TOTAL"]) == pytest.approx(
+            stand_model.basal_area_m2_per_ha
+        )
+        assert float(ctx.metrics["Stems"]["TOTAL"]) == pytest.approx(stand_model.stems_per_ha)
+
+    def test_stepping_grows_the_stand_and_publishes_the_row(self):
+        model = Persson1992Model(track_history=True)
+        ctx = model.build_context(self._stand(), init=self._init())
+        before = float(ctx.metrics["BasalArea"]["TOTAL"])
+
+        ctx.update_step(5.0)
+
+        assert float(ctx.metrics["BasalArea"]["TOTAL"]) > before, "a pine stand grows"
+        # The row is stamped with the breast-height age the period *started* at.
+        assert ctx.attrs["persson_1992_last_row"]["alder"]["BRH_AR"] == 30
+        assert len(ctx.attrs["persson_1992_rows"]) >= 1
+        assert ctx.state["years_since_thin"] == pytest.approx(5.0)
+
+    def test_a_scheduled_thinning_is_taken_on_the_next_step(self):
+        model = Persson1992Model()
+        ctx = model.build_context(self._stand(), init=self._init())
+        ctx.update_step(5.0)
+        thinned_from = float(ctx.metrics["BasalArea"]["TOTAL"])
+
+        assert "schedule_thinning" in model.available_actions()
+        ctx.do("schedule_thinning", outtake=30.0, outtake_type="percent")
+        ctx.update_step(5.0)
+
+        assert float(ctx.metrics["BasalArea"]["TOTAL"]) < thinned_from
+        # The clock since the last thinning restarts, which is what a program
+        # keyed on intervals reads.
+        assert ctx.state["years_since_thin"] == 0.0
+
+    def test_an_unknown_outtake_type_is_refused(self):
+        model = Persson1992Model()
+        ctx = model.build_context(self._stand(), init=self._init())
+        with pytest.raises(ValueError, match="percent, residual, or absolute"):
+            ctx.do("schedule_thinning", outtake=30.0, outtake_type="half")
+
+    def test_the_init_can_come_from_the_stand_or_the_model(self):
+        stand = self._stand()
+        stand.attrs["persson_1992_init"] = self._init(start_bh_age=35.0)
+        # From the stand, when the call gives none.
+        assert Persson1992Model().build_context(stand).state["t"] == pytest.approx(35.0)
+        # From the model's own default, when neither does.
+        default = Persson1992Model(self._init(start_bh_age=40.0))
+        assert default.build_context(self._stand()).state["t"] == pytest.approx(40.0)
+        # The call wins over both.
+        assert default.build_context(stand, init=self._init()).state["t"] == pytest.approx(30.0)
+
+    def test_a_model_with_no_init_anywhere_says_so(self):
+        with pytest.raises(ValueError, match="requires a PerssonStandInit"):
+            Persson1992Model().build_context(self._stand())
+
+    def test_stems_and_basal_area_fall_back_to_the_stand(self):
+        """An init that leaves them out reads them off the inventory it is given."""
+        model = Persson1992Model()
+        ctx = model.build_context(self._stand(), init=self._init(stems=None, basal_area=None))
+        stand_model = ctx.attrs["persson_1992_stand"]
+        assert stand_model.stems_per_ha == pytest.approx(2000.0)
+        assert stand_model.basal_area_m2_per_ha == pytest.approx(20.0)
+
+    def test_a_context_without_a_stand_model_is_refused(self):
+        model = Persson1992Model()
+        ctx = model.build_context(self._stand(), init=self._init())
+        del ctx.attrs["persson_1992_stand"]
+        with pytest.raises(ValueError, match="missing stand model"):
+            ctx.update_step(5.0)
+
+
+class TestInitialStandPartialInputs:
+    """One of stems or basal area given, the other estimated.
+
+    Both-given and both-missing were covered; the two halves in between were the
+    largest untested block in the module, and they are four different
+    Elfving-Hägglund functions -- north and south, stems and basal area.
+    """
+
+    @pytest.mark.parametrize("latitude, altitude", [(64.0, 200.0), (58.0, 100.0)])
+    def test_stems_are_estimated_when_only_basal_area_is_given(self, latitude, altitude):
+        init = PerssonStandInit(
+            h100_m=28.0,
+            start_bh_age=16,
+            latitude=latitude,
+            altitude_m=altitude,
+            basal_area=28.5,
+        )
+        _hdom, stems, ba, _si, _t13 = persson_estimate_initial_stand(init)
+        assert ba == 28.5, "what was given is kept"
+        assert 500 < stems < 10000
+
+    @pytest.mark.parametrize("latitude, altitude", [(64.0, 200.0), (58.0, 100.0)])
+    def test_basal_area_is_estimated_when_only_stems_are_given(self, latitude, altitude):
+        init = PerssonStandInit(
+            h100_m=28.0,
+            start_bh_age=16,
+            latitude=latitude,
+            altitude_m=altitude,
+            stems=4887.0,
+        )
+        _hdom, stems, ba, _si, _t13 = persson_estimate_initial_stand(init)
+        assert stems == 4887.0, "what was given is kept"
+        assert 5.0 < ba < 50.0

@@ -116,3 +116,62 @@ def test_kuehne_growth_model_adapter_projects_full_stand():
     assert float(ctx.metrics["Stems"]["TOTAL"]) <= stems_before
     assert float(ctx.metrics["BasalArea"]["TOTAL"]) >= ba_before
     assert ctx.attrs["stand_volume_m3_per_ha"] > 0.0
+
+
+# --- the input contracts these published equations declare --------------------
+
+
+class TestKuehneInputContracts:
+    """Every guard the module raises, exercised.
+
+    These are the equations' domain of validity expressed in code -- an age that
+    is not a total age, a negative basal area, a period that runs backwards --
+    and none of them had a test, so nothing said the contracts still held.
+    """
+
+    def test_an_age_must_be_a_total_age_measurement(self):
+        with pytest.raises(TypeError, match="must be an AgeMeasurement"):
+            kuehne_2022_stand_volume(20.0, 12.0, 40.0)
+        with pytest.raises(TypeError, match="must use Age.TOTAL"):
+            kuehne_2022_stand_volume(20.0, 12.0, Age.DBH(40.0))
+
+    def test_an_age_must_be_positive(self):
+        with pytest.raises(ValueError, match="must be positive"):
+            kuehne_2022_stand_volume(20.0, 12.0, Age.TOTAL(0.0))
+
+    def test_negative_inputs_are_refused(self):
+        with pytest.raises(ValueError, match="must be non-negative"):
+            kuehne_2022_stand_volume(-1.0, 12.0, Age.TOTAL(40.0))
+        with pytest.raises(ValueError, match="must be non-negative"):
+            kuehne_2022_stand_volume(20.0, -1.0, Age.TOTAL(40.0))
+
+    def test_a_period_cannot_run_backwards(self):
+        with pytest.raises(ValueError, match="greater than or equal"):
+            kuehne_2022_stem_density(2000.0, Age.TOTAL(60.0), Age.TOTAL(40.0), 11.0)
+        with pytest.raises(ValueError, match="greater than or equal"):
+            kuehne_2022_basal_area(
+                20.0, Age.TOTAL(60.0), Age.TOTAL(40.0), 12.0, 14.0, 2000.0, 1800.0
+            )
+
+    def test_a_period_of_no_length_returns_what_it_was_given(self):
+        same = Age.TOTAL(40.0)
+        assert float(kuehne_2022_stem_density(2000.0, same, same, 11.0)) == pytest.approx(2000.0)
+
+    def test_an_empty_stand_stays_empty(self):
+        assert float(
+            kuehne_2022_stem_density(0.0, Age.TOTAL(40.0), Age.TOTAL(60.0), 11.0)
+        ) == pytest.approx(0.0)
+
+    def test_the_two_thinning_ratios_are_each_other_s_inverse(self):
+        """Eq. 9 and Eq. 10 are one relation read in the two directions."""
+        for quotient in (0.6, 0.75, 0.9):
+            stems = kuehne_2022_stems_after_thinning_ratio(quotient)
+            assert kuehne_2022_basal_area_after_thinning_ratio(stems) == pytest.approx(quotient)
+
+    def test_a_thinning_quotient_outside_the_relation_is_refused(self):
+        # Eq. 10 takes a log, so a non-positive stem quotient has no answer.
+        with pytest.raises(ValueError, match="must be positive"):
+            kuehne_2022_basal_area_after_thinning_ratio(0.0)
+        # Eq. 9 takes a proportion, and a negative one is not one.
+        with pytest.raises(ValueError, match="must be non-negative"):
+            kuehne_2022_stems_after_thinning_ratio(-0.1)

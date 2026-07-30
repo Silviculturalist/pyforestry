@@ -44,6 +44,7 @@ from pyforestry.simulation.artifacts import (
 from pyforestry.simulation.forcing import (
     CALENDAR_YEAR_KEY,
     DISCOUNT,
+    DISTURBANCE,
     GROWTH,
     AnnualForcing,
     ConstantForcing,
@@ -729,3 +730,124 @@ def test_valuation_settings_without_a_valuation_stage_are_refused(tmp_path) -> N
     """The same reason discount_rate is: the manifest would name an unused list."""
     with pytest.raises(ValueError, match="declares no 'valuation' stage"):
         _run(tmp_path, valuation=_valuation(), mean_tree=_mean_tree)
+
+
+# --- the artifact contract's own error paths ---------------------------------
+
+
+def test_a_schema_2_0_summary_is_named_rather_than_diffed(tmp_path) -> None:
+    """ "Expected these twelve, got these eight" leaves the reader to work out which."""
+    from pyforestry.simulation.artifacts import _columns_error
+
+    old = SCENARIO_SUMMARY_COLUMNS[:8]
+    assert "schema 2.0 summary" in str(_columns_error("summary.parquet", old))
+    # Anything else is a plain mismatch, not a version.
+    assert "columns mismatch" in str(_columns_error("summary.parquet", ("nonsense",)))
+
+
+def test_a_summary_whose_volume_does_not_close_is_refused() -> None:
+    """The check exists to catch volume lost between the step and the row."""
+    row = {
+        "stand_id": 1,
+        "initial_volume_m3": 100.0,
+        "gross_growth_m3": 10.0,
+        "disturbance_loss_m3": 0.0,
+        "harvested_m3": 0.0,
+        "net_volume_m3": 999.0,
+        "valued": False,
+        "nominal_revenue": 0.0,
+        "net_present_value": 0.0,
+    }
+    with pytest.raises(ValueError, match="Volume balance does not close"):
+        check_volume_balance([row])
+
+
+def test_a_run_missing_an_artifact_or_a_key_is_refused(tmp_path) -> None:
+    """Each of the three files, and the keys that make the summary interpretable."""
+    from pyforestry.simulation.artifacts import (
+        QUALITY_REPORT_FILENAME,
+        RUN_MANIFEST_FILENAME,
+    )
+
+    result = _run(tmp_path)
+    output = result.artifacts.output_dir
+
+    # A missing file.
+    (output / QUALITY_REPORT_FILENAME).unlink()
+    with pytest.raises(ValueError, match="Missing required artifact"):
+        validate_artifact_contract(output)
+
+    # A manifest that has lost a required key.
+    fresh = _run(tmp_path / "second").artifacts.output_dir
+    manifest_path = fresh / RUN_MANIFEST_FILENAME
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    del manifest["models_run"]
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    with pytest.raises(ValueError, match="missing keys.*models_run"):
+        validate_artifact_contract(fresh)
+
+    # And a quality report that has.
+    third = _run(tmp_path / "third").artifacts.output_dir
+    quality_path = third / QUALITY_REPORT_FILENAME
+    quality = json.loads(quality_path.read_text(encoding="utf-8"))
+    del quality["determinism_hash"]
+    quality_path.write_text(json.dumps(quality), encoding="utf-8")
+    with pytest.raises(ValueError, match="missing keys.*determinism_hash"):
+        validate_artifact_contract(third)
+
+
+def test_the_summary_round_trips_through_the_json_fallback(tmp_path, monkeypatch) -> None:
+    """Not every environment has a parquet backend, and the run still has to write."""
+    import pyforestry.simulation.artifacts as artifacts
+
+    monkeypatch.setattr(artifacts, "_parquet_engine_available", lambda: False)
+    result = _run(tmp_path)
+
+    payload = json.loads(result.artifacts.scenario_summary_path.read_text(encoding="utf-8"))
+    assert payload["format"] == "pseudo_parquet_json_v1"
+    # The manifest as written says which of the two a reader is holding; the
+    # encoding is stamped in by write_artifacts, not by the caller.
+    written = json.loads(result.artifacts.run_manifest_path.read_text(encoding="utf-8"))
+    assert written["scenario_summary_encoding"] == "pseudo_parquet_json_v1"
+    assert load_scenario_summary(result.artifacts.scenario_summary_path) == list(result.rows)
+
+    payload["columns"] = ["wrong"]
+    result.artifacts.scenario_summary_path.write_text(json.dumps(payload), encoding="utf-8")
+    with pytest.raises(ValueError, match="columns mismatch"):
+        load_scenario_summary(result.artifacts.scenario_summary_path)
+
+
+# --- the schedule's own validation -------------------------------------------
+
+
+def test_a_schedule_must_carry_what_its_basis_needs() -> None:
+    from pyforestry.simulation.stages import BY_AGE, ThinningSchedule
+
+    with pytest.raises(ValueError, match="basis must be"):
+        ThinningSchedule(basis="whenever")
+    with pytest.raises(ValueError, match="must say which age it means"):
+        ThinningSchedule(basis=BY_AGE, points=(60.0,))
+
+
+def test_a_schedule_cannot_mix_total_and_breast_height_ages() -> None:
+    """They differ by the years the stand took to reach 1.3 m."""
+    from pyforestry.simulation.stages import ThinningSchedule
+
+    with pytest.raises(ValueError, match="cannot mix total and breast-height"):
+        ThinningSchedule.by_age([Age.TOTAL(60.0), Age.DBH(50.0)])
+
+
+def test_a_disturbance_forcing_cannot_conjure_a_rate_from_nothing() -> None:
+    """It scales the run's rate, and zero times anything is zero.
+
+    A run that declares no disturbance rate has an exact no-op of a stage, and a
+    forcing is not the place to introduce one -- the rate is the caller's, and
+    this package ships none for either region.
+    """
+    from pyforestry.simulation.stages import ScenarioDisturbanceStep
+
+    source = SourceReference(author="Test fixture", year=2026, title="Invented here")
+    forced = ForcingSet([ConstantForcing(DISTURBANCE, 2.0, source=source)])
+
+    assert ScenarioDisturbanceStep(rate_per_year=0.0, forcings=forced).rate_in(2020) == 0.0
+    assert ScenarioDisturbanceStep(rate_per_year=0.01, forcings=forced).rate_in(2020) == 0.02
