@@ -30,7 +30,10 @@ class ScenarioConfig(_ScenarioConfig):
 
     This was ``NorwayScenarioPreset`` -- the rename that separated "configuration"
     (this) from "pipeline" (a simulator) reached Sweden and stopped there, so the
-    two regions called one concept two things. Runs nothing; see the base class.
+    two regions called one concept two things. Executed by
+    :func:`~pyforestry.simulation.scenario.run_scenario`, through
+    :func:`~pyforestry.norway.simulation.orchestration.run_norway_scenario`; see
+    the base class.
     """
 
     region: str = "Norway"

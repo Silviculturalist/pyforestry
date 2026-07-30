@@ -22,11 +22,19 @@ from typing import Any, Callable, Mapping, Protocol, Sequence
 class SimulationPreset(Protocol):
     """Contract for a regional scenario configuration.
 
-    Implemented by :class:`pyforestry.simulation.presets.ScenarioConfig`. Note
-    what this is *not*: nothing executes a ``SimulationPreset``. ``stages()`` is
-    recorded into a manifest, ``rulesets()`` and ``guard_policy()`` have no
-    runtime caller, and the harness that consumes the result fills it with
-    synthetic numbers. The runnable things are the composite pipelines under
+    Implemented by :class:`pyforestry.simulation.presets.ScenarioConfig` and
+    executed by :func:`pyforestry.simulation.scenario.run_scenario`, which reads
+    all five: ``stages()`` becomes the steps a period runs, ``rulesets()``
+    supplies the management plan, ``guard_policy()`` the guard flags,
+    ``seed_strategy()`` each stand's seed, and ``required_artifacts()`` what the
+    run must emit. All of them are recorded in the run manifest as well.
+
+    This said the opposite until the runtime existed -- that nothing executed a
+    preset, that ``rulesets()`` and ``guard_policy()`` had no caller, and that the
+    harness consuming the result filled it with synthetic numbers. All of that was
+    true, and none of it is now.
+
+    The other runnable things are the composite pipelines under
     ``<region>/simulation/presets/`` and :func:`pyforestry.project`.
     """
 

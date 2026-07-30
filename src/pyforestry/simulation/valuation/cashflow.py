@@ -74,10 +74,23 @@ def _rate_at(year: float, *, discount_rate: Optional[float], forcings: ForcingSe
 
     A :data:`~pyforestry.simulation.forcing.DISCOUNT` forcing wins over a flat
     rate, so a term structure can be supplied for a run that has one.
+
+    Raises:
+        TypeError: If the forcing's value is not a number. A rate per species is
+            not a thing a cash flow can be discounted at, and ``float()`` on a
+            mapping says only that it is not a float.
     """
-    if DISCOUNT in forcings.names():
-        return float(forcings.value(DISCOUNT, year, default=discount_rate or 0.0))
-    return float(discount_rate or 0.0)
+    if DISCOUNT not in forcings.names():
+        return float(discount_rate or 0.0)
+    value = forcings.value(DISCOUNT, year, default=discount_rate or 0.0)
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise TypeError(
+            f"The discount forcing is {type(value).__name__} in {year:g}, and a cash "
+            "flow is discounted at one rate. A rate that varies by year is an "
+            "AnnualForcing whose values are numbers; a rate that varies by anything "
+            "else is not something this discounts at."
+        )
+    return float(value)
 
 
 def discount_factor(
@@ -107,6 +120,9 @@ def discount_factor(
     Raises:
         ValueError: If a rate of ``-1`` or below applies, which makes money in
             the following year infinitely valuable.
+        KeyError: If a ``DISCOUNT`` series does not cover every year between
+            ``base_year`` and ``year``. Compounding needs a rate for each of them,
+            so a term structure has to be dense over the horizon it is used on.
     """
     resolved = forcings or ForcingSet()
     if year == base_year:

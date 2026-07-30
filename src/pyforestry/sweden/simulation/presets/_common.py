@@ -23,7 +23,9 @@ class ScenarioConfig(_ScenarioConfig):
     :class:`pyforestry.simulation.presets.ScenarioConfig`'s, which is what Sweden
     and Norway used to keep separate near-copies of.
 
-    Runs nothing -- see the base class.
+    Executed by :func:`~pyforestry.simulation.scenario.run_scenario`, through
+    :func:`~pyforestry.sweden.simulation.orchestration.run_sweden_scenario` --
+    see the base class.
     """
 
     region: str = "Sweden"

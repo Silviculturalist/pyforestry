@@ -22,10 +22,12 @@ Current implementation (repository state):
 
 - Regional `*/adapters` modules expose simulation-facing model bindings;
   `*/systems` holds whole published growth-and-yield systems.
-- Sweden preset execution uses `SimulationPreset` contracts and
-  `run_sweden_preset(...)` orchestration -- note that this runbook emits an
-  artifact contract from synthetic numbers and runs no model; see
-  `STRUCTURAL_REVIEW.md` A2.
+- Sweden and Norway both execute their `SimulationPreset` configurations through
+  `run_sweden_scenario(...)` / `run_norway_scenario(...)`, which project real
+  stands with the Elfving (2010) and Kuehne (2022) models and write the three
+  artifacts. `run_sweden_preset(...)`, which emitted the artifact contract from
+  synthetic numbers and ran no model, is gone; see `STRUCTURAL_REVIEW.md` A2 for
+  what it was.
 - Optimization contracts in this document are target-facing and not implemented
   as runtime entrypoints.
 
