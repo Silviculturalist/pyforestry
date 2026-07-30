@@ -32,6 +32,7 @@ another rate.
 
 from __future__ import annotations
 
+import copy
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Mapping, Optional, Sequence
@@ -603,8 +604,14 @@ def run_scenario(
         model = build_model()
 
         stand_seed = _stand_seed(scenario_seed, unit.stand_id)
+        # The caller's inventory is an input, not the run's working state. A
+        # projection grows, thins and kills the stand it is given, so passing
+        # `unit.stand` straight in left the caller holding the run's *end* state:
+        # a second scenario over the same inventory started where the first
+        # finished, which is exactly what comparing two scenarios is. Copy, as
+        # `pyforestry.project` already does.
         ctx = model.build_context(
-            unit.stand,
+            copy.deepcopy(unit.stand),
             seed=stand_seed,
             attrs=dict(attrs) if attrs else None,
         )

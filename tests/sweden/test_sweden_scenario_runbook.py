@@ -152,6 +152,37 @@ def test_summary_is_loadable_and_keyed_by_stand(tmp_path, valuation) -> None:
     assert {row["scenario_id"] for row in rows} == {"baseline"}
 
 
+def test_the_same_inventory_can_be_compared_across_two_runs(tmp_path, valuation) -> None:
+    """Two scenarios over one inventory, which is what a comparison is.
+
+    The run used to project the caller's ``Stand`` objects, so each run left the
+    trees eighty years older than it found them: the same run repeated on the
+    same stands gave 257.63 -> 340.23 -> 425.05 m3/ha of starting volume, each
+    one beginning where the last finished. Every test built its own inventory, so
+    nothing said otherwise.
+    """
+    inventory = build_even_aged_stands(1)
+    trees_before = len(inventory[0].stand.plots[0].trees)
+
+    runs = [
+        run_sweden_scenario(
+            global_seed=20260728,
+            output_dir=tmp_path / f"run{index}",
+            stands=inventory,
+            n_steps=3,
+            valuation=valuation,
+            discount_rate=0.0,
+        )
+        for index in range(3)
+    ]
+
+    first = runs[0].rows[0]
+    for later in runs[1:]:
+        assert later.rows[0]["initial_volume_m3"] == pytest.approx(first["initial_volume_m3"])
+        assert later.rows[0]["net_volume_m3"] == pytest.approx(first["net_volume_m3"])
+    assert len(inventory[0].stand.plots[0].trees) == trees_before
+
+
 def test_scenario_config_lookup_and_error_paths() -> None:
     assert get_scenario_config("baseline").scenario_id == "baseline"
     with pytest.raises(ValueError, match="Unsupported scenario_id"):
