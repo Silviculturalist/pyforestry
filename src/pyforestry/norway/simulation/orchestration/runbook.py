@@ -142,6 +142,7 @@ def _height_for_stem_volume(diameter_cm: float, volume_m3: float) -> Optional[fl
         return None
 
     def stem_volume(height_m: float) -> float:
+        """Volume of a stem of this diameter at ``height_m``."""
         # AtomicVolume, in m3 -- the function reports dm3 internally and wraps it.
         return float(brantseg_1967_volume_scots_pine_norway(height_m, diameter_cm).value)
 

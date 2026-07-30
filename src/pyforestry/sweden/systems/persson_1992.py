@@ -145,6 +145,15 @@ class _PerssonState:
 
 
 def _ln(x: float) -> float:
+    """Natural logarithm, refusing a non-positive argument by name.
+
+    The functions here take logs of stems, basal areas and heights. A stand
+    that has reached nought of any of them is outside the model, and saying so
+    beats a ``math domain error`` from three frames down.
+
+    Raises:
+        ValueError: If ``x`` is zero or negative.
+    """
     if x <= 0.0:
         raise ValueError(f"log() argument must be > 0, got {x}")
     return math.log(x)
@@ -606,6 +615,20 @@ class Persson1992Stand:
         *,
         track_history: bool = False,
     ) -> None:
+        """Estimate the starting stand and arm the thinning programme.
+
+        Args:
+            init: The stand to start from. Stems and basal area may be left out
+                and estimated from site index and age.
+            program: A thinning schedule. Its first trigger is compared against
+                the starting state here, so a stand that already qualifies is
+                due a thinning at its first step rather than its second.
+            track_history: Keep every step in :attr:`rows`. Off by default,
+                because a long run only needs its last row.
+
+        Raises:
+            ValueError: If the final age is not later than the start.
+        """
         self.init = init
         self.program = program
         self._track_history = track_history
@@ -656,34 +679,42 @@ class Persson1992Stand:
 
     @property
     def done(self) -> bool:
+        """Whether the run has reached its final age. :meth:`run` is idempotent."""
         return self._done
 
     @property
     def bh_age(self) -> float:
+        """Breast-height age (years). The clock every function here is fitted on."""
         return self._state.t
 
     @property
     def total_age(self) -> float:
+        """Total age (years): breast-height age plus the years to reach 1.3 m."""
         return self._state.t + self._t13
 
     @property
     def stems_per_ha(self) -> float:
+        """Living stems per hectare, after any thinning and self-thinning."""
         return self._state.sn1
 
     @property
     def basal_area_m2_per_ha(self) -> float:
+        """Basal area over bark (m2/ha). The under-bark twin drives the growth."""
         return self._state.ba_ob
 
     @property
     def dominant_height_m(self) -> float:
+        """Dominant height (m) at the present breast-height age."""
         return self._ctx.height_m(self._state.t)
 
     @property
     def qmd_cm(self) -> float:
+        """Quadratic mean diameter (cm) over bark, from basal area and stems."""
         return _qmd_cm(self._state.ba_ob, self._state.sn1)
 
     @property
     def volume_m3sk(self) -> float:
+        """Standing volume (m3sk/ha) of the living stand as it now stands."""
         return volume_m3sk(
             self._state.ba_ob,
             self._ctx.height_m(self._state.t),
@@ -693,14 +724,22 @@ class Persson1992Stand:
 
     @property
     def last_row(self) -> Optional[Dict[str, Any]]:
+        """The most recent step's figures, or ``None`` before the first step."""
         return self._last_row
 
     @property
     def track_history(self) -> bool:
+        """Whether every step is kept in :attr:`rows`, not just the last."""
         return self._track_history
 
     @property
     def self_thinning_summary(self) -> Dict[str, float]:
+        """What self-thinning has taken since the run started, cumulatively.
+
+        Mortality is a separate account from the thinnings a programme
+        prescribes: this is the wood the stand lost on its own, and it is never
+        harvested.
+        """
         return {
             "stems_per_ha": self._state.mort_stems,
             "basal_area_m2_per_ha": self._state.mort_ba,
@@ -741,6 +780,7 @@ class Persson1992Stand:
     # ─── Internal helpers ─────────────────────────────────────────────────
 
     def _record_row(self, row: Dict[str, Any]) -> None:
+        """Keep ``row`` as the latest, and in the history if one is being kept."""
         self._last_row = row
         if self._track_history:
             self.rows.append(row)
@@ -748,6 +788,16 @@ class Persson1992Stand:
     def _coerce_thinning(
         self, thinning: Optional[PerssonThinningRequest | Mapping[str, Any]]
     ) -> Optional[PerssonThinningRequest]:
+        """Accept a thinning as a request object or as a plain mapping.
+
+        The mapping form is what crosses the action boundary from a runtime,
+        which carries JSON-shaped values rather than this module's types.
+
+        Raises:
+            ValueError: If the outtake type is not one of the three the model
+                defines -- a share removed, a residual to leave, or an absolute
+                amount.
+        """
         if thinning is None:
             return None
         if isinstance(thinning, PerssonThinningRequest):
@@ -766,6 +816,14 @@ class Persson1992Stand:
         )
 
     def _resolve_program_thinning(self) -> Optional[PerssonThinningRequest]:
+        """The thinning the programme prescribes now, if it prescribes one.
+
+        ``None`` covers four different situations that all mean the same thing
+        here: no programme, no trigger reached yet, the schedule exhausted, or a
+        scheduled outtake of nought. Diameter factors run one behind their own
+        list and hold at the last one, so a programme with fewer factors than
+        thinnings keeps its final selection rather than reverting to neutral.
+        """
         program = self.program
         state = self._state
         if program is None or not state.val:
@@ -796,6 +854,22 @@ class Persson1992Stand:
         thinning: Optional[PerssonThinningRequest],
         use_program: bool,
     ) -> Optional[Dict[str, Any]]:
+        """Advance the stand one period, and return the row describing it.
+
+        The one place the state moves: thinning first, then growth, then
+        self-thinning, in that order because each reads the stand the previous one
+        left. ``years=None`` takes the period from the thinning programme, which is
+        what :meth:`step` means by a step.
+
+        Args:
+            years: Length of the period, or ``None`` to let the programme decide.
+            thinning: A thinning to apply before growing.
+            use_program: Whether the programme may prescribe one of its own.
+
+        Returns:
+            The period's figures, or ``None`` once the run has reached its final
+            age -- which is how a caller stepping in a loop learns to stop.
+        """
         if self._done:
             return None
         state = self._state
@@ -1034,16 +1108,26 @@ class Persson1992Model(GrowthModel):
         *,
         track_history: bool = False,
     ) -> None:
+        """Hold the stand description and schedule this model falls back on.
+
+        Args:
+            init: The starting state to use when neither the call to
+                :meth:`build_context` nor the stand carries one.
+            program: The thinning schedule, resolved the same way.
+            track_history: Whether the stands this model builds keep every row.
+        """
         self._default_init = init
         self._default_program = program
         self._track_history = track_history
 
     @property
     def component_id(self) -> str:
+        """The catalog key for this model."""
         return "persson_1992"
 
     @property
     def source(self) -> SourceReference:
+        """The report this growth and yield system is taken from."""
         return SourceReference(
             author="Persson, O.",
             year=1992,
@@ -1058,6 +1142,11 @@ class Persson1992Model(GrowthModel):
         )
 
     def requirements(self) -> Requirements:
+        """Aggregate: the model steps a whole-stand basal area and stem number.
+
+        Persson's functions are stand-level throughout, so a tree list would be
+        reduced to those two numbers and its detail discarded.
+        """
         return Requirements(inventory="aggregate")
 
     def build_context(
@@ -1069,6 +1158,24 @@ class Persson1992Model(GrowthModel):
         track_history: Optional[bool] = None,
         **kwargs: Any,
     ) -> SimulationContext:
+        """Build a context around a live stand simulator.
+
+        Unlike a yield-table model, this one is stepped rather than tabulated:
+        the context carries the :class:`Persson1992Stand` itself, because a
+        thinning scheduled mid-run changes everything after it.
+
+        Args:
+            stand: The stand. Read for its ``persson_1992_init`` and
+                ``persson_1992_program`` attributes, and for the stems, basal
+                area, latitude and altitude the starting state leaves out.
+            init: The starting state, taking precedence over both.
+            program: The thinning schedule, likewise.
+            track_history: Overrides the model's own setting for this run.
+            **kwargs: Passed to :meth:`GrowthModel.build_context`.
+
+        Raises:
+            ValueError: If no starting state can be resolved.
+        """
         ctx = super().build_context(stand, **kwargs)
         resolved_init = self._resolve_init(stand, init)
         resolved_program = (
@@ -1091,6 +1198,13 @@ class Persson1992Model(GrowthModel):
         return ctx
 
     def update_step(self, ctx: SimulationContext, dt: float) -> None:
+        """Grow the stand by ``dt`` years, applying any queued thinning first.
+
+        The thinning is *popped* from the context state, so one scheduled
+        through :meth:`available_actions` fires once and not every step after.
+        ``years_since_thin`` restarts at nought when one fires, which is what
+        the thinning-response term in the growth functions reads.
+        """
         stand_model = self._stand_from_ctx(ctx)
         thinning = ctx.state.pop("persson_1992_pending_thinning", None)
         thinning_req = stand_model._coerce_thinning(thinning)
@@ -1109,6 +1223,7 @@ class Persson1992Model(GrowthModel):
             ctx.state["years_since_thin"] = ctx.state.get("years_since_thin", 0.0) + dt
 
     def available_actions(self) -> Dict[str, ActionSpec]:
+        """The one thing a management policy can ask this model to do."""
         return {
             "schedule_thinning": ActionSpec(
                 name="schedule_thinning",
@@ -1131,6 +1246,20 @@ class Persson1992Model(GrowthModel):
         outtake_type: str = "percent",
         diameter_factor: Optional[float] = None,
     ) -> None:
+        """Queue a thinning for the next growth step.
+
+        Args:
+            ctx: The context to queue it on.
+            outtake: How much to take, read according to ``outtake_type``.
+            outtake_type: ``percent`` of the standing basal area, the
+                ``residual`` to leave, or an ``absolute`` amount.
+            diameter_factor: Which stems it takes -- below one for a thinning
+                from below, above one from above. ``None`` leaves the
+                programme's own selection in force.
+
+        Raises:
+            ValueError: If the outtake type is not one of the three.
+        """
         normalized = str(outtake_type).lower()
         if normalized not in {"percent", "residual", "absolute"}:
             raise ValueError("outtake_type must be percent, residual, or absolute.")
@@ -1141,6 +1270,17 @@ class Persson1992Model(GrowthModel):
         }
 
     def _resolve_init(self, stand: Stand, init: Optional[PerssonStandInit]) -> PerssonStandInit:
+        """Fill a starting state in from the stand where it left things out.
+
+        Stems and basal area come off the stand's own metrics when the state
+        does not carry them. Latitude and altitude are taken from the site only
+        where the state still holds the field default, so a caller who stated
+        one keeps it -- at the cost that a caller who genuinely means 64 deg N
+        or sea level cannot say so distinctly from saying nothing.
+
+        Raises:
+            ValueError: If there is no starting state to fill in.
+        """
         resolved = init or stand.attrs.get("persson_1992_init") or self._default_init
         if resolved is None:
             raise ValueError("Persson1992Model requires a PerssonStandInit.")
@@ -1170,6 +1310,12 @@ class Persson1992Model(GrowthModel):
 
     @staticmethod
     def _stand_from_ctx(ctx: SimulationContext) -> Persson1992Stand:
+        """Return the simulator this context was built around.
+
+        Raises:
+            ValueError: If the context was not built by this model, in which
+                case stepping it would silently do nothing.
+        """
         stand_model = ctx.attrs.get("persson_1992_stand")
         if not isinstance(stand_model, Persson1992Stand):
             raise ValueError("Persson1992Model context missing stand model.")

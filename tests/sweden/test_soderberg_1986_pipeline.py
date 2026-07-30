@@ -159,6 +159,7 @@ _VALUATION_KEYS = {
     "pulp_volume_m3_per_ha",
     "value_per_m3_sek",
     "timber_valued_stems_per_ha",
+    "unpriceable_stems_per_ha",
     "volume_over_bark",
 }
 

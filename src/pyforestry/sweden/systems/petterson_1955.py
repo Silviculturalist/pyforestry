@@ -97,10 +97,12 @@ _UPPER = 3.0  # upper truncation of the underlying normal, at +3 sigma
 
 
 def _pdf(x: float) -> float:
+    """Standard normal density at ``x``."""
     return math.exp(-0.5 * x * x) / _SQRT2PI
 
 
 def _cdf(x: float) -> float:
+    """Standard normal distribution function at ``x``."""
     return 0.5 * (1.0 + math.erf(x / _SQRT2))
 
 
@@ -109,6 +111,12 @@ _S3 = _cdf(_UPPER)
 
 
 def _sigma_prime_at_6() -> float:
+    """The structure factor ``sigma'`` in the limit of an untruncated normal.
+
+    ``phi = 6`` is the widest the distribution gets: cut at plus and minus three
+    standard deviations, so nothing is truncated away in practice. Computed once
+    to normalise the factors at narrower ``phi`` against it.
+    """
     i = -_UPPER
     ai = _pdf(i)
     f = _S3 - _cdf(i)
@@ -331,6 +339,16 @@ PETTERSON_VARIANTS: Dict[str, PettersonVariant] = {
 
 
 def _resolve_variant(species: str, region: str) -> PettersonVariant:
+    """Return the coefficient set for one species and region.
+
+    Petterson fitted four: pine and spruce, each north and south, and they are
+    different function families rather than one family with different numbers --
+    spruce in the north has no growth-percent function at all and uses the M31
+    radius regressions instead.
+
+    Raises:
+        ValueError: If the pair names no published variant.
+    """
     key = f"{species.strip().lower()}_{region.strip().lower()}"
     if key not in PETTERSON_VARIANTS:
         raise ValueError(
@@ -378,6 +396,12 @@ def _double_bark(v: PettersonVariant, d_ob: float) -> float:
 
 
 def _d_under_bark(v: PettersonVariant, d_ob: float) -> float:
+    """Under-bark diameter (cm) for an over-bark one, through ``F_.5``.
+
+    Floored just above zero: the volume functions this feeds are undefined at a
+    diameter of nought, and a class whose bark is thicker than its stem is an
+    artefact of extrapolating the bark function, not a stem to be dropped.
+    """
     return max(0.05, d_ob - _double_bark(v, d_ob))
 
 
@@ -482,6 +506,11 @@ def _delta_prime(phi: float, low_grade: float) -> float:
 
 
 def _advance_phi(phi: float, low_grade: float, n_steps: int) -> float:
+    """Develop ``phi`` through ``n_steps`` five-year low thinnings.
+
+    One period at a time rather than ``n_steps`` times one step, because the
+    increment depends on the ``phi`` it starts from (Kap 12/16).
+    """
     for _ in range(n_steps):
         phi += _delta_prime(phi, low_grade)
     return phi
@@ -506,6 +535,7 @@ def _u_prime_high(high_grade: float) -> float:
     target = 1.0 - min(0.95, _HIGH_BA_FACTOR * high_grade / 100.0)
 
     def ba_ratio(u: float) -> float:
+        """Basal area after the moment over before, at retention ``u``."""
         return u**3 * math.exp(-4.5 * (1.0 - u) / (1.0 + u))
 
     lo, hi = 0.3, 1.0
@@ -534,6 +564,12 @@ _M31_YEARS = [0.0, 12.0, 32.0, 52.0, 72.0, 92.0]
 
 
 def _interp(x: float, xs: List[float], ys: List[float]) -> float:
+    """Piecewise-linear interpolation over ``xs``, extended by the end slopes.
+
+    Outside the knots it continues the first or last segment rather than holding
+    flat, because M31's period groups are a sample of a trend rather than a
+    lookup: a stand run past the last group should keep developing.
+    """
     if x <= xs[0]:
         return ys[0] + (ys[1] - ys[0]) * (x - xs[0]) / (xs[1] - xs[0])
     if x >= xs[-1]:
@@ -643,6 +679,17 @@ class PettersonSimulationResult:
 
 @dataclass
 class _State:
+    """The stand as the engine carries it between five-year sub-steps.
+
+    Everything a yield-table row is computed from, and nothing that can be
+    recomputed: the truncated normal's own parameters (``sigma_n``, the lower
+    cut ``alpha``, and the relative width ``phi``), the cumulative diameter
+    constant ``b_cum = prod(b)`` that maps the starting distribution onto the
+    present one, and the two running quantities the stem number needs --
+    ``p_psi`` for through thinning, and ``e_years`` for time since the stand
+    entered the table.
+    """
+
     age: float
     phi: float
     sigma_n: float
@@ -668,6 +715,19 @@ class Petterson1955Stand:
         init: PettersonStandInit,
         program: Optional[PettersonThinningProgram] = None,
     ) -> None:
+        """Resolve the variant and the starting-state geometry for one stand.
+
+        Args:
+            init: The stand to start from. What it leaves out comes from the
+                variant's register defaults, except the starting stem number,
+                which comes from ``F5.2`` where the variant has one.
+            program: The thinning regime. Defaults to the variant's published
+                one: a low thinning of 5 at its default grade and interval.
+
+        Raises:
+            ValueError: If the thinning interval is not a multiple of five
+                years, which is the period the growth functions are fitted on.
+        """
         self.init = init
         self.variant = _resolve_variant(init.species, init.region)
         v = self.variant
@@ -716,10 +776,12 @@ class Petterson1955Stand:
     # ── public ────────────────────────────────────────────────────────────
     @property
     def rows(self) -> List[PettersonYieldRow]:
+        """The yield table built so far -- empty until :meth:`run`."""
         return self._rows
 
     @property
     def done(self) -> bool:
+        """Whether the table has been built. :meth:`run` is idempotent."""
         return self._done
 
     def run(self) -> "Petterson1955Stand":
@@ -732,6 +794,14 @@ class Petterson1955Stand:
 
     # ── core ──────────────────────────────────────────────────────────────
     def _metrics(self, st: _State) -> Dict[str, float]:
+        """Reduce one state to the stand figures a yield-table row reports.
+
+        Rebuilds the diameter distribution's twelve relative classes from the
+        structure factors at the present ``phi`` (Kap 9.3), takes each class to
+        an under-bark diameter through the double-bark functions and to a height
+        through the Naslund within-stand curve, and sums the per-class Naslund
+        (1947) volumes.
+        """
         v = self.variant
         a_const = st.alpha - st.b_cum * self.alpha0
         upper = a_const + st.b_cum * self.l0
@@ -761,6 +831,15 @@ class Petterson1955Stand:
         return dict(qmd=qmd, qmd_h=qmd_h, ba=ba, volume=volume, h3s=h3s)
 
     def _grow(self, st: _State, n_sub: int) -> None:
+        """Advance ``st`` by ``n_sub`` five-year periods of diameter growth.
+
+        The general case iterates Kap 21 one five-year period at a time: the
+        growth-percent function gives ``R'``, from which ``b = 0.96 R'`` scales
+        the distribution's width and ``alpha = R' (0.04 Ms + 0.96 alpha)`` moves
+        its lower cut. Gran in Norra Sverige has no such function and reads
+        cumulative constants off the M31 radius regressions instead, which is why
+        that branch sets ``b_cum`` outright rather than compounding it.
+        """
         v = self.variant
         if v.special_m31:
             st.age += self.program.interval
@@ -783,6 +862,16 @@ class Petterson1955Stand:
             st.e_years += 5.0
 
     def _thin(self, st: _State, n_sub: int) -> None:
+        """Apply ``n_sub`` periods' worth of the thinning programme to ``st``.
+
+        The three grades act on the distribution differently, which is the point
+        of the method: a low thinning develops ``phi`` (Kap 12/16) because it
+        takes the fine end, a high thinning holds ``phi`` and draws ``sigma_n``
+        in from the coarse end (Kap 16.7, as simplified in M26), and a through
+        thinning takes a uniform fraction and so touches neither, only the stem
+        multiplier ``p_psi``. The retained stem number then follows from the
+        product of the strengths (Kap 17-18).
+        """
         prog = self.program
         if prog.low > 0:
             # Låggallring: develop phi (removes the fine end); sigma_n *= u'.
@@ -803,6 +892,13 @@ class Petterson1955Stand:
         st.stems = self.stems1 * i_ratio * (f_cur / self._f0) * st.p_psi
 
     def _simulate(self) -> List[PettersonYieldRow]:
+        """Run growth and thinning alternately and collect the table's rows.
+
+        One row per thinning occasion, each reporting the stand before and after
+        the moment, so the removal is the difference between the two. The first
+        row's current annual increment is undefined -- there is no earlier
+        occasion to have grown from -- and is reported as ``None``, not zero.
+        """
         prog = self.program
         n_sub = int(round(prog.interval / 5.0))
         st = _State(
@@ -891,15 +987,24 @@ class Petterson1955Model(GrowthModel):
         init: Optional[PettersonStandInit] = None,
         program: Optional[PettersonThinningProgram] = None,
     ) -> None:
+        """Hold the stand description this model falls back on.
+
+        Args:
+            init: The starting state to use when neither the call to
+                :meth:`build_context` nor the stand carries one.
+            program: The thinning regime, resolved the same way.
+        """
         self._default_init = init
         self._default_program = program
 
     @property
     def component_id(self) -> str:
+        """The catalog key for this model."""
         return "petterson_1955"
 
     @property
     def source(self) -> SourceReference:
+        """The monograph these yield tables are reconstructed from."""
         return SourceReference(
             author="Petterson, H.",
             year=1955,
@@ -908,6 +1013,12 @@ class Petterson1955Model(GrowthModel):
         )
 
     def requirements(self) -> Requirements:
+        """Aggregate: the model carries its own diameter distribution.
+
+        A stand is described here by a truncated normal in twelve relative
+        classes, derived from the starting state rather than read off a tree
+        list, so a caller's tree list would be discarded.
+        """
         return Requirements(inventory="aggregate")
 
     def build_context(
@@ -918,6 +1029,25 @@ class Petterson1955Model(GrowthModel):
         program: Optional[PettersonThinningProgram] = None,
         **kwargs: Any,
     ) -> SimulationContext:
+        """Build a context whose whole yield table is already computed.
+
+        The table is a closed-form product of the starting state and the
+        thinning programme, so it is built once here and stepped through
+        afterwards; :meth:`update_step` only advances which row the context
+        stands on.
+
+        Args:
+            stand: The stand. Read for its ``petterson_1955_init`` and
+                ``petterson_1955_program`` attributes when the arguments and
+                the model's own defaults leave them unresolved.
+            init: The starting state, taking precedence over both.
+            program: The thinning regime, likewise.
+            **kwargs: Passed to :meth:`GrowthModel.build_context`.
+
+        Raises:
+            ValueError: If no starting state can be resolved from any of the
+                three places it may come from.
+        """
         ctx = super().build_context(stand, **kwargs)
         resolved_init = init or stand.attrs.get("petterson_1955_init") or self._default_init
         if resolved_init is None:
@@ -935,6 +1065,13 @@ class Petterson1955Model(GrowthModel):
         return ctx
 
     def update_step(self, ctx: SimulationContext, dt: float) -> None:
+        """Step to the next thinning occasion in the pre-computed table.
+
+        ``dt`` is not read: the occasions are the table's own, spaced by the
+        programme's interval, and a caller asking for some other period would
+        get a row that does not correspond to it. A run that reaches the end of
+        the table holds on its last row rather than raising.
+        """
         result: PettersonSimulationResult = ctx.attrs["petterson_1955_result"]
         idx = int(ctx.state.get("occasion", 0)) + 1
         if idx >= len(result.rows):

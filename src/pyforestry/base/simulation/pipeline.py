@@ -94,6 +94,7 @@ def combine(*policies: Policy) -> Policy:
     """Return a policy proposing everything ``policies`` propose, in order."""
 
     def _combined(ctx: SimulationContext) -> Sequence[Action]:
+        """Concatenate what each policy proposes, in the order given."""
         actions: List[Action] = []
         for policy in policies:
             actions.extend(policy(ctx) or ())
@@ -118,6 +119,7 @@ def when(
     fired = [False]
 
     def _policy(ctx: SimulationContext) -> Sequence[Action]:
+        """Propose the action on a step where the predicate holds."""
         if once and fired[0]:
             return ()
         if not predicate(ctx):
@@ -145,6 +147,7 @@ def at_times(
     scheduled = tuple(float(t) for t in times)
 
     def _policy(ctx: SimulationContext) -> Sequence[Action]:
+        """Propose the action on a step whose clock has reached a due time."""
         now = float(ctx.state.get("t", 0.0))
         if not any(abs(now - t) <= tolerance for t in scheduled):
             return ()

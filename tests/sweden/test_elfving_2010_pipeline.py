@@ -488,7 +488,13 @@ def test_value_standing_forest_cached_and_direct_bucking_paths(
     monkeypatch.setattr(
         preset_cached,
         "_lookup_or_compute_timber_value_volume",
-        lambda **_kwargs: (10.0, 0.5, True),
+        lambda **_kwargs: composite_module.BuckedStem(
+            value_sek=10.0,
+            volume_m3=0.5,
+            timber_volume_m3=0.4,
+            pulp_volume_m3=0.1,
+            bucked=True,
+        ),
     )
     valuation_cached = preset_cached.value_standing_forest()
     assert valuation_cached["timber_valued_stems_per_ha"] > 0.0
@@ -544,7 +550,9 @@ def test_solution_cube_management_and_lookup_branches(monkeypatch: pytest.Monkey
 
     class _CubeHit:
         def lookup(self, species: str, dbh: float, height: float) -> tuple[float, list]:  # noqa: ARG002
-            return 42.0, [{"volume": 0.7}]
+            # Quality 1 is a butt log, 4 is pulpwood: the cube stores the split,
+            # and the caller must read it rather than calling the lot timber.
+            return 42.0, [{"volume": 0.5, "quality": 1}, {"volume": 0.2, "quality": 4}]
 
     preset._valuation_solution_cube = _CubeHit()
     looked_up = preset._lookup_or_compute_timber_value_volume(
@@ -554,7 +562,11 @@ def test_solution_cube_management_and_lookup_branches(monkeypatch: pytest.Monkey
         bark_mm=10.0,
         region="southern",
     )
-    assert looked_up == pytest.approx((42.0, 0.7, True))
+    assert looked_up.value_sek == pytest.approx(42.0)
+    assert looked_up.volume_m3 == pytest.approx(0.7)
+    assert looked_up.timber_volume_m3 == pytest.approx(0.5)
+    assert looked_up.pulp_volume_m3 == pytest.approx(0.2)
+    assert looked_up.bucked
 
     class _CubeMiss:
         def lookup(self, species: str, dbh: float, height: float) -> tuple[float, list]:  # noqa: ARG002
@@ -579,7 +591,12 @@ def test_solution_cube_management_and_lookup_branches(monkeypatch: pytest.Monkey
         bark_mm=10.0,
         region="southern",
     )
-    assert looked_up_miss == pytest.approx((123.0, 0.9, True))
+    assert looked_up_miss.value_sek == pytest.approx(123.0)
+    assert looked_up_miss.volume_m3 == pytest.approx(0.9)
+    # ButtLog + MiddleLog + TopLog, and Pulp apart from them.
+    assert looked_up_miss.timber_volume_m3 == pytest.approx(0.6)
+    assert looked_up_miss.pulp_volume_m3 == pytest.approx(0.2)
+    assert looked_up_miss.bucked
 
 
 def test_initial_dbh_age_fallback_and_naslund_helpers(monkeypatch: pytest.MonkeyPatch) -> None:
