@@ -377,6 +377,49 @@ def test_the_context_and_the_pipeline_hold_one_tree_list() -> None:
     assert pipeline.tree_list is pipeline._ctx.stand.plots[0].trees
 
 
+# --- the two valuation routes report the same stem ---------------------------
+
+
+class TestTheCacheReportsTheSameAssortmentsAsBuckingDoes:
+    """A cached stem and a freshly bucked one must split the same way.
+
+    The lookup cache stored only ``(value, volume, solved)``, so the caller had
+    no assortments to book and put the whole stem volume under timber, leaving
+    pulp at nought. Since the cache is on by default, a projection's timber and
+    pulp columns recorded which route a stem took rather than what came off it.
+    """
+
+    @staticmethod
+    def _value(*, cached: bool, diameter_cm: float, height_m: float) -> dict[str, float]:
+        from pyforestry.base.helpers.tree import Tree
+        from pyforestry.base.helpers.tree_species import TreeSpecies
+
+        pipeline = _make_pipeline(valuation_use_solution_cube=cached)
+        pipeline.initialize(site=_make_site())
+        tree = Tree(
+            species=TreeSpecies.Sweden.picea_abies,
+            diameter_cm=diameter_cm,
+            height_m=height_m,
+            age=60,
+            weight_n=200.0,
+        )
+        return pipeline.value_standing_forest([tree])
+
+    @pytest.mark.parametrize(("diameter_cm", "height_m"), [(15.0, 15.0), (28.0, 22.0)])
+    def test_every_reported_figure_agrees(self, diameter_cm: float, height_m: float) -> None:
+        cached = self._value(cached=True, diameter_cm=diameter_cm, height_m=height_m)
+        direct = self._value(cached=False, diameter_cm=diameter_cm, height_m=height_m)
+
+        assert cached == pytest.approx(direct)
+
+    def test_the_assortments_are_a_split_of_the_stem_not_the_whole_of_it(self) -> None:
+        """A 15 cm spruce used to report 21.05 m3/ha of timber against 15.13."""
+        totals = self._value(cached=True, diameter_cm=15.0, height_m=15.0)
+
+        assortments = totals["timber_volume_m3_per_ha"] + totals["pulp_volume_m3_per_ha"]
+        assert 0.0 < assortments < totals["standing_volume_m3_per_ha"]
+
+
 # --- stands at the edge of what the equations accept -------------------------
 
 

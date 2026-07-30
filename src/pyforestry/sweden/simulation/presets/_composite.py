@@ -36,6 +36,7 @@ import pandas as pd
 
 from pyforestry.base.contracts import Describable, SourceReference
 from pyforestry.base.helpers import CircularPlot, Stand, Tree
+from pyforestry.base.helpers.bucking import QualityType
 from pyforestry.base.helpers.primitives import Age, SiteIndexValue
 from pyforestry.base.helpers.tree import TreeUid
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies
@@ -202,6 +203,87 @@ class CompositePipelineConfig:
     valuation_cube_dbh_step_cm: float = 1.0
     valuation_cube_height_step_m: float = 0.5
     valuation_cube_bark_step_mm: float = 1.0
+
+
+#: The qualities that are sawtimber. Pulp, cull and fuelwood are the rest.
+_TIMBER_QUALITIES = (QualityType.ButtLog, QualityType.MiddleLog, QualityType.TopLog)
+
+
+def _section_volume(
+    sections: Sequence[Mapping[str, Any]], qualities: Sequence[QualityType]
+) -> float:
+    """Total volume of the cut sections whose quality is one of ``qualities``.
+
+    A :class:`~pyforestry.base.pricelist.SolutionCube` stores its sections as
+    JSON, and ``QualityType`` is an ``IntEnum``, so the quality comes back as a
+    plain integer. A section that lost its quality counts towards nothing rather
+    than towards timber, so a cube written by an older version under-reports the
+    assortments instead of inflating them.
+    """
+    wanted = {int(quality) for quality in qualities}
+    total = 0.0
+    for section in sections:
+        try:
+            quality = int(section.get("quality", QualityType.Undefined))
+        except (TypeError, ValueError):
+            continue
+        if quality in wanted:
+            total += float(section.get("volume", 0.0))
+    return total
+
+
+@dataclass(frozen=True)
+class BuckedStem:
+    """What one stem bucked to: what it is worth, and which assortments it gave.
+
+    The valuation caches this per quantised stem so a stand of similar trees
+    bucks once. It used to cache ``(value, volume, solved)`` -- no assortments --
+    and the caller then booked the *whole* stem volume as timber and left pulp at
+    nought, while the uncached route split the bucking result properly. A 15 cm
+    spruce reported 21.05 m³/ha of timber cached against 15.13 uncached, so the
+    projection's assortment columns recorded which route a stem took rather than
+    what came off it.
+
+    Attributes:
+        value_sek: What the bucking solution is worth, per stem.
+        volume_m3: The stem volume the value came off. Under bark, and *not* the
+            same measure in both routes: a stem bucked here reports the taper's
+            ``vol_sk_ub``, while one read out of a :class:`SolutionCube` reports
+            the sections the cube stored, since a cube keeps no stem volume.
+        timber_volume_m3: Butt, middle and top logs -- the sawtimber assortments.
+        pulp_volume_m3: Pulpwood.
+        bucked: Whether a bucking solution was found at all. ``False`` is a real
+            answer -- a stem outside the taper's validity -- and is remembered so
+            the bin is not retried.
+    """
+
+    value_sek: float = 0.0
+    volume_m3: float = 0.0
+    timber_volume_m3: float = 0.0
+    pulp_volume_m3: float = 0.0
+    bucked: bool = False
+
+    @classmethod
+    def from_bucking_result(cls, result: Any) -> "BuckedStem":
+        """Split a Näsberg (1985) result into the assortments a row reports."""
+        per_quality = result.volume_per_quality
+        return cls(
+            value_sek=float(result.total_value),
+            volume_m3=float(result.vol_sk_ub),
+            timber_volume_m3=float(
+                sum(
+                    per_quality[quality.value]
+                    for quality in (QualityType.ButtLog, QualityType.MiddleLog, QualityType.TopLog)
+                    if quality.value < len(per_quality)
+                )
+            ),
+            pulp_volume_m3=float(
+                per_quality[QualityType.Pulp.value]
+                if QualityType.Pulp.value < len(per_quality)
+                else 0.0
+            ),
+            bucked=True,
+        )
 
 
 @dataclass
@@ -941,30 +1023,25 @@ class CompositePipeline:
                     bark_mm=bark_mm,
                     region=valuation_region,
                 )
-                if cached is not None:
-                    cached_value, cached_volume, has_timber_solution = cached
-                    if has_timber_solution:
-                        totals.value_sek_per_ha += float(cached_value) * weight
-                        totals.volume_m3_per_ha += float(cached_volume) * weight
-                        totals.timber_volume_m3_per_ha += float(cached_volume) * weight
-                        if cached_value > 0.0:
-                            totals.timber_valued_stems_per_ha += weight
-                        continue
+                if cached is not None and cached.bucked:
+                    totals.value_sek_per_ha += cached.value_sek * weight
+                    totals.volume_m3_per_ha += cached.volume_m3 * weight
+                    totals.timber_volume_m3_per_ha += cached.timber_volume_m3 * weight
+                    totals.pulp_volume_m3_per_ha += cached.pulp_volume_m3 * weight
+                    totals.timber_valued_stems_per_ha += weight
+                    continue
                 try:
                     bucker = Nasberg_1985_BranchBound(timber, self._pricelist, EdgrenNylinder1949)
-                    result = bucker.calculate_tree_value(
-                        min_diam_dead_wood=99.0,
-                        config=BuckingConfig(save_sections=False),
+                    bucked = BuckedStem.from_bucking_result(
+                        bucker.calculate_tree_value(
+                            min_diam_dead_wood=99.0,
+                            config=BuckingConfig(save_sections=False),
+                        )
                     )
-                    vol_ub = float(result.vol_sk_ub)
-                    # Extract assortment volumes from quality array
-                    vq = result.volume_per_quality
-                    tree_timber_vol = sum(vq[1:4])  # ButtLog + MiddleLog + TopLog
-                    tree_pulp_vol = vq[4] if len(vq) > 4 else 0.0
-                    totals.value_sek_per_ha += float(result.total_value) * weight
-                    totals.volume_m3_per_ha += vol_ub * weight
-                    totals.timber_volume_m3_per_ha += tree_timber_vol * weight
-                    totals.pulp_volume_m3_per_ha += tree_pulp_vol * weight
+                    totals.value_sek_per_ha += bucked.value_sek * weight
+                    totals.volume_m3_per_ha += bucked.volume_m3 * weight
+                    totals.timber_volume_m3_per_ha += bucked.timber_volume_m3 * weight
+                    totals.pulp_volume_m3_per_ha += bucked.pulp_volume_m3 * weight
                     totals.timber_valued_stems_per_ha += weight
                     continue
                 except ValueError:
@@ -1136,8 +1213,8 @@ class CompositePipeline:
         height_m: float,
         bark_mm: float,
         region: str,
-    ) -> tuple[float, float, bool] | None:
-        """Return cached timber value/volume per tree, or ``None`` when lookup mode is off."""
+    ) -> BuckedStem | None:
+        """Return what one quantised stem bucks to, or ``None`` when lookup mode is off."""
         if not self.config.valuation_use_solution_cube:
             return None
 
@@ -1163,13 +1240,8 @@ class CompositePipeline:
         if self._valuation_solution_cube is not None:
             value_q, sections_q = self._valuation_solution_cube.lookup(species, dbh_q, height_q)
             if float(value_q) > 0.0 or sections_q:
-                volume_q = float(
-                    sum(
-                        float(section.get("volume", 0.0))
-                        for section in sections_q
-                        if isinstance(section, dict)
-                    )
-                )
+                sections = [section for section in sections_q if isinstance(section, dict)]
+                volume_q = float(sum(float(section.get("volume", 0.0)) for section in sections))
                 if volume_q <= 0.0:
                     timber_q = SweTimber(
                         species=species,
@@ -1180,7 +1252,13 @@ class CompositePipeline:
                         over_bark=False,
                     )
                     volume_q = float(timber_q.getvolume())
-                result = (float(value_q), float(volume_q), True)
+                result = BuckedStem(
+                    value_sek=float(value_q),
+                    volume_m3=volume_q,
+                    timber_volume_m3=_section_volume(sections, _TIMBER_QUALITIES),
+                    pulp_volume_m3=_section_volume(sections, (QualityType.Pulp,)),
+                    bucked=True,
+                )
                 self._valuation_lookup_cache[key] = result
                 return result
 
@@ -1198,10 +1276,10 @@ class CompositePipeline:
                 min_diam_dead_wood=99.0,
                 config=BuckingConfig(save_sections=False),
             )
-            result = (float(buck_result_q.total_value), float(buck_result_q.vol_sk_ub), True)
+            result = BuckedStem.from_bucking_result(buck_result_q)
         except ValueError:
             # Remember failed bins to avoid repeated expensive retries.
-            result = (0.0, 0.0, False)
+            result = BuckedStem()
 
         self._valuation_lookup_cache[key] = result
         return result
