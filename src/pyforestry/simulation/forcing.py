@@ -49,6 +49,7 @@ with its citation attached, which is what makes the run readable afterwards.
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass, field
 from typing import Any, Iterable, Iterator, Mapping, Optional, Protocol, runtime_checkable
 
@@ -339,13 +340,23 @@ class AnnualForcing:
     def at(self, year: float) -> Any:
         """Return the value for ``year``.
 
+        A part-way year falls in the calendar year containing it, which is what
+        "the year the period starts" means for a run whose period is not a whole
+        number of years. Matching exactly and nothing else, this raised for 2027.5
+        against a series covering 2025-2028 -- a year it does cover -- so a
+        fractional step and an annual forcing could not be used together. An exact
+        key still wins, for a series that really is keyed sub-annually.
+
         Raises:
-            KeyError: If the series does not cover ``year`` and
-                ``outside_series`` is ``"raise"``.
+            KeyError: If the series covers neither ``year`` nor the calendar year
+                containing it, and ``outside_series`` is ``"raise"``.
         """
         key = float(year)
         if key in self.series:
             return self.series[key]
+        containing_year = math.floor(key)
+        if containing_year in self.series:
+            return self.series[containing_year]
         if self.outside_series == "neutral":
             return neutral_value(self.name)
         if self.outside_series == "hold":

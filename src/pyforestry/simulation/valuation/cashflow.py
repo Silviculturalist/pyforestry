@@ -130,21 +130,29 @@ def discount_factor(
 
     factor = 1.0
     step = 1 if year > base_year else -1
+    whole_years = int(abs(year - base_year))
     # Compound across the years between, so a year-varying rate is applied to the
-    # year it belongs to rather than averaged into one exponent.
-    for offset in range(0, int(abs(year - base_year))):
-        current = base_year + offset * step
-        rate = _rate_at(current, discount_rate=discount_rate, forcings=resolved)
+    # year it belongs to rather than averaged into one exponent. Each step covers
+    # the interval [earlier, earlier + 1), and it is the *earlier* year's rate
+    # that governs it -- which is `base_year + offset` going forwards and
+    # `base_year - offset - 1` going back. Sampling `base_year - offset` for a
+    # flow before the base year took the rate one year too late every step,
+    # including `base_year`'s own, which governs no interval in that direction.
+    for offset in range(whole_years):
+        governing_year = base_year + offset if step > 0 else base_year - offset - 1
+        rate = _rate_at(governing_year, discount_rate=discount_rate, forcings=resolved)
         if rate <= -1.0:
             raise ValueError(
-                f"A discount rate of {rate!r} applies in {current:g}, which makes money "
-                "in the next year infinitely valuable. Rates must exceed -1."
+                f"A discount rate of {rate!r} applies in {governing_year:g}, which makes "
+                "money in the next year infinitely valuable. Rates must exceed -1."
             )
         factor *= 1.0 / (1.0 + rate) if step > 0 else (1.0 + rate)
 
-    fractional = abs(year - base_year) - int(abs(year - base_year))
+    fractional = abs(year - base_year) - whole_years
     if fractional:
-        rate = _rate_at(year, discount_rate=discount_rate, forcings=resolved)
+        # The part-year beyond the whole ones, governed by the year it falls in.
+        governing_year = base_year + whole_years if step > 0 else base_year - whole_years - 1
+        rate = _rate_at(governing_year, discount_rate=discount_rate, forcings=resolved)
         factor *= (1.0 + rate) ** (-fractional * step)
     return factor
 
