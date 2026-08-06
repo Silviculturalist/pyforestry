@@ -113,17 +113,44 @@ def available_models() -> list[str]:
     return sorted(_model_entries())
 
 
+#: Regional preset packages scanned for composite pipelines, in the same spirit as
+#: :data:`pyforestry.catalog._MODEL_ROOTS`. Sweden is the only region shipping a
+#: pipeline today, and this used to import Sweden's ``available_pipelines``
+#: directly -- so the package-level front door silently meant "Sweden's
+#: pipelines", and the day Norway shipped one it would have gone on omitting it
+#: with nothing failing. A region without pipelines is skipped, not an error.
+_PIPELINE_ROOTS = (
+    "pyforestry.sweden.simulation.presets",
+    "pyforestry.norway.simulation.presets",
+)
+
+
+def _pipeline_owners() -> dict[str, str]:
+    """Map each composite pipeline name to the presets module that publishes it."""
+    owners: dict[str, str] = {}
+    for module_name in _PIPELINE_ROOTS:
+        try:
+            module = importlib.import_module(module_name)
+        except ImportError:  # pragma: no cover - a region that is not installed
+            continue
+        lister = getattr(module, "available_pipelines", None)
+        if lister is None:
+            continue
+        for name in lister():
+            owners.setdefault(name, module_name)
+    return owners
+
+
 def available_pipelines() -> list[str]:
-    """Return every composite pipeline name, sorted.
+    """Return every composite pipeline name, sorted, across all regions.
 
     A pipeline is not something :func:`project` can run: it reconstructs its own
-    stand from a site rather than advancing one you supply. Build it with
-    :func:`pyforestry.sweden.simulation.presets.get_pipeline` and drive it with
+    stand from a site rather than advancing one you supply. Build it with the
+    ``get_pipeline`` of the region that publishes it -- Sweden's is
+    :func:`pyforestry.sweden.simulation.presets.get_pipeline` -- and drive it with
     ``initialize(site=...)`` / ``run_projection(...)``.
     """
-    from pyforestry.sweden.simulation.presets import available_pipelines as _sweden_pipelines
-
-    return sorted(_sweden_pipelines())
+    return sorted(_pipeline_owners())
 
 
 def _resolve_model(name: str) -> "GrowthModel":
@@ -137,15 +164,24 @@ def _resolve_model(name: str) -> "GrowthModel":
     entry = entries.get(name)
     if entry is None:
         known = ", ".join(available_models())
-        pipelines = available_pipelines()
-        hint = (
-            f" {name!r} is a composite pipeline, not a growth model: it builds its own "
-            f"stand from a site, so project() cannot drive it. Use "
-            f"pyforestry.sweden.simulation.presets.get_pipeline({name!r}) instead."
-            if name in pipelines
-            else f" Composite pipelines ({', '.join(pipelines)}) are run through "
-            f"pyforestry.sweden.simulation.presets.get_pipeline() rather than project()."
-        )
+        owners = _pipeline_owners()
+        owner = owners.get(name)
+        if owner is not None:
+            # Name the region that publishes *this* pipeline, rather than Sweden's
+            # module path regardless of where the pipeline came from.
+            hint = (
+                f" {name!r} is a composite pipeline, not a growth model: it builds its own "
+                f"stand from a site, so project() cannot drive it. Use "
+                f"{owner}.get_pipeline({name!r}) instead."
+            )
+        elif owners:
+            listed = ", ".join(f"{n} ({owners[n]})" for n in sorted(owners))
+            hint = (
+                f" Composite pipelines ({listed}) are run through their region's "
+                f"get_pipeline() rather than project()."
+            )
+        else:
+            hint = ""
         raise ValueError(f"Unknown model {name!r}. Available models: {known}.{hint}")
 
     candidates = _growth_models_in(entry.module)
