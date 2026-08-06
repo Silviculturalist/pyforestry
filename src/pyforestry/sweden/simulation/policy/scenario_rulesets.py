@@ -14,7 +14,7 @@ disturbance multipliers that were invented, with no source behind them.
 from __future__ import annotations
 
 from pyforestry.simulation.forcing import ForcingSet
-from pyforestry.simulation.policy import lookup_scenario
+from pyforestry.simulation.policy import ScenarioTable
 
 __all__ = ["scenario_forcings", "supported_scenarios"]
 
@@ -22,16 +22,14 @@ _SCENARIO_FORCINGS: dict[str, ForcingSet] = {
     "baseline": ForcingSet(),
 }
 
+_RULESET: ScenarioTable[ForcingSet] = ScenarioTable(
+    _SCENARIO_FORCINGS, what="Sweden scenario forcings"
+)
 
-def supported_scenarios() -> tuple[str, ...]:
-    """Return scenario ids this ruleset covers."""
-    return tuple(sorted(_SCENARIO_FORCINGS))
-
-
-def scenario_forcings(scenario_id: str) -> ForcingSet:
-    """Return the forcings this scenario declares.
-
-    Raises:
-        ValueError: If the scenario id is unknown.
-    """
-    return lookup_scenario(_SCENARIO_FORCINGS, scenario_id, what="Sweden scenario forcings")
+#: Return the scenario ids this ruleset covers.
+supported_scenarios = _RULESET.supported
+#: Return the forcings a scenario declares.
+#: Raises ``ValueError`` if the scenario id is unknown -- it used to fall back to
+#: the baseline, so a typo produced a full run of baseline numbers labelled with
+#: the scenario that was asked for.
+scenario_forcings = _RULESET.lookup

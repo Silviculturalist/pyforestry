@@ -1,8 +1,15 @@
-"""Management-side policy rulesets for Norway scenario configurations."""
+"""Management-side policy rulesets for Norway scenario configurations.
+
+What is Norwegian here is the table. The accessors around it --
+``supported_management_scenarios``, ``management_intensity``, ``management_plan``
+-- are :class:`~pyforestry.simulation.policy.ManagementRuleset`'s, because they
+were identical to Sweden's apart from this table and the label in the error a bad
+scenario id raises.
+"""
 
 from __future__ import annotations
 
-from pyforestry.simulation.policy import ManagementPlan, lookup_scenario
+from pyforestry.simulation.policy import ManagementRuleset
 
 __all__ = ["management_intensity", "management_plan", "supported_management_scenarios"]
 
@@ -34,27 +41,15 @@ _THINNING_RATIO: dict[str, float] = {
     for scenario, multiplier in _INTENSITY_MULTIPLIER.items()
 }
 
+_RULESET = ManagementRuleset(_THINNING_RATIO, what="Norway management")
 
-def supported_management_scenarios() -> tuple[str, ...]:
-    """Return the scenario ids this ruleset covers."""
-    return tuple(sorted(_THINNING_RATIO))
-
-
-def management_intensity(scenario_id: str) -> float:
-    """Return the fraction of stems a thinning removes under this scenario.
-
-    Raises:
-        ValueError: If the scenario id is unknown.
-    """
-    return float(lookup_scenario(_THINNING_RATIO, scenario_id, what="Norway management"))
-
-
-def management_plan(scenario_id: str) -> ManagementPlan:
-    """Return the management plan for the given scenario.
-
-    Raises:
-        ValueError: If the scenario id is unknown. It used to return the baseline
-            plan for any unrecognised id, so a typo produced a full run under a
-            scenario nobody chose.
-    """
-    return ManagementPlan(thinning_ratio=management_intensity(scenario_id))
+#: Return the scenario ids this ruleset covers.
+supported_management_scenarios = _RULESET.supported
+#: Return the fraction of stems a thinning removes under a scenario.
+#: Raises ``ValueError`` if the scenario id is unknown -- it used to return the
+#: baseline plan for any unrecognised id, so a typo produced a full run under a
+#: scenario nobody chose.
+management_intensity = _RULESET.lookup
+#: Return the :class:`~pyforestry.simulation.policy.ManagementPlan` for a scenario.
+#: Raises ``ValueError`` if the scenario id is unknown.
+management_plan = _RULESET.plan

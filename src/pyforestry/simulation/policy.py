@@ -29,10 +29,12 @@ changes from year to year, or one that differs by species. The general form is
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Mapping, TypeVar
+from typing import Generic, Mapping, TypeVar
 
 __all__ = [
     "ManagementPlan",
+    "ManagementRuleset",
+    "ScenarioTable",
     "lookup_scenario",
 ]
 
@@ -86,3 +88,59 @@ def lookup_scenario(table: Mapping[str, _T], scenario_id: str, *, what: str) -> 
         raise ValueError(
             f"Unsupported scenario_id {scenario_id!r} for {what}. Known scenarios: {known}."
         ) from None
+
+
+@dataclass(frozen=True)
+class ScenarioTable(Generic[_T]):
+    """A region's scenario table, with the two accessors every region needs.
+
+    Both regions had written these accessors out by hand, once each: a
+    ``supported_*`` returning ``tuple(sorted(table))`` and a lookup delegating to
+    :func:`lookup_scenario`. The two copies were identical apart from the table
+    and the string in ``what``, which is the shape this class exists to remove.
+    What stays regional is the table -- the numbers are policy, and policy is
+    regional. The accessors are not.
+
+    Attributes:
+        values: The region's table, scenario id to value.
+        what: What the table holds, used to name it in the error a bad id raises
+            (e.g. ``"Sweden management"``).
+    """
+
+    values: Mapping[str, _T]
+    what: str
+
+    def supported(self) -> tuple[str, ...]:
+        """Return the scenario ids this table covers, sorted."""
+        return tuple(sorted(self.values))
+
+    def lookup(self, scenario_id: str) -> _T:
+        """Return this table's entry for ``scenario_id``.
+
+        Raises:
+            ValueError: If the scenario id is unknown. Both regions raise; neither
+                falls back to baseline, because that turns a typo into a full run
+                of plausible numbers under a scenario nobody chose.
+        """
+        return lookup_scenario(self.values, scenario_id, what=self.what)
+
+
+@dataclass(frozen=True)
+class ManagementRuleset(ScenarioTable[float]):
+    """A management table, whose values are the fraction of stems a thinning removes.
+
+    The unit is the reason this is its own class rather than a bare
+    :class:`ScenarioTable`: ``thinning_ratio`` once meant a fraction of stems in
+    Sweden and an intensity *multiplier* in Norway under the same name, so a run
+    configured for Norway's "intensive" scenario read as thinning 120% of the
+    stand. A region builds one of these from ratios, and :meth:`plan` is the only
+    way the number reaches a run.
+    """
+
+    def plan(self, scenario_id: str) -> ManagementPlan:
+        """Return the management plan for ``scenario_id``.
+
+        Raises:
+            ValueError: If the scenario id is unknown.
+        """
+        return ManagementPlan(thinning_ratio=self.lookup(scenario_id))
