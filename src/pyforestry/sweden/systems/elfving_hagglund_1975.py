@@ -127,7 +127,7 @@ class ElfvingHagglundInitialStand:
     ) -> Stems:
         """
         Estimates initial stems/ha (>2.5cm DBH) for young Pine in Northern Sweden.
-        Based on Function 5.1, Elfving & Hägglund (1975), p. 53.
+        Based on Function 5.1, Elfving & Hägglund (1975), p. 42.
 
         Args:
             latitude: Latitude, degrees N.
@@ -176,7 +176,7 @@ class ElfvingHagglundInitialStand:
     ) -> Stems:
         """
         Estimates initial stems/ha (>2.5cm DBH) for young Spruce in Northern Sweden.
-        Based on Function 5.3, Elfving & Hägglund (1975), p. 53.
+        Based on Function 5.3, Elfving & Hägglund (1975), p. 42.
 
         Args:
             altitude: Altitude, meters above sea level.
@@ -235,7 +235,7 @@ class ElfvingHagglundInitialStand:
     ) -> Stems:
         """
         Estimates initial stems/ha (>2.5cm DBH) for young Pine in Southern Sweden.
-        Based on Function 5.2, Elfving & Hägglund (1975), p. 53.
+        Based on Function 5.2, Elfving & Hägglund (1975), p. 42.
 
         Args:
             latitude: Latitude (used if age needs calculation).
@@ -313,7 +313,7 @@ class ElfvingHagglundInitialStand:
     ) -> Stems:
         """
         Estimates initial stems/ha (>2.5cm DBH) for young Spruce in Southern Sweden.
-        Based on Function 5.4, Elfving & Hägglund (1975), p. 53.
+        Based on Function 5.4, Elfving & Hägglund (1975), p. 42.
 
         Args:
             altitude: Altitude, meters above sea level.
