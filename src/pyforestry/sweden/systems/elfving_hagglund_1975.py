@@ -1,7 +1,33 @@
-"""Elfving Hagglund 1975 utilities and interfaces.
+"""Elfving & Hägglund (1975): stems and basal area in young Swedish stands.
 
-Source: Forestry equation implementation within pyforestry formulas modules and
-referenced scientific literature used by this package.
+    Elfving, B. & Hägglund, B. (1975). Utgångslägen för produktionsprognoser:
+    tall och gran i Sverige. /Initial stands for yield forecasts: Scots pine and
+    Norway spruce in Sweden./ Rapporter och Uppsatser 38, Institutionen för
+    skogsproduktion, Skogshögskolan, Stockholm.
+
+Eight functions, four per response, grouped by species and part of the country:
+
+* **f5.1-f5.4**, ``ln(stamantal/ha)`` -- stems per hectare, table p. 42.
+* **f6.1-f6.4**, ``ln(grundyta/ha)`` in **dm²** -- basal area per hectare,
+  table p. 53. Hence the ``/ 100`` each basal-area function ends with.
+
+Every coefficient in all eight was read off those two tables and matches this
+implementation exactly, including the pine-southern basal-area intercept 1.280
+that previously carried a TODO for want of a primary-source check.
+
+Units are the tables' own "Sort" column, and two are folded into the coefficient
+rather than the variable, so the printed number does not always appear here
+literally:
+
+* Latitude is tabulated per 0.1°, so the printed -0.0033 is written -0.033 with
+  latitude in whole degrees.
+* Density (*slutenhet*) is tabulated in tenths, so a factor of 0.1-1.0 is scaled
+  to 1-10 before use.
+
+One reading is **not** settled by the tables; see
+:meth:`ElfvingHagglundInitialStand.estimate_basal_area_young_pine_north` for the
+altitude transform, which is written there rather than here because that is
+where it is computed.
 """
 
 # ElfvingHagglund_1975.py
@@ -397,7 +423,16 @@ class ElfvingHagglundInitialStand:
         else:
             raise TypeError("stems must be a Stems object or None.")
 
-        alt_norm = (altitude + 1.0) / 10.0  # Add 1m before dividing by 10? Check original.
+        # The tables name this variable "Höjd över havet + 1 /Altitude + 1/"
+        # with Sort "10 m", and that is genuinely ambiguous: it reads either as
+        # (altitude + 1 m) expressed in units of 10 m -- what is computed here,
+        # and what makes the Sort column exactly true -- or as (altitude in units
+        # of 10 m) + 1, which is the form a log guard usually takes, since it puts
+        # the argument at 1 rather than 0.1 for a stand at sea level. Above about
+        # 100 m the two agree to a fraction of a per cent; at sea level they differ
+        # by ln(0.1) against ln(1), which this function's -0.170 turns into some
+        # 48% of basal area. Unresolved, and left as the R implementation had it.
+        alt_norm = (altitude + 1.0) / 10.0
         stand_dens_orig = stand_density_factor * 10.0
         si_dm = float(site_index) * 10.0
         h_dm = float(dominant_height) * 10.0
@@ -415,7 +450,7 @@ class ElfvingHagglundInitialStand:
                 + 0.032 * log(broadleaves_norm)
             )
             / 100.0
-        )  # Convert dm²/ha (?) to m²/ha
+        )  # dm²/ha to m²/ha; the tables' dependent variable is ln(grundyta/ha) in dm²
 
         return StandBasalArea(
             value=ba_val,
@@ -493,7 +528,11 @@ class ElfvingHagglundInitialStand:
         uneven_aged_flag_for_ba = 2 if uneven_aged else 1
 
         alt_norm = (altitude + 1.0) / 10.0
-        alt_norm_sq = (altitude + 1.0) / 10.0  # Typo in R code? Should likely be alt_norm
+        # Was `alt_norm_sq`, with a comment wondering whether the R had dropped a
+        # square. It had not: f6.3's second altitude row is "Höjd över havet + 1",
+        # linear, at Sort 10 m -- the same transformed variable its log term uses.
+        # No basal-area function has a squared altitude; only the *stems* table
+        # does (f5.3, at Sort 100 m).
         stand_dens_orig = stand_density_factor * 10.0
         si_dm = float(site_index) * 10.0
         h_dm = float(dominant_height) * 10.0
@@ -502,8 +541,7 @@ class ElfvingHagglundInitialStand:
             exp(
                 -1.659
                 - 0.125 * log(alt_norm)  # Uses alt_norm here
-                + 0.00918
-                * alt_norm_sq  # Uses alt_norm_sq here - check source paper if discrepancy matters
+                + 0.00918 * alt_norm
                 + 0.488 * log(stand_dens_orig)
                 + 0.467 * log(stems_val)
                 - 0.268 * log(si_dm)
@@ -512,7 +550,7 @@ class ElfvingHagglundInitialStand:
                 - 0.055 * uneven_aged_flag_for_ba  # Uses the 1 or 2 flag
             )
             / 100.0
-        )  # Convert dm²/ha (?) to m²/ha
+        )  # dm²/ha to m²/ha; the tables' dependent variable is ln(grundyta/ha) in dm²
 
         return StandBasalArea(
             value=ba_val,
@@ -591,11 +629,12 @@ class ElfvingHagglundInitialStand:
 
         ba_val = (
             exp(
-                # TODO(verify 1.280): confirm this intercept against the primary source
-                # -- Elfving & Hagglund (1975), Research Notes #38, p. 53, Function 6.2.
-                # It matches the forester R exactly, and the spruce siblings (5.4/6.3/6.4)
-                # are independently confirmed by the Eriksson (1976) FORTRAN -- but Eriksson
-                # is spruce-only, so this pine-south intercept has no third-source check yet.
+                # Verified against the primary source: Rapporter och Uppsatser 38,
+                # p. 53, function f6.2, Konstant = 1.280. It had carried a TODO,
+                # having matched the R implementation and nothing else -- the
+                # Eriksson (1976) FORTRAN confirms the spruce siblings but is
+                # spruce-only, so this one had no second witness until the table
+                # itself was read.
                 1.280
                 - 0.089 * log(alt_norm)
                 + 0.283 * log(stand_dens_orig)
@@ -605,7 +644,7 @@ class ElfvingHagglundInitialStand:
                 - 0.121 * uneven_aged  # Bool -> 1/0
             )
             / 100.0
-        )  # Convert dm²/ha (?) to m²/ha
+        )  # dm²/ha to m²/ha; the tables' dependent variable is ln(grundyta/ha) in dm²
 
         return StandBasalArea(
             value=ba_val,
@@ -693,7 +732,7 @@ class ElfvingHagglundInitialStand:
                 - 0.098 * spatial_distribution
             )
             / 100.0
-        )  # Convert dm²/ha (?) to m²/ha
+        )  # dm²/ha to m²/ha; the tables' dependent variable is ln(grundyta/ha) in dm²
 
         return StandBasalArea(
             value=ba_val,
