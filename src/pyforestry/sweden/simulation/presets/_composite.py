@@ -667,6 +667,20 @@ class CompositePipeline:
     threw away, the subclass reached across module boundaries for two private
     names, and its config inherited Elfving-only knobs. The eleven phases were
     always the shared thing; this is where they live now.
+
+    **Stated assumptions.** Composing published models means answering questions
+    none of them answers, and those answers are this pipeline's, not a paper's.
+    Each is written out where it is made:
+
+    * **Mean stand age is weighted by basal area** --
+      :meth:`_mean_age_total_years`. Four mortality models and the bark functions
+      take a mean age and none defines one; the weighting decides how much a
+      seedling counts and moves early-rotation mortality.
+    * **A stand's volume and its merchantable assortments are two measures, not
+      one** -- :class:`ValuationTotals`. They come from different studies, are
+      reported side by side and are never reconciled.
+    * **Broadleaves are tapered as pine** -- :meth:`_pulpwood_volume_m3fub`, this
+      being the form Edgren-Nylinder (1949) offers for them.
     """
 
     def __init__(self, config: CompositePipelineConfig | None = None) -> None:
@@ -2014,7 +2028,47 @@ class CompositePipeline:
             self._trees.extend(new_trees)
 
     def _mean_age_total_years(self) -> float:
-        """Return basal-area-weighted stand age (years), with a safe fallback."""
+        """Return the stand's mean total age (years), weighted by basal area.
+
+        **This weighting is a stated assumption of this pipeline, not something a
+        publication here establishes.** It is written out because several models
+        take a "mean stand age" as an input and none of them defines it, while the
+        choice moves their answers -- so a reader should be able to see what was
+        assumed without reading the arithmetic.
+
+        The assumption: a stand's mean age is the age of its *basal area*, so a
+        stem contributes in proportion to the wood it holds. A seedling therefore
+        counts for almost nothing and one with no diameter yet counts for nothing
+        at all, which is how this reaches an age that behaves like a mean
+        "excluding saplings" without needing a rule for what a sapling is.
+
+        The alternative is an unweighted mean over the tree records -- one tree,
+        one vote -- which is what :func:`mortality._common.mean_tree_age_years`
+        computes and what Elfving (2013) falls back to when this pipeline does not
+        supply an age. On a regeneration-phase tree list the two diverge sharply:
+        a stand of a few thousand seedlings under a few hundred stems of crop
+        gets a mean age near the seedlings' under one-tree-one-vote and near the
+        crop's under basal-area weighting.
+
+        Why it matters, concretely. Söderberg's (1986) self-thinning enters
+        through ``1 / (age + 10)`` in both the rate and the basal-area limit that
+        decides whether the rate applies at all. At a low mean age the rate goes
+        negative -- it is clamped to nought -- while the limit collapses towards
+        nought, so the model reports "this stand is self-thinning" and "it is
+        self-thinning at no rate" together, and the period's mortality is replaced
+        by zero. The lower the mean age, the earlier in the rotation that happens.
+
+        What is **not** settled: whether Söderberg's own mean age excludes
+        saplings, which would need Report 14. If it does, this weighting
+        approximates his definition rather than reproducing it, and the
+        approximation is worst exactly where it bites -- the young stand.
+
+        Returns:
+            The basal-area weighted mean of the trees' total ages, each floored at
+            one year. Stems with no diameter or no represented stems are left out,
+            having no basal area to weight with; if that leaves nothing, the
+            pipeline's own clock age stands in.
+        """
         weighted_age_sum = 0.0
         ba_sum = 0.0
         for tree in self._trees:
