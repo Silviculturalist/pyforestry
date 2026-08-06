@@ -4,6 +4,14 @@ pyforestry.simulation.valuation package
 Submodules
 ----------
 
+pyforestry.simulation.valuation.cashflow module
+-----------------------------------------------
+
+.. automodule:: pyforestry.simulation.valuation.cashflow
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pyforestry.simulation.valuation.removals module
 -----------------------------------------------
 

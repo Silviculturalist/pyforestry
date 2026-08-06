@@ -7,7 +7,6 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   pyforestry.sweden.simulation.data
    pyforestry.sweden.simulation.mortality
    pyforestry.sweden.simulation.orchestration
    pyforestry.sweden.simulation.policy

@@ -67,17 +67,22 @@ class Position:
 
     # Convenience tuple-like access for callers that expect iterable positions
     def __iter__(self):
-        """Iter."""
+        """Yield X then Y, so a position unpacks as a planar coordinate pair.
+
+        Z is deliberately not yielded: the callers that iterate a position are
+        the planar ones (distances, competition indices, plot geometry), and
+        including height would silently change what ``x, y = position`` means.
+        """
         yield from (self.X, self.Y)
 
     @property
     def x(self) -> float:
-        """X."""
+        """Return the easting, for callers using the lower-case spelling."""
         return self.X
 
     @property
     def y(self) -> float:
-        """Y."""
+        """Return the northing, for callers using the lower-case spelling."""
         return self.Y
 
     @staticmethod
