@@ -12,6 +12,7 @@ from typing import Union
 
 from pyforestry.base.helpers.primitives import SiteIndexValue
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies, parse_tree_species
+from pyforestry.base.helpers.utils import warn_proportion as _warn_proportion
 from pyforestry.sweden.siteindex.validation import validate_hagglund_1970_h100_site_index
 
 PINE_GROUP = {
@@ -38,7 +39,12 @@ OAK_GROUP = {
 
 
 def coerce_species(species: Union[TreeName, str]) -> TreeName:
-    """Parse species input into a canonical ``TreeName``."""
+    """Parse species input into a canonical ``TreeName``.
+
+    A thin alias for :func:`~pyforestry.base.helpers.tree_species.parse_tree_species`,
+    which is where the generic version lives; this exists so the Söderberg modules
+    can take all their input normalisation from one import.
+    """
     return parse_tree_species(species)
 
 
@@ -85,13 +91,11 @@ def normalize_part_of_sweden(
     raise ValueError(error_message)
 
 
-def warn_proportion(name: str, value: float) -> None:
-    """Warn when a proportion is outside [0, 1]."""
-    if not (0.0 <= value <= 1.0):
-        warnings.warn(
-            f"{name}={value} is outside [0, 1]; results may be extrapolated.",
-            stacklevel=2,
-        )
+# Re-exported, not defined here: a proportion is a proportion in any country, so
+# the check lives in ``pyforestry.base.helpers.utils`` where Norway can reach it
+# without importing from Sweden. Kept in this module's namespace so the Söderberg
+# modules that import it from here are unaffected.
+warn_proportion = _warn_proportion
 
 
 def normalize_hagglund_h100_site_index_m(

@@ -32,7 +32,7 @@ from .tree import Tree
 from .bitterlich_angle_count import AngleCount, AngleCountAggregator
 from .plot import CircularPlot
 from .stand import Stand, StandMetricAccessor
-from .utils import enum_code
+from .utils import enum_code, warn_proportion
 from .bucking import (
     BuckingConfig,
     BuckingResult,
@@ -110,6 +110,7 @@ __all__ = [
     "StandMetricAccessor",
     "SiteBase",
     "enum_code",
+    "warn_proportion",
     "CrossCutSection",
     "BuckingResult",
     "BuckingConfig",
