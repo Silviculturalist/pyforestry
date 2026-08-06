@@ -1873,6 +1873,14 @@ class CompositePipeline:
                     mean_diameter_arithmetic_cm=mean_diameter_arithmetic_cm,
                     mean_diameter_dg_cm=mean_diameter_dg_cm,
                     mean_age_total_years=mean_age_total_years,
+                    # This pipeline models no overstorey, so "excluding overstorey"
+                    # excludes nothing and this is the plain stand mean. Passed
+                    # explicitly rather than left to each consumer's fallback,
+                    # because those fallbacks disagree: Söderberg, Bengtsson and
+                    # the root-rot model read `mean_age_total_years`, while Elfving
+                    # (2013) derives a mean from the tree records instead. Setting
+                    # it here is what makes every mortality model in the period age
+                    # the stand the same way.
                     mean_age_excl_overstorey_years=mean_age_total_years,
                     species_basal_area_m2_ha=species_ba_m2_ha,
                 ),
