@@ -61,7 +61,42 @@ from .petterson_1955 import (
     petterson_simulate,
 )
 
+#: The stateful whole-rotation runner each published system ships, by the name
+#: its `GrowthModel` adapter is registered under. Elfving & Hägglund (1975) is
+#: absent deliberately: it estimates a starting stand and does not step one.
+_SYSTEM_RUNNERS: dict[str, type] = {
+    "eko_1985": Eko1985Stand,
+    "eriksson_1976": Eriksson1976Stand,
+    "persson_1992": Persson1992Stand,
+    "petterson_1955": Petterson1955Stand,
+}
+
+
+def available_systems() -> dict[str, type]:
+    """Return each published system's own runner, by name.
+
+    These project a stand end to end, exactly as
+    :func:`~pyforestry.sweden.simulation.presets.get_pipeline`'s composites do --
+    which ``available_pipelines()`` alone does not say, since it lists only the
+    two compositions pyforestry assembled itself. Asking what this package can
+    run means asking both.
+
+    The classes are returned rather than built, because there is no shared
+    constructor to build them with and inventing one would misrepresent them:
+    each takes the starting state and thinning programme its own publication
+    defines. Read the class to see what it wants.
+
+    Returns:
+        Name to runner class. The same names their ``GrowthModel`` adapters use
+        in :func:`~pyforestry.available_models`, so one system is one name
+        whichever way it is reached -- the adapter steps a stand you supply, the
+        runner builds and projects its own.
+    """
+    return dict(_SYSTEM_RUNNERS)
+
+
 __all__ = [
+    "available_systems",
     "DominantHeightObservation",
     "Eko1985Cohort",
     "Eko1985Model",

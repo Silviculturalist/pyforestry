@@ -67,3 +67,35 @@ def test_the_scenario_lookup_answers_only_for_what_it_defines() -> None:
     assert get_scenario_config("baseline").scenario_id == "baseline"
     with pytest.raises(ValueError, match="Unsupported scenario_id"):
         get_scenario_config("baseline_v2")
+
+
+def test_the_published_systems_are_discoverable_too() -> None:
+    """``available_pipelines`` is not the answer to "what can I project?".
+
+    A composite is a composition pyforestry assembled; a system's composition is
+    its own author's. Both project a stand end to end, so a caller asking what
+    can be run has to be able to find both -- and the systems' runners were in no
+    registry at all, reachable only by importing the class.
+    """
+    from pyforestry.sweden.systems import available_systems
+
+    systems = available_systems()
+    assert sorted(systems) == ["eko_1985", "eriksson_1976", "persson_1992", "petterson_1955"]
+    # Classes, not instances: each takes the starting state its own publication
+    # defines, and there is no shared constructor to hide that behind.
+    for name, runner in systems.items():
+        assert isinstance(runner, type), name
+
+    # No name means two things: a system is the same name whichever way it is
+    # reached, and no system is also a pipeline.
+    assert not set(systems) & set(available_pipelines())
+
+
+def test_every_system_name_is_also_a_registered_model() -> None:
+    """The runner and the adapter are two doors onto one publication."""
+    from pyforestry import available_models
+    from pyforestry.sweden.systems import available_systems
+
+    models = set(available_models())
+    for name in available_systems():
+        assert name in models, f"{name} ships a runner but no GrowthModel adapter"

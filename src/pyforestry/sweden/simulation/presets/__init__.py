@@ -58,7 +58,21 @@ _RENAMED_PIPELINES = {
 
 
 def available_pipelines() -> list[str]:
-    """Return every name :func:`get_pipeline` accepts, sorted."""
+    """Return every name :func:`get_pipeline` accepts, sorted.
+
+    These are the *composite* pipelines, and they are not everything this package
+    can run end to end. A composite is a composition pyforestry assembled: a
+    dozen publications that were never fitted to each other, driven through one
+    period. The whole published systems -- Eriksson (1976), Ekö (1985), Persson
+    (1992), Petterson (1955) -- each project a stand just as completely, but the
+    composition is their own author's, so they live in
+    :mod:`pyforestry.sweden.systems` and ship their own runner. Ask
+    :func:`~pyforestry.sweden.systems.available_systems` for those.
+
+    The split is by whose composition it is, not by what can be run, and reading
+    this list as the answer to "what can I project?" understates the package by
+    four systems.
+    """
     return sorted(PIPELINE_BUILDERS)
 
 

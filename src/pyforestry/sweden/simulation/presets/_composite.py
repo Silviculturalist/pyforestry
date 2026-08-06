@@ -44,22 +44,32 @@ from pyforestry.base.pricelist import Pricelist, SolutionCube, create_pricelist_
 from pyforestry.base.simulation.core import SimulationContext
 from pyforestry.base.simulation.pipeline import Step, run_pipeline
 from pyforestry.base.taper.taper import Taper
+
+# Imported as modules, for their DESCRIPTOR: `components` is this pipeline's
+# whole citation, and every one of these is a publication it composes.
+from pyforestry.base.timber_bucking import nasberg_1985
 from pyforestry.base.timber_bucking.nasberg_1985 import BuckingConfig, Nasberg_1985_BranchBound
 from pyforestry.simulation.services import RandomBundle
+from pyforestry.sweden.adapters import elfving_1982
 from pyforestry.sweden.adapters.elfving_1982 import (
     HuginMeanHeightModel,
     NfiRegion,
     NyskogReconstruction,
     RegenerationType,
 )
+from pyforestry.sweden.bark import soderberg_1992 as soderberg_1992_bark
 from pyforestry.sweden.bark.soderberg_1992 import soderberg_1992_bark_thickness_bh_mm
+from pyforestry.sweden.height import nystrom_2000
+from pyforestry.sweden.height import soderberg_1992 as soderberg_1992_height
 from pyforestry.sweden.height.nystrom_2000 import sapling_height_growth_m
 from pyforestry.sweden.height.soderberg_1992 import soderberg_1992_height_tree_age_m
+from pyforestry.sweden.ingrowth import wikberg_2004
 from pyforestry.sweden.ingrowth.wikberg_2004 import (
     IngrowthSpeciesGroup,
     ingrowth_predict,
     ingrowth_to_plot_trees,
 )
+from pyforestry.sweden.mortality import naslund_1986
 from pyforestry.sweden.mortality.naslund_1986 import (
     Naslund1986DamageModel,
     SaplingSpeciesGroup,
@@ -69,6 +79,7 @@ from pyforestry.sweden.pricelist.data.mellanskog_2013 import (
     MELLANSKOG_2013_IDENTITY,
     MELLANSKOG_2013_PRICE_DATA,
 )
+from pyforestry.sweden.regeneration import elfving_1992
 from pyforestry.sweden.regeneration.elfving_1992 import Elfving1992Regeneration
 from pyforestry.sweden.simulation.mortality import (
     MortalityConfig,
@@ -81,10 +92,13 @@ from pyforestry.sweden.simulation.mortality import (
 )
 from pyforestry.sweden.simulation.presets import valuation_cube
 from pyforestry.sweden.site import Sweden, SwedishSite
+from pyforestry.sweden.siteindex import hagglund_1970
 from pyforestry.sweden.siteindex.hagglund_1970 import Hagglund_1970
+from pyforestry.sweden.systems import nystrom_soderberg_1987
 from pyforestry.sweden.systems.nystrom_soderberg_1987 import NystromSoderberg1987
-from pyforestry.sweden.taper import EdgrenNylinder1949
+from pyforestry.sweden.taper import EdgrenNylinder1949, edgren_nylinder_1949
 from pyforestry.sweden.timber import SweTimber
+from pyforestry.sweden.volume import brandel_1990
 
 # Two of these three deliberately do not match the package-wide groups in
 # ``pyforestry.sweden._model_input_normalization``, so do not "unify" them without
@@ -813,12 +827,43 @@ class CompositePipeline:
 
     @property
     def components(self) -> Sequence[Describable]:
-        """The cited components this pipeline composes.
+        """Every publication this pipeline composes, for provenance to report.
 
-        Subclasses extend this with their own growth model. The mortality engine
-        is here for every composite, and carries the seven mortality papers.
+        A composite cites nothing of its own -- :meth:`source` says so -- so this
+        list *is* its citation. It used to hold the mortality engine alone, with
+        the subclass adding its growth model: two entries for a period that runs
+        a dozen published models. A run manifest reads its citations off here, so
+        the reconstruction, the young-stand height growth, the height and bark
+        curves, the site-index curves and everything the valuation bucks with
+        were simply absent from it.
+
+        Listed unconditionally, including the phases a configuration can switch
+        off. What a composite *is* does not change with a flag, and a reader
+        checking whether a run used Wikberg (2004) should find the answer in the
+        run's own record of what it ran, not by inferring it from the absence of
+        a citation.
+
+        Subclasses prepend their own growth model.
         """
-        return (self._mortality_engine,)
+        return (
+            # Reconstruction and the young stand.
+            elfving_1982.DESCRIPTOR,
+            elfving_1992.DESCRIPTOR,
+            nystrom_2000.DESCRIPTOR,
+            nystrom_soderberg_1987.DESCRIPTOR,
+            naslund_1986.DESCRIPTOR,
+            # Mortality -- itself a composition, carrying seven papers.
+            self._mortality_engine,
+            # Ingrowth, and the height and bark the period ends by refreshing.
+            wikberg_2004.DESCRIPTOR,
+            soderberg_1992_height.DESCRIPTOR,
+            soderberg_1992_bark.DESCRIPTOR,
+            # Site index, and what the valuation measures and bucks with.
+            hagglund_1970.DESCRIPTOR,
+            brandel_1990.DESCRIPTOR,
+            edgren_nylinder_1949.DESCRIPTOR,
+            nasberg_1985.DESCRIPTOR,
+        )
 
     # --- State access ---
 
