@@ -200,7 +200,15 @@ The following rules are mandatory:
 
 ## Transitional Exceptions
 
-No active transitional exceptions are currently registered in this document.
+- **`ctx.attrs` as a model input contract.** A model declares what it needs as a
+  typed `Inputs` dataclass, resolved once when the context is built, so a missing
+  or mistyped input fails there and by name. `Elfving2010Model` is the only
+  adopter. Söderberg 1986, Ekö 1985, Eriksson 1976 and all four Norway models
+  still read `ctx.attrs` by string key, where a mistyped name is
+  indistinguishable from a site that has none of that value and surfaces only as
+  a default -- or an exception -- once a kernel reaches for it. Typed `Inputs` is
+  the contract new models MUST use; `ctx.attrs` is not removed and cannot be
+  until those seven are migrated, which is per-model work and is not scheduled.
 
 Completed migrations:
 
@@ -259,8 +267,8 @@ longer share a name:
   contract below, and `run_scenario()` executes all four of those: `stages()`
   resolves to `Step` objects through `simulation/stages.py`, `rulesets()` and
   `guard_policy()` are applied, and `seed_strategy()` seeds each stand. This is
-  the tier `ARCHITECTURE_PROPOSAL.md` Move 9 said should "either grow a runtime
-  or be deleted along with the mock runbook"; it grew one.
+  the tier that was to either grow a runtime or be deleted along with the mock
+  runbook it fed; it grew one.
 - **Composite pipelines** (`CompositePipeline`, with `Elfving2010Pipeline` and
   `Soderberg1986Pipeline` as siblings of it) are the runnable ones: stateful
   `initialize()`/`step()`/`run_projection()` objects that drive published models

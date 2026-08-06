@@ -11,10 +11,9 @@
 > systems) and `*/adapters` (runtime glue).
 >
 > For what the package actually offers today, read `ARCHITECTURE.md` (the
-> canonical current policy), `ROADMAP.md` (direction, with `[CP]`/`[TD]` status
-> tags) and `ARCHITECTURE_PROPOSAL.md` (the concrete next moves, several of which
-> supersede sections here). The only runnable code below is §18.3, which uses the
-> real `Eriksson1976Model` API.
+> canonical current policy) and `ROADMAP.md` (direction, with `[CP]`/`[TD]`
+> status tags); both supersede sections here. The only runnable code below is
+> §18.3, which uses the real `Eriksson1976Model` API.
 
 ## Implementation Status (Current vs Target)
 
@@ -26,8 +25,7 @@ Current implementation (repository state):
   `run_sweden_scenario(...)` / `run_norway_scenario(...)`, which project real
   stands with the Elfving (2010) and Kuehne (2022) models and write the three
   artifacts. `run_sweden_preset(...)`, which emitted the artifact contract from
-  synthetic numbers and ran no model, is gone; see `STRUCTURAL_REVIEW.md` A2 for
-  what it was.
+  synthetic numbers and ran no model, is gone.
 - Optimization contracts in this document are target-facing and not implemented
   as runtime entrypoints.
 
