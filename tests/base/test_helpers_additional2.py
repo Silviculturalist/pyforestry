@@ -41,13 +41,13 @@ def test_area_aggregates_repr():
 
 
 def test_atomicvolume_invalid_ops():
-    vol = AtomicVolume(1.0)
+    vol = AtomicVolume(1.0, region="Sweden")
     assert AtomicVolume.__truediv__(vol, "x") is NotImplemented
     assert AtomicVolume.__eq__(vol, "x") is NotImplemented
 
 
 def test_compositevolume_invalid_ops():
-    vol = AtomicVolume(1.0)
+    vol = AtomicVolume(1.0, region="Sweden")
     with pytest.raises(TypeError):
         CompositeVolume([vol, 1])
 
