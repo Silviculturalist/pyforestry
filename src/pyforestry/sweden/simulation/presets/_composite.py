@@ -990,6 +990,74 @@ class CompositePipeline:
         self._build_context()
         return self._trees
 
+    # --- Checkpointing (Checkpointable) -------------------------------------
+
+    #: The attributes that change as a projection advances, and nothing else.
+    #: Everything absent from this tuple is either rebuilt from ``config``
+    #: (the model, the price list, the phases) or a cache. ``_steps`` in
+    #: particular must stay out: each phase is a frozen dataclass holding a
+    #: back-reference to this pipeline, so copying the tuple would copy the
+    #: pipeline and restore one whose phases advance its predecessor.
+    _CHECKPOINT_ATTRS = (
+        "_site",
+        "_ctx",
+        "_staged_trees",
+        "_current_age_years",
+        "_years_elapsed",
+        "_regen_asinw",
+        "_regen_q",
+        "_record",
+    )
+
+    def checkpoint_state(self) -> dict[str, Any]:
+        """Return what this pipeline would need to be resumed elsewhere.
+
+        The trees are not listed separately: :attr:`_trees` reads through to the
+        context's plot once :meth:`initialize` has built one, so ``_ctx`` already
+        carries them, and ``_staged_trees`` covers the window before there is a
+        context to carry anything.
+
+        The generator's *state* is captured rather than the seed. Re-seeding from
+        ``config.random_seed`` would rewind every stream to the start of the run,
+        so a stand resumed at year 40 would draw the same mortality as the stand
+        that resumed at year 5 -- reproducible, and wrong.
+        """
+        state: dict[str, Any] = {
+            name: getattr(self, name, None) for name in self._CHECKPOINT_ATTRS
+        }
+        state["_rng_state"] = self._rng.state
+        return state
+
+    def restore_checkpoint_state(self, state: Mapping[str, Any]) -> None:
+        """Adopt a state mapping from :meth:`checkpoint_state`.
+
+        Rebuilds the mortality engine rather than restoring one, so that it draws
+        on the restored generator: the engine is handed ``_rng.child("mortality")``
+        at :meth:`initialize` time, and an engine carried across a checkpoint would
+        keep the stream it was built with while the rest of the run moved.
+
+        Args:
+            state: A mapping produced by :meth:`checkpoint_state`.
+
+        Raises:
+            KeyError: If the mapping is missing the generator state, which means it
+                did not come from :meth:`checkpoint_state`.
+        """
+        rng_state = state["_rng_state"]
+        for name in self._CHECKPOINT_ATTRS:
+            if name in state:
+                setattr(self, name, state[name])
+        self._rng.state = rng_state
+        self._mortality_engine = MortalityEngine(
+            config=self._build_mortality_config(),
+            rng=self._rng.child("mortality").numpy,
+        )
+        # Caches, not state: the lookup cache is keyed by species/size and stays
+        # valid, but the cube is loaded lazily by initialize(), which a restored
+        # pipeline never runs.
+        if self._valuation_solution_cube is None:
+            self._valuation_solution_cube = self._load_solution_cube()
+
     def step(self, *, dt_years: float | None = None) -> list[Tree]:
         """Advance one period: the young phase, mature growth, mortality and the rest.
 
