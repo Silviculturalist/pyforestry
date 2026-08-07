@@ -444,6 +444,32 @@ class GrowthModel(ABC):
             )
         mode = _select_mode(req, stand, mode_hint)
 
+        # The bundle is opened before the inventory is acquired, because acquiring
+        # it may *draw*: an angle-count or tree-list stand converted to "spatial"
+        # gets pseudo-positions from the adapter. This used to run first, so the
+        # adapter never saw a stream and fell back to the hard-coded default seed
+        # in ``_adapter_rng`` -- every run produced the same coordinates whatever
+        # ``seed=`` said, and those draws sat outside the run's bundle, so no
+        # checkpoint could reproduce them. ``_adapter_rng``'s own docstring named
+        # ``ctx.rng.child("adapters")`` as the thing to pass; nothing passed it.
+        if seed is not None and random_bundle is not None:
+            raise ValueError(
+                "Pass either seed= or random_bundle=, not both: a bundle already "
+                "carries its root seed, so supplying a second one has no defined "
+                "meaning."
+            )
+        if random_bundle is None and seed is not None:
+            from pyforestry.simulation.services import RandomBundle
+
+            random_bundle = RandomBundle(int(seed))
+
+        # An explicit stream from the caller wins, in either spelling. ``rng=`` is
+        # the obvious one; ``seed=`` matters just as much, because ``_adapter_rng``
+        # prefers ``rng`` over ``seed`` -- injecting one beside a caller's seed
+        # would silently ignore the seed they passed to pin these coordinates.
+        if random_bundle is not None and not {"rng", "seed"} & adapter_kwargs.keys():
+            adapter_kwargs = {**adapter_kwargs, "rng": random_bundle.rng_for("adapters")}
+
         acquired = _acquire_inventory(stand, mode, use_adapter, adapter_kwargs)
         inventory, mode, origin, adapter_used = acquired
 
@@ -458,17 +484,6 @@ class GrowthModel(ABC):
         context_attrs["inventory_origin"] = origin
         if adapter_used is not None:
             context_attrs["inventory_adapter"] = adapter_used
-
-        if seed is not None and random_bundle is not None:
-            raise ValueError(
-                "Pass either seed= or random_bundle=, not both: a bundle already "
-                "carries its root seed, so supplying a second one has no defined "
-                "meaning."
-            )
-        if random_bundle is None and seed is not None:
-            from pyforestry.simulation.services import RandomBundle
-
-            random_bundle = RandomBundle(int(seed))
 
         ctx = SimulationContext(
             mode=mode,

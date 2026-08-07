@@ -943,3 +943,35 @@ def test_parallel_runner_telemetry_sink(monkeypatch):
 
     run_parallel([ctx], dt=1.0, steps=1, write_back=False, telemetry_sink=sink)
     assert collected == [(0, [{"event": "ok"}])]
+
+
+def test_adapter_draws_come_from_the_run_seed_not_a_hard_coded_one():
+    """A stochastic adapter is part of the run, so the run's seed must reach it.
+
+    ``build_context`` acquired the inventory before it opened the run's
+    ``RandomBundle``, so an angle-count stand converted to ``spatial`` got its
+    pseudo-positions from ``_adapter_rng``'s hard-coded fallback: every seed gave
+    the same coordinates, and the draws sat outside the bundle a checkpoint
+    captures. ``_adapter_rng``'s docstring already named ``ctx.rng.child(...)`` as
+    the thing to pass; nothing passed it.
+    """
+    model = ExampleStandGeneralModel()
+
+    def positions(**kwargs):
+        ctx = model.build_context(_ac_stand(), mode_hint="spatial", **kwargs)
+        return [
+            (round(t.position.X, 9), round(t.position.Y, 9))
+            for plot in ctx.stand.plots
+            for t in plot.trees
+            if getattr(t, "position", None) is not None
+        ]
+
+    assert positions(seed=11), "expected the adapter to place trees"
+    assert positions(seed=11) != positions(seed=99)
+    # Seedless construction stays reproducible, and an explicit adapter seed still
+    # pins the coordinates -- injecting an rng beside it would silently ignore it,
+    # because _adapter_rng prefers rng over seed.
+    assert positions() == positions()
+    assert positions(seed=11, adapter_kwargs={"seed": 42}) == positions(
+        seed=99, adapter_kwargs={"seed": 42}
+    )
