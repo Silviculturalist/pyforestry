@@ -214,6 +214,68 @@ def build_kuehne_stands(
     ]
 
 
+def _kuehne_start_total_age(
+    start_age: Optional[AgeMeasurement],
+    stands: Sequence[StandUnit],
+) -> float:
+    """Return the total age the Kuehne adapter should start its clock at.
+
+    The adapter seeds ``ctx.state["t"]`` from ``start_total_age_years``, and the
+    volume reporter reads that clock, so this number decides what age the stands
+    are grown and valued at. It used to be :data:`_BASELINE_AGE_YEARS` whatever the
+    caller asked for: a run given ``start_age=Age.TOTAL(70)`` was *scheduled* at 70
+    and *grown* at 40.
+
+    ``build_model`` produces one model for every stand, so one age has to serve all
+    of them. Where the stands disagree, that is refused rather than resolved --
+    picking a mean, or the first, would grow the rest at an age nobody chose.
+
+    Args:
+        start_age: The run-level start age, or ``None`` for the baseline.
+        stands: The stands being projected, whose per-stand ``age`` must agree with
+            it where they carry one.
+
+    Returns:
+        The total age in years for :class:`KuehnePineAdapterConfig`.
+
+    Raises:
+        ValueError: If ``start_age`` is given in an age measure other than total,
+            since the Kuehne adapter's clock is a total age and converting one to
+            the other needs a time to breast height this function is not given; or
+            if the stands carry per-stand ages that disagree with each other or
+            with ``start_age``.
+    """
+    if start_age is None:
+        resolved = float(_BASELINE_AGE_YEARS)
+    elif start_age.code != Age.TOTAL.value:
+        raise ValueError(
+            "Norway's Kuehne adapter starts its clock at a *total* age, so "
+            f"start_age must be Age.TOTAL(...); got {start_age!r}. Convert it "
+            "yourself, with the time to breast height the stand was measured on."
+        )
+    else:
+        resolved = float(start_age)
+
+    stand_ages = {
+        round(float(unit.age), 9) for unit in stands if getattr(unit, "age", None) is not None
+    }
+    if not stand_ages:
+        return resolved
+    if len(stand_ages) > 1:
+        raise ValueError(
+            f"Norway's Kuehne model is built once for the whole run, so it cannot "
+            f"start at {len(stand_ages)} different ages: {sorted(stand_ages)}. Run "
+            f"the differing stands separately, or give them one age."
+        )
+    (only_age,) = stand_ages
+    if start_age is not None and abs(only_age - resolved) > 1e-9:
+        raise ValueError(
+            f"start_age is {resolved} but the stands carry age {only_age}. One of "
+            f"them would be ignored; say which by passing only that one."
+        )
+    return only_age
+
+
 def run_norway_scenario(
     *,
     global_seed: int,
@@ -291,13 +353,14 @@ def run_norway_scenario(
     """
     resolved_config = config or build_baseline_scenario_config()
     resolved_stands = list(stands) if stands is not None else build_kuehne_stands(n_stands)
+    model_start_age = _kuehne_start_total_age(start_age, resolved_stands)
 
     return run_scenario(
         resolved_config,
         build_model=lambda: KuehnePineGrowthModel(
             KuehnePineAdapterConfig(
                 dominant_height_m=_BASELINE_DOMINANT_HEIGHT_M,
-                start_total_age_years=_BASELINE_AGE_YEARS,
+                start_total_age_years=model_start_age,
             )
         ),
         stands=resolved_stands,

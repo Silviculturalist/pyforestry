@@ -524,3 +524,59 @@ def test_the_mean_tree_is_the_stands_qmd_and_a_height_the_model_implies() -> Non
         brantseg_1967_volume_scots_pine_norway(mean_tree.height_m, mean_tree.diameter_cm).value
     )
     assert implied == pytest.approx(removed / mean_tree.stems_removed, rel=1e-6)
+
+
+def test_kuehne_model_starts_at_the_age_the_caller_asked_for() -> None:
+    """The adapter's clock decides what age a stand is grown and valued at.
+
+    ``KuehnePineGrowthModel.build_context`` seeds ``ctx.state["t"]`` from
+    ``start_total_age_years``, and the volume reporter reads that clock. The
+    runbook used to hardcode the 40-year baseline while accepting ``start_age``
+    for scheduling, so a run asked for 70 was scheduled at 70 and grown at 40.
+    """
+    import dataclasses
+
+    from pyforestry.norway.simulation.orchestration.runbook import (
+        _kuehne_start_total_age,
+        build_kuehne_stands,
+    )
+
+    stands = build_kuehne_stands(3)
+    assert _kuehne_start_total_age(None, stands) == 40.0
+    assert _kuehne_start_total_age(Age.TOTAL(70), stands) == 70.0
+
+    aged = [dataclasses.replace(unit, age=Age.TOTAL(55)) for unit in stands]
+    assert _kuehne_start_total_age(None, aged) == 55.0
+    assert _kuehne_start_total_age(Age.TOTAL(55), aged) == 55.0
+
+
+def test_a_kuehne_start_age_that_one_config_cannot_honour_is_refused() -> None:
+    """One model is built for the whole run, so one age has to serve every stand.
+
+    Picking a mean, or the first, would grow the rest at an age nobody chose.
+    """
+    import dataclasses
+
+    from pyforestry.norway.simulation.orchestration.runbook import (
+        _kuehne_start_total_age,
+        build_kuehne_stands,
+    )
+
+    stands = build_kuehne_stands(3)
+
+    # The Kuehne clock is a total age; converting from breast-height age needs a
+    # time to breast height this function is not given.
+    with pytest.raises(ValueError, match="must be Age.TOTAL"):
+        _kuehne_start_total_age(Age.DBH(47), stands)
+
+    mixed = [
+        dataclasses.replace(stands[0], age=Age.TOTAL(55)),
+        dataclasses.replace(stands[1], age=Age.TOTAL(60)),
+        stands[2],
+    ]
+    with pytest.raises(ValueError, match="cannot start at 2 different ages"):
+        _kuehne_start_total_age(None, mixed)
+
+    aged = [dataclasses.replace(unit, age=Age.TOTAL(55)) for unit in stands]
+    with pytest.raises(ValueError, match="but the stands carry age"):
+        _kuehne_start_total_age(Age.TOTAL(70), aged)
