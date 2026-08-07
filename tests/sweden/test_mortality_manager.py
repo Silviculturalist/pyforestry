@@ -371,8 +371,10 @@ def test_a_stochastic_tree_model_follows_the_run_stream_across_engine_rebuilds()
     period of a run -- correlated mortality dressed as independent draws.
 
     Passing a ``KeyedRNG`` hands the model the run's stream itself, so a rebuild
-    carries on rather than restarting. A bare NumPy generator cannot supply the
-    scalar draws a tree model makes, so that path still falls back to the seed.
+    carries on rather than restarting. Only a ``KeyedRNG`` is accepted: a bare
+    NumPy generator can seed the engine's own vectorised draws but not the scalar
+    draws of the tree model it builds, so accepting one would leave the model on
+    the config seed -- half the fix, silently.
     """
     from pyforestry.simulation.services import RandomBundle
     from pyforestry.sweden.mortality.types import MortalityRealizationMode, MortalityTreeModel
@@ -396,3 +398,10 @@ def test_a_stochastic_tree_model_follows_the_run_stream_across_engine_rebuilds()
     # has to pass its stream in.
     seeded = [MortalityEngine(config=config)._tree_model._rng.random() for _ in range(4)]
     assert len(set(seeded)) == 1
+
+    # A generator is not a stream. Refused, rather than used for the engine's own
+    # draws while the tree model it builds quietly stays on the config seed.
+    import numpy as np
+
+    with pytest.raises(TypeError, match="takes a KeyedRNG"):
+        MortalityEngine(config=config, rng=np.random.default_rng(3))
