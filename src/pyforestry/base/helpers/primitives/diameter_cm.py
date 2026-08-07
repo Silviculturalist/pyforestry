@@ -1,15 +1,17 @@
-"""Module for handling diameter measurements and conversions.
+"""Diameter primitives and conversion helpers.
 
-This module provides functions and classes to represent tree
-stem diameters in centimeters and to perform unit conversions,
-calculations of basal area per tree, and validation of inputs.
+This module defines the ``Diameter_cm`` value object and helper functions for
+converting between diameter and basal-area representations. The formulas mirror
+the standard geometric relationships used in forestry growth calculations.
 
-Classes:
-    Diameter: Represents a diameter measurement in cm with optional unit conversion.
-
-Functions:
-    diameter_to_basal_area: Compute basal area (cm²) from diameter.
+Source:
+    Standard basal-area geometry for diameter/basal-area conversion
+    workflows in ``pyforestry``.
 """
+
+from __future__ import annotations
+
+from math import pi, sqrt
 
 
 class Diameter_cm(float):
@@ -81,3 +83,102 @@ class Diameter_cm(float):
             f"Diameter_cm({float(self)}, over_bark={self.over_bark}, "
             f"measurement_height_m={self.measurement_height_m})"
         )
+
+
+def diameter_to_basal_area_cm2(diameter_cm: float) -> float:
+    """Compute basal area (cm²) from diameter (cm).
+
+    Source:
+        Standard basal-area geometry (area = pi * d^2 / 4).
+
+    Args:
+        diameter_cm (float): Diameter at breast height in centimeters.
+
+    Returns:
+        float: Basal area in cm².
+
+    Raises:
+        ValueError: If ``diameter_cm`` is negative.
+    """
+    if diameter_cm < 0:
+        raise ValueError("diameter_cm must be non-negative.")
+    return (pi / 4.0) * (diameter_cm**2)
+
+
+def basal_area_cm2_to_diameter_cm(basal_area_cm2: float) -> float:
+    """Compute diameter (cm) from basal area (cm²).
+
+    Source:
+        Standard basal-area geometry (area = pi * d^2 / 4).
+
+    Args:
+        basal_area_cm2 (float): Basal area in cm².
+
+    Returns:
+        float: Diameter in centimeters.
+
+    Raises:
+        ValueError: If ``basal_area_cm2`` is negative.
+    """
+    if basal_area_cm2 < 0:
+        raise ValueError("basal_area_cm2 must be non-negative.")
+    return sqrt(4.0 * basal_area_cm2 / pi)
+
+
+def diameter_growth_to_basal_area_growth_cm2(
+    diameter_cm: float, diameter_growth_cm: float
+) -> float:
+    """Convert diameter growth (cm) to basal area growth (cm²).
+
+    Source:
+        Standard basal-area geometry (area = pi * d^2 / 4).
+
+    Args:
+        diameter_cm (float): Current diameter (cm).
+        diameter_growth_cm (float): Diameter increment (cm).
+
+    Returns:
+        float: Basal area growth (cm²).
+
+    Raises:
+        ValueError: If inputs are negative.
+    """
+    if diameter_cm < 0:
+        raise ValueError("diameter_cm must be non-negative.")
+    if diameter_growth_cm < 0:
+        raise ValueError("diameter_growth_cm must be non-negative.")
+    return (pi / 4.0) * ((diameter_cm + diameter_growth_cm) ** 2 - diameter_cm**2)
+
+
+def basal_area_growth_cm2_to_diameter_growth_cm(
+    diameter_cm: float, basal_area_growth_cm2: float
+) -> float:
+    """Convert basal area growth (cm²) to diameter growth (cm).
+
+    Source:
+        Standard basal-area geometry (d = sqrt(4 * area / pi)).
+
+    Args:
+        diameter_cm (float): Current diameter (cm).
+        basal_area_growth_cm2 (float): Basal area growth (cm²).
+
+    Returns:
+        float: Diameter increment (cm).
+
+    Raises:
+        ValueError: If inputs are negative.
+    """
+    if diameter_cm < 0:
+        raise ValueError("diameter_cm must be non-negative.")
+    if basal_area_growth_cm2 < 0:
+        raise ValueError("basal_area_growth_cm2 must be non-negative.")
+    return sqrt((4.0 * basal_area_growth_cm2 / pi) + diameter_cm**2) - diameter_cm
+
+
+__all__ = [
+    "Diameter_cm",
+    "diameter_to_basal_area_cm2",
+    "basal_area_cm2_to_diameter_cm",
+    "diameter_growth_to_basal_area_growth_cm2",
+    "basal_area_growth_cm2_to_diameter_growth_cm",
+]

@@ -59,11 +59,12 @@ def test_downgrading_and_section_merge(monkeypatch):
     t = Timber("pine", 15, 6, stump_height_m=0)
     pl = make_pricelist()
 
-    Pricelist.getPulpWoodWasteProportion = lambda self, s: 0.0  # type: ignore[attr-defined]
-    Pricelist.getPulpwoodFuelwoodProportion = lambda self, s: 0.0  # type: ignore[attr-defined]
+    # Pricelist.get_pulpwood_waste_proportion / get_pulpwood_fuelwood_proportion now exist
+    # in production and default to 0.0 (no downgrade) - exactly what this test needs -
+    # so no monkeypatch is required.
 
     nb = Nasberg_1985_BranchBound(t, pl, lambda timber: SimpleTaper(timber, 15, t.height_m))
-    monkeypatch.setattr(nb._timber_prices, "getTimberWeight", lambda part: Weights())
+    monkeypatch.setattr(nb._timber_prices, "get_timber_weight", lambda part: Weights())
 
     res = nb.calculate_tree_value(
         min_diam_dead_wood=16, config=BuckingConfig(use_downgrading=True, save_sections=True)

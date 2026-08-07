@@ -1,6 +1,4 @@
-import io
 import warnings
-from contextlib import redirect_stdout
 
 import pytest
 
@@ -64,8 +62,7 @@ def test_spruce_south_warnings():
 
 
 def test_pine_model_prints_and_warning():
-    f = io.StringIO()
-    with warnings.catch_warnings(record=True) as w, redirect_stdout(f):
+    with warnings.catch_warnings(record=True) as w:
         warnings.simplefilter("always")
         HagglundPineModel.sweden(
             dominant_height_m=5.0,
@@ -73,9 +70,9 @@ def test_pine_model_prints_and_warning():
             age2=Age.TOTAL(5),
             regeneration=Hagglund_1970.regeneration.CULTURE,
         )
-    out = f.getvalue()
-    assert "Too low productivity" in out
-    assert any("non-positive" in str(x.message) for x in w)
+    msgs = [str(x.message) for x in w]
+    assert any("Too low productivity" in m for m in msgs)
+    assert any("non-positive" in m for m in msgs)
 
 
 def test_regeneration_str():
@@ -133,16 +130,15 @@ def test_southern_old_and_high_age():
 
 
 def test_pine_model_old_stand_and_unknown_regeneration():
-    f = io.StringIO()
-    with redirect_stdout(f):
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
         HagglundPineModel.sweden(
             dominant_height_m=10.0,
             age=Age.DBH(130),
             age2=Age.TOTAL(140),
             regeneration=Hagglund_1970.regeneration.UNKNOWN,
         )
-    out = f.getvalue()
-    assert "Too old stand" in out
+    assert any("Too old stand" in str(x.message) for x in w)
 
 
 def test_wrapper_passthrough():
@@ -192,8 +188,8 @@ def test_southern_high_productivity():
 
 
 def test_pine_high_low_productivity_prints():
-    f = io.StringIO()
-    with redirect_stdout(f):
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
         HagglundPineModel.sweden(
             dominant_height_m=25,
             age=Age.DBH(40),
@@ -206,9 +202,9 @@ def test_pine_high_low_productivity_prints():
             age2=Age.TOTAL(60),
             regeneration=Hagglund_1970.regeneration.CULTURE,
         )
-    out = f.getvalue()
-    assert "Too high productivity" in out
-    assert "Too low productivity" in out
+    msgs = [str(x.message) for x in w]
+    assert any("Too high productivity" in m for m in msgs)
+    assert any("Too low productivity" in m for m in msgs)
 
 
 def test_force_full_coverage():

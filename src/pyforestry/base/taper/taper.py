@@ -1,3 +1,5 @@
+"""Taper utilities and interfaces."""
+
 from typing import Union
 
 import numpy as np
@@ -41,6 +43,7 @@ class Taper:
 
     def get_diameter_vectorised(self, h_array: Union[npt.ArrayLike, np.ndarray]) -> np.ndarray:
         # --- CORRECTED: Vectorize the wrapper method to ensure height checks are applied ---
+        """Get diameter vectorised."""
         f = np.vectorize(self.get_diameter_at_height, otypes=[np.float32])
         return f(h_array)
 

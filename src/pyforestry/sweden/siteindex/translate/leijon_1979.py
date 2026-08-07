@@ -4,8 +4,10 @@ import warnings
 
 from numpy import exp, log
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 
-def Leijon_Pine_to_Spruce(H100_Pine):
+
+def leijon_pine_to_spruce(H100_Pine):
     """
     Leijon 1979 function 7.2.
     """
@@ -25,7 +27,7 @@ def Leijon_Pine_to_Spruce(H100_Pine):
     )
 
 
-def Leijon_Spruce_to_Pine(H100_Spruce):
+def leijon_spruce_to_pine(H100_Spruce):
     """
     Leijon 1979 function 7.1.
     """
@@ -43,3 +45,25 @@ def Leijon_Spruce_to_Pine(H100_Spruce):
         )
         / 10
     )
+
+
+DESCRIPTOR = FormulaDescriptor(
+    component_id="leijon_1979_siteindex",
+    source=SourceReference(
+        author="Leijon, B.",
+        year=1979,
+        title="Tallens och granens produktion på lika ståndort",
+        note=(
+            "Slutredovisning för anslag från Statens råd för skogs- och "
+            "jordbruksforskning. Sveriges lantbruksuniversitet, institutionen för "
+            "skogsskötsel, Umeå. A grant final report, so it carries no report "
+            "series number."
+        ),
+    ),
+    species_groups={
+        "pine": frozenset({"Pinus sylvestris"}),
+        "spruce": frozenset({"Picea abies"}),
+    },
+    units={},
+    kernel_names=("leijon_pine_to_spruce", "leijon_spruce_to_pine"),
+)

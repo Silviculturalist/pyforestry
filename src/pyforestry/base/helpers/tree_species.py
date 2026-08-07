@@ -8,6 +8,7 @@ given region.  For example ``TreeSpecies.Sweden.pinus_sylvestris`` returns the
 """
 
 from dataclasses import dataclass
+from importlib import import_module
 from typing import Any, ClassVar, Dict, Iterator, List, Union
 
 # --------------------------------------------------------------------
@@ -274,11 +275,55 @@ class RegionalTreeSpecies:
         raise AttributeError(f"Species or genus '{attr}' not found in region '{self.region}'")
 
 
+# Where each regional namespace is registered from. The base package must not
+# depend on the regional packages at import time, so the module is only imported
+# when its namespace is first asked for.
+_REGIONAL_NAMESPACE_MODULES = {
+    "Sweden": "pyforestry.sweden.helpers.tree_species_extension",
+    "Norway": "pyforestry.norway.helpers.tree_species_extension",
+}
+
+
+class _TreeSpeciesMeta(type):
+    """Resolve regional species namespaces on first access.
+
+    Each regional package attaches its namespace (``TreeSpecies.Sweden``) as a
+    side effect of being imported. Relying on that alone makes the attribute's
+    existence depend on whether something happened to import the region first: a
+    plain ``from pyforestry.base.helpers import TreeSpecies`` followed by
+    ``TreeSpecies.Sweden`` raised ``AttributeError`` unless a Sweden module had
+    already been pulled in elsewhere, so the same code worked or failed according
+    to import order. Importing the region on demand here makes the namespace
+    available either way, without the base package depending on the regions.
+    """
+
+    def __getattr__(cls, name: str):
+        """Import the owning regional package the first time it is referenced."""
+        module_name = _REGIONAL_NAMESPACE_MODULES.get(name)
+        if module_name is None:
+            raise AttributeError(f"type object {cls.__name__!r} has no attribute {name!r}")
+        import_module(module_name)
+        try:
+            return cls.__dict__[name]
+        except KeyError as exc:  # pragma: no cover - defensive
+            raise AttributeError(f"{module_name} did not register TreeSpecies.{name}.") from exc
+
+    def __dir__(cls):
+        """Include the regional namespaces so they are discoverable."""
+        return sorted(set(super().__dir__()) | set(_REGIONAL_NAMESPACE_MODULES))
+
+
 # Global Regional Species Namespace
-class TreeSpecies:
-    """Namespace exposing regional groups of tree species."""
+class TreeSpecies(metaclass=_TreeSpeciesMeta):
+    """Namespace exposing regional groups of tree species.
+
+    Regional namespaces (``TreeSpecies.Sweden``, ``TreeSpecies.Norway``) resolve
+    on first access, so they are available without importing the regional
+    package yourself.
+    """
 
     Sweden: ClassVar["RegionalTreeSpecies"]
+    Norway: ClassVar["RegionalTreeSpecies"]
 
 
 def parse_tree_species(species_str: Union[str, TreeName]) -> TreeName:
@@ -301,8 +346,7 @@ def parse_tree_species(species_str: Union[str, TreeName]) -> TreeName:
 
 
 # --------------------------------------------------------------------
-# Automatically load regional extensions if available
-try:  # pragma: no cover - optional dependency
-    import pyforestry.sweden.helpers.tree_species_extension  # noqa: F401
-except Exception:  # pragma: no cover - fail silently if extension missing
-    pass
+# Regional species extensions (e.g. Sweden, Norway) self-register on import of
+# their package via ``pyforestry/<region>/__init__.py``. ``base`` therefore does
+# not import any regional package, keeping the dependency direction one-way
+# (regions depend on base, never the reverse).

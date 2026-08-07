@@ -4,7 +4,7 @@ from pyforestry.base.helpers import Age, SiteIndexValue, TreeSpecies
 from pyforestry.sweden.site.enums import Sweden, county_flags_syz_t_area
 from pyforestry.sweden.siteindex.hagglund_1970 import Hagglund_1970
 from pyforestry.sweden.siteindex.translate.hagglund_1981_si_to_productivity import (
-    hagglund_1981_SI_to_productivity,
+    hagglund_1981_si_to_productivity,
 )
 from pyforestry.sweden.siteindex.translate.jonson_index import (
     jonson_index_from_m3sk,
@@ -35,7 +35,7 @@ def test_jonson_index_from_site_index_matches_productivity():
     altitude = 100.0
     county = Sweden.County.VARMLAND
 
-    expected_m3sk = hagglund_1981_SI_to_productivity(
+    expected_m3sk = hagglund_1981_si_to_productivity(
         h100_input=h100,
         main_species=main_species,
         vegetation=vegetation,

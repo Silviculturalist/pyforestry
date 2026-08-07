@@ -16,11 +16,11 @@ from pyforestry.sweden.siteindex import (
     johansson_2013_height_trajectory_sweden_oak,
 )
 from pyforestry.sweden.siteindex.translate import (
-    Leijon_Pine_to_Spruce,
-    Leijon_Spruce_to_Pine,
     agestam_1985_si_translation_pine_to_birch,
     agestam_1985_si_translation_spruce_to_birch,
-    hagglund_1981_SI_to_productivity,
+    hagglund_1981_si_to_productivity,
+    leijon_pine_to_spruce,
+    leijon_spruce_to_pine,
 )
 
 
@@ -73,9 +73,9 @@ def test_translate_init_reexports():
         "agestam_1985_si_translation_spruce_to_birch": (
             agestam_1985_si_translation_spruce_to_birch
         ),
-        "hagglund_1981_SI_to_productivity": hagglund_1981_SI_to_productivity,
-        "Leijon_Pine_to_Spruce": Leijon_Pine_to_Spruce,
-        "Leijon_Spruce_to_Pine": Leijon_Spruce_to_Pine,
+        "hagglund_1981_si_to_productivity": hagglund_1981_si_to_productivity,
+        "leijon_pine_to_spruce": leijon_pine_to_spruce,
+        "leijon_spruce_to_pine": leijon_spruce_to_pine,
     }
     for name, fn in expected.items():
         assert name in mod.__all__

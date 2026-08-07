@@ -46,7 +46,7 @@ extensions = [
     "nbsphinx",  # for notebooks
 ]
 # templates_path = ['_templates']  # if you have custom Jinja2 templates
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "notebooks/_archive/**"]
 
 autodoc_default_options = {
     "members": True,  # include all public members

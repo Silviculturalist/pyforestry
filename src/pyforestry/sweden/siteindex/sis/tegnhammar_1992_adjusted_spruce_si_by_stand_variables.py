@@ -1,7 +1,15 @@
+"""Tegnhammar (1992) adjusted spruce site index from stand variables.
+
+Source:
+    Tegnhammar, L. (1992). *Om skattningen av ståndortsindex för gran.* Sveriges
+    lantbruksuniversitet, institutionen för skogstaxering, Rapport nr 53, Umeå, 259 s.
+"""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.sweden.site.enums import Sweden
 
 from .tegnhammar_1992 import tegnhammar_1992_adjusted_spruce_si_by_stand_variables as _impl
@@ -45,3 +53,20 @@ def tegnhammar_1992_adjusted_spruce_si_by_stand_variables(
         peat_humification=peat_humification,
         epsg=epsg,
     )
+
+
+DESCRIPTOR = FormulaDescriptor(
+    component_id="tegnhammar_1992_adjusted_siteindex",
+    source=SourceReference(
+        author="Tegnhammar, L.",
+        year=1992,
+        title="Om skattningen av ståndortsindex för gran",
+        note=(
+            "Sveriges lantbruksuniversitet, institutionen för skogstaxering, "
+            "Rapport nr 53, Umeå, 259 s. Adjusted spruce site index from stand variables."
+        ),
+    ),
+    species_groups={"spruce": frozenset({"Picea abies"})},
+    units={},
+    kernel_names=("tegnhammar_1992_adjusted_spruce_si_by_stand_variables",),
+)

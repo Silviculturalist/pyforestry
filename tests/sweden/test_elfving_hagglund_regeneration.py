@@ -4,8 +4,8 @@ import pytest
 
 from pyforestry.base.helpers import Age, SiteIndexValue
 from pyforestry.base.helpers.tree_species import TreeSpecies
-from pyforestry.sweden.models.elfving_hagglund_1975 import ElfvingHagglundInitialStand
 from pyforestry.sweden.siteindex.hagglund_1970 import Hagglund_1970
+from pyforestry.sweden.systems.elfving_hagglund_1975 import ElfvingHagglundInitialStand
 
 
 def test_validate_age_structure():
@@ -74,8 +74,8 @@ def test_validate_site_index_type_and_value_errors():
         )
 
 
-def test_validate_site_index_warns_on_unknown_fn():
-    """A warning is emitted if the function origin looks wrong."""
+def test_validate_site_index_rejects_unknown_fn():
+    """Site-index values must be tagged with a Hagglund 1970 function source."""
     si = _create_valid_siteindex()
 
     def dummy_fn():
@@ -84,12 +84,10 @@ def test_validate_site_index_warns_on_unknown_fn():
     bad_fn_si = SiteIndexValue(
         float(si), reference_age=si.reference_age, species=si.species, fn=dummy_fn
     )
-    with warnings.catch_warnings(record=True) as rec:
-        warnings.simplefilter("always")
+    with pytest.raises(ValueError, match="site_index\\.fn"):
         ElfvingHagglundInitialStand._validate_site_index(
             bad_fn_si, TreeSpecies.Sweden.pinus_sylvestris
         )
-        assert rec
 
 
 def test_estimate_stems_young_pine_north_numeric_and_errors():

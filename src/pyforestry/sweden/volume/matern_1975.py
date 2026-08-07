@@ -1,3 +1,14 @@
+"""Tree volume functions for oak and beech, Hagberg & Matérn (1975).
+
+Source:
+    Hagberg, E. & Matérn, B. (1975). *Tabeller för kubering av ek och bok.*
+    Skogshögskolan, institutionen för skoglig matematisk statistik, Rapporter och
+    uppsatser nr 14, Stockholm, 118 s.
+"""
+
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
+
+
 def matern_1975_volume_sweden_oak(diameter_cm, height_m):
     """
     Calculate the volume of Oak trees based on Matérn (1975).
@@ -69,3 +80,25 @@ def matern_1975_volume_sweden_beech(diameter_cm, height_m):
         + 0.00622 * diameter_cm * (height_m**2)
     )
     return volume / 1000
+
+
+# ---------------------------------------------------------------------------
+# Introspection
+# ---------------------------------------------------------------------------
+
+
+DESCRIPTOR = FormulaDescriptor(
+    component_id="matern_1975_volume",
+    source=SourceReference(
+        author="Hagberg, E. & Matérn, B.",
+        year=1975,
+        title="Tabeller för kubering av ek och bok",
+        note=(
+            "Skogshögskolan, institutionen för skoglig matematisk statistik, "
+            "Rapporter och uppsatser nr 14, Stockholm, 118 s."
+        ),
+    ),
+    species_groups={},
+    units={},
+    kernel_names=("matern_1975_volume_sweden_oak", "matern_1975_volume_sweden_beech"),
+)

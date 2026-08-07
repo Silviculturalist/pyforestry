@@ -1,11 +1,6 @@
 pyforestry.sweden.bark package
 ==============================
 
-.. automodule:: pyforestry.sweden.bark
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Submodules
 ----------
 
@@ -13,6 +8,22 @@ pyforestry.sweden.bark.hannrup\_2004 module
 -------------------------------------------
 
 .. automodule:: pyforestry.sweden.bark.hannrup_2004
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyforestry.sweden.bark.soderberg\_1992 module
+---------------------------------------------
+
+.. automodule:: pyforestry.sweden.bark.soderberg_1992
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: pyforestry.sweden.bark
    :members:
    :undoc-members:
    :show-inheritance:

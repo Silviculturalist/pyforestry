@@ -1,0 +1,25 @@
+pyforestry.norway package
+=========================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   pyforestry.norway.adapters
+   pyforestry.norway.bark
+   pyforestry.norway.growth
+   pyforestry.norway.helpers
+   pyforestry.norway.simulation
+   pyforestry.norway.siteindex
+   pyforestry.norway.taper
+   pyforestry.norway.volume
+
+Module contents
+---------------
+
+.. automodule:: pyforestry.norway
+   :members:
+   :undoc-members:
+   :show-inheritance:

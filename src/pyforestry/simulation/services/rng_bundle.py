@@ -12,12 +12,14 @@ class RandomBundle:
     """Manage keyed random number generators derived from a root seed."""
 
     def __init__(self, seed: int) -> None:
+        """Start a bundle rooted at ``seed``, with its root stream ready."""
         self.seed = int(seed)
         self._streams: Dict[Tuple[str, ...], KeyedRNG] = {}
         # Initialise the root generator so snapshotting always includes it.
         self._get_rng(())
 
     def _derive_seed(self, path: Tuple[str, ...]) -> int:
+        """Derive seed."""
         if not path:
             return self.seed
         joined = "::".join(path).encode("utf8")
@@ -26,9 +28,11 @@ class RandomBundle:
         return int.from_bytes(digest.digest(), "big")
 
     def _normalize_path(self, keys: Iterable[object]) -> Tuple[str, ...]:
+        """Normalize path."""
         return tuple(str(key) for key in keys)
 
     def _get_rng(self, path: Tuple[str, ...]) -> KeyedRNG:
+        """Get rng."""
         rng = self._streams.get(path)
         if rng is None:
             rng = KeyedRNG(self, path, self._derive_seed(path))

@@ -1,7 +1,9 @@
 """Tree volume functions from Eriksson (1973)."""
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 
-def Eriksson_1973_volume_aspen_Sweden(diameter_cm: float, height_m: float) -> float:
+
+def eriksson_1973_volume_aspen_sweden(diameter_cm: float, height_m: float) -> float:
     """
     Calculates the volume of a Ash, Aspen, Alnus glutinosa tree in m³ according to Eriksson (1973).
 
@@ -33,7 +35,7 @@ def Eriksson_1973_volume_aspen_Sweden(diameter_cm: float, height_m: float) -> fl
     return volume / 1000  # Original in dm3
 
 
-def Eriksson_1973_volume_lodgepole_pine_Sweden(diameter_cm: float, height_m: float) -> float:
+def eriksson_1973_volume_lodgepole_pine_sweden(diameter_cm: float, height_m: float) -> float:
     """
     Calculates the volume of a Lodgepole Pine tree in m³ according to Eriksson (1973).
 
@@ -63,3 +65,28 @@ def Eriksson_1973_volume_lodgepole_pine_Sweden(diameter_cm: float, height_m: flo
         + 0.01249 * diameter_cm * h2
     )
     return volume / 1000
+
+
+# ---------------------------------------------------------------------------
+# Introspection
+# ---------------------------------------------------------------------------
+
+
+DESCRIPTOR = FormulaDescriptor(
+    component_id="eriksson_1973_volume",
+    source=SourceReference(
+        author="Eriksson, H.",
+        year=1973,
+        title="Volymfunktioner för stående träd av ask, asp, klibbal och contortatall",
+        note=(
+            "Skogshögskolan, institutionen för skogsproduktion, Rapporter och "
+            "uppsatser nr 26, Stockholm, 26 s."
+        ),
+    ),
+    species_groups={},
+    units={},
+    kernel_names=(
+        "eriksson_1973_volume_aspen_sweden",
+        "eriksson_1973_volume_lodgepole_pine_sweden",
+    ),
+)

@@ -13,10 +13,14 @@ license         = {text = "MIT"}
 urls            = {Homepage = "https://github.com/Silviculturalist/pyforestry"}
 dependencies    = [
   "numpy",
+  # Imported at module scope by the simulation core, the ensemble engine, the
+  # solution cube and the Sweden presets, and returned from public APIs
+  # (SimulationContext.to_pandas, run_projection). It used to arrive only as a
+  # transitive geopandas dependency, so the package worked by accident.
+  "pandas",
   "tqdm",
   "xarray",
   "scipy>=1.5",
-  "matplotlib",
   "geopandas",
   "shapely",
   "pyproj",
@@ -28,22 +32,41 @@ dependencies    = [
 
 #optional country-specific dependencies
 sweden = []
+norway = []
 germany = []
+
+# optional feature backends (kept out of the base install to stay lightweight)
+accel = ["jax", "numba"]   # acceleration backends for the batch/ensemble engine
+plot = ["matplotlib"]      # plotting helpers (e.g. Bucker.plot)
 
 
 all = [
   "pyforestry[sweden]",
-  "pyforestry[germany]"
+  "pyforestry[norway]",
+  "pyforestry[germany]",
+  "pyforestry[accel]",
+  "pyforestry[plot]"
 ]
 
 #Dev dependencies for writing documentation and testing.
 dev = [
+  "pyforestry[all]",     # exercise the optional backends (jax/numba/matplotlib) in tests
   "pytest",
   "pytest-cov",          # measure coverage
   "docstr-coverage",     # docstring coverage
   "coverage",            # coverage engine
-  "ruff",
+  # Pinned: CI hard-gates on `ruff format --check`, and ruff's formatter changes
+  # its output between releases. Unpinned, a new ruff turns CI red with no code
+  # change. Bump deliberately, running `ruff format .` in the same commit.
+  "ruff==0.12.3",
   "hypothesis",          # property-based testing
+  # Parquet is optional at runtime -- artifacts.py checks for an engine and falls
+  # back to JSON -- but it is not optional for the tests, which write a parquet
+  # summary directly to check the reader rejects the old schema. Without an
+  # engine that test errors rather than skipping. Declaring it also means CI
+  # exercises the parquet write path at all; the JSON fallback stays covered by
+  # the test that monkeypatches the engine check away.
+  "pyarrow",
   "build",
   "twine",
   "sphinx",              # docs tool
@@ -64,6 +87,8 @@ where = ["src"]              # automatic discovery under src/
 "pyforestry.sweden.geo.climate"   = ["klimat.*"]
 "pyforestry.sweden.geo.coastline" = ["swedishcoastline_ne_medium_clipped.*"]
 "pyforestry.sweden.geo.counties"  = ["rt_dlanskod.*"]
+# Fitted SIS site-category decision trees (loaded by generated_site_category_trees.py)
+"pyforestry.sweden.siteindex.sis" = ["*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -80,8 +105,12 @@ addopts = [
 # --- Ruff Configuration ---
 [tool.ruff]
 line-length = 99
-# Exclude Jupyter notebooks from linting and formatting
-exclude = ["docs/source/notebooks/*"]
+# Exclude documentation notebooks and generated docs artifacts.
+exclude = [
+  "docs/source/notebooks/*",
+  "docs/source/notebooks/_archive/*",
+  "docs/_build/*",
+]
 # Enable import-sorting, standard lint rules, and bug-finding
 
 [tool.ruff.lint]
@@ -98,4 +127,3 @@ filename = "pyproject.toml"
 search = 'version\s*=\s*"{current_version}"'
 replace = 'version = "{new_version}"'
 regex = true
-

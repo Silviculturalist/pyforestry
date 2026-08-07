@@ -16,15 +16,11 @@ from pyforestry.base.helpers import (
     parse_tree_species,
 )
 from pyforestry.base.simulation import (
-    ActionSpec,
     ContextEnsemble,
     ExampleStandGeneralModel,
     GrowthModel,
     PythonEngine,
     Requirements,
-    ScheduledOp,
-    SimulationSetup,
-    TriggerSpec,
 )
 from pyforestry.base.simulation.adapters import (
     AdapterRegistry,
@@ -66,8 +62,14 @@ def _tree_list_stand(with_positions=False):
 
 
 def _ac_stand():
-    ac1 = AngleCount(ba_factor=2.0, value=[10], species=[PICEA_ABIES], point_id="p1")
-    ac2 = AngleCount(ba_factor=2.0, value=[12], species=[PICEA_ABIES], point_id="p2")
+    # Diameters are supplied so stems/ha (and hence QMD) are derivable, which the
+    # angle-count adapters need.
+    ac1 = AngleCount(
+        ba_factor=2.0, value=[10], species=[PICEA_ABIES], point_id="p1", diameters_cm=[[20.0] * 10]
+    )
+    ac2 = AngleCount(
+        ba_factor=2.0, value=[12], species=[PICEA_ABIES], point_id="p2", diameters_cm=[[20.0] * 12]
+    )
     p1 = CircularPlot(id=1, area_m2=200.0, AngleCount=[ac1])
     p2 = CircularPlot(id=2, area_m2=200.0, AngleCount=[ac2])
     return Stand(area_ha=1.0, plots=[p1, p2])
@@ -161,13 +163,21 @@ def test_adapter_registry_and_angle_count_adapters():
 
 
 def test_growth_model_base_methods():
-    model = GrowthModel()
+    """The base class is abstract; its non-abstract defaults still work."""
+    with pytest.raises(TypeError, match="abstract"):
+        GrowthModel()
+
+    class Minimal(GrowthModel):
+        def requirements(self):
+            return Requirements()
+
+        def update_step(self, ctx, dt):
+            return None
+
+    model = Minimal()
     assert model.default_attrs() == {}
     assert model.available_actions() == {}
-    with pytest.raises(NotImplementedError):
-        model.requirements()
-    with pytest.raises(NotImplementedError):
-        model.update_step(SimpleNamespace(), 1.0)
+    assert model.requirements().native_step_years is None
 
 
 def test_growth_model_can_build_branches():
@@ -221,7 +231,11 @@ def test_growth_model_can_build_branches():
 
     ok, missing = model.can_build(dummy, allow_adapters=False)
     assert not ok
-    assert any("tree_list or aggregates" in item for item in missing)
+    # `can_build` reports the mode `build_context` would actually choose. For an
+    # "either" model on a stand with no trees that is "aggregate", so the message
+    # names the aggregates it lacks rather than the old disjunction "tree_list or
+    # aggregates", which described a choice the builder had already made.
+    assert any("aggregates" in item for item in missing)
 
     ok, missing = model.can_build(_ac_stand(), allow_adapters=True, mode_hint="spatial")
     assert ok
@@ -266,7 +280,7 @@ def test_growth_model_build_context_branches(monkeypatch):
     }
     ctx3 = model.build_context(stand3, mode_hint="diameter_class")
     assert ctx3.mode == "diameter_class"
-    assert ctx3._dclass["TOTAL"]["bin_mids_cm"]
+    assert ctx3.diameter_classes["TOTAL"]["bin_mids_cm"]
 
     stand4 = Stand(plots=[])
     stand4.use_angle_count = True
@@ -290,9 +304,9 @@ def test_example_model_diameter_class_update_step():
         "Stems": {"TOTAL": Stems(200.0)},
     }
     ctx = model.build_context(stand, mode_hint="diameter_class")
-    before = ctx._dclass["TOTAL"]["bin_mids_cm"][0]
+    before = ctx.diameter_classes["TOTAL"]["bin_mids_cm"][0]
     ctx.update_step(1.0)
-    after = ctx._dclass["TOTAL"]["bin_mids_cm"][0]
+    after = ctx.diameter_classes["TOTAL"]["bin_mids_cm"][0]
     assert after > before
 
 
@@ -341,7 +355,7 @@ def test_example_model_thin_smallest_classes_branches():
         {"TOTAL": {"bin_mids_cm": [10.0, 20.0], "n_per_ha": [50.0, 50.0]}}
     )
     model._act_thin_smallest_classes(dclass_ctx, fraction=0.2)
-    assert dclass_ctx._dclass["TOTAL"]["n_per_ha"][1] == pytest.approx(50.0)
+    assert dclass_ctx.diameter_classes["TOTAL"]["n_per_ha"][1] == pytest.approx(50.0)
 
 
 def test_spatial_from_tree_list():
@@ -447,10 +461,10 @@ def test_dclass_normalize_mismatch_raises():
         ctx.set_diameter_class(bad)
 
 
-def test_deepcopy_plots_strips_anglecount_and_copies_trees():
-    """Simulation inventory should not carry AngleCount tallies in plots."""
+def test_tree_list_context_strips_anglecount_and_references_live_trees():
+    """Tree-list contexts should drop AngleCount tallies but keep live tree references."""
     model = ExampleStandGeneralModel()
-    # Build a tree-list plot that *also* has AngleCount tallies; the sim copy should drop them.
+    # Build a tree-list plot that *also* has AngleCount tallies.
     ac = AngleCount(ba_factor=2.0, value=[10], species=[PICEA_ABIES], point_id="px")
     p = CircularPlot(
         id=9,
@@ -459,8 +473,15 @@ def test_deepcopy_plots_strips_anglecount_and_copies_trees():
         trees=[Tree(species="Picea abies", diameter_cm=20.0, weight_n=1.0)],
     )
     st = Stand(area_ha=1.0, plots=[p])
+    st.use_angle_count = False
     ctx = model.build_context(st, mode_hint="tree_list")
     assert all(len(pp.AngleCount) == 0 for pp in ctx.plots)
+    assert ctx.plots[0].trees[0] is st.plots[0].trees[0]
+
+    before = float(st.plots[0].trees[0].diameter_cm or 0.0)
+    ctx.update_step(1.0)
+    after = float(st.plots[0].trees[0].diameter_cm or 0.0)
+    assert after > before
 
 
 def test_to_pandas_history_shape_and_values():
@@ -532,15 +553,20 @@ def test_growth_model_build_context_invalid_adapter():
         )
 
 
-def test_growth_model_grow_deprecation_warning():
+def test_grow_is_gone_and_update_step_is_the_only_name():
+    """The deprecated alias is removed, not merely warned about.
+
+    ``grow`` existed three times -- on SimulationContext, on GrowthModel, and
+    re-implemented verbatim on ExampleStandGeneralModel -- alongside a
+    ``hasattr(model, "update_step")`` shim in update_step that could not fire
+    once update_step became abstract.
+    """
     model = ExampleStandGeneralModel()
     ctx = model.build_context(_tree_list_stand(), mode_hint="aggregate")
-    with pytest.warns(DeprecationWarning):
-        model.grow(ctx, 1.0)
 
-    base_model = _RequirementsModel()
-    with pytest.warns(DeprecationWarning):
-        base_model.grow(ctx, 1.0)
+    assert not hasattr(model, "grow")
+    assert not hasattr(ctx, "grow")
+    assert not hasattr(_RequirementsModel(), "grow")
 
 
 def test_adapter_registry_and_engines():
@@ -684,37 +710,6 @@ def test_ensemble_batch_engine_path_and_logging():
             assert ba == pytest.approx(20.0 * (1.0 + model.ba_rel))
 
 
-def test_management_phase_respects_allowed_phases():
-    """Actions declare allowed_phases and should be gated per phase."""
-
-    class PhaseyModel(ExampleStandGeneralModel):
-        def available_actions(self):
-            actions = dict(super().available_actions())
-
-            def mark(ctx):
-                ctx.attrs.setdefault("markers", []).append(ctx.state.get("t", 0.0))
-
-            actions["mark_pre"] = ActionSpec(
-                name="mark_pre",
-                fn=mark,
-                requires_modes=[],
-                allowed_phases=("pre",),
-            )
-            return actions
-
-    model = PhaseyModel()
-    ctx = model.build_context(_tree_list_stand(), mode_hint="aggregate")
-    ctx.set_aggregate_metrics(ba_total=10.0, stems_total=100.0)
-
-    # Allowed in pre-phase
-    ctx.update_step(1.0, management={"pre": ["mark_pre"]})
-    assert ctx.attrs.get("markers") == [1.0]
-
-    # Blocked in disallowed phase
-    with pytest.raises(RuntimeError):
-        ctx.update_step(1.0, management={"post": ["mark_pre"]})
-
-
 def test_context_ensemble_engine_hint_selection():
     model = ExampleStandGeneralModel()
     ctx = model.build_context(_tree_list_stand(), mode_hint="aggregate")
@@ -769,7 +764,7 @@ def test_ensemble_engine_helpers(monkeypatch):
     assert float(out["n"][0]) == 2.0
 
 
-def test_context_ensemble_management_and_dataframe():
+def test_context_ensemble_steps_every_context_and_reports_one_table():
     model = ExampleStandGeneralModel()
     ctxs = []
     for _i in range(2):
@@ -778,91 +773,12 @@ def test_context_ensemble_management_and_dataframe():
         ctxs.append(ctx)
 
     ens = ContextEnsemble(ctxs, model=model)
-    ens.update_step(dt=0.5, management=[{"pre": []}, {"pre": []}])
-    ens.update_step(dt=0.5, management={"pre": []})
+    ens.update_step(dt=0.5)
+    ens.update_step(dt=0.5)
     ens.do("fertilize", years=1.0)
 
     df = ens.to_pandas()
     assert "context_id" in df.columns
-
-
-def test_simulation_setup_triggers_and_schedule():
-    model = ExampleStandGeneralModel()
-    ctx = model.build_context(_tree_list_stand(), mode_hint="aggregate")
-    ctx.set_aggregate_metrics(ba_total=10.0, stems_total=100.0)
-
-    fired = {"pre": 0, "post": 0}
-
-    def pre_predicate(_ctx):
-        return True
-
-    def pre_action(_ctx):
-        fired["pre"] += 1
-
-    def post_predicate(_ctx):
-        return _ctx.state.get("t", 0.0) >= 1.0
-
-    def post_action(_ctx):
-        fired["post"] += 1
-
-    def scheduled(ctx):
-        ctx.attrs["scheduled"] = True
-
-    setup = SimulationSetup(
-        start_t=0.0,
-        end_t=2.0,
-        dt=1.0,
-        triggers=[
-            TriggerSpec(
-                name="pre_once",
-                check_phase="pre",
-                predicate=pre_predicate,
-                action=pre_action,
-                once=True,
-            ),
-            TriggerSpec(
-                name="post",
-                check_phase="post",
-                predicate=post_predicate,
-                action=post_action,
-            ),
-        ],
-        schedule=[ScheduledOp(name="mark", t=1.0, fn=scheduled)],
-    )
-    setup.run(ctx)
-
-    assert fired["pre"] == 1
-    assert fired["post"] >= 1
-    assert ctx.attrs.get("scheduled") is True
-    ops = {entry.op for entry in ctx.history}
-    assert "scheduled_op" in ops
-    assert "trigger_fired" in ops
-
-
-def test_simulation_setup_trigger_error_recorded():
-    model = ExampleStandGeneralModel()
-    ctx = model.build_context(_tree_list_stand(), mode_hint="aggregate")
-    ctx.set_aggregate_metrics(ba_total=10.0, stems_total=100.0)
-
-    def bad_predicate(_ctx):
-        raise RuntimeError("boom")
-
-    setup = SimulationSetup(
-        start_t=0.0,
-        end_t=1.0,
-        dt=1.0,
-        triggers=[
-            TriggerSpec(
-                name="bad",
-                check_phase="pre",
-                predicate=bad_predicate,
-                action=lambda _ctx: None,
-            )
-        ],
-    )
-    setup.run(ctx)
-
-    assert any(entry.op == "trigger_error" for entry in ctx.history)
 
 
 def test_parallel_runner_round_trip():
@@ -967,7 +883,7 @@ def test_parallel_runner_missing_model_raises():
         run_parallel([NoModel()], dt=1.0)
 
 
-def test_parallel_runner_pool_branch_and_management_list(monkeypatch):
+def test_parallel_runner_pool_branch(monkeypatch):
     import pyforestry.simulation.services.parallel_runner as pr
     from pyforestry.simulation.services import run_parallel
 
@@ -993,13 +909,11 @@ def test_parallel_runner_pool_branch_and_management_list(monkeypatch):
         ctx.set_aggregate_metrics(ba_total=10.0, stems_total=100.0)
         ctxs.append(ctx)
 
-    mgmt = [{"pre": []}, {"pre": []}]
     updated = run_parallel(
         ctxs,
         dt=0.5,
         steps=1,
         processes=2,
-        management=mgmt,
         write_back=False,
     )
     assert len(updated) == len(ctxs)
@@ -1029,3 +943,35 @@ def test_parallel_runner_telemetry_sink(monkeypatch):
 
     run_parallel([ctx], dt=1.0, steps=1, write_back=False, telemetry_sink=sink)
     assert collected == [(0, [{"event": "ok"}])]
+
+
+def test_adapter_draws_come_from_the_run_seed_not_a_hard_coded_one():
+    """A stochastic adapter is part of the run, so the run's seed must reach it.
+
+    ``build_context`` acquired the inventory before it opened the run's
+    ``RandomBundle``, so an angle-count stand converted to ``spatial`` got its
+    pseudo-positions from ``_adapter_rng``'s hard-coded fallback: every seed gave
+    the same coordinates, and the draws sat outside the bundle a checkpoint
+    captures. ``_adapter_rng``'s docstring already named ``ctx.rng.child(...)`` as
+    the thing to pass; nothing passed it.
+    """
+    model = ExampleStandGeneralModel()
+
+    def positions(**kwargs):
+        ctx = model.build_context(_ac_stand(), mode_hint="spatial", **kwargs)
+        return [
+            (round(t.position.X, 9), round(t.position.Y, 9))
+            for plot in ctx.stand.plots
+            for t in plot.trees
+            if getattr(t, "position", None) is not None
+        ]
+
+    assert positions(seed=11), "expected the adapter to place trees"
+    assert positions(seed=11) != positions(seed=99)
+    # Seedless construction stays reproducible, and an explicit adapter seed still
+    # pins the coordinates -- injecting an rng beside it would silently ignore it,
+    # because _adapter_rng prefers rng over seed.
+    assert positions() == positions()
+    assert positions(seed=11, adapter_kwargs={"seed": 42}) == positions(
+        seed=99, adapter_kwargs={"seed": 42}
+    )

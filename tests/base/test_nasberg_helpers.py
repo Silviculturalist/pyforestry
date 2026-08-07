@@ -101,12 +101,12 @@ def test_bucking_result_mapping():
         timber_price_by_quality=[0] * 7,
         vol_fub_5cm=1.0,
         vol_sk_ub=1.0,
-        DBH_cm=20,
+        dbh_cm=20,
         height_m=30,
         stump_height_m=0.3,
         diameter_stump_cm=25,
-        taperDiams_cm=[30],
-        taperHeights_m=[0.3],
+        taper_diameters_cm=[30],
+        taper_heights_m=[0.3],
     )
     assert len(res) > 0
     assert res["species_group"] == "spruce"
@@ -134,12 +134,12 @@ def test_bucking_result_plot(monkeypatch):
         timber_price_by_quality=[0] * 7,
         vol_fub_5cm=0.0,
         vol_sk_ub=0.0,
-        DBH_cm=10,
+        dbh_cm=10,
         height_m=20,
         stump_height_m=0.3,
         diameter_stump_cm=12,
-        taperDiams_cm=[15, 10],
-        taperHeights_m=[0.3, 2.0],
+        taper_diameters_cm=[15, 10],
+        taper_heights_m=[0.3, 2.0],
         sections=[CrossCutSection(0, 10, 0.1, 15, 5, "spruce")],
     )
 
@@ -160,12 +160,12 @@ def test_bucking_result_plot_no_sections():
         timber_price_by_quality=[0] * 7,
         vol_fub_5cm=0.0,
         vol_sk_ub=0.0,
-        DBH_cm=10,
+        dbh_cm=10,
         height_m=20,
         stump_height_m=0.3,
         diameter_stump_cm=12,
-        taperDiams_cm=[15, 10],
-        taperHeights_m=[0.3, 2.0],
+        taper_diameters_cm=[15, 10],
+        taper_heights_m=[0.3, 2.0],
         sections=[],
     )
     with pytest.raises(ValueError):

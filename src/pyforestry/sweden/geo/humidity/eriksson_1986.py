@@ -1,9 +1,18 @@
-"""Humidity lookup helper based on Eriksson (1986) data."""
+"""Humidity lookup helper based on Eriksson (1986) data.
+
+Source:
+    Eriksson, B. (1986). *Nederbörds- och humiditetsklimatet i Sverige under
+    vegetationsperioden.* Sveriges Meteorologiska och Hydrologiska Institut
+    (SMHI), Rapporter i meteorologi och klimatologi (RMK) nr 46.
+"""
 
 from importlib.resources import as_file, files
 
-import geopandas as gpd
-from shapely.geometry import Point
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
+
+# ``geopandas`` costs several seconds to import and is only needed to answer a query.
+# Model discovery imports this module for its DESCRIPTOR alone, so the heavy import is
+# deferred into the function rather than paid on every ``catalog`` call.
 
 
 def eriksson_1986_humidity(longitude: float, latitude: float, epsg: int = 4326):
@@ -23,6 +32,9 @@ def eriksson_1986_humidity(longitude: float, latitude: float, epsg: int = 4326):
     Returns:
         float: Humidity during the vegetation period (mm).
     """
+    import geopandas as gpd
+    from shapely.geometry import Point
+
     # Validate input for SWEREF99TM
     if epsg == 3006 and longitude > 1e6:
         raise ValueError("Latitude and Longitude appear to be mixed up.")
@@ -54,3 +66,26 @@ def eriksson_1986_humidity(longitude: float, latitude: float, epsg: int = 4326):
         return joined.iloc[0]["humiditet"]
     else:
         raise ValueError("Humidity value could not be determined for the given location.")
+
+
+DESCRIPTOR = FormulaDescriptor(
+    component_id="eriksson_1986_humidity",
+    source=SourceReference(
+        author="Eriksson, B.",
+        year=1986,
+        title=("Nederbörds- och humiditetsklimatet i Sverige under vegetationsperioden"),
+        note=(
+            "Sveriges Meteorologiska och Hydrologiska Institut (SMHI), Rapporter i "
+            "meteorologi och klimatologi (RMK) nr 46. Humidity is read from the "
+            "published map, bundled here as a spatial lookup."
+        ),
+    ),
+    species_groups={},
+    units={
+        "longitude": "decimal degrees",
+        "latitude": "decimal degrees",
+        "return": "mm (humidity during the vegetation period)",
+    },
+    kernel_names=("eriksson_1986_humidity",),
+    domain="climate",
+)

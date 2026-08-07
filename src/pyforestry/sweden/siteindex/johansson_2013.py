@@ -4,6 +4,8 @@ import math
 import warnings
 from typing import Union
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
+
 # Imports added
 from pyforestry.base.helpers import Age, AgeMeasurement, SiteIndexValue, TreeSpecies
 
@@ -324,3 +326,31 @@ def johansson_2013_height_trajectory_sweden_oak(
         species={TreeSpecies.Sweden.quercus_robur},
         fn=johansson_2013_height_trajectory_sweden_oak,
     )
+
+
+# ---------------------------------------------------------------------------
+# Introspection
+# ---------------------------------------------------------------------------
+
+
+DESCRIPTOR = FormulaDescriptor(
+    component_id="johansson_2013",
+    source=SourceReference(
+        author=("Johansson, U., Ekö, P.-M., Elfving, B., Johansson, T. & Nilsson, U."),
+        year=2013,
+        title="Nya höjdutvecklingskurvor för bonitering",
+        note="Sveriges lantbruksuniversitet, Fakta Skog nr 14, 2013.",
+    ),
+    species_groups={},
+    units={
+        "dominant_height_m": "m",
+        "age_years": "years",
+        "return": "SiteIndexValue (m)",
+    },
+    kernel_names=(
+        "johansson_2013_height_trajectory_sweden_beech",
+        "johansson_2013_height_trajectory_sweden_hybrid_aspen",
+        "johansson_2013_height_trajectory_sweden_larch",
+        "johansson_2013_height_trajectory_sweden_oak",
+    ),
+)

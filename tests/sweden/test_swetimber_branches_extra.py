@@ -120,7 +120,7 @@ def test_getvolume_birch_site(monkeypatch):
 
 def test_getvolume_aspen(monkeypatch):
     monkeypatch.setattr(
-        "pyforestry.sweden.timber.swe_timber.Eriksson_1973_volume_aspen_Sweden",
+        "pyforestry.sweden.timber.swe_timber.eriksson_1973_volume_aspen_sweden",
         lambda *_: 10,
     )
     tree = create_tree("populus tremula")
@@ -138,7 +138,7 @@ def test_getvolume_lodgepole_small(monkeypatch):
 
 def test_getvolume_lodgepole_large(monkeypatch):
     monkeypatch.setattr(
-        "pyforestry.sweden.timber.swe_timber.Eriksson_1973_volume_lodgepole_pine_Sweden",
+        "pyforestry.sweden.timber.swe_timber.eriksson_1973_volume_lodgepole_pine_sweden",
         lambda *_: 12,
     )
     tree = create_tree("pinus contorta")

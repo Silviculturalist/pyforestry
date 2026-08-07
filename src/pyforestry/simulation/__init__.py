@@ -1,32 +1,19 @@
-"""Simulation-facing views and orchestration helpers."""
+"""Scenario presets, harvest valuation, and shared run services.
 
-from .contracts import StageContract
-from .dp import (
-    DeterministicAdapter,
-    ModelViewStateKey,
-    PartKey,
-    SimulationProvenance,
-    decode_model_views,
-    encode_model_views,
-    simulate_one_step_pure,
-)
-from .growth_module import (
-    DisturbanceStage,
-    GrowthModule,
-    GrowthStage,
-    ManagementStage,
-    Stage,
-    StageAction,
-    ValuationStage,
-)
-from .model_view import InventoryView, SpatialTreeView, StandMetricView
-from .stand_composite import (
-    DispatchRecord,
-    DispatchResult,
-    StandAction,
-    StandComposite,
-    StandPart,
-)
+What was here before -- ``StageRuntime``, ``Stage``, ``StandComposite``,
+``StandPart``, ``StandAction`` and their dispatch types -- was a per-part
+scheduling runtime. Every model in this package steps the whole stand, so its one
+consumer had to make N-1 of every N stage invocations inert with a latch, and
+bypassed the dispatch machinery entirely for thinning. The scheduler that
+replaced it is :mod:`pyforestry.base.simulation.pipeline`, which schedules stands.
+
+``CheckpointSerializer`` went with it: it serialised a composite, and
+:meth:`SimulationContext.checkpoint` is the checkpoint mechanism that has a
+consumer.
+"""
+
+from .contracts import SimulationPreset
+from .presets import ScenarioConfig, ScenarioConfigBase, stable_seed
 from .valuation import (
     CohortRemoval,
     EmptyVolumeDescriptor,
@@ -34,28 +21,18 @@ from .valuation import (
     StandRemovalLedger,
     TreeRemoval,
     TreeVolumeDescriptor,
+    ValuationSettings,
+    ValuationStep,
     VolumeConnector,
     VolumeDescriptor,
     VolumeResult,
 )
 
 __all__ = [
-    "InventoryView",
-    "SpatialTreeView",
-    "StandMetricView",
-    "DispatchRecord",
-    "DispatchResult",
-    "StandAction",
-    "StandComposite",
-    "StandPart",
-    "GrowthModule",
-    "GrowthStage",
-    "ManagementStage",
-    "DisturbanceStage",
-    "ValuationStage",
-    "Stage",
-    "StageAction",
-    "StageContract",
+    "SimulationPreset",
+    "ScenarioConfig",
+    "ScenarioConfigBase",
+    "stable_seed",
     "StandRemovalLedger",
     "CohortRemoval",
     "TreeRemoval",
@@ -65,11 +42,6 @@ __all__ = [
     "VolumeResult",
     "VolumeConnector",
     "PieceRecord",
-    "DeterministicAdapter",
-    "ModelViewStateKey",
-    "PartKey",
-    "SimulationProvenance",
-    "decode_model_views",
-    "encode_model_views",
-    "simulate_one_step_pure",
+    "ValuationSettings",
+    "ValuationStep",
 ]

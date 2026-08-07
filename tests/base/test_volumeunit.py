@@ -19,17 +19,17 @@ def test_atomic_volume_equality_across_metadata():
     """
     # Assuming __eq__ is implemented to compare v.value
     assert AtomicVolume(value=1.0, region="Sweden") == AtomicVolume(value=1.0, region="Norway")
-    assert AtomicVolume(value=10.0, species="picea abies") == AtomicVolume(
-        value=10.0, species="pinus sylvestris"
+    assert AtomicVolume(value=10.0, region="Sweden", species="picea abies") == AtomicVolume(
+        value=10.0, region="Sweden", species="pinus sylvestris"
     )
 
 
 def test_atomic_volume_unit_conversions():
     """Tests the factory methods and the .to() conversion."""
     # Using the .from_unit() and .to() methods for clarity
-    assert AtomicVolume.from_unit(1000, "dm3").value == 1.0  # 1000 dm³ = 1 m³
-    assert AtomicVolume.from_unit(10, "m3").to("dm3") == 10000
-    assert AtomicVolume.from_unit(1e6, "cm3").value == 1.0
+    assert AtomicVolume.from_unit(1000, "dm3", region="Sweden").value == 1.0  # 1000 dm³ = 1 m³
+    assert AtomicVolume.from_unit(10, "m3", region="Sweden").to("dm3") == 10000
+    assert AtomicVolume.from_unit(1e6, "cm3", region="Sweden").value == 1.0
 
 
 def test_atomic_volume_repr():
@@ -96,8 +96,8 @@ def test_addition_with_incompatible_types_raises_value_error():
     Tests that creating a CompositeVolume from AtomicVolumes with different `type`
     (e.g., 'm3sk' vs 'm3to') raises a ValueError.
     """
-    v_m3sk = AtomicVolume(value=1, type="m3sk")
-    v_m3to = AtomicVolume(value=1, type="m3to")  # A different, hypothetical type
+    v_m3sk = AtomicVolume(value=1, region="Sweden", type="m3sk")
+    v_m3to = AtomicVolume(value=1, region="Sweden", type="m3to")  # A different, hypothetical type
 
     with pytest.raises(ValueError) as exc_info:
         # The error is raised when the CompositeVolume is created inside the __add__ method
@@ -111,7 +111,22 @@ def test_atomic_volume_negative_value_error():
     """AtomicVolume should reject negative values."""
 
     with pytest.raises(ValueError):
-        AtomicVolume(value=-1)
+        AtomicVolume(value=-1, region="Sweden")
+
+
+def test_atomic_volume_requires_a_region():
+    """A volume states which country's measure it is; there is no default.
+
+    ``region`` used to default to ``"Sweden"``. Because :meth:`AtomicVolume.__add__`
+    merges only across matching regions, that default decided whether an addition
+    returned an ``AtomicVolume`` or a ``CompositeVolume`` -- so omitting the
+    argument changed the result type rather than merely the label.
+    """
+    with pytest.raises(TypeError, match="required positional argument: 'region'"):
+        AtomicVolume(1.0)
+
+    with pytest.raises(ValueError, match="requires a region"):
+        AtomicVolume(1.0, region="")
 
 
 def test_atomic_volume_invalid_region_for_type():
@@ -149,7 +164,7 @@ def test_atomic_volume_divide_by_zero():
     """Division by zero should raise ``ZeroDivisionError``."""
 
     with pytest.raises(ZeroDivisionError):
-        AtomicVolume(value=10) / 0
+        AtomicVolume(value=10, region="Sweden") / 0
 
 
 def test_atomic_volume_from_unit_invalid_unit():
@@ -162,21 +177,21 @@ def test_atomic_volume_from_unit_invalid_unit():
 def test_atomic_volume_invalid_operand_add():
     """Adding a non-volume via ``__add__`` returns ``NotImplemented``."""
 
-    assert AtomicVolume.__add__(AtomicVolume(1), 1) is NotImplemented
+    assert AtomicVolume.__add__(AtomicVolume(1, region="Sweden"), 1) is NotImplemented
 
 
 def test_atomic_volume_invalid_scalar_mul():
     """Non-numeric multiplication should return ``NotImplemented``."""
 
-    assert AtomicVolume.__mul__(AtomicVolume(1), "a") is NotImplemented
+    assert AtomicVolume.__mul__(AtomicVolume(1, region="Sweden"), "a") is NotImplemented
 
 
 def test_composite_volume_addition_cases():
     """CompositeVolume should handle adding volumes and other composites."""
 
-    v1 = AtomicVolume(1)
-    v2 = AtomicVolume(2)
-    v3 = AtomicVolume(3)
+    v1 = AtomicVolume(1, region="Sweden")
+    v2 = AtomicVolume(2, region="Sweden")
+    v3 = AtomicVolume(3, region="Sweden")
     comp = CompositeVolume([v1, v2])
 
     new_comp = comp + v3

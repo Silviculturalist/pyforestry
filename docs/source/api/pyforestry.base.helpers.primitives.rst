@@ -9,77 +9,93 @@ pyforestry.base.helpers.primitives.age module
 
 .. automodule:: pyforestry.base.helpers.primitives.age
    :members:
-   :show-inheritance:
    :undoc-members:
+   :show-inheritance:
 
 pyforestry.base.helpers.primitives.area\_aggregates module
 ----------------------------------------------------------
 
 .. automodule:: pyforestry.base.helpers.primitives.area_aggregates
    :members:
-   :show-inheritance:
    :undoc-members:
+   :show-inheritance:
 
 pyforestry.base.helpers.primitives.bawad module
 -----------------------------------------------
 
 .. automodule:: pyforestry.base.helpers.primitives.bawad
    :members:
-   :show-inheritance:
    :undoc-members:
+   :show-inheritance:
 
 pyforestry.base.helpers.primitives.cartesian\_position module
 -------------------------------------------------------------
 
 .. automodule:: pyforestry.base.helpers.primitives.cartesian_position
    :members:
-   :show-inheritance:
    :undoc-members:
+   :show-inheritance:
 
 pyforestry.base.helpers.primitives.diameter\_cm module
 ------------------------------------------------------
 
 .. automodule:: pyforestry.base.helpers.primitives.diameter_cm
    :members:
-   :show-inheritance:
    :undoc-members:
+   :show-inheritance:
+
+pyforestry.base.helpers.primitives.loreys\_mean\_height module
+--------------------------------------------------------------
+
+.. automodule:: pyforestry.base.helpers.primitives.loreys_mean_height
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 pyforestry.base.helpers.primitives.qmd module
 ---------------------------------------------
 
 .. automodule:: pyforestry.base.helpers.primitives.qmd
    :members:
-   :show-inheritance:
    :undoc-members:
+   :show-inheritance:
 
 pyforestry.base.helpers.primitives.sitebase module
 --------------------------------------------------
 
 .. automodule:: pyforestry.base.helpers.primitives.sitebase
    :members:
-   :show-inheritance:
    :undoc-members:
+   :show-inheritance:
 
 pyforestry.base.helpers.primitives.siteindex\_value module
 ----------------------------------------------------------
 
 .. automodule:: pyforestry.base.helpers.primitives.siteindex_value
    :members:
-   :show-inheritance:
    :undoc-members:
+   :show-inheritance:
 
 pyforestry.base.helpers.primitives.topheight module
 ---------------------------------------------------
 
 .. automodule:: pyforestry.base.helpers.primitives.topheight
    :members:
-   :show-inheritance:
    :undoc-members:
+   :show-inheritance:
 
 pyforestry.base.helpers.primitives.volume module
 ------------------------------------------------
 
 .. automodule:: pyforestry.base.helpers.primitives.volume
    :members:
-   :show-inheritance:
    :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: pyforestry.base.helpers.primitives
+   :members:
+   :undoc-members:
+   :show-inheritance:

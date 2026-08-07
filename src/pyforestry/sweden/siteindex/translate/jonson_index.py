@@ -8,14 +8,14 @@ Provides:
 
 from __future__ import annotations
 
-from typing import Iterable
-
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.helpers.primitives import SiteIndexValue
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies
 from pyforestry.sweden.site.enums import Sweden
 from pyforestry.sweden.siteindex.translate.hagglund_1981_si_to_productivity import (
-    hagglund_1981_SI_to_productivity,
+    hagglund_1981_si_to_productivity,
 )
+from pyforestry.sweden.siteindex.validation import validate_hagglund_1970_h100_site_index
 
 
 def jonson_index_from_m3sk(site_index_m3sk: float) -> int:
@@ -45,7 +45,7 @@ def jonson_index_from_m3sk(site_index_m3sk: float) -> int:
     return 1
 
 
-def _validate_h100_input(h100_input: SiteIndexValue, main_species: TreeName) -> None:
+def _validate_h100_site_index_input(h100_input: SiteIndexValue, main_species: TreeName) -> None:
     """Validate that the H100 input matches required species and function.
 
     Args:
@@ -56,48 +56,13 @@ def _validate_h100_input(h100_input: SiteIndexValue, main_species: TreeName) -> 
         TypeError: If input types are invalid.
         ValueError: If reference age, species, or function provenance is invalid.
     """
-    if not isinstance(h100_input, SiteIndexValue):
-        raise TypeError("h100_input must be a SiteIndexValue instance.")
-
-    # Enforce H100
-    if h100_input.reference_age != 100:
-        raise ValueError(
-            "h100_input must have reference_age 100 (H100). "
-            f"Received {h100_input.reference_age}"
-        )
-
-    if not isinstance(main_species, TreeName):
-        raise TypeError("main_species must be a TreeName instance.")
-
-    if not isinstance(h100_input.species, set) or not h100_input.species:
-        raise TypeError("h100_input.species must be a non-empty set of TreeName.")
-
-    if h100_input.species != {main_species}:
-        raise ValueError(
-            "h100_input.species must match main_species exactly. "
-            f"Got {h100_input.species}, expected {{{main_species}}}."
-        )
-
     allowed = {TreeSpecies.Sweden.picea_abies, TreeSpecies.Sweden.pinus_sylvestris}
-    if main_species not in allowed:
-        raise ValueError(
-            "Only spruce or pine H100 inputs are supported for Jonson index. "
-            f"Got {main_species}."
-        )
-
-    # Ensure the site index function is from Hagglund 1970 (used by SIS/H100).
-    fn_module = getattr(h100_input.fn, "__module__", "")
-    fn_qualname = getattr(h100_input.fn, "__qualname__", "")
-    valid_markers: Iterable[str] = (
-        "hagglund_1970",
-        "Hagglund_1970",
-        "height_trajectory",
+    validate_hagglund_1970_h100_site_index(
+        h100_input,
+        param_name="h100_input",
+        expected_species=main_species,
+        allowed_species=allowed,
     )
-    if not any(marker in fn_module or marker in fn_qualname for marker in valid_markers):
-        raise ValueError(
-            "h100_input.fn does not appear to be a Hagglund 1970 site index function. "
-            f"fn={fn_qualname}"
-        )
 
 
 def jonson_index_from_site_index(
@@ -125,15 +90,32 @@ def jonson_index_from_site_index(
         ValueError: If H100 is not valid or not from a supported function.
     """
 
-    _validate_h100_input(h100_input, main_species)
-    m3sk = hagglund_1981_SI_to_productivity(
+    _validate_h100_site_index_input(h100_input, main_species)
+    site_index_m3sk = hagglund_1981_si_to_productivity(
         h100_input=h100_input,
         main_species=main_species,
         vegetation=vegetation,
         altitude=altitude,
         county=county,
     )
-    return jonson_index_from_m3sk(m3sk)
+    return jonson_index_from_m3sk(site_index_m3sk)
 
 
 __all__ = ["jonson_index_from_m3sk", "jonson_index_from_site_index"]
+
+
+DESCRIPTOR = FormulaDescriptor(
+    component_id="jonson_1914_siteindex",
+    source=SourceReference(
+        author="Jonson, T.",
+        year=1914,
+        title="Om bonitering av skogsmark",
+        note=(
+            "Svenska Skogsvårdsföreningens Tidskrift 12:369-392. The Jonson bonitet "
+            "classification, in use in Swedish forestry until the early 1980s."
+        ),
+    ),
+    species_groups={},
+    units={},
+    kernel_names=("jonson_index_from_m3sk", "jonson_index_from_site_index"),
+)

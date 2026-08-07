@@ -1,4 +1,13 @@
+"""Small-tree volume functions, Andersson (1954).
+
+Source:
+    Andersson, S.-O. (1954). *Funktioner och tabeller för kubering av småträd.*
+    Meddelanden från Statens skogsforskningsinstitut 44(12), 29 s.
+"""
+
 import math
+
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 
 
 def andersson_1954_volume_small_trees_birch_height_above_4_m(diameter_cm, height_m):
@@ -111,3 +120,27 @@ def andersson_1954_volume_small_trees_spruce(diameter_cm, height_m):
         + 0.01712 * (diameter_cm**2) * height_m
         + 0.008905 * diameter_cm * (height_m**2)
     ) / 1000
+
+
+# ---------------------------------------------------------------------------
+# Introspection
+# ---------------------------------------------------------------------------
+
+
+DESCRIPTOR = FormulaDescriptor(
+    component_id="andersson_1954_volume",
+    source=SourceReference(
+        author="Andersson, S.-O.",
+        year=1954,
+        title="Funktioner och tabeller för kubering av småträd",
+        note="Meddelanden från Statens skogsforskningsinstitut 44(12).",
+    ),
+    species_groups={},
+    units={},
+    kernel_names=(
+        "andersson_1954_volume_small_trees_birch_height_above_4_m",
+        "andersson_1954_volume_small_trees_birch_under_diameter_5_cm",
+        "andersson_1954_volume_small_trees_pine",
+        "andersson_1954_volume_small_trees_spruce",
+    ),
+)

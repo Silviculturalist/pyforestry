@@ -68,12 +68,12 @@ def test_bucking_result_mapping_and_plot(monkeypatch):
         timber_price_by_quality=[0],
         vol_fub_5cm=0.0,
         vol_sk_ub=0.0,
-        DBH_cm=10,
+        dbh_cm=10,
         height_m=20,
         stump_height_m=0.3,
         diameter_stump_cm=12,
-        taperDiams_cm=[15, 10],
-        taperHeights_m=[0.3, 2.0],
+        taper_diameters_cm=[15, 10],
+        taper_heights_m=[0.3, 2.0],
         sections=[section],
     )
 

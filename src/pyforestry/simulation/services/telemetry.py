@@ -24,6 +24,7 @@ class TelemetryPublisher:
         seed: int,
         sink: Optional[Callable[[TelemetryEvent], None]] = None,
     ) -> None:
+        """Record the run identity every published event is stamped with."""
         self.model_id = model_id or "unknown"
         self.seed = int(seed)
         self._events: List[TelemetryEvent] = []

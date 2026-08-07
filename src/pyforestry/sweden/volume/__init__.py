@@ -1,4 +1,12 @@
-"""Lazy-loading interface for Swedish volume models."""
+"""Lazy-loading interface for Swedish volume models.
+
+Public names resolve to their submodule on first access via :pep:`562`
+``__getattr__`` (see ``_name_to_module``). Loading is deferred deliberately:
+the volume submodules are independent published models and some are large
+(e.g. ``soderberg_1986_form_height``), so a flat eager re-export would import
+every model whenever any single one is requested. ``TYPE_CHECKING`` imports
+below keep the names visible to static checkers.
+"""
 
 # pyforestry/volume/__init__.py
 
@@ -18,8 +26,10 @@ __all__ = [
     "matern_1975_volume_sweden_oak",
     "NaslundVolume",
     "NaslundFormFactor",
-    "Eriksson_1973_volume_aspen_Sweden",
-    "Eriksson_1973_volume_lodgepole_pine_Sweden",
+    "eriksson_1973_volume_aspen_sweden",
+    "eriksson_1973_volume_lodgepole_pine_sweden",
+    "soderberg_1986_form_height_m",
+    "soderberg_1986_volume_m3",
 ]
 
 if TYPE_CHECKING:  # pragma: no cover - imported only for type checking
@@ -33,8 +43,8 @@ if TYPE_CHECKING:  # pragma: no cover - imported only for type checking
     from .brandel_1990 import BrandelVolume  # pragma: no cover
     from .carbonnier_1954 import carbonnier_1954_volume_larch  # pragma: no cover
     from .eriksson_1973 import (  # pragma: no cover
-        Eriksson_1973_volume_aspen_Sweden,  # pragma: no cover
-        Eriksson_1973_volume_lodgepole_pine_Sweden,  # pragma: no cover
+        eriksson_1973_volume_aspen_sweden,  # pragma: no cover
+        eriksson_1973_volume_lodgepole_pine_sweden,  # pragma: no cover
     )
     from .johnsson_1953 import johnsson_1953_volume_hybrid_aspen  # pragma: no cover
     from .matern_1975 import (  # pragma: no cover
@@ -42,6 +52,10 @@ if TYPE_CHECKING:  # pragma: no cover - imported only for type checking
         matern_1975_volume_sweden_oak,  # pragma: no cover
     )
     from .naslund_1947 import NaslundFormFactor, NaslundVolume  # pragma: no cover
+    from .soderberg_1986_form_height import (  # pragma: no cover
+        soderberg_1986_form_height_m,  # pragma: no cover
+        soderberg_1986_volume_m3,  # pragma: no cover
+    )
 
 # Map of public name → submodule
 _name_to_module: typing.Dict[str, str] = {
@@ -56,8 +70,10 @@ _name_to_module: typing.Dict[str, str] = {
     "matern_1975_volume_sweden_oak": "matern_1975",
     "NaslundVolume": "naslund_1947",
     "NaslundFormFactor": "naslund_1947",
-    "Eriksson_1973_volume_aspen_Sweden": "eriksson_1973",
-    "Eriksson_1973_volume_lodgepole_pine_Sweden": "eriksson_1973",
+    "eriksson_1973_volume_aspen_sweden": "eriksson_1973",
+    "eriksson_1973_volume_lodgepole_pine_sweden": "eriksson_1973",
+    "soderberg_1986_form_height_m": "soderberg_1986_form_height",
+    "soderberg_1986_volume_m3": "soderberg_1986_form_height",
 }
 
 

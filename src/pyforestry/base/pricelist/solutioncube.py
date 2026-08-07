@@ -3,6 +3,7 @@
 import hashlib
 import json
 import time
+import warnings
 from datetime import datetime, timezone
 from functools import partial
 from multiprocessing import Pool, cpu_count
@@ -15,10 +16,12 @@ from tqdm import tqdm
 
 from pyforestry.base.pricelist.pricelist import create_pricelist_from_data
 from pyforestry.base.taper.taper import Taper
-from pyforestry.base.timber_bucking.nasberg_1985 import BuckingConfig, Nasberg_1985_BranchBound
+from pyforestry.base.timber.timber_base.timber import Timber
 
-# Import your project's classes
-from pyforestry.sweden.timber.swe_timber import SweTimber
+# ``nasberg_1985`` imports ``pyforestry.base.pricelist``, which imports this module, so a
+# module-level import here is a cycle. It only bites when ``nasberg_1985`` is imported
+# first (as model discovery does), which left it silently undiscoverable. Imported inside
+# the worker instead.
 
 
 def _hash_pricelist(price_data: Dict[str, Any]) -> str:
@@ -31,17 +34,25 @@ def _hash_pricelist(price_data: Dict[str, Any]) -> str:
 
 
 def _worker_buck_one_tree(
-    tree_params: Tuple[str, int, int], pricelist_data: Dict, taper_model_class: Type[Taper]
+    tree_params: Tuple[str, int, int],
+    pricelist_data: Dict,
+    taper_model_class: Type[Taper],
+    timber_class: Type[Timber] = Timber,
 ):
     """
     A top-level function for a single tree optimization.
     This is what each parallel process will execute.
     """
+    from pyforestry.base.timber_bucking.nasberg_1985 import (  # circular import; see module head
+        BuckingConfig,
+        Nasberg_1985_BranchBound,
+    )
+
     species, dbh_cm, height_dm = tree_params
     height_m = height_dm / 10.0
 
     try:
-        timber = SweTimber(species=species, diameter_cm=dbh_cm, height_m=height_m)
+        timber = timber_class(species=species, diameter_cm=dbh_cm, height_m=height_m)
         pricelist = create_pricelist_from_data(
             pricelist_data,
             species,
@@ -71,7 +82,7 @@ def _worker_buck_one_tree(
         }
     except Exception as e:
         # Log or handle errors for specific tree combinations
-        print(f"Error processing {species} DBH={dbh_cm} H={height_m}: {e}")
+        warnings.warn(f"Error processing {species} DBH={dbh_cm} H={height_m}: {e}", stacklevel=2)
         return {
             "species": species,
             "dbh": dbh_cm,
@@ -103,6 +114,7 @@ class SolutionCube:
         height_range: Tuple[float, float],
         dbh_step: int = 2,
         height_step: float = 0.2,
+        timber_class: Type[Timber] = Timber,
         workers: int = -1,
     ):
         """
@@ -130,7 +142,10 @@ class SolutionCube:
 
         # Use a partial function to pass the static pricelist and taper model to the worker
         worker_func = partial(
-            _worker_buck_one_tree, pricelist_data=pricelist_data, taper_model_class=taper_model
+            _worker_buck_one_tree,
+            pricelist_data=pricelist_data,
+            taper_model_class=taper_model,
+            timber_class=timber_class,
         )
 
         # Run the optimizations in parallel (or sequentially for single-worker setups).
@@ -216,20 +231,26 @@ class SolutionCube:
             if "species" in self.dataset.coords:
                 if species not in self.dataset.coords["species"].values:
                     raise KeyError
-            # .sel is xarray's powerful selection method. 'nearest' finds the closest point.
-            solution = self.dataset.sel(species=species, dbh=dbh, height=height, method="nearest")
+            # Select species exactly (string axis), then apply nearest-neighbor on numeric axes.
+            species_slice = self.dataset.sel(species=species)
+            solution = species_slice.sel(dbh=float(dbh), height=float(height), method="nearest")
 
             total_value = float(solution["total_value"].values)
+            if not np.isfinite(total_value):
+                total_value = 0.0
+
             sections_json = str(solution["solution_sections"].values)
             sections = json.loads(sections_json)
+            if not isinstance(sections, list):
+                sections = []
 
             return total_value, sections
 
         except KeyError:
-            print(f"Warning: Species '{species}' not found in the solution cube.")
+            warnings.warn(f"Species '{species}' not found in the solution cube.", stacklevel=2)
             return 0.0, []
         except Exception as e:
-            print(f"An error occurred during lookup: {e}")
+            warnings.warn(f"An error occurred during lookup: {e}", stacklevel=2)
             return 0.0, []
 
     def lookup_timber_pricelist(self, species: str) -> Tuple[float, list]:
@@ -245,8 +266,8 @@ class SolutionCube:
             return self.lookup(species, dbh, height)
 
         except KeyError:
-            print(f"Warning: Species '{species}' not found in the solution cube.")
+            warnings.warn(f"Species '{species}' not found in the solution cube.", stacklevel=2)
             return 0.0, []
         except Exception as e:
-            print(f"An error occurred during lookup: {e}")
+            warnings.warn(f"An error occurred during lookup: {e}", stacklevel=2)
             return 0.0, []

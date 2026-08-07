@@ -31,9 +31,9 @@ enum_code(Sweden.SoilMoistureEnum.DRY), enum_code(Sweden.County.UPPSALA)
 
 
 ```python
-from pyforestry.sweden.siteindex.sis.hagglund_lundmark_1979 import Hagglund_Lundmark_1979_SIS
+from pyforestry.sweden.siteindex.sis.hagglund_lundmark_1977 import Hagglund_Lundmark_1977_SIS
 
-sis = Hagglund_Lundmark_1979_SIS(
+sis = Hagglund_Lundmark_1977_SIS(
     species='Picea abies',
     latitude=60,
     altitude=100,

@@ -1,8 +1,20 @@
+"""Convert a stand into an inventory representation a model can step.
+
+An angle-count stand carries tallies, not stems; a model that needs a tree list
+or diameter classes cannot read it directly. These adapters bridge that gap, and
+:meth:`GrowthModel.build_context` picks one automatically and records which ran
+in ``ctx.attrs["inventory_adapter"]``, because a reconstructed inventory is not
+the same evidence as a measured one.
+
+The pseudo-tree adapters are the strongest claim here: they place every stem of a
+species at the stand QMD, which reproduces the basal area and stem count exactly
+and the diameter distribution not at all.
+"""
+
 # pyforestry/base/simulation/adapters.py
 from __future__ import annotations
 
 import math
-import random
 from dataclasses import dataclass
 from math import pi, sqrt
 from typing import Any, Dict, List, Optional
@@ -12,6 +24,25 @@ from pyforestry.base.helpers.primitives import Stems
 from pyforestry.base.helpers.tree_species import TreeName
 
 
+def _adapter_rng(kwargs: Dict[str, Any], *, default_seed: int) -> Any:
+    """Return the caller's random stream, or open one from a seed.
+
+    An adapter reconstructing pseudo-positions is not a stochastic *model* -- the
+    coordinates support neighbourhood operations and claim nothing about where
+    the trees stood -- but it still draws, so the run that owns it should be able
+    to say from where. Pass ``rng=`` (``ctx.rng.child("adapters")``) to tie the
+    draws to the run's seed. ``seed=`` remains for a standalone call and opens a
+    stream through the same service, so an adapter's draws are checkpointable
+    either way; its default keeps the historical coordinates reproducible.
+    """
+    rng = kwargs.get("rng")
+    if rng is not None:
+        return rng
+    from pyforestry.simulation.services import RandomBundle
+
+    return RandomBundle(int(kwargs.get("seed", default_seed))).rng_for()
+
+
 class Adapter:
     """Protocol for inventory adapters that construct runnable inventories from a Stand."""
 
@@ -19,9 +50,16 @@ class Adapter:
     target_mode: str  # "spatial" | "tree_list" | "diameter_class" | "aggregate"
 
     def can_adapt(self, stand) -> bool:  # noqa: ANN001
+        """Whether this adapter can produce its target mode from ``stand``."""
         raise NotImplementedError
 
     def adapt(self, stand, **kwargs) -> Dict[str, Any]:  # noqa: ANN001
+        """Build the inventory payload for :class:`SimulationContext`.
+
+        Returns:
+            A single-key mapping -- ``{"plots": ...}``, ``{"dclass": ...}`` or
+            ``{"metrics": ...}`` -- matching this adapter's ``target_mode``.
+        """
         raise NotImplementedError
 
 
@@ -37,18 +75,27 @@ class AngleCountToPseudoTreesAdapter(Adapter):
     replicas_per_species: int = 32
 
     def can_adapt(self, stand) -> bool:  # noqa: ANN001
+        """Whether the stand has the angle-count basal-area and stem estimates."""
         if not getattr(stand, "use_angle_count", False):
             return False
-        metrics = getattr(stand, "_metric_estimates", {})
+        metrics = stand.metric_estimates()
         return "BasalArea" in metrics and "Stems" in metrics and len(metrics["BasalArea"]) > 0
 
     def adapt(self, stand, **kwargs) -> Dict[str, Any]:  # noqa: ANN001
+        """Replicate each species' stems as identical trees at the stand QMD.
+
+        Reproduces basal area and stem count exactly and the diameter
+        distribution not at all: every surrogate stem of a species carries the
+        same diameter. Splitting the stems over ``replicas_per_species`` records
+        exists so per-tree operations (thinning a fraction, removing the
+        smallest) have something to bite on, not to represent variation.
+        """
         reps = int(kwargs.get("replicas_per_species", self.replicas_per_species))
         if reps <= 0:
             reps = self.replicas_per_species
         _ = stand.QMD  # ensure QMD ready
-        ba_dict = stand._metric_estimates["BasalArea"]
-        n_dict = stand._metric_estimates["Stems"]
+        ba_dict = stand.metric_estimates()["BasalArea"]
+        n_dict = stand.metric_estimates()["Stems"]
 
         plot = CircularPlot(id="ac_pseudo", area_m2=10_000.0, AngleCount=[], trees=[])
         species_keys = [k for k in ba_dict.keys() if isinstance(k, TreeName)]
@@ -99,10 +146,15 @@ class AngleCountToSpatialPseudoTreesAdapter(AngleCountToPseudoTreesAdapter):
     target_mode: str = "spatial"
 
     def adapt(self, stand, **kwargs) -> Dict[str, Any]:  # noqa: ANN001
+        """Place the surrogate stems at uniform random positions in a 1 ha plot.
+
+        The coordinates are drawn, not observed: they support neighbourhood
+        operations that need *some* geometry, and say nothing about where the
+        tallied trees actually stood.
+        """
         out = super().adapt(stand, **kwargs)
         plot: CircularPlot = out["plots"][0]
-        seed = kwargs.get("seed", 1337)
-        rng = random.Random(seed)
+        rng = _adapter_rng(kwargs, default_seed=1337)
         r = getattr(plot, "radius_m", sqrt(plot.area_m2 / pi))
         for t in plot.trees:
             rr = r * math.sqrt(rng.random())
@@ -124,16 +176,22 @@ class AngleCountToDiameterClassAdapter(Adapter):
     target_mode: str = "diameter_class"
 
     def can_adapt(self, stand) -> bool:  # noqa: ANN001
+        """Whether the stand carries angle-count basal-area and stem estimates."""
         return (
             bool(getattr(stand, "use_angle_count", False))
-            and "BasalArea" in stand._metric_estimates
-            and "Stems" in stand._metric_estimates
+            and "BasalArea" in stand.metric_estimates()
+            and "Stems" in stand.metric_estimates()
         )
 
     def adapt(self, stand, **kwargs) -> Dict[str, Any]:  # noqa: ANN001
+        """Bin each species into a single class at its own QMD.
+
+        A relascope tally supports one class per species and no more; the width
+        of the real distribution is not in the data.
+        """
         stand._ensure_qmd_estimates()
-        ba_dict = stand._metric_estimates["BasalArea"]
-        n_dict = stand._metric_estimates["Stems"]
+        ba_dict = stand.metric_estimates()["BasalArea"]
+        n_dict = stand.metric_estimates()["Stems"]
         dclass: Dict[Any, Dict[str, List[float]]] = {}
         for key, _ in ba_dict.items():
             if key == "TOTAL":
@@ -160,9 +218,15 @@ class TreeListToDiameterClassAdapter(Adapter):
     bin_width_cm: float = 2.0
 
     def can_adapt(self, stand) -> bool:  # noqa: ANN001
+        """Whether the stand holds measured trees rather than angle-count tallies."""
         return (not getattr(stand, "use_angle_count", False)) and any(p.trees for p in stand.plots)
 
     def adapt(self, stand, **kwargs) -> Dict[str, Any]:  # noqa: ANN001
+        """Histogram the measured stems into fixed-width diameter classes.
+
+        Each tree contributes ``weight_n`` stems per hectare of its plot's
+        effective (post-occlusion) area to the class its diameter falls in.
+        """
         bin_w = float(kwargs.get("bin_width_cm", self.bin_width_cm))
         per_sp: Dict[Any, List[tuple[float, float, float]]] = {}
         for p in stand.plots:
@@ -181,8 +245,12 @@ class TreeListToDiameterClassAdapter(Adapter):
             d_vals = [d for (d, _, _) in items]
             d_min, d_max = min(d_vals), max(d_vals)
             lo = bin_w * math.floor(d_min / bin_w)
-            hi = bin_w * math.ceil(d_max / bin_w)
-            mids = [lo + bin_w * i + bin_w / 2.0 for i in range(int((hi - lo) / bin_w))]
+            # At least one bin, always. When every tree of a species shares a
+            # diameter that sits exactly on a bin boundary -- 20.0 cm at a 2 cm
+            # width -- the span rounds to zero, and the empty ``mids`` that
+            # produced made the ``counts[idx]`` below index an empty list.
+            n_bins = max(1, math.ceil((d_max - lo) / bin_w))
+            mids = [lo + bin_w * i + bin_w / 2.0 for i in range(n_bins)]
             counts = [0.0 for _ in mids]
             for d, w, eff_area in items:
                 idx = int((d - lo) // bin_w)
@@ -205,11 +273,16 @@ class TreeListToSpatialAdapter(Adapter):
     target_mode: str = "spatial"
 
     def can_adapt(self, stand) -> bool:  # noqa: ANN001
+        """Whether the stand holds measured trees rather than angle-count tallies."""
         return (not getattr(stand, "use_angle_count", False)) and any(p.trees for p in stand.plots)
 
     def adapt(self, stand, **kwargs) -> Dict[str, Any]:  # noqa: ANN001
-        seed = kwargs.get("seed", 2027)
-        rng = random.Random(seed)
+        """Fill in a position for every tree that lacks one.
+
+        Missing coordinates are drawn uniformly within the tree's own plot.
+        Trees that already carry a position keep it.
+        """
+        rng = _adapter_rng(kwargs, default_seed=2027)
         plots = []
         for p in stand.plots:
             plots.append(p)
@@ -226,7 +299,10 @@ class TreeListToSpatialAdapter(Adapter):
 
 
 class AdapterRegistry:
+    """Named lookup for the inventory adapters ``build_context`` chooses from."""
+
     def __init__(self):
+        """Register the built-in adapters."""
         self._by_name: Dict[str, Adapter] = {}
         self.register(AngleCountToPseudoTreesAdapter())
         self.register(AngleCountToSpatialPseudoTreesAdapter())
@@ -235,16 +311,20 @@ class AdapterRegistry:
         self.register(TreeListToSpatialAdapter())
 
     def register(self, adapter: Adapter) -> None:
+        """Add ``adapter`` under its own ``name``, replacing any previous one."""
         self._by_name[adapter.name] = adapter
 
     def get(self, name: str) -> Optional[Adapter]:
+        """Get."""
         return self._by_name.get(name)
 
     def find_for(self, target_mode: str) -> List[Adapter]:
+        """Find for."""
         return [a for a in self._by_name.values() if a.target_mode == target_mode]
 
     @staticmethod
     def default() -> "AdapterRegistry":
+        """Default."""
         if not hasattr(AdapterRegistry, "_DEFAULT"):
             AdapterRegistry._DEFAULT = AdapterRegistry()  # type: ignore[attr-defined]
         return AdapterRegistry._DEFAULT  # type: ignore[attr-defined]

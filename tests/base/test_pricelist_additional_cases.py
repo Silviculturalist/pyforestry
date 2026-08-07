@@ -43,7 +43,7 @@ def test_timber_price_and_length_corrections():
 
 def test_get_timber_weight_defaults():
     tp = TimberPricelist(10, 20)
-    weights = tp.getTimberWeight(tp.LogParts.Butt)
+    weights = tp.get_timber_weight(tp.LogParts.Butt)
     assert weights.pulpwoodPercentage == 0.0
     assert weights.fuelWoodPercentage == 0.0
     assert weights.logCullPercentage == 0.0
@@ -55,13 +55,13 @@ def test_pulp_pricelist_lookup_and_defaults():
         "pinus sylvestris": 300,
         "pinus": 150,
     }
-    assert pp.getPulpwoodPrice("pinus sylvestris") == 300
-    assert pp.getPulpwoodPrice(TreeSpecies.Sweden.pinus_sylvestris) == 300
+    assert pp.get_pulpwood_price("pinus sylvestris") == 300
+    assert pp.get_pulpwood_price(TreeSpecies.Sweden.pinus_sylvestris) == 300
 
     pp._prices = {"pinus": 123}
-    assert pp.getPulpwoodPrice(TreeSpecies.Sweden.pinus_sylvestris) == 123
-    assert pp.getPulpwoodPrice("unknown species") == 200
-    assert pp.getPulpwoodPrice("pinus") == 200
+    assert pp.get_pulpwood_price(TreeSpecies.Sweden.pinus_sylvestris) == 123
+    assert pp.get_pulpwood_price("unknown species") == 200
+    assert pp.get_pulpwood_price("pinus") == 200
 
 
 def test_pricelist_load_from_dict(monkeypatch):

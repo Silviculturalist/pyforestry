@@ -21,21 +21,41 @@ class AtomicVolume:
     """
     Represents a single, indivisible volume measurement for a specific species and region.
     This is the fundamental building block.
+
+    ``region`` has no default, deliberately. It used to default to ``"Sweden"``,
+    which made this data-contract primitive assert a country on every volume built
+    without one -- and the assertion was not inert, because :meth:`__add__` merges
+    two volumes only when their regions match. A caller who omitted the argument
+    got a volume labelled Swedish that merged happily with Swedish volumes, while
+    a volume correctly tagged ``region="Norway"`` refused to merge with a defaulted
+    one and silently degraded to a :class:`CompositeVolume`: the same addition
+    returned a different type depending on whether someone had remembered a
+    keyword. The default was also load-bearing for nobody -- Sweden's volume
+    functions do not build ``AtomicVolume`` at all, and Norway's four all pass
+    their region explicitly.
     """
 
     value: float = field(metadata={"unit": "m3"})
-    region: str = "Sweden"
+    region: str
     species: str = "unknown"
     type: str = "m3sk"
 
     # --- (Class constants and validation are the same as before) ---
     UNIT_CONVERSION: ClassVar[Dict[str, float]] = {"m3": 1.0, "dm3": 1e-3, "cm3": 1e-6}
+    #: Which regions report a given volume type. ``m3sk`` (skogskubikmeter) is a
+    #: Nordic standing-volume measure, so the entry names the countries that use
+    #: it rather than expressing a preference among them.
     TYPE_REGIONS: ClassVar[Dict[str, List[str]]] = {"m3sk": ["Sweden", "Finland", "Norway"]}
 
     def __post_init__(self) -> None:
         """Validate the created volume."""
         if self.value < 0:
             raise ValueError("Volume value must be non-negative.")
+        if not self.region:
+            raise ValueError(
+                "AtomicVolume requires a region: it is part of what the measurement "
+                "means, and volumes only merge across matching regions."
+            )
         allowed_regions = self.TYPE_REGIONS.get(self.type)
         if allowed_regions and self.region not in allowed_regions:
             raise ValueError(f"Region '{self.region}' is not valid for type '{self.type}'.")

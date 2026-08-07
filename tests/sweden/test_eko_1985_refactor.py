@@ -4,7 +4,7 @@ import pytest
 
 from pyforestry.base.helpers import Age, Stand, TreeSpecies
 from pyforestry.base.helpers.primitives import StandBasalArea, Stems
-from pyforestry.sweden.models.eko_1985_refactor import (
+from pyforestry.sweden.systems.eko1985 import (
     DominantHeightObservation,
     Eko1985Cohort,
     Eko1985Model,
@@ -68,38 +68,48 @@ def test_engine_cohorts_match_legacy_growth_south():
 
     stand.grow(years=5)
 
+    # Corrected Eko 1985 output after the Dg-units, vegetation-indicator, birch
+    # altitude, broadleaf-South volume-constant, ProdMod2 mortality, and the
+    # South-broadleaf SI 240-280 dm BAI-scaling fixes.
+    #
+    # The alnus ("Others") volume (998.5 m3/ha, form height ~141 m) is the faithful
+    # Eko 1985 Tabell 10f Syd output, NOT a transcription bug: its TG (total stand
+    # basal area) term, exp(0.859600e-01 * TG), extrapolates far above the physical
+    # range for a small broadleaf cohort in this dense (35.5 m2/ha) mixed stand. This
+    # is the canonical default; set broadleaf_volume_prodmod=True for the physical
+    # ProdMod2 remap -- see test_broadleaf_volume_prodmod_makes_south_physical.
     expected = {
         "betula pendula": {
-            "basal_area": 14.387561292012318,
-            "stems": 794.72,
-            "qmd": 15.1824402754655,
-            "volume": 4.471694711874658e-07,
-            "bai5": 2.466761292012318,
-            "volume_increment": -1.6445733006677021e-06,
+            "basal_area": 14.150884903465201,
+            "stems": 780.0,
+            "qmd": 15.198459036298637,
+            "volume": 153.93748857865685,
+            "bai5": 2.4508849034652025,
+            "volume_increment": 29.168871777949107,
         },
         "alnus glutinosa": {
-            "basal_area": 5.9604,
-            "stems": 516.568,
-            "qmd": 12.120736576699848,
-            "volume": 2530622898.3846,
-            "bai5": 3.42332514593998e-60,
-            "volume_increment": 43301124.12402272,
+            "basal_area": 7.059392467029466,
+            "stems": 508.04,
+            "qmd": 13.301167705664586,
+            "volume": 998.5046349063624,
+            "bai5": 1.1973924670294656,
+            "volume_increment": 143.11782323876378,
         },
         "fagus sylvatica": {
-            "basal_area": 8.384518812705561,
-            "stems": 407.294,
-            "qmd": 16.189749343735564,
-            "volume": 62.88541094427544,
-            "bai5": 0.9340188127055613,
-            "volume_increment": 9.02944568740834,
+            "basal_area": 8.246816300105099,
+            "stems": 400.57,
+            "qmd": 16.19045334219603,
+            "volume": 61.94898386390469,
+            "bai5": 0.9193163001050999,
+            "volume_increment": 8.093018607037585,
         },
         "quercus robur": {
-            "basal_area": 6.150623530742213,
-            "stems": 298.02,
-            "qmd": 16.21033264230532,
-            "volume": 62.18972591606505,
-            "bai5": 0.1902235307422133,
-            "volume_increment": 2.5924046193831813,
+            "basal_area": 6.050866260587777,
+            "stems": 293.1,
+            "qmd": 16.212721671833187,
+            "volume": 61.272424561044275,
+            "bai5": 0.18886626058777747,
+            "volume_increment": 1.6751032643624058,
         },
     }
 
@@ -115,10 +125,60 @@ def test_engine_cohorts_match_legacy_growth_south():
         )
 
     snapshot = stand.snapshot()["stand"]
-    assert float(snapshot["basal_area"]) == pytest.approx(34.883103635460095)
-    assert float(snapshot["stems"]) == pytest.approx(2016.602)
-    assert float(snapshot["qmd"]) == pytest.approx(14.840636289755377)
-    assert float(snapshot["volume"]) == pytest.approx(2530623023.4597373)
+    assert float(snapshot["basal_area"]) == pytest.approx(35.50795993118754)
+    assert float(snapshot["stems"]) == pytest.approx(1981.71)
+    assert float(snapshot["qmd"]) == pytest.approx(15.104204931467352)
+    assert float(snapshot["volume"]) == pytest.approx(1275.6635319099682)
+
+
+def test_broadleaf_volume_prodmod_makes_south_physical():
+    """The ``broadleaf_volume_prodmod`` flag remaps birch + 'Others' South volumes.
+
+    Ekö 1985 Tabell 10c/10f publish region-specific Syd functions for birch and
+    övrigt löv; ProdMod2 instead pools both to the Nord+Mellan function in every
+    region (its coefficient table is region-identical at INDEX_BIRCH / INDEX_OTHER).
+    Setting ``broadleaf_volume_prodmod=True`` opts into that. It notably rescues the
+    non-physical "Others" Syd volume (~141 m form height, pinned in
+    ``test_engine_cohorts_match_legacy_growth_south``) to a physical ~7.5 m. Beech and
+    oak have a single volume function each and are untouched by the flag.
+    """
+    site_kwargs = {
+        "latitude": 55.0,
+        "longitude": 13.0,
+        "altitude": 120.0,
+        "vegetation": 13,
+        "soil_moisture": 3,
+        "spruce_site_index": 24.0,
+        "pine_site_index": 22.0,
+        "fertilised": True,
+        "thinned": True,
+        "broadleaf_volume_prodmod": True,
+    }
+    cohorts = [
+        Eko1985Cohort.from_values(TreeSpecies.Sweden.betula_pendula, 12.0, 800.0, 45),
+        Eko1985Cohort.from_values(TreeSpecies.Sweden.alnus_glutinosa, 6.0, 520.0, 35),
+        Eko1985Cohort.from_values(TreeSpecies.Sweden.fagus_sylvatica, 7.5, 410.0, 60),
+        Eko1985Cohort.from_values(TreeSpecies.Sweden.quercus_robur, 6.0, 300.0, 70),
+    ]
+    stand = Eko1985Stand(cohorts, Eko1985SiteContext(**site_kwargs))
+    stand.grow(years=5)
+
+    by_name = {c.species.full_name: c for c in stand.cohorts}
+    # "Others" (alnus): Nord+Mellan -> physical (the canonical Syd default is ~141 m).
+    alnus = by_name["alnus glutinosa"]
+    assert float(alnus.volume) == pytest.approx(53.201907666719514)
+    assert 4.0 < float(alnus.volume) / float(alnus.basal_area) < 12.0
+    assert _as_float(alnus.volume_increment) == pytest.approx(11.47132845801616)
+    # Birch (betula) also switches to its Nord+Mellan function (birch Syd is physical
+    # too, so this only nudges the value).
+    betula = by_name["betula pendula"]
+    assert float(betula.volume) == pytest.approx(154.85712879385426)
+    assert 5.0 < float(betula.volume) / float(betula.basal_area) < 15.0
+    assert _as_float(betula.volume_increment) == pytest.approx(32.42429519075557)
+    # Beech and oak use a single volume function -> unchanged from the canonical run.
+    assert float(by_name["fagus sylvatica"].volume) == pytest.approx(61.94898386390469)
+    assert float(by_name["quercus robur"].volume) == pytest.approx(61.272424561044275)
+    assert float(stand.snapshot()["stand"]["volume"]) == pytest.approx(331.28044488552274)
 
 
 def test_birch_engine_matches_legacy_north():
@@ -138,13 +198,17 @@ def test_birch_engine_matches_legacy_north():
 
     stand.grow(years=5)
 
+    # These coordinates (lat 64.5, lon 18) resolve to climate zone K1 = the Central
+    # region, where the ProdMod2 mortality groups with South (localisation != 0).
+    # Value reflects the altitude-coefficient fix (-0.462992 -> -0.462992e-03) and
+    # the ProdMod2 mortality port.
     cohort_updated = stand.cohorts[0]
-    assert float(cohort_updated.basal_area) == pytest.approx(7.9300872)
-    assert float(cohort_updated.stems) == pytest.approx(1189.51308)
-    assert float(cohort_updated.qmd) == pytest.approx(9.213177319235614)
-    assert float(cohort_updated.volume) == pytest.approx(37.89618831125041)
-    assert cohort_updated.bai5 == pytest.approx(1.2675470841550272e-40)
-    assert _as_float(cohort_updated.volume_increment) == pytest.approx(0.7810252416708963)
+    assert float(cohort_updated.basal_area) == pytest.approx(9.947239911784541)
+    assert float(cohort_updated.stems) == pytest.approx(1170.0)
+    assert float(cohort_updated.qmd) == pytest.approx(10.40431337928945)
+    assert float(cohort_updated.volume) == pytest.approx(50.59589247078843)
+    assert cohort_updated.bai5 == pytest.approx(2.1472399117845415)
+    assert _as_float(cohort_updated.volume_increment) == pytest.approx(13.480729401208912)
 
 
 def test_helper_functions_and_species_labels():
@@ -178,14 +242,14 @@ def test_helper_functions_and_species_labels():
 
 def test_cohort_update_from_engine_handles_missing_values():
     class DummyPart:
-        BA = 12.0
+        ba = 12.0
         stems = 900.0
         age = 40.0
-        HK = None
-        BAOtherSpecies = None
-        QMDOtherSpecies = None
-        VOL = None
-        BAI5 = None
+        hk = None
+        ba_other_species = None
+        qmd_other_species = None
+        vol = None
+        bai5 = None
         gross_volume_increment = None
         volume_increment = None
 
@@ -231,7 +295,7 @@ def test_stand_thin_volume_and_growth_paths():
 
     stand.grow5(apply_mortality=False)
     stand._engine_stand.grow5()
-    assert stand._engine_stand.getMAI(10.0, 5.0) == pytest.approx(2.0)
+    assert stand._engine_stand.get_mai(10.0, 5.0) == pytest.approx(2.0)
 
 
 def test_eko1985_model_updates_aggregate_context():
@@ -305,3 +369,98 @@ def test_eko1985_model_updates_aggregate_context():
     for cohort in expected_stand.cohorts:
         assert age_map[cohort.species.full_name] == pytest.approx(float(cohort.age))
     assert ctx.state["years_since_thin"] == pytest.approx(5.0)
+
+
+def _eko_site_context() -> Eko1985SiteContext:
+    return Eko1985SiteContext(
+        latitude=62.0,
+        longitude=18.0,
+        altitude=120.0,
+        vegetation=13,
+        soil_moisture=3,
+        spruce_site_index=20.0,
+        pine_site_index=20.0,
+    )
+
+
+def _eko_stand_with_metrics(cohorts) -> Stand:
+    stand = Stand()
+    ba_metrics, stems_metrics = {}, {}
+    total_ba = total_stems = 0.0
+    for cohort in cohorts:
+        sp = cohort.species
+        ba_metrics[sp] = StandBasalArea(float(cohort.basal_area), species=sp, precision=0.0)
+        stems_metrics[sp] = Stems(float(cohort.stems), species=sp, precision=0.0)
+        total_ba += float(cohort.basal_area)
+        total_stems += float(cohort.stems)
+    ba_metrics["TOTAL"] = StandBasalArea(total_ba, species=None, precision=0.0)
+    stems_metrics["TOTAL"] = Stems(total_stems, species=None, precision=0.0)
+    stand._metric_estimates = {"BasalArea": ba_metrics, "Stems": stems_metrics}
+    return stand
+
+
+def test_eko1985_model_describable_metadata():
+    model = Eko1985Model(site_context=_eko_site_context())
+    assert model.component_id == "eko_1985"
+    # Ekö with the diaeresis: the author is Per-Magnus Ekö, not "Eko".
+    assert model.source.author == "Ekö, P.-M."
+    assert model.source.year == 1985
+    assert model.source.title.startswith("En produktionsmodell för skog i Sverige")
+    assert model.requirements().inventory == "aggregate"
+
+
+def test_eko1985_model_thinning_action_reduces_basal_area():
+    cohorts = [
+        Eko1985Cohort.from_values(TreeSpecies.Sweden.picea_abies, 12.0, 800.0, 40),
+        Eko1985Cohort.from_values(TreeSpecies.Sweden.pinus_sylvestris, 8.0, 600.0, 45),
+    ]
+    model = Eko1985Model(site_context=_eko_site_context())
+    ctx = model.build_context(
+        _eko_stand_with_metrics(cohorts),
+        cohort_ages={
+            TreeSpecies.Sweden.picea_abies: 40.0,
+            TreeSpecies.Sweden.pinus_sylvestris: 45.0,
+        },
+    )
+    ctx.state["years_since_thin"] = 10.0
+    actions = model.available_actions()
+    assert "thin_basal_area" in actions
+
+    ba_before = float(ctx.metrics["BasalArea"][TreeSpecies.Sweden.picea_abies])
+    actions["thin_basal_area"].fn(ctx, removals={TreeSpecies.Sweden.picea_abies: 3.0})
+    ba_after = float(ctx.metrics["BasalArea"][TreeSpecies.Sweden.picea_abies])
+    assert ba_after < ba_before
+    assert ctx.state["years_since_thin"] == 0.0
+
+
+def test_eko1985_model_default_age_without_cohort_ages():
+    cohorts = [Eko1985Cohort.from_values(TreeSpecies.Sweden.picea_abies, 12.0, 800.0, 40)]
+    model = Eko1985Model(site_context=_eko_site_context(), default_age=40.0)
+    ctx = model.build_context(_eko_stand_with_metrics(cohorts))  # no cohort_ages -> default
+    ctx.update_step(5.0)
+    assert ctx.metrics["BasalArea"][TreeSpecies.Sweden.picea_abies] is not None
+
+
+def test_eko1985_model_total_only_metrics_use_single_species():
+    stand = Stand()
+    stand._metric_estimates = {
+        "BasalArea": {"TOTAL": StandBasalArea(20.0, species=None, precision=0.0)},
+        "Stems": {"TOTAL": Stems(1400.0, species=None, precision=0.0)},
+    }
+    model = Eko1985Model(site_context=_eko_site_context())
+    ctx = model.build_context(stand, cohort_ages={TreeSpecies.Sweden.picea_abies: 40.0})
+    ctx.update_step(5.0)
+    assert ctx.metrics["BasalArea"]["TOTAL"] is not None
+
+
+def test_eko1985_model_requires_age_information():
+    cohorts = [Eko1985Cohort.from_values(TreeSpecies.Sweden.picea_abies, 12.0, 800.0, 40)]
+    model = Eko1985Model(site_context=_eko_site_context())
+    with pytest.raises(ValueError):
+        model.build_context(_eko_stand_with_metrics(cohorts))  # no ages, no default
+
+
+def test_eko1985_model_requires_a_site_context():
+    model = Eko1985Model()
+    with pytest.raises(ValueError):
+        model._resolve_site_context(site_context=None)

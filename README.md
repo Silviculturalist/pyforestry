@@ -7,8 +7,10 @@
 ## Documentation
 [Available online](https://silviculturalist.github.io/pyforestry/)
 
+- [Architecture responsibility and context boundary policy](ARCHITECTURE.md)
+  defines package ownership boundaries and migration guardrails.
 - [Architecture overview](https://silviculturalist.github.io/pyforestry/architecture.html)
-  summarises the helper layer and outlines forthcoming simulation tooling.
+  mirrors the architecture policy in the published documentation.
 
 This package is currently under *very early* development.
 Use at your own risk. Any corrections, comments, and suggestions are greatly appreciated.
@@ -40,13 +42,69 @@ pip install -e .[dev]
 
 ## Quick example
 ```python
-from pyforestry.base.helpers import CircularPlot, Tree, Stand, parse_tree_species
+import pyforestry as pf
 
-plot = CircularPlot(id=1, radius_m=5.0, trees=[
-    Tree(species=parse_tree_species("picea abies"), diameter_cm=20),
+plot = pf.CircularPlot(id=1, radius_m=5.0, trees=[
+    pf.Tree(species="picea abies", diameter_cm=20),
 ])
-stand = Stand(plots=[plot])
+stand = pf.Stand(plots=[plot])
 print(stand.BasalArea.TOTAL.value)
+```
+
+## Projecting a stand
+One call runs a published growth model forward and hands back a table, the final
+stand, and the citations behind both:
+
+```python
+import pyforestry as pf
+
+result = pf.project(stand, model="elfving_2010", years=100, step=5, seed=42)
+
+result.table        # a DataFrame, one row per step
+result.stand        # the final state
+result.provenance   # every component that was cited, by component id
+
+pf.available_models()   # every name `model=` accepts
+```
+
+`step` defaults to the period the model was fitted for, so you only pass it when
+you want something else. The stand you hand in is not modified, so the same stand
+can be projected under several models and compared. For finer control, pass a
+management `policy` or an explicit `pipeline` of steps; the typed constructors
+(`Elfving2010Model`, `build_context`, `run_pipeline`) all remain available.
+
+## Projecting from a site: composite pipelines
+
+`project` advances a stand you already have. When you have a *site* instead and
+want a stand reconstructed and grown through a whole published workflow —
+regeneration, NYSKOG stand creation, young-stand growth, mortality, ingrowth,
+height and bark, valuation — that is a composite pipeline. It builds its own
+stand, which is why `project` cannot drive one:
+
+```python
+from pyforestry.sweden.simulation.presets import get_pipeline
+
+pipeline = get_pipeline("elfving_2010_composite")
+table = pipeline.run_projection(site=site, n_steps=20)
+
+pf.available_pipelines()   # every name `get_pipeline` accepts
+```
+
+The two namespaces are deliberately distinct: `"elfving_2010"` is the single-tree
+growth model, `"elfving_2010_composite"` the workflow that drives it alongside
+nine other published models.
+
+## Finding a model
+With 60+ growth, yield, volume, bark, biomass, and site-index models, the model
+catalog lets you discover them without knowing the import path or citation:
+
+```python
+from pyforestry import catalog
+
+catalog.find(domain="volume", species="Picea abies")  # volume models for spruce
+catalog.search("brandel")                              # by id / author / title
+catalog.describe("brandel_1990_volume").source         # citation
+catalog.regions()                                      # ['norway', 'sweden']
 ```
 
 ## Contributing

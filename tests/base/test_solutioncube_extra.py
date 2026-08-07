@@ -1,5 +1,6 @@
 from types import SimpleNamespace
 
+import pytest
 import xarray as xr
 
 import pyforestry.base.pricelist.solutioncube as sc
@@ -46,21 +47,31 @@ class FailingPool:
 
 
 def test_worker_with_sections(monkeypatch):
-    monkeypatch.setattr(sc, "SweTimber", lambda *args, **kwargs: object())
     monkeypatch.setattr(sc, "create_pricelist_from_data", lambda *a, **k: {})
-    monkeypatch.setattr(sc, "Nasberg_1985_BranchBound", lambda *a, **k: DummyOptimizer())
+    # See test_solutioncube_worker: the optimiser is imported inside the worker, so it
+    # is patched on its own module rather than on solutioncube.
+    monkeypatch.setattr(
+        "pyforestry.base.timber_bucking.nasberg_1985.Nasberg_1985_BranchBound",
+        lambda *a, **k: DummyOptimizer(),
+    )
 
-    res = sc._worker_buck_one_tree(("pine", 10, 100), {}, object)
+    res = sc._worker_buck_one_tree(
+        ("pine", 10, 100), {}, object, timber_class=lambda *args, **kwargs: object()
+    )
     assert res["solution_sections"] == '[{"a": 1}]'
     assert res["total_value"] == 1.0
 
 
 def test_worker_error(monkeypatch):
-    monkeypatch.setattr(sc, "SweTimber", lambda *a, **k: object())
     monkeypatch.setattr(sc, "create_pricelist_from_data", lambda *a, **k: {})
-    monkeypatch.setattr(sc, "Nasberg_1985_BranchBound", lambda *a, **k: FailingOptimizer())
+    monkeypatch.setattr(
+        "pyforestry.base.timber_bucking.nasberg_1985.Nasberg_1985_BranchBound",
+        lambda *a, **k: FailingOptimizer(),
+    )
 
-    out = sc._worker_buck_one_tree(("pine", 10, 100), {}, object)
+    out = sc._worker_buck_one_tree(
+        ("pine", 10, 100), {}, object, timber_class=lambda *a, **k: object()
+    )
     assert out["total_value"] != out["total_value"]  # NaN
     assert out["solution_sections"] == "[]"
 
@@ -118,7 +129,7 @@ def test_generate_fallback_on_pool_error(monkeypatch):
     assert cube.dataset.attrs["taper_model"] == "object"
 
 
-def test_lookup_unknown_species(capsys):
+def test_lookup_unknown_species():
     ds = xr.Dataset(
         {
             "total_value": (("species", "height", "dbh"), [[[1.0]]]),
@@ -128,11 +139,10 @@ def test_lookup_unknown_species(capsys):
     )
     cube = sc.SolutionCube(ds)
 
-    value, sections = cube.lookup("unknown", 10.0, 1.0)
-    captured = capsys.readouterr()
+    with pytest.warns(UserWarning, match="not found"):
+        value, sections = cube.lookup("unknown", 10.0, 1.0)
     assert value == 0.0
     assert sections == []
-    assert "not found" in captured.out.lower()
 
 
 def test_lookup_timber_pricelist_valid_species():
@@ -150,7 +160,7 @@ def test_lookup_timber_pricelist_valid_species():
     assert sections == []
 
 
-def test_lookup_timber_pricelist_exception(monkeypatch, capsys):
+def test_lookup_timber_pricelist_exception(monkeypatch):
     ds = xr.Dataset(
         {
             "total_value": (("species", "height", "dbh"), [[[2.0]]]),
@@ -161,14 +171,13 @@ def test_lookup_timber_pricelist_exception(monkeypatch, capsys):
     cube = sc.SolutionCube(ds)
     monkeypatch.setattr(cube, "lookup", lambda *a, **k: (_ for _ in ()).throw(RuntimeError()))
 
-    value, sections = cube.lookup_timber_pricelist("known")
-    captured = capsys.readouterr()
+    with pytest.warns(UserWarning, match="error occurred during lookup"):
+        value, sections = cube.lookup_timber_pricelist("known")
     assert value == 0.0
     assert sections == []
-    assert "error" in captured.out.lower()
 
 
-def test_lookup_timber_pricelist_unknown_species(capsys):
+def test_lookup_timber_pricelist_unknown_species():
     ds = xr.Dataset(
         {
             "total_value": (("species", "height", "dbh"), [[[1.0]]]),
@@ -178,8 +187,7 @@ def test_lookup_timber_pricelist_unknown_species(capsys):
     )
     cube = sc.SolutionCube(ds)
 
-    value, sections = cube.lookup_timber_pricelist("unknown-species")
-    captured = capsys.readouterr()
+    with pytest.warns(UserWarning, match="not found"):
+        value, sections = cube.lookup_timber_pricelist("unknown-species")
     assert value == 0.0
     assert sections == []
-    assert "not found" in captured.out.lower()

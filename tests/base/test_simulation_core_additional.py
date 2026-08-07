@@ -25,7 +25,11 @@ from pyforestry.base.simulation.growth_model import (
 
 
 def _ac_stand():
-    ac1 = AngleCount(ba_factor=2.0, value=[10], species=[PICEA_ABIES], point_id="p1")
+    # Diameters are supplied so stems/ha (and hence QMD) are derivable, which the
+    # angle-count adapters need.
+    ac1 = AngleCount(
+        ba_factor=2.0, value=[10], species=[PICEA_ABIES], point_id="p1", diameters_cm=[[20.0] * 10]
+    )
     plot = CircularPlot(id=1, area_m2=200.0, AngleCount=[ac1])
     return Stand(area_ha=1.0, plots=[plot])
 
@@ -128,16 +132,47 @@ def test_growth_model_can_build_modes():
     fake_any = FakeStand()
     ok, missing = model.can_build(fake_any, allow_adapters=False)
     assert not ok
-    assert any("tree_list or aggregates" in item for item in missing)
+    # `can_build` reports the mode `build_context` would actually choose. For an
+    # "either" model on a stand with no trees that is "aggregate", so the message
+    # names the aggregates it lacks rather than the old disjunction "tree_list or
+    # aggregates", which described a choice the builder had already made.
+    assert any("aggregates" in item for item in missing)
 
 
-def test_growth_model_base_methods_raise():
-    model = GrowthModel()
-    with pytest.raises(NotImplementedError):
-        model.requirements()
-    with pytest.raises(NotImplementedError):
-        model.update_step(None, 1.0)
-    assert model.available_actions() == {}
+def test_growth_model_cannot_be_instantiated_incomplete():
+    """A model missing requirements() or update_step() fails at construction.
+
+    It used to construct fine and raise NotImplementedError partway through a
+    projection instead.
+    """
+    with pytest.raises(TypeError, match="abstract"):
+        GrowthModel()
+
+    class NoStep(GrowthModel):
+        def requirements(self):
+            return Requirements()
+
+    with pytest.raises(TypeError, match="abstract"):
+        NoStep()
+
+
+def test_growth_model_without_a_source_refuses_to_supply_a_fake_one():
+    """It used to return SourceReference("unknown", 0, "unknown").
+
+    That reads like a real citation everywhere provenance is reported, in a
+    package whose stated value is traceability.
+    """
+
+    class Uncited(GrowthModel):
+        def requirements(self):
+            return Requirements()
+
+        def update_step(self, ctx, dt):
+            return None
+
+    with pytest.raises(NotImplementedError, match="does not declare a source"):
+        _ = Uncited().source
+    assert Uncited().available_actions() == {}
 
 
 def test_build_context_angle_count_fallback(monkeypatch):
@@ -182,7 +217,7 @@ def test_build_context_diameter_class_fallback():
     }
     ctx = model.build_context(stand, mode_hint="diameter_class")
     assert ctx.mode == "diameter_class"
-    assert ctx._dclass["TOTAL"]["bin_mids_cm"]
+    assert ctx.diameter_classes["TOTAL"]["bin_mids_cm"]
 
 
 def test_build_context_angle_count_origin():
@@ -235,7 +270,7 @@ def test_build_context_uses_requirements_inventory():
     assert ctx.mode == "spatial"
 
 
-def test_simulation_context_action_gating_and_phases():
+def test_simulation_context_action_gating_by_inventory_mode():
     model = DummyModel()
     metrics = {
         "BasalArea": {"TOTAL": StandBasalArea(10.0, species=None)},
@@ -264,19 +299,12 @@ def test_simulation_context_action_gating_and_phases():
                 params={},
                 requires_modes=["tree_list"],
             ),
-            "phase_ok": ActionSpec(
-                name="phase_ok",
-                description="",
-                fn=noop,
-                params={},
-                allowed_phases=["pre"],
-            ),
             "legacy_tree": ActionSpec(
                 name="legacy_tree",
                 description="",
                 fn=noop,
                 params={},
-                requires_tree_list=True,
+                requires_modes=["tree_list", "spatial"],
             ),
         }
 
@@ -286,8 +314,6 @@ def test_simulation_context_action_gating_and_phases():
         ctx.do("missing")
     with pytest.raises(RuntimeError, match="requires mode"):
         ctx.do("only_tree")
-    with pytest.raises(RuntimeError, match="not permitted"):
-        ctx.do("phase_ok", phase="post")
     with pytest.raises(RuntimeError, match="requires mode"):
         ctx.do("legacy_tree")
 
@@ -306,7 +332,7 @@ def test_simulation_context_invalid_mode():
         )
 
 
-def test_simulation_context_management_tuple_and_scale_stems():
+def test_simulation_context_scale_stems():
     model = DummyModel()
     metrics = {
         "BasalArea": {"TOTAL": StandBasalArea(10.0, species=None)},
@@ -329,12 +355,19 @@ def test_simulation_context_management_tuple_and_scale_stems():
     model.available_actions = lambda: {  # type: ignore[assignment]
         "noop": ActionSpec(name="noop", description="", fn=noop, params={})
     }
-    ctx.update_step(1.0, management={"pre": [("noop", {})], "post": ["noop"]})
+    ctx.do("noop")
+    ctx.update_step(1.0)
     ctx.scale_stems(0.5)
     assert float(ctx.metrics["Stems"]["TOTAL"]) == pytest.approx(50.0)
 
 
-def test_simulation_context_metrics_edge_paths():
+def test_simulation_context_metrics_come_from_its_stand():
+    """A tree-list context reports exactly what its stand reports.
+
+    The context used to carry a second estimator, and this test covered its edge
+    paths. There is only one estimator now, so the property worth asserting is
+    that the context is a view of the stand rather than a parallel calculation.
+    """
     model = DummyModel()
     plot = CircularPlot(
         id=1,
@@ -344,7 +377,6 @@ def test_simulation_context_metrics_edge_paths():
             Tree(species="Picea abies", diameter_cm=20.0, weight_n=2.0),
         ],
     )
-    plot.trees[1].species = "Picea abies"
     ctx = SimulationContext(
         mode="tree_list",
         area_ha=1.0,
@@ -355,16 +387,27 @@ def test_simulation_context_metrics_edge_paths():
         model=model,
         initial_attrs={},
     )
-    metrics = ctx._recompute_metrics_tree_list([plot])
-    assert "TOTAL" in metrics["Stems"]
+    assert "TOTAL" in ctx.metrics["Stems"]
+    assert float(ctx.metrics["Stems"]["TOTAL"]) == pytest.approx(float(ctx.stand.Stems))
+    assert float(ctx.metrics["BasalArea"]["TOTAL"]) == pytest.approx(float(ctx.stand.BasalArea))
+    assert float(ctx.metrics["QMD"]["TOTAL"]) == pytest.approx(float(ctx.stand.QMD))
 
-    ctx._metrics.pop("BasalArea", None)
-    ctx._recompute_qmd()
-    assert float(ctx._metrics["QMD"]["TOTAL"]) == 0.0
 
+def test_simulation_context_qmd_is_zero_without_measurable_trees():
+    """A stand of trees with no diameters has no QMD to report, not a crash."""
+    model = DummyModel()
     empty_plot = CircularPlot(id=2, area_m2=200.0, trees=[Tree(species=None)])
-    metrics_empty = ctx._recompute_metrics_tree_list([empty_plot])
-    assert float(metrics_empty["QMD"]["TOTAL"]) == 0.0
+    ctx = SimulationContext(
+        mode="tree_list",
+        area_ha=1.0,
+        site=None,
+        origin_ref=None,
+        inventory={"plots": [empty_plot]},
+        initial_state={},
+        model=model,
+        initial_attrs={},
+    )
+    assert float(ctx.metrics["QMD"]["TOTAL"]) == 0.0
 
 
 def test_simulation_context_checkpoint_dclass_and_rng_restore():
@@ -380,24 +423,44 @@ def test_simulation_context_checkpoint_dclass_and_rng_restore():
         initial_attrs={},
     )
 
-    class BadBundle:
-        def snapshot(self):
-            raise RuntimeError("boom")
+    class Bundle:
+        """A minimal snapshot/restore bundle."""
 
-    ctx.random_bundle = BadBundle()
+        def __init__(self):
+            self.state = {"draws": 3}
+            self.restored = None
+
+        def snapshot(self):
+            return dict(self.state)
+
+        def restore(self, state):
+            self.restored = state
+
+    # A round trip must actually carry the RNG state across. This used to be dead:
+    # checkpoint() stored rng_state, but from_checkpoint() guarded on
+    # hasattr(ctx, "random_bundle") -- which the constructor never set -- so the
+    # state was silently dropped and a resumed stochastic run diverged in silence.
+    bundle = Bundle()
+    ctx.random_bundle = bundle
     ctx.history.append(object())
     payload = ctx.checkpoint(include_history=True)
-    payload["rng_state"] = {"state": 1}
+    assert payload["rng_state"] == {"draws": 3}
 
-    class RestoreBundle:
-        def restore(self, _state):
-            raise RuntimeError("restore fail")
+    target = Bundle()
+    restored = SimulationContext.from_checkpoint(model, payload, random_bundle=target)
+    assert target.restored == {"draws": 3}
+    assert restored.random_bundle is target
 
-    class CustomContext(SimulationContext):
-        pass
+    # Resuming a stochastic checkpoint with nowhere to put the state is an error,
+    # not a quiet fresh stream.
+    with pytest.raises(ValueError, match="no random_bundle was supplied"):
+        SimulationContext.from_checkpoint(model, payload)
 
-    CustomContext.random_bundle = RestoreBundle()  # type: ignore[assignment]
-    CustomContext.from_checkpoint(model, payload)
+    # A checkpoint without RNG state restores fine without a bundle.
+    ctx.random_bundle = None
+    plain = ctx.checkpoint()
+    assert "rng_state" not in plain
+    assert SimulationContext.from_checkpoint(model, plain).random_bundle is None
 
 
 def test_simulation_context_dclass_qmd_zero():
@@ -479,12 +542,10 @@ def test_context_ensemble_engine_paths():
         ens.update_step(1.0)
 
     ens.engine = PythonEngine()
-    ens.update_step(1.0, management={"pre": []})
+    ens.update_step(1.0)
     ens.do("fertilize", years=1.0)
     df = ens.to_pandas()
     assert "context_id" in df.columns
-    with pytest.raises(ValueError):
-        ens.update_step(1.0, management=[None, None])
 
 
 def test_batch_engine_not_implemented():
@@ -534,3 +595,45 @@ def test_adapter_branch_coverage():
     assert tree_adapter.can_adapt(stand_tree) is True
     out = tree_adapter.adapt(stand_tree)
     assert out["dclass"]
+
+
+def test_can_build_and_build_context_agree_on_the_mode() -> None:
+    """One function decides the mode, so the check and the build cannot disagree.
+
+    ``can_build`` tested ``mode_hint or req.inventory`` and ``build_context``
+    re-derived the mode with different rules. For an ``"either"`` model on an
+    angle-count stand the first checked the ``"either"`` branch while the second
+    chose ``"aggregate"`` -- two answers to "what will this run do", kept in step
+    by hand.
+    """
+    from pyforestry.base.simulation.growth_model import ExampleStandGeneralModel, _select_mode
+
+    model = ExampleStandGeneralModel()
+    req = model.requirements()
+
+    def _trees() -> Stand:
+        plot = CircularPlot(
+            id=1,
+            area_m2=100.0,
+            trees=[
+                Tree(species=PICEA_ABIES, diameter_cm=20.0, height_m=15.0, position=(1.0, 1.0))
+            ],
+        )
+        return Stand(area_ha=1.0, plots=[plot])
+
+    for stand, hint in (
+        (_trees(), None),
+        (_trees(), "aggregate"),
+        (_trees(), "spatial"),
+        (_ac_stand(), None),
+        (_ac_stand(), "diameter_class"),
+    ):
+        expected = _select_mode(req, stand, hint)
+        ok, missing = model.can_build(stand, mode_hint=hint)
+        assert ok, missing
+        ctx = model.build_context(stand, mode_hint=hint)
+        # build_context may *downgrade* when no adapter can supply the asked-for
+        # representation; it must never silently pick a different one outright.
+        assert ctx.mode in (expected, "aggregate", "tree_list"), (stand, hint, ctx.mode)
+        if expected in ("aggregate", "diameter_class"):
+            assert ctx.mode == expected

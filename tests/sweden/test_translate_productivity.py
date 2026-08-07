@@ -1,9 +1,12 @@
+from typing import Any, cast
+
 import pytest
 
 from pyforestry.base.helpers.primitives import Age, SiteIndexValue
 from pyforestry.base.helpers.tree_species import TreeSpecies
 from pyforestry.sweden.site.enums import Sweden
-from pyforestry.sweden.siteindex.translate import hagglund_1981_SI_to_productivity
+from pyforestry.sweden.siteindex.hagglund_1970 import Hagglund_1970
+from pyforestry.sweden.siteindex.translate import hagglund_1981_si_to_productivity
 
 
 def _make_si(value: float, ref_age: int = 100) -> SiteIndexValue:
@@ -11,14 +14,14 @@ def _make_si(value: float, ref_age: int = 100) -> SiteIndexValue:
         value,
         Age.TOTAL(ref_age),
         {TreeSpecies.Sweden.picea_abies},
-        lambda: None,
+        Hagglund_1970.height_trajectory.picea_abies.northern_sweden,
     )
 
 
 def test_invalid_reference_age():
     si = _make_si(25, ref_age=50)
     with pytest.raises(ValueError):
-        hagglund_1981_SI_to_productivity(
+        hagglund_1981_si_to_productivity(
             si,
             TreeSpecies.Sweden.picea_abies,
             Sweden.FieldLayer.BILBERRY,
@@ -38,12 +41,18 @@ def test_invalid_reference_age():
 def test_input_type_errors(main_species, vegetation, county):
     si = _make_si(28)
     with pytest.raises(TypeError):
-        hagglund_1981_SI_to_productivity(si, main_species, vegetation, 100, county)
+        hagglund_1981_si_to_productivity(
+            si,
+            cast(Any, main_species),
+            cast(Any, vegetation),
+            100,
+            cast(Any, county),
+        )
 
 
 def test_valid_productivity_positive():
     si = _make_si(28)
-    prod = hagglund_1981_SI_to_productivity(
+    prod = hagglund_1981_si_to_productivity(
         si,
         TreeSpecies.Sweden.picea_abies,
         Sweden.FieldLayer.BILBERRY,

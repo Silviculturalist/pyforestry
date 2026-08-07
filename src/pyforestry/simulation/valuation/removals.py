@@ -1,4 +1,20 @@
-"""Removal ledger data structures for stand valuation workflows."""
+"""What a run removed, in whatever detail the stand it came from could give.
+
+Two kinds, because two kinds of model produce removals:
+
+* :class:`TreeRemoval` -- a stem, with a diameter and a height, which can be
+  bucked into assortments and priced by grade. What a tree-list model gives.
+* :class:`MeanTreeRemoval` -- the stand's *representative* stem, and how many of
+  them came out. What an aggregate model gives: Kuehne (2022) and its siblings
+  step a basal area and a stem count, so a thinning there has no individual
+  stems -- but it does have a quadratic mean diameter, and that mean tree can be
+  bucked like any other.
+
+The second existed nowhere, which is the whole reason Norway had no valuation
+stage: its models are aggregate, the ledger could only hold stems, so there was
+nothing for a valuation to price. A stand-level model cannot be bucked stem by
+stem; it can be bucked once, at its mean tree.
+"""
 
 from __future__ import annotations
 
@@ -42,6 +58,7 @@ class TreeRemoval:
     metadata: MutableMapping[str, Any] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
+        """Validate the record and resolve the stem weight it stands for."""
         if not self.cohort_id:
             raise ValueError("Tree removals require a cohort identifier.")
         if not isinstance(self.tree, Tree):
@@ -114,6 +131,77 @@ class TreeRemoval:
 
 
 @dataclass
+class MeanTreeRemoval:
+    """Record a removal as one representative stem, and how many came out.
+
+    What an aggregate model can say. There are no individual stems, but a stand
+    has a quadratic mean diameter and a mean height, and the stem those describe
+    can be bucked like any other -- which is how a stand-level model gets an
+    assortment split at all.
+
+    ``volume_m3`` is the total the *model* says left the stand, in the model's own
+    measure -- m3sk for the Nordic stand volume functions -- and it is what the
+    run's summary reports as harvested. It is deliberately **not** imposed on the
+    logs: :class:`~pyforestry.simulation.valuation.volume.MeanTreeVolumeDescriptor`
+    bucks the mean stem and multiplies by ``stems``, because a price list buys the
+    narrower m3to and scaling the grades up to an m3sk total pays m3to prices on
+    m3sk cubic metres. It is still the ceiling -- logs cannot exceed the stem
+    volume they came from -- and the descriptor raises if they do.
+
+    Attributes:
+        cohort_id: Which removal event this belongs to.
+        species: The species removed.
+        diameter_cm: The representative stem's diameter, normally the stand's QMD.
+        height_m: Its height. Lorey's mean height where the stand has one.
+        stems: How many such stems came out, per hectare.
+        volume_m3: The total volume removed, per hectare, from the model.
+        metadata: Carried through to the piece records.
+    """
+
+    cohort_id: str
+    species: TreeName | str
+    diameter_cm: float
+    height_m: float
+    stems: float
+    volume_m3: float
+    metadata: Dict[str, Any] = field(default_factory=dict)
+
+    def __post_init__(self) -> None:
+        """Normalise the species and reject dimensions nothing can be bucked from."""
+        self.species = _normalise_species(self.species)
+        self.diameter_cm = float(self.diameter_cm)
+        self.height_m = float(self.height_m)
+        self.stems = float(self.stems)
+        self.volume_m3 = float(self.volume_m3)
+        if self.diameter_cm <= 0.0 or self.height_m <= 1.3:
+            raise ValueError(
+                f"A mean tree needs a diameter and a height above breast height to be "
+                f"bucked, got {self.diameter_cm!r} cm and {self.height_m!r} m for cohort "
+                f"{self.cohort_id!r}."
+            )
+        if self.stems <= 0.0 or self.volume_m3 <= 0.0:
+            raise ValueError(
+                f"A mean-tree removal must take out stems and volume, got "
+                f"{self.stems!r} stems and {self.volume_m3!r} m3 for cohort "
+                f"{self.cohort_id!r}."
+            )
+        self.metadata = dict(self.metadata)
+
+    @property
+    def species_name(self) -> str:
+        """The species' full scientific name."""
+        return str(self.species.full_name)
+
+    def to_timber(self) -> Timber:
+        """Build the :class:`~pyforestry.base.timber.Timber` for the mean stem."""
+        return Timber(
+            species=self.species_name,
+            diameter_cm=self.diameter_cm,
+            height_m=self.height_m,
+        )
+
+
+@dataclass
 class CohortRemoval:
     """Group a collection of removed trees for a cohort."""
 
@@ -123,6 +211,7 @@ class CohortRemoval:
     trees: list[TreeRemoval] = field(default_factory=list)
 
     def __post_init__(self) -> None:
+        """Validate the cohort and stamp its species into the metadata."""
         if not self.identifier:
             raise ValueError("Cohort removals require an identifier.")
         self.species = _normalise_species(self.species)
@@ -174,10 +263,14 @@ class StandRemovalLedger:
     stand_id: Optional[str] = None
     metadata: MutableMapping[str, Any] = field(default_factory=dict)
     cohorts: MutableMapping[str, CohortRemoval] = field(default_factory=dict)
+    #: Mean-tree removals, from stands that hold no individual stems.
+    mean_trees: list[MeanTreeRemoval] = field(default_factory=list)
 
     def __post_init__(self) -> None:
+        """Copy the mappings in so the ledger owns its own state."""
         self.metadata = dict(self.metadata)
         self.cohorts = dict(self.cohorts)
+        self.mean_trees = list(self.mean_trees)
         if self.stand_id:
             self.metadata.setdefault("stand_id", self.stand_id)
 
@@ -230,17 +323,69 @@ class StandRemovalLedger:
 
         yield from self.cohorts.values()
 
+    def record_mean_tree(
+        self,
+        identifier: str,
+        *,
+        species: TreeName | str,
+        diameter_cm: float,
+        height_m: float,
+        stems: float,
+        volume_m3: float,
+        metadata: Optional[Mapping[str, Any]] = None,
+    ) -> MeanTreeRemoval:
+        """Record a removal as a representative stem, for a stand holding no stems.
+
+        Args:
+            identifier: The removal event, e.g. ``"management@2035"``.
+            species: What was removed.
+            diameter_cm: The representative stem's diameter, normally the QMD.
+            height_m: Its height.
+            stems: How many came out, per hectare.
+            volume_m3: The total volume removed, per hectare, from the model.
+            metadata: Carried through to the piece records.
+
+        Returns:
+            The recorded removal.
+        """
+        removal = MeanTreeRemoval(
+            cohort_id=identifier,
+            species=species,
+            diameter_cm=diameter_cm,
+            height_m=height_m,
+            stems=stems,
+            volume_m3=volume_m3,
+            metadata=dict(metadata or {}),
+        )
+        self.mean_trees.append(removal)
+        return removal
+
     def iter_tree_removals(self) -> Iterator[TreeRemoval]:
         """Yield tree removals across all cohorts."""
 
         for cohort in self.iter_cohorts():
             yield from cohort.iter_trees()
 
+    def iter_mean_tree_removals(self) -> Iterator[MeanTreeRemoval]:
+        """Yield mean-tree removals, in the order they were recorded."""
+
+        yield from self.mean_trees
+
     @property
     def is_empty(self) -> bool:
-        """Return ``True`` when no tree removals are recorded."""
+        """Return ``True`` when nothing at all was recorded.
 
-        return all(cohort.tree_count == 0 for cohort in self.cohorts.values())
+        Both kinds count: a ledger holding only mean-tree removals is not empty,
+        which is what lets an aggregate model's thinning be priced.
+        """
+        return not self.mean_trees and all(
+            cohort.tree_count == 0 for cohort in self.cohorts.values()
+        )
+
+    @property
+    def total_volume_m3(self) -> float:
+        """Return the volume recorded through mean-tree removals."""
+        return float(sum(removal.volume_m3 for removal in self.mean_trees))
 
     @property
     def tree_count(self) -> int:
@@ -266,4 +411,4 @@ class StandRemovalLedger:
                 existing.record_tree(tree.tree, weight=tree.weight, metadata=tree.metadata)
 
 
-__all__ = ["TreeRemoval", "CohortRemoval", "StandRemovalLedger"]
+__all__ = ["TreeRemoval", "MeanTreeRemoval", "CohortRemoval", "StandRemovalLedger"]

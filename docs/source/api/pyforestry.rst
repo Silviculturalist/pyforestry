@@ -1,11 +1,6 @@
 pyforestry package
 ==================
 
-.. automodule:: pyforestry
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Subpackages
 -----------
 
@@ -13,4 +8,33 @@ Subpackages
    :maxdepth: 4
 
    pyforestry.base
+   pyforestry.norway
+   pyforestry.simulation
    pyforestry.sweden
+
+Submodules
+----------
+
+pyforestry.catalog module
+-------------------------
+
+.. automodule:: pyforestry.catalog
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyforestry.projection module
+----------------------------
+
+.. automodule:: pyforestry.projection
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: pyforestry
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -17,7 +17,6 @@ from pyforestry.base.helpers import (
     StandBasalArea,
     Stems,
     Tree,
-    TreeSpecies,
     parse_tree_species,
 )
 
@@ -234,11 +233,63 @@ def test_aggregate_stand_metrics():
     # Basal area = 2.5*2 = 5; precision = sqrt(0.25)*2 = 1.
     assert math.isclose(ba_dict[sp2].value, 5.0)
     assert math.isclose(ba_dict[sp2].precision, 1.0)
-    # For Stems, raw counts are used.
-    assert math.isclose(stems_dict[sp1].value, 5.0)
-    assert math.isclose(stems_dict[sp1].precision, 1.0)
-    assert math.isclose(stems_dict[sp2].value, 2.5)
-    assert math.isclose(stems_dict[sp2].precision, math.sqrt(0.25))
+    # Stems/ha cannot be derived from bare tallies (no per-tree diameters).
+    assert stems_dict == {}
+
+
+def test_aggregate_stand_metrics_stems_from_diameters():
+    """With per-tally diameters, stems/ha = sum(BAF / g_i) is estimable."""
+    sp = parse_tree_species("picea abies")
+    # Two points, each tallying two 20 cm trees of one species.
+    ac1 = AngleCount(
+        ba_factor=2.0, value=[2], species=[sp], point_id="P1", diameters_cm=[[20.0, 20.0]]
+    )
+    ac2 = AngleCount(
+        ba_factor=2.0, value=[2], species=[sp], point_id="P2", diameters_cm=[[20.0, 20.0]]
+    )
+    ba_dict, stems_dict = AngleCountAggregator(records=[ac1, ac2]).aggregate_stand_metrics()
+    # Basal area = count * BAF = 2 * 2 = 4 at each point → mean 4.
+    assert math.isclose(ba_dict[sp].value, 4.0)
+    # g(20 cm) = pi/4 * (0.2 m)^2; stems/ha per point = 2 * BAF / g.
+    g = math.pi * ((20.0 / 100.0) / 2.0) ** 2
+    per_point_stems = 2 * (2.0 / g)
+    assert math.isclose(stems_dict[sp].value, per_point_stems)
+    # Identical points → zero variance → zero standard error.
+    assert math.isclose(stems_dict[sp].precision, 0.0)
+
+
+def test_angle_count_slope_correction():
+    """A relascope point on a slope scales estimates by sqrt(1 + slope**2)."""
+    sp = parse_tree_species("picea abies")
+    flat = AngleCount(ba_factor=2.0, value=[5], species=[sp], point_id="p1")
+    sloped = AngleCount(ba_factor=2.0, value=[5], species=[sp], point_id="p1", slope=1.0)
+    ba_flat, _ = AngleCountAggregator([flat]).aggregate_stand_metrics()
+    ba_slope, _ = AngleCountAggregator([sloped]).aggregate_stand_metrics()
+    assert math.isclose(ba_flat[sp].value, 10.0)
+    assert math.isclose(ba_slope[sp].value, 10.0 * math.sqrt(2.0))
+
+
+def test_angle_count_occlusion_half_sweep():
+    """A boundary half-sweep (occlusion 0.5) doubles the per-hectare estimates."""
+    sp = parse_tree_species("picea abies")
+    rec = AngleCount(ba_factor=2.0, value=[5], species=[sp], point_id="p1", occlusion=0.5)
+    ba_dict, _ = AngleCountAggregator([rec]).aggregate_stand_metrics()
+    assert math.isclose(ba_dict[sp].value, 20.0)
+
+
+def test_angle_count_slope_and_occlusion_compose():
+    sp = parse_tree_species("picea abies")
+    rec = AngleCount(
+        ba_factor=2.0, value=[5], species=[sp], point_id="p1", slope=1.0, occlusion=0.5
+    )
+    ba_dict, _ = AngleCountAggregator([rec]).aggregate_stand_metrics()
+    assert math.isclose(ba_dict[sp].value, 10.0 * math.sqrt(2.0) / 0.5)
+
+
+def test_angle_count_occlusion_out_of_range():
+    sp = parse_tree_species("picea abies")
+    with pytest.raises(ValueError):
+        AngleCount(ba_factor=2.0, value=[1], species=[sp], occlusion=1.0)
 
 
 # --- Volume conversion tests ---
@@ -317,6 +368,12 @@ def compute_height(d_cm: float) -> float:
 
 
 def test_random_plots_on_stand():
+    # Plot centres are drawn at random, so seed the generator: an unseeded draw
+    # occasionally places every plot far enough inside the stand that no plot is
+    # occluded (or so far out that one holds almost no trees), which made this
+    # test pass or fail depending on the run.
+    random.seed(20260725)
+
     # Define a rectangular stand (200 m x 100 m)
     stand_polygon = Polygon([(0, 0), (200, 0), (200, 100), (0, 100)])
 
@@ -365,7 +422,7 @@ def test_random_plots_on_stand():
         for _ in range(n_pinus):
             trees.append(
                 Tree(
-                    species=TreeSpecies.Sweden.pinus_sylvestris,
+                    species=parse_tree_species("pinus sylvestris"),
                     diameter_cm=d_pinus,
                     height_m=h_pinus,
                     weight_n=1.0,
@@ -374,7 +431,7 @@ def test_random_plots_on_stand():
         for _ in range(n_picea):
             trees.append(
                 Tree(
-                    species=TreeSpecies.Sweden.picea_abies,
+                    species=parse_tree_species("picea abies"),
                     diameter_cm=d_picea,
                     height_m=h_picea,
                     weight_n=1.0,
@@ -387,23 +444,23 @@ def test_random_plots_on_stand():
     stand = Stand(plots=plots, polygon=stand_polygon)
 
     # Get the aggregated metrics via the accessors. In this test we use tree
-    # data, so the _compute_ht_estimates method is used.
+    # data, so the _compute_plot_mean_estimates method is used.
     ba_accessor = stand.BasalArea
     stems_accessor = stand.Stems
 
     # Extract species-level metrics:
-    ba_pinus = ba_accessor(TreeSpecies.Sweden.pinus_sylvestris)
-    ba_picea = ba_accessor(TreeSpecies.Sweden.picea_abies)
-    stems_pinus = stems_accessor(TreeSpecies.Sweden.pinus_sylvestris)
-    stems_picea = stems_accessor(TreeSpecies.Sweden.picea_abies)
+    ba_pinus = ba_accessor(parse_tree_species("pinus sylvestris"))
+    ba_picea = ba_accessor(parse_tree_species("picea abies"))
+    stems_pinus = stems_accessor(parse_tree_species("pinus sylvestris"))
+    stems_picea = stems_accessor(parse_tree_species("picea abies"))
     ba_total = ba_accessor.TOTAL
     stems_total = stems_accessor.TOTAL
 
     top_height = stand.get_dominant_height()
 
     qmd_total = stand.QMD.TOTAL
-    qmd_pinus = stand.QMD(TreeSpecies.Sweden.pinus_sylvestris)
-    qmd_picea = stand.QMD(TreeSpecies.Sweden.picea_abies)
+    qmd_pinus = stand.QMD(parse_tree_species("pinus sylvestris"))
+    qmd_picea = stand.QMD(parse_tree_species("picea abies"))
 
     # Basic assertions: all values should be > 0.
     assert ba_pinus.value > 0
@@ -415,11 +472,19 @@ def test_random_plots_on_stand():
     assert top_height is not None
     assert top_height.value > 0
     assert qmd_total.value > 0
+    # The stand total mixes 20 cm pine with 10 cm spruce in proportions that vary
+    # from plot to plot, so its QMD genuinely differs between plots.
     assert qmd_total.precision > 0
-    assert qmd_picea.value > 0
-    assert qmd_picea.precision > 0
-    assert qmd_pinus.value > 0
-    assert qmd_pinus.precision > 0
+
+    # Every tree of a given species here has one fixed diameter, so each plot
+    # yields exactly that QMD and the between-plot standard error is zero. Basal
+    # area and stem count both scale with the plot's effective area, and the
+    # covariance-aware delta method cancels that shared variation; treating them
+    # as independent used to invent a positive error here.
+    assert qmd_picea.value == pytest.approx(d_picea)
+    assert qmd_picea.precision == pytest.approx(0.0, abs=1e-9)
+    assert qmd_pinus.value == pytest.approx(d_pinus)
+    assert qmd_pinus.precision == pytest.approx(0.0, abs=1e-9)
 
 
 def test_thin_by_uid():

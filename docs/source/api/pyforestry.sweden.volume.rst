@@ -1,11 +1,6 @@
 pyforestry.sweden.volume package
 ================================
 
-.. automodule:: pyforestry.sweden.volume
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Submodules
 ----------
 
@@ -61,6 +56,22 @@ pyforestry.sweden.volume.naslund\_1947 module
 ---------------------------------------------
 
 .. automodule:: pyforestry.sweden.volume.naslund_1947
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyforestry.sweden.volume.soderberg\_1986\_form\_height module
+-------------------------------------------------------------
+
+.. automodule:: pyforestry.sweden.volume.soderberg_1986_form_height
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: pyforestry.sweden.volume
    :members:
    :undoc-members:
    :show-inheritance:

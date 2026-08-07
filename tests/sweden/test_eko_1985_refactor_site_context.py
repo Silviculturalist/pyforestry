@@ -3,15 +3,31 @@ from typing import cast
 import pytest
 
 from pyforestry.base.helpers import Age, SiteIndexValue, TreeSpecies
-from pyforestry.sweden.models.eko_1985_refactor import (
+from pyforestry.sweden.site.enums import Sweden
+from pyforestry.sweden.site.swedish_site import SwedishSite
+from pyforestry.sweden.siteindex.carbonnier_1971 import CarbonnierHeightModel
+from pyforestry.sweden.siteindex.hagglund_1970 import Hagglund_1970
+from pyforestry.sweden.systems.eko1985 import (
     DominantHeightObservation,
     Eko1985SiteContext,
     EkoStandSite,
+    EngineStand,
+    EngineStandPart,
     RegionSE,
 )
-from pyforestry.sweden.site.enums import Sweden
-from pyforestry.sweden.site.swedish_site import SwedishSite
-from pyforestry.sweden.siteindex.carbonnier_1975 import CarbonnierHeightModel
+from pyforestry.sweden.systems.eko1985 import (
+    Eko1985SiteContext as ExtractedEko1985SiteContext,
+)
+from pyforestry.sweden.systems.eko1985 import EkoStandSite as ExtractedEkoStandSite
+from pyforestry.sweden.systems.eko1985 import EngineStand as ExtractedEngineStand
+from pyforestry.sweden.systems.eko1985 import EngineStandPart as ExtractedEngineStandPart
+
+
+def test_model_site_context_exports_use_extracted_formula_types():
+    assert Eko1985SiteContext is ExtractedEko1985SiteContext
+    assert EkoStandSite is ExtractedEkoStandSite
+    assert EngineStand is ExtractedEngineStand
+    assert EngineStandPart is ExtractedEngineStandPart
 
 
 class DummySwedishSite:
@@ -149,12 +165,24 @@ def test_site_context_translates_missing_indices():
         20.0,
         reference_age=Age.TOTAL(100.0),
         species={TreeSpecies.Sweden.picea_abies},
-        fn=lambda *_: None,
+        fn=Hagglund_1970.height_trajectory.picea_abies.northern_sweden,
     )
     spruce_only = Eko1985SiteContext(spruce_site_index=spruce_value)
     spruce_si, pine_si, _beech = spruce_only.resolve_site_indices()
     assert spruce_si is spruce_value
     assert pine_si is not None
+
+
+def test_site_context_rejects_non_hagglund_site_index_function():
+    pine_value = SiteIndexValue(
+        20.0,
+        reference_age=Age.TOTAL(100.0),
+        species={TreeSpecies.Sweden.pinus_sylvestris},
+        fn=lambda *_: None,
+    )
+    context = Eko1985SiteContext(pine_site_index=pine_value)
+    with pytest.raises(ValueError, match="site_index\\.fn"):
+        context.resolve_site_indices()
 
 
 def test_site_context_observation_paths():
@@ -197,9 +225,8 @@ def test_eko_stand_site_region_and_warnings():
         )
 
     assert site.region == "North"
-    assert site.vegcode == 0
     assert site.Bilberry_or_Cowberry is False
-    assert site.HerbsGrassesNoFieldLayer is False
+    assert site.herbs_grasses_no_field_layer is False
 
 
 def test_eko_stand_site_requires_h100():

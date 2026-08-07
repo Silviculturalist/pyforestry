@@ -3,9 +3,7 @@
 from __future__ import annotations
 
 import copy
-import warnings
 from dataclasses import dataclass, field
-from math import pi, sqrt
 
 # ----------------------------- Actions & History ------------------------------
 from typing import (
@@ -16,10 +14,8 @@ from typing import (
     Iterable,
     List,
     Mapping,
-    MutableMapping,
     Optional,
     ParamSpec,
-    Tuple,
     TypedDict,
     Union,
     cast,
@@ -27,7 +23,7 @@ from typing import (
 
 import pandas as pd
 
-from pyforestry.base.helpers import CircularPlot, Tree, TreeName, parse_tree_species
+from pyforestry.base.helpers import CircularPlot, Stand, TreeName
 from pyforestry.base.helpers.primitives import QuadraticMeanDiameter, StandBasalArea, Stems
 
 # ---- Type aliases for metric containers ----
@@ -51,18 +47,22 @@ ActionFn = Callable[Concatenate["SimulationContext", P], None]
 
 @dataclass(frozen=True)
 class ActionSpec:
-    """Declarative action descriptor with mode gating."""
+    """Declarative action descriptor with mode gating.
+
+    ``requires_modes`` is the gate: the inventory modes this action can run in,
+    or an empty list for one that works in all of them. A second field,
+    ``requires_tree_list``, used to mean ``["tree_list", "spatial"]`` and was
+    unioned with this one -- two spellings of the same gate, with nothing in the
+    package setting the older.
+    """
 
     name: str
     fn: Callable[..., None]
     description: str = ""
     params: Dict[str, Any] = field(default_factory=dict)
-    # Legacy toggle (mapped to {"tree_list","spatial"}); prefer requires_modes.
-    requires_tree_list: bool = False
-    # New: explicit allowed modes, e.g. ["tree_list","spatial"] or []
+    #: Inventory modes this action may run in, e.g. ``["tree_list", "spatial"]``.
+    #: ``None`` or ``[]`` means every mode.
     requires_modes: Optional[List[str]] = None
-    # Optional: phases within update_step where this action is valid, e.g. ("pre","post")
-    allowed_phases: Optional[Tuple[str, ...]] = None
 
 
 @dataclass
@@ -84,10 +84,20 @@ class HistoryEntry:
 
 
 class SimulationContext:
-    """
-    Sandboxed, auditable working copy for a single run.
+    """The context of one run: a stand, a clock, an audit trail.
 
-    mode ∈ {"spatial","tree_list","diameter_class","aggregate"}
+    The stand is the state. This class used to own a second copy of it -- its own
+    metric store, its own diameter-class inventory, its own plot-to-stand
+    estimator -- and the two disagreed by a factor that grew with the number of
+    species in the stand. Now :attr:`stand` holds every representation and every
+    metric, and this class holds what is genuinely about the *run*: which
+    inventory mode the model asked for, where time stands, the model itself, the
+    RNG bundle, and the history.
+
+    ``mode`` (∈ ``{"spatial", "tree_list", "diameter_class", "aggregate"}``) is
+    the model's requirement, not the stand's storage: ``spatial`` and
+    ``tree_list`` are the same representation, differing in whether the model
+    needs tree positions.
     """
 
     def __init__(
@@ -101,158 +111,196 @@ class SimulationContext:
         initial_state: Dict[str, Any],
         model: Any,
         initial_attrs: Optional[Dict[str, Any]] = None,
+        random_bundle: Optional[Any] = None,
     ) -> None:
-        """Initialize a simulation context with inventory and initial state."""
+        """Initialize a simulation context with inventory and initial state.
+
+        ``random_bundle`` is any object exposing ``rng_for(*keys)``,
+        ``snapshot()`` and ``restore(state)`` (a
+        :class:`~pyforestry.simulation.services.RandomBundle`, in practice). It is
+        kept duck-typed so the base simulation layer does not depend on the
+        services package. Supplying one is what makes :meth:`checkpoint` and
+        :meth:`from_checkpoint` reproduce a stochastic run, and what lets a model
+        reach a keyed stream through :attr:`rng` instead of building its own.
+        """
         if mode not in ("spatial", "tree_list", "diameter_class", "aggregate"):
             raise ValueError("mode must be 'spatial','tree_list','diameter_class', or 'aggregate'")
         self.mode = mode
-        self.area_ha = area_ha
-        self.site = site
         self.origin_ref = origin_ref  # provenance only
         self.model = model
-        # Internal inventory & metrics containers (dicts for mutability)
-        self._metrics: MetricMap = {"Stems": {}, "BasalArea": {}, "QMD": {}}
-        self._dclass: Dict[Any, Dict[str, List[float]]] = {}
-
-        if self.mode in ("tree_list", "spatial"):
-            self.plots: List[CircularPlot] = self._deepcopy_plots(inventory["plots"])
-            self._metrics = self._recompute_metrics_tree_list(self.plots)
-        elif self.mode == "aggregate":
-            self._metrics = self._normalize_aggregate_metrics(inventory["metrics"])
-        else:  # "diameter_class"
-            self._dclass = self._normalize_dclass_inventory(inventory["dclass"])
-            self._metrics = self._recompute_metrics_dclass(self._dclass)
+        self.random_bundle = random_bundle
+        self.stand: Stand = self._build_stand(mode, inventory, area_ha, site)
 
         self.state: Dict[str, Any] = dict(initial_state)
         self.attrs: Dict[str, Any] = dict(initial_attrs or {})
+        #: The model's typed run inputs, resolved once by
+        #: :meth:`GrowthModel.build_context`. ``None`` for a model that has not
+        #: declared an ``Inputs`` type and still reads ``attrs`` directly.
+        self.inputs: Any = None
         self.history: List[HistoryEntry] = []
         self.state.setdefault("t", 0.0)
         self.state.setdefault("last_dt", 0.0)
 
+    def _build_stand(
+        self,
+        mode: str,
+        inventory: Dict[str, Any],
+        area_ha: Optional[float],
+        site: Optional[Any],
+    ) -> Stand:
+        """Build the run's working stand from the inventory payload.
+
+        The stand is a sandbox: plot containers are copied so a run cannot append
+        to or thin the caller's inventory, while the ``Tree`` objects themselves
+        are shared by reference, which is what lets a model mutate diameters in
+        place and what :attr:`Tree.uid` exists to make traceable.
+        """
+        if mode in ("tree_list", "spatial"):
+            stand = Stand(
+                site=site,
+                area_ha=area_ha,
+                plots=self._copy_plots_with_tree_refs(inventory["plots"]),
+            )
+            stand.refresh_metrics()
+            return stand
+        if mode == "aggregate":
+            return Stand.from_aggregate_metrics(inventory["metrics"], site=site, area_ha=area_ha)
+        return Stand.from_diameter_classes(inventory["dclass"], site=site, area_ha=area_ha)
+
+    # --------------------------- Stand delegation -----------------------------
+    #
+    # These forward to the one state object. They are kept because they read
+    # better at a call site inside a model (``ctx.plots``, ``ctx.area_ha``) and
+    # because removing them would touch every adapter for no gain -- but there is
+    # no second store behind them.
+
+    @property
+    def area_ha(self) -> Optional[float]:
+        """The stand's area in hectares, if known."""
+        return self.stand.area_ha
+
+    @property
+    def site(self) -> Optional[Any]:
+        """The stand's site reference, if any."""
+        return self.stand.site
+
+    @property
+    def rng(self) -> Any:
+        """The run's root random stream. Derive sub-streams with ``.child(...)``.
+
+        Every stochastic kernel in this package takes its generator as a
+        parameter and none constructs one, because a generator built where it is
+        used cannot be seeded by the run, cannot be checkpointed, and -- when two
+        of them are seeded from the same scalar, as the Elfving composite once did
+        -- makes the interleaving of draws across them an unwritten part of the
+        result. Ask for a keyed stream instead::
+
+            rng = ctx.rng.child("mortality").child(str(species))
+
+        Raises:
+            RuntimeError: If the context was built without a random bundle. A run
+                that draws random numbers needs a seed, and defaulting to an
+                unseeded generator would make it silently irreproducible.
+        """
+        bundle = self.random_bundle
+        if bundle is None:
+            raise RuntimeError(
+                "This context has no random bundle, so it cannot supply a random "
+                "stream. Build it with a seed -- model.build_context(stand, "
+                "seed=42) -- or pass random_bundle= explicitly. Defaulting to an "
+                "unseeded generator would make the run irreproducible without "
+                "saying so."
+            )
+        return bundle.rng_for()
+
+    def holds_tree_list(self) -> bool:
+        """Whether this run's stand stores individual trees.
+
+        ``True`` for ``mode`` ``"tree_list"`` and ``"spatial"``, which are the
+        same storage and differ only in whether the model needs tree positions.
+
+        This is the one place the two vocabularies are reconciled. ``mode`` is the
+        *model's* requirement and ``stand.representation`` is the *stand's*
+        storage; they answer different questions but overlap in their values, and
+        methods here keyed off whichever came to hand -- :meth:`snapshot` branched
+        on the representation while :meth:`checkpoint` branched on the mode, so
+        the two would have described different stands the first time they
+        disagreed.
+        """
+        return self.stand.representation in ("tree_list", "angle_count")
+
+    @property
+    def plots(self) -> List[CircularPlot]:
+        """The working copy's plots.
+
+        Raises:
+            AttributeError: If the run's stand holds no individual trees.
+        """
+        if not self.holds_tree_list():
+            raise AttributeError(
+                f"This context is in {self.mode!r} mode, which holds no plots. "
+                f"Read ctx.diameter_classes or ctx.metrics instead."
+            )
+        return self.stand.plots
+
     # ------------------------------ Public API --------------------------------
 
-    def update_step(
-        self,
-        years: float,
-        *,
-        management: Optional[
-            Mapping[str, Iterable[Union[str, tuple[str, Mapping[str, Any]]]]]
-        ] = None,
-    ) -> None:
+    def update_step(self, years: float) -> None:
+        """Advance the model by ``years``, refresh the metrics, record the step.
+
+        This is the atom, not the schedule. Management used to be threaded through
+        here as a dict of ``{"pre": [...], "mid": [...], "post": [...]}`` action
+        names -- one of the three schedulers this package carried. It is now a
+        :class:`~pyforestry.base.simulation.pipeline.ManagementStep` placed where
+        you want it in a pipeline, which is the same capability with an ordering
+        you can read.
         """
-        Advance the simulation by ``years`` while allowing management hooks.
-
-        ``management`` can map phase names ("pre", "mid", "post") to an iterable of
-        action specifications. Each action specification may be a string (action name)
-        or a tuple of ``(name, kwargs_mapping)`` to pass parameters. Phases execute
-        in order: pre -> model update -> mid -> metrics refresh -> post. Actions are
-        dispatched through ``self.do`` so model-provided capabilities still gate them.
-        """
-
-        def _phase_actions(
-            phase: str, actions: Iterable[Union[str, tuple[str, Mapping[str, Any]]]]
-        ):
-            """Dispatch phase-specific actions by name and parameters."""
-            for item in actions:
-                if isinstance(item, tuple):
-                    name, params = item
-                    params = dict(params)
-                else:
-                    name, params = str(item), {}
-                self.do(name, phase=phase, **params)
-
-        mgmt: MutableMapping[str, Iterable[Union[str, tuple[str, Mapping[str, Any]]]]] = (
-            dict(management) if management else {}
-        )
-
         pre = self.snapshot()
-        t0 = self.state.get("t", 0.0)
-        t1 = t0 + years
-        self.state["t"] = t1
+        t1 = self.state.get("t", 0.0) + years
 
-        # Pre-update management
-        _phase_actions("pre", mgmt.get("pre", ()))
-
-        # Core model update
-        if hasattr(self.model, "update_step"):
-            self.model.update_step(self, years)  # type: ignore[call-arg]
-        else:  # pragma: no cover - compatibility shim
-            self.model.grow(self, years)  # type: ignore[call-arg]
+        self.model.update_step(self, years)
         self.state["t"] = t1
         self.state["last_dt"] = years
 
-        # Optional mid-phase hooks (after model update, before metric recompute)
-        _phase_actions("mid", mgmt.get("mid", ()))
-
         self._refresh_metrics()
         post = self.snapshot()
+        self._append_history("update_step", {"dt": years}, pre, post)
 
-        # Post-metric hooks (e.g. logging/valuation that depends on refreshed totals)
-        _phase_actions("post", mgmt.get("post", ()))
-
-        self._append_history(
-            "update_step",
-            {
-                "dt": years,
-                "management": {
-                    k: [str(a[0] if isinstance(a, tuple) else a) for a in v]
-                    for k, v in mgmt.items()
-                },
-            },
-            pre,
-            post,
-        )
-
-    def grow(self, years: float, **kwargs: Any) -> None:  # pragma: no cover - compatibility alias
-        """Compatibility alias for :meth:`update_step`."""
-        warnings.warn(
-            "SimulationContext.grow is deprecated; use update_step instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        self.update_step(years, **kwargs)
-
-    def do(self, action: str, *, phase: Optional[str] = None, **kwargs: Any) -> None:
-        """Execute a named action with optional phase gating."""
+    def do(self, action: str, **kwargs: Any) -> None:
+        """Execute a capability the model declares, gated on the inventory mode."""
         actions = self.model.available_actions()
         if action not in actions:
             raise KeyError(f"Action '{action}' not available for this model.")
         spec: ActionSpec = actions[action]
 
-        # New gating
         requires_modes = set(spec.requires_modes or [])
-        if spec.requires_tree_list:
-            requires_modes.update({"tree_list", "spatial"})
         if requires_modes and self.mode not in requires_modes:
             req_str = ", ".join(sorted(requires_modes))
             raise RuntimeError(
                 f"Action '{action}' requires mode in {{{req_str}}}, got '{self.mode}'."
             )
-        if phase is not None and spec.allowed_phases:
-            if phase not in spec.allowed_phases:
-                allowed = ", ".join(spec.allowed_phases)
-                raise RuntimeError(
-                    f"Action '{action}' not permitted during '{phase}' phase (allowed: {allowed})."
-                )
 
         pre = self.snapshot()
         spec.fn(self, **kwargs)
         self._refresh_metrics()
         post = self.snapshot()
-        self._append_history(f"action:{action}", {"params": kwargs, "phase": phase}, pre, post)
+        self._append_history(f"action:{action}", {"params": kwargs}, pre, post)
 
     def snapshot(self) -> Dict[str, Any]:
         """Return a lightweight snapshot of state and aggregate totals."""
-        if self.mode in ("tree_list", "spatial"):
-            n_plots = len(self.plots)
-            n_trees = sum(len(p.trees) for p in self.plots)
-            tree_stats = {"n_plots": n_plots, "n_trees": n_trees}
+        if self.holds_tree_list():
+            plots = self.stand.plots
+            tree_stats = {
+                "n_plots": len(plots),
+                "n_trees": sum(len(p.trees) for p in plots),
+            }
         else:
             tree_stats = {"n_plots": 0, "n_trees": 0}
 
-        ba = float(self._metrics["BasalArea"]["TOTAL"]) if "BasalArea" in self._metrics else 0.0
-        stems = float(self._metrics["Stems"]["TOTAL"]) if "Stems" in self._metrics else 0.0
-        qmd = float(self._metrics["QMD"]["TOTAL"]) if "QMD" in self._metrics else 0.0
+        metrics = self._metrics
+        ba = float(metrics["BasalArea"]["TOTAL"]) if metrics["BasalArea"] else 0.0
+        stems = float(metrics["Stems"]["TOTAL"]) if metrics["Stems"] else 0.0
+        qmd = float(metrics["QMD"]["TOTAL"]) if metrics["QMD"] else 0.0
 
         return {
             "mode": self.mode,
@@ -261,6 +309,46 @@ class SimulationContext:
             "tree_stats": tree_stats,
             "state": copy.deepcopy(self.state),
         }
+
+    @property
+    def diameter_classes(self) -> Dict[Any, Dict[str, List[float]]]:
+        """The stand's diameter-class inventory, keyed by species.
+
+        Each entry holds ``bin_mids_cm`` and a matching ``n_per_ha``. This is a
+        copy: mutate it freely and hand it back through
+        :meth:`set_diameter_class`, which revalidates and refreshes the metrics.
+
+        Raises:
+            RuntimeError: If the context is not in diameter-class mode.
+        """
+        return self.stand.diameter_classes
+
+    @property
+    def _metrics(self) -> MetricMap:
+        """The stand's metric estimates, in this module's three-key shape.
+
+        Reads through to :meth:`Stand.metric_estimates`; there is no second
+        store. ``Stand`` also computes BAWAD and Lorey's height, which this view
+        drops because nothing in the runtime consumes them yet -- read them off
+        ``ctx.stand`` when that changes.
+        """
+        estimates = self.stand.metric_estimates()
+        if "QMD" not in estimates:
+            # Stand derives QMD lazily; force it here so every mode reports the
+            # same three keys. An angle-count stand whose tallies carry no
+            # diameters genuinely cannot produce one, and says so by raising.
+            try:
+                self.stand.QMD  # noqa: B018 -- accessed for its side effect
+            except KeyError:
+                pass
+        return cast(
+            MetricMap,
+            {
+                "Stems": estimates.get("Stems", {}),
+                "BasalArea": estimates.get("BasalArea", {}),
+                "QMD": estimates.get("QMD", {}),
+            },
+        )
 
     @property
     def metrics(self) -> MetricView:
@@ -292,68 +380,57 @@ class SimulationContext:
             )
         return pd.DataFrame(rows)
 
-    # Aggregate helpers
+    # ---------------------------- State mutation ------------------------------
+    #
+    # Every one of these forwards to the stand, which owns both the state and the
+    # rule about which representation may be written directly.
+
     def set_aggregate_metrics(self, *, ba_total: float, stems_total: float) -> None:
-        """Set aggregate basal area and stems, then recompute QMD."""
-        self._metrics.setdefault("BasalArea", {})
-        self._metrics.setdefault("Stems", {})
-        self._metrics.setdefault("QMD", {})
-        self._metrics["BasalArea"]["TOTAL"] = StandBasalArea(ba_total, species=None, precision=0.0)
-        self._metrics["Stems"]["TOTAL"] = Stems(stems_total, species=None, precision=0.0)
-        self._recompute_qmd()
+        """Set aggregate basal area and stems, then recompute QMD.
+
+        Raises:
+            RuntimeError: If the context is not in aggregate mode.
+        """
+        self.stand.set_aggregate_metrics(ba_total=ba_total, stems_total=stems_total)
+
+    def set_species_metrics(
+        self,
+        *,
+        basal_area: Mapping[Any, Any],
+        stems: Mapping[Any, Any],
+    ) -> None:
+        """Publish a per-species aggregate result, deriving totals and QMD.
+
+        This is the public path for a model that steps species cohorts and knows
+        the breakdown. Writing ``ctx._metrics`` directly used to be the only way,
+        which put two modules' arithmetic in charge of the same invariants.
+
+        Raises:
+            RuntimeError: If the context is not in aggregate mode.
+        """
+        self.stand.set_species_metrics(basal_area=basal_area, stems=stems)
 
     def scale_stems(self, factor: float) -> None:
-        """Scale aggregate stems and basal area by ``factor``."""
-        total_n = float(self._metrics["Stems"]["TOTAL"])
-        total_ba = float(self._metrics["BasalArea"]["TOTAL"])
-        new_n = max(0.0, total_n * factor)
-        new_ba = max(0.0, total_ba * factor)
-        self.set_aggregate_metrics(ba_total=new_ba, stems_total=new_n)
+        """Scale aggregate stems and basal area by ``factor``.
 
-    # Diameter-class helper
+        Raises:
+            RuntimeError: If the context is not in aggregate mode.
+        """
+        self.stand.scale_stems(factor)
+
     def set_diameter_class(self, dclass: Dict[Any, Dict[str, List[float]]]) -> None:
-        """Replace diameter-class inventory and recompute metrics."""
-        self._dclass = self._normalize_dclass_inventory(dclass)
-        self._metrics = self._recompute_metrics_dclass(self._dclass)
+        """Replace diameter-class inventory and recompute metrics.
+
+        Raises:
+            RuntimeError: If the context is not in diameter-class mode.
+        """
+        self.stand.set_diameter_classes(dclass)
 
     # ----------------------------- Internal utils -----------------------------
 
     def _refresh_metrics(self) -> None:
-        """Refresh metrics based on the active inventory representation."""
-        if self.mode in ("tree_list", "spatial"):
-            computed = self._recompute_metrics_tree_list(self.plots)
-            self._metrics = cast(
-                MetricMap,
-                {
-                    "Stems": dict(computed.get("Stems", {})),
-                    "BasalArea": dict(computed.get("BasalArea", {})),
-                    "QMD": dict(computed.get("QMD", {})),
-                },
-            )
-
-        elif self.mode == "aggregate":
-            self._recompute_qmd()
-        else:
-            computed = self._recompute_metrics_dclass(self._dclass)
-            self._metrics = cast(
-                MetricMap,
-                {
-                    "Stems": dict(computed.get("Stems", {})),
-                    "BasalArea": dict(computed.get("BasalArea", {})),
-                    "QMD": dict(computed.get("QMD", {})),
-                },
-            )
-
-    def _recompute_qmd(self) -> None:
-        """Recompute quadratic mean diameter from aggregate totals."""
-        try:
-            ba = float(self._metrics["BasalArea"]["TOTAL"])
-            n = float(self._metrics["Stems"]["TOTAL"])
-            qmd_val = sqrt((40000.0 * ba) / (pi * n)) if (ba > 0 and n > 0) else 0.0
-        except KeyError:
-            qmd_val = 0.0
-        self._metrics.setdefault("QMD", {})
-        self._metrics["QMD"]["TOTAL"] = QuadraticMeanDiameter(qmd_val, precision=0.0)
+        """Rebuild the stand's metrics from whichever representation it holds."""
+        self.stand.refresh_metrics()
 
     def _append_history(
         self, op: str, details: Dict[str, Any], pre: Dict[str, Any], post: Dict[str, Any]
@@ -371,22 +448,11 @@ class SimulationContext:
         )
         self.history.append(entry)
 
-    def _deepcopy_plots(self, plots: Iterable[CircularPlot]) -> List[CircularPlot]:
-        """Clone plot and tree data into a mutable simulation inventory."""
+    def _copy_plots_with_tree_refs(self, plots: Iterable[CircularPlot]) -> List[CircularPlot]:
+        """Copy plot containers while preserving references to the original tree objects."""
         out: List[CircularPlot] = []
         for p in plots:
-            new_trees = [
-                Tree(
-                    position=getattr(t, "position", None),
-                    species=getattr(t, "species", None),
-                    age=getattr(t, "age", None),
-                    diameter_cm=getattr(t, "diameter_cm", None),
-                    height_m=getattr(t, "height_m", None),
-                    weight_n=getattr(t, "weight_n", 1.0),
-                    uid=getattr(t, "uid", None),
-                )
-                for t in p.trees
-            ]
+            new_trees = list(p.trees)
             out.append(
                 CircularPlot(
                     id=p.id,
@@ -399,133 +465,6 @@ class SimulationContext:
                 )
             )
         return out
-
-    def _normalize_aggregate_metrics(self, metrics_in: Dict[str, Dict[Any, Any]]) -> MetricMap:
-        """Normalize aggregate metric inputs and compute derived values."""
-        stems_dict = cast(Dict[MetricKey, Stems], dict(metrics_in.get("Stems", {})))
-        ba_dict = cast(Dict[MetricKey, StandBasalArea], dict(metrics_in.get("BasalArea", {})))
-        qmd_dict: Dict[MetricKey, QuadraticMeanDiameter] = {}
-        stems_dict.setdefault("TOTAL", Stems(0.0))
-        ba_dict.setdefault("TOTAL", StandBasalArea(0.0))
-        out_map = cast(
-            MetricMap,
-            {"Stems": stems_dict, "BasalArea": ba_dict, "QMD": qmd_dict},
-        )
-        self._metrics = out_map
-        self._recompute_qmd()
-        return out_map
-
-    def _recompute_metrics_tree_list(self, plots: Iterable[CircularPlot]) -> MetricMap:
-        """Compute metric aggregates from tree-list plots."""
-        species_data: Dict[TreeName, Dict[str, List[float]]] = {}
-
-        def _eff_area_ha(p: CircularPlot) -> float:
-            """Return effective plot area in hectares after occlusion."""
-            area_ha = p.area_ha or 1.0
-            return area_ha * (1 - p.occlusion) if (1 - p.occlusion) > 0 else area_ha
-
-        for plot in plots:
-            eff = _eff_area_ha(plot)
-            by_sp: Dict[TreeName, List[Tree]] = {}
-            for t in plot.trees:
-                sp = getattr(t, "species", None)
-                if sp is None:
-                    continue
-                if isinstance(sp, str):
-                    sp = parse_tree_species(sp)
-                by_sp.setdefault(sp, []).append(t)
-
-            for sp, trs in by_sp.items():
-                stems = 0.0
-                for t in trs:
-                    weight = getattr(t, "weight_n", 1.0)
-                    stems += 1.0 if weight is None else float(weight)
-                stems_ha = stems / eff
-                ba_sum = 0.0
-                for t in trs:
-                    d_cm = float(getattr(t, "diameter_cm", 0.0) or 0.0)
-                    r_m = (d_cm / 100.0) / 2.0
-                    weight = getattr(t, "weight_n", 1.0)
-                    ba_sum += pi * (r_m**2) * (1.0 if weight is None else float(weight))
-                ba_ha = ba_sum / eff
-                species_data.setdefault(sp, {"stems_per_ha": [], "basal_area_per_ha": []})
-                species_data[sp]["stems_per_ha"].append(stems_ha)
-                species_data[sp]["basal_area_per_ha"].append(ba_ha)
-
-        stems_dict: Dict[Union[TreeName, str], Stems] = {}
-        ba_dict: Dict[Union[TreeName, str], StandBasalArea] = {}
-        total_stems_val = 0.0
-        total_ba_val = 0.0
-        for sp, vals in species_data.items():
-            s_vals = vals["stems_per_ha"]
-            b_vals = vals["basal_area_per_ha"]
-            stems_mean = sum(s_vals) / len(s_vals) if s_vals else 0.0
-            ba_mean = sum(b_vals) / len(b_vals) if b_vals else 0.0
-            stems_dict[sp] = Stems(stems_mean, species=sp, precision=0.0)
-            ba_dict[sp] = StandBasalArea(ba_mean, species=sp, precision=0.0)
-            total_stems_val += stems_mean
-            total_ba_val += ba_mean
-
-        stems_dict["TOTAL"] = Stems(total_stems_val, species=None, precision=0.0)
-        ba_dict["TOTAL"] = StandBasalArea(total_ba_val, species=None, precision=0.0)
-        qmd_dict: Dict[Union[TreeName, str], QuadraticMeanDiameter] = {}
-        if total_stems_val > 0 and total_ba_val > 0:
-            total_qmd = sqrt((40000.0 * total_ba_val) / (pi * total_stems_val))
-        else:
-            total_qmd = 0.0
-        qmd_dict["TOTAL"] = QuadraticMeanDiameter(total_qmd, precision=0.0)
-        return cast(
-            MetricMap,
-            {"Stems": stems_dict, "BasalArea": ba_dict, "QMD": qmd_dict},
-        )
-
-    def _normalize_dclass_inventory(
-        self, dclass_in: Dict[Any, Dict[str, List[float]]]
-    ) -> Dict[Any, Dict[str, List[float]]]:
-        """Validate and normalize diameter-class inventory arrays."""
-        out: Dict[Any, Dict[str, List[float]]] = {}
-        for key, rec in dclass_in.items():
-            mids = list(rec.get("bin_mids_cm", []))
-            nph = list(rec.get("n_per_ha", []))
-            if len(mids) != len(nph):
-                raise ValueError(f"Diameter-class arrays length mismatch for {key}.")
-            out[key] = {"bin_mids_cm": mids, "n_per_ha": nph}
-        return out
-
-    def _recompute_metrics_dclass(self, dclass: Dict[Any, Dict[str, List[float]]]) -> MetricMap:
-        """Compute metric aggregates from diameter-class inventory."""
-        stems_dict: Dict[Union[TreeName, str], Stems] = {}
-        ba_dict: Dict[Union[TreeName, str], StandBasalArea] = {}
-        total_n = 0.0
-        total_ba = 0.0
-        for key, rec in dclass.items():
-            mids = rec["bin_mids_cm"]
-            nph = rec["n_per_ha"]
-            n_sp = sum(nph)
-            ba_sp = 0.0
-            for D_cm, n_i in zip(mids, nph, strict=False):
-                r_m = (float(D_cm) / 100.0) / 2.0
-                ba_sp += float(n_i) * (pi * r_m * r_m)
-            stems_dict[key] = Stems(n_sp, species=key if key != "TOTAL" else None, precision=0.0)
-            ba_dict[key] = StandBasalArea(
-                ba_sp, species=key if key != "TOTAL" else None, precision=0.0
-            )
-            if key != "TOTAL":
-                total_n += n_sp
-                total_ba += ba_sp
-        stems_dict["TOTAL"] = Stems(total_n, species=None, precision=0.0)
-        ba_dict["TOTAL"] = StandBasalArea(total_ba, species=None, precision=0.0)
-        qmd_dict: Dict[Union[TreeName, str], QuadraticMeanDiameter] = {}
-        if total_ba > 0.0 and total_n > 0.0:
-            qmd_dict["TOTAL"] = QuadraticMeanDiameter(
-                sqrt((40000.0 * total_ba) / (pi * total_n)), precision=0.0
-            )
-        else:
-            qmd_dict["TOTAL"] = QuadraticMeanDiameter(0.0, precision=0.0)
-        return cast(
-            MetricMap,
-            {"Stems": stems_dict, "BasalArea": ba_dict, "QMD": qmd_dict},
-        )
 
     # Used by ensemble to log vector updates
     def _log_external_update(self, op: str, details: Dict[str, Any]) -> None:
@@ -552,27 +491,32 @@ class SimulationContext:
         captured unless explicitly requested.
         """
 
-        if self.mode in ("tree_list", "spatial"):
-            inventory = {"plots": copy.deepcopy(self.plots)}
-        elif self.mode == "diameter_class":
-            inventory = {"dclass": copy.deepcopy(self._dclass)}
+        if self.holds_tree_list():
+            inventory = {"plots": copy.deepcopy(self.stand.plots)}
+        elif self.stand.representation == "diameter_class":
+            inventory = {"dclass": copy.deepcopy(self.stand.diameter_classes)}
         else:
-            inventory = {"metrics": copy.deepcopy(self._metrics)}
+            inventory = {"metrics": copy.deepcopy(dict(self._metrics))}
 
         payload: Dict[str, Any] = {
             "mode": self.mode,
-            "area_ha": self.area_ha,
-            "site": copy.deepcopy(self.site),
+            "area_ha": self.stand.area_ha,
+            "site": copy.deepcopy(self.stand.site),
             "state": copy.deepcopy(self.state),
             "attrs": copy.deepcopy(self.attrs),
             "inventory": inventory,
         }
         rng_bundle = getattr(self, "random_bundle", None)
         if rng_bundle is not None and hasattr(rng_bundle, "snapshot"):
-            try:
-                payload["rng_state"] = rng_bundle.snapshot()
-            except Exception:
-                pass
+            payload["rng_state"] = rng_bundle.snapshot()
+            # The root seed too, not only the per-stream states: a stream reached
+            # for the first time after a restore derives its seed from the root,
+            # and without it that stream would be a different one. It is also what
+            # lets :meth:`from_checkpoint` rebuild a bundle when the caller has no
+            # way to hand one over -- a worker process, say.
+            root_seed = getattr(rng_bundle, "seed", None)
+            if root_seed is not None:
+                payload["rng_seed"] = int(root_seed)
         if include_history:
             if history_tail is not None:
                 history_slice = self.history[-int(history_tail) :]
@@ -582,16 +526,38 @@ class SimulationContext:
         return payload
 
     @classmethod
-    def from_checkpoint(cls, model: Any, checkpoint: Mapping[str, Any]) -> "SimulationContext":
+    def from_checkpoint(
+        cls,
+        model: Any,
+        checkpoint: Mapping[str, Any],
+        *,
+        random_bundle: Optional[Any] = None,
+    ) -> "SimulationContext":
         """
         Restore a context from ``checkpoint`` produced by :meth:`checkpoint`.
 
         ``model`` must be the growth model instance that will drive the context.
+        ``random_bundle`` receives any RNG state the checkpoint carries. Pass one
+        to restore into a bundle you already hold; otherwise a checkpoint that
+        records its root seed rebuilds an equivalent bundle here, which is what
+        lets a checkpoint cross a process boundary -- :func:`run_parallel` hands
+        one to a worker that has no bundle to give.
+
+        A checkpoint carrying RNG state but *no* seed still raises: resuming that
+        one without a bundle would silently continue on a fresh stream.
+
+        Raises:
+            ValueError: If the checkpoint carries RNG state that cannot be
+                restored -- no bundle given, and no root seed recorded.
         """
 
         payload = dict(checkpoint)
         mode = payload["mode"]
         inventory = payload["inventory"]
+        if random_bundle is None and "rng_state" in payload and "rng_seed" in payload:
+            from pyforestry.simulation.services import RandomBundle
+
+            random_bundle = RandomBundle(int(payload["rng_seed"]))
         ctx = cls(
             mode=mode,
             area_ha=payload.get("area_ha"),
@@ -601,12 +567,18 @@ class SimulationContext:
             initial_state=payload.get("state", {}),
             model=model,
             initial_attrs=payload.get("attrs", {}),
+            random_bundle=random_bundle,
         )
         if "history" in payload:
             ctx.history = list(payload["history"])
-        if "rng_state" in payload and hasattr(ctx, "random_bundle"):
-            try:
-                ctx.random_bundle.restore(payload["rng_state"])  # type: ignore[attr-defined]
-            except Exception:
-                pass
+        if "rng_state" in payload:
+            bundle = ctx.random_bundle
+            if bundle is None or not hasattr(bundle, "restore"):
+                raise ValueError(
+                    "This checkpoint carries RNG state but no random_bundle was supplied "
+                    "to restore it into; resuming without it would silently diverge from "
+                    "the checkpointed run. Pass "
+                    "SimulationContext.from_checkpoint(..., random_bundle=...)."
+                )
+            bundle.restore(payload["rng_state"])
         return ctx

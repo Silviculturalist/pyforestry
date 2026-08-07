@@ -204,6 +204,25 @@ def test_age_measurement_equality(age_total_100, age_dbh_100):
     assert "100" != age_total_100
 
 
+def test_age_measurement_hashable(age_total_100, age_dbh_100):
+    """Regression: defining __eq__ without __hash__ made instances unhashable.
+
+    They must be usable as dict keys / set members, and hashing must stay
+    consistent with __eq__ (which compares on the float value against plain
+    numbers)."""
+    # Hashable at all (previously raised TypeError: unhashable type).
+    assert isinstance(hash(age_total_100), int)
+
+    # Equal objects hash equally.
+    assert hash(age_total_100) == hash(AgeMeasurement(100.0, Age.TOTAL.value))
+    # Consistent with equality against a plain float (age == 100.0 is True).
+    assert hash(age_total_100) == hash(100.0)
+
+    # Usable in sets/dicts; same value + different code are distinct members.
+    assert len({age_total_100, AgeMeasurement(100.0, Age.TOTAL.value), age_dbh_100}) == 2
+    assert {age_total_100: "x"}[AgeMeasurement(100.0, Age.TOTAL.value)] == "x"
+
+
 # --- Tests for Age Enum ---
 
 

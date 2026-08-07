@@ -1,5 +1,7 @@
 """Volume equation for hybrid aspen from Johnsson (1953)."""
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
+
 
 def johnsson_1953_volume_hybrid_aspen(diameter_cm, height_m):
     """
@@ -34,3 +36,22 @@ def johnsson_1953_volume_hybrid_aspen(diameter_cm, height_m):
     # Convert volume to m³
     volume_m3 = volume_dm3 / 1000  # 1000 dm³ in 1 m³
     return volume_m3
+
+
+# ---------------------------------------------------------------------------
+# Introspection
+# ---------------------------------------------------------------------------
+
+
+DESCRIPTOR = FormulaDescriptor(
+    component_id="johnsson_1953_volume",
+    source=SourceReference(
+        author="Johnsson, H.",
+        year=1953,
+        title=("Hybridaspens ungdomsutveckling och ett försök till framtidsprognos"),
+        note="Svenska Skogsvårdsföreningens Tidskrift 51:73-96.",
+    ),
+    species_groups={},
+    units={},
+    kernel_names=("johnsson_1953_volume_hybrid_aspen",),
+)

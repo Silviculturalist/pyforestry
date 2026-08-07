@@ -1,3 +1,5 @@
+"""Tree Species Extension utilities and interfaces."""
+
 from pyforestry.base.helpers.tree_species import (
     ACER_PLATANOIDES,
     ACER_PSEUDOPLATANUS,
