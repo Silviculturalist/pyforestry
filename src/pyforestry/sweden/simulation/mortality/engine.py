@@ -83,13 +83,21 @@ class MortalityModel(Protocol):
 # Maps the configured model family to a factory that builds the single selected
 # strategy. Adding a model is a table entry, not another branch in the driver
 # (cf. the enum->callable dispatch in sweden/ingrowth/wikberg_2004.py).
-_TREE_MODEL_FACTORIES: dict[MortalityTreeModel, Callable[[MortalityConfig], MortalityModel]] = {
-    MortalityTreeModel.FRIDMAN_STAHL_2001: lambda config: FridmanStahl2001Model(
+#: The second argument is the run's keyed stream, or ``None`` when the engine has
+#: no keyed stream to pass on. A model that draws takes it: given only
+#: ``stochastic_seed`` it opens a stream from that constant, and because the engine
+#: is rebuilt every period, it reopened the *same* one each time -- so a stochastic
+#: tree model drew identical numbers in every period of a run.
+_TREE_MODEL_FACTORIES: dict[
+    MortalityTreeModel, Callable[[MortalityConfig, Optional[Any]], MortalityModel]
+] = {
+    MortalityTreeModel.FRIDMAN_STAHL_2001: lambda config, rng: FridmanStahl2001Model(
         implementation_type=config.implementation_type,
         stochastic_seed=config.stochastic_seed,
+        rng=rng,
     ),
-    MortalityTreeModel.ELFVING_2013: lambda _config: Elfving2013MortalityModel(),
-    MortalityTreeModel.SIIPILEHTO_2020: lambda _config: Siipilehto2020MortalityModel(),
+    MortalityTreeModel.ELFVING_2013: lambda _config, _rng: Elfving2013MortalityModel(),
+    MortalityTreeModel.SIIPILEHTO_2020: lambda _config, _rng: Siipilehto2020MortalityModel(),
 }
 
 
@@ -234,17 +242,31 @@ class MortalityEngine:
 
     config: MortalityConfig = field(default_factory=MortalityConfig)
     #: The random stream stochastic realisation draws from. Supply the run's --
-    #: ``ctx.rng.child("mortality").numpy`` -- so mortality follows the run's seed
+    #: ``ctx.rng.child("mortality")`` -- so mortality follows the run's seed
     #: instead of a second seed carried on the config. When it is omitted the
     #: engine falls back to ``config.stochastic_seed``, which keeps a
     #: directly-constructed engine reproducible on its own terms.
-    rng: Optional[np.random.Generator] = None
+    #:
+    #: A :class:`~pyforestry.simulation.services.KeyedRNG` is what to pass. A bare
+    #: ``numpy.random.Generator`` is still accepted, because that is what callers
+    #: passed before the tree models needed a stream of their own -- but it can
+    #: only seed the engine's *own* vectorised draws. A tree model wants scalar
+    #: draws, and a NumPy generator cannot supply those, so one given a bare
+    #: generator falls back to ``config.stochastic_seed`` as it always did.
+    rng: Optional[Any] = None
     _rng: np.random.Generator = field(init=False, repr=False)
+    _keyed_rng: Optional[Any] = field(init=False, repr=False, default=None)
     _tree_model: MortalityModel = field(init=False, repr=False)
 
     def __post_init__(self) -> None:
         """Take the injected random stream, or seed one from the config."""
-        if self.rng is not None:
+        supplied_numpy = getattr(self.rng, "numpy", None)
+        if supplied_numpy is not None:
+            # A KeyedRNG: keep it, so the tree model can draw from the same run
+            # stream rather than opening a constant-seeded one of its own.
+            self._keyed_rng = self.rng
+            self._rng = supplied_numpy
+        elif self.rng is not None:
             self._rng = self.rng
         else:
             from pyforestry.simulation.services import RandomBundle
@@ -398,7 +420,7 @@ class MortalityEngine:
             factory = _TREE_MODEL_FACTORIES[self.config.tree_model]
         except (KeyError, TypeError) as exc:
             raise ValueError(f"Unsupported tree model: {self.config.tree_model}") from exc
-        return factory(self.config)
+        return factory(self.config, self._keyed_rng)
 
     def _calibrate(
         self,

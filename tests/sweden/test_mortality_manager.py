@@ -359,3 +359,40 @@ def test_engine_rejects_non_hagglund_site_index_value() -> None:
                 site=site,
             )
         )
+
+
+def test_a_stochastic_tree_model_follows_the_run_stream_across_engine_rebuilds():
+    """A tree model that draws must take the run's stream, not reopen a seeded one.
+
+    The composite pipeline rebuilds its :class:`MortalityEngine` every period, to
+    put that period's length on the config. The engine passed its tree models only
+    ``config.stochastic_seed``, so a stochastic Fridman-Stahl opened a *fresh*
+    generator from that constant on every rebuild and drew the same number in every
+    period of a run -- correlated mortality dressed as independent draws.
+
+    Passing a ``KeyedRNG`` hands the model the run's stream itself, so a rebuild
+    carries on rather than restarting. A bare NumPy generator cannot supply the
+    scalar draws a tree model makes, so that path still falls back to the seed.
+    """
+    from pyforestry.simulation.services import RandomBundle
+    from pyforestry.sweden.mortality.types import MortalityRealizationMode, MortalityTreeModel
+    from pyforestry.sweden.simulation.mortality.engine import MortalityEngine
+
+    config = MortalityConfig(
+        tree_model=MortalityTreeModel.FRIDMAN_STAHL_2001,
+        implementation_type=MortalityRealizationMode.STOCHASTIC,
+        stochastic_seed=7,
+    )
+
+    keyed = RandomBundle(2026).rng_for("mortality")
+    with_stream = [
+        MortalityEngine(config=config, rng=keyed)._tree_model._rng.random() for _ in range(4)
+    ]
+    assert len(set(with_stream)) == 4, "rebuilding the engine restarted the tree model's stream"
+    assert MortalityEngine(config=config, rng=keyed)._tree_model._rng is keyed
+
+    # Without a keyed stream the engine is reproducible on its own terms, which is
+    # what a directly-constructed one relies on -- and is exactly why the pipeline
+    # has to pass its stream in.
+    seeded = [MortalityEngine(config=config)._tree_model._rng.random() for _ in range(4)]
+    assert len(set(seeded)) == 1

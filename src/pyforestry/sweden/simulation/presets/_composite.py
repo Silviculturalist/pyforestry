@@ -704,13 +704,21 @@ class CompositePipeline:
             MELLANSKOG_2013_PRICE_DATA, identity=MELLANSKOG_2013_IDENTITY
         )
         self._model = self._build_model()
-        self._mortality_engine = MortalityEngine(config=self._build_mortality_config())
+        # The bundle before anything that draws from it. The mortality engine used
+        # to be built here, six lines above the bundle existed, so it could only
+        # fall back to the seed on its config -- the same ordering mistake
+        # ``build_context`` made with its adapters.
+        self._rng_bundle = RandomBundle(int(self.config.random_seed))
+        self._rng = self._rng_bundle.rng_for()
+        self._mortality_engine = MortalityEngine(
+            config=self._build_mortality_config(),
+            rng=self._rng.child("mortality"),
+        )
         self._site: SwedishSite | None = None
         self._ctx: SimulationContext | None = None
         self._trees = []
         self._current_age_years: float = self.config.initial_age_years
         self._years_elapsed: float = 0.0
-        self._rng = RandomBundle(int(self.config.random_seed)).rng_for()
         self._regen_asinw: float = 0.0
         self._regen_q: float = 0.0
         self._record = CompositePeriodRecord()
@@ -907,10 +915,11 @@ class CompositePipeline:
         self._site = site
         self._current_age_years = self.config.initial_age_years
         self._years_elapsed = 0.0
-        self._rng = RandomBundle(int(self.config.random_seed)).rng_for()
+        self._rng_bundle = RandomBundle(int(self.config.random_seed))
+        self._rng = self._rng_bundle.rng_for()
         self._mortality_engine = MortalityEngine(
             config=self._build_mortality_config(),
-            rng=self._rng.child("mortality").numpy,
+            rng=self._rng.child("mortality"),
         )
         self._record = CompositePeriodRecord()
         self._valuation_lookup_cache = {}
@@ -1021,11 +1030,23 @@ class CompositePipeline:
         ``config.random_seed`` would rewind every stream to the start of the run,
         so a stand resumed at year 40 would draw the same mortality as the stand
         that resumed at year 5 -- reproducible, and wrong.
+
+        The whole *bundle* is snapshotted, not the root stream. The pipeline draws
+        from keyed children -- ``mortality``, ``regeneration``, ``ingrowth`` -- and
+        each carries its own position, held by the bundle rather than by the root.
+        Capturing only the root left every child at its opening state, so a resumed
+        run replayed the ingrowth draws the captured one had already made.
         """
         state: dict[str, Any] = {
             name: getattr(self, name, None) for name in self._CHECKPOINT_ATTRS
         }
-        state["_rng_state"] = self._rng.state
+        state["_rng_streams"] = self._rng_bundle.snapshot()
+        # The root seed as well as the per-stream states, for the reason
+        # :meth:`SimulationContext.to_checkpoint` records it: a stream reached for
+        # the first time *after* a restore derives its seed from the root, so a
+        # checkpoint restored into a pipeline configured with a different
+        # ``random_seed`` would open different streams from the run it came from.
+        state["_rng_seed"] = int(self._rng_bundle.seed)
         return state
 
     def restore_checkpoint_state(self, state: Mapping[str, Any]) -> None:
@@ -1040,17 +1061,25 @@ class CompositePipeline:
             state: A mapping produced by :meth:`checkpoint_state`.
 
         Raises:
-            KeyError: If the mapping is missing the generator state, which means it
+            KeyError: If the mapping is missing the generator states, which means it
                 did not come from :meth:`checkpoint_state`.
         """
-        rng_state = state["_rng_state"]
+        rng_streams = state["_rng_streams"]
         for name in self._CHECKPOINT_ATTRS:
             if name in state:
                 setattr(self, name, state[name])
-        self._rng.state = rng_state
+        # The root seed first: it governs what any stream reached for the first
+        # time after this restore derives from, so it has to be in place before
+        # the streams are put back.
+        self._rng_bundle.seed = int(state["_rng_seed"])
+        # ``restore`` rebuilds the bundle's streams, so the root this pipeline was
+        # holding is no longer the one the bundle hands out. Re-take it, or every
+        # later ``_rng.child(...)`` derives from a generator nothing else shares.
+        self._rng_bundle.restore(rng_streams)
+        self._rng = self._rng_bundle.rng_for()
         self._mortality_engine = MortalityEngine(
             config=self._build_mortality_config(),
-            rng=self._rng.child("mortality").numpy,
+            rng=self._rng.child("mortality"),
         )
         # Caches, not state: the lookup cache is keyed by species/size and stays
         # valid, but the cube is loaded lazily by initialize(), which a restored
@@ -1989,7 +2018,17 @@ class CompositePipeline:
             period_years=float(dt_years),
             stochastic_seed=self.config.random_seed,
         )
-        self._mortality_engine = MortalityEngine(config=run_config)
+        # The rebuild exists to put this period's length on the config, and it must
+        # not cost the run's stream. Without ``rng=``, the engine falls back to
+        # ``config.stochastic_seed`` -- a constant -- and opens a *fresh* generator
+        # from it every period, so the engine started each period in a byte-identical
+        # state and stochastic mortality drew the same numbers in period 1, 2, 3 and
+        # 4. ``child("mortality")`` is the same cached stream ``initialize`` handed
+        # over, so it carries on from where the previous period left it.
+        self._mortality_engine = MortalityEngine(
+            config=run_config,
+            rng=self._rng.child("mortality"),
+        )
         result = self._mortality_engine.run(
             MortalityContext(
                 trees=records,

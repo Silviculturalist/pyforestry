@@ -130,6 +130,36 @@ def test_one_checkpoint_can_seed_two_independent_runs() -> None:
     assert _stand_fingerprint(left._trees) != _stand_fingerprint(right._trees)
 
 
+def test_every_keyed_stream_survives_the_round_trip_not_only_the_root() -> None:
+    """The pipeline draws from keyed children, and each carries its own position.
+
+    ``mortality``, ``regeneration`` and ``ingrowth`` are separate streams held by
+    the bundle, not by the root generator. Capturing only the root state left each
+    child at its opening position on restore, so a resumed run replayed draws the
+    captured run had already made. Comparing the whole snapshot rather than the
+    observable output is deliberate: which children a given scenario instantiates
+    depends on whether ingrowth or mortality actually fires, so a behavioural test
+    passes or fails by luck of the stand.
+    """
+    reference = _make_pipeline()
+    reference.initialize(site=_make_site())
+    reference.step()
+    reference.step()
+
+    checkpoint = CheckpointSerializer().capture(reference)
+    resumed = _make_pipeline()
+    CheckpointSerializer().restore(resumed, checkpoint)
+
+    expected = reference._rng_bundle.snapshot()
+    observed = resumed._rng_bundle.snapshot()
+
+    assert set(observed) == set(expected)
+    # More than the root, or this asserts nothing about children.
+    assert len(expected) > 1
+    for path in expected:
+        assert observed[path] == expected[path], f"stream {path} did not survive the round trip"
+
+
 def test_capture_leaves_the_phases_out_of_the_snapshot() -> None:
     """``_steps`` holds a back-reference to the pipeline and must not be copied.
 
@@ -145,7 +175,7 @@ def test_capture_leaves_the_phases_out_of_the_snapshot() -> None:
     assert "_steps" not in state
     assert "_model" not in state
     assert "_mortality_engine" not in state
-    assert "_rng_state" in state
+    assert "_rng_streams" in state
 
 
 def test_restore_rebuilds_the_mortality_engine_on_the_restored_generator() -> None:
@@ -192,3 +222,42 @@ def test_restoring_a_mapping_that_did_not_come_from_capture_is_an_error() -> Non
 
     with pytest.raises(KeyError):
         pipeline.restore_checkpoint_state({"_current_age_years": 40.0})
+
+
+def test_mortality_draws_continue_across_periods_rather_than_restarting() -> None:
+    """Each period must carry on the mortality stream, not re-open it.
+
+    ``_predict_mortality`` rebuilds the engine every period to put that period's
+    length on its config. It used to rebuild without ``rng=``, so the engine fell
+    back to ``config.stochastic_seed`` -- a constant -- and opened a *fresh*
+    generator from it each time: every period began in a byte-identical state and
+    stochastic mortality drew the same numbers in period 1, 2, 3 and 4. Nothing in
+    the projection table showed it, because the stand differs each period even when
+    the draws do not.
+    """
+    from pyforestry.sweden.simulation.mortality.engine import MortalityEngine
+
+    seen: list[tuple[int, int]] = []
+    original_run = MortalityEngine.run
+
+    def _spy(self, *args, **kwargs):
+        before = self._rng.bit_generator.state["state"]["state"]
+        result = original_run(self, *args, **kwargs)
+        seen.append((before, self._rng.bit_generator.state["state"]["state"]))
+        return result
+
+    MortalityEngine.run = _spy
+    try:
+        pipeline = _make_pipeline()
+        pipeline.initialize(site=_make_site())
+        for _ in range(4):
+            pipeline.step()
+    finally:
+        MortalityEngine.run = original_run
+
+    assert len(seen) >= 3, "expected the mortality engine to run each period"
+    # The stream is one continuous thing: each period opens where the last closed.
+    for (_, ended), (started, _) in zip(seen, seen[1:], strict=False):
+        assert started == ended, "the mortality engine was re-seeded between periods"
+    # And it does advance -- a run that never draws would satisfy the above trivially.
+    assert any(before != after for before, after in seen)
