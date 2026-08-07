@@ -60,13 +60,37 @@ def load_coverage_rates(xml_path: str) -> dict[str, float]:
     return rates
 
 
-def docstring_coverage(path: str) -> float:
-    """Return docstring coverage percentage for ``path``."""
-    result = subprocess.run(["docstr-coverage", "-p", path], capture_output=True, text=True)
-    try:
-        return float(result.stdout.strip())
-    except ValueError:
-        return 0.0
+def docstring_coverage_rates(paths: list[str]) -> dict[str, float]:
+    """Return docstring coverage percentage for every path in ``paths``.
+
+    One pass over all of them, through ``docstr_coverage``'s Python API. This
+    used to shell out to ``docstr-coverage -p <path>`` once per file, which on a
+    branch touching two hundred files meant two hundred interpreter startups to
+    answer a question the library answers for the whole set at once -- and it was
+    the reason this step dominated the CI job's runtime.
+
+    Keys are resolved absolute paths, so a caller comparing against them does not
+    have to guess whether the analyser echoed back the relative path it was given.
+
+    Args:
+        paths: Python files to measure.
+
+    Returns:
+        Resolved path to docstring coverage percentage. A file with nothing that
+        needs a docstring counts as fully covered rather than as a division by
+        zero.
+    """
+    if not paths:
+        return {}
+
+    from docstr_coverage import analyze
+
+    results = analyze(paths)
+    rates: dict[str, float] = {}
+    for path, file_count in results.files():
+        count = file_count.count_aggregate()
+        rates[str(Path(path).resolve())] = 100.0 if count.needed == 0 else count.coverage()
+    return rates
 
 
 def main() -> int:
@@ -77,11 +101,15 @@ def main() -> int:
         return 0
 
     rates = load_coverage_rates("coverage.xml")
+    doc_rates = docstring_coverage_rates(files)
 
     failed = False
     for path in files:
         test_cov = rates.get(path, 0.0) * 100
-        doc_cov = docstring_coverage(path)
+        # Missing from the analyser's results means "not measured", which is
+        # reported as a failure rather than passed over: a file the gate cannot
+        # score is the one case where staying quiet would be worst.
+        doc_cov = doc_rates.get(str(Path(path).resolve()), 0.0)
         if test_cov < 90 or doc_cov < 90:
             print(f"{path}: tests {test_cov:.1f}% docs {doc_cov:.1f}% (<90%)")
             failed = True
