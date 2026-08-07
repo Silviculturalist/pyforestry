@@ -60,6 +60,13 @@ dev = [
   # change. Bump deliberately, running `ruff format .` in the same commit.
   "ruff==0.12.3",
   "hypothesis",          # property-based testing
+  # Parquet is optional at runtime -- artifacts.py checks for an engine and falls
+  # back to JSON -- but it is not optional for the tests, which write a parquet
+  # summary directly to check the reader rejects the old schema. Without an
+  # engine that test errors rather than skipping. Declaring it also means CI
+  # exercises the parquet write path at all; the JSON fallback stays covered by
+  # the test that monkeypatches the engine check away.
+  "pyarrow",
   "build",
   "twine",
   "sphinx",              # docs tool
