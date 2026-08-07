@@ -110,3 +110,34 @@ rules:
     checks:
       - no_random_Random_construction
       - no_numpy_default_rng_construction
+
+  AL006:
+    name: A stochastic collaborator is handed the run's stream
+    scope: >
+      All files under src/pyforestry/, except the RNG service and the checkpoint
+      loader, and except a module constructing a class it defines itself.
+    mode: blocking
+    description: >
+      AL005 stops a model building a generator out of thin air. It does not stop
+      the subtler thing, because that one goes through the RNG service and so
+      looks correct: a component that accepts rng= is constructed without it,
+      falls back to a seed carried on its config, and -- when the constructing
+      code runs once per period -- reopens the identical stream every period.
+
+      Four instances shipped before this rule existed. The composite pipeline
+      rebuilt its mortality engine each period without rng=, so stochastic
+      mortality drew the same numbers in period 1, 2, 3 and 4; the engine built
+      its tree models with only stochastic_seed, with the same result one level
+      down; build_context acquired its inventory before opening the run's bundle,
+      so every adapter fell back to a hard-coded seed whatever the run's seed
+      said; and the pipeline's own constructor built an engine six lines before
+      the bundle existed. None of them tripped AL005, and none of them moved a
+      pinned number, because the pinned scenarios are deterministic.
+
+      The collaborators are discovered, not listed: any class in the package that
+      takes an rng parameter is one, so a new stochastic component comes under the
+      rule without anyone remembering to register it. A module may construct a
+      class it defines itself without a stream -- that is the documented fallback
+      keeping a directly-constructed component reproducible on its own terms.
+    checks:
+      - stochastic_collaborator_receives_rng

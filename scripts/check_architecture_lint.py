@@ -365,6 +365,99 @@ def check_al005(paths: list[Path]) -> list[str]:
 
 
 # ---------------------------------------------------------------------------
+# AL006: A stochastic collaborator is constructed without the run's stream
+# ---------------------------------------------------------------------------
+
+# AL005 stops a model building a generator out of thin air. It does not stop the
+# subtler thing, because that one goes *through* the RNG service and so looks
+# correct: a component that accepts ``rng=`` is constructed without it, falls back
+# to a seed on its config, and -- because the constructing code runs once per
+# period -- reopens the identical stream every period. Four instances shipped.
+# The composite pipeline rebuilt its mortality engine each period without ``rng=``,
+# so stochastic mortality drew the same numbers in period 1, 2, 3 and 4; the
+# engine built its tree models with only ``stochastic_seed``, with the same
+# result one level down; and ``build_context`` acquired its inventory before
+# opening the run's bundle, so every adapter fell back to a hard-coded seed.
+#
+# The collaborators are discovered rather than listed: any class in the package
+# that takes an ``rng`` parameter is one, so adding a stochastic component brings
+# it under the rule without anyone remembering to register it.
+
+#: Modules allowed to construct a collaborator without a stream. Each is the
+#: fallback that keeps a *directly* constructed component reproducible on its own
+#: terms -- a class may always build its own collaborators seed-only, and the
+#: checkpoint loader rebuilds from a recorded seed by design.
+AL006_EXEMPT = (
+    "base/simulation/core.py",
+    "simulation/services/",
+)
+
+
+def _classes_taking_rng(paths: list[Path]) -> set[str]:
+    """Return the names of classes that accept an ``rng`` argument."""
+    taking: set[str] = set()
+    for path in paths:
+        if path.suffix != ".py" or _relative_to_src(path) is None:
+            continue
+        try:
+            tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+        except (OSError, SyntaxError):  # pragma: no cover - unreadable/invalid file
+            continue
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.ClassDef):
+                continue
+            for item in node.body:
+                # A dataclass field named rng, or an __init__ parameter named rng.
+                if isinstance(item, ast.AnnAssign) and isinstance(item.target, ast.Name):
+                    if item.target.id == "rng":
+                        taking.add(node.name)
+                elif isinstance(item, ast.FunctionDef) and item.name == "__init__":
+                    names = [a.arg for a in item.args.args + item.args.kwonlyargs]
+                    if "rng" in names:
+                        taking.add(node.name)
+    return taking
+
+
+def check_al006(paths: list[Path]) -> list[str]:
+    """Check that a stochastic collaborator is handed the run's stream."""
+    collaborators = _classes_taking_rng(paths)
+    violations = []
+    for path in paths:
+        if path.suffix != ".py":
+            continue
+        relative = _relative_to_src(path)
+        if relative is None:
+            continue
+        if any(exempt in relative for exempt in AL006_EXEMPT):
+            continue
+        try:
+            source = path.read_text(encoding="utf-8")
+            tree = ast.parse(source, filename=str(path))
+        except (OSError, SyntaxError):  # pragma: no cover - unreadable/invalid file
+            continue
+        # A module may construct its own class seed-only: that is the documented
+        # fallback, and the class is where the fallback belongs.
+        defined_here = {node.name for node in ast.walk(tree) if isinstance(node, ast.ClassDef)}
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.Call) or not isinstance(node.func, ast.Name):
+                continue
+            name = node.func.id
+            if name not in collaborators or name in defined_here:
+                continue
+            if any(kw.arg == "rng" for kw in node.keywords):
+                continue
+            violations.append(
+                f"AL006: {relative}:{node.lineno} builds {name} without rng=. It "
+                "accepts a stream, so omitting one drops it to a seed on its config "
+                "-- and code that runs once per period then reopens the identical "
+                "stream every period, which is how mortality came to draw the same "
+                "numbers in every period of a run. Pass the run's: "
+                "ctx.rng.child('mortality')."
+            )
+    return violations
+
+
+# ---------------------------------------------------------------------------
 # Rule registry
 # ---------------------------------------------------------------------------
 
@@ -378,6 +471,7 @@ RULES: tuple[tuple[str, str, object], ...] = (
     ("AL003", "blocking", check_al003),
     ("AL004", "blocking", check_al004),
     ("AL005", "blocking", check_al005),
+    ("AL006", "blocking", check_al006),
 )
 
 _YAML_RULE_RE = re.compile(r"^  (AL\d{3}):\s*$")
