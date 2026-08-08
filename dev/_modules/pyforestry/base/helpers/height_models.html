@@ -1,0 +1,1090 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pyforestry.base.helpers.height_models &#8212; pyforestry  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyforestry/base/helpers/height_models';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.20.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../../../_static/searchtools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
+    <script src="../../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pyforestry  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../catalog.html">
+    Model catalog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../model_index.html">
+    Model index
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../api/modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/wikberg_2004.html">
+    Wikberg 2004 ingrowth demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/elfving_2010.html">
+    Elfving 2010 growth demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/elfving_2010_preset.html">
+    Elfving 2010 composite preset demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/soderberg_1986_preset.html">
+    Soderberg 1986 composite preset demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/young_stand.html">
+    Young stand demo (NYSKOG + Näslund 1986)
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/competition_indices.html">
+    Competition indices on a simulated stand
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/FullStack_Callables_Guide.html">
+    Composable Callables & Full‑Stack GrowthModel — Practical Guide
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../catalog.html">
+    Model catalog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../model_index.html">
+    Model index
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../api/modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/wikberg_2004.html">
+    Wikberg 2004 ingrowth demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/elfving_2010.html">
+    Elfving 2010 growth demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/elfving_2010_preset.html">
+    Elfving 2010 composite preset demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/soderberg_1986_preset.html">
+    Soderberg 1986 composite preset demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/young_stand.html">
+    Young stand demo (NYSKOG + Näslund 1986)
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/competition_indices.html">
+    Competition indices on a simulated stand
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/FullStack_Callables_Guide.html">
+    Composable Callables & Full‑Stack GrowthModel — Practical Guide
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pyforestry.base.helpers.height_models</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for pyforestry.base.helpers.height_models</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Height-diameter curves and pluggable height sources.</span>
+
+<span class="sd">This module provides the height machinery used by height imputation and by the</span>
+<span class="sd">configurable top-height estimators:</span>
+
+<span class="sd">* :class:`NaslundHeightCurve` -- Näslund&#39;s two-parameter height-diameter curve</span>
+<span class="sd">  ``h = 1.3 + d**p / (a + b*d)**p`` (``p = 2`` by default), fit from measured</span>
+<span class="sd">  ``(diameter, height)`` pairs by ordinary least squares after a linearising</span>
+<span class="sd">  transform.</span>
+<span class="sd">* :class:`HeightSource` and its concretions -- a small abstraction that yields a</span>
+<span class="sd">  height for a tree, and (for curve-based sources) for an arbitrary diameter.</span>
+<span class="sd">* :func:`resolve_height_source` -- turn the user-facing ``height_source``</span>
+<span class="sd">  argument (a string, a callable ``f(d) -&gt; h``, a fitted curve, or a ready</span>
+<span class="sd">  :class:`HeightSource`) into a :class:`HeightSource`.</span>
+
+<span class="sd">Heights produced by a curve are *interpolated*, never measured; callers keep the</span>
+<span class="sd">two provenances distinct (see ``Tree.imputed`` and ``Tree.value_of``).</span>
+
+<span class="sd">Source:</span>
+<span class="sd">    Näslund, M. (1936). *Skogsförsöksanstaltens gallringsförsök i tallskog.*</span>
+<span class="sd">    Meddelanden från Statens skogsförsöksanstalt 29(1), 1-169. The height-diameter</span>
+<span class="sd">    curve and its linearising transform are Näslund&#39;s; the least-squares fitting</span>
+<span class="sd">    procedure and the pluggable ``HeightSource`` abstraction around it are</span>
+<span class="sd">    pyforestry&#39;s own.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.contracts</span><span class="w"> </span><span class="kn">import</span> <span class="n">FormulaDescriptor</span><span class="p">,</span> <span class="n">SourceReference</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;NaslundHeightCurve&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;HeightSource&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;MeasuredHeightSource&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CurveHeightSource&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;resolve_height_source&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;MIN_HEIGHT_ABOVE_BREAST_M&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">BREAST_HEIGHT_M</span> <span class="o">=</span> <span class="mf">1.3</span>
+
+<span class="c1"># Näslund&#39;s curve is linearised by dividing through by ``(h - 1.3)**(1/p)``, which</span>
+<span class="c1"># grows without bound as a tree approaches breast height. A record only a few</span>
+<span class="c1"># centimetres above 1.3 m carries almost no information about the curve, yet it</span>
+<span class="c1"># would dominate the regression and can drive the fit outside its valid range</span>
+<span class="c1"># altogether. Pairs closer to breast height than this margin are dropped.</span>
+<span class="n">MIN_HEIGHT_ABOVE_BREAST_M</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+
+<div class="viewcode-block" id="NaslundHeightCurve">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.height_models.NaslundHeightCurve">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">NaslundHeightCurve</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Näslund&#39;s height-diameter curve ``h = 1.3 + d**p / (a + b*d)**p``.</span>
+
+<span class="sd">    After Näslund, M. (1936), *Skogsförsöksanstaltens gallringsförsök i tallskog*,</span>
+<span class="sd">    Meddelanden från Statens skogsförsöksanstalt 29(1).</span>
+
+<span class="sd">    The two coefficients ``a`` and ``b`` are positive; ``p`` (the exponent) is</span>
+<span class="sd">    2 for Näslund&#39;s common &quot;minor&quot; function and is occasionally 3, but it may</span>
+<span class="sd">    also be fit from the data (see :meth:`fit` with ``fit_exponent=True``).</span>
+<span class="sd">    Heights and the breast-height offset are in metres, diameters in centimetres.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    a, b:</span>
+<span class="sd">        Curve coefficients.</span>
+<span class="sd">    exponent:</span>
+<span class="sd">        The exponent ``p``. Defaults to 2.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;exponent&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">exponent</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store the fitted coefficients and exponent.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">a</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">b</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exponent</span> <span class="o">=</span> <span class="n">exponent</span>
+
+<div class="viewcode-block" id="NaslundHeightCurve.predict">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.height_models.NaslundHeightCurve.predict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diameter_cm</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the curve height (m) at ``diameter_cm``, or ``None`` if undefined.</span>
+
+<span class="sd">        ``None`` is returned for a non-positive diameter or if the denominator</span>
+<span class="sd">        ``a + b*d`` is non-positive (outside the curve&#39;s valid range).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">diameter_cm</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">diameter_cm</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">denom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">*</span> <span class="n">diameter_cm</span>
+        <span class="k">if</span> <span class="n">denom</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">BREAST_HEIGHT_M</span> <span class="o">+</span> <span class="n">diameter_cm</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">exponent</span> <span class="o">/</span> <span class="n">denom</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">exponent</span></div>
+
+
+<div class="viewcode-block" id="NaslundHeightCurve.fit">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.height_models.NaslundHeightCurve.fit">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">diameters_cm</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+        <span class="n">heights_m</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+        <span class="n">exponent</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">fit_exponent</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">exponent_bounds</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">),</span>
+        <span class="n">min_height_above_breast_m</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">MIN_HEIGHT_ABOVE_BREAST_M</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;NaslundHeightCurve&quot;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fit the curve from measured ``(diameter, height)`` pairs.</span>
+
+<span class="sd">        For a fixed exponent ``p`` the fit is ordinary least squares after</span>
+<span class="sd">        Näslund&#39;s linearising transform: with ``y = d / (h - 1.3)**(1/p)`` and</span>
+<span class="sd">        ``x = d``, ``h = 1.3 + d**p/(a + b*d)**p`` becomes ``y = a + b*x``. Only</span>
+<span class="sd">        pairs with ``d &gt; 0`` and ``h &gt;= 1.3 + min_height_above_breast_m``</span>
+<span class="sd">        contribute; see :data:`MIN_HEIGHT_ABOVE_BREAST_M`.</span>
+
+<span class="sd">        When ``fit_exponent`` is ``True`` the exponent is fit as well: for each</span>
+<span class="sd">        candidate ``p`` the coefficients ``a, b`` are obtained as above, and the</span>
+<span class="sd">        ``p`` minimising the sum of squared *height* residuals over</span>
+<span class="sd">        ``exponent_bounds`` is chosen (a coarse grid seed refined by</span>
+<span class="sd">        golden-section search). The height-space criterion is used because the</span>
+<span class="sd">        transform itself depends on ``p``, so transformed residuals are not</span>
+<span class="sd">        comparable between candidates; ``a`` and ``b`` remain the linearised</span>
+<span class="sd">        least-squares solution at the chosen ``p``, which is the conventional way</span>
+<span class="sd">        the curve is fitted. Identifying the exponent needs at least three usable</span>
+<span class="sd">        pairs; with fewer, the fixed ``exponent`` is used.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        diameters_cm:</span>
+<span class="sd">            Diameters at breast height (cm).</span>
+<span class="sd">        heights_m:</span>
+<span class="sd">            Corresponding measured heights (m).</span>
+<span class="sd">        exponent:</span>
+<span class="sd">            The Näslund exponent ``p`` to use (or fall back to). Defaults to 2.</span>
+<span class="sd">        fit_exponent:</span>
+<span class="sd">            When ``True``, also fit the exponent. Defaults to ``False``.</span>
+<span class="sd">        exponent_bounds:</span>
+<span class="sd">            Inclusive search range for a fitted exponent. Defaults to</span>
+<span class="sd">            ``(1.0, 5.0)``.</span>
+<span class="sd">        min_height_above_breast_m:</span>
+<span class="sd">            Least height above breast height a pair must have to be used.</span>
+<span class="sd">            Defaults to :data:`MIN_HEIGHT_ABOVE_BREAST_M`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        NaslundHeightCurve | None</span>
+<span class="sd">            The fitted curve, or ``None`` if it could not be fit (fewer than two</span>
+<span class="sd">            usable pairs, or a degenerate design).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pairs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">near_breast_height</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">minimum_height</span> <span class="o">=</span> <span class="n">BREAST_HEIGHT_M</span> <span class="o">+</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">min_height_above_breast_m</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">h</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">diameters_cm</span><span class="p">,</span> <span class="n">heights_m</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">d</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">h</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">d</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">h</span> <span class="o">&lt;</span> <span class="n">minimum_height</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">h</span> <span class="o">&gt;</span> <span class="n">BREAST_HEIGHT_M</span><span class="p">:</span>
+                    <span class="n">near_breast_height</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">continue</span>
+            <span class="n">pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">d</span><span class="p">,</span> <span class="n">h</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">near_breast_height</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">near_breast_height</span><span class="si">}</span><span class="s2"> height-diameter pair(s) sit within &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">minimum_height</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">BREAST_HEIGHT_M</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> m of breast height and were &quot;</span>
+                <span class="s2">&quot;excluded from the Näslund fit; they carry almost no curve information &quot;</span>
+                <span class="s2">&quot;but dominate the linearising transform.&quot;</span><span class="p">,</span>
+                <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pairs</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">fit_exponent</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">pairs</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">fitted</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_fit_with_exponent</span><span class="p">(</span><span class="n">pairs</span><span class="p">,</span> <span class="n">exponent_bounds</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">fitted</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">fitted</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_fit_ab</span><span class="p">(</span><span class="n">pairs</span><span class="p">,</span> <span class="n">exponent</span><span class="p">)</span></div>
+
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_fit_ab</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">pairs</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span> <span class="n">exponent</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;NaslundHeightCurve&quot;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Least-squares fit of ``a, b`` for a fixed exponent (linearised).</span>
+
+<span class="sd">        Uses Näslund&#39;s own linearisation, ``d / (h - 1.3)**(1/p) = a + b*d``,</span>
+<span class="sd">        regressing on the diameter itself. Dividing through by ``d`` instead</span>
+<span class="sd">        (regressing ``1/(h - 1.3)**(1/p)`` on ``1/d``) describes the same line but</span>
+<span class="sd">        is not the same least-squares problem: it scales every residual by</span>
+<span class="sd">        ``1/d``, so the fit is pulled towards the smallest trees -- precisely the</span>
+<span class="sd">        ones that matter least for top height and volume.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">inv_p</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">exponent</span>
+        <span class="n">xs</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">]</span>
+        <span class="n">ys</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span> <span class="o">*</span> <span class="p">(</span><span class="n">h</span> <span class="o">-</span> <span class="n">BREAST_HEIGHT_M</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="n">inv_p</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">]</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
+        <span class="n">sum_x</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
+        <span class="n">sum_y</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">ys</span><span class="p">)</span>
+        <span class="n">sum_xx</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xs</span><span class="p">)</span>
+        <span class="n">sum_xy</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">y</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+        <span class="n">denom</span> <span class="o">=</span> <span class="n">n</span> <span class="o">*</span> <span class="n">sum_xx</span> <span class="o">-</span> <span class="n">sum_x</span> <span class="o">*</span> <span class="n">sum_x</span>
+        <span class="k">if</span> <span class="n">denom</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="c1"># intercept -&gt; a, slope -&gt; b in y = a + b*x</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">sum_xy</span> <span class="o">-</span> <span class="n">sum_x</span> <span class="o">*</span> <span class="n">sum_y</span><span class="p">)</span> <span class="o">/</span> <span class="n">denom</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">sum_y</span> <span class="o">-</span> <span class="n">b</span> <span class="o">*</span> <span class="n">sum_x</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
+        <span class="k">if</span> <span class="n">a</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">b</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># A non-positive coefficient is not a usable (monotone) Näslund curve.</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="n">exponent</span><span class="o">=</span><span class="n">exponent</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_height_sse</span><span class="p">(</span><span class="n">curve</span><span class="p">:</span> <span class="s2">&quot;NaslundHeightCurve&quot;</span><span class="p">,</span> <span class="n">pairs</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sum of squared height residuals of ``curve`` over ``pairs``.&quot;&quot;&quot;</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">:</span>
+            <span class="n">predicted</span> <span class="o">=</span> <span class="n">curve</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">predicted</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+            <span class="n">total</span> <span class="o">+=</span> <span class="p">(</span><span class="n">h</span> <span class="o">-</span> <span class="n">predicted</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="k">return</span> <span class="n">total</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_fit_with_exponent</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">pairs</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span> <span class="n">bounds</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;NaslundHeightCurve&quot;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Pick the exponent minimising height residuals, then fit ``a, b``.&quot;&quot;&quot;</span>
+        <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">bounds</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">hi</span> <span class="o">&gt;</span> <span class="n">lo</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">sse_of</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Height-space SSE of the best ``a, b`` fit at exponent ``p``.&quot;&quot;&quot;</span>
+            <span class="n">curve</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_fit_ab</span><span class="p">(</span><span class="n">pairs</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">curve</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_height_sse</span><span class="p">(</span><span class="n">curve</span><span class="p">,</span> <span class="n">pairs</span><span class="p">)</span>
+
+        <span class="c1"># Coarse grid to bracket the minimum, then golden-section refinement.</span>
+        <span class="n">steps</span> <span class="o">=</span> <span class="mi">16</span>
+        <span class="n">grid</span> <span class="o">=</span> <span class="p">[</span><span class="n">lo</span> <span class="o">+</span> <span class="p">(</span><span class="n">hi</span> <span class="o">-</span> <span class="n">lo</span><span class="p">)</span> <span class="o">*</span> <span class="n">i</span> <span class="o">/</span> <span class="n">steps</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+        <span class="n">best_p</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">sse_of</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sse_of</span><span class="p">(</span><span class="n">best_p</span><span class="p">)</span> <span class="o">==</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">span</span> <span class="o">=</span> <span class="p">(</span><span class="n">hi</span> <span class="o">-</span> <span class="n">lo</span><span class="p">)</span> <span class="o">/</span> <span class="n">steps</span>
+        <span class="n">left</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">lo</span><span class="p">,</span> <span class="n">best_p</span> <span class="o">-</span> <span class="n">span</span><span class="p">)</span>
+        <span class="n">right</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">hi</span><span class="p">,</span> <span class="n">best_p</span> <span class="o">+</span> <span class="n">span</span><span class="p">)</span>
+        <span class="n">inv_phi</span> <span class="o">=</span> <span class="p">(</span><span class="mf">5.0</span><span class="o">**</span><span class="mf">0.5</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">right</span> <span class="o">-</span> <span class="n">inv_phi</span> <span class="o">*</span> <span class="p">(</span><span class="n">right</span> <span class="o">-</span> <span class="n">left</span><span class="p">)</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">left</span> <span class="o">+</span> <span class="n">inv_phi</span> <span class="o">*</span> <span class="p">(</span><span class="n">right</span> <span class="o">-</span> <span class="n">left</span><span class="p">)</span>
+        <span class="n">fc</span><span class="p">,</span> <span class="n">fd</span> <span class="o">=</span> <span class="n">sse_of</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="n">sse_of</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">40</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">fc</span> <span class="o">&lt;</span> <span class="n">fd</span><span class="p">:</span>
+                <span class="n">right</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">fd</span> <span class="o">=</span> <span class="n">d</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">fc</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="n">right</span> <span class="o">-</span> <span class="n">inv_phi</span> <span class="o">*</span> <span class="p">(</span><span class="n">right</span> <span class="o">-</span> <span class="n">left</span><span class="p">)</span>
+                <span class="n">fc</span> <span class="o">=</span> <span class="n">sse_of</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">left</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">fc</span> <span class="o">=</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">fd</span>
+                <span class="n">d</span> <span class="o">=</span> <span class="n">left</span> <span class="o">+</span> <span class="n">inv_phi</span> <span class="o">*</span> <span class="p">(</span><span class="n">right</span> <span class="o">-</span> <span class="n">left</span><span class="p">)</span>
+                <span class="n">fd</span> <span class="o">=</span> <span class="n">sse_of</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_fit_ab</span><span class="p">(</span><span class="n">pairs</span><span class="p">,</span> <span class="p">(</span><span class="n">left</span> <span class="o">+</span> <span class="n">right</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># pragma: no cover - trivial</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a readable representation of the curve.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;NaslundHeightCurve(a=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="si">:</span><span class="s2">.5g</span><span class="si">}</span><span class="s2">, b=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="si">:</span><span class="s2">.5g</span><span class="si">}</span><span class="s2">, exponent=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">exponent</span><span class="si">}</span><span class="s2">)&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="HeightSource">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.height_models.HeightSource">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">HeightSource</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interface for objects that supply tree heights.</span>
+
+<span class="sd">    A height source answers two questions: the height of a given tree</span>
+<span class="sd">    (:meth:`height_for`) and, when it is curve-based (:attr:`is_curve`), the</span>
+<span class="sd">    height at an arbitrary diameter (:meth:`height_at_diameter`).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">is_curve</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="HeightSource.height_for">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.height_models.HeightSource.height_for">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">height_for</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tree</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>  <span class="c1"># noqa: ANN001</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a height (m) for ``tree``, or ``None`` if unavailable.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="HeightSource.height_at_diameter">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.height_models.HeightSource.height_at_diameter">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">height_at_diameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diameter_cm</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a height (m) at ``diameter_cm`` (curve sources only).&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="s2">&quot;this height source cannot evaluate a height at an arbitrary &quot;</span>
+            <span class="s2">&quot;diameter; supply a curve height source (Näslund or a callable)&quot;</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="MeasuredHeightSource">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.height_models.MeasuredHeightSource">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MeasuredHeightSource</span><span class="p">(</span><span class="n">HeightSource</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Use each tree&#39;s measured ``height_m`` (optionally an imputed fallback).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    use_imputed_fallback:</span>
+<span class="sd">        When ``True`` and a tree has no measured ``height_m``, fall back to an</span>
+<span class="sd">        imputed height from ``Tree.imputed`` (a modelled value). Defaults to</span>
+<span class="sd">        ``False``, i.e. measured heights only.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">is_curve</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">use_imputed_fallback</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store whether an imputed-height fallback is allowed.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_imputed_fallback</span> <span class="o">=</span> <span class="n">use_imputed_fallback</span>
+
+<div class="viewcode-block" id="MeasuredHeightSource.height_for">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.height_models.MeasuredHeightSource.height_for">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">height_for</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tree</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>  <span class="c1"># noqa: ANN001</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the tree&#39;s measured height, or an imputed height if allowed.&quot;&quot;&quot;</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="s2">&quot;height_m&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">height</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_imputed_fallback</span><span class="p">:</span>
+            <span class="n">entry</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="s2">&quot;imputed&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;height_m&quot;</span><span class="p">)</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">entry</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">entry</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">return</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">height</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">height</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="CurveHeightSource">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.height_models.CurveHeightSource">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CurveHeightSource</span><span class="p">(</span><span class="n">HeightSource</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrap a diameter-to-height callable (e.g. a fitted Näslund curve).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    curve:</span>
+<span class="sd">        A callable ``f(diameter_cm) -&gt; height_m | None``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">is_curve</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">curve</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store the underlying diameter-to-height callable.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_curve</span> <span class="o">=</span> <span class="n">curve</span>
+
+<div class="viewcode-block" id="CurveHeightSource.height_for">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.height_models.CurveHeightSource.height_for">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">height_for</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tree</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>  <span class="c1"># noqa: ANN001</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the curve height for the tree&#39;s diameter.&quot;&quot;&quot;</span>
+        <span class="n">diameter</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="s2">&quot;diameter_cm&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">diameter</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_at_diameter</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">diameter</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="CurveHeightSource.height_at_diameter">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.height_models.CurveHeightSource.height_at_diameter">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">height_at_diameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diameter_cm</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the curve height (m) at ``diameter_cm``.&quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_curve</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="n">HeightSourceSpec</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span> <span class="n">HeightSource</span><span class="p">,</span> <span class="n">NaslundHeightCurve</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="resolve_height_source">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.height_models.resolve_height_source">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">resolve_height_source</span><span class="p">(</span>
+    <span class="n">source</span><span class="p">:</span> <span class="n">HeightSourceSpec</span><span class="p">,</span>
+    <span class="n">fit_trees</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">naslund_exponent</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">HeightSource</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Turn a ``height_source`` argument into a :class:`HeightSource`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    source:</span>
+<span class="sd">        One of:</span>
+
+<span class="sd">        * ``&quot;measured&quot;`` -- measured heights only;</span>
+<span class="sd">        * ``&quot;measured+imputed&quot;`` -- measured, falling back to ``Tree.imputed``;</span>
+<span class="sd">        * ``&quot;naslund&quot;`` -- fit a :class:`NaslundHeightCurve` from ``fit_trees``;</span>
+<span class="sd">        * a callable ``f(diameter_cm) -&gt; height_m``;</span>
+<span class="sd">        * a :class:`NaslundHeightCurve`; or</span>
+<span class="sd">        * a ready :class:`HeightSource`.</span>
+<span class="sd">    fit_trees:</span>
+<span class="sd">        Trees whose measured ``(diameter, height)`` pairs fit the ``&quot;naslund&quot;``</span>
+<span class="sd">        curve. Ignored otherwise.</span>
+<span class="sd">    naslund_exponent:</span>
+<span class="sd">        Exponent for the ``&quot;naslund&quot;`` fit: a number to fix it, or ``&quot;auto&quot;`` to</span>
+<span class="sd">        fit the exponent from the data as well. Defaults to 2.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    HeightSource | None</span>
+<span class="sd">        The resolved source, or ``None`` if ``&quot;naslund&quot;`` could not be fit.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">HeightSource</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">source</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">NaslundHeightCurve</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">CurveHeightSource</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">predict</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">source</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">CurveHeightSource</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;measured&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">MeasuredHeightSource</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;measured+imputed&quot;</span><span class="p">,</span> <span class="s2">&quot;measured_imputed&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">MeasuredHeightSource</span><span class="p">(</span><span class="n">use_imputed_fallback</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;naslund&quot;</span><span class="p">,</span> <span class="s2">&quot;näslund&quot;</span><span class="p">):</span>
+            <span class="n">diameters</span> <span class="o">=</span> <span class="p">[</span><span class="nb">getattr</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="s2">&quot;diameter_cm&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">(</span><span class="n">fit_trees</span> <span class="ow">or</span> <span class="p">[])]</span>
+            <span class="n">heights</span> <span class="o">=</span> <span class="p">[</span><span class="nb">getattr</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="s2">&quot;height_m&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">(</span><span class="n">fit_trees</span> <span class="ow">or</span> <span class="p">[])]</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">naslund_exponent</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">naslund_exponent</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
+                <span class="n">curve</span> <span class="o">=</span> <span class="n">NaslundHeightCurve</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">diameters</span><span class="p">,</span> <span class="n">heights</span><span class="p">,</span> <span class="n">fit_exponent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">curve</span> <span class="o">=</span> <span class="n">NaslundHeightCurve</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">diameters</span><span class="p">,</span> <span class="n">heights</span><span class="p">,</span> <span class="n">exponent</span><span class="o">=</span><span class="n">naslund_exponent</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">curve</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">CurveHeightSource</span><span class="p">(</span><span class="n">curve</span><span class="o">.</span><span class="n">predict</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown height source </span><span class="si">{</span><span class="n">source</span><span class="si">!r}</span><span class="s2">.&quot;</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported height source of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">source</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span></div>
+
+
+
+<span class="n">DESCRIPTOR</span> <span class="o">=</span> <span class="n">FormulaDescriptor</span><span class="p">(</span>
+    <span class="n">component_id</span><span class="o">=</span><span class="s2">&quot;naslund_1936_height_curve&quot;</span><span class="p">,</span>
+    <span class="n">source</span><span class="o">=</span><span class="n">SourceReference</span><span class="p">(</span>
+        <span class="n">author</span><span class="o">=</span><span class="s2">&quot;Näslund, M.&quot;</span><span class="p">,</span>
+        <span class="n">year</span><span class="o">=</span><span class="mi">1936</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Skogsförsöksanstaltens gallringsförsök i tallskog&quot;</span><span class="p">,</span>
+        <span class="n">note</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Meddelanden från Statens skogsförsöksanstalt 29(1), 1-169. The &quot;</span>
+            <span class="s2">&quot;height-diameter curve h = 1.3 + d**p / (a + b*d)**p and its linearising &quot;</span>
+            <span class="s2">&quot;transform are Näslund&#39;s; the least-squares fitting procedure and the &quot;</span>
+            <span class="s2">&quot;pluggable HeightSource abstraction around it are pyforestry&#39;s own.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">),</span>
+    <span class="n">species_groups</span><span class="o">=</span><span class="p">{},</span>
+    <span class="n">units</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;diameter&quot;</span><span class="p">:</span> <span class="s2">&quot;cm&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;height&quot;</span><span class="p">:</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;return&quot;</span><span class="p">:</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">kernel_names</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;NaslundHeightCurve&quot;</span><span class="p">,</span> <span class="s2">&quot;resolve_height_source&quot;</span><span class="p">),</span>
+    <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;height&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

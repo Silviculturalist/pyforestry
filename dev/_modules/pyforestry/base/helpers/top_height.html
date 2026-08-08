@@ -1,0 +1,1054 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pyforestry.base.helpers.top_height &#8212; pyforestry  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyforestry/base/helpers/top_height';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.20.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../../../_static/searchtools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
+    <script src="../../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pyforestry  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../catalog.html">
+    Model catalog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../model_index.html">
+    Model index
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../api/modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/wikberg_2004.html">
+    Wikberg 2004 ingrowth demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/elfving_2010.html">
+    Elfving 2010 growth demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/elfving_2010_preset.html">
+    Elfving 2010 composite preset demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/soderberg_1986_preset.html">
+    Soderberg 1986 composite preset demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/young_stand.html">
+    Young stand demo (NYSKOG + Näslund 1986)
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/competition_indices.html">
+    Competition indices on a simulated stand
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/FullStack_Callables_Guide.html">
+    Composable Callables & Full‑Stack GrowthModel — Practical Guide
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../catalog.html">
+    Model catalog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../model_index.html">
+    Model index
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../api/modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/wikberg_2004.html">
+    Wikberg 2004 ingrowth demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/elfving_2010.html">
+    Elfving 2010 growth demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/elfving_2010_preset.html">
+    Elfving 2010 composite preset demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/soderberg_1986_preset.html">
+    Soderberg 1986 composite preset demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/young_stand.html">
+    Young stand demo (NYSKOG + Näslund 1986)
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/competition_indices.html">
+    Competition indices on a simulated stand
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/FullStack_Callables_Guide.html">
+    Composable Callables & Full‑Stack GrowthModel — Practical Guide
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pyforestry.base.helpers.top_height</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for pyforestry.base.helpers.top_height</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Configurable stand top-height (dominant height) estimators.</span>
+
+<span class="sd">Top height is estimated per plot and then averaged over all plots. Two families</span>
+<span class="sd">of *reference* (what &quot;the top&quot; is) are supported, each composed with a *height</span>
+<span class="sd">source* (measured heights, a fitted Näslund curve, or a user callable):</span>
+
+<span class="sd">Tree-selection references (use the heights of selected trees):</span>
+
+<span class="sd">* ``&quot;mean_of_largest&quot;`` -- mean height of the ``n`` largest trees, by diameter</span>
+<span class="sd">  (widest) or by height (tallest).</span>
+<span class="sd">* ``&quot;garcia_u&quot;`` -- García&#39;s (1998) distribution-free linear-unbiased</span>
+<span class="sd">  U-statistic (his eqs 4-7), for plots that differ in size from the reference</span>
+<span class="sd">  area.</span>
+<span class="sd">* ``&quot;garcia_pp&quot;`` -- García&#39;s plotting-position estimator (his eq 3), a single</span>
+<span class="sd">  interpolated order statistic with the Hosking Gumbel constant ``alpha = 0.65``.</span>
+
+<span class="sd">Diameter-reference references (read a height off a curve at a reference</span>
+<span class="sd">diameter; these require a *curve* height source):</span>
+
+<span class="sd">* ``&quot;percentile&quot;`` -- the curve height at the ``p``-th diameter percentile</span>
+<span class="sd">  (e.g. D90).</span>
+<span class="sd">* ``&quot;mean_plus_k_sigma&quot;`` -- the curve height at ``mean(d) + k * sd(d)``</span>
+<span class="sd">  (Petterson 1955 uses ``k = 3``).</span>
+
+<span class="sd">Reference</span>
+<span class="sd">---------</span>
+<span class="sd">García, O. (1998). Estimating top height with variable plot sizes.</span>
+<span class="sd">Canadian Journal of Forest Research 28(10): 1509-1517.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">statistics</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">floor</span><span class="p">,</span> <span class="n">sqrt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.contracts</span><span class="w"> </span><span class="kn">import</span> <span class="n">FormulaDescriptor</span><span class="p">,</span> <span class="n">SourceReference</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.height_models</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">HeightSource</span><span class="p">,</span>
+    <span class="n">HeightSourceSpec</span><span class="p">,</span>
+    <span class="n">resolve_height_source</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.primitives</span><span class="w"> </span><span class="kn">import</span> <span class="n">TopHeightDefinition</span><span class="p">,</span> <span class="n">TopHeightMeasurement</span>
+
+<span class="c1"># Hosking&#39;s (1990) recommended Gumbel plotting-position constant (beta = 0);</span>
+<span class="c1"># García&#39;s Table 1, approximation 8.</span>
+<span class="n">GARCIA_ALPHA</span> <span class="o">=</span> <span class="mf">0.65</span>
+
+<span class="n">_DIAMETER_REFERENCES</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s2">&quot;percentile&quot;</span><span class="p">,</span> <span class="s2">&quot;mean_plus_k_sigma&quot;</span><span class="p">})</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_reference_cell_ha</span><span class="p">(</span><span class="n">definition</span><span class="p">:</span> <span class="n">TopHeightDefinition</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Area (ha) that the definition allots to a single dominant tree.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">definition</span><span class="o">.</span><span class="n">nominal_area_ha</span> <span class="o">/</span> <span class="n">definition</span><span class="o">.</span><span class="n">nominal_n</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_effective_area_ha</span><span class="p">(</span><span class="n">plot</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>  <span class="c1"># noqa: ANN001</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The plot area (ha) that was actually observed.</span>
+
+<span class="sd">    A plot straddling the stand boundary only sees the ``1 - occlusion`` share of</span>
+<span class="sd">    its nominal area, and only the trees on that share are recorded. Densities</span>
+<span class="sd">    and reference-cell counts must therefore be taken against the observed area,</span>
+<span class="sd">    exactly as ``Stand._compute_plot_mean_estimates`` does, or a boundary plot looks</span>
+<span class="sd">    artificially sparse and its top height is biased low.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">area_ha</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">plot</span><span class="p">,</span> <span class="s2">&quot;area_ha&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">area_ha</span> <span class="ow">or</span> <span class="n">area_ha</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">visible</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">plot</span><span class="p">,</span> <span class="s2">&quot;occlusion&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="ow">or</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">visible</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">area_ha</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">area_ha</span><span class="p">)</span> <span class="o">*</span> <span class="n">visible</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_plot_stem_count</span><span class="p">(</span><span class="n">plot</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>  <span class="c1"># noqa: ANN001</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stems the plot represents, honouring per-record ``weight_n``.</span>
+
+<span class="sd">    This is the count that sets how many trees a reference cell holds. It must</span>
+<span class="sd">    come from the whole tree list, not from the subset carrying heights: heights</span>
+<span class="sd">    are routinely measured on a subsample, and deriving the cell occupancy from</span>
+<span class="sd">    the measured subset alone shrinks it in proportion to the sampling intensity.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="n">plot</span><span class="o">.</span><span class="n">trees</span><span class="p">:</span>
+        <span class="n">weight</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="s2">&quot;weight_n&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">total</span> <span class="o">+=</span> <span class="mf">1.0</span> <span class="k">if</span> <span class="n">weight</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">total</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_usable_heights</span><span class="p">(</span><span class="n">trees</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">HeightSource</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Heights (m) the source can supply for ``trees`` (skipping ``None``).&quot;&quot;&quot;</span>
+    <span class="n">out</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="n">trees</span><span class="p">:</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">height_for</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">height</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">height</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">out</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_percentile</span><span class="p">(</span><span class="n">sorted_values</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">p</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Linear-interpolation percentile (``p`` in [0, 100]) of sorted values.&quot;&quot;&quot;</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sorted_values</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sorted_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">rank</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">lo</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">floor</span><span class="p">(</span><span class="n">rank</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">lo</span> <span class="o">&gt;=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sorted_values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">frac</span> <span class="o">=</span> <span class="n">rank</span> <span class="o">-</span> <span class="n">lo</span>
+    <span class="k">return</span> <span class="n">sorted_values</span><span class="p">[</span><span class="n">lo</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">frac</span><span class="p">)</span> <span class="o">+</span> <span class="n">sorted_values</span><span class="p">[</span><span class="n">lo</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">frac</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_mean_of_largest</span><span class="p">(</span>
+    <span class="n">plot</span><span class="p">,</span>  <span class="c1"># noqa: ANN001</span>
+    <span class="n">source</span><span class="p">:</span> <span class="n">HeightSource</span><span class="p">,</span>
+    <span class="n">area_ha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">definition</span><span class="p">:</span> <span class="n">TopHeightDefinition</span><span class="p">,</span>
+    <span class="n">n</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+    <span class="n">by</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mean height of the ``n`` largest trees (by diameter or height).&quot;&quot;&quot;</span>
+    <span class="n">candidates</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># (sort_key, height)</span>
+    <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="n">plot</span><span class="o">.</span><span class="n">trees</span><span class="p">:</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">height_for</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">height</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">by</span> <span class="o">==</span> <span class="s2">&quot;diameter&quot;</span><span class="p">:</span>
+            <span class="n">diameter</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="s2">&quot;diameter_cm&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">diameter</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">candidates</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="nb">float</span><span class="p">(</span><span class="n">diameter</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">height</span><span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># by == &quot;height&quot;</span>
+            <span class="n">candidates</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="nb">float</span><span class="p">(</span><span class="n">height</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">height</span><span class="p">)))</span>
+
+    <span class="k">if</span> <span class="n">n</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">n_top</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">area_ha</span> <span class="o">*</span> <span class="n">definition</span><span class="o">.</span><span class="n">nominal_n</span> <span class="o">/</span> <span class="n">definition</span><span class="o">.</span><span class="n">nominal_area_ha</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">n_top</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n_top</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">n_top</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="n">candidates</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">pair</span><span class="p">:</span> <span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">statistics</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">height</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">height</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">[:</span><span class="n">n_top</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_garcia_theta_integer</span><span class="p">(</span><span class="n">heights_asc</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">m</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;García&#39;s U-statistic top-height estimate for integer ``m`` (his eq 7).</span>
+
+<span class="sd">    Uses the numerically stable ascending recursion</span>
+<span class="sd">    ``t &lt;- x[i] + (i - m) * t / (i - 1)`` for ``i = m..n`` (``t = x[m]`` at</span>
+<span class="sd">    ``i = m``), then multiplies by ``m / n``. ``heights_asc[i-1]`` is the i-th</span>
+<span class="sd">    smallest height.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">m</span><span class="p">:</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">heights_asc</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">heights_asc</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="n">m</span><span class="p">)</span> <span class="o">*</span> <span class="n">t</span> <span class="o">/</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">m</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="n">t</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_garcia_u</span><span class="p">(</span>
+    <span class="n">plot</span><span class="p">,</span>  <span class="c1"># noqa: ANN001</span>
+    <span class="n">source</span><span class="p">:</span> <span class="n">HeightSource</span><span class="p">,</span>
+    <span class="n">area_ha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">definition</span><span class="p">:</span> <span class="n">TopHeightDefinition</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;García&#39;s U-statistic estimator, interpolating on non-integer ``m``.&quot;&quot;&quot;</span>
+    <span class="n">heights</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">_usable_heights</span><span class="p">(</span><span class="n">plot</span><span class="o">.</span><span class="n">trees</span><span class="p">,</span> <span class="n">source</span><span class="p">))</span>
+    <span class="n">n_measured</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">heights</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n_measured</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">stems</span> <span class="o">=</span> <span class="n">_plot_stem_count</span><span class="p">(</span><span class="n">plot</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">stems</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="c1"># m = N * a_ref / A is how many trees the reference cell holds. It follows</span>
+    <span class="c1"># from the stand&#39;s density, so it is taken from the plot&#39;s whole tree list;</span>
+    <span class="c1"># the order statistics below then come from the measured heights, which</span>
+    <span class="c1"># estimate the same height distribution.</span>
+    <span class="n">m_real</span> <span class="o">=</span> <span class="n">stems</span> <span class="o">*</span> <span class="n">_reference_cell_ha</span><span class="p">(</span><span class="n">definition</span><span class="p">)</span> <span class="o">/</span> <span class="n">area_ha</span>
+    <span class="n">m_floor</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">floor</span><span class="p">(</span><span class="n">m_real</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">m_floor</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">m_floor</span> <span class="o">&gt;</span> <span class="n">n_measured</span><span class="p">:</span>
+        <span class="c1"># Plot smaller than the reference cell, or too few measured heights to</span>
+        <span class="c1"># represent a cell holding m trees.</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">theta_lo</span> <span class="o">=</span> <span class="n">_garcia_theta_integer</span><span class="p">(</span><span class="n">heights</span><span class="p">,</span> <span class="n">m_floor</span><span class="p">,</span> <span class="n">n_measured</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">m_real</span> <span class="o">==</span> <span class="n">m_floor</span> <span class="ow">or</span> <span class="n">m_floor</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="n">n_measured</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">theta_lo</span>
+    <span class="n">theta_hi</span> <span class="o">=</span> <span class="n">_garcia_theta_integer</span><span class="p">(</span><span class="n">heights</span><span class="p">,</span> <span class="n">m_floor</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_measured</span><span class="p">)</span>
+    <span class="n">frac</span> <span class="o">=</span> <span class="n">m_real</span> <span class="o">-</span> <span class="n">m_floor</span>
+    <span class="k">return</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">frac</span><span class="p">)</span> <span class="o">*</span> <span class="n">theta_lo</span> <span class="o">+</span> <span class="n">frac</span> <span class="o">*</span> <span class="n">theta_hi</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_garcia_pp</span><span class="p">(</span>
+    <span class="n">plot</span><span class="p">,</span>  <span class="c1"># noqa: ANN001</span>
+    <span class="n">source</span><span class="p">:</span> <span class="n">HeightSource</span><span class="p">,</span>
+    <span class="n">area_ha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">definition</span><span class="p">:</span> <span class="n">TopHeightDefinition</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;García&#39;s plotting-position estimator (his eq 3, ``alpha = 0.65``).&quot;&quot;&quot;</span>
+    <span class="n">heights</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">_usable_heights</span><span class="p">(</span><span class="n">plot</span><span class="o">.</span><span class="n">trees</span><span class="p">,</span> <span class="n">source</span><span class="p">))</span>
+    <span class="n">n_measured</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">heights</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n_measured</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">stems</span> <span class="o">=</span> <span class="n">_plot_stem_count</span><span class="p">(</span><span class="n">plot</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">stems</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">rho</span> <span class="o">=</span> <span class="n">area_ha</span> <span class="o">/</span> <span class="n">_reference_cell_ha</span><span class="p">(</span><span class="n">definition</span><span class="p">)</span>  <span class="c1"># García&#39;s &quot;100 A&quot;</span>
+    <span class="n">rank_from_top</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="n">GARCIA_ALPHA</span> <span class="o">*</span> <span class="p">(</span><span class="n">rho</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">rank_from_top</span> <span class="o">&gt;</span> <span class="n">stems</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="c1"># The rank is defined within the plot&#39;s whole tree list. Re-express it as the</span>
+    <span class="c1"># same quantile of the measured heights so a height subsample does not shift</span>
+    <span class="c1"># the estimate; the two coincide when every tree carries a height.</span>
+    <span class="n">rank_in_sample</span> <span class="o">=</span> <span class="n">rank_from_top</span> <span class="o">*</span> <span class="n">n_measured</span> <span class="o">/</span> <span class="n">stems</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">n_measured</span> <span class="o">-</span> <span class="n">rank_in_sample</span> <span class="o">+</span> <span class="mf">1.0</span>  <span class="c1"># k-th smallest order statistic</span>
+    <span class="k">if</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="n">n_measured</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">k_floor</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">floor</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="n">k_floor</span> <span class="ow">or</span> <span class="n">k_floor</span> <span class="o">&gt;=</span> <span class="n">n_measured</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">heights</span><span class="p">[</span><span class="n">k_floor</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">frac</span> <span class="o">=</span> <span class="n">k</span> <span class="o">-</span> <span class="n">k_floor</span>
+    <span class="k">return</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">frac</span><span class="p">)</span> <span class="o">*</span> <span class="n">heights</span><span class="p">[</span><span class="n">k_floor</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">frac</span> <span class="o">*</span> <span class="n">heights</span><span class="p">[</span><span class="n">k_floor</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_plot_diameters</span><span class="p">(</span><span class="n">plot</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>  <span class="c1"># noqa: ANN001</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Positive diameters (cm) of the plot&#39;s trees.&quot;&quot;&quot;</span>
+    <span class="n">diameters</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="n">plot</span><span class="o">.</span><span class="n">trees</span><span class="p">:</span>
+        <span class="n">diameter</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="s2">&quot;diameter_cm&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">diameter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">float</span><span class="p">(</span><span class="n">diameter</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">diameters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">diameter</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">diameters</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_percentile_reference</span><span class="p">(</span>
+    <span class="n">plot</span><span class="p">,</span>  <span class="c1"># noqa: ANN001</span>
+    <span class="n">source</span><span class="p">:</span> <span class="n">HeightSource</span><span class="p">,</span>
+    <span class="n">p</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Curve height at the ``p``-th diameter percentile of the plot.&quot;&quot;&quot;</span>
+    <span class="n">diameters</span> <span class="o">=</span> <span class="n">_plot_diameters</span><span class="p">(</span><span class="n">plot</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">diameters</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">reference_diameter</span> <span class="o">=</span> <span class="n">_percentile</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">diameters</span><span class="p">),</span> <span class="n">p</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">source</span><span class="o">.</span><span class="n">height_at_diameter</span><span class="p">(</span><span class="n">reference_diameter</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_mean_plus_k_sigma_reference</span><span class="p">(</span>
+    <span class="n">plot</span><span class="p">,</span>  <span class="c1"># noqa: ANN001</span>
+    <span class="n">source</span><span class="p">:</span> <span class="n">HeightSource</span><span class="p">,</span>
+    <span class="n">k</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Curve height at ``mean(d) + k * sd(d)`` of the plot&#39;s diameters.&quot;&quot;&quot;</span>
+    <span class="n">diameters</span> <span class="o">=</span> <span class="n">_plot_diameters</span><span class="p">(</span><span class="n">plot</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">diameters</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">reference_diameter</span> <span class="o">=</span> <span class="n">statistics</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">diameters</span><span class="p">)</span> <span class="o">+</span> <span class="n">k</span> <span class="o">*</span> <span class="n">statistics</span><span class="o">.</span><span class="n">stdev</span><span class="p">(</span><span class="n">diameters</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">source</span><span class="o">.</span><span class="n">height_at_diameter</span><span class="p">(</span><span class="n">reference_diameter</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="compute_top_height">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.helpers.html#pyforestry.base.helpers.top_height.compute_top_height">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_top_height</span><span class="p">(</span>
+    <span class="n">plots</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">reference</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;garcia_u&quot;</span><span class="p">,</span>
+    <span class="n">height_source</span><span class="p">:</span> <span class="n">HeightSourceSpec</span> <span class="o">=</span> <span class="s2">&quot;measured&quot;</span><span class="p">,</span>
+    <span class="n">n</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">by</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;diameter&quot;</span><span class="p">,</span>
+    <span class="n">percentile</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">90.0</span><span class="p">,</span>
+    <span class="n">k</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">3.0</span><span class="p">,</span>
+    <span class="n">definition</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TopHeightDefinition</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">naslund_exponent</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TopHeightMeasurement</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Estimate stand top height, averaging a per-plot estimate over all plots.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    plots:</span>
+<span class="sd">        The sample plots (each exposing ``trees`` and ``area_ha``).</span>
+<span class="sd">    reference:</span>
+<span class="sd">        Which top-height reference to use: ``&quot;mean_of_largest&quot;``, ``&quot;garcia_u&quot;``,</span>
+<span class="sd">        ``&quot;garcia_pp&quot;``, ``&quot;percentile&quot;`` or ``&quot;mean_plus_k_sigma&quot;``.</span>
+<span class="sd">    height_source:</span>
+<span class="sd">        ``&quot;measured&quot;``, ``&quot;naslund&quot;`` (fit stand-wide), a callable</span>
+<span class="sd">        ``f(diameter_cm) -&gt; height_m``, or a ready height source/curve. The</span>
+<span class="sd">        diameter-reference methods require a curve source. With ``&quot;measured&quot;``</span>
+<span class="sd">        only trees carrying a measured height contribute, so if the thickest</span>
+<span class="sd">        trees lack heights, impute them first (``Stand.impute(&quot;height_m&quot;)``) or use a</span>
+<span class="sd">        curve source instead.</span>
+<span class="sd">    n:</span>
+<span class="sd">        For ``&quot;mean_of_largest&quot;``: number of largest trees per plot. Defaults to</span>
+<span class="sd">        the definition-consistent count ``round(area_ha * nominal_n /</span>
+<span class="sd">        nominal_area_ha)``.</span>
+<span class="sd">    by:</span>
+<span class="sd">        For ``&quot;mean_of_largest&quot;``: ``&quot;diameter&quot;`` (widest) or ``&quot;height&quot;``</span>
+<span class="sd">        (tallest).</span>
+<span class="sd">    percentile:</span>
+<span class="sd">        For ``&quot;percentile&quot;``: the diameter percentile (e.g. ``90`` for D90).</span>
+<span class="sd">    k:</span>
+<span class="sd">        For ``&quot;mean_plus_k_sigma&quot;``: the sigma multiplier (Petterson uses 3).</span>
+<span class="sd">    definition:</span>
+<span class="sd">        The top-height definition (``nominal_n`` per ``nominal_area_ha``).</span>
+<span class="sd">        Defaults to 100 per hectare.</span>
+<span class="sd">    naslund_exponent:</span>
+<span class="sd">        Exponent for a ``&quot;naslund&quot;`` fit: a number, or ``&quot;auto&quot;`` to fit the</span>
+<span class="sd">        exponent from the data too. Defaults to 2.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    TopHeightMeasurement | None</span>
+<span class="sd">        The stand top height (metres), or ``None`` if no plot could contribute.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        For an unknown ``reference``, or a diameter-reference method with a</span>
+<span class="sd">        non-curve height source.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">plots</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="n">definition</span> <span class="ow">or</span> <span class="n">TopHeightDefinition</span><span class="p">()</span>
+    <span class="n">reference</span> <span class="o">=</span> <span class="n">reference</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">by</span> <span class="o">=</span> <span class="n">by</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="n">all_trees</span> <span class="o">=</span> <span class="p">[</span><span class="n">tree</span> <span class="k">for</span> <span class="n">plot</span> <span class="ow">in</span> <span class="n">plots</span> <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="n">plot</span><span class="o">.</span><span class="n">trees</span><span class="p">]</span>
+    <span class="n">source</span> <span class="o">=</span> <span class="n">resolve_height_source</span><span class="p">(</span><span class="n">height_source</span><span class="p">,</span> <span class="n">all_trees</span><span class="p">,</span> <span class="n">naslund_exponent</span><span class="o">=</span><span class="n">naslund_exponent</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">source</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># e.g. Näslund could not be fit</span>
+
+    <span class="k">if</span> <span class="n">reference</span> <span class="ow">in</span> <span class="n">_DIAMETER_REFERENCES</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">source</span><span class="o">.</span><span class="n">is_curve</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;reference=</span><span class="si">{</span><span class="n">reference</span><span class="si">!r}</span><span class="s2"> needs a curve height source (Näslund or a &quot;</span>
+            <span class="s2">&quot;callable), not measured heights.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">estimates</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">skipped</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">plot</span> <span class="ow">in</span> <span class="n">plots</span><span class="p">:</span>
+        <span class="n">area_ha</span> <span class="o">=</span> <span class="n">_effective_area_ha</span><span class="p">(</span><span class="n">plot</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">area_ha</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">skipped</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">reference</span> <span class="o">==</span> <span class="s2">&quot;mean_of_largest&quot;</span><span class="p">:</span>
+            <span class="n">est</span> <span class="o">=</span> <span class="n">_mean_of_largest</span><span class="p">(</span><span class="n">plot</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">area_ha</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">by</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">reference</span> <span class="o">==</span> <span class="s2">&quot;garcia_u&quot;</span><span class="p">:</span>
+            <span class="n">est</span> <span class="o">=</span> <span class="n">_garcia_u</span><span class="p">(</span><span class="n">plot</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">area_ha</span><span class="p">,</span> <span class="n">definition</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">reference</span> <span class="o">==</span> <span class="s2">&quot;garcia_pp&quot;</span><span class="p">:</span>
+            <span class="n">est</span> <span class="o">=</span> <span class="n">_garcia_pp</span><span class="p">(</span><span class="n">plot</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">area_ha</span><span class="p">,</span> <span class="n">definition</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">reference</span> <span class="o">==</span> <span class="s2">&quot;percentile&quot;</span><span class="p">:</span>
+            <span class="n">est</span> <span class="o">=</span> <span class="n">_percentile_reference</span><span class="p">(</span><span class="n">plot</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">percentile</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">reference</span> <span class="o">==</span> <span class="s2">&quot;mean_plus_k_sigma&quot;</span><span class="p">:</span>
+            <span class="n">est</span> <span class="o">=</span> <span class="n">_mean_plus_k_sigma_reference</span><span class="p">(</span><span class="n">plot</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown top-height reference </span><span class="si">{</span><span class="n">reference</span><span class="si">!r}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">est</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">est</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">estimates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">est</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">skipped</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">estimates</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;No plot could supply a </span><span class="si">{</span><span class="n">reference</span><span class="si">!r}</span><span class="s2"> top-height estimate &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">skipped</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">plots</span><span class="p">)</span><span class="si">}</span><span class="s2"> plot(s) skipped). Typically the plots are &quot;</span>
+            <span class="s2">&quot;smaller than the reference cell, or too few trees carry a height to &quot;</span>
+            <span class="s2">&quot;resolve the top of the distribution -- impute heights first, or use a &quot;</span>
+            <span class="s2">&quot;curve height source.&quot;</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">skipped</span><span class="p">:</span>
+        <span class="c1"># Averaging only the plots that happened to resolve is a selection, not a</span>
+        <span class="c1"># sample, so the caller has to know it happened.</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">skipped</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">plots</span><span class="p">)</span><span class="si">}</span><span class="s2"> plot(s) could not supply a </span><span class="si">{</span><span class="n">reference</span><span class="si">!r}</span><span class="s2"> &quot;</span>
+            <span class="s2">&quot;top-height estimate and were excluded from the stand mean.&quot;</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">statistics</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">estimates</span><span class="p">)</span>
+    <span class="n">precision</span> <span class="o">=</span> <span class="n">statistics</span><span class="o">.</span><span class="n">stdev</span><span class="p">(</span><span class="n">estimates</span><span class="p">)</span> <span class="o">/</span> <span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">estimates</span><span class="p">))</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">estimates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="mf">0.0</span>
+    <span class="k">return</span> <span class="n">TopHeightMeasurement</span><span class="p">(</span>
+        <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
+        <span class="n">definition</span><span class="o">=</span><span class="n">definition</span><span class="p">,</span>
+        <span class="n">species</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="n">precision</span><span class="p">,</span>
+        <span class="n">est_bias</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<span class="n">DESCRIPTOR</span> <span class="o">=</span> <span class="n">FormulaDescriptor</span><span class="p">(</span>
+    <span class="n">component_id</span><span class="o">=</span><span class="s2">&quot;garcia_1998_top_height&quot;</span><span class="p">,</span>
+    <span class="n">source</span><span class="o">=</span><span class="n">SourceReference</span><span class="p">(</span>
+        <span class="n">author</span><span class="o">=</span><span class="s2">&quot;García, O.&quot;</span><span class="p">,</span>
+        <span class="n">year</span><span class="o">=</span><span class="mi">1998</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Estimating top height with variable plot sizes&quot;</span><span class="p">,</span>
+        <span class="n">note</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Canadian Journal of Forest Research 28(10), 1509-1517. Supplies the &quot;</span>
+            <span class="s2">&quot;&#39;garcia_u&#39; distribution-free linear-unbiased U-statistic (his eqs 4-7) &quot;</span>
+            <span class="s2">&quot;and the &#39;garcia_pp&#39; plotting-position estimator (his eq 3, with the &quot;</span>
+            <span class="s2">&quot;Hosking Gumbel constant alpha = 0.65). The other references composed &quot;</span>
+            <span class="s2">&quot;here carry their own provenance: the Näslund height curve is &quot;</span>
+            <span class="s2">&quot;naslund_1936_height_curve, and the &#39;mean_plus_k_sigma&#39; reference with &quot;</span>
+            <span class="s2">&quot;k = 3 follows Petterson, H. (1955), &#39;Barrskogens volymproduktion&#39;, &quot;</span>
+            <span class="s2">&quot;Meddelanden från Statens skogsforskningsinstitut 45(1).&quot;</span>
+        <span class="p">),</span>
+    <span class="p">),</span>
+    <span class="n">species_groups</span><span class="o">=</span><span class="p">{},</span>
+    <span class="n">units</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;diameter&quot;</span><span class="p">:</span> <span class="s2">&quot;cm&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;height&quot;</span><span class="p">:</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;return&quot;</span><span class="p">:</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">kernel_names</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;compute_top_height&quot;</span><span class="p">,),</span>
+    <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;height&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

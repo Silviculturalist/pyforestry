@@ -1,0 +1,951 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pyforestry.projection &#8212; pyforestry  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyforestry/projection';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.20.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pyforestry  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../catalog.html">
+    Model catalog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../model_index.html">
+    Model index
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../notebooks/wikberg_2004.html">
+    Wikberg 2004 ingrowth demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../notebooks/elfving_2010.html">
+    Elfving 2010 growth demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../notebooks/elfving_2010_preset.html">
+    Elfving 2010 composite preset demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../notebooks/soderberg_1986_preset.html">
+    Soderberg 1986 composite preset demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../notebooks/young_stand.html">
+    Young stand demo (NYSKOG + Näslund 1986)
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../notebooks/competition_indices.html">
+    Competition indices on a simulated stand
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../notebooks/FullStack_Callables_Guide.html">
+    Composable Callables & Full‑Stack GrowthModel — Practical Guide
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../catalog.html">
+    Model catalog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../model_index.html">
+    Model index
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../notebooks/wikberg_2004.html">
+    Wikberg 2004 ingrowth demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../notebooks/elfving_2010.html">
+    Elfving 2010 growth demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../notebooks/elfving_2010_preset.html">
+    Elfving 2010 composite preset demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../notebooks/soderberg_1986_preset.html">
+    Soderberg 1986 composite preset demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../notebooks/young_stand.html">
+    Young stand demo (NYSKOG + Näslund 1986)
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../notebooks/competition_indices.html">
+    Competition indices on a simulated stand
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../notebooks/FullStack_Callables_Guide.html">
+    Composable Callables & Full‑Stack GrowthModel — Practical Guide
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pyforestry.projection</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for pyforestry.projection</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;One projection, in one call.</span>
+
+<span class="sd">Running a projection used to mean knowing ``Eriksson1976Model``, ``StandInit``,</span>
+<span class="sd">``ThinningProgram``, ``build_context``, ``mode_hint``, ``SimulationSetup`` and</span>
+<span class="sd">``Eriksson1976ManagementSchedule`` -- seven concepts, one of which raised</span>
+<span class="sd">``TypeError`` when used the way the repository&#39;s own worked example used it.</span>
+
+<span class="sd">::</span>
+
+<span class="sd">    import pyforestry as pf</span>
+
+<span class="sd">    result = pf.project(stand, model=&quot;elfving_2010&quot;, years=100, step=5, seed=42)</span>
+
+<span class="sd">    result.table        # a DataFrame, one row per step</span>
+<span class="sd">    result.stand        # the final state</span>
+<span class="sd">    result.provenance   # what was cited, and by what</span>
+
+<span class="sd">The typed constructors are all still there; this is the ninety-per-cent path, not</span>
+<span class="sd">a replacement for them. ``model=`` resolves through</span>
+<span class="sd">:mod:`pyforestry.catalog`, which is the payoff for having built a discovery layer:</span>
+<span class="sd">the string a user finds with ``catalog.search(&quot;elfving&quot;)`` is the string they can</span>
+<span class="sd">run.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover - annotation only</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.stand</span><span class="w"> </span><span class="kn">import</span> <span class="n">Stand</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.simulation.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimulationContext</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.simulation.growth_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">GrowthModel</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.simulation.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Policy</span><span class="p">,</span> <span class="n">Step</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ProjectionResult&quot;</span><span class="p">,</span> <span class="s2">&quot;available_models&quot;</span><span class="p">,</span> <span class="s2">&quot;available_pipelines&quot;</span><span class="p">,</span> <span class="s2">&quot;project&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="ProjectionResult">
+<a class="viewcode-back" href="../../api/pyforestry.html#pyforestry.projection.ProjectionResult">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ProjectionResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;What a projection produced, and where it came from.&quot;&quot;&quot;</span>
+
+    <span class="c1">#: One row per step, including step 0. Columns follow the run&#39;s history.</span>
+    <span class="n">table</span><span class="p">:</span> <span class="s2">&quot;pd.DataFrame&quot;</span>
+    <span class="c1">#: The stand as it stands at the end of the run.</span>
+    <span class="n">stand</span><span class="p">:</span> <span class="s2">&quot;Stand&quot;</span>
+    <span class="c1">#: The full run context: history, state, resolved inputs, random streams.</span>
+    <span class="n">context</span><span class="p">:</span> <span class="s2">&quot;SimulationContext&quot;</span>
+    <span class="c1">#: Every component that was cited, keyed by ``component_id``. A run&#39;s numbers</span>
+    <span class="c1">#: and the papers behind them travel together rather than being reconstructed</span>
+    <span class="c1">#: afterwards from the model you think you used.</span>
+    <span class="n">provenance</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;GrowthModel&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The model that was stepped.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">model</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_growth_models_in</span><span class="p">(</span><span class="n">module_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">type</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the :class:`GrowthModel` subclasses ``module_name`` itself defines.&quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.simulation.growth_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">GrowthModel</span>
+
+    <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="n">obj</span>
+        <span class="k">for</span> <span class="n">_attr</span><span class="p">,</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getmembers</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">GrowthModel</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="n">obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">GrowthModel</span>
+        <span class="ow">and</span> <span class="n">obj</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">==</span> <span class="n">module_name</span>
+    <span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_model_entries</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the catalog entries :func:`project` can step, keyed by name.</span>
+
+<span class="sd">    Not every catalog entry with ``kind=&quot;model&quot;`` is a runnable projection: the</span>
+<span class="sd">    NYSKOG reconstruction, Nyström &amp; Söderberg&#39;s young-stand functions and</span>
+<span class="sd">    Elfving &amp; Hägglund&#39;s initial-stand generator are all published models that</span>
+<span class="sd">    produce a stand rather than advance one. Listing them here would be listing</span>
+<span class="sd">    names ``project`` cannot run, so the filter is &quot;does this module define a</span>
+<span class="sd">    ``GrowthModel``&quot;.</span>
+
+<span class="sd">    The catalog&#39;s ids end in ``_model`` (``&quot;elfving_2010_model&quot;``); both that and</span>
+<span class="sd">    the short form (``&quot;elfving_2010&quot;``) resolve, because the short form is what a</span>
+<span class="sd">    user would type and the long form is what ``catalog.search`` shows them.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry</span><span class="w"> </span><span class="kn">import</span> <span class="n">catalog</span>
+
+    <span class="n">entries</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">catalog</span><span class="o">.</span><span class="n">list_models</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">kind</span> <span class="o">!=</span> <span class="s2">&quot;model&quot;</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">_growth_models_in</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">module</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="n">entries</span><span class="p">[</span><span class="n">entry</span><span class="o">.</span><span class="n">component_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">entry</span>
+        <span class="n">short</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">component_id</span><span class="o">.</span><span class="n">removesuffix</span><span class="p">(</span><span class="s2">&quot;_model&quot;</span><span class="p">)</span>
+        <span class="n">entries</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">short</span><span class="p">,</span> <span class="n">entry</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">entries</span>
+
+
+<div class="viewcode-block" id="available_models">
+<a class="viewcode-back" href="../../api/pyforestry.html#pyforestry.projection.available_models">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">available_models</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return every name :func:`project` accepts for ``model=``, sorted.</span>
+
+<span class="sd">    These are single-tree/stand growth models: give one a :class:`Stand` and it</span>
+<span class="sd">    advances it. The *composite pipelines* -- which build their own stand from a</span>
+<span class="sd">    site and run nine models around a growth model -- are a different shape and</span>
+<span class="sd">    are not listed here; see :func:`available_pipelines`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">_model_entries</span><span class="p">())</span></div>
+
+
+
+<span class="c1">#: Regional preset packages scanned for composite pipelines, in the same spirit as</span>
+<span class="c1">#: :data:`pyforestry.catalog._MODEL_ROOTS`. Sweden is the only region shipping a</span>
+<span class="c1">#: pipeline today, and this used to import Sweden&#39;s ``available_pipelines``</span>
+<span class="c1">#: directly -- so the package-level front door silently meant &quot;Sweden&#39;s</span>
+<span class="c1">#: pipelines&quot;, and the day Norway shipped one it would have gone on omitting it</span>
+<span class="c1">#: with nothing failing. A region without pipelines is skipped, not an error.</span>
+<span class="n">_PIPELINE_ROOTS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;pyforestry.sweden.simulation.presets&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pyforestry.norway.simulation.presets&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_pipeline_owners</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Map each composite pipeline name to the presets module that publishes it.&quot;&quot;&quot;</span>
+    <span class="n">owners</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">module_name</span> <span class="ow">in</span> <span class="n">_PIPELINE_ROOTS</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>  <span class="c1"># pragma: no cover - a region that is not installed</span>
+            <span class="k">continue</span>
+        <span class="n">lister</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s2">&quot;available_pipelines&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">lister</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">lister</span><span class="p">():</span>
+            <span class="n">owners</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">module_name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">owners</span>
+
+
+<div class="viewcode-block" id="available_pipelines">
+<a class="viewcode-back" href="../../api/pyforestry.html#pyforestry.projection.available_pipelines">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">available_pipelines</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return every composite pipeline name, sorted, across all regions.</span>
+
+<span class="sd">    A pipeline is not something :func:`project` can run: it reconstructs its own</span>
+<span class="sd">    stand from a site rather than advancing one you supply. Build it with the</span>
+<span class="sd">    ``get_pipeline`` of the region that publishes it -- Sweden&#39;s is</span>
+<span class="sd">    :func:`pyforestry.sweden.simulation.presets.get_pipeline` -- and drive it with</span>
+<span class="sd">    ``initialize(site=...)`` / ``run_projection(...)``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">_pipeline_owners</span><span class="p">())</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_resolve_model</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;GrowthModel&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build the growth model the catalog publishes under ``name``.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If no model is registered under that name, or if the model</span>
+<span class="sd">            needs configuration that has no default.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">entries</span> <span class="o">=</span> <span class="n">_model_entries</span><span class="p">()</span>
+    <span class="n">entry</span> <span class="o">=</span> <span class="n">entries</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">entry</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">known</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">available_models</span><span class="p">())</span>
+        <span class="n">owners</span> <span class="o">=</span> <span class="n">_pipeline_owners</span><span class="p">()</span>
+        <span class="n">owner</span> <span class="o">=</span> <span class="n">owners</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">owner</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Name the region that publishes *this* pipeline, rather than Sweden&#39;s</span>
+            <span class="c1"># module path regardless of where the pipeline came from.</span>
+            <span class="n">hint</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> is a composite pipeline, not a growth model: it builds its own &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;stand from a site, so project() cannot drive it. Use &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">owner</span><span class="si">}</span><span class="s2">.get_pipeline(</span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2">) instead.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">owners</span><span class="p">:</span>
+            <span class="n">listed</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">owners</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">owners</span><span class="p">))</span>
+            <span class="n">hint</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot; Composite pipelines (</span><span class="si">{</span><span class="n">listed</span><span class="si">}</span><span class="s2">) are run through their region&#39;s &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;get_pipeline() rather than project().&quot;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">hint</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown model </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2">. Available models: </span><span class="si">{</span><span class="n">known</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">hint</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">candidates</span> <span class="o">=</span> <span class="n">_growth_models_in</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">module</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">model_cls</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">model_cls</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="c1"># A model whose configuration has no defaults cannot be built from a</span>
+            <span class="c1"># name alone; try the next, and report it if none can.</span>
+            <span class="k">continue</span>
+
+    <span class="n">names</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span> <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">))</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> (</span><span class="si">{</span><span class="n">names</span><span class="si">}</span><span class="s2">) requires configuration that has no default, so it &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;cannot be built from a name alone. Construct it yourself and pass the &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;instance as model=.&quot;</span>
+    <span class="p">)</span>
+
+
+<div class="viewcode-block" id="project">
+<a class="viewcode-back" href="../../api/pyforestry.html#pyforestry.projection.project">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">project</span><span class="p">(</span>
+    <span class="n">stand</span><span class="p">:</span> <span class="s2">&quot;Stand&quot;</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;GrowthModel&quot;</span><span class="p">],</span>
+    <span class="n">years</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">step</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">policy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;Policy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">attrs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">inputs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">pipeline</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="s2">&quot;Step&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ProjectionResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Project ``stand`` forward and return the result.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        stand: The inventory to project. Deep-copied first, so the caller&#39;s stand</span>
+<span class="sd">            is untouched and the same stand can be projected under several models</span>
+<span class="sd">            or several seeds and compared. (``GrowthModel.build_context`` copies</span>
+<span class="sd">            only the plot containers and shares the ``Tree`` objects, because a</span>
+<span class="sd">            model grows diameters in place. That is right for a model and wrong</span>
+<span class="sd">            for a front door: it would make ``project(stand, ...)`` return</span>
+<span class="sd">            something different the second time you called it.)</span>
+<span class="sd">        model: A name from :func:`available_models`, or a</span>
+<span class="sd">            :class:`~pyforestry.base.simulation.growth_model.GrowthModel` you</span>
+<span class="sd">            built yourself.</span>
+<span class="sd">        years: Total length of the projection.</span>
+<span class="sd">        step: Length of one period. Defaults to the model&#39;s declared</span>
+<span class="sd">            ``native_step_years``, and to 5 years for a model that declares none,</span>
+<span class="sd">            so the common case needs no argument and no guessing.</span>
+<span class="sd">        seed: Root seed for every random stream the run uses. Required only if</span>
+<span class="sd">            something in the run draws; without it, drawing raises rather than</span>
+<span class="sd">            silently using an unseeded generator.</span>
+<span class="sd">        policy: A management policy -- ``Callable[[ctx], Sequence[Action]]`` --</span>
+<span class="sd">            run before growth in each period. Triggers, schedules and rulesets are</span>
+<span class="sd">            all policies; see :mod:`pyforestry.base.simulation.pipeline`.</span>
+<span class="sd">        attrs: Site and history values the stand does not carry typed. Resolved</span>
+<span class="sd">            into the model&#39;s ``Inputs`` during the build, so a missing one is a</span>
+<span class="sd">            named error before any time is simulated.</span>
+<span class="sd">        inputs: An already-built ``Inputs`` instance, which skips resolution.</span>
+<span class="sd">        pipeline: The ordered steps to run each period, overriding the default</span>
+<span class="sd">            (management if a policy was given, then growth). Supply this to add a</span>
+<span class="sd">            valuation step or reorder the phases.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A :class:`ProjectionResult`.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If ``model`` names nothing, if the stand cannot supply what</span>
+<span class="sd">            the model needs, or if the clock arguments are not positive.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.simulation.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">GrowthStep</span><span class="p">,</span> <span class="n">ManagementStep</span><span class="p">,</span> <span class="n">run_pipeline</span>
+
+    <span class="n">growth_model</span> <span class="o">=</span> <span class="n">_resolve_model</span><span class="p">(</span><span class="n">model</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">model</span>
+    <span class="n">stand</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">stand</span><span class="p">)</span>
+
+    <span class="n">ok</span><span class="p">,</span> <span class="n">missing</span> <span class="o">=</span> <span class="n">growth_model</span><span class="o">.</span><span class="n">can_build</span><span class="p">(</span><span class="n">stand</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ok</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">growth_model</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> cannot run on this stand: it needs &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">missing</span><span class="p">)</span><span class="si">}</span><span class="s2">. Check with model.can_build(stand) before projecting.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">step</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="n">growth_model</span><span class="o">.</span><span class="n">requirements</span><span class="p">()</span><span class="o">.</span><span class="n">native_step_years</span> <span class="ow">or</span> <span class="mf">5.0</span>
+
+    <span class="n">ctx</span> <span class="o">=</span> <span class="n">growth_model</span><span class="o">.</span><span class="n">build_context</span><span class="p">(</span>
+        <span class="n">stand</span><span class="p">,</span>
+        <span class="n">attrs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">attrs</span><span class="p">)</span> <span class="k">if</span> <span class="n">attrs</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">inputs</span><span class="o">=</span><span class="n">inputs</span><span class="p">,</span>
+        <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">pipeline</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">steps</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Step&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">policy</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ManagementStep</span><span class="p">(</span><span class="n">policy</span><span class="p">))</span>
+        <span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">GrowthStep</span><span class="p">())</span>
+        <span class="n">pipeline</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span>
+
+    <span class="n">run_pipeline</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">years</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">years</span><span class="p">),</span> <span class="n">step</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">step</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">ProjectionResult</span><span class="p">(</span>
+        <span class="n">table</span><span class="o">=</span><span class="n">ctx</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">(),</span>
+        <span class="n">stand</span><span class="o">=</span><span class="n">ctx</span><span class="o">.</span><span class="n">stand</span><span class="p">,</span>
+        <span class="n">context</span><span class="o">=</span><span class="n">ctx</span><span class="p">,</span>
+        <span class="n">provenance</span><span class="o">=</span><span class="n">_provenance</span><span class="p">(</span><span class="n">growth_model</span><span class="p">),</span>
+    <span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_provenance</span><span class="p">(</span><span class="n">component</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect the citations of a component and of everything it composes.</span>
+
+<span class="sd">    One traversal, shared with the scenario runner so a ``ProjectionResult`` and a</span>
+<span class="sd">    run manifest report the same papers for the same models; see</span>
+<span class="sd">    :func:`pyforestry.simulation.provenance.collect_provenance`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.simulation.provenance</span><span class="w"> </span><span class="kn">import</span> <span class="n">collect_provenance</span>
+
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">collect_provenance</span><span class="p">(</span><span class="n">component</span><span class="p">))</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,1394 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pyforestry.simulation.scenario &#8212; pyforestry  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyforestry/simulation/scenario';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.20.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pyforestry  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../catalog.html">
+    Model catalog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../model_index.html">
+    Model index
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/wikberg_2004.html">
+    Wikberg 2004 ingrowth demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/elfving_2010.html">
+    Elfving 2010 growth demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/elfving_2010_preset.html">
+    Elfving 2010 composite preset demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/soderberg_1986_preset.html">
+    Soderberg 1986 composite preset demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/young_stand.html">
+    Young stand demo (NYSKOG + Näslund 1986)
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/competition_indices.html">
+    Competition indices on a simulated stand
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/FullStack_Callables_Guide.html">
+    Composable Callables & Full‑Stack GrowthModel — Practical Guide
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../catalog.html">
+    Model catalog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../model_index.html">
+    Model index
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/wikberg_2004.html">
+    Wikberg 2004 ingrowth demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/elfving_2010.html">
+    Elfving 2010 growth demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/elfving_2010_preset.html">
+    Elfving 2010 composite preset demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/soderberg_1986_preset.html">
+    Soderberg 1986 composite preset demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/young_stand.html">
+    Young stand demo (NYSKOG + Näslund 1986)
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/competition_indices.html">
+    Competition indices on a simulated stand
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/FullStack_Callables_Guide.html">
+    Composable Callables & Full‑Stack GrowthModel — Practical Guide
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pyforestry.simulation.scenario</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for pyforestry.simulation.scenario</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Running a scenario configuration over real stands, and recording how.</span>
+
+<span class="sd">This is what closes the gap the configuration tier carried from the start: a</span>
+<span class="sd">:class:`~pyforestry.simulation.presets.ScenarioConfig` declared a seed strategy,</span>
+<span class="sd">an ordered list of stage names, rulesets and a guard policy, and nothing executed</span>
+<span class="sd">any of them. The harness that consumed it filled its artifacts with a seeded</span>
+<span class="sd">random walk and stamped them ``synthetic: true``.</span>
+
+<span class="sd">:func:`run_scenario` executes all four. It resolves ``stages()`` into steps via</span>
+<span class="sd">:mod:`pyforestry.simulation.stages`, seeds each stand from ``seed_strategy()``,</span>
+<span class="sd">steps a real :class:`~pyforestry.base.simulation.growth_model.GrowthModel` through</span>
+<span class="sd">:func:`~pyforestry.base.simulation.pipeline.run_pipeline`, applies the guard</span>
+<span class="sd">policy, and writes the volume balance each stand actually produced.</span>
+
+<span class="sd">The manifest is the point. It records which models ran with which citations,</span>
+<span class="sd">which stages in which order, which ruleset values were applied, the guard policy,</span>
+<span class="sd">which price list the money is in, the discount rate and every seed -- so a summary</span>
+<span class="sd">row can be read back against the construction that produced it without rerunning</span>
+<span class="sd">anything.</span>
+
+<span class="sd">The discount rate is here rather than on :meth:`ScenarioRunResult.net_present_value`</span>
+<span class="sd">because the summary carries a net present value, and a figure in an artifact has</span>
+<span class="sd">to have been discounted at a rate the artifact records. As a call argument it was</span>
+<span class="sd">whatever the reader happened to pass, which is fine for exploring and useless in a</span>
+<span class="sd">file. A run that prices its removals must now state a rate -- ``0.0`` states that</span>
+<span class="sd">a krona at the end of the horizon is worth a krona now, which is a preference like</span>
+<span class="sd">any other -- or declare a</span>
+<span class="sd">:data:`~pyforestry.simulation.forcing.DISCOUNT` forcing for one that varies by</span>
+<span class="sd">year. The method remains, for asking the same run what it would be worth at</span>
+<span class="sd">another rate.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.primitives</span><span class="w"> </span><span class="kn">import</span> <span class="n">Age</span><span class="p">,</span> <span class="n">AgeMeasurement</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.stand</span><span class="w"> </span><span class="kn">import</span> <span class="n">Stand</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.pricelist</span><span class="w"> </span><span class="kn">import</span> <span class="n">PricelistIdentity</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.simulation.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimulationContext</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.simulation.growth_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">GrowthModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.simulation.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_pipeline</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.simulation.artifacts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ScenarioArtifacts</span><span class="p">,</span> <span class="n">git_revision</span><span class="p">,</span> <span class="n">write_artifacts</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.simulation.forcing</span><span class="w"> </span><span class="kn">import</span> <span class="n">DISCOUNT</span><span class="p">,</span> <span class="n">ForcingSet</span><span class="p">,</span> <span class="n">stated_choice</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.simulation.policy</span><span class="w"> </span><span class="kn">import</span> <span class="n">ManagementPlan</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.simulation.presets</span><span class="w"> </span><span class="kn">import</span> <span class="n">ScenarioConfig</span><span class="p">,</span> <span class="n">stable_seed</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.simulation.provenance</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">as_manifest_entries</span><span class="p">,</span>
+    <span class="n">as_manifest_source</span><span class="p">,</span>
+    <span class="n">collect_provenance</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.simulation.stages</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BY_AGE</span><span class="p">,</span>
+    <span class="n">REMOVED_BY_STAGE_KEY</span><span class="p">,</span>
+    <span class="n">STAND_SPECIES_KEY</span><span class="p">,</span>
+    <span class="n">STAND_START_AGE_KEY</span><span class="p">,</span>
+    <span class="n">THINNINGS_FIRED_KEY</span><span class="p">,</span>
+    <span class="n">MeanTreeReporter</span><span class="p">,</span>
+    <span class="n">StageContext</span><span class="p">,</span>
+    <span class="n">ThinningSchedule</span><span class="p">,</span>
+    <span class="n">build_pipeline</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.simulation.valuation.cashflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">CashFlow</span><span class="p">,</span> <span class="n">cash_flows_of</span><span class="p">,</span> <span class="n">net_present_value</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.simulation.valuation.volume</span><span class="w"> </span><span class="kn">import</span> <span class="n">ValuationSettings</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;ScenarioRunResult&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;StandUnit&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;run_scenario&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c1">#: Where a model publishes the stand volume it last computed. Useful to a reader</span>
+<span class="c1">#: of a finished context; **not** a volume reporter, because it only moves when</span>
+<span class="c1">#: the model steps -- a thinning between steps leaves it stale, which is how a</span>
+<span class="c1">#: run first reported harvest and disturbance as zero while the volume they</span>
+<span class="c1">#: removed silently reappeared inside &quot;growth&quot;.</span>
+<span class="n">STAND_VOLUME_ATTR</span> <span class="o">=</span> <span class="s2">&quot;stand_volume_m3_per_ha&quot;</span>
+
+
+<div class="viewcode-block" id="StandUnit">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.scenario.StandUnit">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">StandUnit</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;One stand in a scenario run, with the id its summary row is keyed by.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        stand_id: The id its summary row is keyed by.</span>
+<span class="sd">        stand: The inventory to project.</span>
+<span class="sd">        species: What the stand is, for pricing removals an *aggregate* model</span>
+<span class="sd">            produces. Such a model steps a whole-stand basal area, and</span>
+<span class="sd">            ``Stand.set_aggregate_metrics`` drops species detail by design --</span>
+<span class="sd">            a total genuinely has none -- so the species cannot be recovered from</span>
+<span class="sd">            the metrics after the first step. Whoever built the stand knows it;</span>
+<span class="sd">            this is where they say so. Unnecessary for a tree list, where every</span>
+<span class="sd">            stem carries its own.</span>
+<span class="sd">        age: How old this stand is when the projection starts, as</span>
+<span class="sd">            ``Age.TOTAL(...)`` or ``Age.DBH(...)``. Overrides the run&#39;s</span>
+<span class="sd">            ``start_age``, because real inventory is not all one age and a</span>
+<span class="sd">            thinning prescribed at age 60 falls in a different year for each</span>
+<span class="sd">            stand. Only needed by a run that schedules its thinnings by age.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">stand_id</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">stand</span><span class="p">:</span> <span class="n">Stand</span>
+    <span class="n">species</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">age</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AgeMeasurement</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="ScenarioRunResult">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.scenario.ScenarioRunResult">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ScenarioRunResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;What a scenario run produced.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        artifacts: The three written files.</span>
+<span class="sd">        rows: The summary rows, as written.</span>
+<span class="sd">        manifest: The manifest payload, as written.</span>
+<span class="sd">        contexts: One finished context per stand, in stand order, for a caller</span>
+<span class="sd">            that wants the history rather than the summary.</span>
+<span class="sd">        forcings: The forcings this run applied, kept so a horizon calculation</span>
+<span class="sd">            can read a year-varying discount rate off the same set.</span>
+<span class="sd">        discount_rate: The flat rate the run was configured with, and the one its</span>
+<span class="sd">            summary&#39;s ``net_present_value`` column was discounted at. ``None``</span>
+<span class="sd">            when a :data:`~pyforestry.simulation.forcing.DISCOUNT` forcing</span>
+<span class="sd">            supplied the rate instead, or when the run priced nothing.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">artifacts</span><span class="p">:</span> <span class="n">ScenarioArtifacts</span>
+    <span class="n">rows</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">...</span><span class="p">]</span>
+    <span class="n">manifest</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="n">contexts</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">SimulationContext</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="p">())</span>
+    <span class="n">forcings</span><span class="p">:</span> <span class="n">ForcingSet</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">ForcingSet</span><span class="p">)</span>
+    <span class="n">discount_rate</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">start_year</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The calendar year the projection began in.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">manifest</span><span class="p">[</span><span class="s2">&quot;start_year&quot;</span><span class="p">])</span>
+
+<div class="viewcode-block" id="ScenarioRunResult.thinnings">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.scenario.ScenarioRunResult.thinnings">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">thinnings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">...</span><span class="p">]],</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the thinnings each stand actually performed, as ``(stand_id, fired)``.</span>
+
+<span class="sd">        A scheduled point falls due in the period whose span covers it, so a</span>
+<span class="sd">        thinning asked for at age 62 of a run stepping five years from 40 happens</span>
+<span class="sd">        at 60. Each entry says both, which is the difference between what a run</span>
+<span class="sd">        was asked for -- the manifest&#39;s ``management_schedule`` -- and what it did.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;stand_id&quot;</span><span class="p">]),</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">THINNINGS_FIRED_KEY</span><span class="p">,</span> <span class="p">())))</span>
+            <span class="k">for</span> <span class="n">row</span><span class="p">,</span> <span class="n">ctx</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">contexts</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ScenarioRunResult.cash_flows">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.scenario.ScenarioRunResult.cash_flows">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cash_flows</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">CashFlow</span><span class="p">,</span> <span class="o">...</span><span class="p">]],</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return each stand&#39;s revenue by year, as ``(stand_id, flows)``.</span>
+
+<span class="sd">        Empty for a run that never harvested, or one whose configuration declares</span>
+<span class="sd">        no valuation stage.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;stand_id&quot;</span><span class="p">]),</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">cash_flows_of</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">attrs</span><span class="p">)))</span>
+            <span class="k">for</span> <span class="n">row</span><span class="p">,</span> <span class="n">ctx</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">contexts</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ScenarioRunResult.net_present_value">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.scenario.ScenarioRunResult.net_present_value">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">net_present_value</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">discount_rate</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">base_year</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return each stand&#39;s discounted revenue over the horizon, by stand id.</span>
+
+<span class="sd">        The revenue in each entry is already nominal -- a</span>
+<span class="sd">        :data:`~pyforestry.simulation.forcing.PRICE` forcing was applied in the</span>
+<span class="sd">        year it was earned -- so discounting it here completes the pair: prices</span>
+<span class="sd">        move the money, the discount rate moves it in time, and the manifest</span>
+<span class="sd">        records both separately.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            discount_rate: A flat annual rate. Defaults to the rate the run was</span>
+<span class="sd">                configured with, so calling this with no arguments reproduces the</span>
+<span class="sd">                summary&#39;s ``net_present_value`` column. Pass one to ask what the</span>
+<span class="sd">                same run would be worth at a different rate. Ignored if the run</span>
+<span class="sd">                applied a :data:`~pyforestry.simulation.forcing.DISCOUNT` forcing,</span>
+<span class="sd">                which may vary by year.</span>
+<span class="sd">            base_year: The year to express the total in. Defaults to the run&#39;s</span>
+<span class="sd">                first, which is the year the summary column is expressed in.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Stand id to net present value. Zero for a stand that earned nothing.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">discount_rate</span> <span class="k">if</span> <span class="n">discount_rate</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">discount_rate</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_year</span> <span class="k">if</span> <span class="n">base_year</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">base_year</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="n">stand_id</span><span class="p">:</span> <span class="n">net_present_value</span><span class="p">(</span>
+                <span class="n">flows</span><span class="p">,</span>
+                <span class="n">base_year</span><span class="o">=</span><span class="n">base</span><span class="p">,</span>
+                <span class="n">discount_rate</span><span class="o">=</span><span class="n">rate</span><span class="p">,</span>
+                <span class="n">forcings</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">forcings</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">stand_id</span><span class="p">,</span> <span class="n">flows</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cash_flows</span><span class="p">()</span>
+        <span class="p">}</span></div>
+</div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_stand_seed</span><span class="p">(</span><span class="n">scenario_seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">stand_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Derive a stand&#39;s seed from the scenario&#39;s, so order cannot affect it.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">stable_seed</span><span class="p">(</span><span class="n">scenario_seed</span><span class="p">,</span> <span class="n">stand_id</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_check_discounting</span><span class="p">(</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">values_removals</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="n">discount_rate</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+    <span class="n">from_forcing</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reject a run whose discounting and whose valuation stage disagree.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If a run that prices its removals states no rate to discount</span>
+<span class="sd">            them at, or a run that prices nothing states one anyway. The first</span>
+<span class="sd">            would put a net present value in an artifact with nothing behind it;</span>
+<span class="sd">            the second would put a rate in the manifest that discounted nothing,</span>
+<span class="sd">            which reads as though it had.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">values_removals</span> <span class="ow">and</span> <span class="n">discount_rate</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">from_forcing</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;This scenario declares a &#39;valuation&#39; stage, so its summary carries a net &quot;</span>
+            <span class="s2">&quot;present value -- and that needs a rate to discount at. Pass &quot;</span>
+            <span class="s2">&quot;discount_rate=, or declare a DISCOUNT forcing for a rate that varies by &quot;</span>
+            <span class="s2">&quot;year. discount_rate=0.0 is a legitimate answer: it states that a krona at &quot;</span>
+            <span class="s2">&quot;the end of the horizon is worth a krona now. There is no default, because &quot;</span>
+            <span class="s2">&quot;a rate is a stated preference and no default would be anyone&#39;s.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">values_removals</span> <span class="ow">and</span> <span class="n">discount_rate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;discount_rate=</span><span class="si">{</span><span class="n">discount_rate</span><span class="si">!r}</span><span class="s2"> was given, but this scenario declares no &quot;</span>
+            <span class="s2">&quot;&#39;valuation&#39; stage, so nothing is priced and there would be nothing to &quot;</span>
+            <span class="s2">&quot;discount. Recording the rate in the manifest would say the run applied &quot;</span>
+            <span class="s2">&quot;it. Add &#39;valuation&#39; to the configuration&#39;s stages, or drop the argument.&quot;</span>
+        <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_valuation_manifest</span><span class="p">(</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">values_removals</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="n">discount_rate</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+    <span class="n">from_forcing</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="n">base_year</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">identity</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PricelistIdentity</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Record what the summary&#39;s money columns were produced by.</span>
+
+<span class="sd">    Two things produce them, and both belong here. The **price list** is where the</span>
+<span class="sd">    money comes from -- what a cubic metre fetched, and in what currency -- so</span>
+<span class="sd">    ``price_list`` names it, states its currency and carries its citation. Without</span>
+<span class="sd">    it a revenue figure is a bare number: comparable with another run&#39;s only if</span>
+<span class="sd">    both were priced against the same table, which nothing recorded. The</span>
+<span class="sd">    **discount rate** then moves that money in time.</span>
+
+<span class="sd">    The two are cited differently, because they are different kinds of thing. A</span>
+<span class="sd">    discount rate is a decision rather than a finding, so it takes the</span>
+<span class="sd">    ``(none)``/year-0 sentinel :func:`~pyforestry.simulation.forcing.stated_choice`</span>
+<span class="sd">    builds -- the same way a thinning intensity does. A price list is regional</span>
+<span class="sd">    market data with a publisher and a year, so it carries a real citation; a run</span>
+<span class="sd">    that priced against its own table says *that* in the same sentinel form,</span>
+<span class="sd">    through :data:`~pyforestry.base.pricelist.UNATTRIBUTED_PRICELIST_IDENTITY`.</span>
+
+<span class="sd">    A rate that came from a forcing is already cited in ``forcings_applied``, and</span>
+<span class="sd">    is pointed at from here rather than copied. ``price_list`` is ``None`` for a</span>
+<span class="sd">    run that priced nothing, for the reason ``discount_rate`` is: naming a list a</span>
+<span class="sd">    run never used would read as though it had.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;valued&quot;</span><span class="p">:</span> <span class="n">values_removals</span><span class="p">,</span>
+        <span class="s2">&quot;base_year&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">base_year</span><span class="p">),</span>
+        <span class="s2">&quot;price_list&quot;</span><span class="p">:</span> <span class="p">(</span>
+            <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">identity</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">identity</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s2">&quot;currency&quot;</span><span class="p">:</span> <span class="n">identity</span><span class="o">.</span><span class="n">currency</span><span class="p">,</span>
+                <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">as_manifest_source</span><span class="p">(</span><span class="n">identity</span><span class="o">.</span><span class="n">source</span><span class="p">),</span>
+            <span class="p">}</span>
+        <span class="p">),</span>
+        <span class="s2">&quot;discount_rate&quot;</span><span class="p">:</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">discount_rate</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">discount_rate</span><span class="p">),</span>
+        <span class="s2">&quot;discount_from_forcing&quot;</span><span class="p">:</span> <span class="n">from_forcing</span><span class="p">,</span>
+        <span class="s2">&quot;discount_source&quot;</span><span class="p">:</span> <span class="p">(</span>
+            <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">discount_rate</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="n">as_manifest_source</span><span class="p">(</span><span class="n">stated_choice</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">discount_rate</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2"> annual discount rate&quot;</span><span class="p">))</span>
+        <span class="p">),</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_resolve_schedule</span><span class="p">(</span>
+    <span class="n">thin_at_age</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">AgeMeasurement</span><span class="p">]],</span>
+    <span class="n">thin_at_year</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ThinningSchedule</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build the run&#39;s thinning schedule from whichever way it was expressed.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If both ways were used at once. They are two answers to the</span>
+<span class="sd">            same question, and nothing would say which the run meant.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">thin_at_age</span> <span class="ow">and</span> <span class="n">thin_at_year</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;A run thins by stand age or by calendar year, not both: thin_at_age=&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">thin_at_age</span><span class="p">]</span><span class="si">}</span><span class="s2"> and thin_at_year=</span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">thin_at_year</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span>
+            <span class="s2">&quot;were both given. Pick the one the prescription is actually written in -- &quot;</span>
+            <span class="s2">&quot;age, normally, since that is what a thinning is a statement about.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">thin_at_age</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ThinningSchedule</span><span class="o">.</span><span class="n">by_age</span><span class="p">(</span><span class="n">thin_at_age</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ThinningSchedule</span><span class="o">.</span><span class="n">by_calendar</span><span class="p">(</span><span class="n">thin_at_year</span> <span class="ow">or</span> <span class="p">())</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_stand_start_age</span><span class="p">(</span>
+    <span class="n">unit</span><span class="p">:</span> <span class="n">StandUnit</span><span class="p">,</span>
+    <span class="n">start_age</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AgeMeasurement</span><span class="p">],</span>
+    <span class="n">schedule</span><span class="p">:</span> <span class="n">ThinningSchedule</span><span class="p">,</span>
+    <span class="n">time_to_breast_height</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AgeMeasurement</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the age this stand starts at, in the measure the schedule uses.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If an age schedule has no age to compare against, or the two</span>
+<span class="sd">            are counted from different points and nothing was given to bridge</span>
+<span class="sd">            them. The gap between total age and age at breast height is the years</span>
+<span class="sd">            the stand took to reach 1.3 m -- a few on a good site, well over a</span>
+<span class="sd">            decade on a poor one -- and it depends on the species and the site,</span>
+<span class="sd">            so this package will not guess it in a region-agnostic runner.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">declared</span> <span class="o">=</span> <span class="n">unit</span><span class="o">.</span><span class="n">age</span> <span class="k">if</span> <span class="n">unit</span><span class="o">.</span><span class="n">age</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">start_age</span>
+    <span class="k">if</span> <span class="n">declared</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">schedule</span><span class="o">.</span><span class="n">basis</span> <span class="o">==</span> <span class="n">BY_AGE</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Stand </span><span class="si">{</span><span class="n">unit</span><span class="o">.</span><span class="n">stand_id</span><span class="si">}</span><span class="s2"> thins at &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">p</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">&#39;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">schedule</span><span class="o">.</span><span class="n">points</span><span class="p">]</span><span class="si">}</span><span class="s2"> by &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">schedule</span><span class="o">.</span><span class="n">age_measure</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2"> age, but nothing said how old it &quot;</span>
+                <span class="s2">&quot;is when the projection starts. Pass start_age=Age.TOTAL(40) to &quot;</span>
+                <span class="s2">&quot;run_scenario for the whole run, or an age on the StandUnit for this &quot;</span>
+                <span class="s2">&quot;stand. The model&#39;s own clock cannot answer it: some adapters start it &quot;</span>
+                <span class="s2">&quot;at zero and some at the stand&#39;s age.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">declared</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Stand </span><span class="si">{</span><span class="n">unit</span><span class="o">.</span><span class="n">stand_id</span><span class="si">}</span><span class="s2"> was given an age of </span><span class="si">{</span><span class="n">declared</span><span class="si">!r}</span><span class="s2">, which does not &quot;</span>
+            <span class="s2">&quot;say what is being counted. Use Age.TOTAL(40) or Age.DBH(33).&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">schedule</span><span class="o">.</span><span class="n">basis</span> <span class="o">!=</span> <span class="n">BY_AGE</span> <span class="ow">or</span> <span class="n">declared</span><span class="o">.</span><span class="n">code</span> <span class="o">==</span> <span class="n">schedule</span><span class="o">.</span><span class="n">age_measure</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">declared</span>
+    <span class="k">if</span> <span class="n">time_to_breast_height</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Stand </span><span class="si">{</span><span class="n">unit</span><span class="o">.</span><span class="n">stand_id</span><span class="si">}</span><span class="s2"> starts at </span><span class="si">{</span><span class="n">schedule_measure_name</span><span class="p">(</span><span class="n">declared</span><span class="p">)</span><span class="si">}</span><span class="s2"> age &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">declared</span><span class="p">)</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">, but this run thins by &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">schedule</span><span class="o">.</span><span class="n">age_measure</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2"> age. Converting between them means &quot;</span>
+            <span class="s2">&quot;knowing how long the stand took to reach breast height, which depends on &quot;</span>
+            <span class="s2">&quot;the species and the site. Give the schedule in the same measure as the &quot;</span>
+            <span class="s2">&quot;stand&#39;s age, or pass time_to_breast_height= to state the bridge.&quot;</span>
+        <span class="p">)</span>
+    <span class="n">bridge</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">time_to_breast_height</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">schedule</span><span class="o">.</span><span class="n">age_measure</span> <span class="ow">is</span> <span class="n">Age</span><span class="o">.</span><span class="n">TOTAL</span><span class="p">:</span>  <span class="c1"># declared is DBH</span>
+        <span class="k">return</span> <span class="n">Age</span><span class="o">.</span><span class="n">TOTAL</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">declared</span><span class="p">)</span> <span class="o">+</span> <span class="n">bridge</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Age</span><span class="o">.</span><span class="n">DBH</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">declared</span><span class="p">)</span> <span class="o">-</span> <span class="n">bridge</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">schedule_measure_name</span><span class="p">(</span><span class="n">age</span><span class="p">:</span> <span class="n">AgeMeasurement</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return ``&quot;total&quot;`` or ``&quot;dbh&quot;`` for an age measurement, for error text.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Age</span><span class="p">(</span><span class="n">age</span><span class="o">.</span><span class="n">code</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_check_schedule_reachable</span><span class="p">(</span>
+    <span class="n">unit</span><span class="p">:</span> <span class="n">StandUnit</span><span class="p">,</span>
+    <span class="n">schedule</span><span class="p">:</span> <span class="n">ThinningSchedule</span><span class="p">,</span>
+    <span class="n">start</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+    <span class="n">horizon_years</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reject a scheduled thinning the run will never reach.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If a scheduled point lies outside the span this run covers.</span>
+<span class="sd">            Firing nothing and reporting no harvest is indistinguishable in the</span>
+<span class="sd">            summary from a scenario that chose not to thin, so a schedule the run</span>
+<span class="sd">            cannot honour is an error rather than a quiet omission.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">schedule</span> <span class="ow">or</span> <span class="n">start</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">horizon_years</span>
+    <span class="n">outside</span> <span class="o">=</span> <span class="p">[</span><span class="n">point</span> <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">schedule</span><span class="o">.</span><span class="n">points</span> <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">start</span> <span class="o">&lt;=</span> <span class="n">point</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">outside</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="n">unit_word</span> <span class="o">=</span> <span class="s2">&quot;stand age&quot;</span> <span class="k">if</span> <span class="n">schedule</span><span class="o">.</span><span class="n">basis</span> <span class="o">==</span> <span class="n">BY_AGE</span> <span class="k">else</span> <span class="s2">&quot;calendar year&quot;</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Stand </span><span class="si">{</span><span class="n">unit</span><span class="o">.</span><span class="n">stand_id</span><span class="si">}</span><span class="s2"> is projected from </span><span class="si">{</span><span class="n">unit_word</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">start</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">end</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">, so &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;it never reaches </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">p</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">&#39;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">outside</span><span class="p">)</span><span class="si">}</span><span class="s2">. That thinning would &quot;</span>
+        <span class="s2">&quot;not happen, and the summary would report no harvest -- which reads exactly &quot;</span>
+        <span class="s2">&quot;like a scenario that chose not to thin. Move the schedule inside the horizon, &quot;</span>
+        <span class="s2">&quot;or lengthen the run.&quot;</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_rulesets_applied</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ScenarioConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Resolve the configuration&#39;s rulesets to the values this run used.&quot;&quot;&quot;</span>
+    <span class="n">applied</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">concern</span><span class="p">,</span> <span class="n">ruleset</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">rulesets</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">ruleset</span><span class="p">()</span>
+        <span class="n">applied</span><span class="p">[</span><span class="n">concern</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">as_mapping</span><span class="p">()</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;as_mapping&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">value</span>
+    <span class="k">return</span> <span class="n">applied</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_resolved_management</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ScenarioConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ManagementPlan</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the management plan this configuration declares, if any.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If more than one ruleset returns a plan. Only one reaches the</span>
+<span class="sd">            thinning step, and taking the last silently would let a configuration</span>
+<span class="sd">            declare two thinning intensities and apply whichever happened to be</span>
+<span class="sd">            iterated last.</span>
+<span class="sd">        TypeError: If a ruleset returns something that is not a plan.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">management</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ManagementPlan</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">declared_by</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">concern</span><span class="p">,</span> <span class="n">ruleset</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">rulesets</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">ruleset</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">ManagementPlan</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">management</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Rulesets </span><span class="si">{</span><span class="n">declared_by</span><span class="si">!r}</span><span class="s2"> and </span><span class="si">{</span><span class="n">concern</span><span class="si">!r}</span><span class="s2"> both return a &quot;</span>
+                    <span class="s2">&quot;ManagementPlan, but a run thins to one intensity. Merge them into &quot;</span>
+                    <span class="s2">&quot;one ruleset, so the configuration says which.&quot;</span>
+                <span class="p">)</span>
+            <span class="n">management</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="n">declared_by</span> <span class="o">=</span> <span class="n">concern</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># pragma: no cover - RulesetFn is typed to ManagementPlan</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Ruleset </span><span class="si">{</span><span class="n">concern</span><span class="si">!r}</span><span class="s2"> returned </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">; a ruleset returns &quot;</span>
+                <span class="s2">&quot;a ManagementPlan. Anything imposed from outside the models is a &quot;</span>
+                <span class="s2">&quot;forcing, declared through ScenarioConfig.forcings().&quot;</span>
+            <span class="p">)</span>
+    <span class="k">return</span> <span class="n">management</span>
+
+
+<div class="viewcode-block" id="run_scenario">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.scenario.run_scenario">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">run_scenario</span><span class="p">(</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">ScenarioConfig</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">build_model</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">GrowthModel</span><span class="p">],</span>
+    <span class="n">stands</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">StandUnit</span><span class="p">],</span>
+    <span class="n">volume</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">SimulationContext</span><span class="p">],</span> <span class="nb">float</span><span class="p">],</span>
+    <span class="n">global_seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">n_steps</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">step_years</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">attrs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">valuation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ValuationSettings</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">discount_rate</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">disturbance_rate_per_year</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">thin_at_age</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">AgeMeasurement</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">thin_at_year</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">start_age</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AgeMeasurement</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">time_to_breast_height</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">start_year</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">forcings</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ForcingSet</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">mean_tree</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MeanTreeReporter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ScenarioRunResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run ``config`` over ``stands`` and write the three artifacts.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config: The scenario configuration. Its ``stages()``, ``rulesets()``,</span>
+<span class="sd">            ``guard_policy()`` and ``seed_strategy()`` are all executed.</span>
+<span class="sd">        build_model: Builds a fresh model per stand. A model may carry per-run</span>
+<span class="sd">            state, so stands must not share one.</span>
+<span class="sd">        stands: The stands to project, each with the id its row is keyed by.</span>
+<span class="sd">        volume: Standing volume of the stand *as it currently is*, in m³/ha,</span>
+<span class="sd">            evaluated on demand. It must be a function of the context&#39;s present</span>
+<span class="sd">            state: a reporter that reads a value the model cached at its last</span>
+<span class="sd">            step cannot see a thinning, and every cubic metre a removal takes out</span>
+<span class="sd">            reappears in the growth column. Required, with no default, for that</span>
+<span class="sd">            reason.</span>
+<span class="sd">        global_seed: The run&#39;s seed. Each stand&#39;s is derived from it through</span>
+<span class="sd">            ``config.seed_strategy()``, so the summary does not depend on the</span>
+<span class="sd">            order the stands were evaluated in.</span>
+<span class="sd">        n_steps: Number of periods to project.</span>
+<span class="sd">        step_years: Period length. Defaults to the model&#39;s declared</span>
+<span class="sd">            ``native_step_years``, and to 5 years for a model that declares none.</span>
+<span class="sd">        output_dir: Where the artifacts go; created if absent.</span>
+<span class="sd">        attrs: Extra model attributes, merged into every stand&#39;s context.</span>
+<span class="sd">        valuation: Price list, taper and bucking settings. Required if the</span>
+<span class="sd">            configuration declares a ``&quot;valuation&quot;`` stage. The price list&#39;s</span>
+<span class="sd">            :class:`~pyforestry.base.pricelist.PricelistIdentity` goes into the</span>
+<span class="sd">            manifest, so give it one: it is what says what currency the summary&#39;s</span>
+<span class="sd">            money is in and whose prices earned it.</span>
+<span class="sd">        discount_rate: The annual rate the summary&#39;s net present value is</span>
+<span class="sd">            discounted at, e.g. ``0.03``. Required if the configuration declares</span>
+<span class="sd">            a ``&quot;valuation&quot;`` stage and no</span>
+<span class="sd">            :data:`~pyforestry.simulation.forcing.DISCOUNT` forcing supplies a</span>
+<span class="sd">            year-varying one; rejected if it declares no such stage, since then</span>
+<span class="sd">            there is nothing to discount. ``0.0`` states no time preference. It</span>
+<span class="sd">            is a decision rather than a finding, and the manifest records it as</span>
+<span class="sd">            one.</span>
+<span class="sd">        disturbance_rate_per_year: The annual share of the stand a scenario</span>
+<span class="sd">            disturbance removes, before ``ScenarioFactors.disturbance_factor``.</span>
+<span class="sd">            **The caller supplies this and it has no default source.** None of</span>
+<span class="sd">            these growth models predicts windthrow, fire or bark beetle, and this</span>
+<span class="sd">            package ships no disturbance rate for any region -- a rate belongs to</span>
+<span class="sd">            a risk model or an inventory of observed damage, and there is neither</span>
+<span class="sd">            here yet. Zero, the default, makes the stage an exact no-op; anything</span>
+<span class="sd">            else is the analyst&#39;s number and is recorded in the manifest as such.</span>
+<span class="sd">        thin_at_age: Stand ages at which the management stage thins, as</span>
+<span class="sd">            ``Age.TOTAL(60)`` or ``Age.DBH(47)``. **The one to reach for**: a</span>
+<span class="sd">            thinning prescription is a statement about how old a stand is, and an</span>
+<span class="sd">            age says which stand it means even when a run holds stands of several</span>
+<span class="sd">            ages. Requires ``start_age`` or a per-stand</span>
+<span class="sd">            :attr:`StandUnit.age`, since nothing else says how old a stand is --</span>
+<span class="sd">            a model&#39;s own clock starts wherever that model starts it.</span>
+<span class="sd">        thin_at_year: Calendar years at which it thins instead, read against</span>
+<span class="sd">            ``start_year``, for a schedule tied to something outside the stand.</span>
+<span class="sd">            Mutually exclusive with ``thin_at_age``.</span>
+<span class="sd">        start_age: How old the stands are when the projection begins, for a run</span>
+<span class="sd">            that schedules by age. A :attr:`StandUnit.age` overrides it per stand.</span>
+<span class="sd">        time_to_breast_height: Years the stands took to reach 1.3 m, needed only</span>
+<span class="sd">            to schedule in one age measure a run whose stands are described in the</span>
+<span class="sd">            other. There is no default: it depends on the species and the site,</span>
+<span class="sd">            and this package will not guess it in a region-agnostic runner.</span>
+<span class="sd">        start_year: Calendar year the projection begins in. Every period stamps</span>
+<span class="sd">            its own year onto the context, and that is the year a forcing series</span>
+<span class="sd">            is read at, so a weather correction given as ``{2014: 1.04, ...}``</span>
+<span class="sd">            lines up with the run.</span>
+<span class="sd">        forcings: Named values the run reads for the period it is in -- a weather</span>
+<span class="sd">            correction, a disturbance factor, a price index. Merged after the</span>
+<span class="sd">            configuration&#39;s own, so a caller&#39;s forcing composes with rather than</span>
+<span class="sd">            replaces it. This package ships none: each is a claim about the</span>
+<span class="sd">            world, and every one a run applies is recorded in its manifest with</span>
+<span class="sd">            its citation.</span>
+<span class="sd">        mean_tree: How to read the representative stem of a stand that holds no</span>
+<span class="sd">            individual ones, so an aggregate model&#39;s thinning can still be</span>
+<span class="sd">            bucked. Required to value such a run: only the caller knows which</span>
+<span class="sd">            height its model predicts, and a model that gives dominant height has</span>
+<span class="sd">            no mean height to substitute.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The artifacts, the rows, the manifest and the finished contexts.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If ``n_steps`` is not positive, no stands were given, a stage</span>
+<span class="sd">            name is unknown, the discounting and the valuation stage disagree, or</span>
+<span class="sd">            a guard rejects an input.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">n_steps</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;n_steps must be &gt; 0, got </span><span class="si">{</span><span class="n">n_steps</span><span class="si">!r}</span><span class="s2">.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">stands</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;A scenario run needs at least one stand.&quot;</span><span class="p">)</span>
+
+    <span class="n">scenario_seed</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">seed_strategy</span><span class="p">(</span><span class="n">global_seed</span><span class="o">=</span><span class="n">global_seed</span><span class="p">))</span>
+    <span class="n">guard_policy</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">guard_policy</span><span class="p">())</span>
+    <span class="n">management</span> <span class="o">=</span> <span class="n">_resolved_management</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+    <span class="n">applied_forcings</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">forcings</span><span class="p">()</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">forcings</span> <span class="ow">or</span> <span class="n">ForcingSet</span><span class="p">())</span>
+    <span class="n">schedule</span> <span class="o">=</span> <span class="n">_resolve_schedule</span><span class="p">(</span><span class="n">thin_at_age</span><span class="p">,</span> <span class="n">thin_at_year</span><span class="p">)</span>
+
+    <span class="n">stage_names</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">stages</span><span class="p">())</span>
+    <span class="n">values_removals</span> <span class="o">=</span> <span class="s2">&quot;valuation&quot;</span> <span class="ow">in</span> <span class="n">stage_names</span>
+    <span class="n">discount_from_forcing</span> <span class="o">=</span> <span class="n">DISCOUNT</span> <span class="ow">in</span> <span class="n">applied_forcings</span><span class="o">.</span><span class="n">names</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">valuation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">values_removals</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Valuation settings were given, but this scenario declares no &#39;valuation&#39; &quot;</span>
+            <span class="s2">&quot;stage, so nothing would be priced and the price list would earn nothing. &quot;</span>
+            <span class="s2">&quot;The manifest would then name a list the run never used. Add &#39;valuation&#39; to &quot;</span>
+            <span class="s2">&quot;the configuration&#39;s stages, or drop the argument -- the same reason &quot;</span>
+            <span class="s2">&quot;discount_rate is refused here.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">stage_context</span> <span class="o">=</span> <span class="n">StageContext</span><span class="p">(</span>
+        <span class="n">volume</span><span class="o">=</span><span class="n">volume</span><span class="p">,</span>
+        <span class="n">management</span><span class="o">=</span><span class="n">management</span><span class="p">,</span>
+        <span class="n">forcings</span><span class="o">=</span><span class="n">applied_forcings</span><span class="p">,</span>
+        <span class="n">guard_policy</span><span class="o">=</span><span class="n">guard_policy</span><span class="p">,</span>
+        <span class="n">valuation</span><span class="o">=</span><span class="n">valuation</span><span class="p">,</span>
+        <span class="n">records_removals</span><span class="o">=</span><span class="n">values_removals</span><span class="p">,</span>
+        <span class="n">disturbance_rate_per_year</span><span class="o">=</span><span class="n">disturbance_rate_per_year</span><span class="p">,</span>
+        <span class="n">schedule</span><span class="o">=</span><span class="n">schedule</span><span class="p">,</span>
+        <span class="n">mean_tree</span><span class="o">=</span><span class="n">mean_tree</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="c1"># After the pipeline, so a run that declares a valuation stage and supplies</span>
+    <span class="c1"># neither a price list nor a rate is told about the price list first: without</span>
+    <span class="c1"># one there is no revenue, and the rate is a refinement on revenue.</span>
+    <span class="n">pipeline</span> <span class="o">=</span> <span class="n">build_pipeline</span><span class="p">(</span><span class="n">stage_names</span><span class="p">,</span> <span class="n">stage_context</span><span class="p">,</span> <span class="n">start_year</span><span class="o">=</span><span class="n">start_year</span><span class="p">)</span>
+    <span class="n">_check_discounting</span><span class="p">(</span>
+        <span class="n">values_removals</span><span class="o">=</span><span class="n">values_removals</span><span class="p">,</span>
+        <span class="n">discount_rate</span><span class="o">=</span><span class="n">discount_rate</span><span class="p">,</span>
+        <span class="n">from_forcing</span><span class="o">=</span><span class="n">discount_from_forcing</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">rows</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">contexts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">SimulationContext</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">models_run</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="c1"># Resolved before the loop, because the horizon it implies is what tells a</span>
+    <span class="c1"># stand whether its thinning schedule is reachable at all.</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">step_years</span><span class="p">)</span> <span class="k">if</span> <span class="n">step_years</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">step</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">build_model</span><span class="p">()</span><span class="o">.</span><span class="n">requirements</span><span class="p">()</span><span class="o">.</span><span class="n">native_step_years</span> <span class="ow">or</span> <span class="mf">5.0</span><span class="p">)</span>
+    <span class="n">horizon_years</span> <span class="o">=</span> <span class="n">step</span> <span class="o">*</span> <span class="n">n_steps</span>
+
+    <span class="k">for</span> <span class="n">unit</span> <span class="ow">in</span> <span class="n">stands</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">build_model</span><span class="p">()</span>
+
+        <span class="n">stand_seed</span> <span class="o">=</span> <span class="n">_stand_seed</span><span class="p">(</span><span class="n">scenario_seed</span><span class="p">,</span> <span class="n">unit</span><span class="o">.</span><span class="n">stand_id</span><span class="p">)</span>
+        <span class="c1"># The caller&#39;s inventory is an input, not the run&#39;s working state. A</span>
+        <span class="c1"># projection grows, thins and kills the stand it is given, so passing</span>
+        <span class="c1"># `unit.stand` straight in left the caller holding the run&#39;s *end* state:</span>
+        <span class="c1"># a second scenario over the same inventory started where the first</span>
+        <span class="c1"># finished, which is exactly what comparing two scenarios is. Copy, as</span>
+        <span class="c1"># `pyforestry.project` already does.</span>
+        <span class="n">ctx</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">build_context</span><span class="p">(</span>
+            <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">unit</span><span class="o">.</span><span class="n">stand</span><span class="p">),</span>
+            <span class="n">seed</span><span class="o">=</span><span class="n">stand_seed</span><span class="p">,</span>
+            <span class="n">attrs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">attrs</span><span class="p">)</span> <span class="k">if</span> <span class="n">attrs</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;_volume_reporter&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">volume</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;stand_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">unit</span><span class="o">.</span><span class="n">stand_id</span>
+        <span class="k">if</span> <span class="n">unit</span><span class="o">.</span><span class="n">species</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ctx</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">STAND_SPECIES_KEY</span><span class="p">]</span> <span class="o">=</span> <span class="n">unit</span><span class="o">.</span><span class="n">species</span>
+
+        <span class="n">stand_age</span> <span class="o">=</span> <span class="n">_stand_start_age</span><span class="p">(</span><span class="n">unit</span><span class="p">,</span> <span class="n">start_age</span><span class="p">,</span> <span class="n">schedule</span><span class="p">,</span> <span class="n">time_to_breast_height</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">stand_age</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ctx</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">STAND_START_AGE_KEY</span><span class="p">]</span> <span class="o">=</span> <span class="n">stand_age</span>
+        <span class="n">_check_schedule_reachable</span><span class="p">(</span>
+            <span class="n">unit</span><span class="p">,</span>
+            <span class="n">schedule</span><span class="p">,</span>
+            <span class="nb">float</span><span class="p">(</span><span class="n">stand_age</span><span class="p">)</span> <span class="k">if</span> <span class="n">schedule</span><span class="o">.</span><span class="n">basis</span> <span class="o">==</span> <span class="n">BY_AGE</span> <span class="ow">and</span> <span class="n">stand_age</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">start_year</span><span class="p">,</span>
+            <span class="n">horizon_years</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">initial_volume</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">volume</span><span class="p">(</span><span class="n">ctx</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">guard_policy</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;reject_negative_inputs&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">initial_volume</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Stand </span><span class="si">{</span><span class="n">unit</span><span class="o">.</span><span class="n">stand_id</span><span class="si">}</span><span class="s2"> starts at </span><span class="si">{</span><span class="n">initial_volume</span><span class="si">}</span><span class="s2"> m3/ha, and this &quot;</span>
+                <span class="s2">&quot;scenario&#39;s guard policy rejects negative inputs.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">run_pipeline</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">years</span><span class="o">=</span><span class="n">step</span> <span class="o">*</span> <span class="n">n_steps</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">step</span><span class="p">)</span>
+
+        <span class="n">removed</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">REMOVED_BY_STAGE_KEY</span><span class="p">,</span> <span class="p">{}))</span>
+        <span class="n">harvested</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">removed</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;management&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+        <span class="n">disturbed</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">removed</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;disturbance&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+        <span class="n">net_volume</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">volume</span><span class="p">(</span><span class="n">ctx</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">guard_policy</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;clamp_net_volume_to_zero&quot;</span><span class="p">):</span>
+            <span class="n">net_volume</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">net_volume</span><span class="p">)</span>
+        <span class="c1"># Derived from the clamped net so the row&#39;s identity closes exactly; the</span>
+        <span class="c1"># manifest records that the clamp was in force.</span>
+        <span class="n">gross_growth</span> <span class="o">=</span> <span class="n">net_volume</span> <span class="o">-</span> <span class="n">initial_volume</span> <span class="o">+</span> <span class="n">harvested</span> <span class="o">+</span> <span class="n">disturbed</span>
+
+        <span class="c1"># Empty unless a valuation stage priced a removal, so both figures are</span>
+        <span class="c1"># 0.0 for a run that declares no such stage -- which is what ``valued``</span>
+        <span class="c1"># is in the row to distinguish from a run that priced its removals and</span>
+        <span class="c1"># found them worth nothing.</span>
+        <span class="n">flows</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">cash_flows_of</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">attrs</span><span class="p">))</span>
+        <span class="n">nominal_revenue</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">flow</span><span class="o">.</span><span class="n">amount</span> <span class="k">for</span> <span class="n">flow</span> <span class="ow">in</span> <span class="n">flows</span><span class="p">))</span>
+
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;stand_id&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">unit</span><span class="o">.</span><span class="n">stand_id</span><span class="p">),</span>
+                <span class="s2">&quot;scenario_id&quot;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">scenario_id</span><span class="p">,</span>
+                <span class="s2">&quot;stand_seed&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">stand_seed</span><span class="p">),</span>
+                <span class="s2">&quot;initial_volume_m3&quot;</span><span class="p">:</span> <span class="n">initial_volume</span><span class="p">,</span>
+                <span class="s2">&quot;gross_growth_m3&quot;</span><span class="p">:</span> <span class="n">gross_growth</span><span class="p">,</span>
+                <span class="s2">&quot;disturbance_loss_m3&quot;</span><span class="p">:</span> <span class="n">disturbed</span><span class="p">,</span>
+                <span class="s2">&quot;harvested_m3&quot;</span><span class="p">:</span> <span class="n">harvested</span><span class="p">,</span>
+                <span class="s2">&quot;net_volume_m3&quot;</span><span class="p">:</span> <span class="n">net_volume</span><span class="p">,</span>
+                <span class="s2">&quot;valued&quot;</span><span class="p">:</span> <span class="n">values_removals</span><span class="p">,</span>
+                <span class="s2">&quot;nominal_revenue&quot;</span><span class="p">:</span> <span class="n">nominal_revenue</span><span class="p">,</span>
+                <span class="s2">&quot;net_present_value&quot;</span><span class="p">:</span> <span class="n">net_present_value</span><span class="p">(</span>
+                    <span class="n">flows</span><span class="p">,</span>
+                    <span class="n">base_year</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">start_year</span><span class="p">),</span>
+                    <span class="n">discount_rate</span><span class="o">=</span><span class="n">discount_rate</span><span class="p">,</span>
+                    <span class="n">forcings</span><span class="o">=</span><span class="n">applied_forcings</span><span class="p">,</span>
+                <span class="p">),</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="n">contexts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+        <span class="n">models_run</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">collect_provenance</span><span class="p">(</span><span class="n">model</span><span class="p">))</span>
+
+    <span class="n">manifest</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;preset_id&quot;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">preset_id</span><span class="p">,</span>
+        <span class="s2">&quot;scenario_id&quot;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">scenario_id</span><span class="p">,</span>
+        <span class="s2">&quot;region&quot;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">region</span><span class="p">,</span>
+        <span class="s2">&quot;global_seed&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">global_seed</span><span class="p">),</span>
+        <span class="s2">&quot;scenario_seed&quot;</span><span class="p">:</span> <span class="n">scenario_seed</span><span class="p">,</span>
+        <span class="s2">&quot;processes&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;n_steps&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_steps</span><span class="p">),</span>
+        <span class="s2">&quot;step_years&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">step</span> <span class="ow">or</span> <span class="mf">0.0</span><span class="p">),</span>
+        <span class="s2">&quot;n_stands&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">stands</span><span class="p">),</span>
+        <span class="s2">&quot;required_artifacts&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">required_artifacts</span><span class="p">()),</span>
+        <span class="s2">&quot;stages&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">stage_names</span><span class="p">),</span>
+        <span class="s2">&quot;rulesets_applied&quot;</span><span class="p">:</span> <span class="n">_rulesets_applied</span><span class="p">(</span><span class="n">config</span><span class="p">),</span>
+        <span class="s2">&quot;forcings_applied&quot;</span><span class="p">:</span> <span class="n">applied_forcings</span><span class="o">.</span><span class="n">as_manifest</span><span class="p">(),</span>
+        <span class="s2">&quot;guard_policy&quot;</span><span class="p">:</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">value</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">guard_policy</span><span class="o">.</span><span class="n">items</span><span class="p">()},</span>
+        <span class="s2">&quot;valuation&quot;</span><span class="p">:</span> <span class="n">_valuation_manifest</span><span class="p">(</span>
+            <span class="n">values_removals</span><span class="o">=</span><span class="n">values_removals</span><span class="p">,</span>
+            <span class="n">discount_rate</span><span class="o">=</span><span class="n">discount_rate</span><span class="p">,</span>
+            <span class="n">from_forcing</span><span class="o">=</span><span class="n">discount_from_forcing</span><span class="p">,</span>
+            <span class="n">base_year</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">start_year</span><span class="p">),</span>
+            <span class="c1"># Only for a run that priced something. A valuation stage cannot reach</span>
+            <span class="c1"># here without settings -- build_pipeline refuses that above -- and a</span>
+            <span class="c1"># price list supplied to a configuration that never values anything</span>
+            <span class="c1"># earned nothing, so recording it would misreport what the run did.</span>
+            <span class="n">identity</span><span class="o">=</span><span class="p">(</span>
+                <span class="n">valuation</span><span class="o">.</span><span class="n">pricelist</span><span class="o">.</span><span class="n">identity</span> <span class="k">if</span> <span class="n">values_removals</span> <span class="ow">and</span> <span class="n">valuation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="p">),</span>
+        <span class="p">),</span>
+        <span class="s2">&quot;start_year&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">start_year</span><span class="p">),</span>
+        <span class="s2">&quot;disturbance_rate_per_year&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">disturbance_rate_per_year</span><span class="p">),</span>
+        <span class="c1"># What the thinnings were asked for, and in what measure. The measure is</span>
+        <span class="c1"># the point: the same list of numbers under the old `thin_at_years` meant</span>
+        <span class="c1"># elapsed years for one region&#39;s models and total stand age for another&#39;s,</span>
+        <span class="c1"># because it was compared against a clock each model starts where it likes.</span>
+        <span class="s2">&quot;management_schedule&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="o">**</span><span class="n">schedule</span><span class="o">.</span><span class="n">as_manifest</span><span class="p">(),</span>
+            <span class="s2">&quot;start_age&quot;</span><span class="p">:</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">start_age</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">start_age</span><span class="p">),</span>
+            <span class="s2">&quot;start_age_measure&quot;</span><span class="p">:</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">start_age</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">Age</span><span class="p">(</span><span class="n">start_age</span><span class="o">.</span><span class="n">code</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;time_to_breast_height_years&quot;</span><span class="p">:</span> <span class="p">(</span>
+                <span class="kc">None</span> <span class="k">if</span> <span class="n">time_to_breast_height</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">time_to_breast_height</span><span class="p">)</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;models_run&quot;</span><span class="p">:</span> <span class="n">as_manifest_entries</span><span class="p">(</span><span class="n">models_run</span><span class="p">),</span>
+        <span class="s2">&quot;provenance&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;git_revision&quot;</span><span class="p">:</span> <span class="n">git_revision</span><span class="p">(),</span>
+            <span class="s2">&quot;config_component_id&quot;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">component_id</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+
+    <span class="n">artifacts</span> <span class="o">=</span> <span class="n">write_artifacts</span><span class="p">(</span><span class="n">output_dir</span><span class="o">=</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">manifest</span><span class="o">=</span><span class="n">manifest</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="n">rows</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ScenarioRunResult</span><span class="p">(</span>
+        <span class="n">artifacts</span><span class="o">=</span><span class="n">artifacts</span><span class="p">,</span>
+        <span class="n">rows</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">rows</span><span class="p">),</span>
+        <span class="n">manifest</span><span class="o">=</span><span class="n">manifest</span><span class="p">,</span>
+        <span class="n">contexts</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">contexts</span><span class="p">),</span>
+        <span class="n">forcings</span><span class="o">=</span><span class="n">applied_forcings</span><span class="p">,</span>
+        <span class="n">discount_rate</span><span class="o">=</span><span class="n">discount_rate</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

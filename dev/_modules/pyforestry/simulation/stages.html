@@ -1,0 +1,1445 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pyforestry.simulation.stages &#8212; pyforestry  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyforestry/simulation/stages';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.20.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pyforestry  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../catalog.html">
+    Model catalog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../model_index.html">
+    Model index
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/wikberg_2004.html">
+    Wikberg 2004 ingrowth demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/elfving_2010.html">
+    Elfving 2010 growth demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/elfving_2010_preset.html">
+    Elfving 2010 composite preset demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/soderberg_1986_preset.html">
+    Soderberg 1986 composite preset demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/young_stand.html">
+    Young stand demo (NYSKOG + Näslund 1986)
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/competition_indices.html">
+    Competition indices on a simulated stand
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/FullStack_Callables_Guide.html">
+    Composable Callables & Full‑Stack GrowthModel — Practical Guide
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../catalog.html">
+    Model catalog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../model_index.html">
+    Model index
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/wikberg_2004.html">
+    Wikberg 2004 ingrowth demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/elfving_2010.html">
+    Elfving 2010 growth demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/elfving_2010_preset.html">
+    Elfving 2010 composite preset demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/soderberg_1986_preset.html">
+    Soderberg 1986 composite preset demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/young_stand.html">
+    Young stand demo (NYSKOG + Näslund 1986)
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/competition_indices.html">
+    Competition indices on a simulated stand
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/FullStack_Callables_Guide.html">
+    Composable Callables & Full‑Stack GrowthModel — Practical Guide
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pyforestry.simulation.stages</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for pyforestry.simulation.stages</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Turning a scenario&#39;s stage *names* into the steps a run executes.</span>
+
+<span class="sd">``ScenarioConfig.stages()`` returns ``(&quot;growth&quot;, &quot;disturbance&quot;, &quot;valuation&quot;)`` --</span>
+<span class="sd">names, in the order they run. :func:`build_pipeline` resolves each to a</span>
+<span class="sd">:class:`~pyforestry.base.simulation.pipeline.Step`. Until it existed, the names</span>
+<span class="sd">were recorded into a manifest and nothing ran them, which is most of why the</span>
+<span class="sd">whole configuration tier executed nothing.</span>
+
+<span class="sd">Two of the four stages are the runtime&#39;s own (:class:`GrowthStep`,</span>
+<span class="sd">:class:`~pyforestry.simulation.valuation.step.ValuationStep`). Two are defined</span>
+<span class="sd">here because they are what a *scenario* adds on top of a published model:</span>
+
+<span class="sd">* :class:`ScenarioDisturbanceStep` -- an annual disturbance rate, scaled by any</span>
+<span class="sd">  :data:`~pyforestry.simulation.forcing.DISTURBANCE` forcing. None of the growth</span>
+<span class="sd">  models in this package predicts windthrow, fire or bark beetle, so this is an</span>
+<span class="sd">  addition to the model rather than a distortion of it.</span>
+<span class="sd">* :class:`ScenarioGrowthStep` -- growth, with any</span>
+<span class="sd">  :data:`~pyforestry.simulation.forcing.GROWTH` forcing applied to the period&#39;s</span>
+<span class="sd">  *increment*. This one **is** a distortion of a published model&#39;s prediction,</span>
+<span class="sd">  which is why it is a separate named stage, why it is an exact no-op when</span>
+<span class="sd">  nothing forces growth, why the forcing is recorded in the run manifest, and</span>
+<span class="sd">  why it refuses to run on a representation where &quot;the increment&quot; is not a</span>
+<span class="sd">  well-defined thing to scale.</span>
+
+<span class="sd">Every step reads its forcings at the period&#39;s calendar year, which</span>
+<span class="sd">:class:`CalendarStep` stamps onto the context. That is what lets a forcing be a</span>
+<span class="sd">year-by-year series -- a weather correction, an inflation index -- rather than</span>
+<span class="sd">one number for the run.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.primitives</span><span class="w"> </span><span class="kn">import</span> <span class="n">Age</span><span class="p">,</span> <span class="n">AgeMeasurement</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.simulation.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimulationContext</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.simulation.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Action</span><span class="p">,</span> <span class="n">GrowthStep</span><span class="p">,</span> <span class="n">ManagementStep</span><span class="p">,</span> <span class="n">Step</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.simulation.forcing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CALENDAR_YEAR_KEY</span><span class="p">,</span>
+    <span class="n">DISTURBANCE</span><span class="p">,</span>
+    <span class="n">GROWTH</span><span class="p">,</span>
+    <span class="n">THINNING</span><span class="p">,</span>
+    <span class="n">ForcingSet</span><span class="p">,</span>
+    <span class="n">period_year</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.simulation.policy</span><span class="w"> </span><span class="kn">import</span> <span class="n">ManagementPlan</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.simulation.valuation.removals</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandRemovalLedger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.simulation.valuation.step</span><span class="w"> </span><span class="kn">import</span> <span class="n">ValuationStep</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.simulation.valuation.volume</span><span class="w"> </span><span class="kn">import</span> <span class="n">ValuationSettings</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;BY_AGE&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BY_CALENDAR&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CALENDAR_YEAR_KEY&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;STAND_AGE_KEY&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;STAND_SPECIES_KEY&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;STAND_START_AGE_KEY&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;THINNINGS_FIRED_KEY&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;MeanTree&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;MeanTreeReporter&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;STAGE_BUILDERS&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CalendarStep&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ScenarioDisturbanceStep&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ScenarioGrowthStep&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;StageContext&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ThinningSchedule&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ThinningStep&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;build_pipeline&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;known_stages&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;period_age&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;period_year&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c1">#: A thinning schedule counted in stand age -- the recommended one.</span>
+<span class="n">BY_AGE</span> <span class="o">=</span> <span class="s2">&quot;age&quot;</span>
+<span class="c1">#: A thinning schedule counted in calendar years.</span>
+<span class="n">BY_CALENDAR</span> <span class="o">=</span> <span class="s2">&quot;calendar&quot;</span>
+
+
+<span class="c1">#: Where a step records the volume it removed, so the run&#39;s summary can report</span>
+<span class="c1">#: harvest and disturbance separately without either step knowing about the other.</span>
+<span class="n">REMOVED_BY_STAGE_KEY</span> <span class="o">=</span> <span class="s2">&quot;removed_volume_m3_per_ha_by_stage&quot;</span>
+
+<span class="c1">#: Where a run records the species a stand&#39;s mean-tree removals are priced as.</span>
+<span class="c1">#: Set from :attr:`~pyforestry.simulation.scenario.StandUnit.species`.</span>
+<span class="n">STAND_SPECIES_KEY</span> <span class="o">=</span> <span class="s2">&quot;stand_species&quot;</span>
+
+<span class="c1">#: The age the stand starts the projection at, as an</span>
+<span class="c1">#: :class:`~pyforestry.base.helpers.primitives.AgeMeasurement` so it says whether</span>
+<span class="c1">#: it is counted from the seed or from breast height. Set per stand by</span>
+<span class="c1">#: :func:`~pyforestry.simulation.scenario.run_scenario`.</span>
+<span class="n">STAND_START_AGE_KEY</span> <span class="o">=</span> <span class="s2">&quot;stand_start_age&quot;</span>
+
+<span class="c1">#: The age the stand has reached in the period currently running, stamped by</span>
+<span class="c1">#: :class:`CalendarStep` in the same measure its start age was given in.</span>
+<span class="n">STAND_AGE_KEY</span> <span class="o">=</span> <span class="s2">&quot;stand_age&quot;</span>
+
+<span class="c1">#: Where :class:`ThinningStep` records the ages or years its thinnings actually</span>
+<span class="c1">#: fired at, so a run can be asked what it did rather than what it was asked for.</span>
+<span class="n">THINNINGS_FIRED_KEY</span> <span class="o">=</span> <span class="s2">&quot;thinnings_fired&quot;</span>
+
+
+<div class="viewcode-block" id="period_age">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.stages.period_age">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">period_age</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">SimulationContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AgeMeasurement</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the stand&#39;s age at the start of the period currently running.</span>
+
+<span class="sd">    ``None`` for a run that never said how old its stands were, which is every</span>
+<span class="sd">    run that does not schedule by age.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">age</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">STAND_AGE_KEY</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">age</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="MeanTree">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.stages.MeanTree">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MeanTree</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The representative stem a stand without individual stems can be bucked as.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        species: What it is.</span>
+<span class="sd">        diameter_cm: Its diameter, normally the stand&#39;s quadratic mean diameter.</span>
+<span class="sd">        height_m: Its height. Lorey&#39;s mean height where the stand has one -- a</span>
+<span class="sd">            model that predicts only *dominant* height does not, and substituting</span>
+<span class="sd">            that overstates the stem.</span>
+<span class="sd">        stems_removed: How many such stems the removal takes out, per hectare.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">species</span><span class="p">:</span> <span class="n">Any</span>
+    <span class="n">diameter_cm</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">height_m</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">stems_removed</span><span class="p">:</span> <span class="nb">float</span></div>
+
+
+
+<span class="c1">#: How a run reads its stand&#39;s mean tree, given the fraction being removed.</span>
+<span class="n">MeanTreeReporter</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">SimulationContext</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MeanTree</span><span class="p">]]</span>
+
+
+<div class="viewcode-block" id="ThinningSchedule">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.stages.ThinningSchedule">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ThinningSchedule</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;When a scenario thins, in a measure that means the same thing everywhere.</span>
+
+<span class="sd">    A projection&#39;s own clock -- ``ctx.state[&quot;t&quot;]`` -- is elapsed years from</span>
+<span class="sd">    wherever the model started, and *where a model starts it is the model&#39;s</span>
+<span class="sd">    business*: the Elfving (2010) adapter starts at zero, the Kuehne (2022) one at</span>
+<span class="sd">    the stand&#39;s total age. Scheduling against it therefore meant two different</span>
+<span class="sd">    things in the two regions under one parameter name and one sentence of</span>
+<span class="sd">    documentation, and asking Norway to thin at ``15`` -- fifteen years in --</span>
+<span class="sd">    silently did nothing at all, because that clock began at 40.</span>
+
+<span class="sd">    So a schedule says what its numbers are. Either:</span>
+
+<span class="sd">    * **by age** (:data:`BY_AGE`) -- the recommended one, because a silvicultural</span>
+<span class="sd">      prescription is a statement about how old the stand is, not about when the</span>
+<span class="sd">      analyst pressed start. The points are</span>
+<span class="sd">      :class:`~pyforestry.base.helpers.primitives.AgeMeasurement`, so they also</span>
+<span class="sd">      say whether they are counted from the seed or from breast height.</span>
+<span class="sd">    * **by calendar year** (:data:`BY_CALENDAR`) -- for a schedule tied to</span>
+<span class="sd">      something outside the stand, and read against the same calendar a</span>
+<span class="sd">      :mod:`~pyforestry.simulation.forcing` series is.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        basis: :data:`BY_AGE` or :data:`BY_CALENDAR`.</span>
+<span class="sd">        points: The ages or years to thin at, sorted.</span>
+<span class="sd">        age_measure: ``Age.TOTAL`` or ``Age.DBH`` for an age schedule; ``None``</span>
+<span class="sd">            for a calendar one.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">basis</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">points</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">age_measure</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Age</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sort the points and check the basis carries what it needs.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">basis</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">BY_AGE</span><span class="p">,</span> <span class="n">BY_CALENDAR</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;basis must be </span><span class="si">{</span><span class="n">BY_AGE</span><span class="si">!r}</span><span class="s2"> or </span><span class="si">{</span><span class="n">BY_CALENDAR</span><span class="si">!r}</span><span class="s2">, got </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">basis</span><span class="si">!r}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">basis</span> <span class="o">==</span> <span class="n">BY_AGE</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">age_measure</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;An age schedule must say which age it means. Build its points with &quot;</span>
+                <span class="s2">&quot;Age.TOTAL(...) or Age.DBH(...), which carry that.&quot;</span>
+            <span class="p">)</span>
+        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;points&quot;</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">)))</span>
+
+<div class="viewcode-block" id="ThinningSchedule.by_age">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.stages.ThinningSchedule.by_age">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">by_age</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">ages</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">AgeMeasurement</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ThinningSchedule&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Build an age schedule from measurements that agree on what age they are.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TypeError: If a point is a bare number. ``40`` does not say whether it</span>
+<span class="sd">                is counted from the seed or from breast height, and the two differ</span>
+<span class="sd">                by the years a stand took to reach 1.3 m.</span>
+<span class="sd">            ValueError: If the points mix total and breast-height ages.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">measures</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">age</span> <span class="ow">in</span> <span class="n">ages</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;A thinning age must say which age it is, got </span><span class="si">{</span><span class="n">age</span><span class="si">!r}</span><span class="s2">. Use &quot;</span>
+                    <span class="s2">&quot;Age.TOTAL(60) for age from the seed or Age.DBH(47) for age at &quot;</span>
+                    <span class="s2">&quot;breast height -- they differ by the time the stand took to reach &quot;</span>
+                    <span class="s2">&quot;1.3 m, which is a decade on a poor site.&quot;</span>
+                <span class="p">)</span>
+            <span class="n">measures</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">age</span><span class="o">.</span><span class="n">code</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">measures</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;A thinning schedule cannot mix total and breast-height ages: &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">ages</span><span class="p">]</span><span class="si">}</span><span class="s2"> were given in both measures. Convert them &quot;</span>
+                <span class="s2">&quot;to one.&quot;</span>
+            <span class="p">)</span>
+        <span class="n">measure</span> <span class="o">=</span> <span class="n">Age</span><span class="p">(</span><span class="n">measures</span><span class="o">.</span><span class="n">pop</span><span class="p">())</span> <span class="k">if</span> <span class="n">measures</span> <span class="k">else</span> <span class="n">Age</span><span class="o">.</span><span class="n">TOTAL</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">basis</span><span class="o">=</span><span class="n">BY_AGE</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ages</span><span class="p">),</span> <span class="n">age_measure</span><span class="o">=</span><span class="n">measure</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ThinningSchedule.by_calendar">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.stages.ThinningSchedule.by_calendar">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">by_calendar</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">years</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ThinningSchedule&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Build a calendar-year schedule, read against the run&#39;s ``start_year``.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">basis</span><span class="o">=</span><span class="n">BY_CALENDAR</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">years</span><span class="p">))</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether this schedule thins at all.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ThinningSchedule.as_manifest">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.stages.ThinningSchedule.as_manifest">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">as_manifest</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return this schedule as a manifest record.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;basis&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">basis</span><span class="p">,</span>
+            <span class="s2">&quot;age_measure&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">age_measure</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">age_measure</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;points&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">),</span>
+        <span class="p">}</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="CalendarStep">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.stages.CalendarStep">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CalendarStep</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stamp the period&#39;s calendar year and the stand&#39;s age, then advance both.</span>
+
+<span class="sd">    A projection&#39;s clock is elapsed years from wherever the model started, and</span>
+<span class="sd">    some models start it at the stand&#39;s age. A forcing series is keyed by</span>
+<span class="sd">    calendar year, and a silvicultural prescription by stand age. This is the one</span>
+<span class="sd">    place all of them are reconciled: the run says which calendar year it begins</span>
+<span class="sd">    in and how old each stand is, and every step afterwards reads</span>
+<span class="sd">    :func:`period_year` or :func:`period_age` rather than the raw clock.</span>
+
+<span class="sd">    Both are stamped at the *start* of the period, so a step reading either gets</span>
+<span class="sd">    the year and age the period begins at, whatever order the stages run in. That</span>
+<span class="sd">    is why scheduling no longer depends on whether management is placed before or</span>
+<span class="sd">    after growth, which the elapsed clock quietly did.</span>
+
+<span class="sd">    The stand&#39;s start age comes off the context rather than this step, because one</span>
+<span class="sd">    pipeline runs every stand and real inventory is not all one age.</span>
+
+<span class="sd">    First in the pipeline, and installed by :func:`build_pipeline` rather than</span>
+<span class="sd">    named in a configuration&#39;s ``stages()``: which years a run covers is a</span>
+<span class="sd">    property of the run, not of the scenario&#39;s science.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">start_year</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;calendar&quot;</span>
+
+<div class="viewcode-block" id="CalendarStep.run">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.stages.CalendarStep.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">SimulationContext</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Stamp this period&#39;s year and stand age, then move both on by ``dt``.&quot;&quot;&quot;</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">CALENDAR_YEAR_KEY</span><span class="p">)</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">CALENDAR_YEAR_KEY</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start_year</span><span class="p">)</span> <span class="k">if</span> <span class="n">current</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">current</span><span class="p">)</span> <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">start_age</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">STAND_START_AGE_KEY</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">start_age</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">):</span>
+            <span class="n">reached</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">STAND_AGE_KEY</span><span class="p">)</span>
+            <span class="n">ctx</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">STAND_AGE_KEY</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">start_age</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">reached</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">)</span>
+                <span class="c1"># A year of elapsed time adds a year to age from the seed and to age</span>
+                <span class="c1"># at breast height alike, so the measure carries through untouched.</span>
+                <span class="k">else</span> <span class="n">AgeMeasurement</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">reached</span><span class="p">)</span> <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">dt</span><span class="p">),</span> <span class="n">reached</span><span class="o">.</span><span class="n">code</span><span class="p">)</span>
+            <span class="p">)</span></div>
+</div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">record_removal</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">SimulationContext</span><span class="p">,</span> <span class="n">stage</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">volume_m3_per_ha</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add ``volume_m3_per_ha`` to what ``stage`` has removed over the run.&quot;&quot;&quot;</span>
+    <span class="n">ledger</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">REMOVED_BY_STAGE_KEY</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="n">ledger</span><span class="p">[</span><span class="n">stage</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ledger</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">stage</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span> <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">volume_m3_per_ha</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="StageContext">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.stages.StageContext">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">StageContext</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Everything a stage builder may consult when constructing its step.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        management: The scenario&#39;s management plan, if it declares one.</span>
+<span class="sd">        forcings: The named multipliers this run applies, read at the period&#39;s</span>
+<span class="sd">            calendar year. An empty set -- the default -- leaves every model&#39;s</span>
+<span class="sd">            own prediction exactly as it is.</span>
+<span class="sd">        guard_policy: Non-formula guard flags declared by the configuration.</span>
+<span class="sd">        valuation: Price list, taper and bucking settings, when the run supplies</span>
+<span class="sd">            them. A ``&quot;valuation&quot;`` stage without them is an error rather than a</span>
+<span class="sd">            silently skipped stage.</span>
+<span class="sd">        records_removals: Whether a thinning writes to the valuation ledger. True</span>
+<span class="sd">            exactly when the configuration declares a ``&quot;valuation&quot;`` stage --</span>
+<span class="sd">            which is what reads it. Keying this off the *settings* instead filled</span>
+<span class="sd">            a ledger nobody would price for any run that passed a price list to a</span>
+<span class="sd">            configuration that values nothing.</span>
+<span class="sd">        volume: How to read the stand&#39;s standing volume, in m³/ha.</span>
+<span class="sd">        disturbance_rate_per_year: The base annual disturbance rate, before any</span>
+<span class="sd">            :data:`~pyforestry.simulation.forcing.DISTURBANCE` forcing. Zero --</span>
+<span class="sd">            the default -- makes the disturbance stage an exact no-op.</span>
+<span class="sd">        schedule: When the management stage thins, in stand age or calendar</span>
+<span class="sd">            years. Empty -- the default -- makes it an exact no-op.</span>
+<span class="sd">        mean_tree: How to read the representative stem of a stand that holds no</span>
+<span class="sd">            individual ones, so an aggregate model&#39;s thinning can be bucked.</span>
+<span class="sd">            Only the run knows this: a model that predicts dominant height has no</span>
+<span class="sd">            mean height, and guessing one here would put a bias in every price.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">volume</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">SimulationContext</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span>
+    <span class="n">management</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ManagementPlan</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">forcings</span><span class="p">:</span> <span class="n">ForcingSet</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">ForcingSet</span><span class="p">)</span>
+    <span class="n">guard_policy</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">valuation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ValuationSettings</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">records_removals</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">disturbance_rate_per_year</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">schedule</span><span class="p">:</span> <span class="n">ThinningSchedule</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">ThinningSchedule</span><span class="p">(</span><span class="n">basis</span><span class="o">=</span><span class="n">BY_CALENDAR</span><span class="p">))</span>
+    <span class="n">mean_tree</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;MeanTreeReporter&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="ScenarioGrowthStep">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.stages.ScenarioGrowthStep">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ScenarioGrowthStep</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Advance the model, then apply this period&#39;s growth forcing to the increment.</span>
+
+<span class="sd">    With no forcing on :data:`~pyforestry.simulation.forcing.GROWTH` this is</span>
+<span class="sd">    exactly :class:`GrowthStep`: the model&#39;s own prediction, untouched. With one,</span>
+<span class="sd">    the period&#39;s increment is scaled and the stand rewritten -- a scenario</span>
+<span class="sd">    device, not science, which is why it is a distinct named step and why the</span>
+<span class="sd">    manifest records the forcing that drove it.</span>
+
+<span class="sd">    The factor is read per period, so a weather correction given as a series</span>
+<span class="sd">    (``{2014: 1.04, 2015: 1.02, ...}``) scales each period by its own year.</span>
+
+<span class="sd">    Only aggregate stands can be adjusted this way: scaling &quot;the increment&quot; means</span>
+<span class="sd">    scaling one basal-area and one stem number. On a tree list the same idea</span>
+<span class="sd">    would mean redistributing growth across trees, which is a modelling decision</span>
+<span class="sd">    and belongs to a model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">forcings</span><span class="p">:</span> <span class="n">ForcingSet</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">ForcingSet</span><span class="p">)</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;growth&quot;</span>
+
+<div class="viewcode-block" id="ScenarioGrowthStep.run">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.stages.ScenarioGrowthStep.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">SimulationContext</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Grow one period, scaling the increment by this year&#39;s growth forcing.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If a forcing other than 1.0 applies to a stand that is</span>
+<span class="sd">                not in aggregate mode.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forcings</span><span class="o">.</span><span class="n">multiplier</span><span class="p">(</span><span class="n">GROWTH</span><span class="p">,</span> <span class="n">period_year</span><span class="p">(</span><span class="n">ctx</span><span class="p">))</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">forcings</span> <span class="k">else</span> <span class="mf">1.0</span>
+        <span class="k">if</span> <span class="n">factor</span> <span class="o">==</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="n">ctx</span><span class="o">.</span><span class="n">update_step</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">mode</span> <span class="o">!=</span> <span class="s2">&quot;aggregate&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;A growth forcing of </span><span class="si">{</span><span class="n">factor</span><span class="si">!r}</span><span class="s2"> cannot be applied to a </span><span class="si">{</span><span class="n">ctx</span><span class="o">.</span><span class="n">mode</span><span class="si">!r}</span><span class="s2"> &quot;</span>
+                <span class="s2">&quot;stand: scaling &#39;the increment&#39; is only well defined for aggregate &quot;</span>
+                <span class="s2">&quot;basal area and stems. Drop the forcing, run this scenario on an &quot;</span>
+                <span class="s2">&quot;aggregate model, or express the effect inside a model variant.&quot;</span>
+            <span class="p">)</span>
+        <span class="n">ba_before</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;BasalArea&quot;</span><span class="p">][</span><span class="s2">&quot;TOTAL&quot;</span><span class="p">])</span>
+        <span class="n">stems_before</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;Stems&quot;</span><span class="p">][</span><span class="s2">&quot;TOTAL&quot;</span><span class="p">])</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">update_step</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+        <span class="n">ba_after</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;BasalArea&quot;</span><span class="p">][</span><span class="s2">&quot;TOTAL&quot;</span><span class="p">])</span>
+        <span class="n">stems_after</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;Stems&quot;</span><span class="p">][</span><span class="s2">&quot;TOTAL&quot;</span><span class="p">])</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">set_aggregate_metrics</span><span class="p">(</span>
+            <span class="n">ba_total</span><span class="o">=</span><span class="n">ba_before</span> <span class="o">+</span> <span class="p">(</span><span class="n">ba_after</span> <span class="o">-</span> <span class="n">ba_before</span><span class="p">)</span> <span class="o">*</span> <span class="n">factor</span><span class="p">,</span>
+            <span class="n">stems_total</span><span class="o">=</span><span class="n">stems_before</span> <span class="o">+</span> <span class="p">(</span><span class="n">stems_after</span> <span class="o">-</span> <span class="n">stems_before</span><span class="p">)</span> <span class="o">*</span> <span class="n">factor</span><span class="p">,</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ScenarioDisturbanceStep">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.stages.ScenarioDisturbanceStep">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ScenarioDisturbanceStep</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove a scenario-driven share of the stand each period.</span>
+
+<span class="sd">    ``rate_per_year * factor`` compounded over the period, applied to stems and</span>
+<span class="sd">    basal area alike. This is not any published model&#39;s mortality: those are in</span>
+<span class="sd">    ``&lt;region&gt;/mortality/`` and run inside the models that own them. This is the</span>
+<span class="sd">    windthrow-and-fire term a *scenario* adds, and it is zero unless a run asks</span>
+<span class="sd">    for it.</span>
+
+<span class="sd">    The rate is the caller&#39;s. This package ships none, for either region: a</span>
+<span class="sd">    disturbance rate is a finding -- from a risk model, or from an inventory of</span>
+<span class="sd">    observed damage -- and inventing one here would put a number under a</span>
+<span class="sd">    scenario&#39;s name with nothing behind it. The manifest records whatever the run</span>
+<span class="sd">    was given.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">rate_per_year</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">forcings</span><span class="p">:</span> <span class="n">ForcingSet</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">ForcingSet</span><span class="p">)</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;disturbance&quot;</span>
+
+<div class="viewcode-block" id="ScenarioDisturbanceStep.rate_in">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.stages.ScenarioDisturbanceStep.rate_in">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rate_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">year</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The annual rate applied in ``year``, after any disturbance forcing.&quot;&quot;&quot;</span>
+        <span class="n">factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forcings</span><span class="o">.</span><span class="n">multiplier</span><span class="p">(</span><span class="n">DISTURBANCE</span><span class="p">,</span> <span class="n">year</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">forcings</span> <span class="k">else</span> <span class="mf">1.0</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rate_per_year</span><span class="p">)</span> <span class="o">*</span> <span class="n">factor</span></div>
+
+
+<div class="viewcode-block" id="ScenarioDisturbanceStep.run">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.stages.ScenarioDisturbanceStep.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">SimulationContext</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove the period&#39;s disturbance share, recording the volume lost.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate_per_year</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate_in</span><span class="p">(</span><span class="n">period_year</span><span class="p">(</span><span class="n">ctx</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">rate</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">removed_fraction</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">rate</span><span class="p">)</span> <span class="o">**</span> <span class="nb">float</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+        <span class="n">_remove_fraction</span><span class="p">(</span>
+            <span class="n">ctx</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">removed_fraction</span><span class="p">,</span>
+            <span class="p">{</span><span class="s2">&quot;rate_per_year&quot;</span><span class="p">:</span> <span class="n">rate</span><span class="p">},</span>
+            <span class="n">merchantable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ThinningStep">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.stages.ThinningStep">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ThinningStep</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove the scenario&#39;s thinning fraction, once, when the schedule falls due.</span>
+
+<span class="sd">    ``ManagementStep`` is the general mechanism -- a policy proposes actions and</span>
+<span class="sd">    this is one policy&#39;s worth of it -- expressed as a step because a scenario&#39;s</span>
+<span class="sd">    management is a fraction and a schedule rather than a callable a caller</span>
+<span class="sd">    writes.</span>
+
+<span class="sd">    A scheduled point falls due in the period whose span **contains** it, rather</span>
+<span class="sd">    than in a period that begins exactly on it. Matching exactly meant that a</span>
+<span class="sd">    thinning asked for anywhere off the period grid -- age 24 of a run stepping</span>
+<span class="sd">    five years from 0 -- did nothing whatsoever, wrote a summary reporting no</span>
+<span class="sd">    harvest and no revenue, and passed the artifact contract, because a run that</span>
+<span class="sd">    harvests nothing legitimately earns nothing. There was no way to tell it from</span>
+<span class="sd">    a scenario that had deliberately not thinned.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">thinning_ratio</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">schedule</span><span class="p">:</span> <span class="n">ThinningSchedule</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">ThinningSchedule</span><span class="p">(</span><span class="n">basis</span><span class="o">=</span><span class="n">BY_CALENDAR</span><span class="p">))</span>
+    <span class="n">forcings</span><span class="p">:</span> <span class="n">ForcingSet</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">ForcingSet</span><span class="p">)</span>
+    <span class="c1">#: Whether to record what was removed for pricing. False when the pipeline</span>
+    <span class="c1">#: has no valuation stage: a ledger nobody reads is wasted work.</span>
+    <span class="n">records_removals</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="c1">#: How to read the mean stem of a stand that holds no individual ones.</span>
+    <span class="n">mean_tree</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;MeanTreeReporter&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;management&quot;</span>
+
+<div class="viewcode-block" id="ThinningStep.ratio_in">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.stages.ThinningStep.ratio_in">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ratio_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">year</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The fraction removed in ``year``, after any thinning forcing.</span>
+
+<span class="sd">        Clamped to 1.0: a forcing that would take more than the stand holds takes</span>
+<span class="sd">        the stand.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forcings</span><span class="o">.</span><span class="n">multiplier</span><span class="p">(</span><span class="n">THINNING</span><span class="p">,</span> <span class="n">year</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">forcings</span> <span class="k">else</span> <span class="mf">1.0</span>
+        <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thinning_ratio</span><span class="p">)</span> <span class="o">*</span> <span class="n">factor</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_due</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">SimulationContext</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the scheduled point this period covers, or ``None``.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RuntimeError: If an age schedule is running against a stand whose age</span>
+<span class="sd">                was never declared, which :func:`run_scenario` refuses earlier.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">basis</span> <span class="o">==</span> <span class="n">BY_AGE</span><span class="p">:</span>
+            <span class="n">reached</span> <span class="o">=</span> <span class="n">period_age</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">reached</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="s2">&quot;This run thins by stand age but no stand age was declared, so &quot;</span>
+                    <span class="s2">&quot;there is nothing to compare the schedule against. Pass &quot;</span>
+                    <span class="s2">&quot;start_age= to run_scenario, or an age on each StandUnit.&quot;</span>
+                <span class="p">)</span>
+            <span class="n">now</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">reached</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">now</span> <span class="o">=</span> <span class="n">period_year</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+        <span class="c1"># Half-open, so a point on a period boundary falls due in exactly one</span>
+        <span class="c1"># period and never in two.</span>
+        <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">points</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">now</span> <span class="o">&lt;=</span> <span class="n">point</span> <span class="o">&lt;</span> <span class="n">now</span> <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">dt</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">point</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="ThinningStep.run">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.stages.ThinningStep.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">SimulationContext</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Thin if this period&#39;s span covers one of the scheduled points.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">thinning_ratio</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">due</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_due</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">due</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">ratio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ratio_in</span><span class="p">(</span><span class="n">period_year</span><span class="p">(</span><span class="n">ctx</span><span class="p">))</span>
+        <span class="n">_remove_fraction</span><span class="p">(</span>
+            <span class="n">ctx</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">ratio</span><span class="p">,</span>
+            <span class="p">{</span><span class="s2">&quot;thinning_ratio&quot;</span><span class="p">:</span> <span class="n">ratio</span><span class="p">,</span> <span class="s2">&quot;scheduled_at&quot;</span><span class="p">:</span> <span class="n">due</span><span class="p">},</span>
+            <span class="n">merchantable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">records_removals</span><span class="p">,</span>
+            <span class="n">mean_tree_reporter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mean_tree</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="c1"># What it actually did, beside what it was asked for: a point inside a</span>
+        <span class="c1"># period fires at the period&#39;s start, and the difference is the run&#39;s to</span>
+        <span class="c1"># see rather than infer from the step length.</span>
+        <span class="n">fired</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">THINNINGS_FIRED_KEY</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="n">fired</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;basis&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">basis</span><span class="p">,</span>
+                <span class="s2">&quot;scheduled_at&quot;</span><span class="p">:</span> <span class="n">due</span><span class="p">,</span>
+                <span class="s2">&quot;fired_at&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">period_age</span><span class="p">(</span><span class="n">ctx</span><span class="p">))</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span><span class="o">.</span><span class="n">basis</span> <span class="o">==</span> <span class="n">BY_AGE</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;calendar_year&quot;</span><span class="p">:</span> <span class="n">period_year</span><span class="p">(</span><span class="n">ctx</span><span class="p">),</span>
+                <span class="s2">&quot;ratio&quot;</span><span class="p">:</span> <span class="n">ratio</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_standing_volume</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">SimulationContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read the volume reporter the run installed on the context.&quot;&quot;&quot;</span>
+    <span class="n">reporter</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;_volume_reporter&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">reporter</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># pragma: no cover - run_scenario always installs one</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;No volume reporter is installed on this context.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">reporter</span><span class="p">(</span><span class="n">ctx</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_ledger_for</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">SimulationContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StandRemovalLedger</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the run&#39;s removal ledger, creating it on first use.&quot;&quot;&quot;</span>
+    <span class="n">ledger</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ValuationStep</span><span class="o">.</span><span class="n">LEDGER_KEY</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ledger</span><span class="p">,</span> <span class="n">StandRemovalLedger</span><span class="p">):</span>
+        <span class="n">ledger</span> <span class="o">=</span> <span class="n">StandRemovalLedger</span><span class="p">(</span><span class="n">stand_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;stand_id&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)))</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">ValuationStep</span><span class="o">.</span><span class="n">LEDGER_KEY</span><span class="p">]</span> <span class="o">=</span> <span class="n">ledger</span>
+    <span class="k">return</span> <span class="n">ledger</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_record_removed</span><span class="p">(</span>
+    <span class="n">ctx</span><span class="p">:</span> <span class="n">SimulationContext</span><span class="p">,</span>
+    <span class="n">stage</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">removed_fraction</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">volume_removed_m3</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">mean_tree</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;MeanTree&quot;</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add what a removal took out to the run&#39;s removal ledger.</span>
+
+<span class="sd">    This is what connects the two halves of the valuation design: a step thins,</span>
+<span class="sd">    and :class:`~pyforestry.simulation.valuation.step.ValuationStep` prices what</span>
+<span class="sd">    it removed. Without it the ledger stayed empty, so a pipeline that declared a</span>
+<span class="sd">    valuation stage priced nothing and reported it as zero.</span>
+
+<span class="sd">    Both kinds of stand can say something, and both are bucked. A tree list gives</span>
+<span class="sd">    stems. An aggregate stand gives its *mean* stem and how many came out, which</span>
+<span class="sd">    is bucked once and scaled -- because a stand-level model still has a</span>
+<span class="sd">    quadratic mean diameter, and that is a real tree.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ledger</span> <span class="o">=</span> <span class="n">_ledger_for</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+    <span class="n">cohort</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stage</span><span class="si">}</span><span class="s2">@</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;t&#39;</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">))</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">holds_tree_list</span><span class="p">():</span>
+        <span class="n">skipped</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">plot</span> <span class="ow">in</span> <span class="n">ctx</span><span class="o">.</span><span class="n">plots</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="n">plot</span><span class="o">.</span><span class="n">trees</span><span class="p">:</span>
+                <span class="n">weight</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">weight_n</span> <span class="ow">or</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">removed_fraction</span>
+                <span class="k">if</span> <span class="n">tree</span><span class="o">.</span><span class="n">species</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">tree</span><span class="o">.</span><span class="n">diameter_cm</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">tree</span><span class="o">.</span><span class="n">height_m</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1"># Nothing to buck it from. Its volume may still have been</span>
+                    <span class="c1"># counted as harvested -- that depends on the run&#39;s volume</span>
+                    <span class="c1"># reporter, and one that imputes heights will count it -- so</span>
+                    <span class="c1"># the ledger says how many stems it could not price rather</span>
+                    <span class="c1"># than reporting a smaller harvest as simply worth less.</span>
+                    <span class="n">skipped</span> <span class="o">+=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">weight</span><span class="p">)</span>
+                    <span class="k">continue</span>
+                <span class="k">if</span> <span class="n">weight</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">ledger</span><span class="o">.</span><span class="n">record_tree</span><span class="p">(</span><span class="n">cohort</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">skipped</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="n">ledger</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;stems_without_dimensions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="nb">float</span><span class="p">(</span><span class="n">ledger</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;stems_without_dimensions&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span> <span class="o">+</span> <span class="n">skipped</span>
+            <span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">if</span> <span class="n">volume_removed_m3</span> <span class="o">&lt;=</span> <span class="mf">0.0</span> <span class="ow">or</span> <span class="n">mean_tree</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="n">ledger</span><span class="o">.</span><span class="n">record_mean_tree</span><span class="p">(</span>
+        <span class="n">cohort</span><span class="p">,</span>
+        <span class="n">species</span><span class="o">=</span><span class="n">mean_tree</span><span class="o">.</span><span class="n">species</span><span class="p">,</span>
+        <span class="n">diameter_cm</span><span class="o">=</span><span class="n">mean_tree</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">,</span>
+        <span class="n">height_m</span><span class="o">=</span><span class="n">mean_tree</span><span class="o">.</span><span class="n">height_m</span><span class="p">,</span>
+        <span class="n">stems</span><span class="o">=</span><span class="n">mean_tree</span><span class="o">.</span><span class="n">stems_removed</span><span class="p">,</span>
+        <span class="n">volume_m3</span><span class="o">=</span><span class="n">volume_removed_m3</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;from&quot;</span><span class="p">:</span> <span class="s2">&quot;aggregate stand; bucked at its mean tree&quot;</span><span class="p">},</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_scale_stand</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">SimulationContext</span><span class="p">,</span> <span class="n">survived</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scale the stand down to ``survived`` of its stems, in whatever it holds.</span>
+
+<span class="sd">    Removing a share of a stand is a property of the *representation*, not of any</span>
+<span class="sd">    model: it is the same arithmetic on aggregate metrics, on per-tree weights and</span>
+<span class="sd">    on diameter-class counts. Doing it here rather than through</span>
+<span class="sd">    ``ctx.do(&quot;apply_mortality_rate&quot;)`` is what lets a scenario thin any model --</span>
+<span class="sd">    that action is declared by exactly one model in this package, the reference</span>
+<span class="sd">    example, so dispatching through it would have limited scenarios to that one.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;aggregate&quot;</span><span class="p">:</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">scale_stems</span><span class="p">(</span><span class="n">survived</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">ctx</span><span class="o">.</span><span class="n">holds_tree_list</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">plot</span> <span class="ow">in</span> <span class="n">ctx</span><span class="o">.</span><span class="n">plots</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="n">plot</span><span class="o">.</span><span class="n">trees</span><span class="p">:</span>
+                <span class="n">weight</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">weight_n</span>
+                <span class="n">tree</span><span class="o">.</span><span class="n">weight_n</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="k">if</span> <span class="n">weight</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">weight</span><span class="p">))</span> <span class="o">*</span> <span class="n">survived</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">classes</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">diameter_classes</span>
+        <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">classes</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">record</span><span class="p">[</span><span class="s2">&quot;n_per_ha&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="n">survived</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">record</span><span class="p">[</span><span class="s2">&quot;n_per_ha&quot;</span><span class="p">]]</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">set_diameter_class</span><span class="p">(</span><span class="n">classes</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_remove_fraction</span><span class="p">(</span>
+    <span class="n">ctx</span><span class="p">:</span> <span class="n">SimulationContext</span><span class="p">,</span>
+    <span class="n">stage</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">fraction</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">merchantable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="n">mean_tree_reporter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;MeanTreeReporter&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove ``fraction`` of the stand under ``stage``, recording what it took.</span>
+
+<span class="sd">    The volume goes to the run&#39;s per-stage ledger so the summary can report</span>
+<span class="sd">    harvest and disturbance apart, and the operation goes to ``ctx.history``</span>
+<span class="sd">    through :class:`Action`, so a caller reading the context sees it too.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        merchantable: Whether what was removed reaches the valuation ledger. A</span>
+<span class="sd">            thinning produces logs to price; a windthrow produces loss, so</span>
+<span class="sd">            sending disturbance there would report a stand as having *earned*</span>
+<span class="sd">            what a storm took. False also when the pipeline has no valuation</span>
+<span class="sd">            stage at all.</span>
+<span class="sd">        mean_tree_reporter: How to read the representative stem of a stand that</span>
+<span class="sd">            holds no individual ones. Required to price an aggregate model&#39;s</span>
+<span class="sd">            thinning.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">fraction</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="n">before</span> <span class="o">=</span> <span class="n">_standing_volume</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+    <span class="c1"># Stems are read before the removal, while they are still there; the mean</span>
+    <span class="c1"># tree likewise, since scaling the stand changes the stem count it reports.</span>
+    <span class="c1"># The volume removed is only known afterwards. Hence both sides of the action.</span>
+    <span class="n">mean_tree</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">merchantable</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">holds_tree_list</span><span class="p">():</span>
+            <span class="n">_record_removed</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">stage</span><span class="p">,</span> <span class="n">fraction</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">mean_tree_reporter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">mean_tree</span> <span class="o">=</span> <span class="n">mean_tree_reporter</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">fraction</span><span class="p">)</span>
+
+    <span class="n">Action</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">stage</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">params</span><span class="p">),</span> <span class="n">apply</span><span class="o">=</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">_scale_stand</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">fraction</span><span class="p">))(</span><span class="n">ctx</span><span class="p">)</span>
+    <span class="n">removed_volume</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">before</span> <span class="o">-</span> <span class="n">_standing_volume</span><span class="p">(</span><span class="n">ctx</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">merchantable</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">ctx</span><span class="o">.</span><span class="n">holds_tree_list</span><span class="p">():</span>
+        <span class="n">_record_removed</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">stage</span><span class="p">,</span> <span class="n">fraction</span><span class="p">,</span> <span class="n">removed_volume</span><span class="p">,</span> <span class="n">mean_tree</span><span class="p">)</span>
+    <span class="n">record_removal</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">stage</span><span class="p">,</span> <span class="n">removed_volume</span><span class="p">)</span>
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Registry</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_build_growth</span><span class="p">(</span><span class="n">stage</span><span class="p">:</span> <span class="n">StageContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Step</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;``&quot;growth&quot;``: the model, with a growth forcing if the run declares one.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">GROWTH</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stage</span><span class="o">.</span><span class="n">forcings</span><span class="o">.</span><span class="n">names</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">GrowthStep</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">ScenarioGrowthStep</span><span class="p">(</span><span class="n">forcings</span><span class="o">=</span><span class="n">stage</span><span class="o">.</span><span class="n">forcings</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_build_disturbance</span><span class="p">(</span><span class="n">stage</span><span class="p">:</span> <span class="n">StageContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Step</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;``&quot;disturbance&quot;``: the scenario&#39;s disturbance term, zero unless configured.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">ScenarioDisturbanceStep</span><span class="p">(</span>
+        <span class="n">rate_per_year</span><span class="o">=</span><span class="n">stage</span><span class="o">.</span><span class="n">disturbance_rate_per_year</span><span class="p">,</span>
+        <span class="n">forcings</span><span class="o">=</span><span class="n">stage</span><span class="o">.</span><span class="n">forcings</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_build_management</span><span class="p">(</span><span class="n">stage</span><span class="p">:</span> <span class="n">StageContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Step</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;``&quot;management&quot;``: a no-op unless the scenario declares a thinning plan.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">stage</span><span class="o">.</span><span class="n">management</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ManagementStep</span><span class="p">(</span><span class="n">policy</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_ctx</span><span class="p">:</span> <span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;management&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ThinningStep</span><span class="p">(</span>
+        <span class="n">thinning_ratio</span><span class="o">=</span><span class="n">stage</span><span class="o">.</span><span class="n">management</span><span class="o">.</span><span class="n">thinning_ratio</span><span class="p">,</span>
+        <span class="n">schedule</span><span class="o">=</span><span class="n">stage</span><span class="o">.</span><span class="n">schedule</span><span class="p">,</span>
+        <span class="n">forcings</span><span class="o">=</span><span class="n">stage</span><span class="o">.</span><span class="n">forcings</span><span class="p">,</span>
+        <span class="n">records_removals</span><span class="o">=</span><span class="n">stage</span><span class="o">.</span><span class="n">records_removals</span><span class="p">,</span>
+        <span class="n">mean_tree</span><span class="o">=</span><span class="n">stage</span><span class="o">.</span><span class="n">mean_tree</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_build_valuation</span><span class="p">(</span><span class="n">stage</span><span class="p">:</span> <span class="n">StageContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Step</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;``&quot;valuation&quot;``: price what the period removed.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If the configuration declares this stage but the run supplied</span>
+<span class="sd">            no valuation settings. Skipping it silently would report a run as</span>
+<span class="sd">            having valued its removals at nothing.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">stage</span><span class="o">.</span><span class="n">valuation</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;This scenario declares a &#39;valuation&#39; stage but the run supplied no &quot;</span>
+            <span class="s2">&quot;ValuationSettings. Pass valuation=ValuationSettings(...) to run_scenario, &quot;</span>
+            <span class="s2">&quot;or drop the stage from the configuration.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">ValuationStep</span><span class="p">(</span><span class="n">settings</span><span class="o">=</span><span class="n">stage</span><span class="o">.</span><span class="n">valuation</span><span class="p">,</span> <span class="n">forcings</span><span class="o">=</span><span class="n">stage</span><span class="o">.</span><span class="n">forcings</span><span class="p">)</span>
+
+
+<span class="c1">#: Stage name -&gt; the step it builds. A configuration naming anything else fails</span>
+<span class="c1">#: at pipeline construction, with the known names listed.</span>
+<span class="n">STAGE_BUILDERS</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">StageContext</span><span class="p">],</span> <span class="n">Step</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;growth&quot;</span><span class="p">:</span> <span class="n">_build_growth</span><span class="p">,</span>
+    <span class="s2">&quot;disturbance&quot;</span><span class="p">:</span> <span class="n">_build_disturbance</span><span class="p">,</span>
+    <span class="s2">&quot;management&quot;</span><span class="p">:</span> <span class="n">_build_management</span><span class="p">,</span>
+    <span class="s2">&quot;valuation&quot;</span><span class="p">:</span> <span class="n">_build_valuation</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="known_stages">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.stages.known_stages">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">known_stages</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return every stage name :func:`build_pipeline` can resolve, sorted.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">STAGE_BUILDERS</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="build_pipeline">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.stages.build_pipeline">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_pipeline</span><span class="p">(</span>
+    <span class="n">stages</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">stage_context</span><span class="p">:</span> <span class="n">StageContext</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">start_year</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Step</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Resolve stage names into the ordered steps a period runs.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        stages: The configuration&#39;s ``stages()``, in order.</span>
+<span class="sd">        stage_context: What the builders may consult.</span>
+<span class="sd">        start_year: Calendar year the run begins in. When given, a</span>
+<span class="sd">            :class:`CalendarStep` is prepended so year-by-year forcings can be</span>
+<span class="sd">            read; it is not one of the configuration&#39;s stages, because which</span>
+<span class="sd">            years a run covers belongs to the run rather than to the scenario.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        One step per name, in the same order, after the calendar step if any.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If a name is not a known stage.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">steps</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Step</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">start_year</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">CalendarStep</span><span class="p">(</span><span class="n">start_year</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">start_year</span><span class="p">)))</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">stages</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">builder</span> <span class="o">=</span> <span class="n">STAGE_BUILDERS</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Unknown stage </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2">. Known stages: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">known_stages</span><span class="p">())</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
+        <span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">builder</span><span class="p">(</span><span class="n">stage_context</span><span class="p">))</span>
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span></div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

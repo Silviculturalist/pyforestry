@@ -1,0 +1,408 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "7fb27b941602401d91542211134fc71a",
+   "metadata": {},
+   "source": [
+    "# Wikberg 2004 ingrowth demo\n",
+    "\n",
+    "This notebook demonstrates the 4-step Wikberg (2004) ingrowth model for a 5-year period. Ingrowth here means trees recruited into the >= 4 cm dbh class. Outputs are per hectare, and `ingrowth_to_plot_trees` scales the per-ha results to a plot area."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "acae54e37e7d407bbb7b55eff062a284",
+   "metadata": {},
+   "source": [
+    "## Notebook Objectives\n",
+    "- Demonstrate a full 5-year ingrowth workflow using Wikberg (2004).\n",
+    "- Provide runnable, copy-safe snippets that work in the docs build environment.\n",
+    "\n",
+    "## Prerequisites\n",
+    "- Python environment with `pyforestry` installed from this repository.\n",
+    "- Execute cells in order; random components should use fixed seeds where shown.\n",
+    "\n",
+    "## Sources\n",
+    "- Wikberg (2004) ingrowth implementation in `pyforestry.sweden domain packages.wikberg_2004_ingrowth`.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "9a63283cbaf04dbcab1f6479b197f3a8",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-02-19T23:10:06.371229Z",
+     "iopub.status.busy": "2026-02-19T23:10:06.370965Z",
+     "iopub.status.idle": "2026-02-19T23:10:07.593819Z",
+     "shell.execute_reply": "2026-02-19T23:10:07.592140Z"
+    }
+   },
+   "outputs": [],
+   "source": [
+    "import random\n",
+    "\n",
+    "from pyforestry.base.helpers import CircularPlot, Stand, Tree\n",
+    "from pyforestry.base.helpers.primitives.sitebase import SiteBase\n",
+    "from pyforestry.sweden.ingrowth.wikberg_2004 import (\n",
+    "    IngrowthSpeciesGroup,\n",
+    "    Wikberg2004Ingrowth,\n",
+    "    ingrowth_to_plot_trees,\n",
+    ")\n",
+    "from pyforestry.sweden.site import Sweden, SwedishSite\n",
+    "from pyforestry.sweden.siteindex.sis.generated_site_category_trees import (\n",
+    "    predict_site_categories_county_tree,\n",
+    ")\n",
+    "from pyforestry.sweden.siteindex.sis.hagglund_lundmark_1977 import Hagglund_Lundmark_1977_SIS\n",
+    "\n",
+    "\n",
+    "class SwedishSiteDemo(SwedishSite):\n",
+    "    \"\"\"Concrete wrapper for notebooks (implements SiteBase abstract method).\"\"\"\n",
+    "\n",
+    "    def compute_attributes(self) -> None:\n",
+    "        SwedishSite.__post_init__(self)\n",
+    "\n",
+    "    def __post_init__(self) -> None:\n",
+    "        SiteBase.__post_init__(self)\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "8dd0d8092fe74a7c96281538738b07e2",
+   "metadata": {},
+   "source": [
+    "## 1. Define site inputs"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "72eea5119410473aa328ad9291626812",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-02-19T23:10:07.596508Z",
+     "iopub.status.busy": "2026-02-19T23:10:07.596069Z",
+     "iopub.status.idle": "2026-02-19T23:10:07.822999Z",
+     "shell.execute_reply": "2026-02-19T23:10:07.821477Z"
+    }
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "{'sis_closeness': {'requested_sis': 26.0,\n",
+       "  'achieved_sis': 28.52447261350454,\n",
+       "  'sis_abs_error': 2.524472613504539,\n",
+       "  'sis_rel_error_pct': 9.709510051940535},\n",
+       " 'predicted_site_categories': {'field_layer': <SwedenFieldLayer.LOW_HERB_WITHOUT_SHRUBS: Vegetation(code=4, swedish_name='Lågört utan ris', english_name='Low-herb without shrubs', index=3)>,\n",
+       "  'bottom_layer': <SwedenBottomLayer.FRESH_MOSS: BottomLayerType(code=6, english_name='Fresh moss type', swedish_name='Friskmosstyp')>,\n",
+       "  'soil_texture': <SwedenSoilTextureTill.SANDY: SoilTextureCategory(code=3, swedish_name='Sandig morän', english_name='Sandy till', short_name='Coarse sand')>,\n",
+       "  'soil_moisture': <SwedenSoilMoisture.MESIC_MOIST: SoilMoistureData(code=3, swedish_description='frisk-fuktig', english_description='Mesic-moist (subsoil water depth <1 m)')>,\n",
+       "  'soil_depth': <SwedenSoilDepth.DEEP: SoilDepthCat(code=1, swedish_description='Mäktigt >70 cm. Inga synliga hällar', english_description='Deep >70cm. No visible stone outcrops.')>,\n",
+       "  'soil_water': <SwedenSoilWater.LONGER_PERIODS: SoilWaterCat(code=3, swedish_description='längre perioder', english_description='Longer periods')>,\n",
+       "  'ditched': False}}"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "data": {
+      "text/plain": [
+       "SwedishSiteDemo(latitude=60.5, longitude=15.0, altitude=150.0, field_layer=<SwedenFieldLayer.LOW_HERB_WITHOUT_SHRUBS: Vegetation(code=4, swedish_name='Lågört utan ris', english_name='Low-herb without shrubs', index=3)>, bottom_layer=<SwedenBottomLayer.FRESH_MOSS: BottomLayerType(code=6, english_name='Fresh moss type', swedish_name='Friskmosstyp')>, soil_texture=<SwedenSoilTextureTill.SANDY: SoilTextureCategory(code=3, swedish_name='Sandig morän', english_name='Sandy till', short_name='Coarse sand')>, soil_moisture=<SwedenSoilMoisture.MESIC_MOIST: SoilMoistureData(code=3, swedish_description='frisk-fuktig', english_description='Mesic-moist (subsoil water depth <1 m)')>, soil_depth=<SwedenSoilDepth.DEEP: SoilDepthCat(code=1, swedish_description='Mäktigt >70 cm. Inga synliga hällar', english_description='Deep >70cm. No visible stone outcrops.')>, soil_water=<SwedenSoilWater.LONGER_PERIODS: SoilWaterCat(code=3, swedish_description='längre perioder', english_description='Longer periods')>, aspect=None, incline_percent=None, ditched=False, temperature_sum_odin1983=1215.1999999999998, county=<SwedenCounty.KOPPARBERG_OVRIGA: CountyData(code=12, label='Kopparberg (Dalarna), övriga (W övr)')>, humidity=np.float64(75.0), distance_to_coast=np.float64(254.68051713105228), climate_zone=<SwedenClimateZone.M3: ClimateZoneData(code=3, label='M3', description='Maritime, Mountain range')>, sis_spruce_100=None, sis_pine_100=None, sis_birch_50=None, n_of_limes_norrlandicus=True)"
+      ]
+     },
+     "execution_count": 2,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "site_index_m = 26.0\n",
+    "mean_age_excl_overstorey_years = 60.0\n",
+    "site_category_species = \"Picea abies\"\n",
+    "county = Sweden.County.KOPPARBERG_OVRIGA\n",
+    "requested_sis = site_index_m\n",
+    "\n",
+    "predicted_site_categories = predict_site_categories_county_tree(\n",
+    "    sis_hagglund_1979=requested_sis,\n",
+    "    species=site_category_species,\n",
+    "    Direktlan=county,\n",
+    ")\n",
+    "\n",
+    "site = SwedishSiteDemo(\n",
+    "    latitude=60.5,\n",
+    "    longitude=15.0,\n",
+    "    altitude=150.0,\n",
+    "    field_layer=predicted_site_categories[\"field_layer\"],\n",
+    "    bottom_layer=predicted_site_categories[\"bottom_layer\"],\n",
+    "    soil_texture=predicted_site_categories[\"soil_texture\"],\n",
+    "    soil_moisture=predicted_site_categories[\"soil_moisture\"],\n",
+    "    soil_depth=predicted_site_categories[\"soil_depth\"],\n",
+    "    soil_water=predicted_site_categories[\"soil_water\"],\n",
+    "    ditched=predicted_site_categories[\"ditched\"],\n",
+    ")\n",
+    "\n",
+    "achieved_sis = Hagglund_Lundmark_1977_SIS(\n",
+    "    species=site_category_species,\n",
+    "    latitude=site.latitude,\n",
+    "    altitude=site.altitude or 0.0,\n",
+    "    soil_moisture=site.soil_moisture,\n",
+    "    ground_layer=site.bottom_layer or Sweden.BottomLayer.FRESH_MOSS,\n",
+    "    vegetation=site.field_layer,\n",
+    "    soil_texture=site.soil_texture or Sweden.SoilTextureTill.SANDY,\n",
+    "    climate_code=site.climate_zone or Sweden.ClimateZone.K1,\n",
+    "    lateral_water=site.soil_water or Sweden.SoilWater.SELDOM_NEVER,\n",
+    "    soil_depth=site.soil_depth or Sweden.SoilDepth.DEEP,\n",
+    "    incline_percent=site.incline_percent or 0.0,\n",
+    "    aspect=site.aspect or 0.0,\n",
+    "    nfi_adjustments=True,\n",
+    "    dlan=site.county or county,\n",
+    "    ditched=bool(site.ditched),\n",
+    "    peat=False,\n",
+    "    gotland=False,\n",
+    "    coast=(site.distance_to_coast or 9999.0) < 50.0,\n",
+    "    limes_norrlandicus=bool(site.n_of_limes_norrlandicus),\n",
+    ")\n",
+    "\n",
+    "sis_closeness = {\n",
+    "    \"requested_sis\": requested_sis,\n",
+    "    \"achieved_sis\": float(achieved_sis),\n",
+    "    \"sis_abs_error\": abs(float(achieved_sis) - requested_sis),\n",
+    "    \"sis_rel_error_pct\": 100.0 * abs(float(achieved_sis) - requested_sis) / requested_sis,\n",
+    "}\n",
+    "\n",
+    "display({\"sis_closeness\": sis_closeness, \"predicted_site_categories\": predicted_site_categories})\n",
+    "site"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "8edb47106e1a46a883d545849b8ab81b",
+   "metadata": {},
+   "source": [
+    "## 2. Build a stand with trees"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "10185d26023b46108eb7d9f57d49d2b3",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(16.865, 18.365728953678914)"
+      ]
+     },
+     "execution_count": 3,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "plot1 = CircularPlot(\n",
+    "    id=1,\n",
+    "    radius_m=5.0,\n",
+    "    trees=[\n",
+    "        Tree(species=\"picea abies\", diameter_cm=24),\n",
+    "        Tree(species=\"picea abies\", diameter_cm=18),\n",
+    "        Tree(species=\"pinus sylvestris\", diameter_cm=26),\n",
+    "        Tree(species=\"betula pendula\", diameter_cm=14),\n",
+    "        Tree(species=\"picea abies\", diameter_cm=3.0),  # sapling\n",
+    "    ],\n",
+    ")\n",
+    "plot2 = CircularPlot(\n",
+    "    id=2,\n",
+    "    radius_m=5.0,\n",
+    "    trees=[\n",
+    "        Tree(species=\"picea abies\", diameter_cm=20),\n",
+    "        Tree(species=\"pinus sylvestris\", diameter_cm=22),\n",
+    "        Tree(species=\"betula pubescens\", diameter_cm=16),\n",
+    "    ],\n",
+    ")\n",
+    "\n",
+    "stand = Stand(site=site, plots=[plot1, plot2])\n",
+    "float(stand.BasalArea), float(stand.QMD)\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "8763a12b2bbd4a93a75aff182afb95dc",
+   "metadata": {},
+   "source": [
+    "## 3. Deterministic ingrowth (per ha)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "7623eae2785240b9bd12b16a66d81610",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "[Tree(species=TreeName(genus=TreeGenus(name='Picea', code='PICEA'), species_name='abies', code='PAB'), age=None, diameter_cm=4.8677735297380575, height_m=None, position=None, weight_n=52.54974940117897, is_overstorey=None, mortality=None, uid=None),\n",
+       " Tree(species=TreeName(genus=TreeGenus(name='Pinus', code='PINUS'), species_name='sylvestris', code='PSYL'), age=None, diameter_cm=4.955254944454568, height_m=None, position=None, weight_n=3.4078691973058537, is_overstorey=None, mortality=None, uid=None),\n",
+       " Tree(species=TreeName(genus=TreeGenus(name='Betula', code='BETULA'), species_name='pendula', code='BPEN'), age=None, diameter_cm=5.292627989964315, height_m=None, position=None, weight_n=22.83112264750084, is_overstorey=None, mortality=None, uid=None)]"
+      ]
+     },
+     "execution_count": 4,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "def summarize(result):\n",
+    "    return {\n",
+    "        group.value: {\n",
+    "            \"n_small\": result.number_small_trees[group],\n",
+    "            \"n_ingrowth\": result.number_ingrowth_trees[group],\n",
+    "            \"mean_dbh_cm\": result.mean_diameter_cm[group],\n",
+    "        }\n",
+    "        for group in result.number_ingrowth_trees\n",
+    "    }\n",
+    "\n",
+    "\n",
+    "model = Wikberg2004Ingrowth(\n",
+    "    deterministic=True,\n",
+    "    ingrowth_species=[\n",
+    "        IngrowthSpeciesGroup.SPRUCE,\n",
+    "        IngrowthSpeciesGroup.PINE,\n",
+    "        IngrowthSpeciesGroup.BIRCH,\n",
+    "    ],\n",
+    ")\n",
+    "result_det = model.predict(\n",
+    "    stand=stand,\n",
+    "    site=site,\n",
+    "    site_index_m=site_index_m,\n",
+    "    mean_age_excl_overstorey_years=mean_age_excl_overstorey_years,\n",
+    ")\n",
+    "\n",
+    "summary_det = summarize(result_det)\n",
+    "summary_det\n",
+    "result_det.ingrown_trees\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "7cdc8c89c7104fffa095e18ddfef8986",
+   "metadata": {},
+   "source": [
+    "## 4. Convert to plot-level ingrowth trees"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "b118ea5561624da68c537baed56e602f",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "[Tree(species=TreeName(genus=TreeGenus(name='Picea', code='PICEA'), species_name='abies', code='PAB'), age=None, diameter_cm=4.8677735297380575, height_m=None, position=None, weight_n=0.41272476666682123, is_overstorey=None, mortality=None, uid=None),\n",
+       " Tree(species=TreeName(genus=TreeGenus(name='Pinus', code='PINUS'), species_name='sylvestris', code='PSYL'), age=None, diameter_cm=4.955254944454568, height_m=None, position=None, weight_n=0.02676534208662754, is_overstorey=None, mortality=None, uid=None),\n",
+       " Tree(species=TreeName(genus=TreeGenus(name='Betula', code='BETULA'), species_name='pendula', code='BPEN'), age=None, diameter_cm=5.292627989964315, height_m=None, position=None, weight_n=0.1793152179564905, is_overstorey=None, mortality=None, uid=None)]"
+      ]
+     },
+     "execution_count": 5,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "plot_ingrowth_trees = ingrowth_to_plot_trees(result_det, plot_area_ha=plot1.area_ha)\n",
+    "plot_ingrowth_trees\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "938c804e27f84196a10c8828c723f798",
+   "metadata": {},
+   "source": [
+    "## 5. Stochastic example (seeded RNG)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "504fb2a444614c0babb325280ed9130a",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "{'deterministic': {'spruce': {'n_small': 71.74089277826172,\n",
+       "   'n_ingrowth': 52.54974940117897,\n",
+       "   'mean_dbh_cm': 4.8677735297380575},\n",
+       "  'pine': {'n_small': 18.284319371335716,\n",
+       "   'n_ingrowth': 3.4078691973058537,\n",
+       "   'mean_dbh_cm': 4.955254944454568},\n",
+       "  'birch': {'n_small': 32.01744120786947,\n",
+       "   'n_ingrowth': 22.83112264750084,\n",
+       "   'mean_dbh_cm': 5.292627989964315}},\n",
+       " 'stochastic': {'spruce': {'n_small': 71.74089277826172,\n",
+       "   'n_ingrowth': 71.74089277826172,\n",
+       "   'mean_dbh_cm': 4.8677735297380575},\n",
+       "  'pine': {'n_small': 18.284319371335716,\n",
+       "   'n_ingrowth': 18.284319371335716,\n",
+       "   'mean_dbh_cm': 4.955254944454568},\n",
+       "  'birch': {'n_small': 32.01744120786947,\n",
+       "   'n_ingrowth': 32.01744120786947,\n",
+       "   'mean_dbh_cm': 5.292627989964315}}}"
+      ]
+     },
+     "execution_count": 6,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "rng = random.Random(7)\n",
+    "model_stoch = Wikberg2004Ingrowth(\n",
+    "    deterministic=False,\n",
+    "    rng=rng,\n",
+    "    ingrowth_species=[\n",
+    "        IngrowthSpeciesGroup.SPRUCE,\n",
+    "        IngrowthSpeciesGroup.PINE,\n",
+    "        IngrowthSpeciesGroup.BIRCH,\n",
+    "    ],\n",
+    ")\n",
+    "result_stoch = model_stoch.predict(\n",
+    "    stand=stand,\n",
+    "    site=site,\n",
+    "    site_index_m=site_index_m,\n",
+    "    mean_age_excl_overstorey_years=mean_age_excl_overstorey_years,\n",
+    ")\n",
+    "\n",
+    "summary_stoch = summarize(result_stoch)\n",
+    "{\"deterministic\": summary_det, \"stochastic\": summary_stoch}\n"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "pyforestry",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.14.2"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

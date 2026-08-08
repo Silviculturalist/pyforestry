@@ -1,0 +1,1318 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pyforestry.base.competition.indices &#8212; pyforestry  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyforestry/base/competition/indices';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.20.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../../../_static/searchtools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
+    <script src="../../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pyforestry  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../catalog.html">
+    Model catalog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../model_index.html">
+    Model index
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../api/modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/wikberg_2004.html">
+    Wikberg 2004 ingrowth demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/elfving_2010.html">
+    Elfving 2010 growth demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/elfving_2010_preset.html">
+    Elfving 2010 composite preset demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/soderberg_1986_preset.html">
+    Soderberg 1986 composite preset demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/young_stand.html">
+    Young stand demo (NYSKOG + Näslund 1986)
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/competition_indices.html">
+    Competition indices on a simulated stand
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/FullStack_Callables_Guide.html">
+    Composable Callables & Full‑Stack GrowthModel — Practical Guide
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../catalog.html">
+    Model catalog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../model_index.html">
+    Model index
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../api/modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/wikberg_2004.html">
+    Wikberg 2004 ingrowth demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/elfving_2010.html">
+    Elfving 2010 growth demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/elfving_2010_preset.html">
+    Elfving 2010 composite preset demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/soderberg_1986_preset.html">
+    Soderberg 1986 composite preset demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/young_stand.html">
+    Young stand demo (NYSKOG + Näslund 1986)
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/competition_indices.html">
+    Competition indices on a simulated stand
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/FullStack_Callables_Guide.html">
+    Composable Callables & Full‑Stack GrowthModel — Practical Guide
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pyforestry.base.competition.indices</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for pyforestry.base.competition.indices</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Eighteen individual-tree competition indices, each attributed to its own author.</span>
+
+<span class="sd">Seven distance-independent and eleven spatially explicit indices, spanning</span>
+<span class="sd">Staebler (1951) to Schröder &amp; Gadow (1999). Every index is a pure function of a</span>
+<span class="sd">:class:`~pyforestry.base.competition.neighbourhood.Neighbourhood`, and every one</span>
+<span class="sd">carries the citation of the paper that *proposed* it -- reachable as</span>
+<span class="sd">:func:`index_source` or ``INDEX_REGISTRY[name].source``. The set was assembled</span>
+<span class="sd">and compared by Maleki, Kiviste &amp; Korjus (2015), who are credited for that</span>
+<span class="sd">collection in :data:`~pyforestry.base.competition.sources.INDEX_SET_REVIEW` and</span>
+<span class="sd">for nothing else.</span>
+
+<span class="sd">Symbols follow the usual convention: ``d_i`` subject diameter (cm), ``d_j``</span>
+<span class="sd">competitor diameter (cm), ``l_ij`` stem-to-stem distance (m), ``g`` basal area</span>
+<span class="sd">(m^2), ``G`` plot basal area (m^2/ha), ``S`` plot area (ha), ``CZR``</span>
+<span class="sd">competition-zone radius (m), ``CZ`` competition-zone area (m^2), ``O_ij``</span>
+<span class="sd">influence-zone overlap (m^2).</span>
+
+<span class="sd">Where the transcription departs from the 2015 review&#39;s Table 2 it does so to</span>
+<span class="sd">follow the original, and says so at the point of use:</span>
+
+<span class="sd">* **Martin &amp; Ek (1984), ``Sdrl2``** -- the exponent is negative. Table 2 prints</span>
+<span class="sd">  ``exp(+16*l_ij/(d_i+d_j))``, as does Wang et al. (2012) Table 1, which would</span>
+<span class="sd">  make a competitor&#39;s contribution grow without bound with distance: at</span>
+<span class="sd">  ``d_i+d_j = 40 cm`` one 10 m away would count 24 times one at 2 m. See</span>
+<span class="sd">  :func:`martin_ek_sdrl2`.</span>
+<span class="sd">* **Rouvinen &amp; Kuuluvainen** -- Table 2 dates the work 1977; it is 1997.</span>
+<span class="sd">* The angular indices (``SAng1``, ``SAng2``, ``SdrAng``) convert diameters from</span>
+<span class="sd">  cm to m before the arctangent. As printed the ratio mixes cm with m, putting a</span>
+<span class="sd">  20 cm stem 5 m away at 76 degrees instead of 2.3. See :func:`lin_sang1`.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">atan</span><span class="p">,</span> <span class="n">exp</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.contracts</span><span class="w"> </span><span class="kn">import</span> <span class="n">SourceReference</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">circle_intersection_area</span><span class="p">,</span> <span class="n">circle_overlap_length</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.neighbourhood</span><span class="w"> </span><span class="kn">import</span> <span class="n">Neighbourhood</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.sources</span><span class="w"> </span><span class="kn">import</span> <span class="n">INDEX_SOURCES</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;INDEX_REGISTRY&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CompetitionIndex&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;index_source&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;resolve_index&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;NON_SPATIAL_INDICES&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SPATIAL_INDICES&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;alemdag_almdg&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;basal_area_of_larger_bal&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;basal_area_ratio_bar&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;basal_area_sum_ba_gj&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bal_ratio_balr&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;balmod&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bella_sodr&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;compute_index&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;daniels_sbar&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;diameter_ratio_drg&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gerrard_sor&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;hegyi&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;lin_sang1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;lorimer_sdrl1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;martin_ek_sdrl2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;rouvinen_kuuluvainen_sang2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;rouvinen_kuuluvainen_sdrang&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;staebler_sl&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;sum_diameter_ratio_sdr&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Non-spatially explicit indices (Table 2, upper block)</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="basal_area_sum_ba_gj">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.indices.basal_area_sum_ba_gj">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">basal_area_sum_ba_gj</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="n">Neighbourhood</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;``BA-gj``: basal area of the neighbours per hectare. Steneker &amp; Jarvis (1963).</span>
+
+<span class="sd">    ``sum(g_j) / S`` -- every neighbour counts, regardless of size.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        n: The neighbourhood. Needs ``plot_area_ha``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Competitor basal area in m^2/ha.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="s2">&quot;plot_area_ha&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">weighted_competitor_basal_areas_m2</span><span class="p">())</span> <span class="o">/</span> <span class="n">n</span><span class="o">.</span><span class="n">plot_area_ha</span>  <span class="c1"># type: ignore[operator]</span></div>
+
+
+
+<div class="viewcode-block" id="basal_area_of_larger_bal">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.indices.basal_area_of_larger_bal">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">basal_area_of_larger_bal</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="n">Neighbourhood</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;``BAL``: basal area of trees larger than the subject. Wykoff et al. (1982).</span>
+
+<span class="sd">    ``sum(g_j for d_j &gt; d_i) / S``. The single most widely used distance-</span>
+<span class="sd">    independent index.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        n: The neighbourhood. Needs ``plot_area_ha``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Basal area of larger trees in m^2/ha.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="s2">&quot;plot_area_ha&quot;</span><span class="p">)</span>
+    <span class="n">larger</span> <span class="o">=</span> <span class="n">n</span><span class="o">.</span><span class="n">larger_competitor_mask</span><span class="p">()</span>
+    <span class="n">areas</span> <span class="o">=</span> <span class="n">n</span><span class="o">.</span><span class="n">weighted_competitor_basal_areas_m2</span><span class="p">()</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">g</span> <span class="k">for</span> <span class="n">g</span><span class="p">,</span> <span class="n">is_larger</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">areas</span><span class="p">,</span> <span class="n">larger</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="n">is_larger</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span>
+        <span class="n">n</span><span class="o">.</span><span class="n">plot_area_ha</span>  <span class="c1"># type: ignore[operator]</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="sum_diameter_ratio_sdr">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.indices.sum_diameter_ratio_sdr">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">sum_diameter_ratio_sdr</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="n">Neighbourhood</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;``Sdr``: summed diameter ratio per hectare. Lorimer (1983).</span>
+
+<span class="sd">    ``((sum(d_j)) / d_i) / S``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        n: The neighbourhood. Needs ``plot_area_ha``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The index in ha^-1.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="s2">&quot;plot_area_ha&quot;</span><span class="p">)</span>
+    <span class="n">summed</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="n">d</span> <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="n">n</span><span class="o">.</span><span class="n">competitor_dbh_cm</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">summed</span> <span class="o">/</span> <span class="n">n</span><span class="o">.</span><span class="n">subject_dbh_cm</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span><span class="o">.</span><span class="n">plot_area_ha</span>  <span class="c1"># type: ignore[operator]</span></div>
+
+
+
+<div class="viewcode-block" id="diameter_ratio_drg">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.indices.diameter_ratio_drg">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">diameter_ratio_drg</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="n">Neighbourhood</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;``dr_g``: subject diameter over the plot quadratic mean diameter. Hamilton (1986).</span>
+
+<span class="sd">    ``d_i / d_g``. Above 1 the subject is larger than the average tree, so unlike</span>
+<span class="sd">    every other index here a *high* value means *less* competition.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        n: The neighbourhood. Needs ``plot_qmd_cm``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The dimensionless ratio.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="s2">&quot;plot_qmd_cm&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">n</span><span class="o">.</span><span class="n">subject_dbh_cm</span> <span class="o">/</span> <span class="n">n</span><span class="o">.</span><span class="n">plot_qmd_cm</span>  <span class="c1"># type: ignore[operator]</span></div>
+
+
+
+<div class="viewcode-block" id="basal_area_ratio_bar">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.indices.basal_area_ratio_bar">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">basal_area_ratio_bar</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="n">Neighbourhood</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;``BAr``: summed basal-area ratio per hectare. Corona &amp; Ferrara (1989).</span>
+
+<span class="sd">    ``((sum(g_j)) / g_i) / S`` -- the basal-area analogue of ``Sdr``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        n: The neighbourhood. Needs ``plot_area_ha``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The index in ha^-1.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="s2">&quot;plot_area_ha&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">weighted_competitor_basal_areas_m2</span><span class="p">())</span> <span class="o">/</span> <span class="n">n</span><span class="o">.</span><span class="n">subject_basal_area_m2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span>
+        <span class="n">n</span><span class="o">.</span><span class="n">plot_area_ha</span>  <span class="c1"># type: ignore[operator]</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="bal_ratio_balr">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.indices.bal_ratio_balr">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">bal_ratio_balr</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="n">Neighbourhood</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;``BALr``: BAL as a share of plot basal area. Vanclay (1991).</span>
+
+<span class="sd">    ``sum(g_j for d_j &gt; d_i) / G``. Both terms are per-hectare, so the result is</span>
+<span class="sd">    dimensionless and bounded by 1 -- it is the proportion of the stand&#39;s basal</span>
+<span class="sd">    area held in trees larger than the subject.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        n: The neighbourhood. Needs ``plot_area_ha`` and ``plot_basal_area_m2_ha``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A dimensionless share in ``[0, 1]``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="s2">&quot;plot_area_ha&quot;</span><span class="p">,</span> <span class="s2">&quot;plot_basal_area_m2_ha&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">basal_area_of_larger_bal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span><span class="o">.</span><span class="n">plot_basal_area_m2_ha</span>  <span class="c1"># type: ignore[operator]</span></div>
+
+
+
+<div class="viewcode-block" id="balmod">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.indices.balmod">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">balmod</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="n">Neighbourhood</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;``BALMOD``: BALr scaled by relative spacing. Schröder &amp; Gadow (1999).</span>
+
+<span class="sd">    ``[sum(g_j for d_j &gt; d_i) / G] / RS`` with ``RS = sqrt(S/N) / H_dom`` (``S``</span>
+<span class="sd">    in m^2). Dividing by relative spacing lets the index distinguish stands that</span>
+<span class="sd">    share a BALr but differ in how crowded they are.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        n: The neighbourhood. Needs ``plot_area_ha``, ``plot_basal_area_m2_ha``</span>
+<span class="sd">            and ``relative_spacing``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The modified BAL ratio.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="s2">&quot;plot_area_ha&quot;</span><span class="p">,</span> <span class="s2">&quot;plot_basal_area_m2_ha&quot;</span><span class="p">,</span> <span class="s2">&quot;relative_spacing&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">relative_spacing</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># type: ignore[operator]</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;relative_spacing must be positive.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">bal_ratio_balr</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span><span class="o">.</span><span class="n">relative_spacing</span>  <span class="c1"># type: ignore[operator]</span></div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Influence-zone overlap indices (Table 2, first spatial group)</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="staebler_sl">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.indices.staebler_sl">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">staebler_sl</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="n">Neighbourhood</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;``Sl``: summed linear overlap of influence zones. Staebler (1951).</span>
+
+<span class="sd">    ``sum(l_ij)`` where ``l_ij`` is here the *overlap length*</span>
+<span class="sd">    ``max(0, CZR_i + CZR_j - distance)``, not the stem distance. Table 2 reuses</span>
+<span class="sd">    the symbol ``l_ij`` for both; the paper&#39;s own text places this index in the</span>
+<span class="sd">    &quot;influence-zone overlap&quot; group, which fixes the reading.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        n: The neighbourhood. Needs ``distances_m``, ``subject_crown_radius_m``</span>
+<span class="sd">            and ``competitor_crown_radius_m``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Total overlap length in m.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="s2">&quot;distances_m&quot;</span><span class="p">,</span> <span class="s2">&quot;subject_crown_radius_m&quot;</span><span class="p">,</span> <span class="s2">&quot;competitor_crown_radius_m&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span>
+        <span class="n">circle_overlap_length</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">subject_crown_radius_m</span><span class="p">,</span> <span class="n">r_j</span><span class="p">,</span> <span class="n">l_ij</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
+        <span class="k">for</span> <span class="n">r_j</span><span class="p">,</span> <span class="n">l_ij</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+            <span class="n">n</span><span class="o">.</span><span class="n">competitor_crown_radius_m</span><span class="p">,</span>  <span class="c1"># type: ignore[arg-type]</span>
+            <span class="n">n</span><span class="o">.</span><span class="n">distances_m</span><span class="p">,</span>  <span class="c1"># type: ignore[arg-type]</span>
+            <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="gerrard_sor">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.indices.gerrard_sor">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">gerrard_sor</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="n">Neighbourhood</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;``SOr``: overlap area as a share of the influence zone. Gerrard (1969).</span>
+
+<span class="sd">    ``sum(O_ij / CZ)`` with ``CZ = pi * CZR_i^2``. Gerrard&#39;s competition</span>
+<span class="sd">    quotient: how many times over the subject&#39;s growing space is claimed by</span>
+<span class="sd">    neighbours.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        n: The neighbourhood. Needs ``distances_m``, ``subject_crown_radius_m``</span>
+<span class="sd">            and ``competitor_crown_radius_m``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The dimensionless quotient.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="s2">&quot;distances_m&quot;</span><span class="p">,</span> <span class="s2">&quot;subject_crown_radius_m&quot;</span><span class="p">,</span> <span class="s2">&quot;competitor_crown_radius_m&quot;</span><span class="p">)</span>
+    <span class="n">zone_area</span> <span class="o">=</span> <span class="n">pi</span> <span class="o">*</span> <span class="n">n</span><span class="o">.</span><span class="n">subject_crown_radius_m</span><span class="o">**</span><span class="mi">2</span>  <span class="c1"># type: ignore[operator]</span>
+    <span class="k">if</span> <span class="n">zone_area</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;subject_crown_radius_m must be positive.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="nb">sum</span><span class="p">(</span>
+            <span class="n">circle_intersection_area</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">subject_crown_radius_m</span><span class="p">,</span> <span class="n">r_j</span><span class="p">,</span> <span class="n">l_ij</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
+            <span class="k">for</span> <span class="n">r_j</span><span class="p">,</span> <span class="n">l_ij</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+                <span class="n">n</span><span class="o">.</span><span class="n">competitor_crown_radius_m</span><span class="p">,</span>  <span class="c1"># type: ignore[arg-type]</span>
+                <span class="n">n</span><span class="o">.</span><span class="n">distances_m</span><span class="p">,</span>  <span class="c1"># type: ignore[arg-type]</span>
+                <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="o">/</span> <span class="n">zone_area</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="bella_sodr">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.indices.bella_sodr">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">bella_sodr</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="n">Neighbourhood</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;``SOdr``: Gerrard&#39;s quotient weighted by diameter ratio. Bella (1971).</span>
+
+<span class="sd">    ``sum((O_ij * d_j) / (CZ * d_i))``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        n: The neighbourhood. Needs ``distances_m``, ``subject_crown_radius_m``</span>
+<span class="sd">            and ``competitor_crown_radius_m``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The dimensionless index.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="s2">&quot;distances_m&quot;</span><span class="p">,</span> <span class="s2">&quot;subject_crown_radius_m&quot;</span><span class="p">,</span> <span class="s2">&quot;competitor_crown_radius_m&quot;</span><span class="p">)</span>
+    <span class="n">zone_area</span> <span class="o">=</span> <span class="n">pi</span> <span class="o">*</span> <span class="n">n</span><span class="o">.</span><span class="n">subject_crown_radius_m</span><span class="o">**</span><span class="mi">2</span>  <span class="c1"># type: ignore[operator]</span>
+    <span class="k">if</span> <span class="n">zone_area</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;subject_crown_radius_m must be positive.&quot;</span><span class="p">)</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">for</span> <span class="n">d_j</span><span class="p">,</span> <span class="n">r_j</span><span class="p">,</span> <span class="n">l_ij</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+        <span class="n">n</span><span class="o">.</span><span class="n">competitor_dbh_cm</span><span class="p">,</span>
+        <span class="n">n</span><span class="o">.</span><span class="n">competitor_crown_radius_m</span><span class="p">,</span>  <span class="c1"># type: ignore[arg-type]</span>
+        <span class="n">n</span><span class="o">.</span><span class="n">distances_m</span><span class="p">,</span>  <span class="c1"># type: ignore[arg-type]</span>
+        <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">overlap</span> <span class="o">=</span> <span class="n">circle_intersection_area</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">subject_crown_radius_m</span><span class="p">,</span> <span class="n">r_j</span><span class="p">,</span> <span class="n">l_ij</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
+        <span class="n">total</span> <span class="o">+=</span> <span class="p">(</span><span class="n">overlap</span> <span class="o">*</span> <span class="n">d_j</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">zone_area</span> <span class="o">*</span> <span class="n">n</span><span class="o">.</span><span class="n">subject_dbh_cm</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">total</span></div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Size-ratio spatial indices (Table 2, second spatial group)</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="daniels_sbar">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.indices.daniels_sbar">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">daniels_sbar</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="n">Neighbourhood</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;``SBAr``: subject basal area against the competitors&#39;. Daniels et al. (1986).</span>
+
+<span class="sd">    ``(d_i^2 * N_c) / sum(d_j^2)``. Like ``dr_g``, a *high* value means the</span>
+<span class="sd">    subject dominates its neighbours, i.e. less competition.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        n: The neighbourhood.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The dimensionless ratio.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If there are no competitors (the denominator would be zero).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">denominator</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">d</span> <span class="o">*</span> <span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">n</span><span class="o">.</span><span class="n">competitor_dbh_cm</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">denominator</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;SBAr is undefined without competitors of positive diameter.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">subject_dbh_cm</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">n</span><span class="o">.</span><span class="n">n_competitors</span><span class="p">)</span> <span class="o">/</span> <span class="n">denominator</span></div>
+
+
+
+<div class="viewcode-block" id="hegyi">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.indices.hegyi">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">hegyi</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="n">Neighbourhood</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;``Heg``: the Hegyi (1974) size-ratio distance-weighted index.</span>
+
+<span class="sd">    ``sum(d_j / (d_i * l_ij))``. The most widely used distance-dependent index.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        n: The neighbourhood. Needs ``distances_m``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The index in m^-1.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="s2">&quot;distances_m&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span>
+        <span class="n">d_j</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">subject_dbh_cm</span> <span class="o">*</span> <span class="n">l_ij</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">d_j</span><span class="p">,</span> <span class="n">l_ij</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">competitor_dbh_cm</span><span class="p">,</span> <span class="n">n</span><span class="o">.</span><span class="n">distances_m</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="lin_sang1">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.indices.lin_sang1">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">lin_sang1</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="n">Neighbourhood</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;``SAng1``: summed angular size of the competitors. Lin (1974).</span>
+
+<span class="sd">    ``2 * sum(arctan(d_j / (2 * l_ij)))`` -- the horizontal angle each competitor</span>
+<span class="sd">    stem subtends at the subject.</span>
+
+<span class="sd">    Diameters are converted from cm to m first. Table 2 prints ``d_j`` in cm</span>
+<span class="sd">    against ``l_ij`` in m, which is dimensionally inconsistent: a 20 cm stem 5 m</span>
+<span class="sd">    away would come out at 76 degrees rather than the correct 2.3.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        n: The neighbourhood. Needs ``distances_m``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The summed angle in radians.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="s2">&quot;distances_m&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="nb">sum</span><span class="p">(</span>
+        <span class="n">atan</span><span class="p">((</span><span class="n">d_j</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">l_ij</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">d_j</span><span class="p">,</span> <span class="n">l_ij</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">competitor_dbh_cm</span><span class="p">,</span> <span class="n">n</span><span class="o">.</span><span class="n">distances_m</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="rouvinen_kuuluvainen_sang2">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.indices.rouvinen_kuuluvainen_sang2">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">rouvinen_kuuluvainen_sang2</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="n">Neighbourhood</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;``SAng2``: summed horizontal angle. Rouvinen &amp; Kuuluvainen (1997).</span>
+
+<span class="sd">    ``sum(arctan(d_j / l_ij))``, diameters converted to m (see :func:`lin_sang1`).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        n: The neighbourhood. Needs ``distances_m``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The summed angle in radians.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="s2">&quot;distances_m&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span>
+        <span class="n">atan</span><span class="p">((</span><span class="n">d_j</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">l_ij</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">d_j</span><span class="p">,</span> <span class="n">l_ij</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">competitor_dbh_cm</span><span class="p">,</span> <span class="n">n</span><span class="o">.</span><span class="n">distances_m</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="rouvinen_kuuluvainen_sdrang">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.indices.rouvinen_kuuluvainen_sdrang">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">rouvinen_kuuluvainen_sdrang</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="n">Neighbourhood</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;``SdrAng``: horizontal angle weighted by diameter ratio. Rouvinen &amp; Kuuluvainen (1997).</span>
+
+<span class="sd">    ``sum((d_j / d_i) * arctan(d_j / l_ij))``, diameters converted to m in the</span>
+<span class="sd">    arctangent (the ``d_j / d_i`` ratio is unit-free either way).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        n: The neighbourhood. Needs ``distances_m``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The weighted angle sum in radians.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="s2">&quot;distances_m&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">d_j</span> <span class="o">/</span> <span class="n">n</span><span class="o">.</span><span class="n">subject_dbh_cm</span><span class="p">)</span> <span class="o">*</span> <span class="n">atan</span><span class="p">((</span><span class="n">d_j</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">l_ij</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">d_j</span><span class="p">,</span> <span class="n">l_ij</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">competitor_dbh_cm</span><span class="p">,</span> <span class="n">n</span><span class="o">.</span><span class="n">distances_m</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="alemdag_almdg">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.indices.alemdag_almdg">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">alemdag_almdg</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="n">Neighbourhood</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;``Almdg``: potentially available growing space. Alemdag (1978).</span>
+
+<span class="sd">    ``sum(pi * [(l_ij * d_i) / (d_i + d_j)]^2 * (d_j / l_ij) / sum(d_j / l_ij))``.</span>
+
+<span class="sd">    The bracketed term is the radius (m) at which the subject and competitor</span>
+<span class="sd">    exert equal influence along the line joining them, so each summand is an</span>
+<span class="sd">    area weighted by that competitor&#39;s share of the total size-over-distance.</span>
+
+<span class="sd">    Like ``dr_g`` and ``SBAr``, a *high* value means *less* competition: it is</span>
+<span class="sd">    the space left to the subject, not the pressure on it. The weights sum to</span>
+<span class="sd">    one, so this is a mean rather than a sum -- losing half the competitors to a</span>
+<span class="sd">    plot boundary leaves it unchanged, which is why it is not edge-corrected.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        n: The neighbourhood. Needs ``distances_m``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Growing space in m^2.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If there are no competitors.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="s2">&quot;distances_m&quot;</span><span class="p">)</span>
+    <span class="n">ratios</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">d_j</span> <span class="o">/</span> <span class="n">l_ij</span>
+        <span class="k">for</span> <span class="n">d_j</span><span class="p">,</span> <span class="n">l_ij</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">competitor_dbh_cm</span><span class="p">,</span> <span class="n">n</span><span class="o">.</span><span class="n">distances_m</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
+    <span class="p">]</span>
+    <span class="n">total_ratio</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">ratios</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">total_ratio</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Almdg is undefined without competitors.&quot;</span><span class="p">)</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">for</span> <span class="n">d_j</span><span class="p">,</span> <span class="n">l_ij</span><span class="p">,</span> <span class="n">ratio</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">competitor_dbh_cm</span><span class="p">,</span> <span class="n">n</span><span class="o">.</span><span class="n">distances_m</span><span class="p">,</span> <span class="n">ratios</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>  <span class="c1"># type: ignore[arg-type]</span>
+        <span class="n">equal_influence_radius_m</span> <span class="o">=</span> <span class="p">(</span><span class="n">l_ij</span> <span class="o">*</span> <span class="n">n</span><span class="o">.</span><span class="n">subject_dbh_cm</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">subject_dbh_cm</span> <span class="o">+</span> <span class="n">d_j</span><span class="p">)</span>
+        <span class="n">total</span> <span class="o">+=</span> <span class="n">pi</span> <span class="o">*</span> <span class="n">equal_influence_radius_m</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">ratio</span> <span class="o">/</span> <span class="n">total_ratio</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">total</span></div>
+
+
+
+<div class="viewcode-block" id="lorimer_sdrl1">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.indices.lorimer_sdrl1">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">lorimer_sdrl1</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="n">Neighbourhood</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;``Sdrl1``: diameter ratio damped by the square root of relative distance. Lorimer (1983).</span>
+
+<span class="sd">    ``sum((d_j / d_i) / sqrt(l_ij / CZR))``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        n: The neighbourhood. Needs ``distances_m`` and</span>
+<span class="sd">            ``competition_zone_radius_m``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The dimensionless index.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="s2">&quot;distances_m&quot;</span><span class="p">,</span> <span class="s2">&quot;competition_zone_radius_m&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">competition_zone_radius_m</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># type: ignore[operator]</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;competition_zone_radius_m must be positive.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">d_j</span> <span class="o">/</span> <span class="n">n</span><span class="o">.</span><span class="n">subject_dbh_cm</span><span class="p">)</span> <span class="o">/</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">l_ij</span> <span class="o">/</span> <span class="n">n</span><span class="o">.</span><span class="n">competition_zone_radius_m</span><span class="p">)</span>  <span class="c1"># type: ignore[operator]</span>
+        <span class="k">for</span> <span class="n">d_j</span><span class="p">,</span> <span class="n">l_ij</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">competitor_dbh_cm</span><span class="p">,</span> <span class="n">n</span><span class="o">.</span><span class="n">distances_m</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="martin_ek_sdrl2">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.indices.martin_ek_sdrl2">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">martin_ek_sdrl2</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="n">Neighbourhood</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;``Sdrl2``: diameter ratio with exponential distance decay. Martin &amp; Ek (1984).</span>
+
+<span class="sd">    ``sum((d_j / d_i) * exp(-16 * l_ij / (d_i + d_j)))`` with ``l_ij`` in m and</span>
+<span class="sd">    diameters in cm -- the constant 16 assumes that mixture.</span>
+
+<span class="sd">    **The exponent is negative here and positive in the source table.** Maleki</span>
+<span class="sd">    et al. (2015) Table 2 and Wang et al. (2012) Table 1 both print</span>
+<span class="sd">    ``exp(+16*...)``. That cannot be right: the index is a distance-decay</span>
+<span class="sd">    weighting, and a positive exponent makes far competitors dominate near ones</span>
+<span class="sd">    without bound (at ``d_i + d_j = 40 cm``, a competitor at 10 m would weigh 24</span>
+<span class="sd">    times one at 2 m). The negative form is the one in general use and is what</span>
+<span class="sd">    Martin &amp; Ek describe as an &quot;exponential weighting scheme&quot;.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        n: The neighbourhood. Needs ``distances_m``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The dimensionless index.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="s2">&quot;distances_m&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">d_j</span> <span class="o">/</span> <span class="n">n</span><span class="o">.</span><span class="n">subject_dbh_cm</span><span class="p">)</span> <span class="o">*</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">16.0</span> <span class="o">*</span> <span class="n">l_ij</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">subject_dbh_cm</span> <span class="o">+</span> <span class="n">d_j</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">d_j</span><span class="p">,</span> <span class="n">l_ij</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">competitor_dbh_cm</span><span class="p">,</span> <span class="n">n</span><span class="o">.</span><span class="n">distances_m</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
+    <span class="p">)</span></div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Registry</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="CompetitionIndex">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.indices.CompetitionIndex">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CompetitionIndex</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;One competition index: its formula, its provenance and what it needs.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        abbreviation: The short name used in the literature, e.g. ``&quot;Heg&quot;``.</span>
+<span class="sd">        compute: The kernel, a pure function of a :class:`Neighbourhood`.</span>
+<span class="sd">        source: The publication that proposed *this index*. Not the review it was</span>
+<span class="sd">            collected from -- see</span>
+<span class="sd">            :data:`pyforestry.base.competition.sources.INDEX_SET_REVIEW` for that.</span>
+<span class="sd">        spatial: Whether the index belongs to Table 2&#39;s spatially explicit group,</span>
+<span class="sd">            i.e. whether its value depends on a distance-based competitor</span>
+<span class="sd">            selection. True for every index in :data:`SPATIAL_INDICES` and false</span>
+<span class="sd">            for every index in :data:`NON_SPATIAL_INDICES`, so the flag and the</span>
+<span class="sd">            grouping never disagree. ``SBAr`` is spatial on this reading even</span>
+<span class="sd">            though its arithmetic has no distance term: its competitor set is</span>
+<span class="sd">            distance-defined, and it is the one index whose formula and grouping</span>
+<span class="sd">            come apart.</span>
+<span class="sd">        additive: Whether the index is a plain sum over competitors, and so</span>
+<span class="sd">            scales with the share of the competition zone that was observed.</span>
+<span class="sd">            Only additive indices can be edge-corrected by dividing by</span>
+<span class="sd">            ``observed_zone_fraction``; ``SBAr`` (a ratio) and ``Almdg`` (a</span>
+<span class="sd">            weight-normalised mean of areas) are unchanged when half the</span>
+<span class="sd">            competitors are lost, so dividing them would invent competition.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">abbreviation</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">compute</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Neighbourhood</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span>
+    <span class="n">source</span><span class="p">:</span> <span class="n">SourceReference</span>
+    <span class="n">spatial</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">additive</span><span class="p">:</span> <span class="nb">bool</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neighbourhood</span><span class="p">:</span> <span class="n">Neighbourhood</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate the index.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">neighbourhood</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_entry</span><span class="p">(</span>
+    <span class="n">abbrev</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Neighbourhood</span><span class="p">],</span> <span class="nb">float</span><span class="p">],</span>
+    <span class="n">spatial</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="n">additive</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CompetitionIndex</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Bind a kernel to its own primary citation.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">CompetitionIndex</span><span class="p">(</span><span class="n">abbrev</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">INDEX_SOURCES</span><span class="p">[</span><span class="n">abbrev</span><span class="p">],</span> <span class="n">spatial</span><span class="p">,</span> <span class="n">additive</span><span class="p">)</span>
+
+
+<span class="c1">#: Non-spatial indices, keyed by the abbreviation used in the literature. None of</span>
+<span class="c1">#: these is ever edge-corrected, so ``additive`` is irrelevant and set false.</span>
+<span class="n">NON_SPATIAL_INDICES</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">CompetitionIndex</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">entry</span><span class="o">.</span><span class="n">abbreviation</span><span class="p">:</span> <span class="n">entry</span>
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="p">(</span>
+        <span class="n">_entry</span><span class="p">(</span><span class="s2">&quot;BA-gj&quot;</span><span class="p">,</span> <span class="n">basal_area_sum_ba_gj</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+        <span class="n">_entry</span><span class="p">(</span><span class="s2">&quot;BAL&quot;</span><span class="p">,</span> <span class="n">basal_area_of_larger_bal</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+        <span class="n">_entry</span><span class="p">(</span><span class="s2">&quot;Sdr&quot;</span><span class="p">,</span> <span class="n">sum_diameter_ratio_sdr</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+        <span class="n">_entry</span><span class="p">(</span><span class="s2">&quot;drg&quot;</span><span class="p">,</span> <span class="n">diameter_ratio_drg</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+        <span class="n">_entry</span><span class="p">(</span><span class="s2">&quot;BAr&quot;</span><span class="p">,</span> <span class="n">basal_area_ratio_bar</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+        <span class="n">_entry</span><span class="p">(</span><span class="s2">&quot;BALr&quot;</span><span class="p">,</span> <span class="n">bal_ratio_balr</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+        <span class="n">_entry</span><span class="p">(</span><span class="s2">&quot;BALMOD&quot;</span><span class="p">,</span> <span class="n">balmod</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+    <span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">#: Spatially explicit indices, keyed by the abbreviation used in the literature.</span>
+<span class="n">SPATIAL_INDICES</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">CompetitionIndex</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">entry</span><span class="o">.</span><span class="n">abbreviation</span><span class="p">:</span> <span class="n">entry</span>
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="p">(</span>
+        <span class="n">_entry</span><span class="p">(</span><span class="s2">&quot;Sl&quot;</span><span class="p">,</span> <span class="n">staebler_sl</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+        <span class="n">_entry</span><span class="p">(</span><span class="s2">&quot;SOr&quot;</span><span class="p">,</span> <span class="n">gerrard_sor</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+        <span class="n">_entry</span><span class="p">(</span><span class="s2">&quot;SOdr&quot;</span><span class="p">,</span> <span class="n">bella_sodr</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+        <span class="n">_entry</span><span class="p">(</span><span class="s2">&quot;SBAr&quot;</span><span class="p">,</span> <span class="n">daniels_sbar</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+        <span class="n">_entry</span><span class="p">(</span><span class="s2">&quot;Heg&quot;</span><span class="p">,</span> <span class="n">hegyi</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+        <span class="n">_entry</span><span class="p">(</span><span class="s2">&quot;SAng1&quot;</span><span class="p">,</span> <span class="n">lin_sang1</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+        <span class="n">_entry</span><span class="p">(</span><span class="s2">&quot;SAng2&quot;</span><span class="p">,</span> <span class="n">rouvinen_kuuluvainen_sang2</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+        <span class="n">_entry</span><span class="p">(</span><span class="s2">&quot;SdrAng&quot;</span><span class="p">,</span> <span class="n">rouvinen_kuuluvainen_sdrang</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+        <span class="n">_entry</span><span class="p">(</span><span class="s2">&quot;Almdg&quot;</span><span class="p">,</span> <span class="n">alemdag_almdg</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+        <span class="n">_entry</span><span class="p">(</span><span class="s2">&quot;Sdrl1&quot;</span><span class="p">,</span> <span class="n">lorimer_sdrl1</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+        <span class="n">_entry</span><span class="p">(</span><span class="s2">&quot;Sdrl2&quot;</span><span class="p">,</span> <span class="n">martin_ek_sdrl2</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">#: Every index, keyed by abbreviation.</span>
+<span class="n">INDEX_REGISTRY</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">CompetitionIndex</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">NON_SPATIAL_INDICES</span><span class="p">,</span> <span class="o">**</span><span class="n">SPATIAL_INDICES</span><span class="p">}</span>
+
+<span class="c1">#: Case-insensitive lookup, built once rather than per call.</span>
+<span class="n">_BY_LOWER_NAME</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">INDEX_REGISTRY</span><span class="p">}</span>
+
+
+<div class="viewcode-block" id="resolve_index">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.indices.resolve_index">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">resolve_index</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CompetitionIndex</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Look an index up by abbreviation, case-insensitively.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name: The abbreviation, e.g. ``&quot;Heg&quot;`` or ``&quot;heg&quot;``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The registry entry, carrying the kernel, its citation and its flags.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        KeyError: If ``name`` is not one of the eighteen indices.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">_BY_LOWER_NAME</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown competition index </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2">. Known: </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">INDEX_REGISTRY</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">INDEX_REGISTRY</span><span class="p">[</span><span class="n">key</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="compute_index">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.indices.compute_index">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_index</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">neighbourhood</span><span class="p">:</span> <span class="n">Neighbourhood</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute one index by its abbreviation.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name: The abbreviation, e.g. ``&quot;Heg&quot;`` or ``&quot;BAL&quot;``. Case-insensitive.</span>
+<span class="sd">        neighbourhood: The subject tree and its competitors.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The index value.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        KeyError: If ``name`` is not one of the eighteen indices.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">resolve_index</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">neighbourhood</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="index_source">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.indices.index_source">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">index_source</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SourceReference</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the publication that proposed the named index.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name: The abbreviation, e.g. ``&quot;Heg&quot;``. Case-insensitive.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The index&#39;s own primary citation -- Hegyi (1974) for ``&quot;Heg&quot;``, not the</span>
+<span class="sd">        review the set was collected from.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        KeyError: If ``name`` is not one of the eighteen indices.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">resolve_index</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">source</span></div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
