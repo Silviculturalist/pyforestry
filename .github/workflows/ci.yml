@@ -43,6 +43,11 @@ on:
       - '**/*.jpeg'
       - '**/*.gif'
       - '**/*.svg'
+  # Manual trigger. The paths-ignore lists above skip the whole workflow for a
+  # docs-only change, which also skips build-and-deploy-docs -- so a notebook or
+  # docs/requirements.txt fix cannot otherwise be validated, and the site is not
+  # rebuilt when its own content changes. This makes such a run requestable.
+  workflow_dispatch:
 
 jobs:
   test-and-coverage:

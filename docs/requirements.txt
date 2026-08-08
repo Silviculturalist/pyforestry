@@ -5,9 +5,7 @@ myst-parser>=0.18
 pydata-sphinx-theme>=0.16
 ipykernel
 pypandoc
-# Imported directly by docs/source/notebooks/elfving_2010_preset.ipynb, which
-# nbsphinx executes during the build: joblib for its parallel schedule search,
-# IPython for display(). IPython arrives transitively via ipykernel, but the
-# notebook imports it by name, so declare it rather than rely on that.
+# Imported by docs/source/notebooks/elfving_2010_preset.ipynb for its parallel
+# schedule search. nbsphinx executes that notebook during the build, and nothing
+# else here or in pyproject pulls joblib in.
 joblib
-IPython
