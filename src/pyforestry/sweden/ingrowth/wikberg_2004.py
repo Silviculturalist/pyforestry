@@ -254,7 +254,8 @@ class Wikberg2004Ingrowth:  # pragma: no cover - legacy parity implementation
         ingrowth_species (Sequence[IngrowthSpeciesGroup] | None): Species groups to include.
         rng (random.Random | None): RNG used when deterministic is False.
 
-    Example:
+    Example::
+
         model = Wikberg2004Ingrowth(deterministic=True)
         result = model.predict(
             stand=stand,

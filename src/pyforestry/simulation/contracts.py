@@ -11,7 +11,7 @@ should have to import from the simulation tier to obtain it. Import it from
 
 ``ParityCase`` and ``AssertionResult`` were removed rather than kept: a Protocol
 for reproducible parity fixtures with no implementer and no caller, exported from
-two ``__all__``s, reads as a contract something honours.
+two ``__all__`` lists, reads as a contract something honours.
 """
 
 from __future__ import annotations

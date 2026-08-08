@@ -25,7 +25,13 @@ discoverable models is on the :doc:`model_index` page.
 API reference
 -------------
 
+.. sphinx-apidoc also generates api/pyforestry.rst, which documents this same
+   module, so without :no-index: every catalog object is described twice. The
+   generated page keeps the index entries because cross-references elsewhere
+   resolve against it; this curated page still renders the full API.
+
 .. automodule:: pyforestry.catalog
    :members:
    :undoc-members:
    :show-inheritance:
+   :no-index:

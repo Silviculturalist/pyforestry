@@ -33,12 +33,16 @@ Context 1: Data Contract Context
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * Owns:
+
   * Shared data structures, primitives, and unit-bearing contracts.
 * Must define:
+
   * Stable type-level contracts consumed by formulas and simulation runtimes.
 * Must not define:
+
   * Scenario sequencing and orchestration policy.
 * Primary package paths:
+
   * ``src/pyforestry/base/helpers/``
   * ``src/pyforestry/base/helpers/primitives/``
 
@@ -46,12 +50,16 @@ Context 2: Formula Context
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * Owns:
+
   * Scientific equations, coefficients, and model-local guards.
 * Must define:
+
   * Explicit equation interfaces with unit-bearing inputs and outputs.
 * Must not define:
+
   * Global seed policy, stage ordering, or scenario rulesets.
 * Primary package paths:
+
   * Domain packages outside ``*/adapters``, ``*/systems`` and ``*/simulation``.
   * Example: ``src/pyforestry/sweden/mortality/``
   * Example: ``src/pyforestry/sweden/siteindex/``
@@ -65,19 +73,24 @@ directories because the question you ask of each is different: a system is
 checked against its publication, an adapter against the runtime contract.
 
 * ``*/adapters/`` owns:
+
   * ``GrowthModel`` bindings that compose domain equations into simulation-facing APIs.
   * No scientific coefficient literals -- enforced by AL001, with no exception list.
 * ``*/systems/`` owns:
+
   * Whole published growth-and-yield systems reproduced end to end (Eriksson 1976,
     Persson 1992, Petterson 1955, Ekö 1985, Elfving & Hägglund 1975).
   * Their coefficients, and the ``GrowthModel`` that drives them: a self-contained
     system owns its own interface.
 * Must define:
+
   * Simulation-facing interfaces binding runtime contracts to domain equations.
 * Must not define:
+
   * New standalone equations (these belong in domain packages).
   * Long-lived orchestration policy or scenario rulesets.
 * Primary package paths:
+
   * ``src/pyforestry/<region>/adapters/``
   * ``src/pyforestry/sweden/systems/`` (Norway ships no whole system yet)
 
@@ -85,13 +98,17 @@ Context 4: Simulation Policy + Runtime Context
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * Owns:
+
   * Runtime orchestration, staging, dispatch behavior, rulesets, and seed policy.
 * Must define:
+
   * Temporal stepping and operation ordering.
   * Non-formula environment constraints and cross-model guards.
 * Must not define:
+
   * Region-specific equation internals.
 * Primary package paths:
+
   * ``src/pyforestry/base/simulation/``
   * ``src/pyforestry/simulation/``
   * Target regional presets/orchestration: ``src/pyforestry/<region>/simulation/``
@@ -100,12 +117,16 @@ Context 5: Integration/Application Context
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * Owns:
+
   * Notebook/app composition, scenario setup, and external integrations.
 * Must define:
+
   * Consumer-facing execution wiring and environment-specific glue.
 * Must not define:
+
   * New reusable formula internals or core runtime contracts.
 * Primary package paths:
+
   * ``docs/source/notebooks/``
   * External applications consuming ``pyforestry``
 
@@ -123,7 +144,7 @@ The following rules are mandatory:
 7. Rulesets MUST be defined and applied in simulation global context.
 
 ``/adapters`` and ``/systems`` Policy
-------------------------------------
+-------------------------------------
 
 * ``src/pyforestry/<region>/adapters/`` contains ``GrowthModel`` bindings and
   nothing else. An adapter MUST NOT carry scientific coefficient literals: AL001
@@ -163,6 +184,7 @@ Dispatch and Single-Responsibility Rules
 ----------------------------------------
 
 * There MUST be one dispatch layer per concern:
+
   * Formula dispatch.
   * Simulation-stage dispatch.
   * Scenario-policy dispatch.
@@ -192,12 +214,16 @@ Runnable regional presets MUST live under ``src/pyforestry/<region>/simulation/`
 Minimum preset contract:
 
 * Seed handling:
+
   * Accept and persist global seed strategy.
 * Pipeline/policy declaration:
+
   * Declare the ordered steps and the management policy explicitly.
 * Operation ordering:
+
   * Declare execution order outside formula internals.
 * Environment guards:
+
   * Apply non-formula constraints in simulation policy.
 
 Migration Guardrails

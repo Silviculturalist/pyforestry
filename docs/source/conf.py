@@ -48,6 +48,24 @@ extensions = [
 # templates_path = ['_templates']  # if you have custom Jinja2 templates
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "notebooks/_archive/**"]
 
+# "Units:" is this codebase's own docstring section, used 86 times in
+# biomass/marklund_1988.py alone. Napoleon does not know it, so reST saw a plain
+# paragraph followed by an indented block and raised "Unexpected indentation" for
+# every one of them. Declaring it parses the section instead of erroring, and
+# keeps the wording the transcriptions were verified against.
+# Aliased to Parameters rather than declared with "params_style": that style
+# consumed only the first entry, so the 25 single-entry sections parsed and all
+# 61 multi-entry ones still errored on their second line.
+napoleon_custom_sections = [("Units", "Parameters")]
+
+# Classes here are largely dataclasses that document their fields in an
+# "Attributes:" docstring section. Napoleon rendered that section as standalone
+# attribute descriptions, while autodoc separately documented the same fields as
+# members -- so each one was registered twice (209 "duplicate object
+# description" warnings). Emitting them as :ivar: fields describes them in place,
+# on the class, which is also where a reader expects a dataclass's fields.
+napoleon_use_ivar = True
+
 autodoc_default_options = {
     "members": True,  # include all public members
     "undoc-members": True,  # also include members without docstrings
