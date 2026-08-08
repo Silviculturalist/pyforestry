@@ -50,6 +50,34 @@ def _has_aggregates(stand: Stand) -> bool:
         return False
 
 
+def _tallies_expand(stand: Stand, mode: str) -> bool:
+    """Return True when an adapter can turn this stand's tallies into ``mode``.
+
+    Asks the same adapters, in the same order, that :func:`_acquire_tree_list` and
+    :func:`_acquire_diameter_classes` would try, so :meth:`GrowthModel.can_build`
+    and :meth:`GrowthModel.build_context` agree on whether a tally-only stand is
+    usable. They did not agree before: ``can_build`` counted every angle-count
+    stand as adaptable, while the adapters need the stems/ha a tally yields only
+    when ``AngleCount(diameters_cm=...)`` recorded diameters. A stand tallied
+    without them passed ``can_build`` and then raised from ``build_context``.
+    """
+    from .adapters import AdapterRegistry
+
+    registry = AdapterRegistry.default()
+    if mode == "diameter_class":
+        names = ["angle_count_to_diameter_class"]
+    elif mode == "spatial":
+        names = ["angle_count_spatial_pseudo_tree_list", "angle_count_pseudo_tree_list"]
+    else:
+        names = ["angle_count_pseudo_tree_list", "angle_count_spatial_pseudo_tree_list"]
+
+    for name in names:
+        adapter = registry.get(name)
+        if adapter is not None and adapter.can_adapt(stand):
+            return True
+    return False
+
+
 def _select_mode(req: "Requirements", stand: Stand, mode_hint: Optional[str]) -> str:
     """Decide which inventory mode a run of this model will use.
 
@@ -355,21 +383,37 @@ class GrowthModel(ABC):
             missing.append("top_height")
 
         mode = _select_mode(req, stand, mode_hint)
-        adaptable = allow_adapters and stand.use_angle_count
+        # Ask the adapters whether they can actually expand the tallies, rather than
+        # assuming any angle-count stand is adaptable. When none can,
+        # _acquire_tree_list falls back to aggregate mode, which still builds as long
+        # as the stand reports BasalArea and Stems -- so that fallback counts as
+        # buildable here too, exactly as build_context treats it.
+        angle_count = allow_adapters and stand.use_angle_count
+        adaptable = angle_count and _tallies_expand(stand, mode)
+        aggregate_fallback = angle_count and _has_aggregates(stand)
+        tally_hint = " (angle-count tallies expand only with AngleCount(diameters_cm=...))"
 
         if mode == "spatial":
             if not (
-                _has_positions(stand) or adaptable or (allow_adapters and _has_tree_list(stand))
+                _has_positions(stand)
+                or adaptable
+                or aggregate_fallback
+                or (allow_adapters and _has_tree_list(stand))
             ):
-                missing.append("spatial (positions required or adapter)")
+                missing.append(
+                    "spatial (positions required or adapter)" + (tally_hint if angle_count else "")
+                )
         elif mode == "tree_list":
-            if not (_has_tree_list(stand) or adaptable):
-                missing.append("tree_list")
+            if not (_has_tree_list(stand) or adaptable or aggregate_fallback):
+                missing.append("tree_list" + (tally_hint if angle_count else ""))
         elif mode == "diameter_class":
             if not (_has_tree_list(stand) or _has_aggregates(stand) or adaptable):
-                missing.append("diameter_class (needs tree list or aggregates)")
+                missing.append(
+                    "diameter_class (needs tree list or aggregates)"
+                    + (tally_hint if angle_count else "")
+                )
         elif not _has_aggregates(stand):  # aggregate
-            missing.append("aggregates (BasalArea/Stems)")
+            missing.append("aggregates (BasalArea/Stems)" + (tally_hint if angle_count else ""))
 
         return (len(missing) == 0, missing)
 

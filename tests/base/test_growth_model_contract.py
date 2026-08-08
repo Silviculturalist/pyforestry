@@ -1,12 +1,15 @@
 """Regression tests for the :class:`GrowthModel.build_context` contract.
 
-Two defects are guarded here:
+Three defects are guarded here:
 
 * every shipped adapter used to pass ``mode_hint`` to ``super().build_context``,
   so the base class's own ``mode_hint`` parameter raised ``TypeError`` for any
   caller that supplied it -- including the worked example in ``example_api.md``;
 * ``inventory_origin`` was set by an inverted branch that labelled every
-  non-angle-count stand as reconstructed from angle-count tallies.
+  non-angle-count stand as reconstructed from angle-count tallies;
+* ``can_build`` treated any angle-count stand as adaptable to a tree list without
+  asking the adapters, so a tally recorded without diameters passed the check and
+  then raised from ``build_context``.
 """
 
 import warnings
@@ -164,6 +167,34 @@ def test_a_stand_that_cannot_supply_stems_says_so():
     assert _AggregateModel().can_build(stand)[0] is False
     with pytest.raises(ValueError, match="does not supply Stems"):
         _AggregateModel().build_context(stand)
+
+
+def test_can_build_does_not_promise_a_tree_list_the_adapters_cannot_deliver():
+    """``can_build`` must agree with ``build_context`` on bare tallies.
+
+    It counted every angle-count stand as adaptable without asking the adapters,
+    which need the stems/ha a tally yields only when diameters were recorded. So
+    a diameter-less tally returned ``(True, [])`` and then raised from
+    ``build_context`` -- the exact exception ``can_build`` exists to avoid.
+    """
+    stand = _angle_count_stand_without_diameters()
+    model = _TreeListModel()
+
+    ok, missing = model.can_build(stand, allow_adapters=True, mode_hint="tree_list")
+    assert ok is False
+    assert any("diameters_cm" in entry for entry in missing), missing
+
+    with pytest.raises(ValueError, match="does not supply Stems"):
+        model.build_context(stand, mode_hint="tree_list")
+
+
+def test_tallies_carrying_diameters_stay_buildable_as_a_tree_list():
+    """The tightened check must still accept tallies the adapters can expand."""
+    stand = _angle_count_stand()
+    model = _TreeListModel()
+
+    assert model.can_build(stand, allow_adapters=True, mode_hint="tree_list")[0] is True
+    assert model.build_context(stand, mode_hint="tree_list").mode == "tree_list"
 
 
 def test_every_tree_gets_a_stable_identifier():
