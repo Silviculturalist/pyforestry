@@ -716,31 +716,17 @@ Meddelanden fran Statens skogsforsoksanstalt 29(1), 1-169.</p>
 <p>The curve is fitted from the measured <code class="docutils literal notranslate"><span class="pre">(diameter_cm,</span> <span class="pre">height_m)</span></code> pairs of
 the trees it is given, so this imputer must be <a class="reference internal" href="#pyforestry.base.imputation.height.NaslundHeightImputer.fit" title="pyforestry.base.imputation.height.NaslundHeightImputer.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a> before use –
 <a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.stand.Stand.impute" title="pyforestry.base.helpers.stand.Stand.impute"><code class="xref py py-meth docutils literal notranslate"><span class="pre">impute()</span></code></a> does that for you.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.imputation.height.NaslundHeightImputer.spec">
-<span class="sig-name descname"><span class="pre">spec</span></span><a class="headerlink" href="#pyforestry.base.imputation.height.NaslundHeightImputer.spec" title="Link to this definition">#</a></dt>
-<dd><p>What to fit. <code class="docutils literal notranslate"><span class="pre">&quot;naslund&quot;</span></code> fits from the stand’s own pairs; a
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spec</strong> (<em>str</em><em> | </em><em>Callable</em><em>[</em><em>[</em><em>float</em><em>]</em><em>, </em><em>float</em><em> | </em><em>None</em><em>] </em><em>| </em><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.height_models.HeightSource" title="pyforestry.base.helpers.height_models.HeightSource"><em>pyforestry.base.helpers.height_models.HeightSource</em></a><em> | </em><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.height_models.NaslundHeightCurve" title="pyforestry.base.helpers.height_models.NaslundHeightCurve"><em>pyforestry.base.helpers.height_models.NaslundHeightCurve</em></a>) – What to fit. <code class="docutils literal notranslate"><span class="pre">&quot;naslund&quot;</span></code> fits from the stand’s own pairs; a
 callable <code class="docutils literal notranslate"><span class="pre">f(diameter_cm)</span> <span class="pre">-&gt;</span> <span class="pre">height_m</span></code> or an already-fitted
 <a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.height_models.NaslundHeightCurve" title="pyforestry.base.helpers.height_models.NaslundHeightCurve"><code class="xref py py-class docutils literal notranslate"><span class="pre">NaslundHeightCurve</span></code></a>
-is used directly.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str | Callable[[float], float | None] | <a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.height_models.HeightSource" title="pyforestry.base.helpers.height_models.HeightSource">pyforestry.base.helpers.height_models.HeightSource</a> | <a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.height_models.NaslundHeightCurve" title="pyforestry.base.helpers.height_models.NaslundHeightCurve">pyforestry.base.helpers.height_models.NaslundHeightCurve</a></p>
+is used directly.</p></li>
+<li><p><strong>naslund_exponent</strong> (<em>int</em><em> | </em><em>float</em><em> | </em><em>str</em>) – Exponent for the fit, or <code class="docutils literal notranslate"><span class="pre">&quot;auto&quot;</span></code> to fit it too.</p></li>
+</ul>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.imputation.height.NaslundHeightImputer.naslund_exponent">
-<span class="sig-name descname"><span class="pre">naslund_exponent</span></span><a class="headerlink" href="#pyforestry.base.imputation.height.NaslundHeightImputer.naslund_exponent" title="Link to this definition">#</a></dt>
-<dd><p>Exponent for the fit, or <code class="docutils literal notranslate"><span class="pre">&quot;auto&quot;</span></code> to fit it too.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int | float | str</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyforestry.base.imputation.height.NaslundHeightImputer.attribute">
 <span class="sig-name descname"><span class="pre">attribute</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'height_m'</span></span><a class="headerlink" href="#pyforestry.base.imputation.height.NaslundHeightImputer.attribute" title="Link to this definition">#</a></dt>
@@ -797,8 +783,8 @@ a non-monotone curve.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id0">
-<span class="sig-name descname"><span class="pre">naslund_exponent</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></span><a class="headerlink" href="#id0" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pyforestry.base.imputation.height.NaslundHeightImputer.naslund_exponent">
+<span class="sig-name descname"><span class="pre">naslund_exponent</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></span><a class="headerlink" href="#pyforestry.base.imputation.height.NaslundHeightImputer.naslund_exponent" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
@@ -808,8 +794,8 @@ a non-monotone curve.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id1">
-<span class="sig-name descname"><span class="pre">spec</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.height_models.HeightSource" title="pyforestry.base.helpers.height_models.HeightSource"><span class="pre">HeightSource</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.height_models.NaslundHeightCurve" title="pyforestry.base.helpers.height_models.NaslundHeightCurve"><span class="pre">NaslundHeightCurve</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'naslund'</span></span><a class="headerlink" href="#id1" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pyforestry.base.imputation.height.NaslundHeightImputer.spec">
+<span class="sig-name descname"><span class="pre">spec</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.height_models.HeightSource" title="pyforestry.base.helpers.height_models.HeightSource"><span class="pre">HeightSource</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.height_models.NaslundHeightCurve" title="pyforestry.base.helpers.height_models.NaslundHeightCurve"><span class="pre">NaslundHeightCurve</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'naslund'</span></span><a class="headerlink" href="#pyforestry.base.imputation.height.NaslundHeightImputer.spec" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -833,40 +819,16 @@ which is what <a class="reference internal" href="#pyforestry.base.imputation.im
 <p>The value it produces is recorded as uncited, which is the honest label: a
 lambda has no publication. That keeps caller-supplied values distinguishable
 from ones a published model produced.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.imputation.imputer.CallableImputer.attribute">
-<span class="sig-name descname"><span class="pre">attribute</span></span><a class="headerlink" href="#pyforestry.base.imputation.imputer.CallableImputer.attribute" title="Link to this definition">#</a></dt>
-<dd><p>The attribute produced, e.g. <code class="docutils literal notranslate"><span class="pre">&quot;crown_radius_m&quot;</span></code>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attribute</strong> (<em>str</em>) – The attribute produced, e.g. <code class="docutils literal notranslate"><span class="pre">&quot;crown_radius_m&quot;</span></code>.</p></li>
+<li><p><strong>function</strong> (<em>Callable</em><em>[</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>float</em><em> | </em><em>None</em><em>]</em>) – <code class="docutils literal notranslate"><span class="pre">f(tree)</span> <span class="pre">-&gt;</span> <span class="pre">value</span> <span class="pre">|</span> <span class="pre">None</span></code>.</p></li>
+<li><p><strong>label</strong> (<em>str</em>) – Short description used as the citation title and, slugified, as
+the <code class="docutils literal notranslate"><span class="pre">component_id</span></code>.</p></li>
+</ul>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.imputation.imputer.CallableImputer.function">
-<span class="sig-name descname"><span class="pre">function</span></span><a class="headerlink" href="#pyforestry.base.imputation.imputer.CallableImputer.function" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">f(tree)</span> <span class="pre">-&gt;</span> <span class="pre">value</span> <span class="pre">|</span> <span class="pre">None</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Callable[[Any], float | None]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.imputation.imputer.CallableImputer.label">
-<span class="sig-name descname"><span class="pre">label</span></span><a class="headerlink" href="#pyforestry.base.imputation.imputer.CallableImputer.label" title="Link to this definition">#</a></dt>
-<dd><p>Short description used as the citation title and, slugified, as
-the <code class="docutils literal notranslate"><span class="pre">component_id</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="pyforestry.base.imputation.imputer.CallableImputer.component_id">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">component_id</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pyforestry.base.imputation.imputer.CallableImputer.component_id" title="Link to this definition">#</a></dt>
@@ -886,8 +848,8 @@ the <code class="docutils literal notranslate"><span class="pre">component_id</s
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id2">
-<span class="sig-name descname"><span class="pre">label</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'caller-supplied</span> <span class="pre">callable'</span></span><a class="headerlink" href="#id2" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pyforestry.base.imputation.imputer.CallableImputer.label">
+<span class="sig-name descname"><span class="pre">label</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'caller-supplied</span> <span class="pre">callable'</span></span><a class="headerlink" href="#pyforestry.base.imputation.imputer.CallableImputer.label" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
@@ -1122,28 +1084,23 @@ the Näslund curve that already lives in
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.base.imputation.height">pyforestry.base.imputation.height module</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.imputation.height.NaslundHeightImputer"><code class="docutils literal notranslate"><span class="pre">NaslundHeightImputer</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.imputation.height.NaslundHeightImputer.spec"><code class="docutils literal notranslate"><span class="pre">NaslundHeightImputer.spec</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.imputation.height.NaslundHeightImputer.naslund_exponent"><code class="docutils literal notranslate"><span class="pre">NaslundHeightImputer.naslund_exponent</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.imputation.height.NaslundHeightImputer.attribute"><code class="docutils literal notranslate"><span class="pre">NaslundHeightImputer.attribute</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.imputation.height.NaslundHeightImputer.component_id"><code class="docutils literal notranslate"><span class="pre">NaslundHeightImputer.component_id</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.imputation.height.NaslundHeightImputer.fit"><code class="docutils literal notranslate"><span class="pre">NaslundHeightImputer.fit()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.imputation.height.NaslundHeightImputer.impute"><code class="docutils literal notranslate"><span class="pre">NaslundHeightImputer.impute()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id0"><code class="docutils literal notranslate"><span class="pre">NaslundHeightImputer.naslund_exponent</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.imputation.height.NaslundHeightImputer.naslund_exponent"><code class="docutils literal notranslate"><span class="pre">NaslundHeightImputer.naslund_exponent</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.imputation.height.NaslundHeightImputer.source"><code class="docutils literal notranslate"><span class="pre">NaslundHeightImputer.source</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1"><code class="docutils literal notranslate"><span class="pre">NaslundHeightImputer.spec</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.imputation.height.NaslundHeightImputer.spec"><code class="docutils literal notranslate"><span class="pre">NaslundHeightImputer.spec</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.base.imputation.imputer">pyforestry.base.imputation.imputer module</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.imputation.imputer.CallableImputer"><code class="docutils literal notranslate"><span class="pre">CallableImputer</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.imputation.imputer.CallableImputer.attribute"><code class="docutils literal notranslate"><span class="pre">CallableImputer.attribute</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.imputation.imputer.CallableImputer.function"><code class="docutils literal notranslate"><span class="pre">CallableImputer.function</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.imputation.imputer.CallableImputer.label"><code class="docutils literal notranslate"><span class="pre">CallableImputer.label</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.imputation.imputer.CallableImputer.component_id"><code class="docutils literal notranslate"><span class="pre">CallableImputer.component_id</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.imputation.imputer.CallableImputer.fit"><code class="docutils literal notranslate"><span class="pre">CallableImputer.fit()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.imputation.imputer.CallableImputer.impute"><code class="docutils literal notranslate"><span class="pre">CallableImputer.impute()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2"><code class="docutils literal notranslate"><span class="pre">CallableImputer.label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.imputation.imputer.CallableImputer.label"><code class="docutils literal notranslate"><span class="pre">CallableImputer.label</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.imputation.imputer.CallableImputer.source"><code class="docutils literal notranslate"><span class="pre">CallableImputer.source</span></code></a></li>
 </ul>
 </li>

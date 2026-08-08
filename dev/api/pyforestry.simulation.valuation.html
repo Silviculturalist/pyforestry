@@ -729,52 +729,18 @@ earned anything.</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyforestry.simulation.valuation.cashflow.</span></span><span class="sig-name descname"><span class="pre">CashFlow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">amount</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price_factor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/simulation/valuation/cashflow.html#CashFlow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.simulation.valuation.cashflow.CashFlow" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>One period’s revenue, in the money of the year it was earned.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.simulation.valuation.cashflow.CashFlow.year">
-<span class="sig-name descname"><span class="pre">year</span></span><a class="headerlink" href="#pyforestry.simulation.valuation.cashflow.CashFlow.year" title="Link to this definition">#</a></dt>
-<dd><p>The calendar year the revenue was earned in.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>year</strong> (<em>float</em>) – The calendar year the revenue was earned in.</p></li>
+<li><p><strong>amount</strong> (<em>float</em>) – The revenue, nominal – already scaled by whatever price forcing
+applied that year.</p></li>
+<li><p><strong>price_factor</strong> (<em>float</em>) – The price forcing that was applied, recorded so a reader
+can separate a change in prices from a change in what was cut.</p></li>
+<li><p><strong>label</strong> (<em>str</em>) – What produced it, e.g. the stage’s name.</p></li>
+</ul>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.simulation.valuation.cashflow.CashFlow.amount">
-<span class="sig-name descname"><span class="pre">amount</span></span><a class="headerlink" href="#pyforestry.simulation.valuation.cashflow.CashFlow.amount" title="Link to this definition">#</a></dt>
-<dd><p>The revenue, nominal – already scaled by whatever price forcing
-applied that year.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.simulation.valuation.cashflow.CashFlow.price_factor">
-<span class="sig-name descname"><span class="pre">price_factor</span></span><a class="headerlink" href="#pyforestry.simulation.valuation.cashflow.CashFlow.price_factor" title="Link to this definition">#</a></dt>
-<dd><p>The price forcing that was applied, recorded so a reader
-can separate a change in prices from a change in what was cut.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.simulation.valuation.cashflow.CashFlow.label">
-<span class="sig-name descname"><span class="pre">label</span></span><a class="headerlink" href="#pyforestry.simulation.valuation.cashflow.CashFlow.label" title="Link to this definition">#</a></dt>
-<dd><p>What produced it, e.g. the stage’s name.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="pyforestry.simulation.valuation.cashflow.CashFlow.as_mapping">
 <span class="sig-name descname"><span class="pre">as_mapping</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pyforestry/simulation/valuation/cashflow.html#CashFlow.as_mapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.simulation.valuation.cashflow.CashFlow.as_mapping" title="Link to this definition">#</a></dt>
@@ -782,13 +748,13 @@ can separate a change in prices from a change in what was cut.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id0">
-<span class="sig-name descname"><span class="pre">label</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></span><a class="headerlink" href="#id0" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.cashflow.CashFlow.label">
+<span class="sig-name descname"><span class="pre">label</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></span><a class="headerlink" href="#pyforestry.simulation.valuation.cashflow.CashFlow.label" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id1">
-<span class="sig-name descname"><span class="pre">price_factor</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.0</span></span><a class="headerlink" href="#id1" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pyforestry.simulation.valuation.cashflow.CashFlow.price_factor">
+<span class="sig-name descname"><span class="pre">price_factor</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.0</span></span><a class="headerlink" href="#pyforestry.simulation.valuation.cashflow.CashFlow.price_factor" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -914,83 +880,19 @@ bucks the mean stem and multiplies by <code class="docutils literal notranslate"
 narrower m3to and scaling the grades up to an m3sk total pays m3to prices on
 m3sk cubic metres. It is still the ceiling – logs cannot exceed the stem
 volume they came from – and the descriptor raises if they do.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.MeanTreeRemoval.cohort_id">
-<span class="sig-name descname"><span class="pre">cohort_id</span></span><a class="headerlink" href="#pyforestry.simulation.valuation.removals.MeanTreeRemoval.cohort_id" title="Link to this definition">#</a></dt>
-<dd><p>Which removal event this belongs to.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cohort_id</strong> (<em>str</em>) – Which removal event this belongs to.</p></li>
+<li><p><strong>species</strong> (<a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><em>pyforestry.base.helpers.tree_species.TreeName</em></a><em> | </em><em>str</em>) – The species removed.</p></li>
+<li><p><strong>diameter_cm</strong> (<em>float</em>) – The representative stem’s diameter, normally the stand’s QMD.</p></li>
+<li><p><strong>height_m</strong> (<em>float</em>) – Its height. Lorey’s mean height where the stand has one.</p></li>
+<li><p><strong>stems</strong> (<em>float</em>) – How many such stems came out, per hectare.</p></li>
+<li><p><strong>volume_m3</strong> (<em>float</em>) – The total volume removed, per hectare, from the model.</p></li>
+<li><p><strong>metadata</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Carried through to the piece records.</p></li>
+</ul>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.MeanTreeRemoval.species">
-<span class="sig-name descname"><span class="pre">species</span></span><a class="headerlink" href="#pyforestry.simulation.valuation.removals.MeanTreeRemoval.species" title="Link to this definition">#</a></dt>
-<dd><p>The species removed.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName">pyforestry.base.helpers.tree_species.TreeName</a> | str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.MeanTreeRemoval.diameter_cm">
-<span class="sig-name descname"><span class="pre">diameter_cm</span></span><a class="headerlink" href="#pyforestry.simulation.valuation.removals.MeanTreeRemoval.diameter_cm" title="Link to this definition">#</a></dt>
-<dd><p>The representative stem’s diameter, normally the stand’s QMD.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.MeanTreeRemoval.height_m">
-<span class="sig-name descname"><span class="pre">height_m</span></span><a class="headerlink" href="#pyforestry.simulation.valuation.removals.MeanTreeRemoval.height_m" title="Link to this definition">#</a></dt>
-<dd><p>Its height. Lorey’s mean height where the stand has one.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.MeanTreeRemoval.stems">
-<span class="sig-name descname"><span class="pre">stems</span></span><a class="headerlink" href="#pyforestry.simulation.valuation.removals.MeanTreeRemoval.stems" title="Link to this definition">#</a></dt>
-<dd><p>How many such stems came out, per hectare.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.MeanTreeRemoval.volume_m3">
-<span class="sig-name descname"><span class="pre">volume_m3</span></span><a class="headerlink" href="#pyforestry.simulation.valuation.removals.MeanTreeRemoval.volume_m3" title="Link to this definition">#</a></dt>
-<dd><p>The total volume removed, per hectare, from the model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.MeanTreeRemoval.metadata">
-<span class="sig-name descname"><span class="pre">metadata</span></span><a class="headerlink" href="#pyforestry.simulation.valuation.removals.MeanTreeRemoval.metadata" title="Link to this definition">#</a></dt>
-<dd><p>Carried through to the piece records.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict[str, Any]</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="pyforestry.simulation.valuation.removals.MeanTreeRemoval.species_name">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">species_name</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pyforestry.simulation.valuation.removals.MeanTreeRemoval.species_name" title="Link to this definition">#</a></dt>
@@ -1546,13 +1448,9 @@ inside the bucker rather than at configuration time.</p></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.simulation.valuation.cashflow">pyforestry.simulation.valuation.cashflow module</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.cashflow.CASH_FLOWS_KEY"><code class="docutils literal notranslate"><span class="pre">CASH_FLOWS_KEY</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.cashflow.CashFlow"><code class="docutils literal notranslate"><span class="pre">CashFlow</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.cashflow.CashFlow.year"><code class="docutils literal notranslate"><span class="pre">CashFlow.year</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.cashflow.CashFlow.amount"><code class="docutils literal notranslate"><span class="pre">CashFlow.amount</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.cashflow.CashFlow.price_factor"><code class="docutils literal notranslate"><span class="pre">CashFlow.price_factor</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.cashflow.CashFlow.label"><code class="docutils literal notranslate"><span class="pre">CashFlow.label</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.cashflow.CashFlow.as_mapping"><code class="docutils literal notranslate"><span class="pre">CashFlow.as_mapping()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id0"><code class="docutils literal notranslate"><span class="pre">CashFlow.label</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1"><code class="docutils literal notranslate"><span class="pre">CashFlow.price_factor</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.cashflow.CashFlow.label"><code class="docutils literal notranslate"><span class="pre">CashFlow.label</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.cashflow.CashFlow.price_factor"><code class="docutils literal notranslate"><span class="pre">CashFlow.price_factor</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.cashflow.discount_factor"><code class="docutils literal notranslate"><span class="pre">discount_factor()</span></code></a></li>
@@ -1568,13 +1466,6 @@ inside the bucker rather than at configuration time.</p></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.MeanTreeRemoval"><code class="docutils literal notranslate"><span class="pre">MeanTreeRemoval</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.MeanTreeRemoval.cohort_id"><code class="docutils literal notranslate"><span class="pre">MeanTreeRemoval.cohort_id</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.MeanTreeRemoval.species"><code class="docutils literal notranslate"><span class="pre">MeanTreeRemoval.species</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.MeanTreeRemoval.diameter_cm"><code class="docutils literal notranslate"><span class="pre">MeanTreeRemoval.diameter_cm</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.MeanTreeRemoval.height_m"><code class="docutils literal notranslate"><span class="pre">MeanTreeRemoval.height_m</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.MeanTreeRemoval.stems"><code class="docutils literal notranslate"><span class="pre">MeanTreeRemoval.stems</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.MeanTreeRemoval.volume_m3"><code class="docutils literal notranslate"><span class="pre">MeanTreeRemoval.volume_m3</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.MeanTreeRemoval.metadata"><code class="docutils literal notranslate"><span class="pre">MeanTreeRemoval.metadata</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.MeanTreeRemoval.species_name"><code class="docutils literal notranslate"><span class="pre">MeanTreeRemoval.species_name</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.valuation.removals.MeanTreeRemoval.to_timber"><code class="docutils literal notranslate"><span class="pre">MeanTreeRemoval.to_timber()</span></code></a></li>
 </ul>

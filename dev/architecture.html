@@ -616,31 +616,55 @@ is scalable, reproducible, and responsibilities remain explicit.</p>
 <section id="context-1-data-contract-context">
 <h3>Context 1: Data Contract Context<a class="headerlink" href="#context-1-data-contract-context" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p>Owns:
-* Shared data structures, primitives, and unit-bearing contracts.</p></li>
-<li><p>Must define:
-* Stable type-level contracts consumed by formulas and simulation runtimes.</p></li>
-<li><p>Must not define:
-* Scenario sequencing and orchestration policy.</p></li>
-<li><p>Primary package paths:
-* <code class="docutils literal notranslate"><span class="pre">src/pyforestry/base/helpers/</span></code>
-* <code class="docutils literal notranslate"><span class="pre">src/pyforestry/base/helpers/primitives/</span></code></p></li>
+<li><p>Owns:</p>
+<ul>
+<li><p>Shared data structures, primitives, and unit-bearing contracts.</p></li>
+</ul>
+</li>
+<li><p>Must define:</p>
+<ul>
+<li><p>Stable type-level contracts consumed by formulas and simulation runtimes.</p></li>
+</ul>
+</li>
+<li><p>Must not define:</p>
+<ul>
+<li><p>Scenario sequencing and orchestration policy.</p></li>
+</ul>
+</li>
+<li><p>Primary package paths:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">src/pyforestry/base/helpers/</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">src/pyforestry/base/helpers/primitives/</span></code></p></li>
+</ul>
+</li>
 </ul>
 </section>
 <section id="context-2-formula-context">
 <h3>Context 2: Formula Context<a class="headerlink" href="#context-2-formula-context" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p>Owns:
-* Scientific equations, coefficients, and model-local guards.</p></li>
-<li><p>Must define:
-* Explicit equation interfaces with unit-bearing inputs and outputs.</p></li>
-<li><p>Must not define:
-* Global seed policy, stage ordering, or scenario rulesets.</p></li>
-<li><p>Primary package paths:
-* Domain packages outside <code class="docutils literal notranslate"><span class="pre">*/adapters</span></code>, <code class="docutils literal notranslate"><span class="pre">*/systems</span></code> and <code class="docutils literal notranslate"><span class="pre">*/simulation</span></code>.
-* Example: <code class="docutils literal notranslate"><span class="pre">src/pyforestry/sweden/mortality/</span></code>
-* Example: <code class="docutils literal notranslate"><span class="pre">src/pyforestry/sweden/siteindex/</span></code>
-* Example: <code class="docutils literal notranslate"><span class="pre">src/pyforestry/sweden/volume/</span></code></p></li>
+<li><p>Owns:</p>
+<ul>
+<li><p>Scientific equations, coefficients, and model-local guards.</p></li>
+</ul>
+</li>
+<li><p>Must define:</p>
+<ul>
+<li><p>Explicit equation interfaces with unit-bearing inputs and outputs.</p></li>
+</ul>
+</li>
+<li><p>Must not define:</p>
+<ul>
+<li><p>Global seed policy, stage ordering, or scenario rulesets.</p></li>
+</ul>
+</li>
+<li><p>Primary package paths:</p>
+<ul>
+<li><p>Domain packages outside <code class="docutils literal notranslate"><span class="pre">*/adapters</span></code>, <code class="docutils literal notranslate"><span class="pre">*/systems</span></code> and <code class="docutils literal notranslate"><span class="pre">*/simulation</span></code>.</p></li>
+<li><p>Example: <code class="docutils literal notranslate"><span class="pre">src/pyforestry/sweden/mortality/</span></code></p></li>
+<li><p>Example: <code class="docutils literal notranslate"><span class="pre">src/pyforestry/sweden/siteindex/</span></code></p></li>
+<li><p>Example: <code class="docutils literal notranslate"><span class="pre">src/pyforestry/sweden/volume/</span></code></p></li>
+</ul>
+</li>
 </ul>
 </section>
 <section id="context-3-model-context-regional-adapters-and-systems">
@@ -648,58 +672,92 @@ is scalable, reproducible, and responsibilities remain explicit.</p>
 <p>This context holds two different kinds of module, and they get separate
 directories because the question you ask of each is different: a system is
 checked against its publication, an adapter against the runtime contract.</p>
-<ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">*/adapters/</span></code> owns:
-* <code class="docutils literal notranslate"><span class="pre">GrowthModel</span></code> bindings that compose domain equations into simulation-facing APIs.
-* No scientific coefficient literals – enforced by AL001, with no exception list.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">*/systems/</span></code> owns:
-* Whole published growth-and-yield systems reproduced end to end (Eriksson 1976,</p>
-<blockquote>
-<div><p>Persson 1992, Petterson 1955, Ekö 1985, Elfving &amp; Hägglund 1975).</p>
-</div></blockquote>
 <ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">*/adapters/</span></code> owns:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">GrowthModel</span></code> bindings that compose domain equations into simulation-facing APIs.</p></li>
+<li><p>No scientific coefficient literals – enforced by AL001, with no exception list.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">*/systems/</span></code> owns:</p>
+<ul>
+<li><p>Whole published growth-and-yield systems reproduced end to end (Eriksson 1976,
+Persson 1992, Petterson 1955, Ekö 1985, Elfving &amp; Hägglund 1975).</p></li>
 <li><p>Their coefficients, and the <code class="docutils literal notranslate"><span class="pre">GrowthModel</span></code> that drives them: a self-contained
 system owns its own interface.</p></li>
 </ul>
 </li>
-<li><p>Must define:
-* Simulation-facing interfaces binding runtime contracts to domain equations.</p></li>
-<li><p>Must not define:
-* New standalone equations (these belong in domain packages).
-* Long-lived orchestration policy or scenario rulesets.</p></li>
-<li><p>Primary package paths:
-* <code class="docutils literal notranslate"><span class="pre">src/pyforestry/&lt;region&gt;/adapters/</span></code>
-* <code class="docutils literal notranslate"><span class="pre">src/pyforestry/sweden/systems/</span></code> (Norway ships no whole system yet)</p></li>
+<li><p>Must define:</p>
+<ul>
+<li><p>Simulation-facing interfaces binding runtime contracts to domain equations.</p></li>
+</ul>
+</li>
+<li><p>Must not define:</p>
+<ul>
+<li><p>New standalone equations (these belong in domain packages).</p></li>
+<li><p>Long-lived orchestration policy or scenario rulesets.</p></li>
+</ul>
+</li>
+<li><p>Primary package paths:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">src/pyforestry/&lt;region&gt;/adapters/</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">src/pyforestry/sweden/systems/</span></code> (Norway ships no whole system yet)</p></li>
+</ul>
+</li>
 </ul>
 </section>
 <section id="context-4-simulation-policy-runtime-context">
 <h3>Context 4: Simulation Policy + Runtime Context<a class="headerlink" href="#context-4-simulation-policy-runtime-context" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p>Owns:
-* Runtime orchestration, staging, dispatch behavior, rulesets, and seed policy.</p></li>
-<li><p>Must define:
-* Temporal stepping and operation ordering.
-* Non-formula environment constraints and cross-model guards.</p></li>
-<li><p>Must not define:
-* Region-specific equation internals.</p></li>
-<li><p>Primary package paths:
-* <code class="docutils literal notranslate"><span class="pre">src/pyforestry/base/simulation/</span></code>
-* <code class="docutils literal notranslate"><span class="pre">src/pyforestry/simulation/</span></code>
-* Target regional presets/orchestration: <code class="docutils literal notranslate"><span class="pre">src/pyforestry/&lt;region&gt;/simulation/</span></code></p></li>
+<li><p>Owns:</p>
+<ul>
+<li><p>Runtime orchestration, staging, dispatch behavior, rulesets, and seed policy.</p></li>
+</ul>
+</li>
+<li><p>Must define:</p>
+<ul>
+<li><p>Temporal stepping and operation ordering.</p></li>
+<li><p>Non-formula environment constraints and cross-model guards.</p></li>
+</ul>
+</li>
+<li><p>Must not define:</p>
+<ul>
+<li><p>Region-specific equation internals.</p></li>
+</ul>
+</li>
+<li><p>Primary package paths:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">src/pyforestry/base/simulation/</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">src/pyforestry/simulation/</span></code></p></li>
+<li><p>Target regional presets/orchestration: <code class="docutils literal notranslate"><span class="pre">src/pyforestry/&lt;region&gt;/simulation/</span></code></p></li>
+</ul>
+</li>
 </ul>
 </section>
 <section id="context-5-integration-application-context">
 <h3>Context 5: Integration/Application Context<a class="headerlink" href="#context-5-integration-application-context" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p>Owns:
-* Notebook/app composition, scenario setup, and external integrations.</p></li>
-<li><p>Must define:
-* Consumer-facing execution wiring and environment-specific glue.</p></li>
-<li><p>Must not define:
-* New reusable formula internals or core runtime contracts.</p></li>
-<li><p>Primary package paths:
-* <code class="docutils literal notranslate"><span class="pre">docs/source/notebooks/</span></code>
-* External applications consuming <code class="docutils literal notranslate"><span class="pre">pyforestry</span></code></p></li>
+<li><p>Owns:</p>
+<ul>
+<li><p>Notebook/app composition, scenario setup, and external integrations.</p></li>
+</ul>
+</li>
+<li><p>Must define:</p>
+<ul>
+<li><p>Consumer-facing execution wiring and environment-specific glue.</p></li>
+</ul>
+</li>
+<li><p>Must not define:</p>
+<ul>
+<li><p>New reusable formula internals or core runtime contracts.</p></li>
+</ul>
+</li>
+<li><p>Primary package paths:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">docs/source/notebooks/</span></code></p></li>
+<li><p>External applications consuming <code class="docutils literal notranslate"><span class="pre">pyforestry</span></code></p></li>
+</ul>
+</li>
 </ul>
 </section>
 </section>
@@ -756,10 +814,13 @@ exception register and its Sweden-only scoping.</p></li>
 <section id="dispatch-and-single-responsibility-rules">
 <h2>Dispatch and Single-Responsibility Rules<a class="headerlink" href="#dispatch-and-single-responsibility-rules" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>There MUST be one dispatch layer per concern:
-* Formula dispatch.
-* Simulation-stage dispatch.
-* Scenario-policy dispatch.</p></li>
+<li><p>There MUST be one dispatch layer per concern:</p>
+<ul>
+<li><p>Formula dispatch.</p></li>
+<li><p>Simulation-stage dispatch.</p></li>
+<li><p>Scenario-policy dispatch.</p></li>
+</ul>
+</li>
 <li><p>A module MUST NOT own both scientific equation internals and scenario
 orchestration policy.</p></li>
 </ul>
@@ -784,14 +845,26 @@ global stage/ruleset orchestration.</p></li>
 <p>Runnable regional presets MUST live under <code class="docutils literal notranslate"><span class="pre">src/pyforestry/&lt;region&gt;/simulation/</span></code>.</p>
 <p>Minimum preset contract:</p>
 <ul class="simple">
-<li><p>Seed handling:
-* Accept and persist global seed strategy.</p></li>
-<li><p>Pipeline/policy declaration:
-* Declare the ordered steps and the management policy explicitly.</p></li>
-<li><p>Operation ordering:
-* Declare execution order outside formula internals.</p></li>
-<li><p>Environment guards:
-* Apply non-formula constraints in simulation policy.</p></li>
+<li><p>Seed handling:</p>
+<ul>
+<li><p>Accept and persist global seed strategy.</p></li>
+</ul>
+</li>
+<li><p>Pipeline/policy declaration:</p>
+<ul>
+<li><p>Declare the ordered steps and the management policy explicitly.</p></li>
+</ul>
+</li>
+<li><p>Operation ordering:</p>
+<ul>
+<li><p>Declare execution order outside formula internals.</p></li>
+</ul>
+</li>
+<li><p>Environment guards:</p>
+<ul>
+<li><p>Apply non-formula constraints in simulation policy.</p></li>
+</ul>
+</li>
 </ul>
 </section>
 <section id="migration-guardrails">

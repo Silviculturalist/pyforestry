@@ -911,47 +911,23 @@ indicator (<code class="docutils literal notranslate"><span class="pre">NEWTH</s
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.growth.elfving_2010.thinning_response.</span></span><span class="sig-name descname"><span class="pre">ThinningEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">years_since_thinning</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proportion_basal_area_removed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thinned_from_above</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/growth/elfving_2010/thinning_response.html#ThinningEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.growth.elfving_2010.thinning_response.ThinningEvent" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A single past thinning used by the Elfving (2009) thinning-response model.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.sweden.growth.elfving_2010.thinning_response.ThinningEvent.years_since_thinning">
-<span class="sig-name descname"><span class="pre">years_since_thinning</span></span><a class="headerlink" href="#pyforestry.sweden.growth.elfving_2010.thinning_response.ThinningEvent.years_since_thinning" title="Link to this definition">#</a></dt>
-<dd><p>Whole years from the thinning to the start of the
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>years_since_thinning</strong> (<em>float</em>) – Whole years from the thinning to the start of the
 current 5-year growth period. <code class="docutils literal notranslate"><span class="pre">TATH</span></code> is this value plus the
-2.5-year mid-period offset.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+2.5-year mid-period offset.</p></li>
+<li><p><strong>proportion_basal_area_removed</strong> (<em>float</em>) – <code class="docutils literal notranslate"><span class="pre">THPROP</span></code> – the proportion (0-1) of stand
+basal area removed at this thinning.</p></li>
+<li><p><strong>thinned_from_above</strong> (<em>float</em>) – <code class="docutils literal notranslate"><span class="pre">THFA</span></code> indicator in [0, 1]; 0 = thinning from below,
+1 = thinning from above. Only used for pine-dominated stands and only
+when <code class="docutils literal notranslate"><span class="pre">ignore_thinning_form</span></code> is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.sweden.growth.elfving_2010.thinning_response.ThinningEvent.proportion_basal_area_removed">
-<span class="sig-name descname"><span class="pre">proportion_basal_area_removed</span></span><a class="headerlink" href="#pyforestry.sweden.growth.elfving_2010.thinning_response.ThinningEvent.proportion_basal_area_removed" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">THPROP</span></code> – the proportion (0-1) of stand
-basal area removed at this thinning.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyforestry.sweden.growth.elfving_2010.thinning_response.ThinningEvent.thinned_from_above">
-<span class="sig-name descname"><span class="pre">thinned_from_above</span></span><a class="headerlink" href="#pyforestry.sweden.growth.elfving_2010.thinning_response.ThinningEvent.thinned_from_above" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">THFA</span></code> indicator in [0, 1]; 0 = thinning from below,
-1 = thinning from above. Only used for pine-dominated stands and only
-when <code class="docutils literal notranslate"><span class="pre">ignore_thinning_form</span></code> is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id0">
-<span class="sig-name descname"><span class="pre">thinned_from_above</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></span><a class="headerlink" href="#id0" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">thinned_from_above</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></span><a class="headerlink" href="#pyforestry.sweden.growth.elfving_2010.thinning_response.ThinningEvent.thinned_from_above" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
@@ -1098,10 +1074,7 @@ most-recent first.</p></li>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.sweden.growth.elfving_2010.thinning_response">pyforestry.sweden.growth.elfving_2010.thinning_response module</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.growth.elfving_2010.thinning_response.ThinningEvent"><code class="docutils literal notranslate"><span class="pre">ThinningEvent</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.growth.elfving_2010.thinning_response.ThinningEvent.years_since_thinning"><code class="docutils literal notranslate"><span class="pre">ThinningEvent.years_since_thinning</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.growth.elfving_2010.thinning_response.ThinningEvent.proportion_basal_area_removed"><code class="docutils literal notranslate"><span class="pre">ThinningEvent.proportion_basal_area_removed</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.growth.elfving_2010.thinning_response.ThinningEvent.thinned_from_above"><code class="docutils literal notranslate"><span class="pre">ThinningEvent.thinned_from_above</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id0"><code class="docutils literal notranslate"><span class="pre">ThinningEvent.thinned_from_above</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.growth.elfving_2010.thinning_response.ThinningEvent.years_to_mid_period"><code class="docutils literal notranslate"><span class="pre">ThinningEvent.years_to_mid_period</span></code></a></li>
 </ul>
 </li>

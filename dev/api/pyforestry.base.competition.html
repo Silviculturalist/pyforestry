@@ -764,109 +764,45 @@ not depend on where in the plot the subject sits.</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyforestry.base.competition.api.</span></span><span class="sig-name descname"><span class="pre">TreeCompetition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree.Tree" title="pyforestry.base.helpers.tree.Tree"><span class="pre">Tree</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">float]</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_competitors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zone_radius_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observed_zone_fraction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_corrected</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skipped</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str]</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/base/competition/api.html#TreeCompetition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.competition.api.TreeCompetition" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Competition indices computed for one subject tree.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.api.TreeCompetition.tree">
-<span class="sig-name descname"><span class="pre">tree</span></span><a class="headerlink" href="#pyforestry.base.competition.api.TreeCompetition.tree" title="Link to this definition">#</a></dt>
-<dd><p>The subject tree.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree.Tree" title="pyforestry.base.helpers.tree.Tree">pyforestry.base.helpers.tree.Tree</a></p>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tree</strong> (<a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree.Tree" title="pyforestry.base.helpers.tree.Tree"><em>pyforestry.base.helpers.tree.Tree</em></a>) – The subject tree.</p></li>
+<li><p><strong>indices</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>float</em><em>]</em>) – Index value by Table 2 abbreviation. An index that could not be
+computed is absent from this mapping and appears in <code class="docutils literal notranslate"><span class="pre">skipped</span></code>.</p></li>
+<li><p><strong>n_competitors</strong> (<em>int</em>) – How many trees the selector kept for the spatially
+explicit indices. The distance-independent indices always see every
+other tree on the plot and are unaffected by this number.</p></li>
+<li><p><strong>zone_radius_m</strong> (<em>float</em><em> | </em><em>None</em>) – The competition-zone radius applied (m), if the selector
+defines one ahead of the data. <code class="docutils literal notranslate"><span class="pre">None</span></code> for the variable-reach
+selectors, which is also why those get no edge correction.</p></li>
+<li><p><strong>observed_zone_fraction</strong> (<em>float</em>) – Share of the competition zone inside the plot,
+in <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">1]</span></code>. <code class="docutils literal notranslate"><span class="pre">1.0</span></code> when no plot geometry was supplied, in which
+case no edge statement is being made.</p></li>
+<li><p><strong>edge_corrected</strong> (<em>bool</em>) – Whether the additive spatial indices were divided by
+<code class="docutils literal notranslate"><span class="pre">observed_zone_fraction</span></code>.</p></li>
+<li><p><strong>skipped</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – Why each unavailable index could not be computed.</p></li>
+</ul>
 </dd>
 </dl>
-</dd></dl>
-
 <dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.api.TreeCompetition.indices">
-<span class="sig-name descname"><span class="pre">indices</span></span><a class="headerlink" href="#pyforestry.base.competition.api.TreeCompetition.indices" title="Link to this definition">#</a></dt>
-<dd><p>Index value by Table 2 abbreviation. An index that could not be
-computed is absent from this mapping and appears in <code class="docutils literal notranslate"><span class="pre">skipped</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict[str, float]</p>
-</dd>
-</dl>
-</dd></dl>
+<dt class="sig sig-object py" id="pyforestry.base.competition.api.TreeCompetition.edge_corrected">
+<span class="sig-name descname"><span class="pre">edge_corrected</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></span><a class="headerlink" href="#pyforestry.base.competition.api.TreeCompetition.edge_corrected" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyforestry.base.competition.api.TreeCompetition.n_competitors">
-<span class="sig-name descname"><span class="pre">n_competitors</span></span><a class="headerlink" href="#pyforestry.base.competition.api.TreeCompetition.n_competitors" title="Link to this definition">#</a></dt>
-<dd><p>How many trees the selector kept for the spatially
-explicit indices. The distance-independent indices always see every
-other tree on the plot and are unaffected by this number.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.api.TreeCompetition.zone_radius_m">
-<span class="sig-name descname"><span class="pre">zone_radius_m</span></span><a class="headerlink" href="#pyforestry.base.competition.api.TreeCompetition.zone_radius_m" title="Link to this definition">#</a></dt>
-<dd><p>The competition-zone radius applied (m), if the selector
-defines one ahead of the data. <code class="docutils literal notranslate"><span class="pre">None</span></code> for the variable-reach
-selectors, which is also why those get no edge correction.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float | None</p>
-</dd>
-</dl>
-</dd></dl>
+<span class="sig-name descname"><span class="pre">n_competitors</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></span><a class="headerlink" href="#pyforestry.base.competition.api.TreeCompetition.n_competitors" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyforestry.base.competition.api.TreeCompetition.observed_zone_fraction">
-<span class="sig-name descname"><span class="pre">observed_zone_fraction</span></span><a class="headerlink" href="#pyforestry.base.competition.api.TreeCompetition.observed_zone_fraction" title="Link to this definition">#</a></dt>
-<dd><p>Share of the competition zone inside the plot,
-in <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">1]</span></code>. <code class="docutils literal notranslate"><span class="pre">1.0</span></code> when no plot geometry was supplied, in which
-case no edge statement is being made.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.api.TreeCompetition.edge_corrected">
-<span class="sig-name descname"><span class="pre">edge_corrected</span></span><a class="headerlink" href="#pyforestry.base.competition.api.TreeCompetition.edge_corrected" title="Link to this definition">#</a></dt>
-<dd><p>Whether the additive spatial indices were divided by
-<code class="docutils literal notranslate"><span class="pre">observed_zone_fraction</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.api.TreeCompetition.skipped">
-<span class="sig-name descname"><span class="pre">skipped</span></span><a class="headerlink" href="#pyforestry.base.competition.api.TreeCompetition.skipped" title="Link to this definition">#</a></dt>
-<dd><p>Why each unavailable index could not be computed.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict[str, str]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id0">
-<span class="sig-name descname"><span class="pre">edge_corrected</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></span><a class="headerlink" href="#id0" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">observed_zone_fraction</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.0</span></span><a class="headerlink" href="#pyforestry.base.competition.api.TreeCompetition.observed_zone_fraction" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id1">
-<span class="sig-name descname"><span class="pre">n_competitors</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></span><a class="headerlink" href="#id1" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id2">
-<span class="sig-name descname"><span class="pre">observed_zone_fraction</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.0</span></span><a class="headerlink" href="#id2" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id3">
-<span class="sig-name descname"><span class="pre">zone_radius_m</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id3" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pyforestry.base.competition.api.TreeCompetition.zone_radius_m">
+<span class="sig-name descname"><span class="pre">zone_radius_m</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyforestry.base.competition.api.TreeCompetition.zone_radius_m" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1067,75 +1003,31 @@ cm to m before the arctangent. As printed the ratio mixes cm with m, putting a
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyforestry.base.competition.indices.</span></span><span class="sig-name descname"><span class="pre">CompetitionIndex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">abbreviation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compute</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyforestry.base.competition.neighbourhood.Neighbourhood" title="pyforestry.base.competition.neighbourhood.Neighbourhood"><span class="pre">Neighbourhood</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.html#pyforestry.base.contracts.SourceReference" title="pyforestry.base.contracts.SourceReference"><span class="pre">SourceReference</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">spatial</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/base/competition/indices.html#CompetitionIndex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.competition.indices.CompetitionIndex" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>One competition index: its formula, its provenance and what it needs.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.indices.CompetitionIndex.abbreviation">
-<span class="sig-name descname"><span class="pre">abbreviation</span></span><a class="headerlink" href="#pyforestry.base.competition.indices.CompetitionIndex.abbreviation" title="Link to this definition">#</a></dt>
-<dd><p>The short name used in the literature, e.g. <code class="docutils literal notranslate"><span class="pre">&quot;Heg&quot;</span></code>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.indices.CompetitionIndex.compute">
-<span class="sig-name descname"><span class="pre">compute</span></span><a class="headerlink" href="#pyforestry.base.competition.indices.CompetitionIndex.compute" title="Link to this definition">#</a></dt>
-<dd><p>The kernel, a pure function of a <code class="xref py py-class docutils literal notranslate"><span class="pre">Neighbourhood</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Callable[[<a class="reference internal" href="#pyforestry.base.competition.neighbourhood.Neighbourhood" title="pyforestry.base.competition.neighbourhood.Neighbourhood">pyforestry.base.competition.neighbourhood.Neighbourhood</a>], float]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.indices.CompetitionIndex.source">
-<span class="sig-name descname"><span class="pre">source</span></span><a class="headerlink" href="#pyforestry.base.competition.indices.CompetitionIndex.source" title="Link to this definition">#</a></dt>
-<dd><p>The publication that proposed <em>this index</em>. Not the review it was
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>abbreviation</strong> (<em>str</em>) – The short name used in the literature, e.g. <code class="docutils literal notranslate"><span class="pre">&quot;Heg&quot;</span></code>.</p></li>
+<li><p><strong>compute</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference internal" href="#pyforestry.base.competition.neighbourhood.Neighbourhood" title="pyforestry.base.competition.neighbourhood.Neighbourhood"><em>pyforestry.base.competition.neighbourhood.Neighbourhood</em></a><em>]</em><em>, </em><em>float</em><em>]</em>) – The kernel, a pure function of a <code class="xref py py-class docutils literal notranslate"><span class="pre">Neighbourhood</span></code>.</p></li>
+<li><p><strong>source</strong> (<a class="reference internal" href="pyforestry.base.html#pyforestry.base.contracts.SourceReference" title="pyforestry.base.contracts.SourceReference"><em>pyforestry.base.contracts.SourceReference</em></a>) – The publication that proposed <em>this index</em>. Not the review it was
 collected from – see
-<code class="xref py py-data docutils literal notranslate"><span class="pre">pyforestry.base.competition.sources.INDEX_SET_REVIEW</span></code> for that.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="pyforestry.base.html#pyforestry.base.contracts.SourceReference" title="pyforestry.base.contracts.SourceReference">pyforestry.base.contracts.SourceReference</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.indices.CompetitionIndex.spatial">
-<span class="sig-name descname"><span class="pre">spatial</span></span><a class="headerlink" href="#pyforestry.base.competition.indices.CompetitionIndex.spatial" title="Link to this definition">#</a></dt>
-<dd><p>Whether the index belongs to Table 2’s spatially explicit group,
+<code class="xref py py-data docutils literal notranslate"><span class="pre">pyforestry.base.competition.sources.INDEX_SET_REVIEW</span></code> for that.</p></li>
+<li><p><strong>spatial</strong> (<em>bool</em>) – Whether the index belongs to Table 2’s spatially explicit group,
 i.e. whether its value depends on a distance-based competitor
 selection. True for every index in <a class="reference internal" href="#pyforestry.base.competition.indices.SPATIAL_INDICES" title="pyforestry.base.competition.indices.SPATIAL_INDICES"><code class="xref py py-data docutils literal notranslate"><span class="pre">SPATIAL_INDICES</span></code></a> and false
 for every index in <a class="reference internal" href="#pyforestry.base.competition.indices.NON_SPATIAL_INDICES" title="pyforestry.base.competition.indices.NON_SPATIAL_INDICES"><code class="xref py py-data docutils literal notranslate"><span class="pre">NON_SPATIAL_INDICES</span></code></a>, so the flag and the
 grouping never disagree. <code class="docutils literal notranslate"><span class="pre">SBAr</span></code> is spatial on this reading even
 though its arithmetic has no distance term: its competitor set is
 distance-defined, and it is the one index whose formula and grouping
-come apart.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.indices.CompetitionIndex.additive">
-<span class="sig-name descname"><span class="pre">additive</span></span><a class="headerlink" href="#pyforestry.base.competition.indices.CompetitionIndex.additive" title="Link to this definition">#</a></dt>
-<dd><p>Whether the index is a plain sum over competitors, and so
+come apart.</p></li>
+<li><p><strong>additive</strong> (<em>bool</em>) – Whether the index is a plain sum over competitors, and so
 scales with the share of the competition zone that was observed.
 Only additive indices can be edge-corrected by dividing by
 <code class="docutils literal notranslate"><span class="pre">observed_zone_fraction</span></code>; <code class="docutils literal notranslate"><span class="pre">SBAr</span></code> (a ratio) and <code class="docutils literal notranslate"><span class="pre">Almdg</span></code> (a
 weight-normalised mean of areas) are unchanged when half the
-competitors are lost, so dividing them would invent competition.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
+competitors are lost, so dividing them would invent competition.</p></li>
+</ul>
 </dd>
 </dl>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py data">
@@ -1549,140 +1441,36 @@ arithmetic error deep inside a sum.</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyforestry.base.competition.neighbourhood.</span></span><span class="sig-name descname"><span class="pre">Neighbourhood</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subject_dbh_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">competitor_dbh_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distances_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject_crown_radius_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">competitor_crown_radius_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_area_ha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_basal_area_m2_ha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_qmd_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relative_spacing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">competition_zone_radius_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">competitor_weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/base/competition/neighbourhood.html#Neighbourhood"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.competition.neighbourhood.Neighbourhood" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A subject tree and the competitors selected for it.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.neighbourhood.Neighbourhood.subject_dbh_cm">
-<span class="sig-name descname"><span class="pre">subject_dbh_cm</span></span><a class="headerlink" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.subject_dbh_cm" title="Link to this definition">#</a></dt>
-<dd><p>Diameter at breast height of the subject tree (cm).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.neighbourhood.Neighbourhood.competitor_dbh_cm">
-<span class="sig-name descname"><span class="pre">competitor_dbh_cm</span></span><a class="headerlink" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.competitor_dbh_cm" title="Link to this definition">#</a></dt>
-<dd><p>Diameters of the selected competitors (cm), in the
-same order as every other per-competitor sequence here.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tuple[float, …]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.neighbourhood.Neighbourhood.competitor_weights">
-<span class="sig-name descname"><span class="pre">competitor_weights</span></span><a class="headerlink" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.competitor_weights" title="Link to this definition">#</a></dt>
-<dd><p>How many stems each competitor record stands for
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subject_dbh_cm</strong> (<em>float</em>) – Diameter at breast height of the subject tree (cm).</p></li>
+<li><p><strong>competitor_dbh_cm</strong> (<em>Tuple</em><em>[</em><em>float</em><em>, </em><em>...</em><em>]</em>) – Diameters of the selected competitors (cm), in the
+same order as every other per-competitor sequence here.</p></li>
+<li><p><strong>competitor_weights</strong> (<em>Tuple</em><em>[</em><em>float</em><em>, </em><em>...</em><em>] </em><em>| </em><em>None</em>) – How many stems each competitor record stands for
 (<code class="docutils literal notranslate"><span class="pre">Tree.weight_n</span></code>). <code class="docutils literal notranslate"><span class="pre">None</span></code> means one stem each. Used only by the
 per-hectare distance-independent indices: the spatially explicit
 ones are per-stem geometry and a record standing for ten stems still
-has one position.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tuple[float, …] | None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.neighbourhood.Neighbourhood.distances_m">
-<span class="sig-name descname"><span class="pre">distances_m</span></span><a class="headerlink" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.distances_m" title="Link to this definition">#</a></dt>
-<dd><p>Distance from the subject stem to each competitor stem (m).
+has one position.</p></li>
+<li><p><strong>distances_m</strong> (<em>Tuple</em><em>[</em><em>float</em><em>, </em><em>...</em><em>] </em><em>| </em><em>None</em>) – Distance from the subject stem to each competitor stem (m).
 Required by the spatially explicit indices; <code class="docutils literal notranslate"><span class="pre">None</span></code> for a
-non-spatial neighbourhood.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tuple[float, …] | None</p>
+non-spatial neighbourhood.</p></li>
+<li><p><strong>subject_crown_radius_m</strong> (<em>float</em><em> | </em><em>None</em>) – Radius of the subject tree’s influence zone (m),
+required by the influence-zone overlap indices.</p></li>
+<li><p><strong>competitor_crown_radius_m</strong> (<em>Tuple</em><em>[</em><em>float</em><em>, </em><em>...</em><em>] </em><em>| </em><em>None</em>) – Influence-zone radii of the competitors (m).</p></li>
+<li><p><strong>plot_area_ha</strong> (<em>float</em><em> | </em><em>None</em>) – Area of the plot the competitors were drawn from (ha).</p></li>
+<li><p><strong>plot_basal_area_m2_ha</strong> (<em>float</em><em> | </em><em>None</em>) – Total basal area of the plot (m^2/ha).</p></li>
+<li><p><strong>plot_qmd_cm</strong> (<em>float</em><em> | </em><em>None</em>) – Quadratic mean diameter of the plot (cm).</p></li>
+<li><p><strong>relative_spacing</strong> (<em>float</em><em> | </em><em>None</em>) – Relative spacing index of the plot, <code class="docutils literal notranslate"><span class="pre">sqrt(S/N)/H_dom</span></code>
+with <code class="docutils literal notranslate"><span class="pre">S</span></code> in m^2 (Schröder &amp; Gadow’s <code class="docutils literal notranslate"><span class="pre">RS</span></code>).</p></li>
+<li><p><strong>competition_zone_radius_m</strong> (<em>float</em><em> | </em><em>None</em>) – Radius of the competition zone the competitors
+were selected within (m), used by Lorimer’s <code class="docutils literal notranslate"><span class="pre">Sdrl1</span></code>.</p></li>
+</ul>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.neighbourhood.Neighbourhood.subject_crown_radius_m">
-<span class="sig-name descname"><span class="pre">subject_crown_radius_m</span></span><a class="headerlink" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.subject_crown_radius_m" title="Link to this definition">#</a></dt>
-<dd><p>Radius of the subject tree’s influence zone (m),
-required by the influence-zone overlap indices.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float | None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.neighbourhood.Neighbourhood.competitor_crown_radius_m">
-<span class="sig-name descname"><span class="pre">competitor_crown_radius_m</span></span><a class="headerlink" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.competitor_crown_radius_m" title="Link to this definition">#</a></dt>
-<dd><p>Influence-zone radii of the competitors (m).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tuple[float, …] | None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.neighbourhood.Neighbourhood.plot_area_ha">
-<span class="sig-name descname"><span class="pre">plot_area_ha</span></span><a class="headerlink" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.plot_area_ha" title="Link to this definition">#</a></dt>
-<dd><p>Area of the plot the competitors were drawn from (ha).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float | None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.neighbourhood.Neighbourhood.plot_basal_area_m2_ha">
-<span class="sig-name descname"><span class="pre">plot_basal_area_m2_ha</span></span><a class="headerlink" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.plot_basal_area_m2_ha" title="Link to this definition">#</a></dt>
-<dd><p>Total basal area of the plot (m^2/ha).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float | None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.neighbourhood.Neighbourhood.plot_qmd_cm">
-<span class="sig-name descname"><span class="pre">plot_qmd_cm</span></span><a class="headerlink" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.plot_qmd_cm" title="Link to this definition">#</a></dt>
-<dd><p>Quadratic mean diameter of the plot (cm).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float | None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.neighbourhood.Neighbourhood.relative_spacing">
-<span class="sig-name descname"><span class="pre">relative_spacing</span></span><a class="headerlink" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.relative_spacing" title="Link to this definition">#</a></dt>
-<dd><p>Relative spacing index of the plot, <code class="docutils literal notranslate"><span class="pre">sqrt(S/N)/H_dom</span></code>
-with <code class="docutils literal notranslate"><span class="pre">S</span></code> in m^2 (Schröder &amp; Gadow’s <code class="docutils literal notranslate"><span class="pre">RS</span></code>).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float | None</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyforestry.base.competition.neighbourhood.Neighbourhood.competition_zone_radius_m">
-<span class="sig-name descname"><span class="pre">competition_zone_radius_m</span></span><a class="headerlink" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.competition_zone_radius_m" title="Link to this definition">#</a></dt>
-<dd><p>Radius of the competition zone the competitors
-were selected within (m), used by Lorimer’s <code class="docutils literal notranslate"><span class="pre">Sdrl1</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float | None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id4">
-<span class="sig-name descname"><span class="pre">competition_zone_radius_m</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id4" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">competition_zone_radius_m</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.competition_zone_radius_m" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1692,18 +1480,18 @@ were selected within (m), used by Lorimer’s <code class="docutils literal notr
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id5">
-<span class="sig-name descname"><span class="pre">competitor_crown_radius_m</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id5" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pyforestry.base.competition.neighbourhood.Neighbourhood.competitor_crown_radius_m">
+<span class="sig-name descname"><span class="pre">competitor_crown_radius_m</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.competitor_crown_radius_m" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id6">
-<span class="sig-name descname"><span class="pre">competitor_weights</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id6" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pyforestry.base.competition.neighbourhood.Neighbourhood.competitor_weights">
+<span class="sig-name descname"><span class="pre">competitor_weights</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.competitor_weights" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id7">
-<span class="sig-name descname"><span class="pre">distances_m</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id7" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pyforestry.base.competition.neighbourhood.Neighbourhood.distances_m">
+<span class="sig-name descname"><span class="pre">distances_m</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.distances_m" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1738,23 +1526,23 @@ were selected within (m), used by Lorimer’s <code class="docutils literal notr
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id8">
-<span class="sig-name descname"><span class="pre">plot_area_ha</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id8" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pyforestry.base.competition.neighbourhood.Neighbourhood.plot_area_ha">
+<span class="sig-name descname"><span class="pre">plot_area_ha</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.plot_area_ha" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id9">
-<span class="sig-name descname"><span class="pre">plot_basal_area_m2_ha</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id9" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pyforestry.base.competition.neighbourhood.Neighbourhood.plot_basal_area_m2_ha">
+<span class="sig-name descname"><span class="pre">plot_basal_area_m2_ha</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.plot_basal_area_m2_ha" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id10">
-<span class="sig-name descname"><span class="pre">plot_qmd_cm</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id10" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pyforestry.base.competition.neighbourhood.Neighbourhood.plot_qmd_cm">
+<span class="sig-name descname"><span class="pre">plot_qmd_cm</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.plot_qmd_cm" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id11">
-<span class="sig-name descname"><span class="pre">relative_spacing</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id11" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pyforestry.base.competition.neighbourhood.Neighbourhood.relative_spacing">
+<span class="sig-name descname"><span class="pre">relative_spacing</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.relative_spacing" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1778,8 +1566,8 @@ were selected within (m), used by Lorimer’s <code class="docutils literal notr
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id12">
-<span class="sig-name descname"><span class="pre">subject_crown_radius_m</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id12" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pyforestry.base.competition.neighbourhood.Neighbourhood.subject_crown_radius_m">
+<span class="sig-name descname"><span class="pre">subject_crown_radius_m</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.subject_crown_radius_m" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1874,49 +1662,25 @@ the conversion: BAF 1, 2 and 4 correspond to gauge angles of 1.15, 1.62 and
 2.30 degrees, which is <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">arcsin(sqrt(BAF</span> <span class="pre">/</span> <span class="pre">10000))</span></code>.</p></li>
 </ul>
 <p>Because each neighbour carries its own limiting distance, the selected zone
-is not a circle and <a class="reference internal" href="#id35" title="pyforestry.base.competition.selection.Selection.zone_radius_m"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Selection.zone_radius_m</span></code></a> is <code class="docutils literal notranslate"><span class="pre">None</span></code>; see
+is not a circle and <a class="reference internal" href="#pyforestry.base.competition.selection.Selection.zone_radius_m" title="pyforestry.base.competition.selection.Selection.zone_radius_m"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Selection.zone_radius_m</span></code></a> is <code class="docutils literal notranslate"><span class="pre">None</span></code>; see
 <a class="reference internal" href="#pyforestry.base.competition.selection.Selection" title="pyforestry.base.competition.selection.Selection"><code class="xref py py-class docutils literal notranslate"><span class="pre">Selection</span></code></a> for what that costs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>basal_area_factor</strong> (<em>float</em>) – The BAF in m^2/ha; the 2015 comparison tests 1, 2, 4.</p></li>
+<li><p><strong>min_size_ratio</strong> (<em>float</em>) – Minimum <code class="docutils literal notranslate"><span class="pre">d_j</span> <span class="pre">/</span> <span class="pre">d_i</span></code> for a neighbour to compete.</p></li>
+<li><p><strong>elimination_angle_deg</strong> (<em>float</em>) – Shadow angle; see <a class="reference internal" href="#pyforestry.base.competition.selection.FixedRadius" title="pyforestry.base.competition.selection.FixedRadius"><code class="xref py py-class docutils literal notranslate"><span class="pre">FixedRadius</span></code></a>.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyforestry.base.competition.selection.BitterlichBAF.basal_area_factor">
-<span class="sig-name descname"><span class="pre">basal_area_factor</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.BitterlichBAF.basal_area_factor" title="Link to this definition">#</a></dt>
-<dd><p>The BAF in m^2/ha; the 2015 comparison tests 1, 2, 4.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.selection.BitterlichBAF.min_size_ratio">
-<span class="sig-name descname"><span class="pre">min_size_ratio</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.BitterlichBAF.min_size_ratio" title="Link to this definition">#</a></dt>
-<dd><p>Minimum <code class="docutils literal notranslate"><span class="pre">d_j</span> <span class="pre">/</span> <span class="pre">d_i</span></code> for a neighbour to compete.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.selection.BitterlichBAF.elimination_angle_deg">
-<span class="sig-name descname"><span class="pre">elimination_angle_deg</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.BitterlichBAF.elimination_angle_deg" title="Link to this definition">#</a></dt>
-<dd><p>Shadow angle; see <a class="reference internal" href="#pyforestry.base.competition.selection.FixedRadius" title="pyforestry.base.competition.selection.FixedRadius"><code class="xref py py-class docutils literal notranslate"><span class="pre">FixedRadius</span></code></a>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id13">
-<span class="sig-name descname"><span class="pre">basal_area_factor</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2.0</span></span><a class="headerlink" href="#id13" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">basal_area_factor</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2.0</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.BitterlichBAF.basal_area_factor" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id14">
-<span class="sig-name descname"><span class="pre">elimination_angle_deg</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></span><a class="headerlink" href="#id14" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pyforestry.base.competition.selection.BitterlichBAF.elimination_angle_deg">
+<span class="sig-name descname"><span class="pre">elimination_angle_deg</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.BitterlichBAF.elimination_angle_deg" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
@@ -1932,8 +1696,8 @@ is not a circle and <a class="reference internal" href="#id35" title="pyforestry
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id15">
-<span class="sig-name descname"><span class="pre">min_size_ratio</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></span><a class="headerlink" href="#id15" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pyforestry.base.competition.selection.BitterlichBAF.min_size_ratio">
+<span class="sig-name descname"><span class="pre">min_size_ratio</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.BitterlichBAF.min_size_ratio" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1963,78 +1727,34 @@ is not a circle and <a class="reference internal" href="#id35" title="pyforestry
 <p>Bundled rather than passed as loose arrays because different rules need
 different columns: the size screen needs diameters, the elimination angle
 needs bearings, and the search cone needs heights.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.selection.Candidates.diameters_cm">
-<span class="sig-name descname"><span class="pre">diameters_cm</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.Candidates.diameters_cm" title="Link to this definition">#</a></dt>
-<dd><p>Diameter of every candidate tree (cm).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tuple[float, …]</p>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diameters_cm</strong> (<em>Tuple</em><em>[</em><em>float</em><em>, </em><em>...</em><em>]</em>) – Diameter of every candidate tree (cm).</p></li>
+<li><p><strong>distances_m</strong> (<em>Tuple</em><em>[</em><em>float</em><em>, </em><em>...</em><em>]</em>) – Distance from the subject to every candidate (m); the
+subject’s own entry is 0.</p></li>
+<li><p><strong>bearings_rad</strong> (<em>Tuple</em><em>[</em><em>float</em><em>, </em><em>...</em><em>] </em><em>| </em><em>None</em>) – Compass bearing from the subject to every candidate
+(radians). Required by <code class="docutils literal notranslate"><span class="pre">elimination_angle_deg</span></code>.</p></li>
+<li><p><strong>heights_m</strong> (<em>Tuple</em><em>[</em><em>float</em><em> | </em><em>None</em><em>, </em><em>...</em><em>] </em><em>| </em><em>None</em>) – Height of every candidate (m), where known. Required by
+<a class="reference internal" href="#pyforestry.base.competition.selection.SearchCone" title="pyforestry.base.competition.selection.SearchCone"><code class="xref py py-class docutils literal notranslate"><span class="pre">SearchCone</span></code></a>.</p></li>
+<li><p><strong>crown_base_heights_m</strong> (<em>Tuple</em><em>[</em><em>float</em><em> | </em><em>None</em><em>, </em><em>...</em><em>] </em><em>| </em><em>None</em>) – Crown base height of every candidate (m), where
+known. Required by <a class="reference internal" href="#pyforestry.base.competition.selection.SearchCone" title="pyforestry.base.competition.selection.SearchCone"><code class="xref py py-class docutils literal notranslate"><span class="pre">SearchCone</span></code></a> with <code class="docutils literal notranslate"><span class="pre">apex=&quot;crown_base&quot;</span></code>.</p></li>
+</ul>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.selection.Candidates.distances_m">
-<span class="sig-name descname"><span class="pre">distances_m</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.Candidates.distances_m" title="Link to this definition">#</a></dt>
-<dd><p>Distance from the subject to every candidate (m); the
-subject’s own entry is 0.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tuple[float, …]</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyforestry.base.competition.selection.Candidates.bearings_rad">
-<span class="sig-name descname"><span class="pre">bearings_rad</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.Candidates.bearings_rad" title="Link to this definition">#</a></dt>
-<dd><p>Compass bearing from the subject to every candidate
-(radians). Required by <code class="docutils literal notranslate"><span class="pre">elimination_angle_deg</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tuple[float, …] | None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.selection.Candidates.heights_m">
-<span class="sig-name descname"><span class="pre">heights_m</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.Candidates.heights_m" title="Link to this definition">#</a></dt>
-<dd><p>Height of every candidate (m), where known. Required by
-<a class="reference internal" href="#pyforestry.base.competition.selection.SearchCone" title="pyforestry.base.competition.selection.SearchCone"><code class="xref py py-class docutils literal notranslate"><span class="pre">SearchCone</span></code></a>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tuple[float | None, …] | None</p>
-</dd>
-</dl>
-</dd></dl>
+<span class="sig-name descname"><span class="pre">bearings_rad</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.Candidates.bearings_rad" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyforestry.base.competition.selection.Candidates.crown_base_heights_m">
-<span class="sig-name descname"><span class="pre">crown_base_heights_m</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.Candidates.crown_base_heights_m" title="Link to this definition">#</a></dt>
-<dd><p>Crown base height of every candidate (m), where
-known. Required by <a class="reference internal" href="#pyforestry.base.competition.selection.SearchCone" title="pyforestry.base.competition.selection.SearchCone"><code class="xref py py-class docutils literal notranslate"><span class="pre">SearchCone</span></code></a> with <code class="docutils literal notranslate"><span class="pre">apex=&quot;crown_base&quot;</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tuple[float | None, …] | None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id16">
-<span class="sig-name descname"><span class="pre">bearings_rad</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id16" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">crown_base_heights_m</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.Candidates.crown_base_heights_m" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id17">
-<span class="sig-name descname"><span class="pre">crown_base_heights_m</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id17" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id18">
-<span class="sig-name descname"><span class="pre">heights_m</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id18" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pyforestry.base.competition.selection.Candidates.heights_m">
+<span class="sig-name descname"><span class="pre">heights_m</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.Candidates.heights_m" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2069,50 +1789,26 @@ known. Required by <a class="reference internal" href="#pyforestry.base.competit
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyforestry.base.competition.selection.</span></span><span class="sig-name descname"><span class="pre">FixedRadius</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_size_ratio</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elimination_angle_deg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/base/competition/selection.html#FixedRadius"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.competition.selection.FixedRadius" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Competitors are the trees within a fixed radius of the subject.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.selection.FixedRadius.radius_m">
-<span class="sig-name descname"><span class="pre">radius_m</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.FixedRadius.radius_m" title="Link to this definition">#</a></dt>
-<dd><p>The competition-zone radius (m).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radius_m</strong> (<em>float</em>) – The competition-zone radius (m).</p></li>
+<li><p><strong>min_size_ratio</strong> (<em>float</em>) – Keep a neighbour only when <code class="docutils literal notranslate"><span class="pre">d_j</span> <span class="pre">&gt;=</span> <span class="pre">ratio</span> <span class="pre">*</span> <span class="pre">d_i</span></code>.
+<code class="docutils literal notranslate"><span class="pre">0.0</span></code> keeps everything; the 2015 comparison uses <code class="docutils literal notranslate"><span class="pre">0.3</span></code>.</p></li>
+<li><p><strong>elimination_angle_deg</strong> (<em>float</em>) – Drop a neighbour standing within this angle of a
+nearer competitor’s bearing. <code class="docutils literal notranslate"><span class="pre">0.0</span></code> disables; the 2015 comparison
+uses <code class="docutils literal notranslate"><span class="pre">30.0</span></code>.</p></li>
+</ul>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.selection.FixedRadius.min_size_ratio">
-<span class="sig-name descname"><span class="pre">min_size_ratio</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.FixedRadius.min_size_ratio" title="Link to this definition">#</a></dt>
-<dd><p>Keep a neighbour only when <code class="docutils literal notranslate"><span class="pre">d_j</span> <span class="pre">&gt;=</span> <span class="pre">ratio</span> <span class="pre">*</span> <span class="pre">d_i</span></code>.
-<code class="docutils literal notranslate"><span class="pre">0.0</span></code> keeps everything; the 2015 comparison uses <code class="docutils literal notranslate"><span class="pre">0.3</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyforestry.base.competition.selection.FixedRadius.elimination_angle_deg">
-<span class="sig-name descname"><span class="pre">elimination_angle_deg</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.FixedRadius.elimination_angle_deg" title="Link to this definition">#</a></dt>
-<dd><p>Drop a neighbour standing within this angle of a
-nearer competitor’s bearing. <code class="docutils literal notranslate"><span class="pre">0.0</span></code> disables; the 2015 comparison
-uses <code class="docutils literal notranslate"><span class="pre">30.0</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id19">
-<span class="sig-name descname"><span class="pre">elimination_angle_deg</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></span><a class="headerlink" href="#id19" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">elimination_angle_deg</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.FixedRadius.elimination_angle_deg" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id20">
-<span class="sig-name descname"><span class="pre">min_size_ratio</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></span><a class="headerlink" href="#id20" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pyforestry.base.competition.selection.FixedRadius.min_size_ratio">
+<span class="sig-name descname"><span class="pre">min_size_ratio</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.FixedRadius.min_size_ratio" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -2131,52 +1827,28 @@ uses <code class="docutils literal notranslate"><span class="pre">30.0</span></c
 <p><code class="docutils literal notranslate"><span class="pre">CZR</span> <span class="pre">=</span> <span class="pre">k</span> <span class="pre">*</span> <span class="pre">sqrt(10000</span> <span class="pre">/</span> <span class="pre">N)</span></code>, where the square root is the mean distance
 between neighbours at <code class="docutils literal notranslate"><span class="pre">N</span></code> stems/ha. The 2015 comparison tests <code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">=</span> <span class="pre">2</span></code>
 and <code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">=</span> <span class="pre">3</span></code>.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.selection.LeeGadowRadius.k">
-<span class="sig-name descname"><span class="pre">k</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.LeeGadowRadius.k" title="Link to this definition">#</a></dt>
-<dd><p>Multiple of mean spacing.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>k</strong> (<em>float</em>) – Multiple of mean spacing.</p></li>
+<li><p><strong>min_size_ratio</strong> (<em>float</em>) – Minimum <code class="docutils literal notranslate"><span class="pre">d_j</span> <span class="pre">/</span> <span class="pre">d_i</span></code> for a neighbour to compete.</p></li>
+<li><p><strong>elimination_angle_deg</strong> (<em>float</em>) – Shadow angle; see <a class="reference internal" href="#pyforestry.base.competition.selection.FixedRadius" title="pyforestry.base.competition.selection.FixedRadius"><code class="xref py py-class docutils literal notranslate"><span class="pre">FixedRadius</span></code></a>.</p></li>
+</ul>
 </dd>
 </dl>
-</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.base.competition.selection.LeeGadowRadius.elimination_angle_deg">
+<span class="sig-name descname"><span class="pre">elimination_angle_deg</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.LeeGadowRadius.elimination_angle_deg" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.base.competition.selection.LeeGadowRadius.k">
+<span class="sig-name descname"><span class="pre">k</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2.0</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.LeeGadowRadius.k" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyforestry.base.competition.selection.LeeGadowRadius.min_size_ratio">
-<span class="sig-name descname"><span class="pre">min_size_ratio</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.LeeGadowRadius.min_size_ratio" title="Link to this definition">#</a></dt>
-<dd><p>Minimum <code class="docutils literal notranslate"><span class="pre">d_j</span> <span class="pre">/</span> <span class="pre">d_i</span></code> for a neighbour to compete.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.selection.LeeGadowRadius.elimination_angle_deg">
-<span class="sig-name descname"><span class="pre">elimination_angle_deg</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.LeeGadowRadius.elimination_angle_deg" title="Link to this definition">#</a></dt>
-<dd><p>Shadow angle; see <a class="reference internal" href="#pyforestry.base.competition.selection.FixedRadius" title="pyforestry.base.competition.selection.FixedRadius"><code class="xref py py-class docutils literal notranslate"><span class="pre">FixedRadius</span></code></a>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id21">
-<span class="sig-name descname"><span class="pre">elimination_angle_deg</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></span><a class="headerlink" href="#id21" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id22">
-<span class="sig-name descname"><span class="pre">k</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2.0</span></span><a class="headerlink" href="#id22" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id23">
-<span class="sig-name descname"><span class="pre">min_size_ratio</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></span><a class="headerlink" href="#id23" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">min_size_ratio</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.LeeGadowRadius.min_size_ratio" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -2205,52 +1877,28 @@ and <code class="docutils literal notranslate"><span class="pre">k</span> <span 
 <p>Influence-zone radius set as a fraction of stand mean height.</p>
 <p><code class="docutils literal notranslate"><span class="pre">CZR</span> <span class="pre">=</span> <span class="pre">fraction</span> <span class="pre">*</span> <span class="pre">mean_height</span></code>; <code class="docutils literal notranslate"><span class="pre">fraction=0.4</span></code> is the value tested by
 Sims et al. (2009), not a fixed constant.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.selection.MeanHeightRadius.fraction">
-<span class="sig-name descname"><span class="pre">fraction</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.MeanHeightRadius.fraction" title="Link to this definition">#</a></dt>
-<dd><p>Multiple of mean height to use as the radius.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fraction</strong> (<em>float</em>) – Multiple of mean height to use as the radius.</p></li>
+<li><p><strong>min_size_ratio</strong> (<em>float</em>) – Minimum <code class="docutils literal notranslate"><span class="pre">d_j</span> <span class="pre">/</span> <span class="pre">d_i</span></code> for a neighbour to compete.</p></li>
+<li><p><strong>elimination_angle_deg</strong> (<em>float</em>) – Shadow angle; see <a class="reference internal" href="#pyforestry.base.competition.selection.FixedRadius" title="pyforestry.base.competition.selection.FixedRadius"><code class="xref py py-class docutils literal notranslate"><span class="pre">FixedRadius</span></code></a>.</p></li>
+</ul>
 </dd>
 </dl>
-</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.base.competition.selection.MeanHeightRadius.elimination_angle_deg">
+<span class="sig-name descname"><span class="pre">elimination_angle_deg</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.MeanHeightRadius.elimination_angle_deg" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.base.competition.selection.MeanHeightRadius.fraction">
+<span class="sig-name descname"><span class="pre">fraction</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.4</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.MeanHeightRadius.fraction" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyforestry.base.competition.selection.MeanHeightRadius.min_size_ratio">
-<span class="sig-name descname"><span class="pre">min_size_ratio</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.MeanHeightRadius.min_size_ratio" title="Link to this definition">#</a></dt>
-<dd><p>Minimum <code class="docutils literal notranslate"><span class="pre">d_j</span> <span class="pre">/</span> <span class="pre">d_i</span></code> for a neighbour to compete.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.selection.MeanHeightRadius.elimination_angle_deg">
-<span class="sig-name descname"><span class="pre">elimination_angle_deg</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.MeanHeightRadius.elimination_angle_deg" title="Link to this definition">#</a></dt>
-<dd><p>Shadow angle; see <a class="reference internal" href="#pyforestry.base.competition.selection.FixedRadius" title="pyforestry.base.competition.selection.FixedRadius"><code class="xref py py-class docutils literal notranslate"><span class="pre">FixedRadius</span></code></a>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id24">
-<span class="sig-name descname"><span class="pre">elimination_angle_deg</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></span><a class="headerlink" href="#id24" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id25">
-<span class="sig-name descname"><span class="pre">fraction</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.4</span></span><a class="headerlink" href="#id25" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id26">
-<span class="sig-name descname"><span class="pre">min_size_ratio</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></span><a class="headerlink" href="#id26" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">min_size_ratio</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.MeanHeightRadius.min_size_ratio" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -2277,54 +1925,30 @@ Sims et al. (2009), not a fixed constant.</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyforestry.base.competition.selection.</span></span><span class="sig-name descname"><span class="pre">NearestNeighbours</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_size_ratio</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elimination_angle_deg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/base/competition/selection.html#NearestNeighbours"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.competition.selection.NearestNeighbours" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>The <code class="docutils literal notranslate"><span class="pre">n</span></code> closest trees, irrespective of distance.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.selection.NearestNeighbours.n">
-<span class="sig-name descname"><span class="pre">n</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.NearestNeighbours.n" title="Link to this definition">#</a></dt>
-<dd><p>How many neighbours to take.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> (<em>int</em>) – How many neighbours to take.</p></li>
+<li><p><strong>min_size_ratio</strong> (<em>float</em>) – Minimum <code class="docutils literal notranslate"><span class="pre">d_j</span> <span class="pre">/</span> <span class="pre">d_i</span></code>, applied <em>before</em> taking the
+closest <code class="docutils literal notranslate"><span class="pre">n</span></code> so the screen cannot be swamped by suppressed stems.</p></li>
+<li><p><strong>elimination_angle_deg</strong> (<em>float</em>) – Shadow angle; see <a class="reference internal" href="#pyforestry.base.competition.selection.FixedRadius" title="pyforestry.base.competition.selection.FixedRadius"><code class="xref py py-class docutils literal notranslate"><span class="pre">FixedRadius</span></code></a>. Applied
+before the count, so <code class="docutils literal notranslate"><span class="pre">n</span></code> counts unshadowed neighbours.</p></li>
+</ul>
 </dd>
 </dl>
-</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.base.competition.selection.NearestNeighbours.elimination_angle_deg">
+<span class="sig-name descname"><span class="pre">elimination_angle_deg</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.NearestNeighbours.elimination_angle_deg" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyforestry.base.competition.selection.NearestNeighbours.min_size_ratio">
-<span class="sig-name descname"><span class="pre">min_size_ratio</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.NearestNeighbours.min_size_ratio" title="Link to this definition">#</a></dt>
-<dd><p>Minimum <code class="docutils literal notranslate"><span class="pre">d_j</span> <span class="pre">/</span> <span class="pre">d_i</span></code>, applied <em>before</em> taking the
-closest <code class="docutils literal notranslate"><span class="pre">n</span></code> so the screen cannot be swamped by suppressed stems.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.selection.NearestNeighbours.elimination_angle_deg">
-<span class="sig-name descname"><span class="pre">elimination_angle_deg</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.NearestNeighbours.elimination_angle_deg" title="Link to this definition">#</a></dt>
-<dd><p>Shadow angle; see <a class="reference internal" href="#pyforestry.base.competition.selection.FixedRadius" title="pyforestry.base.competition.selection.FixedRadius"><code class="xref py py-class docutils literal notranslate"><span class="pre">FixedRadius</span></code></a>. Applied
-before the count, so <code class="docutils literal notranslate"><span class="pre">n</span></code> counts unshadowed neighbours.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id27">
-<span class="sig-name descname"><span class="pre">elimination_angle_deg</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></span><a class="headerlink" href="#id27" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">min_size_ratio</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.NearestNeighbours.min_size_ratio" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id28">
-<span class="sig-name descname"><span class="pre">min_size_ratio</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></span><a class="headerlink" href="#id28" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id29">
-<span class="sig-name descname"><span class="pre">n</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></span><a class="headerlink" href="#id29" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pyforestry.base.competition.selection.NearestNeighbours.n">
+<span class="sig-name descname"><span class="pre">n</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.NearestNeighbours.n" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -2354,70 +1978,36 @@ competitors as “neighbouring trees whose heights are greater than” the
 critical value, and with <code class="docutils literal notranslate"><span class="pre">h_i</span></code> the neighbour’s own size plays no part at
 all, collapsing the cone into a plain fixed radius. The competitor’s height
 is used here, which is also the method as Pretzsch defines it.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.selection.SearchCone.opening_angle_deg">
-<span class="sig-name descname"><span class="pre">opening_angle_deg</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.SearchCone.opening_angle_deg" title="Link to this definition">#</a></dt>
-<dd><p>The cone’s opening angle <code class="docutils literal notranslate"><span class="pre">beta</span></code>; the 2015
-comparison tests 100, 80 and 60 degrees.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>opening_angle_deg</strong> (<em>float</em>) – The cone’s opening angle <code class="docutils literal notranslate"><span class="pre">beta</span></code>; the 2015
+comparison tests 100, 80 and 60 degrees.</p></li>
+<li><p><strong>apex</strong> (<em>str</em>) – <code class="docutils literal notranslate"><span class="pre">&quot;stem_base&quot;</span></code> (equation 4) or <code class="docutils literal notranslate"><span class="pre">&quot;crown_base&quot;</span></code> (equation 5),
+the latter needing the subject’s crown base height.</p></li>
+<li><p><strong>min_size_ratio</strong> (<em>float</em>) – Minimum <code class="docutils literal notranslate"><span class="pre">d_j</span> <span class="pre">/</span> <span class="pre">d_i</span></code> for a neighbour to compete.</p></li>
+<li><p><strong>elimination_angle_deg</strong> (<em>float</em>) – Shadow angle; see <a class="reference internal" href="#pyforestry.base.competition.selection.FixedRadius" title="pyforestry.base.competition.selection.FixedRadius"><code class="xref py py-class docutils literal notranslate"><span class="pre">FixedRadius</span></code></a>.</p></li>
+</ul>
 </dd>
 </dl>
-</dd></dl>
-
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyforestry.base.competition.selection.SearchCone.apex">
-<span class="sig-name descname"><span class="pre">apex</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.SearchCone.apex" title="Link to this definition">#</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">&quot;stem_base&quot;</span></code> (equation 4) or <code class="docutils literal notranslate"><span class="pre">&quot;crown_base&quot;</span></code> (equation 5),
-the latter needing the subject’s crown base height.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.selection.SearchCone.min_size_ratio">
-<span class="sig-name descname"><span class="pre">min_size_ratio</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.SearchCone.min_size_ratio" title="Link to this definition">#</a></dt>
-<dd><p>Minimum <code class="docutils literal notranslate"><span class="pre">d_j</span> <span class="pre">/</span> <span class="pre">d_i</span></code> for a neighbour to compete.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
+<span class="sig-name descname"><span class="pre">apex</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'stem_base'</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.SearchCone.apex" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyforestry.base.competition.selection.SearchCone.elimination_angle_deg">
-<span class="sig-name descname"><span class="pre">elimination_angle_deg</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.SearchCone.elimination_angle_deg" title="Link to this definition">#</a></dt>
-<dd><p>Shadow angle; see <a class="reference internal" href="#pyforestry.base.competition.selection.FixedRadius" title="pyforestry.base.competition.selection.FixedRadius"><code class="xref py py-class docutils literal notranslate"><span class="pre">FixedRadius</span></code></a>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id30">
-<span class="sig-name descname"><span class="pre">apex</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'stem_base'</span></span><a class="headerlink" href="#id30" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">elimination_angle_deg</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.SearchCone.elimination_angle_deg" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id31">
-<span class="sig-name descname"><span class="pre">elimination_angle_deg</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></span><a class="headerlink" href="#id31" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pyforestry.base.competition.selection.SearchCone.min_size_ratio">
+<span class="sig-name descname"><span class="pre">min_size_ratio</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.SearchCone.min_size_ratio" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id32">
-<span class="sig-name descname"><span class="pre">min_size_ratio</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></span><a class="headerlink" href="#id32" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id33">
-<span class="sig-name descname"><span class="pre">opening_angle_deg</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">80.0</span></span><a class="headerlink" href="#id33" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pyforestry.base.competition.selection.SearchCone.opening_angle_deg">
+<span class="sig-name descname"><span class="pre">opening_angle_deg</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">80.0</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.SearchCone.opening_angle_deg" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -2450,66 +2040,32 @@ the latter needing the subject’s crown base height.</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyforestry.base.competition.selection.</span></span><span class="sig-name descname"><span class="pre">Selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distances_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zone_radius_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reach_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/base/competition/selection.html#Selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.competition.selection.Selection" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>The competitors a selector picked for one subject tree.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.selection.Selection.indices">
-<span class="sig-name descname"><span class="pre">indices</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.Selection.indices" title="Link to this definition">#</a></dt>
-<dd><p>Positions of the selected competitors in the caller’s tree list.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tuple[int, …]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.selection.Selection.distances_m">
-<span class="sig-name descname"><span class="pre">distances_m</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.Selection.distances_m" title="Link to this definition">#</a></dt>
-<dd><p>Distance from the subject to each selected competitor (m).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tuple[float, …]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.selection.Selection.zone_radius_m">
-<span class="sig-name descname"><span class="pre">zone_radius_m</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.Selection.zone_radius_m" title="Link to this definition">#</a></dt>
-<dd><p>The competition-zone radius that was applied (m), or
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>indices</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>...</em><em>]</em>) – Positions of the selected competitors in the caller’s tree list.</p></li>
+<li><p><strong>distances_m</strong> (<em>Tuple</em><em>[</em><em>float</em><em>, </em><em>...</em><em>]</em>) – Distance from the subject to each selected competitor (m).</p></li>
+<li><p><strong>zone_radius_m</strong> (<em>float</em><em> | </em><em>None</em>) – The competition-zone radius that was applied (m), or
 <code class="docutils literal notranslate"><span class="pre">None</span></code> for a selector whose zone is not a circle fixed ahead of the
 data. Lorimer’s <code class="docutils literal notranslate"><span class="pre">Sdrl1</span></code> and the proportional-area edge correction
 both need such a radius, so both are unavailable when it is <code class="docutils literal notranslate"><span class="pre">None</span></code>
 – substituting the reach below would make them circular, since a
 neighbourhood truncated by the plot boundary reaches less far and
-would report itself as needing less correction.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float | None</p>
+would report itself as needing less correction.</p></li>
+<li><p><strong>reach_m</strong> (<em>float</em><em> | </em><em>None</em>) – Distance to the farthest retained competitor (m), or <code class="docutils literal notranslate"><span class="pre">None</span></code>
+when nothing was retained. Descriptive only: it says how far this
+subject’s selection actually went.</p></li>
+</ul>
 </dd>
 </dl>
-</dd></dl>
-
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyforestry.base.competition.selection.Selection.reach_m">
-<span class="sig-name descname"><span class="pre">reach_m</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.Selection.reach_m" title="Link to this definition">#</a></dt>
-<dd><p>Distance to the farthest retained competitor (m), or <code class="docutils literal notranslate"><span class="pre">None</span></code>
-when nothing was retained. Descriptive only: it says how far this
-subject’s selection actually went.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float | None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id34">
-<span class="sig-name descname"><span class="pre">reach_m</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id34" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">reach_m</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.Selection.reach_m" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id35">
-<span class="sig-name descname"><span class="pre">zone_radius_m</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id35" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pyforestry.base.competition.selection.Selection.zone_radius_m">
+<span class="sig-name descname"><span class="pre">zone_radius_m</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.Selection.zone_radius_m" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2519,36 +2075,22 @@ subject’s selection actually went.</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyforestry.base.competition.selection.</span></span><span class="sig-name descname"><span class="pre">SelectionContext</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stems_per_ha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/base/competition/selection.html#SelectionContext"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.base.competition.selection.SelectionContext" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Stand-level quantities a selector may need to size its search radius.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.base.competition.selection.SelectionContext.stems_per_ha">
-<span class="sig-name descname"><span class="pre">stems_per_ha</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.SelectionContext.stems_per_ha" title="Link to this definition">#</a></dt>
-<dd><p>Stem density (trees/ha), for <a class="reference internal" href="#pyforestry.base.competition.selection.LeeGadowRadius" title="pyforestry.base.competition.selection.LeeGadowRadius"><code class="xref py py-class docutils literal notranslate"><span class="pre">LeeGadowRadius</span></code></a>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float | None</p>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stems_per_ha</strong> (<em>float</em><em> | </em><em>None</em>) – Stem density (trees/ha), for <a class="reference internal" href="#pyforestry.base.competition.selection.LeeGadowRadius" title="pyforestry.base.competition.selection.LeeGadowRadius"><code class="xref py py-class docutils literal notranslate"><span class="pre">LeeGadowRadius</span></code></a>.</p></li>
+<li><p><strong>mean_height_m</strong> (<em>float</em><em> | </em><em>None</em>) – Arithmetic mean height (m), for <a class="reference internal" href="#pyforestry.base.competition.selection.MeanHeightRadius" title="pyforestry.base.competition.selection.MeanHeightRadius"><code class="xref py py-class docutils literal notranslate"><span class="pre">MeanHeightRadius</span></code></a>.</p></li>
+</ul>
 </dd>
 </dl>
-</dd></dl>
-
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyforestry.base.competition.selection.SelectionContext.mean_height_m">
-<span class="sig-name descname"><span class="pre">mean_height_m</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.SelectionContext.mean_height_m" title="Link to this definition">#</a></dt>
-<dd><p>Arithmetic mean height (m), for <a class="reference internal" href="#pyforestry.base.competition.selection.MeanHeightRadius" title="pyforestry.base.competition.selection.MeanHeightRadius"><code class="xref py py-class docutils literal notranslate"><span class="pre">MeanHeightRadius</span></code></a>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float | None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id36">
-<span class="sig-name descname"><span class="pre">mean_height_m</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id36" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">mean_height_m</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.SelectionContext.mean_height_m" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id37">
-<span class="sig-name descname"><span class="pre">stems_per_ha</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id37" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pyforestry.base.competition.selection.SelectionContext.stems_per_ha">
+<span class="sig-name descname"><span class="pre">stems_per_ha</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyforestry.base.competition.selection.SelectionContext.stems_per_ha" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2712,17 +2254,10 @@ provenance is in <a class="reference internal" href="#pyforestry.base.competitio
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#weight-n-and-occlusion"><code class="docutils literal notranslate"><span class="pre">weight_n</span></code> and occlusion</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#edge-effect">Edge effect</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.api.TreeCompetition"><code class="docutils literal notranslate"><span class="pre">TreeCompetition</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.api.TreeCompetition.tree"><code class="docutils literal notranslate"><span class="pre">TreeCompetition.tree</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.api.TreeCompetition.indices"><code class="docutils literal notranslate"><span class="pre">TreeCompetition.indices</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.api.TreeCompetition.n_competitors"><code class="docutils literal notranslate"><span class="pre">TreeCompetition.n_competitors</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.api.TreeCompetition.zone_radius_m"><code class="docutils literal notranslate"><span class="pre">TreeCompetition.zone_radius_m</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.api.TreeCompetition.observed_zone_fraction"><code class="docutils literal notranslate"><span class="pre">TreeCompetition.observed_zone_fraction</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.api.TreeCompetition.edge_corrected"><code class="docutils literal notranslate"><span class="pre">TreeCompetition.edge_corrected</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.api.TreeCompetition.skipped"><code class="docutils literal notranslate"><span class="pre">TreeCompetition.skipped</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id0"><code class="docutils literal notranslate"><span class="pre">TreeCompetition.edge_corrected</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1"><code class="docutils literal notranslate"><span class="pre">TreeCompetition.n_competitors</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2"><code class="docutils literal notranslate"><span class="pre">TreeCompetition.observed_zone_fraction</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3"><code class="docutils literal notranslate"><span class="pre">TreeCompetition.zone_radius_m</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.api.TreeCompetition.n_competitors"><code class="docutils literal notranslate"><span class="pre">TreeCompetition.n_competitors</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.api.TreeCompetition.observed_zone_fraction"><code class="docutils literal notranslate"><span class="pre">TreeCompetition.observed_zone_fraction</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.api.TreeCompetition.zone_radius_m"><code class="docutils literal notranslate"><span class="pre">TreeCompetition.zone_radius_m</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.api.competition_indices"><code class="docutils literal notranslate"><span class="pre">competition_indices()</span></code></a></li>
@@ -2737,14 +2272,7 @@ provenance is in <a class="reference internal" href="#pyforestry.base.competitio
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.base.competition.indices">pyforestry.base.competition.indices module</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.indices.CompetitionIndex"><code class="docutils literal notranslate"><span class="pre">CompetitionIndex</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.indices.CompetitionIndex.abbreviation"><code class="docutils literal notranslate"><span class="pre">CompetitionIndex.abbreviation</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.indices.CompetitionIndex.compute"><code class="docutils literal notranslate"><span class="pre">CompetitionIndex.compute</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.indices.CompetitionIndex.source"><code class="docutils literal notranslate"><span class="pre">CompetitionIndex.source</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.indices.CompetitionIndex.spatial"><code class="docutils literal notranslate"><span class="pre">CompetitionIndex.spatial</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.indices.CompetitionIndex.additive"><code class="docutils literal notranslate"><span class="pre">CompetitionIndex.additive</span></code></a></li>
-</ul>
-</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.indices.CompetitionIndex"><code class="docutils literal notranslate"><span class="pre">CompetitionIndex</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.indices.INDEX_REGISTRY"><code class="docutils literal notranslate"><span class="pre">INDEX_REGISTRY</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.indices.NON_SPATIAL_INDICES"><code class="docutils literal notranslate"><span class="pre">NON_SPATIAL_INDICES</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.indices.SPATIAL_INDICES"><code class="docutils literal notranslate"><span class="pre">SPATIAL_INDICES</span></code></a></li>
@@ -2774,32 +2302,21 @@ provenance is in <a class="reference internal" href="#pyforestry.base.competitio
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.base.competition.neighbourhood">pyforestry.base.competition.neighbourhood module</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.neighbourhood.MissingNeighbourhoodData"><code class="docutils literal notranslate"><span class="pre">MissingNeighbourhoodData</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.neighbourhood.Neighbourhood"><code class="docutils literal notranslate"><span class="pre">Neighbourhood</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.subject_dbh_cm"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.subject_dbh_cm</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.competitor_dbh_cm"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.competitor_dbh_cm</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.competition_zone_radius_m"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.competition_zone_radius_m</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.competitor_basal_areas_m2"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.competitor_basal_areas_m2()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.competitor_crown_radius_m"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.competitor_crown_radius_m</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.competitor_weights"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.competitor_weights</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.distances_m"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.distances_m</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.subject_crown_radius_m"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.subject_crown_radius_m</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.competitor_crown_radius_m"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.competitor_crown_radius_m</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.from_sequences"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.from_sequences()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.larger_competitor_mask"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.larger_competitor_mask()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.n_competitors"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.n_competitors</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.plot_area_ha"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.plot_area_ha</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.plot_basal_area_m2_ha"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.plot_basal_area_m2_ha</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.plot_qmd_cm"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.plot_qmd_cm</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.relative_spacing"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.relative_spacing</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.competition_zone_radius_m"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.competition_zone_radius_m</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id4"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.competition_zone_radius_m</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.competitor_basal_areas_m2"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.competitor_basal_areas_m2()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.competitor_crown_radius_m</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.competitor_weights</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id7"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.distances_m</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.from_sequences"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.from_sequences()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.larger_competitor_mask"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.larger_competitor_mask()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.n_competitors"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.n_competitors</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id8"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.plot_area_ha</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id9"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.plot_basal_area_m2_ha</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id10"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.plot_qmd_cm</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id11"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.relative_spacing</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.require"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.require()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.subject_basal_area_m2"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.subject_basal_area_m2</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id12"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.subject_crown_radius_m</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.subject_crown_radius_m"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.subject_crown_radius_m</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.weighted_competitor_basal_areas_m2"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.weighted_competitor_basal_areas_m2()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.neighbourhood.Neighbourhood.weights"><code class="docutils literal notranslate"><span class="pre">Neighbourhood.weights</span></code></a></li>
 </ul>
@@ -2810,26 +2327,18 @@ provenance is in <a class="reference internal" href="#pyforestry.base.competitio
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.base.competition.selection">pyforestry.base.competition.selection module</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.BitterlichBAF"><code class="docutils literal notranslate"><span class="pre">BitterlichBAF</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.BitterlichBAF.basal_area_factor"><code class="docutils literal notranslate"><span class="pre">BitterlichBAF.basal_area_factor</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.BitterlichBAF.min_size_ratio"><code class="docutils literal notranslate"><span class="pre">BitterlichBAF.min_size_ratio</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.BitterlichBAF.elimination_angle_deg"><code class="docutils literal notranslate"><span class="pre">BitterlichBAF.elimination_angle_deg</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id13"><code class="docutils literal notranslate"><span class="pre">BitterlichBAF.basal_area_factor</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id14"><code class="docutils literal notranslate"><span class="pre">BitterlichBAF.elimination_angle_deg</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.BitterlichBAF.gauge_angle_deg"><code class="docutils literal notranslate"><span class="pre">BitterlichBAF.gauge_angle_deg</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.BitterlichBAF.limiting_distance_m"><code class="docutils literal notranslate"><span class="pre">BitterlichBAF.limiting_distance_m()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id15"><code class="docutils literal notranslate"><span class="pre">BitterlichBAF.min_size_ratio</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.BitterlichBAF.min_size_ratio"><code class="docutils literal notranslate"><span class="pre">BitterlichBAF.min_size_ratio</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.BitterlichBAF.select"><code class="docutils literal notranslate"><span class="pre">BitterlichBAF.select()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.BitterlichBAF.source"><code class="docutils literal notranslate"><span class="pre">BitterlichBAF.source</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.Candidates"><code class="docutils literal notranslate"><span class="pre">Candidates</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.Candidates.diameters_cm"><code class="docutils literal notranslate"><span class="pre">Candidates.diameters_cm</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.Candidates.distances_m"><code class="docutils literal notranslate"><span class="pre">Candidates.distances_m</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.Candidates.bearings_rad"><code class="docutils literal notranslate"><span class="pre">Candidates.bearings_rad</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.Candidates.heights_m"><code class="docutils literal notranslate"><span class="pre">Candidates.heights_m</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.Candidates.crown_base_heights_m"><code class="docutils literal notranslate"><span class="pre">Candidates.crown_base_heights_m</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id16"><code class="docutils literal notranslate"><span class="pre">Candidates.bearings_rad</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id17"><code class="docutils literal notranslate"><span class="pre">Candidates.crown_base_heights_m</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id18"><code class="docutils literal notranslate"><span class="pre">Candidates.heights_m</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.Candidates.heights_m"><code class="docutils literal notranslate"><span class="pre">Candidates.heights_m</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.CompetitorSelector"><code class="docutils literal notranslate"><span class="pre">CompetitorSelector</span></code></a><ul class="nav section-nav flex-column">
@@ -2837,73 +2346,51 @@ provenance is in <a class="reference internal" href="#pyforestry.base.competitio
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.FixedRadius"><code class="docutils literal notranslate"><span class="pre">FixedRadius</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.FixedRadius.radius_m"><code class="docutils literal notranslate"><span class="pre">FixedRadius.radius_m</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.FixedRadius.min_size_ratio"><code class="docutils literal notranslate"><span class="pre">FixedRadius.min_size_ratio</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.FixedRadius.elimination_angle_deg"><code class="docutils literal notranslate"><span class="pre">FixedRadius.elimination_angle_deg</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id19"><code class="docutils literal notranslate"><span class="pre">FixedRadius.elimination_angle_deg</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id20"><code class="docutils literal notranslate"><span class="pre">FixedRadius.min_size_ratio</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.FixedRadius.min_size_ratio"><code class="docutils literal notranslate"><span class="pre">FixedRadius.min_size_ratio</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.FixedRadius.select"><code class="docutils literal notranslate"><span class="pre">FixedRadius.select()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.LeeGadowRadius"><code class="docutils literal notranslate"><span class="pre">LeeGadowRadius</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.LeeGadowRadius.elimination_angle_deg"><code class="docutils literal notranslate"><span class="pre">LeeGadowRadius.elimination_angle_deg</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.LeeGadowRadius.k"><code class="docutils literal notranslate"><span class="pre">LeeGadowRadius.k</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.LeeGadowRadius.min_size_ratio"><code class="docutils literal notranslate"><span class="pre">LeeGadowRadius.min_size_ratio</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.LeeGadowRadius.elimination_angle_deg"><code class="docutils literal notranslate"><span class="pre">LeeGadowRadius.elimination_angle_deg</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id21"><code class="docutils literal notranslate"><span class="pre">LeeGadowRadius.elimination_angle_deg</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id22"><code class="docutils literal notranslate"><span class="pre">LeeGadowRadius.k</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id23"><code class="docutils literal notranslate"><span class="pre">LeeGadowRadius.min_size_ratio</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.LeeGadowRadius.select"><code class="docutils literal notranslate"><span class="pre">LeeGadowRadius.select()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.LeeGadowRadius.source"><code class="docutils literal notranslate"><span class="pre">LeeGadowRadius.source</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.MeanHeightRadius"><code class="docutils literal notranslate"><span class="pre">MeanHeightRadius</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.MeanHeightRadius.elimination_angle_deg"><code class="docutils literal notranslate"><span class="pre">MeanHeightRadius.elimination_angle_deg</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.MeanHeightRadius.fraction"><code class="docutils literal notranslate"><span class="pre">MeanHeightRadius.fraction</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.MeanHeightRadius.min_size_ratio"><code class="docutils literal notranslate"><span class="pre">MeanHeightRadius.min_size_ratio</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.MeanHeightRadius.elimination_angle_deg"><code class="docutils literal notranslate"><span class="pre">MeanHeightRadius.elimination_angle_deg</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id24"><code class="docutils literal notranslate"><span class="pre">MeanHeightRadius.elimination_angle_deg</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id25"><code class="docutils literal notranslate"><span class="pre">MeanHeightRadius.fraction</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id26"><code class="docutils literal notranslate"><span class="pre">MeanHeightRadius.min_size_ratio</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.MeanHeightRadius.select"><code class="docutils literal notranslate"><span class="pre">MeanHeightRadius.select()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.MeanHeightRadius.source"><code class="docutils literal notranslate"><span class="pre">MeanHeightRadius.source</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.NearestNeighbours"><code class="docutils literal notranslate"><span class="pre">NearestNeighbours</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.NearestNeighbours.n"><code class="docutils literal notranslate"><span class="pre">NearestNeighbours.n</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.NearestNeighbours.min_size_ratio"><code class="docutils literal notranslate"><span class="pre">NearestNeighbours.min_size_ratio</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.NearestNeighbours.elimination_angle_deg"><code class="docutils literal notranslate"><span class="pre">NearestNeighbours.elimination_angle_deg</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id27"><code class="docutils literal notranslate"><span class="pre">NearestNeighbours.elimination_angle_deg</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id28"><code class="docutils literal notranslate"><span class="pre">NearestNeighbours.min_size_ratio</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id29"><code class="docutils literal notranslate"><span class="pre">NearestNeighbours.n</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.NearestNeighbours.min_size_ratio"><code class="docutils literal notranslate"><span class="pre">NearestNeighbours.min_size_ratio</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.NearestNeighbours.n"><code class="docutils literal notranslate"><span class="pre">NearestNeighbours.n</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.NearestNeighbours.select"><code class="docutils literal notranslate"><span class="pre">NearestNeighbours.select()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.SearchCone"><code class="docutils literal notranslate"><span class="pre">SearchCone</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.SearchCone.opening_angle_deg"><code class="docutils literal notranslate"><span class="pre">SearchCone.opening_angle_deg</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.SearchCone.apex"><code class="docutils literal notranslate"><span class="pre">SearchCone.apex</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.SearchCone.min_size_ratio"><code class="docutils literal notranslate"><span class="pre">SearchCone.min_size_ratio</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.SearchCone.elimination_angle_deg"><code class="docutils literal notranslate"><span class="pre">SearchCone.elimination_angle_deg</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id30"><code class="docutils literal notranslate"><span class="pre">SearchCone.apex</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id31"><code class="docutils literal notranslate"><span class="pre">SearchCone.elimination_angle_deg</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id32"><code class="docutils literal notranslate"><span class="pre">SearchCone.min_size_ratio</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id33"><code class="docutils literal notranslate"><span class="pre">SearchCone.opening_angle_deg</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.SearchCone.min_size_ratio"><code class="docutils literal notranslate"><span class="pre">SearchCone.min_size_ratio</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.SearchCone.opening_angle_deg"><code class="docutils literal notranslate"><span class="pre">SearchCone.opening_angle_deg</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.SearchCone.select"><code class="docutils literal notranslate"><span class="pre">SearchCone.select()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.SearchCone.source"><code class="docutils literal notranslate"><span class="pre">SearchCone.source</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.Selection"><code class="docutils literal notranslate"><span class="pre">Selection</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.Selection.indices"><code class="docutils literal notranslate"><span class="pre">Selection.indices</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.Selection.distances_m"><code class="docutils literal notranslate"><span class="pre">Selection.distances_m</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.Selection.zone_radius_m"><code class="docutils literal notranslate"><span class="pre">Selection.zone_radius_m</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.Selection.reach_m"><code class="docutils literal notranslate"><span class="pre">Selection.reach_m</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id34"><code class="docutils literal notranslate"><span class="pre">Selection.reach_m</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id35"><code class="docutils literal notranslate"><span class="pre">Selection.zone_radius_m</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.Selection.zone_radius_m"><code class="docutils literal notranslate"><span class="pre">Selection.zone_radius_m</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.SelectionContext"><code class="docutils literal notranslate"><span class="pre">SelectionContext</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.SelectionContext.stems_per_ha"><code class="docutils literal notranslate"><span class="pre">SelectionContext.stems_per_ha</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.SelectionContext.mean_height_m"><code class="docutils literal notranslate"><span class="pre">SelectionContext.mean_height_m</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id36"><code class="docutils literal notranslate"><span class="pre">SelectionContext.mean_height_m</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id37"><code class="docutils literal notranslate"><span class="pre">SelectionContext.stems_per_ha</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.SelectionContext.stems_per_ha"><code class="docutils literal notranslate"><span class="pre">SelectionContext.stems_per_ha</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.base.competition.selection.selector_source"><code class="docutils literal notranslate"><span class="pre">selector_source()</span></code></a></li>

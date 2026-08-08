@@ -718,33 +718,19 @@ and must not import either.</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyforestry.simulation.services.checkpoint.</span></span><span class="sig-name descname"><span class="pre">Checkpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">component_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/simulation/services/checkpoint.html#Checkpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.simulation.services.checkpoint.Checkpoint" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>One subject’s evolving state, detached from the subject.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.simulation.services.checkpoint.Checkpoint.component_id">
-<span class="sig-name descname"><span class="pre">component_id</span></span><a class="headerlink" href="#pyforestry.simulation.services.checkpoint.Checkpoint.component_id" title="Link to this definition">#</a></dt>
-<dd><p>What the checkpoint was taken from. :meth:`
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>component_id</strong> (<em>str</em>) – What the checkpoint was taken from. :meth:`
 CheckpointSerializer.restore` refuses a checkpoint whose id does not
 match its target, because the failure it prevents is silent: two
 pipelines expose the same state names, so restoring a Sweden
-checkpoint into a Norway run would succeed and mean nothing.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
+checkpoint into a Norway run would succeed and mean nothing.</p></li>
+<li><p><strong>state</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – The state mapping, deep-copied away from the live objects so that
+advancing the run does not edit the checkpoint underneath it.</p></li>
+</ul>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyforestry.simulation.services.checkpoint.Checkpoint.state">
-<span class="sig-name descname"><span class="pre">state</span></span><a class="headerlink" href="#pyforestry.simulation.services.checkpoint.Checkpoint.state" title="Link to this definition">#</a></dt>
-<dd><p>The state mapping, deep-copied away from the live objects so that
-advancing the run does not edit the checkpoint underneath it.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Mapping[str, Any]</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
@@ -1026,11 +1012,7 @@ live callable that cannot cross a process boundary in a checkpoint.</p>
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.simulation.services.checkpoint">pyforestry.simulation.services.checkpoint module</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.services.checkpoint.Checkpoint"><code class="docutils literal notranslate"><span class="pre">Checkpoint</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.services.checkpoint.Checkpoint.component_id"><code class="docutils literal notranslate"><span class="pre">Checkpoint.component_id</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.services.checkpoint.Checkpoint.state"><code class="docutils literal notranslate"><span class="pre">Checkpoint.state</span></code></a></li>
-</ul>
-</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.services.checkpoint.Checkpoint"><code class="docutils literal notranslate"><span class="pre">Checkpoint</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.services.checkpoint.CheckpointSerializer"><code class="docutils literal notranslate"><span class="pre">CheckpointSerializer</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.services.checkpoint.CheckpointSerializer.capture"><code class="docutils literal notranslate"><span class="pre">CheckpointSerializer.capture()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.simulation.services.checkpoint.CheckpointSerializer.restore"><code class="docutils literal notranslate"><span class="pre">CheckpointSerializer.restore()</span></code></a></li>
