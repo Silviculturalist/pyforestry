@@ -318,6 +318,11 @@ def _solve_northern_spruce_8_4(
     top_height_dm = h100_m * 10.0 - 13.0
 
     def bonitering(eff_age: float) -> Tuple[float, float, float, float]:
+        """Bisect on the site parameter until the trajectory hits ``top_height_dm``.
+
+        Returns ``(A2, RK, RM2, T13)`` for a stand reaching that dominant height at
+        breast-height age ``eff_age``. Named for the FORTRAN subroutine it mirrors.
+        """
         ai1, ai2 = 10.0, 600.0
         a2 = rk = rm2 = 0.0
         while abs(ai1 - ai2) > 1:
@@ -336,6 +341,7 @@ def _solve_northern_spruce_8_4(
 
     # Effective DBH age at TOTAL(100): solve eff_age + T13(eff_age) = 100 (Newton-Raphson).
     def f(x: float) -> float:
+        """Residual of ``eff_age + T13(eff_age) = 100``, zero at the wanted age."""
         return x + bonitering(x)[3] - 100.0
 
     x = 100.0 * 0.35
