@@ -8,7 +8,11 @@ permissions:
 
 on:
   push:
-    branches: [ dev ]
+    # main included so a release merge publishes the stable docs. The
+    # build-and-deploy-docs job already branches on refs/heads/main to pick the
+    # "stable" destination, but no main event ever reached it, so gh-pages/stable
+    # sat at its 2025-07-31 build while dev/ kept updating.
+    branches: [ dev, main ]
     paths-ignore:
       - '**/*.md'
       - '**/*.mdx'
