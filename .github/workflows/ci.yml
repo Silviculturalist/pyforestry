@@ -261,3 +261,44 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: docs/build/html
           destination_dir: ${{ steps.dest.outputs.dir }}
+
+      # The deploy above only ever writes inside destination_dir (dev/ or
+      # stable/), so when the versioned layout was introduced the old
+      # pre-versioning build at the branch root stopped belonging to any job:
+      # the root index.html kept serving a frozen four-notebook toctree. This
+      # step owns the root instead: prune anything that is not a versioned
+      # build, keep a redirect to stable/ there, and publish versions.json at
+      # the root -- which the theme's version switcher requests from top-level
+      # pages ("../versions.json" from dev/index.html) and got a 404 for.
+      - name: Maintain gh-pages root
+        run: |
+          git fetch origin gh-pages
+          git worktree add ../ghp origin/gh-pages
+          cd ../ghp
+          find . -mindepth 1 -maxdepth 1 \
+            ! -name dev ! -name stable ! -name .git \
+            ! -name index.html ! -name versions.json ! -name .nojekyll \
+            -exec rm -rf {} +
+          cp "$GITHUB_WORKSPACE/docs/versions.json" versions.json
+          touch .nojekyll
+          cat > index.html <<'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+          <meta charset="utf-8">
+          <meta http-equiv="refresh" content="0; url=stable/">
+          <link rel="canonical" href="https://silviculturalist.github.io/pyforestry/stable/">
+          <title>pyforestry documentation</title>
+          </head>
+          <body>
+          <p>Redirecting to the <a href="stable/">stable documentation</a>.
+          Development version: <a href="dev/">dev</a>.</p>
+          </body>
+          </html>
+          EOF
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          if git commit -m "docs: maintain root redirect, prune stale pre-versioning build"; then
+            git push origin HEAD:gh-pages
+          fi
