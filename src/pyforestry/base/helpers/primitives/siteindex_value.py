@@ -107,6 +107,25 @@ class SiteIndexValue(float):
         obj.fn = fn
         return obj
 
+    def __getnewargs__(self) -> tuple:
+        """Return the arguments ``__new__`` needs, so copying round-trips.
+
+        See :meth:`pyforestry.base.helpers.primitives.age.AgeMeasurement.__getnewargs__`:
+        a ``float`` subclass whose ``__new__`` takes required arguments cannot be
+        deep-copied or pickled without one of these.
+
+        This makes ``copy.deepcopy`` work; pickling a site index still fails, for a
+        different reason. ``fn`` is the height trajectory that produced the value,
+        and the trajectory functions are attached to their model classes at import
+        rather than defined on them, so ``pickle`` cannot find them by name. Fixing
+        that means changing how the trajectories are registered, not this method.
+
+        Returns:
+            The value, reference age, species set and trajectory, in ``__new__``
+            order.
+        """
+        return (float(self), self.reference_age, self.species, self.fn)
+
     def __repr__(self):
         """Return ``repr(self)`` with metadata included."""
         fn_name = self.fn.__name__ if hasattr(self.fn, "__name__") else str(self.fn)

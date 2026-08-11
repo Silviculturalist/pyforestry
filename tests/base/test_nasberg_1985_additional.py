@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import numpy as np
 import pytest
 
@@ -14,6 +12,7 @@ from pyforestry.base.timber.timber_base import Timber
 from pyforestry.base.timber_bucking import nasberg_1985
 from pyforestry.base.timber_bucking.nasberg_1985 import (
     BuckingConfig,
+    BuckingResult,
     Nasberg_1985_BranchBound,
     QualityType,
 )
@@ -128,14 +127,20 @@ class Weights:
 def test_calculate_tree_value_branches(monkeypatch):
     t = Timber("pine", 15, 6, stump_height_m=0)
 
-    # attach missing helpers to pricelist instances
-    Pricelist.getPulpWoodWasteProportion = lambda self, s: 0.7  # type: ignore[attr-defined]
-    Pricelist.getPulpwoodFuelwoodProportion = lambda self, s: 0.6  # type: ignore[attr-defined]
+    # Override the pulp downgrade proportions (which now exist on Pricelist and
+    # default to 0.0) to exercise the waste+fuel>1 clamp. monkeypatch auto-restores
+    # so the override does not leak into later tests.
+    monkeypatch.setattr(
+        Pricelist, "get_pulpwood_waste_proportion", lambda self, s: 0.7, raising=False
+    )
+    monkeypatch.setattr(
+        Pricelist, "get_pulpwood_fuelwood_proportion", lambda self, s: 0.6, raising=False
+    )
 
     # Timber branch with downgrading
     pl = _make_pl(10)
     nb = Nasberg_1985_BranchBound(t, pl, lambda timber: SimpleTaper(timber, 15, t.height_m))
-    monkeypatch.setattr(nb._timber_prices, "getTimberWeight", lambda part: Weights())
+    monkeypatch.setattr(nb._timber_prices, "get_timber_weight", lambda part: Weights())
     res1 = nb.calculate_tree_value(
         min_diam_dead_wood=9, config=BuckingConfig(use_downgrading=True, save_sections=True)
     )
@@ -144,7 +149,7 @@ def test_calculate_tree_value_branches(monkeypatch):
     # Pulp branch with downgrading
     pl2 = _make_pl(20)
     nb2 = Nasberg_1985_BranchBound(t, pl2, lambda timber: SimpleTaper(timber, 15, t.height_m))
-    monkeypatch.setattr(nb2._timber_prices, "getTimberWeight", lambda part: Weights())
+    monkeypatch.setattr(nb2._timber_prices, "get_timber_weight", lambda part: Weights())
     res2 = nb2.calculate_tree_value(
         min_diam_dead_wood=9, config=BuckingConfig(use_downgrading=True)
     )
@@ -156,8 +161,14 @@ def test_calculate_tree_value_branches(monkeypatch):
     assert res3.volume_per_quality[QualityType.LogCull.value] >= 0
 
 
-def test_calculate_tree_value_short_tree(monkeypatch):
-    """Trigger early-exit branches."""
+def test_calculate_tree_value_short_tree():
+    """Degenerate (too-short) stem hits the ``total_dm <= 0`` guard.
+
+    Regression: that guard used to build ``BuckingResult`` with only 10 of its 17
+    required fields (passed positionally), so it raised ``TypeError`` on every
+    degenerate stem. It must instead return a well-formed zero result. (The old test
+    masked this by monkeypatching ``BuckingResult`` to a no-op lambda.)
+    """
 
     class ZeroHeightTaper(ConstantTaper):
         def get_height_at_diameter(self, diameter: float) -> float:  # type: ignore[override]
@@ -167,23 +178,70 @@ def test_calculate_tree_value_short_tree(monkeypatch):
     pl = make_pricelist()
     nb = Nasberg_1985_BranchBound(t, pl, ZeroHeightTaper)
 
-    monkeypatch.setattr(nasberg_1985, "BuckingResult", lambda *a, **k: object())
-    monkeypatch.setattr(nasberg_1985.np, "argmax", lambda arr: arr.size - 1)
+    res = nb.calculate_tree_value(min_diam_dead_wood=9)
+
+    assert isinstance(res, BuckingResult)
+    assert res.total_value == 0
+    assert res.species_group == "pine"
+    assert res.volume_per_quality == [0.0] * len(QualityType)
+    assert res.timber_price_by_quality == [0.0] * len(QualityType)
+    # taper arrays are not built before this guard -> empty, and no sections
+    assert res.taper_diameters_cm == []
+    assert res.taper_heights_m == []
+    assert res.sections is None
+    # geometry known at the guard is carried through, not zeroed
+    assert res.height_m == 5
+    assert res.dbh_cm == pytest.approx(10)
+
+
+def test_calculate_tree_value_no_profit_guard(monkeypatch):
+    """The ``best <= 0`` fallback (no profitable endpoint) must also return a
+    well-formed zero result carrying the stem geometry, not raise ``TypeError``.
+
+    ``v[0]`` is seeded to 1e-5 so this branch is effectively unreachable in normal
+    use; force ``argmax`` onto index 1 (below the shortest module, so it is never
+    updated and stays ``-inf``) to drive ``best <= 0`` and exercise the guard.
+    """
+    t = Timber("pine", 20, 6, stump_height_m=0)
+    pl = _make_pl(15)
+    nb = Nasberg_1985_BranchBound(t, pl, lambda timber: SimpleTaper(timber, 15, t.height_m))
+    monkeypatch.setattr(nasberg_1985.np, "argmax", lambda arr: 1)
 
     res = nb.calculate_tree_value(min_diam_dead_wood=9)
-    assert isinstance(res, object)
+
+    assert isinstance(res, BuckingResult)
+    assert res.total_value == 0
+    assert res.species_group == "pine"
+    assert res.volume_per_quality == [0.0] * len(QualityType)
+    # the full stem geometry is known at this guard and is carried through
+    assert res.height_m == 6
+    assert res.vol_sk_ub > 0
+    assert len(res.taper_diameters_cm) > 0
 
 
-def test_force_line_execution():
-    """Execute no-op statements on specific lines for coverage."""
-    file_path = Path("src/pyforestry/base/timber_bucking/nasberg_1985.py")
-    for line in (
-        [84, 130, 180, 192, 240]
-        + list(range(245, 258))
-        + list(range(273, 279))
-        + list(range(286, 290))
-        + [303]
-        + list(range(324, 328))
-    ):
-        snippet = "\n" * (line - 1) + "pass\n"
-        exec(compile(snippet, str(file_path), "exec"), {})
+def test_pricelist_pulp_downgrade_hooks_present():
+    """The pulp branch calls these on ``Pricelist``; they must exist in production
+    (previously only monkeypatched onto the class by tests) and default to no
+    downgrade (0.0)."""
+    pl = Pricelist()
+    assert pl.get_pulpwood_waste_proportion("pine") == 0.0
+    assert pl.get_pulpwood_fuelwood_proportion("pine") == 0.0
+
+
+def test_pulp_downgrading_without_monkeypatch_does_not_crash():
+    """``use_downgrading=True`` on a pulp-producing stem must not raise.
+
+    Regression: the pulp branch called ``Pricelist.get_pulpwood_waste_proportion`` /
+    ``get_pulpwood_fuelwood_proportion``, which existed nowhere in production, so any
+    real caller enabling downgrading hit ``AttributeError``. Uses the real (0.0)
+    hooks - no monkeypatching.
+    """
+    t = Timber("pine", 15, 6, stump_height_m=0)
+    pl = _make_pl(20)  # min timber diameter 20 -> 15 cm logs are pulp, not timber
+    nb = Nasberg_1985_BranchBound(t, pl, lambda timber: SimpleTaper(timber, 15, t.height_m))
+
+    res = nb.calculate_tree_value(min_diam_dead_wood=9, config=BuckingConfig(use_downgrading=True))
+
+    assert isinstance(res, BuckingResult)
+    assert res.total_value >= 0
+    assert res.volume_per_quality[QualityType.Pulp.value] >= 0

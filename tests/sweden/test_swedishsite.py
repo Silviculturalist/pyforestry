@@ -112,7 +112,7 @@ def test_site_index_failures(monkeypatch):
     def boom(*_a, **_kw):
         raise ValueError("x")
 
-    monkeypatch.setattr("pyforestry.sweden.site.swedish_site.Hagglund_Lundmark_1979_SIS", boom)
+    monkeypatch.setattr("pyforestry.sweden.site.swedish_site.Hagglund_Lundmark_1977_SIS", boom)
     monkeypatch.setattr("pyforestry.sweden.site.swedish_site.eko_pm_2008_estimate_si_birch", boom)
 
     site = SwedishSite(

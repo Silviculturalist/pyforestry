@@ -65,6 +65,26 @@ class Position:
         """
         return f"Position(X={self.X}, Y={self.Y}, Z={self.Z}, crs={self.crs})"
 
+    # Convenience tuple-like access for callers that expect iterable positions
+    def __iter__(self):
+        """Yield X then Y, so a position unpacks as a planar coordinate pair.
+
+        Z is deliberately not yielded: the callers that iterate a position are
+        the planar ones (distances, competition indices, plot geometry), and
+        including height would silently change what ``x, y = position`` means.
+        """
+        yield from (self.X, self.Y)
+
+    @property
+    def x(self) -> float:
+        """Return the easting, for callers using the lower-case spelling."""
+        return self.X
+
+    @property
+    def y(self) -> float:
+        """Return the northing, for callers using the lower-case spelling."""
+        return self.Y
+
     @staticmethod
     def _set_position(
         pos_in: Union["Position", tuple[float, float], tuple[float, float, float], None] = None,

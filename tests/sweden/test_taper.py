@@ -121,7 +121,7 @@ def test_invalid_timber_raises_error():
     Tests that the constructor raises a ValueError when provided with
     an invalid timber object (e.g., height <= 0).
     """
-    with pytest.raises(ValueError, match="Height must be larger than 0 m: {self.height_m}"):
+    with pytest.raises(ValueError, match="Height must be larger than 0 m: 0"):
         invalid_timber = SweTimber(
             species="picea abies",
             diameter_cm=30,
@@ -267,7 +267,7 @@ def test_validate_errors(valid_timber):
 
 def test_validate_wrong_type():
     with pytest.raises(ValueError):
-        EdgrenNylinder1949.validate(object())
+        EdgrenNylinder1949.validate(object())  # type: ignore[arg-type]
 
 
 def test_get_relative_diameter_branches(taper_instance):

@@ -1,4 +1,15 @@
+"""Below-ground biomass functions, Petersson & Ståhl (2006).
+
+Source:
+    Petersson, H. & Ståhl, G. (2006). *Functions for below-ground biomass of
+    Pinus sylvestris, Picea abies, Betula pendula and Betula pubescens in Sweden.*
+    Scandinavian Journal of Forest Research 21(S7):84-93.
+    doi:10.1080/14004080500486864
+"""
+
 import numpy as np
+
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 
 
 class PeterssonStahl2006:
@@ -332,13 +343,43 @@ class PeterssonStahl2006:
         diameter_mm = kwargs.get("diameter_cm", 0) * 10  # Convert cm to mm
         kwargs["diameter_mm"] = diameter_mm
 
-        for func in functions:
+        # The candidate lists are ordered simplest-first (model category i, ii, iii).
+        # Petersson & Ståhl (2006, p. 92) recommend applying the most detailed model
+        # category "whenever possible", so select the most detailed model (iii, then
+        # ii, then i) whose required inputs are all supplied -- iterate in reverse.
+        for func in reversed(functions):
             try:
                 # Match arguments dynamically and evaluate the function
                 func_args = func.__code__.co_varnames[: func.__code__.co_argcount]
                 args = {key: value for key, value in kwargs.items() if key in func_args}
+                if any(name not in args for name in func_args):
+                    continue  # a required predictor is missing; try a simpler model
                 return np.exp(func(**args)) / 1000  # return kg
             except TypeError:
                 continue
 
         raise ValueError("No suitable function matched the provided arguments.")
+
+
+# ---------------------------------------------------------------------------
+# Introspection
+# ---------------------------------------------------------------------------
+
+
+DESCRIPTOR = FormulaDescriptor(
+    component_id="petersson_stahl_2006_biomass",
+    source=SourceReference(
+        author="Petersson, H. & Ståhl, G.",
+        year=2006,
+        title=(
+            "Functions for below-ground biomass of Pinus sylvestris, Picea abies, "
+            "Betula pendula and Betula pubescens in Sweden"
+        ),
+        note=(
+            "Scandinavian Journal of Forest Research 21(S7):84-93. doi:10.1080/14004080500486864"
+        ),
+    ),
+    species_groups={},
+    units={},
+    kernel_names=("PeterssonStahl2006",),
+)

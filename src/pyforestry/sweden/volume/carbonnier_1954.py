@@ -1,3 +1,14 @@
+"""Larch volume functions, Carbonnier (1954).
+
+Source:
+    Carbonnier, C. (1954). *Funktioner för kubering av europeisk, sibirisk och
+    japansk lärk.* Manuscript; no formal publication. Reproduced in the Heureka PM
+    of 2004-01-20 by Björn Elfving.
+"""
+
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
+
+
 def carbonnier_1954_volume_larch(diameter_cm, height_m):
     """
     Volume of Larch trees, from Carbonnier 1954.
@@ -21,3 +32,25 @@ def carbonnier_1954_volume_larch(diameter_cm, height_m):
         - 0.08406 * diameter_cm * height_m
         + 0.1972 * height_m
     ) / 1000
+
+
+# ---------------------------------------------------------------------------
+# Introspection
+# ---------------------------------------------------------------------------
+
+
+DESCRIPTOR = FormulaDescriptor(
+    component_id="carbonnier_1954_volume",
+    source=SourceReference(
+        author="Carbonnier, C.",
+        year=1954,
+        title=("Funktioner för kubering av europeisk, sibirisk och japansk lärk"),
+        note=(
+            "Manuscript; no formal publication. Reproduced in the Heureka PM of "
+            "2004-01-20 by Björn Elfving."
+        ),
+    ),
+    species_groups={},
+    units={},
+    kernel_names=("carbonnier_1954_volume_larch",),
+)

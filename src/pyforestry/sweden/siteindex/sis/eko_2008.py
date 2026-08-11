@@ -1,3 +1,14 @@
+"""Ekö et al. (2008) regional growth-difference site index adjustment.
+
+Source:
+    Ekö, P.-M., Johansson, U., Petersson, N., Bergqvist, J., Elfving, B. & Frisk, J.
+    (2008). *Current growth differences of Norway spruce (Picea abies), Scots pine
+    (Pinus sylvestris) and birch (Betula pendula and Betula pubescens) in different
+    regions in Sweden.* Scandinavian Journal of Forest Research 23(4):307-318.
+    doi:10.1080/02827580802249126
+"""
+
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.helpers import Age, SiteIndexValue, TreeSpecies
 
 from ...site.enums import (
@@ -60,7 +71,10 @@ def eko_pm_2008_estimate_si_birch(
     mesic_soil_mosses = 1 if gl_code == 6 else 0
     mesic = 1 if sm_code == 2 else 0
     moist = 1 if sm_code > 3 else 0
-    lateral_frequent = 1 if lw_code == 4 else 0
+    # "Frequent" lateral water = longer periods (längre perioder), SwedenSoilWater code 3.
+    # (Was `== 4`, which is unreachable since SwedenSoilWater only defines codes 1-3, so the
+    # lateral-water term was permanently dead.)
+    lateral_frequent = 1 if lw_code == 3 else 0
     northern = 1 if latitude > 60 else 0
 
     si_value: float
@@ -124,3 +138,24 @@ def eko_pm_2008_estimate_si_birch(
         species={TreeSpecies.Sweden.betula_pendula, TreeSpecies.Sweden.betula_pubescens},
         fn=eriksson_1997_height_trajectory_sweden_birch,
     )
+
+
+DESCRIPTOR = FormulaDescriptor(
+    component_id="eko_2008_siteindex",
+    source=SourceReference(
+        author=(
+            "Ekö, P.-M., Johansson, U., Petersson, N., Bergqvist, J., Elfving, B. & Frisk, J."
+        ),
+        year=2008,
+        title=(
+            "Current growth differences of Norway spruce (Picea abies), Scots pine "
+            "(Pinus sylvestris) and birch (Betula pendula and Betula pubescens) in "
+            "different regions in Sweden"
+        ),
+        note="Scandinavian Journal of Forest Research 23(4):307-318. "
+        "doi:10.1080/02827580802249126",
+    ),
+    species_groups={"birch": frozenset({"Betula pendula", "Betula pubescens"})},
+    units={},
+    kernel_names=("eko_pm_2008_estimate_si_birch",),
+)

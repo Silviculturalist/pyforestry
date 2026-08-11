@@ -86,6 +86,18 @@ class TopHeightMeasurement(float):
         obj.est_bias = est_bias
         return obj
 
+    def __getnewargs__(self) -> tuple:
+        """Return the arguments ``__new__`` needs, so copying round-trips.
+
+        See :meth:`pyforestry.base.helpers.primitives.age.AgeMeasurement.__getnewargs__`:
+        a ``float`` subclass whose ``__new__`` takes a required second argument
+        cannot be deep-copied or pickled without one of these.
+
+        Returns:
+            The value and its four metadata fields, in ``__new__`` order.
+        """
+        return (float(self), self.definition, self.species, self.precision, self.est_bias)
+
     @property
     def value(self) -> float:
         """Return the numeric height value in metres."""

@@ -13,22 +13,23 @@ attribute.
 class BasalAreaWeightedDiameter(float):
     """A diameter measurement weighted by basal area.
 
-        This subclass of :class:`float` stores the basal-area weighted mean
+    This subclass of :class:`float` stores the basal-area weighted mean
     diameter in centimetres along with an associated measurement
     precision.
 
-        Parameters
-        ----------
-        value:
-            The computed BAWAD value in centimetres. Must be non-negative.
-        precision:
-            Optional precision (standard error) of the measurement in
-            centimetres.
+    Parameters
+    ----------
+    value:
+        The computed BAWAD value in centimetres. Must be non-negative.
+    precision:
+        Optional precision (standard error) of the measurement in
+        centimetres.
     """
 
     __slots__ = "precision"
 
     def __new__(cls, value: float, precision: float = 0.0):
+        """Create a new weighted diameter with optional precision."""
         if value < 0:
             raise ValueError("BasalAreaWeightedDiameter must be non-negative.")
         obj = float.__new__(cls, value)

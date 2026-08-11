@@ -1,3 +1,14 @@
+"""The Swedish site classifications, as enums.
+
+Every site factor the Swedish site-index and growth functions in this package
+take as a category -- field layer, bottom layer, soil moisture, texture, depth,
+lateral water, peat humification, county and climate zone -- is one enum here,
+each member wrapping a primitive from :mod:`.sweden_site_primitives` that carries
+the numeric code the functions index by along with Swedish and English names.
+
+:class:`Sweden` bundles them so a caller imports one name.
+"""
+
 from enum import Enum
 from typing import Optional
 
@@ -15,6 +26,14 @@ from .sweden_site_primitives import (
 
 
 class SwedenFieldLayer(Enum):
+    """Ground vegetation class, and the site-index correction it carries.
+
+    The eighteen Swedish field-layer types, ordered from rich herb communities
+    down to lichen. Each member's :class:`Vegetation` value holds the code, the
+    Swedish and English names, and a numeric index used as a vegetation effect
+    by the site-index estimators in :mod:`pyforestry.sweden.siteindex.sis`.
+    """
+
     HIGH_HERB_WITHOUT_SHRUBS = Vegetation(1, "Högört utan ris", "Rich-herb without shrubs", 4)
     HIGH_HERB_WITH_SHRUBS_BLUEBERRY = Vegetation(
         2, "Högört med ris/blåbär", "Rich-herb with shrubs/bilberry", 2.5
@@ -44,6 +63,13 @@ class SwedenFieldLayer(Enum):
 
 
 class SwedenBottomLayer(Enum):
+    """Bottom-layer (moss and lichen) type of the site.
+
+    Read alongside the field layer by the site-index estimators; the lichen and
+    bogmoss types in particular separate dry and wet poor sites that share a
+    field layer.
+    """
+
     LICHEN_TYPE = BottomLayerType(1, "Lichen type", "Lavtyp")
     LICHEN_RICH_BOGMOSS = BottomLayerType(2, "Lichen-rich bogmoss type", "Lavrik vitmosstyp")
     LICHEN_RICH = BottomLayerType(3, "Lichen-rich", "Lavrik typ")
@@ -53,12 +79,25 @@ class SwedenBottomLayer(Enum):
 
 
 class SwedenSoilWater(Enum):
+    """Whether, and for how long, seepage water moves through the soil.
+
+    ``MISSING``/``SHORTER_PERIODS``/``LONGER_PERIODS`` is the lateral water
+    movement class: moving water carries nutrients, so a site with longer
+    periods of seepage is more productive than its texture alone implies.
+    """
+
     SELDOM_NEVER = SoilWaterCat(1, "saknas", "Seldom/never")
     SHORTER_PERIODS = SoilWaterCat(2, "kortare perioder", "Shorter periods")
     LONGER_PERIODS = SoilWaterCat(3, "längre perioder", "Longer periods")
 
 
 class SwedenSoilDepth(Enum):
+    """Depth of the soil above bedrock, in five field classes.
+
+    Shallow soils and outcrops restrict rooting volume and available water, and
+    the site-index functions treat them as a productivity penalty.
+    """
+
     DEEP = SoilDepthCat(
         1, "Mäktigt >70 cm. Inga synliga hällar", "Deep >70cm. No visible stone outcrops."
     )
@@ -83,11 +122,19 @@ class SwedenSoilDepth(Enum):
 
 
 class SwedenSoilTextureTill(Enum):
+    """Grain-size class of a *till* (moraine) soil.
+
+    Till is the unsorted glacial deposit covering most of Sweden. The parallel
+    :class:`SwedenSoilTextureSediment` covers sorted sediments; both share the
+    same nine codes so a caller can read one texture code without first knowing
+    which parent material it came from.
+    """
+
     BOULDER = SoilTextureCategory(1, "Stenig/blockig morän", "Boulder rich/stony till", "Boulder")
     GRAVEL = SoilTextureCategory(2, "Grusig morän", "Gravelly till", "Gravel")
     SANDY = SoilTextureCategory(3, "Sandig morän", "Sandy till", "Coarse sand")
     SANDY_MOIG = SoilTextureCategory(4, "Sandig-moig morän", "Sandy-silty till", "Medium sand")
-    SILTY_SAND = SoilTextureCategory(5, "Sandig-moig morän", "Silty-sandy till", "Fine sand")
+    SILTY_SAND = SoilTextureCategory(5, "Finmoig morän", "Silty-sandy till", "Fine sand")
     COARSE_SILTY = SoilTextureCategory(6, "Moig morän", "Coarse silty till", "Coarse silt")
     FINE_SILTY = SoilTextureCategory(7, "Mjälig morän", "Fine silty till", "Fine silt")
     CLAY = SoilTextureCategory(8, "Lerig morän", "Clayey till", "Clay")
@@ -95,6 +142,12 @@ class SwedenSoilTextureTill(Enum):
 
 
 class SwedenSoilTextureSediment(Enum):
+    """Grain-size class of a sorted *sediment* soil.
+
+    The sediment counterpart of :class:`SwedenSoilTextureTill`, sharing its nine
+    codes and its coarse-to-fine ordering from boulders through clay to peat.
+    """
+
     BOULDER = SoilTextureCategory(1, "Sten/block", "Boulders/stones", "Boulder")
     GRAVEL = SoilTextureCategory(2, "Grus", "Gravel", "Gravel")
     COARSE_SAND = SoilTextureCategory(3, "Grovsand", "Coarse sand", "Coarse sand")
@@ -107,6 +160,13 @@ class SwedenSoilTextureSediment(Enum):
 
 
 class SwedenSoilMoisture(Enum):
+    """Site moisture class, defined by depth to the subsoil water table.
+
+    Dry through wet, as judged in the field from water-table depth and standing
+    water in hollows. An input to nearly every Swedish site-index and growth
+    function in this package.
+    """
+
     DRY = SoilMoistureData(1, "torr", "Dry (subsoil water depth >2 m)")
     MESIC = SoilMoistureData(2, "frisk", "Mesic (subsoil water depth = 1-2 m)")
     MESIC_MOIST = SoilMoistureData(3, "frisk-fuktig", "Mesic-moist (subsoil water depth <1 m)")
@@ -117,6 +177,12 @@ class SwedenSoilMoisture(Enum):
 
 
 class SwedenPeatHumification(Enum):
+    """How far peat at the site has decomposed, on a four-step field scale.
+
+    Only meaningful where the texture is peat; higher humification means a
+    denser, more decomposed peat and a different nutrient supply.
+    """
+
     NONE = PeatHumificationCat(0, "ingen", "None")
     LOW = PeatHumificationCat(1, "låg", "Low")
     MEDIUM = PeatHumificationCat(2, "medium", "Medium")
@@ -124,6 +190,15 @@ class SwedenPeatHumification(Enum):
 
 
 class SwedenCounty(Enum):
+    """Administrative region, in the subdivision Swedish forestry functions use.
+
+    Not simply the 21 counties: the large northern counties are split into their
+    historical landscapes (Norrbotten into lappmark and kustland, Jämtland into
+    Jämtland and Härjedalen), because the growth and volume functions were
+    fitted with those divisions as regional terms. The codes are the ones
+    Söderberg (1986) and the site-index estimators index by.
+    """
+
     NORRBOTTENS_LAPPMARK = CountyData(1, "Norrbottens lappmark (BD lappm)")
     NORRBOTTENS_KUSTLAND = CountyData(2, "Norrbottens kustland (BD kust)")
     VASTERBOTTENS_LAPPMARK = CountyData(3, "Västerbottens lappmark (AC lappm)")
@@ -167,7 +242,38 @@ class SwedenCounty(Enum):
         return None  # Return None if code not found
 
 
+def county_flags_syz_t_area(county: Optional[SwedenCounty]) -> tuple[int, int, int]:
+    """Return (gotland, syz_area, t_area) flags for Appendix 1 regeneration functions.
+
+    SYZ-area corresponds to old county codes S, Y, Z (X is excluded). We map
+    those to the modern enum members below.
+    """
+
+    if county is None:
+        return (0, 0, 0)
+
+    gotland = int(county == SwedenCounty.GOTLAND)
+    syz_area = int(
+        county
+        in {
+            SwedenCounty.VARMLAND,  # S
+            SwedenCounty.VASTERNORRLAND_ANGERMANLANDS,  # Y Angermanland
+            SwedenCounty.VASTERNORRLAND_MEDELPADS,  # Y Medelpad
+            SwedenCounty.JAMTLAND_JAMTLANDS,  # Z Jamtland
+            SwedenCounty.JAMTLAND_HARJEDALENS,  # Z Harjedalen
+        }
+    )
+    t_area = int(county == SwedenCounty.OREBRO)  # T-area
+    return (gotland, syz_area, t_area)
+
+
 class SwedenClimateZone(Enum):
+    """Maritime or continental climate region (M1-M3, K1-K3).
+
+    A coarse regional climate split used as a categorical term by several
+    Swedish functions. :meth:`from_code` looks a member up by its integer code.
+    """
+
     M1 = ClimateZoneData(1, "M1", "Maritime, West coast")
     M2 = ClimateZoneData(2, "M2", "Maritime, East coast")
     M3 = ClimateZoneData(3, "M3", "Maritime, Mountain range")
@@ -185,6 +291,13 @@ class SwedenClimateZone(Enum):
 
 
 class Sweden:
+    """Namespace bundling every Swedish site classification under one name.
+
+    ``Sweden.FieldLayer``, ``Sweden.SoilMoistureEnum``, ``Sweden.County`` and the
+    rest are aliases for the enums defined above, so a caller imports one symbol
+    and reaches all of them. It holds no state and is never instantiated.
+    """
+
     FieldLayer = SwedenFieldLayer
     BottomLayer = SwedenBottomLayer
     SoilWater = SwedenSoilWater

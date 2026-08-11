@@ -1,11 +1,6 @@
 pyforestry.sweden.geo package
 =============================
 
-.. automodule:: pyforestry.sweden.geo
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Subpackages
 -----------
 
@@ -25,6 +20,14 @@ pyforestry.sweden.geo.geo module
 --------------------------------
 
 .. automodule:: pyforestry.sweden.geo.geo
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: pyforestry.sweden.geo
    :members:
    :undoc-members:
    :show-inheritance:

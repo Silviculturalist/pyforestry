@@ -14,8 +14,22 @@ class DummyTaper:
 
 
 def test_validate_height_positive():
-    with pytest.raises(ValueError, match="Height must be larger than 0 m: {self.height_m}"):
+    # Regression: the message used a plain (non-f) string, so it emitted the literal
+    # "{self.height_m}" instead of the value. It must interpolate the actual height.
+    with pytest.raises(ValueError) as exc:
         Timber(species="pine", diameter_cm=10, height_m=0)
+    msg = str(exc.value)
+    assert "Height must be larger than 0 m: 0" in msg
+    assert "{self.height_m}" not in msg
+
+
+def test_validate_diameter_non_negative():
+    # Same non-f-string bug on the diameter message.
+    with pytest.raises(ValueError) as exc:
+        Timber(species="pine", diameter_cm=-1, height_m=10)
+    msg = str(exc.value)
+    assert "Diameter must be larger than or equal to 0 cm: -1" in msg
+    assert "{self.diameter_cm}" not in msg
 
 
 def test_validate_crown_base_below_height():

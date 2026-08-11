@@ -1,0 +1,582 @@
+"""Norway's scenario tier: a configuration, and a runtime that executes it.
+
+Norway had the configuration, the rulesets and the preset, and nothing that ran
+any of them -- the whole tier was a mirror of Sweden's scaffolding added in the
+same initial commit, before either region had a runtime. Its four published
+models were reachable through ``pyforestry.project`` all along; what was missing
+was the scenario runtime around them. These tests cover both halves.
+"""
+
+from __future__ import annotations
+
+import json
+
+import pytest
+
+from pyforestry.base.contracts import SourceReference
+from pyforestry.base.helpers.primitives import Age
+from pyforestry.base.helpers.tree_species import TreeSpecies
+from pyforestry.base.pricelist import Pricelist
+from pyforestry.base.pricelist.pricelist import (
+    LengthRange,
+    PricelistIdentity,
+    TimberPriceForDiameter,
+    TimberPricelist,
+)
+from pyforestry.norway.simulation.orchestration import (
+    build_kuehne_stands,
+    kuehne_stand_volume,
+    run_norway_scenario,
+)
+from pyforestry.norway.simulation.policy import (
+    management_intensity,
+    scenario_forcings,
+    supported_scenarios,
+)
+from pyforestry.norway.simulation.presets import ScenarioConfig, build_baseline_scenario_config
+from pyforestry.norway.simulation.presets._common import REQUIRED_ARTIFACTS
+from pyforestry.norway.taper.hansen_2023 import Hansen2023
+from pyforestry.simulation.artifacts import load_scenario_summary, validate_artifact_contract
+from pyforestry.simulation.forcing import (
+    DISTURBANCE,
+    GROWTH,
+    PRICE,
+    AnnualForcing,
+    ConstantForcing,
+    ForcingSet,
+)
+from pyforestry.simulation.presets import ScenarioConfig as SharedScenarioConfig
+from pyforestry.simulation.valuation.volume import ValuationSettings
+
+
+@pytest.fixture
+def norwegian_prices() -> ValuationSettings:
+    """A caller-supplied price list, with Norway's own taper.
+
+    This package ships no Norwegian price list: that is regional market data, not
+    science, and inventing one would put numbers under Norway's name with nothing
+    behind them. The figures here are the test's, and the test says so -- in the
+    identity as well as in this docstring, so a run priced against them reports
+    that in its manifest rather than leaving a reader to assume otherwise.
+    """
+    pine = TreeSpecies.Sweden.pinus_sylvestris.full_name
+    pricelist = Pricelist(
+        identity=PricelistIdentity(
+            name="Test fixture prices",
+            currency="NOK",
+            source=SourceReference(
+                author="Test fixture",
+                year=2026,
+                title="A price list invented by this test, and saying so",
+            ),
+        )
+    )
+    pricelist.Pulp._prices[pine] = 320
+    table = TimberPricelist(12, 40, volume_type="m3to")
+    for diameter in range(12, 41):
+        table.set_price_for_diameter(
+            diameter,
+            TimberPriceForDiameter(620 + diameter * 4, 560 + diameter * 4, 480 + diameter * 4),
+        )
+    pricelist.Timber[pine] = table
+    pricelist.TimberLogLength = LengthRange(3.4, 5.5)
+    pricelist.PulpLogLength = LengthRange(2.7, 5.5)
+    return ValuationSettings(pricelist=pricelist, taper_class=Hansen2023)
+
+
+# --- the configuration -------------------------------------------------------
+
+
+def test_baseline_configuration_conforms_and_has_a_stable_identity() -> None:
+    config = build_baseline_scenario_config()
+    assert isinstance(config, ScenarioConfig)
+    assert isinstance(config, SharedScenarioConfig)
+    assert config.component_id == "norway_kuehne/baseline"
+    assert tuple(config.required_artifacts()) == REQUIRED_ARTIFACTS
+    assert config.components == ()
+
+
+def test_stages_are_the_period_the_runtime_executes() -> None:
+    """The same period Sweden runs, valuation included.
+
+    ``("growth",)`` was not Norway having nothing else to run; and the later
+    ``("management", "disturbance", "growth")`` was not Norway having nothing to
+    sell. Its models are aggregate, and the removal ledger could only hold stems.
+    """
+    assert build_baseline_scenario_config().stages() == (
+        "management",
+        "disturbance",
+        "growth",
+        "valuation",
+    )
+
+
+def test_seed_strategy_is_deterministic_and_global_seed_sensitive() -> None:
+    config = build_baseline_scenario_config()
+    assert config.seed_strategy(global_seed=7) == config.seed_strategy(global_seed=7)
+    assert config.seed_strategy(global_seed=7) != config.seed_strategy(global_seed=8)
+
+
+def test_guard_policy_and_rulesets_are_exposed() -> None:
+    config = build_baseline_scenario_config()
+    assert config.guard_policy() == {
+        "clamp_net_volume_to_zero": True,
+        "reject_negative_inputs": True,
+    }
+    assert set(config.rulesets()) == {"management"}
+    assert config.forcings() == ForcingSet(), "this package ships no forcings"
+
+
+def test_source_declares_that_it_is_not_a_publication() -> None:
+    """A configuration must not name an author a reader would take for a citation."""
+    source = build_baseline_scenario_config().source
+    assert "Norway" in source.title
+    assert source.author == "(none)"
+    assert source.year == 0
+    assert "not a publication" in source.note
+
+
+# --- the runtime -------------------------------------------------------------
+
+
+def test_baseline_run_projects_real_kuehne_stands(tmp_path, norwegian_prices) -> None:
+    result = run_norway_scenario(
+        global_seed=20260728,
+        output_dir=tmp_path / "run",
+        n_stands=2,
+        n_steps=6,
+        valuation=norwegian_prices,
+        discount_rate=0.0,
+    )
+
+    validate_artifact_contract(result.artifacts.output_dir)
+    row = result.rows[0]
+    assert row["initial_volume_m3"] > 0.0
+    assert row["gross_growth_m3"] > 0.0
+    assert row["net_volume_m3"] > row["initial_volume_m3"]
+
+    manifest = json.loads(result.artifacts.run_manifest_path.read_text(encoding="utf-8"))
+    assert manifest["region"] == "Norway"
+    assert "synthetic" not in manifest
+    assert [entry["component_id"] for entry in manifest["models_run"]] == ["kuehne_2022_pine"]
+    assert manifest["models_run"][0]["year"] == 2022
+
+
+def test_thinning_and_disturbance_are_reported_apart(tmp_path, norwegian_prices) -> None:
+    thinned = run_norway_scenario(
+        global_seed=1,
+        output_dir=tmp_path / "thin",
+        n_stands=1,
+        n_steps=6,
+        thin_at_age=[Age.TOTAL(60.0)],
+        valuation=norwegian_prices,
+        discount_rate=0.0,
+    )
+    disturbed = run_norway_scenario(
+        global_seed=1,
+        output_dir=tmp_path / "dist",
+        n_stands=1,
+        n_steps=6,
+        disturbance_rate_per_year=0.004,
+        valuation=norwegian_prices,
+        discount_rate=0.0,
+    )
+
+    assert thinned.rows[0]["harvested_m3"] > 0.0
+    assert thinned.rows[0]["disturbance_loss_m3"] == pytest.approx(0.0)
+    assert disturbed.rows[0]["disturbance_loss_m3"] > 0.0
+    assert disturbed.rows[0]["harvested_m3"] == pytest.approx(0.0)
+
+
+def test_the_fabricated_climate_scenario_does_not_resolve() -> None:
+    """``climate_rcp45`` is gone, like Sweden's ``storm_risk_high`` before it.
+
+    It carried ``{growth 1.05, disturbance 1.2}`` from this package's first
+    commit with no source anywhere, under a name that asserts one -- RCP4.5 is a
+    specific IPCC pathway, so the scenario read as a finding about Norwegian
+    Scots pine that nobody had made.
+    """
+    with pytest.raises(ValueError, match="Unsupported scenario_id"):
+        management_intensity("climate_rcp45")
+    with pytest.raises(ValueError, match="Unsupported scenario_id"):
+        scenario_forcings("climate_rcp45")
+
+
+def test_no_shipped_scenario_forces_anything() -> None:
+    """The mechanism exists and is exercised below; what it must not do is arrive
+    preloaded with numbers that have no paper behind them.
+    """
+    for scenario_id in supported_scenarios():
+        assert scenario_forcings(scenario_id) == ForcingSet(), scenario_id
+
+
+def test_a_cited_forcing_raises_growth_and_disturbance(tmp_path, norwegian_prices) -> None:
+    """The forcing mechanism works -- for values that say where they come from."""
+    source = SourceReference(
+        author="Test fixture",
+        year=2026,
+        title="Forcings invented by this test, and saying so",
+    )
+    forcings = ForcingSet(
+        [
+            ConstantForcing(GROWTH, 1.05, source=source),
+            ConstantForcing(DISTURBANCE, 1.2, source=source),
+        ]
+    )
+
+    baseline = run_norway_scenario(
+        global_seed=1,
+        output_dir=tmp_path / "base",
+        n_stands=1,
+        n_steps=6,
+        start_year=2020,
+        disturbance_rate_per_year=0.004,
+        valuation=norwegian_prices,
+        discount_rate=0.0,
+    )
+    forced = run_norway_scenario(
+        global_seed=1,
+        output_dir=tmp_path / "forced",
+        n_stands=1,
+        n_steps=6,
+        start_year=2020,
+        disturbance_rate_per_year=0.004,
+        forcings=forcings,
+        valuation=norwegian_prices,
+        discount_rate=0.0,
+    )
+
+    assert forced.rows[0]["gross_growth_m3"] > baseline.rows[0]["gross_growth_m3"]
+    assert forced.rows[0]["disturbance_loss_m3"] > baseline.rows[0]["disturbance_loss_m3"]
+
+    manifest = json.loads(forced.artifacts.run_manifest_path.read_text(encoding="utf-8"))
+    applied = {entry["name"]: entry for entry in manifest["forcings_applied"]}
+    assert applied[GROWTH]["value"] == 1.05
+    # The citation travels with the number into the manifest, which is the point.
+    assert applied[GROWTH]["source"]["year"] == 2026
+
+
+def test_a_year_by_year_forcing_varies_across_the_run(tmp_path, norwegian_prices) -> None:
+    """A weather correction is a series, not one number for the projection."""
+    source = SourceReference(author="Test fixture", year=2026, title="A series, and saying so")
+    weather = AnnualForcing(
+        GROWTH,
+        {2020: 1.04, 2025: 1.02, 2030: 0.98, 2035: 0.67},
+        outside_series="hold",
+        source=source,
+    )
+
+    flat = run_norway_scenario(
+        global_seed=1,
+        output_dir=tmp_path / "flat",
+        n_stands=1,
+        n_steps=4,
+        start_year=2020,
+        forcings=ForcingSet([ConstantForcing(GROWTH, 1.04, source=source)]),
+        valuation=norwegian_prices,
+        discount_rate=0.0,
+    )
+    varying = run_norway_scenario(
+        global_seed=1,
+        output_dir=tmp_path / "varying",
+        n_stands=1,
+        n_steps=4,
+        start_year=2020,
+        forcings=ForcingSet([weather]),
+        valuation=norwegian_prices,
+        discount_rate=0.0,
+    )
+
+    # Same first period, different afterwards: the series is read per period.
+    assert varying.rows[0]["gross_growth_m3"] != flat.rows[0]["gross_growth_m3"]
+
+    manifest = json.loads(varying.artifacts.run_manifest_path.read_text(encoding="utf-8"))
+    entry = manifest["forcings_applied"][0]
+    assert entry["resolution"] == "annual"
+    assert entry["series"]["2035"] == 0.67
+    assert manifest["start_year"] == 2020.0
+
+
+def test_an_uncited_forcing_is_refused() -> None:
+    """A value that changes a published model must say where it comes from."""
+    with pytest.raises(ValueError, match="where it comes from"):
+        ConstantForcing(GROWTH, 1.05)
+
+
+def test_the_volume_reporter_is_a_function_of_the_current_stand(
+    tmp_path, norwegian_prices
+) -> None:
+    """Not the value the model cached at its last step, which a thinning leaves stale."""
+    result = run_norway_scenario(
+        global_seed=1,
+        output_dir=tmp_path / "run",
+        n_stands=1,
+        n_steps=2,
+        valuation=norwegian_prices,
+        discount_rate=0.0,
+    )
+    ctx = result.contexts[0]
+    before = kuehne_stand_volume(ctx)
+    ctx.scale_stems(0.5)
+    assert kuehne_stand_volume(ctx) < before
+
+
+def test_summary_is_loadable_and_keyed_by_stand(tmp_path, norwegian_prices) -> None:
+    result = run_norway_scenario(
+        global_seed=20260728,
+        output_dir=tmp_path / "run",
+        n_stands=3,
+        n_steps=2,
+        valuation=norwegian_prices,
+        discount_rate=0.0,
+    )
+    rows = load_scenario_summary(result.artifacts.scenario_summary_path)
+    assert [row["stand_id"] for row in rows] == [1, 2, 3]
+
+
+def test_build_kuehne_stands_rejects_an_empty_run() -> None:
+    with pytest.raises(ValueError, match="n_stands must be > 0"):
+        build_kuehne_stands(0)
+
+
+# --- valuation, for a model that reports no stems ------------------------------
+
+
+def test_a_thinning_is_bucked_at_the_stands_mean_tree(tmp_path, norwegian_prices) -> None:
+    """A stand-level model has no individual stems, but it has a mean one.
+
+    The Kuehne model steps a basal area and a stem count, so a thinning from it
+    has nothing to cut stem by stem. It does have a quadratic mean diameter, and
+    that describes a real tree -- bucking it gives an assortment split, which
+    pricing the whole removal as pulpwood never could.
+    """
+    result = run_norway_scenario(
+        global_seed=1,
+        output_dir=tmp_path / "run",
+        n_stands=1,
+        n_steps=6,
+        start_year=2025,
+        valuation=norwegian_prices,
+        discount_rate=0.0,
+        thin_at_age=[Age.TOTAL(60.0)],
+    )
+
+    assert result.rows[0]["harvested_m3"] > 0.0
+    ctx = result.contexts[0]
+    assert float(ctx.attrs["cash"]) > 0.0
+
+    valuation = ctx.attrs["valuation"]
+    assert valuation["metadata"]["bucked"] is True
+    assert valuation["metadata"]["method"] == "mean tree"
+
+    # A real grade split, not everything at one price.
+    graded = {q: v for q, v in valuation["volume_by_quality"].items() if v > 0.0}
+    assert len(graded) >= 1
+    assert any(q.name != "Undefined" for q in graded)
+
+
+def test_the_logs_are_a_narrower_measure_than_the_volume_removed(
+    tmp_path, norwegian_prices
+) -> None:
+    """A thinning sells less than it fells, because the two are measured differently.
+
+    ``harvested_m3`` is the model's own figure, in the m3sk a Nordic stand volume
+    function reports; the price list buys m3to, the narrower top-measured log
+    volume. This used to be an equality: the bucked grades were scaled up until
+    they summed to the model's m3sk, which paid m3to prices on m3sk cubic metres.
+    """
+    result = run_norway_scenario(
+        global_seed=1,
+        output_dir=tmp_path / "run",
+        n_stands=1,
+        n_steps=6,
+        start_year=2025,
+        valuation=norwegian_prices,
+        discount_rate=0.0,
+        thin_at_age=[Age.TOTAL(60.0)],
+    )
+
+    valuation = result.contexts[0].attrs["valuation"]
+    bucked = sum(valuation["volume_by_quality"].values())
+    harvested = result.rows[0]["harvested_m3"]
+
+    assert 0.0 < bucked < harvested, "logs cannot exceed the stem volume they came from"
+    share = valuation["metadata"]["share_of_removed_volume_sold"]
+    assert share == pytest.approx(bucked / harvested, rel=1e-9)
+    # Reported rather than assumed, and in the range a real conversion falls in.
+    assert 0.7 < share < 1.0
+
+
+def test_the_valuation_stage_needs_a_price_list(tmp_path) -> None:
+    """Skipping it would report a run as having valued its removals at nothing."""
+    with pytest.raises(ValueError, match="ValuationSettings"):
+        run_norway_scenario(global_seed=1, output_dir=tmp_path / "run", n_stands=1, n_steps=2)
+
+
+def test_the_manifest_records_the_caller_s_price_list(tmp_path, norwegian_prices) -> None:
+    """Norway ships no list, so the one a run priced against is the caller's.
+
+    That is exactly why the manifest has to name it: the money in the summary is
+    in whatever currency the caller's table quotes, and nothing else in the run
+    knows what that is.
+    """
+    result = run_norway_scenario(
+        global_seed=1,
+        output_dir=tmp_path / "run",
+        n_stands=1,
+        n_steps=6,
+        start_year=2025,
+        valuation=norwegian_prices,
+        discount_rate=0.0,
+        thin_at_age=[Age.TOTAL(60.0)],
+    )
+
+    manifest = json.loads(result.artifacts.run_manifest_path.read_text(encoding="utf-8"))
+    price_list = manifest["valuation"]["price_list"]
+    assert price_list["currency"] == "NOK"
+    assert price_list["name"] == "Test fixture prices"
+    assert price_list["source"]["author"] == "Test fixture"
+
+
+def test_inflation_reaches_norways_horizon_npv(tmp_path, norwegian_prices) -> None:
+    """The same composition Sweden has: prices move the money, the rate moves time."""
+    index = AnnualForcing(
+        PRICE,
+        {year: 1.02 ** (year - 2025) for year in range(2025, 2061)},
+        source=SourceReference(author="Test fixture", year=2026, title="An index, and says so"),
+    )
+
+    def _run(name, forcings):
+        return run_norway_scenario(
+            global_seed=1,
+            output_dir=tmp_path / name,
+            n_stands=1,
+            n_steps=6,
+            start_year=2025,
+            step_years=5.0,
+            valuation=norwegian_prices,
+            discount_rate=0.03,
+            thin_at_age=[Age.TOTAL(60.0)],
+            forcings=forcings,
+        )
+
+    flat = _run("flat", ForcingSet())
+    inflated = _run("inflated", ForcingSet([index]))
+
+    ((_stand, flat_flows),) = flat.cash_flows()
+    ((_stand, inflated_flows),) = inflated.cash_flows()
+    assert flat_flows and inflated_flows
+    assert inflated_flows[0].price_factor > 1.0
+    assert inflated_flows[0].amount == pytest.approx(
+        flat_flows[0].amount * inflated_flows[0].price_factor
+    )
+
+    npv_flat = flat.net_present_value()[1]
+    npv_inflated = inflated.net_present_value()[1]
+    assert npv_inflated > npv_flat > 0.0
+    assert flat.rows[0]["net_present_value"] == pytest.approx(npv_flat)
+
+
+def test_the_mean_tree_is_the_stands_qmd_and_a_height_the_model_implies() -> None:
+    """What the reporter reads, and the one thing it has to derive.
+
+    Kuehne (2022) predicts a *dominant* height trajectory and no mean height.
+    Substituting the dominant one made the representative stem too big -- it
+    bucked to more wood than the model said the thinning removed, which no real
+    stem can do. So the height is inverted out of Brantseg (1967) instead, at the
+    stand's QMD, against the volume per stem the model itself reports: Brantseg is
+    one of the three functions Kuehne's volume equation is built on, so this is
+    the stem the model was already describing.
+    """
+    from pyforestry.norway.adapters.kuehne_2022 import (
+        KuehnePineAdapterConfig,
+        KuehnePineGrowthModel,
+    )
+    from pyforestry.norway.growth.kuehne_2022 import kuehne_2022_stand_volume
+    from pyforestry.norway.simulation.orchestration import kuehne_mean_tree
+    from pyforestry.norway.volume.brantseg_1967 import brantseg_1967_volume_scots_pine_norway
+
+    unit = build_kuehne_stands(1)[0]
+    model = KuehnePineGrowthModel(
+        KuehnePineAdapterConfig(dominant_height_m=12.0, start_total_age_years=40.0)
+    )
+    ctx = model.build_context(unit.stand, seed=1)
+    ctx.update_step(5.0)
+
+    mean_tree = kuehne_mean_tree(ctx, 0.2)
+
+    dominant_height = float(ctx.attrs["kuehne_dominant_height_m"])
+    assert mean_tree.diameter_cm == pytest.approx(float(ctx.stand.QMD))
+    assert mean_tree.species == TreeSpecies.Sweden.pinus_sylvestris
+    assert mean_tree.stems_removed == pytest.approx(float(ctx.metrics["Stems"]["TOTAL"]) * 0.2)
+
+    # A mean stem is shorter than a dominant one, and never taller.
+    assert 1.3 < mean_tree.height_m < dominant_height
+
+    # It is the height at which Brantseg gives the volume per stem the model
+    # reports for this removal, not a guess.
+    basal_area = float(ctx.metrics["BasalArea"]["TOTAL"])
+    age = Age.TOTAL(float(ctx.state["t"]))
+    removed = float(kuehne_2022_stand_volume(basal_area, dominant_height, age)) - float(
+        kuehne_2022_stand_volume(basal_area * 0.8, dominant_height, age)
+    )
+    implied = float(
+        brantseg_1967_volume_scots_pine_norway(mean_tree.height_m, mean_tree.diameter_cm).value
+    )
+    assert implied == pytest.approx(removed / mean_tree.stems_removed, rel=1e-6)
+
+
+def test_kuehne_model_starts_at_the_age_the_caller_asked_for() -> None:
+    """The adapter's clock decides what age a stand is grown and valued at.
+
+    ``KuehnePineGrowthModel.build_context`` seeds ``ctx.state["t"]`` from
+    ``start_total_age_years``, and the volume reporter reads that clock. The
+    runbook used to hardcode the 40-year baseline while accepting ``start_age``
+    for scheduling, so a run asked for 70 was scheduled at 70 and grown at 40.
+    """
+    import dataclasses
+
+    from pyforestry.norway.simulation.orchestration.runbook import (
+        _kuehne_start_total_age,
+        build_kuehne_stands,
+    )
+
+    stands = build_kuehne_stands(3)
+    assert _kuehne_start_total_age(None, stands) == 40.0
+    assert _kuehne_start_total_age(Age.TOTAL(70), stands) == 70.0
+
+    aged = [dataclasses.replace(unit, age=Age.TOTAL(55)) for unit in stands]
+    assert _kuehne_start_total_age(None, aged) == 55.0
+    assert _kuehne_start_total_age(Age.TOTAL(55), aged) == 55.0
+
+
+def test_a_kuehne_start_age_that_one_config_cannot_honour_is_refused() -> None:
+    """One model is built for the whole run, so one age has to serve every stand.
+
+    Picking a mean, or the first, would grow the rest at an age nobody chose.
+    """
+    import dataclasses
+
+    from pyforestry.norway.simulation.orchestration.runbook import (
+        _kuehne_start_total_age,
+        build_kuehne_stands,
+    )
+
+    stands = build_kuehne_stands(3)
+
+    # The Kuehne clock is a total age; converting from breast-height age needs a
+    # time to breast height this function is not given.
+    with pytest.raises(ValueError, match="must be Age.TOTAL"):
+        _kuehne_start_total_age(Age.DBH(47), stands)
+
+    mixed = [
+        dataclasses.replace(stands[0], age=Age.TOTAL(55)),
+        dataclasses.replace(stands[1], age=Age.TOTAL(60)),
+        stands[2],
+    ]
+    with pytest.raises(ValueError, match="cannot start at 2 different ages"):
+        _kuehne_start_total_age(None, mixed)
+
+    aged = [dataclasses.replace(unit, age=Age.TOTAL(55)) for unit in stands]
+    with pytest.raises(ValueError, match="but the stands carry age"):
+        _kuehne_start_total_age(Age.TOTAL(70), aged)

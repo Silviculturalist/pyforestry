@@ -2,16 +2,18 @@
 
 This module implements the smoothed equations from Hägglund (1981) to convert
 H100 estimates to mean annual volume growth at the time of culmination. The
-function :func:`hagglund_1981_SI_to_productivity` is the public entry point and
+function :func:`hagglund_1981_si_to_productivity` is the public entry point and
 accepts enumerated inputs for vegetation type, county and tree species.
 """
 
+from pyforestry.base.contracts import FormulaDescriptor, SourceReference
 from pyforestry.base.helpers.primitives import SiteIndexValue
 from pyforestry.base.helpers.tree_species import TreeName, TreeSpecies
 from pyforestry.sweden.site.enums import Sweden
+from pyforestry.sweden.siteindex.validation import validate_hagglund_1970_h100_site_index
 
 
-def hagglund_1981_SI_to_productivity(
+def hagglund_1981_si_to_productivity(
     h100_input: SiteIndexValue,
     main_species: TreeName,
     vegetation: Sweden.FieldLayer,
@@ -58,21 +60,19 @@ def hagglund_1981_SI_to_productivity(
         Sweden.County.VARMLAND,
     }
 
-    # Validate inputs
-    # Check if the numeric value of the reference_age is 100
-    if h100_input.reference_age != 100:
-        # Raise ValueError instead of warning
-        raise ValueError(
-            "Input SiteIndexValue must have a reference_age value of 100 (H100). "
-            f"Received: {h100_input.reference_age}"
-        )
+    validate_hagglund_1970_h100_site_index(
+        h100_input,
+        param_name="h100_input",
+        expected_species=main_species,
+        allowed_species={
+            TreeSpecies.Sweden.picea_abies,
+            TreeSpecies.Sweden.pinus_sylvestris,
+        },
+    )
 
-    H100 = float(h100_input)  # Extract the float value for calculations
-    if H100 <= 0:
+    site_index_h100_m = float(h100_input)
+    if site_index_h100_m <= 0:
         raise ValueError("H100 value must be positive.")  #
-
-    if not isinstance(main_species, TreeName):
-        raise TypeError("main_species must be a TreeName object.")  #
 
     if not isinstance(vegetation, Sweden.FieldLayer):
         raise TypeError("vegetation must be a Sweden.FieldLayer enum member.")  #
@@ -83,23 +83,23 @@ def hagglund_1981_SI_to_productivity(
     # --- rest of the function remains the same ---
     veg_code = vegetation.value.code
 
-    F1 = 0.72 + (H100 / 130)
-    F2 = 0.70 + (H100 / 100)
-    fun = None
+    spruce_smoothing_factor = 0.72 + (site_index_h100_m / 130)
+    pine_smoothing_factor = 0.70 + (site_index_h100_m / 100)
+    function_key = None
 
     # Determine function based on species, county code, vegetation code, and altitude
     if main_species == TreeSpecies.Sweden.picea_abies:
         if county in NORTHERN_COUNTY_CODES:
-            fun = "d" if veg_code <= 9 else "e"
+            function_key = "d" if veg_code <= 9 else "e"
         elif county in MIDDLE_COUNTY_CODES:
-            fun = "b" if veg_code <= 9 else "c"
+            function_key = "b" if veg_code <= 9 else "c"
         else:  # Southern Sweden assumed otherwise
-            fun = "a"
+            function_key = "a"
     elif main_species == TreeSpecies.Sweden.pinus_sylvestris:
         # For Pine: Northern Sweden with altitude >= 200 meters
-        fun = "g" if county in NORTHERN_COUNTY_CODES and altitude >= 200 else "f"
+        function_key = "g" if county in NORTHERN_COUNTY_CODES and altitude >= 200 else "f"
 
-    if fun is None:
+    if function_key is None:
         # Use county label in error message for clarity
         raise TypeError(
             "Unrecognized combination for species "
@@ -108,21 +108,56 @@ def hagglund_1981_SI_to_productivity(
 
     # Calculate bonitet (same logic as before)
     bon = 0.0
-    if fun == "a":
-        bon = (0.57207 + 0.22166 * H100 + 0.0050164 * H100**2) * F1
-    elif fun == "b":
-        bon = (1.28417 + 0.31060 * H100 + 0.0020048 * H100**2) * F1
-    elif fun == "c":
-        bon = (-0.42289 + 0.17735 * H100 + 0.0050580 * H100**2) * F1
-    elif fun == "d":
-        bon = (-0.75761 + 0.24393 * H100 + 0.0014564 * H100**2) * F2
-    elif fun == "e":
-        bon = (-0.59224 + 0.21765 * H100 + 0.0011391 * H100**2) * F2
-    elif fun == "f":
-        bon = (-0.39456 + 0.16469 * H100 + 0.0047191 * H100**2) * F2
-    elif fun == "g":
-        bon = (0.099227 + 0.067873 * H100 + 0.0066316 * H100**2) * F2
+    if function_key == "a":
+        bon = (
+            0.57207 + 0.22166 * site_index_h100_m + 0.0050164 * site_index_h100_m**2
+        ) * spruce_smoothing_factor
+    elif function_key == "b":
+        bon = (
+            1.28417 + 0.31060 * site_index_h100_m + 0.0020048 * site_index_h100_m**2
+        ) * spruce_smoothing_factor
+    elif function_key == "c":
+        bon = (
+            -0.42289 + 0.17735 * site_index_h100_m + 0.0050580 * site_index_h100_m**2
+        ) * spruce_smoothing_factor
+    elif function_key == "d":
+        bon = (
+            -0.75761 + 0.24393 * site_index_h100_m + 0.0014564 * site_index_h100_m**2
+        ) * pine_smoothing_factor
+    elif function_key == "e":
+        bon = (
+            -0.59224 + 0.21765 * site_index_h100_m + 0.0011391 * site_index_h100_m**2
+        ) * pine_smoothing_factor
+    elif function_key == "f":
+        bon = (
+            -0.39456 + 0.16469 * site_index_h100_m + 0.0047191 * site_index_h100_m**2
+        ) * pine_smoothing_factor
+    elif function_key == "g":
+        bon = (
+            0.099227 + 0.067873 * site_index_h100_m + 0.0066316 * site_index_h100_m**2
+        ) * pine_smoothing_factor
     else:
-        raise TypeError(f"Internal error: function code '{fun}' not recognized.")
+        raise TypeError(f"Internal error: function code '{function_key}' not recognized.")
 
     return bon
+
+
+DESCRIPTOR = FormulaDescriptor(
+    component_id="hagglund_1981_siteindex",
+    source=SourceReference(
+        author="Hägglund, B.",
+        year=1981,
+        title="Forecasting growth and yield in established forests",
+        note=(
+            "Sveriges lantbruksuniversitet, Department of Forest Survey, Report 31, "
+            "Umeå, 145 pp. ISBN 91-576-0797-4. Used here for the site-index to "
+            "productivity (mean annual volume growth at culmination) translation."
+        ),
+    ),
+    species_groups={
+        "spruce": frozenset({"Picea abies"}),
+        "pine": frozenset({"Pinus sylvestris"}),
+    },
+    units={},
+    kernel_names=("hagglund_1981_si_to_productivity",),
+)

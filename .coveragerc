@@ -9,4 +9,11 @@ exclude_lines =
     # some standard things you don’t need to test
     pragma: no cover
     if __name__ == .__main__.:
-    
+    # Bodies that cannot execute. A Protocol member's body is `...`, an abstract
+    # method's is a raise, and a TYPE_CHECKING block runs only under a type
+    # checker -- counting them as uncovered measures how many contracts a package
+    # declares, not how much of it the tests reach.
+    ^\s*\.\.\.$
+    if TYPE_CHECKING:
+    @(abc\.)?abstractmethod
+    class .*\(Protocol\):

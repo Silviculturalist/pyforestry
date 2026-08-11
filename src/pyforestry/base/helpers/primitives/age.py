@@ -67,6 +67,23 @@ class AgeMeasurement(float):
         obj.code = code
         return obj
 
+    def __getnewargs__(self) -> tuple:
+        """Return the arguments ``__new__`` needs, so copying round-trips.
+
+        A ``float`` subclass is rebuilt by calling ``__new__`` with whatever
+        ``__getnewargs__`` returns, and ``float``'s own returns the value alone.
+        Without this, ``copy.deepcopy`` of anything holding an age raised
+        ``TypeError: AgeMeasurement.__new__() missing 1 required positional
+        argument: 'code'`` -- which is every :meth:`SimulationContext.checkpoint`
+        of a tree-list run, and every :func:`pyforestry.project`, since that
+        deep-copies the stand it is handed so the caller's inventory survives the
+        projection.
+
+        Returns:
+            The value and its age code, in ``__new__`` order.
+        """
+        return (float(self), self.code)
+
     @property
     def value(self) -> float:
         """
@@ -117,3 +134,10 @@ class AgeMeasurement(float):
         """Return the inverse result of :py:meth:`__eq__`."""
         equal = self.__eq__(other)
         return NotImplemented if equal is NotImplemented else not equal
+
+    # Defining __eq__ sets __hash__ to None (unhashable). Restore hashing on the
+    # float value so instances stay usable as dict keys / set members; this is
+    # consistent with __eq__ (equality requires equal float value, so equal
+    # objects hash equally — two same-value/different-code ages may share a hash,
+    # which is a permitted collision).
+    __hash__ = float.__hash__

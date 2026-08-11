@@ -5,12 +5,12 @@ import pytest
 from pyforestry.sweden.timber import SweTimber
 from pyforestry.sweden.volume import (
     BrandelVolume,
-    Eriksson_1973_volume_aspen_Sweden,
-    Eriksson_1973_volume_lodgepole_pine_Sweden,
     NaslundFormFactor,
     NaslundVolume,
     andersson_1954_volume_small_trees_birch_height_above_4_m,
     carbonnier_1954_volume_larch,
+    eriksson_1973_volume_aspen_sweden,
+    eriksson_1973_volume_lodgepole_pine_sweden,
     matern_1975_volume_sweden_beech,
     matern_1975_volume_sweden_oak,
 )
@@ -112,13 +112,13 @@ def test_matern_1975_volume_beech():
 
 
 def test_eriksson_1973_volume_aspen():
-    vol = Eriksson_1973_volume_aspen_Sweden(30, 20)
+    vol = eriksson_1973_volume_aspen_sweden(30, 20)
     assert isinstance(vol, float)
     assert vol > 0
 
 
 def test_eriksson_1973_volume_lodgepole():
-    vol = Eriksson_1973_volume_lodgepole_pine_Sweden(30, 20)
+    vol = eriksson_1973_volume_lodgepole_pine_sweden(30, 20)
     assert isinstance(vol, float)
     assert vol > 0
 

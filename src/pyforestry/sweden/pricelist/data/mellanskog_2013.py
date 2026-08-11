@@ -1,10 +1,52 @@
-"""Example price list data from Mellanskog's 2013 tables."""
+"""Example price list data from Mellanskog's 2013 tables.
+
+Commercial price-list data, not a scientific publication: these are the timber
+and pulpwood prices published by the Swedish forest owners' association
+Mellanskog for 2013, bundled as example data so the bucking optimiser has
+something to run against. They are not a recommendation and are long out of
+date; supply your own :class:`~pyforestry.base.pricelist.Pricelist` for real
+work.
+
+:data:`MELLANSKOG_2013_IDENTITY` is the list's identity -- its name, its currency
+and its publisher -- and travels with the prices as data. Build the price list as
+``create_pricelist_from_data(MELLANSKOG_2013_PRICE_DATA,
+identity=MELLANSKOG_2013_IDENTITY)`` so that a run reporting money says which
+list earned it.
+"""
 
 # Use of TreeSpecies shorthand to avoid typos and situations e.g. Betula != Betula pendula.
 
+from pyforestry.base.contracts import SourceReference
 from pyforestry.base.helpers.tree_species import TreeSpecies
 
-Mellanskog_2013_price_data = {
+# The leaf module rather than the package, which pulls in the SolutionCube and its
+# xarray/pandas stack for what is a dataclass import.
+from pyforestry.base.pricelist.pricelist import PricelistIdentity
+
+#: Whose list this is, what money its prices are in, and when it was published.
+#: Commercial market data has a publisher and a year rather than an author and a
+#: paper, and that is still a citation: these prices are somebody's published
+#: figures, not a value chosen by whoever configured a run, so this is a real
+#: :class:`~pyforestry.base.contracts.SourceReference` and not the stated-choice
+#: sentinel.
+MELLANSKOG_2013_IDENTITY = PricelistIdentity(
+    name="Mellanskog 2013",
+    currency="SEK",
+    source=SourceReference(
+        author="Mellanskog",
+        year=2013,
+        title="Timber and pulpwood price list, 2013",
+        note=(
+            "Commercial price-list data from the Swedish forest owners' association "
+            "Mellanskog, bundled as example data. Prices are in SEK per cubic metre "
+            "on the volume basis each species' table declares. Which regional list "
+            "and validity period these tables are taken from is not recorded here, "
+            "and the prices are long out of date: supply your own for real work."
+        ),
+    ),
+)
+
+MELLANSKOG_2013_PRICE_DATA = {
     "Common": {
         "MaximumTreeHeight": 450,
         "SawlogLengthRange": (3.4, 5.5),
@@ -83,3 +125,8 @@ Mellanskog_2013_price_data = {
         "MaxHeight": {"Butt": 5.5, "Middle": 11.0, "Top": 99.0},
     },
 }
+
+__all__ = [
+    "MELLANSKOG_2013_IDENTITY",
+    "MELLANSKOG_2013_PRICE_DATA",
+]

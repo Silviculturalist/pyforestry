@@ -8,6 +8,8 @@ EXPECTED = {
     "TimberPricelist",
     "PulpPricelist",
     "Pricelist",
+    "PricelistIdentity",
+    "UNATTRIBUTED_PRICELIST_IDENTITY",
     "create_pricelist_from_data",
     "SolutionCube",
 }

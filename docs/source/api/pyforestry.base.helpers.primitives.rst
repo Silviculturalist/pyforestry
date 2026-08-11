@@ -1,12 +1,6 @@
 pyforestry.base.helpers.primitives package
 ==========================================
 
-.. automodule:: pyforestry.base.helpers.primitives
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :noindex:
-
 Submodules
 ----------
 
@@ -26,6 +20,14 @@ pyforestry.base.helpers.primitives.area\_aggregates module
    :undoc-members:
    :show-inheritance:
 
+pyforestry.base.helpers.primitives.bawad module
+-----------------------------------------------
+
+.. automodule:: pyforestry.base.helpers.primitives.bawad
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pyforestry.base.helpers.primitives.cartesian\_position module
 -------------------------------------------------------------
 
@@ -38,6 +40,14 @@ pyforestry.base.helpers.primitives.diameter\_cm module
 ------------------------------------------------------
 
 .. automodule:: pyforestry.base.helpers.primitives.diameter_cm
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyforestry.base.helpers.primitives.loreys\_mean\_height module
+--------------------------------------------------------------
+
+.. automodule:: pyforestry.base.helpers.primitives.loreys_mean_height
    :members:
    :undoc-members:
    :show-inheritance:
@@ -78,6 +88,14 @@ pyforestry.base.helpers.primitives.volume module
 ------------------------------------------------
 
 .. automodule:: pyforestry.base.helpers.primitives.volume
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: pyforestry.base.helpers.primitives
    :members:
    :undoc-members:
    :show-inheritance:

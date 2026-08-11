@@ -1,11 +1,6 @@
 pyforestry.sweden.siteindex.sis package
 =======================================
 
-.. automodule:: pyforestry.sweden.siteindex.sis
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Submodules
 ----------
 
@@ -17,10 +12,18 @@ pyforestry.sweden.siteindex.sis.eko\_2008 module
    :undoc-members:
    :show-inheritance:
 
-pyforestry.sweden.siteindex.sis.hagglund\_lundmark\_1979 module
+pyforestry.sweden.siteindex.sis.generated\_site\_category\_trees module
+-----------------------------------------------------------------------
+
+.. automodule:: pyforestry.sweden.siteindex.sis.generated_site_category_trees
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyforestry.sweden.siteindex.sis.hagglund\_lundmark\_1977 module
 ---------------------------------------------------------------
 
-.. automodule:: pyforestry.sweden.siteindex.sis.hagglund_lundmark_1979
+.. automodule:: pyforestry.sweden.siteindex.sis.hagglund_lundmark_1977
    :members:
    :undoc-members:
    :show-inheritance:
@@ -34,9 +37,17 @@ pyforestry.sweden.siteindex.sis.tegnhammar\_1992 module
    :show-inheritance:
 
 pyforestry.sweden.siteindex.sis.tegnhammar\_1992\_adjusted\_spruce\_si\_by\_stand\_variables module
------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 
 .. automodule:: pyforestry.sweden.siteindex.sis.tegnhammar_1992_adjusted_spruce_si_by_stand_variables
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: pyforestry.sweden.siteindex.sis
    :members:
    :undoc-members:
    :show-inheritance:

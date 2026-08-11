@@ -4,4 +4,14 @@ sphinx-rtd-theme>=1.2
 myst-parser>=0.18
 pydata-sphinx-theme>=0.16
 ipykernel
-pypandoc
+# pypandoc_binary, not pypandoc: the plain package is a wrapper around a pandoc
+# binary it does not ship. The build was relying on the runner image providing
+# one, with conf.py falling back to downloading it at build time -- and when the
+# image stopped shipping pandoc and that download did not land, nbsphinx failed
+# with PandocMissing. The _binary wheel carries pandoc itself, so neither the
+# image nor a network fetch decides whether the docs build.
+pypandoc_binary
+# Imported by docs/source/notebooks/elfving_2010_preset.ipynb for its parallel
+# schedule search. nbsphinx executes that notebook during the build, and nothing
+# else here or in pyproject pulls joblib in.
+joblib

@@ -16,6 +16,7 @@ class Timber:
         over_bark: Optional[bool] = None,
         stump_height_m: Optional[float] = 0.3,
     ):
+        """Init."""
         self.species = species.lower()
         self.diameter_cm = diameter_cm
         self.height_m = height_m
@@ -30,10 +31,10 @@ class Timber:
         """Validate that the provided tree attributes are sensible."""
 
         if self.height_m <= 0:
-            raise ValueError("Height must be larger than 0 m: {self.height_m}")
+            raise ValueError(f"Height must be larger than 0 m: {self.height_m}")
 
         if self.diameter_cm < 0:
-            raise ValueError("Diameter must be larger or equal to than 0 cm: {self.diameter_cm}")
+            raise ValueError(f"Diameter must be larger than or equal to 0 cm: {self.diameter_cm}")
 
         if (
             self.crown_base_height_m is not None

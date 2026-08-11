@@ -8,8 +8,24 @@ from pyforestry.base.helpers.tree_species import TreeSpecies
 
 # Imports from your project
 from pyforestry.base.pricelist.solutioncube import SolutionCube
-from pyforestry.sweden.pricelist.data.mellanskog_2013 import Mellanskog_2013_price_data
+from pyforestry.sweden.pricelist.data.mellanskog_2013 import MELLANSKOG_2013_PRICE_DATA
 from pyforestry.sweden.taper import EdgrenNylinder1949
+from pyforestry.sweden.timber import SweTimber
+
+
+class DummyPool:
+    def __init__(self, processes):
+        self.processes = processes
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        return False
+
+    def imap_unordered(self, func, tasks, chunksize=1):
+        for task in tasks:
+            yield func(task)
 
 
 @pytest.fixture(scope="module")
@@ -24,16 +40,24 @@ def mini_cube():
     height_range = (15, 15.2)  # Will compute for Height 15.0 and 15.2
 
     # This will generate a cube for just 2x2 = 4 trees.
-    cube = SolutionCube.generate(
-        pricelist_data=Mellanskog_2013_price_data,
-        taper_model=EdgrenNylinder1949,
-        species_list=species_list,
-        dbh_range=dbh_range,
-        height_range=height_range,
-        dbh_step=2,
-        height_step=0.2,
-        workers=1,  # No need for parallel processing for just 4 trees
-    )
+    from pyforestry.base.pricelist import solutioncube as sc
+
+    mp = pytest.MonkeyPatch()
+    mp.setattr(sc, "Pool", DummyPool)
+    try:
+        cube = SolutionCube.generate(
+            pricelist_data=MELLANSKOG_2013_PRICE_DATA,
+            taper_model=EdgrenNylinder1949,
+            timber_class=SweTimber,
+            species_list=species_list,
+            dbh_range=dbh_range,
+            height_range=height_range,
+            dbh_step=2,
+            height_step=0.2,
+            workers=1,  # No need for parallel processing for just 4 trees
+        )
+    finally:
+        mp.undo()
     return cube
 
 
@@ -92,12 +116,12 @@ def test_pricelist_hash_verification(mini_cube, tmp_path):
 
     # 1. Test that loading with the CORRECT pricelist passes
     try:
-        SolutionCube.load(file_path, pricelist_to_verify=Mellanskog_2013_price_data)
+        SolutionCube.load(file_path, pricelist_to_verify=MELLANSKOG_2013_PRICE_DATA)
     except ValueError:
         pytest.fail("Hash verification failed unexpectedly with the correct pricelist.")
 
     # 2. Test that loading with an INCORRECT pricelist fails
-    modified_pricelist = copy.deepcopy(Mellanskog_2013_price_data)
+    modified_pricelist = copy.deepcopy(MELLANSKOG_2013_PRICE_DATA)
     modified_pricelist["Common"]["TopDiameter"] = 99  # Introduce a change
 
     with pytest.raises(ValueError, match="Pricelist hash mismatch!"):
@@ -149,3 +173,62 @@ def test_lookup_handles_invalid_json():
     value, sections = cube.lookup("sp", 10, 1.0)
     assert value == 0.0
     assert sections == []
+
+
+def test_lookup_handles_keyerror():
+    """lookup should return defaults when selection fails."""
+
+    class DummyDataset:
+        attrs = {}
+
+        def sel(self, *args, **kwargs):  # noqa: D401 - test helper
+            raise KeyError("missing")
+
+    cube = SolutionCube(DummyDataset())
+    value, sections = cube.lookup("sp", 10, 1.0)
+    assert value == 0.0
+    assert sections == []
+
+
+def test_lookup_timber_pricelist_paths(monkeypatch):
+    ds = xr.Dataset(
+        {
+            "total_value": (("species", "height", "dbh"), [[[1.0]]]),
+            "solution_sections": (("species", "height", "dbh"), [[["[]"]]]),
+        },
+        coords={"species": ["sp"], "height": [1.0], "dbh": [10]},
+    )
+    cube = SolutionCube(ds)
+    value, sections = cube.lookup_timber_pricelist("sp")
+    assert value == 1.0
+    assert sections == []
+
+    monkeypatch.setattr(cube, "lookup", lambda *a, **k: (_ for _ in ()).throw(ValueError("boom")))
+    value, sections = cube.lookup_timber_pricelist("sp")
+    assert value == 0.0
+    assert sections == []
+
+
+def test_lookup_after_save_load_with_multiple_species(tmp_path):
+    ds = xr.Dataset(
+        {
+            "total_value": (("species", "height", "dbh"), [[[10.0, 20.0]], [[30.0, 40.0]]]),
+            "solution_sections": (
+                ("species", "height", "dbh"),
+                [[['[{"volume": 0.10}]', '[{"volume": 0.20}]']], [["[]", '[{"volume": 0.40}]']]],
+            ),
+        },
+        coords={"species": ["sp_a", "sp_b"], "height": [10.0], "dbh": [20, 30]},
+    )
+    cube = SolutionCube(ds)
+    file_path = tmp_path / "multi_species_cube.nc"
+    cube.save(file_path)
+    loaded = SolutionCube.load(file_path)
+
+    value_a, sections_a = loaded.lookup("sp_a", 20.2, 10.0)
+    value_b, sections_b = loaded.lookup("sp_b", 29.7, 10.0)
+
+    assert value_a == 10.0
+    assert sections_a and isinstance(sections_a, list)
+    assert value_b == 40.0
+    assert sections_b and isinstance(sections_b, list)

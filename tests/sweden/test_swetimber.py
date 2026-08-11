@@ -39,11 +39,11 @@ def test_getvolume_branches(monkeypatch, species, expected):
         fake_larch,
     )
     monkeypatch.setattr(
-        "pyforestry.sweden.timber.swe_timber.Eriksson_1973_volume_aspen_Sweden",
+        "pyforestry.sweden.timber.swe_timber.eriksson_1973_volume_aspen_sweden",
         lambda *_: expected,
     )
     monkeypatch.setattr(
-        "pyforestry.sweden.timber.swe_timber.Eriksson_1973_volume_lodgepole_pine_Sweden",
+        "pyforestry.sweden.timber.swe_timber.eriksson_1973_volume_lodgepole_pine_sweden",
         lambda *_: expected,
     )
     monkeypatch.setattr(

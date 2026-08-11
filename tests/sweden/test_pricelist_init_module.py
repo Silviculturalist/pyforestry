@@ -1,16 +1,16 @@
 from pyforestry.base.pricelist import Pricelist as BasePricelist
 from pyforestry.base.pricelist import create_pricelist_from_data as base_create
 from pyforestry.sweden.pricelist import Pricelist, create_pricelist_from_data
-from pyforestry.sweden.pricelist.data.mellanskog_2013 import Mellanskog_2013_price_data
+from pyforestry.sweden.pricelist.data.mellanskog_2013 import MELLANSKOG_2013_PRICE_DATA
 
 
 def test_pricelist_reexports_and_functionality():
     assert Pricelist is BasePricelist
 
     pl1 = create_pricelist_from_data(
-        Mellanskog_2013_price_data, species_to_load="pinus sylvestris"
+        MELLANSKOG_2013_PRICE_DATA, species_to_load="pinus sylvestris"
     )
-    pl2 = base_create(Mellanskog_2013_price_data, species_to_load="pinus sylvestris")
+    pl2 = base_create(MELLANSKOG_2013_PRICE_DATA, species_to_load="pinus sylvestris")
 
     assert isinstance(pl1, Pricelist)
     assert isinstance(pl2, Pricelist)
