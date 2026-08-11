@@ -1,5 +1,14 @@
 name: Bump Patch Version
 
+# The job commits the bumped pyproject.toml back to main, which needs write
+# access. Without this block the workflow inherits the repository default
+# (read-only), so bump-my-version ran, the commit was created, and the push then
+# failed with "Permission to ... denied to github-actions[bot]" / 403 -- every
+# run since 2025-07-19. ci.yml already declares its own permissions for the same
+# reason: its badge commit and Pages deploy also push.
+permissions:
+  contents: write
+
 on:
   workflow_dispatch:
   push:
