@@ -1,0 +1,1658 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pyforestry.sweden.adapters package &#8212; pyforestry  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/pyforestry.sweden.adapters';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.20.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'stable';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pyforestry.sweden.bark package" href="pyforestry.sweden.bark.html" />
+    <link rel="prev" title="pyforestry.sweden package" href="pyforestry.sweden.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pyforestry  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../catalog.html">
+    Model catalog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../model_index.html">
+    Model index
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/wikberg_2004.html">
+    Wikberg 2004 ingrowth demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/elfving_2010.html">
+    Elfving 2010 growth demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/elfving_2010_preset.html">
+    Elfving 2010 composite preset demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/soderberg_1986_preset.html">
+    Soderberg 1986 composite preset demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/young_stand.html">
+    Young stand demo (NYSKOG + Näslund 1986)
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/competition_indices.html">
+    Competition indices on a simulated stand
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/FullStack_Callables_Guide.html">
+    Composable Callables & Full‑Stack GrowthModel — Practical Guide
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../catalog.html">
+    Model catalog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../model_index.html">
+    Model index
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/wikberg_2004.html">
+    Wikberg 2004 ingrowth demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/elfving_2010.html">
+    Elfving 2010 growth demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/elfving_2010_preset.html">
+    Elfving 2010 composite preset demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/soderberg_1986_preset.html">
+    Soderberg 1986 composite preset demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/young_stand.html">
+    Young stand demo (NYSKOG + Näslund 1986)
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/competition_indices.html">
+    Competition indices on a simulated stand
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/FullStack_Callables_Guide.html">
+    Composable Callables & Full‑Stack GrowthModel — Practical Guide
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="pyforestry.html">pyforestry package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="pyforestry.base.html">pyforestry.base package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.competition.html">pyforestry.base.competition package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.base.helpers.html">pyforestry.base.helpers package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.base.helpers.primitives.html">pyforestry.base.helpers.primitives package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.imputation.html">pyforestry.base.imputation package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.pricelist.html">pyforestry.base.pricelist package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.simulation.html">pyforestry.base.simulation package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.taper.html">pyforestry.base.taper package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.base.timber.html">pyforestry.base.timber package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.base.timber.timber_base.html">pyforestry.base.timber.timber_base package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.timber_bucking.html">pyforestry.base.timber_bucking package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="pyforestry.norway.html">pyforestry.norway package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.norway.adapters.html">pyforestry.norway.adapters package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.norway.bark.html">pyforestry.norway.bark package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.norway.growth.html">pyforestry.norway.growth package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.norway.helpers.html">pyforestry.norway.helpers package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.norway.simulation.html">pyforestry.norway.simulation package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.norway.simulation.orchestration.html">pyforestry.norway.simulation.orchestration package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.norway.simulation.policy.html">pyforestry.norway.simulation.policy package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.norway.simulation.presets.html">pyforestry.norway.simulation.presets package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.norway.siteindex.html">pyforestry.norway.siteindex package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.norway.taper.html">pyforestry.norway.taper package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.norway.volume.html">pyforestry.norway.volume package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="pyforestry.simulation.html">pyforestry.simulation package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.simulation.services.html">pyforestry.simulation.services package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.simulation.valuation.html">pyforestry.simulation.valuation package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="pyforestry.sweden.html">pyforestry.sweden package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">pyforestry.sweden.adapters package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.bark.html">pyforestry.sweden.bark package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html">pyforestry.sweden.biomass package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.geo.html">pyforestry.sweden.geo package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.climate.html">pyforestry.sweden.geo.climate package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.coastline.html">pyforestry.sweden.geo.coastline package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.counties.html">pyforestry.sweden.geo.counties package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.humidity.html">pyforestry.sweden.geo.humidity package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.temperature.html">pyforestry.sweden.geo.temperature package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.growth.html">pyforestry.sweden.growth package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.growth.elfving_2010.html">pyforestry.sweden.growth.elfving_2010 package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.growth.soderberg_1986.html">pyforestry.sweden.growth.soderberg_1986 package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.height.html">pyforestry.sweden.height package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.helpers.html">pyforestry.sweden.helpers package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.ingrowth.html">pyforestry.sweden.ingrowth package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.misc.html">pyforestry.sweden.misc package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.mortality.html">pyforestry.sweden.mortality package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.pricelist.html">pyforestry.sweden.pricelist package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.pricelist.data.html">pyforestry.sweden.pricelist.data package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.regeneration.html">pyforestry.sweden.regeneration package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.simulation.html">pyforestry.sweden.simulation package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.simulation.mortality.html">pyforestry.sweden.simulation.mortality package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.simulation.orchestration.html">pyforestry.sweden.simulation.orchestration package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.simulation.policy.html">pyforestry.sweden.simulation.policy package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.simulation.presets.html">pyforestry.sweden.simulation.presets package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html">pyforestry.sweden.site package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.siteindex.html">pyforestry.sweden.siteindex package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.sis.html">pyforestry.sweden.siteindex.sis package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.translate.html">pyforestry.sweden.siteindex.translate package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.systems.html">pyforestry.sweden.systems package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.systems.eko1985.html">pyforestry.sweden.systems.eko1985 package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.taper.html">pyforestry.sweden.taper package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.timber.html">pyforestry.sweden.timber package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.volume.html">pyforestry.sweden.volume package</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="modules.html" class="nav-link">pyforestry</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="pyforestry.html" class="nav-link">pyforestry package</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="pyforestry.sweden.html" class="nav-link">pyforestry.sweden package</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pyforestry.sweden.adapters package</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="pyforestry-sweden-adapters-package">
+<h1>pyforestry.sweden.adapters package<a class="headerlink" href="#pyforestry-sweden-adapters-package" title="Link to this heading">#</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
+</section>
+<section id="module-pyforestry.sweden.adapters.elfving_1982">
+<span id="pyforestry-sweden-adapters-elfving-1982-module"></span><h2>pyforestry.sweden.adapters.elfving_1982 module<a class="headerlink" href="#module-pyforestry.sweden.adapters.elfving_1982" title="Link to this heading">#</a></h2>
+<p>Hugin young-stand survey functions, Elfving (1982) Rapport 27.</p>
+<p>This module provides:
+- Mean height / mean age functions for main saplings (Hugin height model).
+- Crop-tree probability (Hugin cleaning proxy).
+- NYSKOG reconstruction step functions for young-stand height distributions.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.HuginCropTreeProbability">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.adapters.elfving_1982.</span></span><span class="sig-name descname"><span class="pre">HuginCropTreeProbability</span></span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/elfving_1982.html#HuginCropTreeProbability"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.HuginCropTreeProbability" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Probability that a tree remains after cleaning (Hugin crop tree proxy).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.HuginCropTreeProbability.crop_tree_probability">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">crop_tree_probability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conifer_stems_per_100m2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rec_stems_per_ha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coniferous</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/elfving_1982.html#HuginCropTreeProbability.crop_tree_probability"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.HuginCropTreeProbability.crop_tree_probability" title="Link to this definition">#</a></dt>
+<dd><p>Compute crop-tree probability for a single tree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>height_m</strong> (<em>float</em>) – Tree height in meters.</p></li>
+<li><p><strong>mean_height_m</strong> (<em>float</em>) – Mean height in meters.</p></li>
+<li><p><strong>conifer_stems_per_100m2</strong> (<em>float</em>) – Conifer stems per 100 m2.</p></li>
+<li><p><strong>rec_stems_per_ha</strong> (<em>float</em>) – Recommended stems per ha after cleaning.</p></li>
+<li><p><strong>coniferous</strong> (<em>bool</em>) – Whether the tree is coniferous.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Probability in [0, 1].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.HuginCropTreeProbability.probabilities_from_tree_list">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">probabilities_from_tree_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trees</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree.Tree" title="pyforestry.base.helpers.tree.Tree"><span class="pre">Tree</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">rec_stems_per_ha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expansion_factor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/elfving_1982.html#HuginCropTreeProbability.probabilities_from_tree_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.HuginCropTreeProbability.probabilities_from_tree_list" title="Link to this definition">#</a></dt>
+<dd><p>Compute crop-tree probabilities for a tree list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trees</strong> (<em>Sequence</em><em>[</em><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree.Tree" title="pyforestry.base.helpers.tree.Tree"><em>Tree</em></a><em>]</em>) – Trees with <code class="docutils literal notranslate"><span class="pre">height_m</span></code> and <code class="docutils literal notranslate"><span class="pre">weight_n</span></code> set.</p></li>
+<li><p><strong>rec_stems_per_ha</strong> (<em>float</em>) – Recommended stems/ha to remain after cleaning.</p></li>
+<li><p><strong>expansion_factor</strong> (<em>float</em>) – Factor to convert tree weights to per-ha stems.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Crop-tree probabilities, same order as input trees.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.HuginMeanHeightModel">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.adapters.elfving_1982.</span></span><span class="sig-name descname"><span class="pre">HuginMeanHeightModel</span></span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/elfving_1982.html#HuginMeanHeightModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.HuginMeanHeightModel" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Mean height and mean age functions for main saplings (Hugin 1982).</p>
+<dl class="simple">
+<dt>The model is defined as:</dt><dd><p>H = SI / (exp(Y) + 1)
+Y = b0 + b1 * ln(A) + b2 * ln(A)^2</p>
+</dd>
+</dl>
+<p>where A is total age (years) and SI is species-specific site index (m).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.HuginMeanHeightModel.mean_age">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">mean_age</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">site_index_pine_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site_index_spruce_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/elfving_1982.html#HuginMeanHeightModel.mean_age"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.HuginMeanHeightModel.mean_age" title="Link to this definition">#</a></dt>
+<dd><p>Invert mean height to mean age (years).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mean_height_m</strong> (<em>float</em>) – Mean height (m).</p></li>
+<li><p><strong>species</strong> (<a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><em>TreeName</em></a>) – Tree species.</p></li>
+<li><p><strong>site_index_pine_m</strong> (<em>float</em>) – Pine site index (m).</p></li>
+<li><p><strong>site_index_spruce_m</strong> (<em>float</em>) – Spruce site index (m).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Mean age (years).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.HuginMeanHeightModel.mean_height">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">mean_height</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">age_years</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">site_index_pine_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site_index_spruce_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/elfving_1982.html#HuginMeanHeightModel.mean_height"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.HuginMeanHeightModel.mean_height" title="Link to this definition">#</a></dt>
+<dd><p>Compute mean height (m) from total age and site indices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>age_years</strong> (<em>float</em>) – Total age in years.</p></li>
+<li><p><strong>species</strong> (<a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><em>TreeName</em></a>) – Tree species.</p></li>
+<li><p><strong>site_index_pine_m</strong> (<em>float</em>) – Pine site index (m).</p></li>
+<li><p><strong>site_index_spruce_m</strong> (<em>float</em>) – Spruce site index (m).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Mean height (m), truncated to &gt;= 0.3.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.HuginMeanHeightModel.site_index_for_species">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">site_index_for_species</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">site_index_pine_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site_index_spruce_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/elfving_1982.html#HuginMeanHeightModel.site_index_for_species"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.HuginMeanHeightModel.site_index_for_species" title="Link to this definition">#</a></dt>
+<dd><p>Translate pine/spruce site indices to a species-specific site index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>species</strong> (<a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><em>TreeName</em></a>) – Tree species to translate.</p></li>
+<li><p><strong>site_index_pine_m</strong> (<em>float</em>) – Pine site index (m).</p></li>
+<li><p><strong>site_index_spruce_m</strong> (<em>float</em>) – Spruce site index (m).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Species-specific site index (m).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.NfiRegion">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.adapters.elfving_1982.</span></span><span class="sig-name descname"><span class="pre">NfiRegion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/elfving_1982.html#NfiRegion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.NfiRegion" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>NFI region codes used in NYSKOG deciduous proportions.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.NfiRegion.REG1">
+<span class="sig-name descname"><span class="pre">REG1</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Reg1'</span></span><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.NfiRegion.REG1" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.NfiRegion.REG21">
+<span class="sig-name descname"><span class="pre">REG21</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Reg21'</span></span><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.NfiRegion.REG21" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.NfiRegion.REG22">
+<span class="sig-name descname"><span class="pre">REG22</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Reg22'</span></span><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.NfiRegion.REG22" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.NfiRegion.REG3">
+<span class="sig-name descname"><span class="pre">REG3</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Reg3'</span></span><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.NfiRegion.REG3" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.NfiRegion.REG4">
+<span class="sig-name descname"><span class="pre">REG4</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Reg4'</span></span><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.NfiRegion.REG4" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.NfiRegion.REG5">
+<span class="sig-name descname"><span class="pre">REG5</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Reg5'</span></span><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.NfiRegion.REG5" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.adapters.elfving_1982.</span></span><span class="sig-name descname"><span class="pre">NyskogReconstruction</span></span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/elfving_1982.html#NyskogReconstruction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Stepwise NYSKOG reconstruction functions for young-stand states.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.dominant_conifer_share">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">dominant_conifer_share</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">regeneration_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyforestry.sweden.adapters.elfving_1982.RegenerationType" title="pyforestry.sweden.adapters.elfving_1982.RegenerationType"><span class="pre">RegenerationType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">qind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ln_si</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dry</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rich</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hwod</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hwd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shrubs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lichen</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deterministic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/elfving_1982.html#NyskogReconstruction.dominant_conifer_share"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.dominant_conifer_share" title="Link to this definition">#</a></dt>
+<dd><p>Step 3: Dominant conifer share.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>regeneration_type</strong> (<a class="reference internal" href="#pyforestry.sweden.adapters.elfving_1982.RegenerationType" title="pyforestry.sweden.adapters.elfving_1982.RegenerationType"><em>RegenerationType</em></a>) – Regeneration category.</p></li>
+<li><p><strong>qind</strong> (<em>float</em>) – Production potential indicator.</p></li>
+<li><p><strong>ln_si</strong> (<em>float</em>) – Log(site index).</p></li>
+<li><p><strong>wet</strong> (<em>int</em>) – Wet site indicator (0/1).</p></li>
+<li><p><strong>dry</strong> (<em>int</em>) – Dry site indicator (0/1).</p></li>
+<li><p><strong>rich</strong> (<em>int</em>) – Rich site indicator (0/1).</p></li>
+<li><p><strong>poor</strong> (<em>int</em>) – Poor site indicator (0/1).</p></li>
+<li><p><strong>hwod</strong> (<em>int</em>) – HWOD indicator (0/1).</p></li>
+<li><p><strong>hwd</strong> (<em>int</em>) – HWD indicator (0/1).</p></li>
+<li><p><strong>shrubs</strong> (<em>int</em>) – Shrubs indicator (0/1).</p></li>
+<li><p><strong>lichen</strong> (<em>int</em>) – Lichen indicator (0/1).</p></li>
+<li><p><strong>deterministic</strong> (<em>bool</em>) – If True, apply bias correction.</p></li>
+<li><p><strong>noise</strong> (<em>float</em>) – Stochastic noise multiplier.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Proportion of dominant conifer within conifers (0..1).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.height_variation">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">height_variation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">species_height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ln_q</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">self_rejuvenated</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deterministic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_cv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_cv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/elfving_1982.html#NyskogReconstruction.height_variation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.height_variation" title="Link to this definition">#</a></dt>
+<dd><p>Step 4B: Height variation (CV).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>species</strong> (<a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><em>TreeName</em></a>) – Species for CVH model.</p></li>
+<li><p><strong>species_height_m</strong> (<em>float</em>) – Mean height of species (m).</p></li>
+<li><p><strong>q</strong> (<em>float</em>) – Production potential Q.</p></li>
+<li><p><strong>ln_q</strong> (<em>float</em>) – Log(Q).</p></li>
+<li><p><strong>self_rejuvenated</strong> (<em>int</em>) – Self-rejuvenation indicator (0/1).</p></li>
+<li><p><strong>deterministic</strong> (<em>bool</em>) – If True, use deterministic output.</p></li>
+<li><p><strong>noise</strong> (<em>float</em>) – Stochastic noise multiplier.</p></li>
+<li><p><strong>min_cv</strong> (<em>float</em>) – Minimum CV bound.</p></li>
+<li><p><strong>max_cv</strong> (<em>float</em>) – Maximum CV bound.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Height variation (coefficient of variation).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.production_potential_q">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">production_potential_q</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">asinw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/elfving_1982.html#NyskogReconstruction.production_potential_q"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.production_potential_q" title="Link to this definition">#</a></dt>
+<dd><p>Compute production potential Q (0-100) from ASINW = arcsin(sqrt(W)).</p>
+<p>Elfving (1982), the Hugin young-stand survey report.
+q = 100 * W with W = sin^2(asinw).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>asinw</strong> (<em>float</em>) – ASINW value (radians), = arcsin(sqrt(W)).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Production potential Q (0-100).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.proportion_conifer">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">proportion_conifer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">regeneration_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyforestry.sweden.adapters.elfving_1982.RegenerationType" title="pyforestry.sweden.adapters.elfving_1982.RegenerationType"><span class="pre">RegenerationType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ln_qind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stem_total</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ln_si</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dry</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rich</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deterministic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/elfving_1982.html#NyskogReconstruction.proportion_conifer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.proportion_conifer" title="Link to this definition">#</a></dt>
+<dd><p>Step 2: Proportion conifer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>regeneration_type</strong> (<a class="reference internal" href="#pyforestry.sweden.adapters.elfving_1982.RegenerationType" title="pyforestry.sweden.adapters.elfving_1982.RegenerationType"><em>RegenerationType</em></a>) – Regeneration category.</p></li>
+<li><p><strong>q</strong> (<em>float</em>) – Production potential Q.</p></li>
+<li><p><strong>ln_qind</strong> (<em>float</em>) – Log(Q) for indicator model.</p></li>
+<li><p><strong>stem_total</strong> (<em>float</em>) – Total stems per ha.</p></li>
+<li><p><strong>ln_si</strong> (<em>float</em>) – Log(site index).</p></li>
+<li><p><strong>wet</strong> (<em>int</em>) – Wet site indicator (0/1).</p></li>
+<li><p><strong>dry</strong> (<em>int</em>) – Dry site indicator (0/1).</p></li>
+<li><p><strong>rich</strong> (<em>int</em>) – Rich site indicator (0/1).</p></li>
+<li><p><strong>poor</strong> (<em>int</em>) – Poor site indicator (0/1).</p></li>
+<li><p><strong>deterministic</strong> (<em>bool</em>) – If True, apply bias correction.</p></li>
+<li><p><strong>noise</strong> (<em>float</em>) – Stochastic noise multiplier.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Proportion of conifer stems (0..1).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.reconstruct_summary">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">reconstruct_summary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">asinw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_height_main_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site_index_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regeneration_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyforestry.sweden.adapters.elfving_1982.RegenerationType" title="pyforestry.sweden.adapters.elfving_1982.RegenerationType"><span class="pre">RegenerationType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">species_to_plant</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">nfi_region</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyforestry.sweden.adapters.elfving_1982.NfiRegion" title="pyforestry.sweden.adapters.elfving_1982.NfiRegion"><span class="pre">NfiRegion</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_layer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenFieldLayer" title="pyforestry.sweden.site.enums.SwedenFieldLayer"><span class="pre">SwedenFieldLayer</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">soil_moisture</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilMoisture" title="pyforestry.sweden.site.enums.SwedenSoilMoisture"><span class="pre">SwedenSoilMoisture</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indicators</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deterministic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyforestry.sweden.adapters.elfving_1982.NyskogReconstructionSummary" title="pyforestry.sweden.adapters.elfving_1982.NyskogReconstructionSummary"><span class="pre">NyskogReconstructionSummary</span></a></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/elfving_1982.html#NyskogReconstruction.reconstruct_summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.reconstruct_summary" title="Link to this definition">#</a></dt>
+<dd><p>Run the full NYSKOG reconstruction workflow and return summary outputs.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.secondary_mean_height">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">secondary_mean_height</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">regeneration_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyforestry.sweden.adapters.elfving_1982.RegenerationType" title="pyforestry.sweden.adapters.elfving_1982.RegenerationType"><span class="pre">RegenerationType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">secondary_species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">site_index_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_height_main_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">herb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dry</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deterministic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/elfving_1982.html#NyskogReconstruction.secondary_mean_height"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.secondary_mean_height" title="Link to this definition">#</a></dt>
+<dd><p>Step 4A: Mean height for secondary species.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>regeneration_type</strong> (<a class="reference internal" href="#pyforestry.sweden.adapters.elfving_1982.RegenerationType" title="pyforestry.sweden.adapters.elfving_1982.RegenerationType"><em>RegenerationType</em></a>) – Regeneration category.</p></li>
+<li><p><strong>secondary_species</strong> (<a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><em>TreeName</em></a>) – Species for the secondary cohort.</p></li>
+<li><p><strong>site_index_m</strong> (<em>float</em>) – Site index for the secondary species (m).</p></li>
+<li><p><strong>mean_height_main_m</strong> (<em>float</em>) – Mean height of main cohort (m).</p></li>
+<li><p><strong>herb</strong> (<em>int</em>) – Herb indicator (0/1).</p></li>
+<li><p><strong>dry</strong> (<em>int</em>) – Dry site indicator (0/1).</p></li>
+<li><p><strong>wet</strong> (<em>int</em>) – Wet site indicator (0/1).</p></li>
+<li><p><strong>deterministic</strong> (<em>bool</em>) – If True, apply bias correction.</p></li>
+<li><p><strong>noise</strong> (<em>float</em>) – Stochastic noise multiplier.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Mean height (m) of the secondary species.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.stems_per_species">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">stems_per_species</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">regeneration_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyforestry.sweden.adapters.elfving_1982.RegenerationType" title="pyforestry.sweden.adapters.elfving_1982.RegenerationType"><span class="pre">RegenerationType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">species_to_plant</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">stem_total</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_conifer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_dom_conifer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site_index_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nfi_region</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyforestry.sweden.adapters.elfving_1982.NfiRegion" title="pyforestry.sweden.adapters.elfving_1982.NfiRegion"><span class="pre">NfiRegion</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/elfving_1982.html#NyskogReconstruction.stems_per_species"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.stems_per_species" title="Link to this definition">#</a></dt>
+<dd><p>Step 3: Resolve stems per species group (pine/spruce/contorta/birch/other).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>regeneration_type</strong> (<a class="reference internal" href="#pyforestry.sweden.adapters.elfving_1982.RegenerationType" title="pyforestry.sweden.adapters.elfving_1982.RegenerationType"><em>RegenerationType</em></a>) – Regeneration category.</p></li>
+<li><p><strong>species_to_plant</strong> (<a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><em>TreeName</em></a>) – Intended planted species.</p></li>
+<li><p><strong>stem_total</strong> (<em>float</em>) – Total stems per ha.</p></li>
+<li><p><strong>prop_conifer</strong> (<em>float</em>) – Proportion conifers (0..1).</p></li>
+<li><p><strong>prop_dom_conifer</strong> (<em>float</em>) – Proportion of dominant conifer (0..1).</p></li>
+<li><p><strong>site_index_m</strong> (<em>float</em>) – Site index for planted species (m).</p></li>
+<li><p><strong>nfi_region</strong> (<a class="reference internal" href="#pyforestry.sweden.adapters.elfving_1982.NfiRegion" title="pyforestry.sweden.adapters.elfving_1982.NfiRegion"><em>NfiRegion</em></a>) – NFI region for deciduous split.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Stems per species group (per ha).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[str, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.total_stems">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">total_stems</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">regeneration_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyforestry.sweden.adapters.elfving_1982.RegenerationType" title="pyforestry.sweden.adapters.elfving_1982.RegenerationType"><span class="pre">RegenerationType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_height_main_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ln_q</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ln_si</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">under_dimension_prob</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dry</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_indicator_dm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deterministic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/elfving_1982.html#NyskogReconstruction.total_stems"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.total_stems" title="Link to this definition">#</a></dt>
+<dd><p>Step 1: Total stems per ha.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>regeneration_type</strong> (<a class="reference internal" href="#pyforestry.sweden.adapters.elfving_1982.RegenerationType" title="pyforestry.sweden.adapters.elfving_1982.RegenerationType"><em>RegenerationType</em></a>) – Regeneration category.</p></li>
+<li><p><strong>mean_height_main_m</strong> (<em>float</em>) – Mean height of main saplings (m).</p></li>
+<li><p><strong>q</strong> (<em>float</em>) – Production potential Q.</p></li>
+<li><p><strong>ln_q</strong> (<em>float</em>) – Log(Q).</p></li>
+<li><p><strong>ln_si</strong> (<em>float</em>) – Log(site index).</p></li>
+<li><p><strong>under_dimension_prob</strong> (<em>float</em>) – Under-dimension probability (0..1).</p></li>
+<li><p><strong>wet</strong> (<em>int</em>) – Wet site indicator (0/1).</p></li>
+<li><p><strong>dry</strong> (<em>int</em>) – Dry site indicator (0/1).</p></li>
+<li><p><strong>height_indicator_dm</strong> (<em>float</em>) – HIND in decimetres (often max(15, 10*H)).</p></li>
+<li><p><strong>deterministic</strong> (<em>bool</em>) – If True, use bias-corrected estimate.</p></li>
+<li><p><strong>noise</strong> (<em>float</em>) – Stochastic noise multiplier.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Total stems per hectare.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.udim_probability">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">udim_probability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">deterministic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/elfving_1982.html#NyskogReconstruction.udim_probability"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.udim_probability" title="Link to this definition">#</a></dt>
+<dd><p>Probability/indicator for under-dimensioned trees.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q</strong> (<em>float</em>) – Production potential Q.</p></li>
+<li><p><strong>deterministic</strong> (<em>bool</em>) – If True, return probability; otherwise return 0/1.</p></li>
+<li><p><strong>rng</strong> (<em>float</em><em> | </em><em>None</em>) – Optional random draw in [0, 1] for stochastic mode.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Probability or indicator for under-dimensioned trees.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.weibull_parameters">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">weibull_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cvh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/elfving_1982.html#NyskogReconstruction.weibull_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.weibull_parameters" title="Link to this definition">#</a></dt>
+<dd><p>Step 5: Weibull scale (beta) and shape (lambda).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>species</strong> (<a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><em>TreeName</em></a>) – Species for Weibull parameters.</p></li>
+<li><p><strong>cvh</strong> (<em>float</em>) – Height variation (CV).</p></li>
+<li><p><strong>mean_height_m</strong> (<em>float</em>) – Mean height (m).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(beta, lambda) parameters.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[float, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.young_stand_quality_asinw">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">young_stand_quality_asinw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">stocking_arcsine_radians</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regeneration_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyforestry.sweden.adapters.elfving_1982.RegenerationType" title="pyforestry.sweden.adapters.elfving_1982.RegenerationType"><span class="pre">RegenerationType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude_deg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/elfving_1982.html#NyskogReconstruction.young_stand_quality_asinw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.young_stand_quality_asinw" title="Link to this definition">#</a></dt>
+<dd><p>Young-stand quality ASINW = arcsin(sqrt(W)) from regeneration stocking.</p>
+<dl class="simple">
+<dt>Reference:</dt><dd><p>Elfving, B. (1982). Hugins ungskogstaxering 1976-1979. SLU, Projekt
+Hugin, Rapport 27. The
+young-stand quality W is a deterministic function of the arcsine-
+transformed regeneration stocking (SLH); the returned ASINW feeds
+<a class="reference internal" href="#pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.production_potential_q" title="pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.production_potential_q"><code class="xref py py-meth docutils literal notranslate"><span class="pre">production_potential_q()</span></code></a> (q = 100*sin^2(asinw)). Cultivations
+carry a latitude dummy -0.031*NS (NS = latitude &gt; 60 N).</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stocking_arcsine_radians</strong> (<em>float</em>) – SLH linear predictor (= 2*asinslh).</p></li>
+<li><p><strong>regeneration_type</strong> (<a class="reference internal" href="#pyforestry.sweden.adapters.elfving_1982.RegenerationType" title="pyforestry.sweden.adapters.elfving_1982.RegenerationType"><em>RegenerationType</em></a>) – Natural/extensive vs cultivation.</p></li>
+<li><p><strong>latitude_deg</strong> (<em>float</em><em> | </em><em>None</em>) – Latitude for the NS dummy (cultivation only).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>ASINW value (radians).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.NyskogReconstructionSummary">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.adapters.elfving_1982.</span></span><span class="sig-name descname"><span class="pre">NyskogReconstructionSummary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">udim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stem_total</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_conifer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_dom_conifer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stems_per_species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_heights_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cvh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weibull_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_species_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/elfving_1982.html#NyskogReconstructionSummary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.NyskogReconstructionSummary" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Summary outputs from the NYSKOG reconstruction workflow.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.RegenerationType">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.adapters.elfving_1982.</span></span><span class="sig-name descname"><span class="pre">RegenerationType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/elfving_1982.html#RegenerationType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.RegenerationType" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Regeneration type categories used in Hugin/NYSKOG functions.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.RegenerationType.CONTORTA_PLANTATION">
+<span class="sig-name descname"><span class="pre">CONTORTA_PLANTATION</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'contorta_plantation'</span></span><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.RegenerationType.CONTORTA_PLANTATION" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.RegenerationType.DECIDUOUS_PLANTATION">
+<span class="sig-name descname"><span class="pre">DECIDUOUS_PLANTATION</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'deciduous_plantation'</span></span><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.RegenerationType.DECIDUOUS_PLANTATION" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.RegenerationType.EXTENSIVE">
+<span class="sig-name descname"><span class="pre">EXTENSIVE</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'extensive'</span></span><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.RegenerationType.EXTENSIVE" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.RegenerationType.NATURAL">
+<span class="sig-name descname"><span class="pre">NATURAL</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'natural_regeneration'</span></span><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.RegenerationType.NATURAL" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.RegenerationType.PINE_PLANTATION">
+<span class="sig-name descname"><span class="pre">PINE_PLANTATION</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'pine_plantation'</span></span><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.RegenerationType.PINE_PLANTATION" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.RegenerationType.SOWN">
+<span class="sig-name descname"><span class="pre">SOWN</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'sown'</span></span><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.RegenerationType.SOWN" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.RegenerationType.SPRUCE_PLANTATION">
+<span class="sig-name descname"><span class="pre">SPRUCE_PLANTATION</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'spruce_plantation'</span></span><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.RegenerationType.SPRUCE_PLANTATION" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_1982.nyskog_indicators_from_site">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.adapters.elfving_1982.</span></span><span class="sig-name descname"><span class="pre">nyskog_indicators_from_site</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_layer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenFieldLayer" title="pyforestry.sweden.site.enums.SwedenFieldLayer"><span class="pre">SwedenFieldLayer</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">soil_moisture</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilMoisture" title="pyforestry.sweden.site.enums.SwedenSoilMoisture"><span class="pre">SwedenSoilMoisture</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/elfving_1982.html#nyskog_indicators_from_site"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_1982.nyskog_indicators_from_site" title="Link to this definition">#</a></dt>
+<dd><p>Backward-compatible typed wrapper delegating to extracted formulas.</p>
+</dd></dl>
+
+</section>
+<section id="module-pyforestry.sweden.adapters.elfving_2010">
+<span id="pyforestry-sweden-adapters-elfving-2010-module"></span><h2>pyforestry.sweden.adapters.elfving_2010 module<a class="headerlink" href="#module-pyforestry.sweden.adapters.elfving_2010" title="Link to this heading">#</a></h2>
+<p>Elfving tree and stand growth models for Sweden.</p>
+<dl class="simple">
+<dt>This module implements two published functions:</dt><dd><ul class="simple">
+<li><p>Single-tree diameter increment (Elfving 2010, tracing to Elfving 2003).</p></li>
+<li><p>Stand-level basal-area growth and calibration (Elfving 2009).</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Diameter inputs/outputs are in centimeters. Basal area is in m²/ha at stand scale.</p></li>
+<li><p>Growth functions are calibrated for 5-year periods. We scale linearly when <code class="docutils literal notranslate"><span class="pre">dt</span> <span class="pre">!=</span> <span class="pre">5</span></code>.</p></li>
+<li><p>The published pine equation applies the rich-vegetation term additively, and we
+follow the published form. An inconsistency in one downstream implementation would
+instead fold that term into the fertilisation term, which we do not reproduce.</p></li>
+</ul>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_2010.Elfving2010Config">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.adapters.elfving_2010.</span></span><span class="sig-name descname"><span class="pre">Elfving2010Config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">include_thinning_effect</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stand_growth_min_diameter_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site_index_adjustment_factor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_edge_effects</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_mean_dgv_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">70.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_bal_over_dbh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/elfving_2010.html#Elfving2010Config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Config" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Configuration for Elfving 2010 growth model.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_2010.Elfving2010Config.include_thinning_effect">
+<span class="sig-name descname"><span class="pre">include_thinning_effect</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></span><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Config.include_thinning_effect" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_2010.Elfving2010Config.max_bal_over_dbh">
+<span class="sig-name descname"><span class="pre">max_bal_over_dbh</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3.0</span></span><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Config.max_bal_over_dbh" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_2010.Elfving2010Config.max_mean_dgv_cm">
+<span class="sig-name descname"><span class="pre">max_mean_dgv_cm</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">70.0</span></span><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Config.max_mean_dgv_cm" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_2010.Elfving2010Config.site_index_adjustment_factor">
+<span class="sig-name descname"><span class="pre">site_index_adjustment_factor</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.0</span></span><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Config.site_index_adjustment_factor" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_2010.Elfving2010Config.stand_growth_min_diameter_cm">
+<span class="sig-name descname"><span class="pre">stand_growth_min_diameter_cm</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10.0</span></span><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Config.stand_growth_min_diameter_cm" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_2010.Elfving2010Config.use_edge_effects">
+<span class="sig-name descname"><span class="pre">use_edge_effects</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></span><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Config.use_edge_effects" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_2010.Elfving2010Inputs">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.adapters.elfving_2010.</span></span><span class="sig-name descname"><span class="pre">Elfving2010Inputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">site_index_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature_sum_dd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude_deg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_to_coast_km</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dominant_species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_estimated_basal_area_m2_ha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_split_plot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_edge_plot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thinned_0_10_years</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thinned_11_25_years</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thinned_11_30_years</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/elfving_2010.html#Elfving2010Inputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Inputs" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>What the Elfving functions need to know about the site, resolved once.</p>
+<p>These are facts about <em>where the stand is</em>, not about what has happened to it
+during a run: latitude does not change because five years passed. They are
+read at <code class="xref py py-meth docutils literal notranslate"><span class="pre">Elfving2010Model.build_context()</span></code> from the stand’s
+<a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.swedish_site.SwedishSite" title="pyforestry.sweden.site.swedish_site.SwedishSite"><code class="xref py py-class docutils literal notranslate"><span class="pre">SwedishSite</span></code></a> where it carries
+them typed, and from <code class="docutils literal notranslate"><span class="pre">ctx.attrs</span></code> where it does not.</p>
+<p>Units are in the field names because the equations are unit-specific and the
+names are the only place a caller sees them: metres, degree-days, decimal
+degrees, metres above sea level, kilometres, m²/ha.</p>
+<p>Deliberately <em>not</em> here: <code class="docutils literal notranslate"><span class="pre">thinning_simulated</span></code>, <code class="docutils literal notranslate"><span class="pre">thinning_history</span></code> and
+<code class="docutils literal notranslate"><span class="pre">fertilized_remaining_years</span></code>. A thinning or a fertilisation performed during
+the run changes those, and a model that had frozen them at build time would
+stop responding to its own management. <code class="docutils literal notranslate"><span class="pre">thinned_0_10_years</span></code> and
+<code class="docutils literal notranslate"><span class="pre">thinned_11_30_years</span></code> do belong here – they describe the stand’s history
+<em>before</em> the run, which is an input.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_2010.Elfving2010Inputs.dominant_species">
+<span class="sig-name descname"><span class="pre">dominant_species</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Inputs.dominant_species" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_2010.Elfving2010Inputs.field_estimated_basal_area_m2_ha">
+<span class="sig-name descname"><span class="pre">field_estimated_basal_area_m2_ha</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Inputs.field_estimated_basal_area_m2_ha" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_2010.Elfving2010Inputs.is_edge_plot">
+<span class="sig-name descname"><span class="pre">is_edge_plot</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></span><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Inputs.is_edge_plot" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_2010.Elfving2010Inputs.is_split_plot">
+<span class="sig-name descname"><span class="pre">is_split_plot</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></span><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Inputs.is_split_plot" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_2010.Elfving2010Inputs.thinned_0_10_years">
+<span class="sig-name descname"><span class="pre">thinned_0_10_years</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></span><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Inputs.thinned_0_10_years" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_2010.Elfving2010Inputs.thinned_11_25_years">
+<span class="sig-name descname"><span class="pre">thinned_11_25_years</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></span><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Inputs.thinned_11_25_years" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_2010.Elfving2010Inputs.thinned_11_30_years">
+<span class="sig-name descname"><span class="pre">thinned_11_30_years</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></span><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Inputs.thinned_11_30_years" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_2010.Elfving2010Model">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.adapters.elfving_2010.</span></span><span class="sig-name descname"><span class="pre">Elfving2010Model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Config" title="pyforestry.sweden.adapters.elfving_2010.Elfving2010Config"><span class="pre">Elfving2010Config</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/elfving_2010.html#Elfving2010Model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Model" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyforestry.base.simulation.html#pyforestry.base.simulation.growth_model.GrowthModel" title="pyforestry.base.simulation.growth_model.GrowthModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">GrowthModel</span></code></a></p>
+<p>Simulation adapter for the Elfving 2010 tree + stand growth model.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_2010.Elfving2010Model.Inputs">
+<span class="sig-name descname"><span class="pre">Inputs</span></span><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Model.Inputs" title="Link to this definition">#</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Inputs" title="pyforestry.sweden.adapters.elfving_2010.Elfving2010Inputs"><code class="xref py py-class docutils literal notranslate"><span class="pre">Elfving2010Inputs</span></code></a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_2010.Elfving2010Model.component_id">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">component_id</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Model.component_id" title="Link to this definition">#</a></dt>
+<dd><p>Stable identifier for the Elfving 2010 growth model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_2010.Elfving2010Model.requirements">
+<span class="sig-name descname"><span class="pre">requirements</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pyforestry.base.simulation.html#pyforestry.base.simulation.growth_model.Requirements" title="pyforestry.base.simulation.growth_model.Requirements"><span class="pre">Requirements</span></a></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/elfving_2010.html#Elfving2010Model.requirements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Model.requirements" title="Link to this definition">#</a></dt>
+<dd><p>Declare that this model accepts either inventory mode and needs site data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_2010.Elfving2010Model.resolve_inputs">
+<span class="sig-name descname"><span class="pre">resolve_inputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.simulation.html#pyforestry.base.simulation.core.SimulationContext" title="pyforestry.base.simulation.core.SimulationContext"><span class="pre">SimulationContext</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Inputs" title="pyforestry.sweden.adapters.elfving_2010.Elfving2010Inputs"><span class="pre">Elfving2010Inputs</span></a></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/elfving_2010.html#Elfving2010Model.resolve_inputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Model.resolve_inputs" title="Link to this definition">#</a></dt>
+<dd><p>Read the site inputs once, at build time, instead of once per kernel call.</p>
+<p>Every value here used to be re-read from <code class="docutils literal notranslate"><span class="pre">ctx.attrs</span></code> on each step, with a
+default supplied at the point of use – so an absent temperature sum
+surfaced as a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> from inside a growth kernel, and a mistyped
+<code class="docutils literal notranslate"><span class="pre">latitiude_deg</span></code> was indistinguishable from a site that had none. Now a
+missing required input fails here, named, before any growth is computed.</p>
+<p>Site index is resolved from the stand as it stands at build time. Where
+neither <code class="docutils literal notranslate"><span class="pre">attrs</span></code> nor a dominant species determines it, the fallback picks
+between the site’s pine and spruce indices by which group carries more
+basal area; resolving that once means a projection keeps the site quality
+it started with, rather than switching curves partway through because the
+mixture drifted. Site index is a property of the site, not of the crop
+standing on it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If temperature sum, latitude/altitude or site index cannot
+    be resolved.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_2010.Elfving2010Model.source">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">source</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.html#pyforestry.base.contracts.SourceReference" title="pyforestry.base.contracts.SourceReference"><span class="pre">SourceReference</span></a></span><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Model.source" title="Link to this definition">#</a></dt>
+<dd><p>Bibliographic provenance for the Elfving growth model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.elfving_2010.Elfving2010Model.update_step">
+<span class="sig-name descname"><span class="pre">update_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.simulation.html#pyforestry.base.simulation.core.SimulationContext" title="pyforestry.base.simulation.core.SimulationContext"><span class="pre">SimulationContext</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/elfving_2010.html#Elfving2010Model.update_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Model.update_step" title="Link to this definition">#</a></dt>
+<dd><p>Advance one simulation step and route to tree-list or aggregate update.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-pyforestry.sweden.adapters.soderberg_1986_growth">
+<span id="pyforestry-sweden-adapters-soderberg-1986-growth-module"></span><h2>pyforestry.sweden.adapters.soderberg_1986_growth module<a class="headerlink" href="#module-pyforestry.sweden.adapters.soderberg_1986_growth" title="Link to this heading">#</a></h2>
+<p>Soderberg (1986) single-tree diameter growth model for Sweden.</p>
+<p>This module implements Söderberg’s single-tree diameter growth functions at
+tree level for 5-year growth periods.</p>
+<dl class="simple">
+<dt>Primary reference:</dt><dd><ul class="simple">
+<li><p>Söderberg, U. (1986). Report 14, SLU, Umeå (Appendix 4 and related growth
+notes).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.soderberg_1986_growth.Soderberg1986Config">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.adapters.soderberg_1986_growth.</span></span><span class="sig-name descname"><span class="pre">Soderberg1986Config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">include_thinning_effect</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/soderberg_1986_growth.html#Soderberg1986Config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.soderberg_1986_growth.Soderberg1986Config" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Configuration options for <a class="reference internal" href="#pyforestry.sweden.adapters.soderberg_1986_growth.Soderberg1986Model" title="pyforestry.sweden.adapters.soderberg_1986_growth.Soderberg1986Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">Soderberg1986Model</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>include_thinning_effect</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, apply Söderberg’s thinning-response
+terms (the thinned 0-5 yr / 6-25 yr state indicators in the published
+diameter-growth functions). When thinning is simulated in this period, the
+thinning-history indicators are ignored for this step.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.soderberg_1986_growth.Soderberg1986Config.include_thinning_effect">
+<span class="sig-name descname"><span class="pre">include_thinning_effect</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></span><a class="headerlink" href="#pyforestry.sweden.adapters.soderberg_1986_growth.Soderberg1986Config.include_thinning_effect" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.soderberg_1986_growth.Soderberg1986Model">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.adapters.soderberg_1986_growth.</span></span><span class="sig-name descname"><span class="pre">Soderberg1986Model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyforestry.sweden.adapters.soderberg_1986_growth.Soderberg1986Config" title="pyforestry.sweden.adapters.soderberg_1986_growth.Soderberg1986Config"><span class="pre">Soderberg1986Config</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/soderberg_1986_growth.html#Soderberg1986Model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.soderberg_1986_growth.Soderberg1986Model" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyforestry.base.simulation.html#pyforestry.base.simulation.growth_model.GrowthModel" title="pyforestry.base.simulation.growth_model.GrowthModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">GrowthModel</span></code></a></p>
+<p>Simulation-engine adapter for the Söderberg (1986) diameter-growth equations.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.soderberg_1986_growth.Soderberg1986Model.component_id">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">component_id</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pyforestry.sweden.adapters.soderberg_1986_growth.Soderberg1986Model.component_id" title="Link to this definition">#</a></dt>
+<dd><p>Stable identifier for the Soderberg 1986 growth model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.soderberg_1986_growth.Soderberg1986Model.requirements">
+<span class="sig-name descname"><span class="pre">requirements</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pyforestry.base.simulation.html#pyforestry.base.simulation.growth_model.Requirements" title="pyforestry.base.simulation.growth_model.Requirements"><span class="pre">Requirements</span></a></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/soderberg_1986_growth.html#Soderberg1986Model.requirements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.soderberg_1986_growth.Soderberg1986Model.requirements" title="Link to this definition">#</a></dt>
+<dd><p>Return model inventory/site requirements.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.soderberg_1986_growth.Soderberg1986Model.source">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">source</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.html#pyforestry.base.contracts.SourceReference" title="pyforestry.base.contracts.SourceReference"><span class="pre">SourceReference</span></a></span><a class="headerlink" href="#pyforestry.sweden.adapters.soderberg_1986_growth.Soderberg1986Model.source" title="Link to this definition">#</a></dt>
+<dd><p>Bibliographic provenance for the Soderberg 1986 growth model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyforestry.sweden.adapters.soderberg_1986_growth.Soderberg1986Model.update_step">
+<span class="sig-name descname"><span class="pre">update_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.simulation.html#pyforestry.base.simulation.core.SimulationContext" title="pyforestry.base.simulation.core.SimulationContext"><span class="pre">SimulationContext</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/adapters/soderberg_1986_growth.html#Soderberg1986Model.update_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.adapters.soderberg_1986_growth.Soderberg1986Model.update_step" title="Link to this definition">#</a></dt>
+<dd><p>Update one simulation step for tree-list or spatial contexts.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-pyforestry.sweden.adapters">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pyforestry.sweden.adapters" title="Link to this heading">#</a></h2>
+<p>Runtime bindings for Swedish equations — glue, not science.</p>
+<p>An adapter’s job is to make published equations runnable: read what a model
+needs off a <a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.stand.Stand" title="pyforestry.base.helpers.stand.Stand"><code class="xref py py-class docutils literal notranslate"><span class="pre">Stand</span></code></a>, call the equation
+kernels that live in the domain packages (<code class="docutils literal notranslate"><span class="pre">sweden/growth</span></code>, <code class="docutils literal notranslate"><span class="pre">sweden/height</span></code>,
+<code class="docutils literal notranslate"><span class="pre">sweden/volume</span></code>, <code class="docutils literal notranslate"><span class="pre">sweden/regeneration</span></code>, …), and write the results back
+through the simulation contract. That is the whole remit.</p>
+<p>The line this package draws is enforceable rather than aspirational: <strong>an
+adapter carries no scientific coefficient literals.</strong> If a number here has more
+than a couple of decimals and is not a unit factor, it is a fitted coefficient
+that has escaped its publication, and <code class="docutils literal notranslate"><span class="pre">AL001</span></code> in
+<code class="docutils literal notranslate"><span class="pre">scripts/check_architecture_lint.py</span></code> will say so. Whole published growth-and-
+yield systems, which do own their coefficients, live one directory over in
+<a class="reference internal" href="pyforestry.sweden.systems.html#module-pyforestry.sweden.systems" title="pyforestry.sweden.systems"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyforestry.sweden.systems</span></code></a>.</p>
+<p>So: to check a number against a paper, open <code class="docutils literal notranslate"><span class="pre">systems/</span></code> or a domain package.
+To check how a model is driven, open this one.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="pyforestry.sweden.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">pyforestry.sweden package</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="pyforestry.sweden.bark.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">pyforestry.sweden.bark package</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.sweden.adapters.elfving_1982">pyforestry.sweden.adapters.elfving_1982 module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.HuginCropTreeProbability"><code class="docutils literal notranslate"><span class="pre">HuginCropTreeProbability</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.HuginCropTreeProbability.crop_tree_probability"><code class="docutils literal notranslate"><span class="pre">HuginCropTreeProbability.crop_tree_probability()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.HuginCropTreeProbability.probabilities_from_tree_list"><code class="docutils literal notranslate"><span class="pre">HuginCropTreeProbability.probabilities_from_tree_list()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.HuginMeanHeightModel"><code class="docutils literal notranslate"><span class="pre">HuginMeanHeightModel</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.HuginMeanHeightModel.mean_age"><code class="docutils literal notranslate"><span class="pre">HuginMeanHeightModel.mean_age()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.HuginMeanHeightModel.mean_height"><code class="docutils literal notranslate"><span class="pre">HuginMeanHeightModel.mean_height()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.HuginMeanHeightModel.site_index_for_species"><code class="docutils literal notranslate"><span class="pre">HuginMeanHeightModel.site_index_for_species()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.NfiRegion"><code class="docutils literal notranslate"><span class="pre">NfiRegion</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.NfiRegion.REG1"><code class="docutils literal notranslate"><span class="pre">NfiRegion.REG1</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.NfiRegion.REG21"><code class="docutils literal notranslate"><span class="pre">NfiRegion.REG21</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.NfiRegion.REG22"><code class="docutils literal notranslate"><span class="pre">NfiRegion.REG22</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.NfiRegion.REG3"><code class="docutils literal notranslate"><span class="pre">NfiRegion.REG3</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.NfiRegion.REG4"><code class="docutils literal notranslate"><span class="pre">NfiRegion.REG4</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.NfiRegion.REG5"><code class="docutils literal notranslate"><span class="pre">NfiRegion.REG5</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction"><code class="docutils literal notranslate"><span class="pre">NyskogReconstruction</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.dominant_conifer_share"><code class="docutils literal notranslate"><span class="pre">NyskogReconstruction.dominant_conifer_share()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.height_variation"><code class="docutils literal notranslate"><span class="pre">NyskogReconstruction.height_variation()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.production_potential_q"><code class="docutils literal notranslate"><span class="pre">NyskogReconstruction.production_potential_q()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.proportion_conifer"><code class="docutils literal notranslate"><span class="pre">NyskogReconstruction.proportion_conifer()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.reconstruct_summary"><code class="docutils literal notranslate"><span class="pre">NyskogReconstruction.reconstruct_summary()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.secondary_mean_height"><code class="docutils literal notranslate"><span class="pre">NyskogReconstruction.secondary_mean_height()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.stems_per_species"><code class="docutils literal notranslate"><span class="pre">NyskogReconstruction.stems_per_species()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.total_stems"><code class="docutils literal notranslate"><span class="pre">NyskogReconstruction.total_stems()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.udim_probability"><code class="docutils literal notranslate"><span class="pre">NyskogReconstruction.udim_probability()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.weibull_parameters"><code class="docutils literal notranslate"><span class="pre">NyskogReconstruction.weibull_parameters()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.NyskogReconstruction.young_stand_quality_asinw"><code class="docutils literal notranslate"><span class="pre">NyskogReconstruction.young_stand_quality_asinw()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.NyskogReconstructionSummary"><code class="docutils literal notranslate"><span class="pre">NyskogReconstructionSummary</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.RegenerationType"><code class="docutils literal notranslate"><span class="pre">RegenerationType</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.RegenerationType.CONTORTA_PLANTATION"><code class="docutils literal notranslate"><span class="pre">RegenerationType.CONTORTA_PLANTATION</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.RegenerationType.DECIDUOUS_PLANTATION"><code class="docutils literal notranslate"><span class="pre">RegenerationType.DECIDUOUS_PLANTATION</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.RegenerationType.EXTENSIVE"><code class="docutils literal notranslate"><span class="pre">RegenerationType.EXTENSIVE</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.RegenerationType.NATURAL"><code class="docutils literal notranslate"><span class="pre">RegenerationType.NATURAL</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.RegenerationType.PINE_PLANTATION"><code class="docutils literal notranslate"><span class="pre">RegenerationType.PINE_PLANTATION</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.RegenerationType.SOWN"><code class="docutils literal notranslate"><span class="pre">RegenerationType.SOWN</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.RegenerationType.SPRUCE_PLANTATION"><code class="docutils literal notranslate"><span class="pre">RegenerationType.SPRUCE_PLANTATION</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_1982.nyskog_indicators_from_site"><code class="docutils literal notranslate"><span class="pre">nyskog_indicators_from_site()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.sweden.adapters.elfving_2010">pyforestry.sweden.adapters.elfving_2010 module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Config"><code class="docutils literal notranslate"><span class="pre">Elfving2010Config</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Config.include_thinning_effect"><code class="docutils literal notranslate"><span class="pre">Elfving2010Config.include_thinning_effect</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Config.max_bal_over_dbh"><code class="docutils literal notranslate"><span class="pre">Elfving2010Config.max_bal_over_dbh</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Config.max_mean_dgv_cm"><code class="docutils literal notranslate"><span class="pre">Elfving2010Config.max_mean_dgv_cm</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Config.site_index_adjustment_factor"><code class="docutils literal notranslate"><span class="pre">Elfving2010Config.site_index_adjustment_factor</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Config.stand_growth_min_diameter_cm"><code class="docutils literal notranslate"><span class="pre">Elfving2010Config.stand_growth_min_diameter_cm</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Config.use_edge_effects"><code class="docutils literal notranslate"><span class="pre">Elfving2010Config.use_edge_effects</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Inputs"><code class="docutils literal notranslate"><span class="pre">Elfving2010Inputs</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Inputs.dominant_species"><code class="docutils literal notranslate"><span class="pre">Elfving2010Inputs.dominant_species</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Inputs.field_estimated_basal_area_m2_ha"><code class="docutils literal notranslate"><span class="pre">Elfving2010Inputs.field_estimated_basal_area_m2_ha</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Inputs.is_edge_plot"><code class="docutils literal notranslate"><span class="pre">Elfving2010Inputs.is_edge_plot</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Inputs.is_split_plot"><code class="docutils literal notranslate"><span class="pre">Elfving2010Inputs.is_split_plot</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Inputs.thinned_0_10_years"><code class="docutils literal notranslate"><span class="pre">Elfving2010Inputs.thinned_0_10_years</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Inputs.thinned_11_25_years"><code class="docutils literal notranslate"><span class="pre">Elfving2010Inputs.thinned_11_25_years</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Inputs.thinned_11_30_years"><code class="docutils literal notranslate"><span class="pre">Elfving2010Inputs.thinned_11_30_years</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Model"><code class="docutils literal notranslate"><span class="pre">Elfving2010Model</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Model.Inputs"><code class="docutils literal notranslate"><span class="pre">Elfving2010Model.Inputs</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Model.component_id"><code class="docutils literal notranslate"><span class="pre">Elfving2010Model.component_id</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Model.requirements"><code class="docutils literal notranslate"><span class="pre">Elfving2010Model.requirements()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Model.resolve_inputs"><code class="docutils literal notranslate"><span class="pre">Elfving2010Model.resolve_inputs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Model.source"><code class="docutils literal notranslate"><span class="pre">Elfving2010Model.source</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.elfving_2010.Elfving2010Model.update_step"><code class="docutils literal notranslate"><span class="pre">Elfving2010Model.update_step()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.sweden.adapters.soderberg_1986_growth">pyforestry.sweden.adapters.soderberg_1986_growth module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.soderberg_1986_growth.Soderberg1986Config"><code class="docutils literal notranslate"><span class="pre">Soderberg1986Config</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.soderberg_1986_growth.Soderberg1986Config.include_thinning_effect"><code class="docutils literal notranslate"><span class="pre">Soderberg1986Config.include_thinning_effect</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.soderberg_1986_growth.Soderberg1986Model"><code class="docutils literal notranslate"><span class="pre">Soderberg1986Model</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.soderberg_1986_growth.Soderberg1986Model.component_id"><code class="docutils literal notranslate"><span class="pre">Soderberg1986Model.component_id</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.soderberg_1986_growth.Soderberg1986Model.requirements"><code class="docutils literal notranslate"><span class="pre">Soderberg1986Model.requirements()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.soderberg_1986_growth.Soderberg1986Model.source"><code class="docutils literal notranslate"><span class="pre">Soderberg1986Model.source</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.adapters.soderberg_1986_growth.Soderberg1986Model.update_step"><code class="docutils literal notranslate"><span class="pre">Soderberg1986Model.update_step()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.sweden.adapters">Module contents</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/api/pyforestry.sweden.adapters.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

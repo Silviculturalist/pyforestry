@@ -1,0 +1,964 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pyforestry.sweden.height package &#8212; pyforestry  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/pyforestry.sweden.height';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.20.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'stable';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pyforestry.sweden.helpers package" href="pyforestry.sweden.helpers.html" />
+    <link rel="prev" title="pyforestry.sweden.growth.soderberg_1986 package" href="pyforestry.sweden.growth.soderberg_1986.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pyforestry  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../catalog.html">
+    Model catalog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../model_index.html">
+    Model index
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/wikberg_2004.html">
+    Wikberg 2004 ingrowth demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/elfving_2010.html">
+    Elfving 2010 growth demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/elfving_2010_preset.html">
+    Elfving 2010 composite preset demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/soderberg_1986_preset.html">
+    Soderberg 1986 composite preset demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/young_stand.html">
+    Young stand demo (NYSKOG + Näslund 1986)
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/competition_indices.html">
+    Competition indices on a simulated stand
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/FullStack_Callables_Guide.html">
+    Composable Callables & Full‑Stack GrowthModel — Practical Guide
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../catalog.html">
+    Model catalog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../model_index.html">
+    Model index
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/wikberg_2004.html">
+    Wikberg 2004 ingrowth demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/elfving_2010.html">
+    Elfving 2010 growth demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/elfving_2010_preset.html">
+    Elfving 2010 composite preset demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/soderberg_1986_preset.html">
+    Soderberg 1986 composite preset demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/young_stand.html">
+    Young stand demo (NYSKOG + Näslund 1986)
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/competition_indices.html">
+    Competition indices on a simulated stand
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/FullStack_Callables_Guide.html">
+    Composable Callables & Full‑Stack GrowthModel — Practical Guide
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="pyforestry.html">pyforestry package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="pyforestry.base.html">pyforestry.base package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.competition.html">pyforestry.base.competition package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.base.helpers.html">pyforestry.base.helpers package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.base.helpers.primitives.html">pyforestry.base.helpers.primitives package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.imputation.html">pyforestry.base.imputation package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.pricelist.html">pyforestry.base.pricelist package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.simulation.html">pyforestry.base.simulation package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.taper.html">pyforestry.base.taper package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.base.timber.html">pyforestry.base.timber package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.base.timber.timber_base.html">pyforestry.base.timber.timber_base package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.timber_bucking.html">pyforestry.base.timber_bucking package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="pyforestry.norway.html">pyforestry.norway package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.norway.adapters.html">pyforestry.norway.adapters package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.norway.bark.html">pyforestry.norway.bark package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.norway.growth.html">pyforestry.norway.growth package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.norway.helpers.html">pyforestry.norway.helpers package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.norway.simulation.html">pyforestry.norway.simulation package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.norway.simulation.orchestration.html">pyforestry.norway.simulation.orchestration package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.norway.simulation.policy.html">pyforestry.norway.simulation.policy package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.norway.simulation.presets.html">pyforestry.norway.simulation.presets package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.norway.siteindex.html">pyforestry.norway.siteindex package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.norway.taper.html">pyforestry.norway.taper package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.norway.volume.html">pyforestry.norway.volume package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="pyforestry.simulation.html">pyforestry.simulation package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.simulation.services.html">pyforestry.simulation.services package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.simulation.valuation.html">pyforestry.simulation.valuation package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="pyforestry.sweden.html">pyforestry.sweden package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.adapters.html">pyforestry.sweden.adapters package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.bark.html">pyforestry.sweden.bark package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html">pyforestry.sweden.biomass package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.geo.html">pyforestry.sweden.geo package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.climate.html">pyforestry.sweden.geo.climate package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.coastline.html">pyforestry.sweden.geo.coastline package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.counties.html">pyforestry.sweden.geo.counties package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.humidity.html">pyforestry.sweden.geo.humidity package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.temperature.html">pyforestry.sweden.geo.temperature package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.growth.html">pyforestry.sweden.growth package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.growth.elfving_2010.html">pyforestry.sweden.growth.elfving_2010 package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.growth.soderberg_1986.html">pyforestry.sweden.growth.soderberg_1986 package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">pyforestry.sweden.height package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.helpers.html">pyforestry.sweden.helpers package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.ingrowth.html">pyforestry.sweden.ingrowth package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.misc.html">pyforestry.sweden.misc package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.mortality.html">pyforestry.sweden.mortality package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.pricelist.html">pyforestry.sweden.pricelist package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.pricelist.data.html">pyforestry.sweden.pricelist.data package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.regeneration.html">pyforestry.sweden.regeneration package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.simulation.html">pyforestry.sweden.simulation package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.simulation.mortality.html">pyforestry.sweden.simulation.mortality package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.simulation.orchestration.html">pyforestry.sweden.simulation.orchestration package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.simulation.policy.html">pyforestry.sweden.simulation.policy package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.simulation.presets.html">pyforestry.sweden.simulation.presets package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html">pyforestry.sweden.site package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.siteindex.html">pyforestry.sweden.siteindex package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.sis.html">pyforestry.sweden.siteindex.sis package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.translate.html">pyforestry.sweden.siteindex.translate package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.systems.html">pyforestry.sweden.systems package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.systems.eko1985.html">pyforestry.sweden.systems.eko1985 package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.taper.html">pyforestry.sweden.taper package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.timber.html">pyforestry.sweden.timber package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.volume.html">pyforestry.sweden.volume package</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="modules.html" class="nav-link">pyforestry</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="pyforestry.html" class="nav-link">pyforestry package</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="pyforestry.sweden.html" class="nav-link">pyforestry.sweden package</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pyforestry.sweden.height package</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="pyforestry-sweden-height-package">
+<h1>pyforestry.sweden.height package<a class="headerlink" href="#pyforestry-sweden-height-package" title="Link to this heading">#</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
+</section>
+<section id="module-pyforestry.sweden.height.nystrom_2000">
+<span id="pyforestry-sweden-height-nystrom-2000-module"></span><h2>pyforestry.sweden.height.nystrom_2000 module<a class="headerlink" href="#module-pyforestry.sweden.height.nystrom_2000" title="Link to this heading">#</a></h2>
+<p>Nyström (2000) sapling height growth model (Table 4, Model M2).</p>
+<dl class="simple">
+<dt>Reference:</dt><dd><p>Nyström, K. (2000). Funktioner för att skatta höjdtillväxten i ungskog.
+Arbetsrapport 68. Inst. f skoglig resurshushållning och geomatik, SLU, Umeå.</p>
+</dd>
+</dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.sweden.height.nystrom_2000.sapling_height_growth_m">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.height.nystrom_2000.</span></span><span class="sig-name descname"><span class="pre">sapling_height_growth_m</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">age_bh_years</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.age.AgeMeasurement" title="pyforestry.base.helpers.primitives.age.AgeMeasurement"><span class="pre">AgeMeasurement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_height_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_height_sqr_m2_per_ha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_height_sqr_std_m2_per_ha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature_sum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">soil_moisture</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenSoilMoisture" title="pyforestry.sweden.site.enums.SwedenSoilMoisture"><span class="pre">SwedenSoilMoisture</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_layer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.SwedenFieldLayer" title="pyforestry.sweden.site.enums.SwedenFieldLayer"><span class="pre">SwedenFieldLayer</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">damage_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_effect</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_effect_alt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">period_years</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/height/nystrom_2000.html#sapling_height_growth_m"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.height.nystrom_2000.sapling_height_growth_m" title="Link to this definition">#</a></dt>
+<dd><p>Estimate sapling height growth (m) over <code class="docutils literal notranslate"><span class="pre">period_years</span></code>.</p>
+<dl class="simple">
+<dt>Source:</dt><dd><p>Nyström, K. (2000). Funktioner för att skatta höjdtillväxten i ungskog.
+Arbetsrapport 68. Inst. f skoglig resurshushållning och geomatik, SLU, Umeå.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>height_m</strong> (<em>float</em>) – Current sapling height (m).</p></li>
+<li><p><strong>age_bh_years</strong> (<em>float</em><em> | </em><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.age.AgeMeasurement" title="pyforestry.base.helpers.primitives.age.AgeMeasurement"><em>AgeMeasurement</em></a>) – Age at breast height (years).
+If an <code class="docutils literal notranslate"><span class="pre">AgeMeasurement</span></code> is provided, it must use <code class="docutils literal notranslate"><span class="pre">Age.DBH</span></code>.
+Negative numeric ages are treated as 1.0.</p></li>
+<li><p><strong>mean_height_m</strong> (<em>float</em>) – Mean height on plot (m).</p></li>
+<li><p><strong>total_height_sqr_m2_per_ha</strong> (<em>float</em>) – Sum of height^2 (m2/ha).</p></li>
+<li><p><strong>total_height_sqr_std_m2_per_ha</strong> (<em>float</em>) – Sum of height^2 for overstorey (m2/ha).</p></li>
+<li><p><strong>temperature_sum</strong> (<em>float</em>) – Temperature sum (degree-days; Odin 1983).</p></li>
+<li><p><strong>soil_moisture</strong> (<a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.Sweden.SoilMoistureEnum" title="pyforestry.sweden.site.enums.Sweden.SoilMoistureEnum"><em>Sweden.SoilMoistureEnum</em></a><em> | </em><em>None</em>) – Soil moisture class.</p></li>
+<li><p><strong>field_layer</strong> (<a class="reference internal" href="pyforestry.sweden.site.html#pyforestry.sweden.site.enums.Sweden.FieldLayer" title="pyforestry.sweden.site.enums.Sweden.FieldLayer"><em>Sweden.FieldLayer</em></a><em> | </em><em>None</em>) – Vegetation class used to derive rich/poor flags.</p></li>
+<li><p><strong>damage_index</strong> (<em>float</em>) – Damage indicator term from Nyström (2000); use 0.0 if unknown.</p></li>
+<li><p><strong>edge_effect</strong> (<em>float</em>) – Edge/border indicator term from Nyström (2000); use 0.0 if unknown.</p></li>
+<li><p><strong>edge_effect_alt</strong> (<em>float</em>) – Alternative edge term from Nyström (2000); use 0.0 if unknown.</p></li>
+<li><p><strong>species</strong> (<a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><em>TreeName</em></a>) – Tree species.</p></li>
+<li><p><strong>period_years</strong> (<em>float</em>) – Growth period in years (default 5.0).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Height growth over the period (m).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> – If <code class="docutils literal notranslate"><span class="pre">age_bh_years</span></code> is not a float/int or <code class="docutils literal notranslate"><span class="pre">AgeMeasurement</span></code> with
+    <code class="docutils literal notranslate"><span class="pre">Age.DBH</span></code> code.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The original model is calibrated for 5-year increments. Growth is scaled linearly
+when <code class="docutils literal notranslate"><span class="pre">period_years</span></code> differs from 5.
+<code class="docutils literal notranslate"><span class="pre">damage_index</span></code>, <code class="docutils literal notranslate"><span class="pre">edge_effect</span></code> and <code class="docutils literal notranslate"><span class="pre">edge_effect_alt</span></code> are retained as direct
+compatibility terms for the legacy Nyström (2000) implementation.</p>
+</dd></dl>
+
+</section>
+<section id="module-pyforestry.sweden.height.soderberg_1992">
+<span id="pyforestry-sweden-height-soderberg-1992-module"></span><h2>pyforestry.sweden.height.soderberg_1992 module<a class="headerlink" href="#module-pyforestry.sweden.height.soderberg_1992" title="Link to this heading">#</a></h2>
+<p>Soderberg (1992) single-tree height models for Sweden.</p>
+<p>Implements the height equations reported in:</p>
+<blockquote>
+<div><p>Söderberg, U. (1992). <em>Functions for forest management. Height, form height
+and bark thickness of individual trees</em>. Report 52, SLU, Umeå.</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Two variants are provided:</dt><dd><ul class="simple">
+<li><p>Stand-age (mean age) model.</p></li>
+<li><p>Tree-age model.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.sweden.height.soderberg_1992.soderberg_1992_height_stand_age_m">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.height.soderberg_1992.</span></span><span class="sig-name descname"><span class="pre">soderberg_1992_height_stand_age_m</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_diameter_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_age_total_years</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site_index_pine_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude_deg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_pine</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_spruce</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_birch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">part_of_sweden</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">near_coast</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">south_east</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region5</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_plot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/height/soderberg_1992.html#soderberg_1992_height_stand_age_m"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.height.soderberg_1992.soderberg_1992_height_stand_age_m" title="Link to this definition">#</a></dt>
+<dd><p>Stand-age height model (m) from Söderberg (1992).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>species</strong> (<a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><em>TreeName</em></a><em> | </em><em>str</em>) – Tree species.</p></li>
+<li><p><strong>diameter_cm</strong> (<em>float</em>) – Diameter at breast height, cm.</p></li>
+<li><p><strong>max_diameter_cm</strong> (<em>float</em>) – Maximum diameter on plot, cm.</p></li>
+<li><p><strong>mean_age_total_years</strong> (<em>float</em>) – Mean total age (years).</p></li>
+<li><p><strong>site_index_pine_m</strong> (<em>float</em>) – Pine site index (H100), m.</p></li>
+<li><p><strong>latitude_deg</strong> (<em>float</em>) – Latitude, degrees.</p></li>
+<li><p><strong>altitude_m</strong> (<em>float</em>) – Altitude, m.</p></li>
+<li><p><strong>prop_pine</strong> (<em>float</em>) – Pine proportion of basal area (0..1).</p></li>
+<li><p><strong>prop_spruce</strong> (<em>float</em>) – Spruce proportion of basal area (0..1).</p></li>
+<li><p><strong>prop_birch</strong> (<em>float</em>) – Birch proportion of basal area (0..1).</p></li>
+<li><p><strong>part_of_sweden</strong> (<em>str</em>) – <code class="docutils literal notranslate"><span class="pre">north</span></code>, <code class="docutils literal notranslate"><span class="pre">middle</span></code> or <code class="docutils literal notranslate"><span class="pre">south</span></code>.</p></li>
+<li><p><strong>near_coast</strong> (<em>bool</em>) – Near-coast indicator (&lt;50 km).</p></li>
+<li><p><strong>south_east</strong> (<em>bool</em>) – Southeast Sweden indicator.</p></li>
+<li><p><strong>region5</strong> (<em>bool</em>) – Region 5 indicator.</p></li>
+<li><p><strong>split_plot</strong> (<em>bool</em>) – Split plot indicator.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tree height, m.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.sweden.height.soderberg_1992.soderberg_1992_height_tree_age_m">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.sweden.height.soderberg_1992.</span></span><span class="sig-name descname"><span class="pre">soderberg_1992_height_tree_age_m</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diameter_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree_age_bh_years</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_diameter_cm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stand_basal_area_m2_ha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dominant_species</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><span class="pre">TreeName</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site_index_dominant_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude_deg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude_m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_pine</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_spruce</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_birch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_beech</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">part_of_sweden</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'south'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maritime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">continental</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">near_coast</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">south_east</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region5</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_plot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/sweden/height/soderberg_1992.html#soderberg_1992_height_tree_age_m"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.sweden.height.soderberg_1992.soderberg_1992_height_tree_age_m" title="Link to this definition">#</a></dt>
+<dd><p>Tree-age height model (m) from Söderberg (1992).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>species</strong> (<a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><em>TreeName</em></a><em> | </em><em>str</em>) – Tree species.</p></li>
+<li><p><strong>diameter_cm</strong> (<em>float</em>) – Diameter at breast height, cm.</p></li>
+<li><p><strong>tree_age_bh_years</strong> (<em>float</em>) – Age at breast height, years.</p></li>
+<li><p><strong>max_diameter_cm</strong> (<em>float</em>) – Maximum diameter on plot, cm.</p></li>
+<li><p><strong>stand_basal_area_m2_ha</strong> (<em>float</em>) – Stand basal area, m²/ha (clamped to 80).</p></li>
+<li><p><strong>dominant_species</strong> (<a class="reference internal" href="pyforestry.base.helpers.html#pyforestry.base.helpers.tree_species.TreeName" title="pyforestry.base.helpers.tree_species.TreeName"><em>TreeName</em></a><em> | </em><em>str</em>) – Dominant species for site index.</p></li>
+<li><p><strong>site_index_dominant_m</strong> (<em>float</em>) – Dominant site index (H100), m.</p></li>
+<li><p><strong>latitude_deg</strong> (<em>float</em>) – Latitude, degrees.</p></li>
+<li><p><strong>altitude_m</strong> (<em>float</em>) – Altitude, m.</p></li>
+<li><p><strong>prop_pine</strong> (<em>float</em>) – Pine proportion of basal area (0..1).</p></li>
+<li><p><strong>prop_spruce</strong> (<em>float</em>) – Spruce proportion of basal area (0..1).</p></li>
+<li><p><strong>prop_birch</strong> (<em>float</em>) – Birch proportion of basal area (0..1).</p></li>
+<li><p><strong>prop_beech</strong> (<em>float</em>) – Beech proportion of basal area (0..1).</p></li>
+<li><p><strong>part_of_sweden</strong> (<em>str</em>) – <code class="docutils literal notranslate"><span class="pre">north</span></code>, <code class="docutils literal notranslate"><span class="pre">middle</span></code> or <code class="docutils literal notranslate"><span class="pre">south</span></code>.</p></li>
+<li><p><strong>maritime</strong> (<em>bool</em>) – Maritime climate indicator.</p></li>
+<li><p><strong>continental</strong> (<em>bool</em>) – Continental climate indicator.</p></li>
+<li><p><strong>near_coast</strong> (<em>bool</em>) – Distance-to-coast &lt; 50 km indicator.</p></li>
+<li><p><strong>south_east</strong> (<em>bool</em>) – Southeast Sweden indicator.</p></li>
+<li><p><strong>region5</strong> (<em>bool</em>) – Region 5 indicator.</p></li>
+<li><p><strong>split_plot</strong> (<em>bool</em>) – Split plot indicator.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tree height, m.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-pyforestry.sweden.height">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pyforestry.sweden.height" title="Link to this heading">#</a></h2>
+<p>Swedish height equations and trajectory models.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="pyforestry.sweden.growth.soderberg_1986.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">pyforestry.sweden.growth.soderberg_1986 package</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="pyforestry.sweden.helpers.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">pyforestry.sweden.helpers package</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.sweden.height.nystrom_2000">pyforestry.sweden.height.nystrom_2000 module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.height.nystrom_2000.sapling_height_growth_m"><code class="docutils literal notranslate"><span class="pre">sapling_height_growth_m()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.sweden.height.soderberg_1992">pyforestry.sweden.height.soderberg_1992 module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.height.soderberg_1992.soderberg_1992_height_stand_age_m"><code class="docutils literal notranslate"><span class="pre">soderberg_1992_height_stand_age_m()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.sweden.height.soderberg_1992.soderberg_1992_height_tree_age_m"><code class="docutils literal notranslate"><span class="pre">soderberg_1992_height_tree_age_m()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.sweden.height">Module contents</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/api/pyforestry.sweden.height.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

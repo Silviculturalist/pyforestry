@@ -1,0 +1,976 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pyforestry.norway.simulation.orchestration package &#8212; pyforestry  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/pyforestry.norway.simulation.orchestration';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.20.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'stable';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pyforestry.norway.simulation.policy package" href="pyforestry.norway.simulation.policy.html" />
+    <link rel="prev" title="pyforestry.norway.simulation package" href="pyforestry.norway.simulation.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pyforestry  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../catalog.html">
+    Model catalog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../model_index.html">
+    Model index
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/wikberg_2004.html">
+    Wikberg 2004 ingrowth demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/elfving_2010.html">
+    Elfving 2010 growth demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/elfving_2010_preset.html">
+    Elfving 2010 composite preset demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/soderberg_1986_preset.html">
+    Soderberg 1986 composite preset demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/young_stand.html">
+    Young stand demo (NYSKOG + Näslund 1986)
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/competition_indices.html">
+    Competition indices on a simulated stand
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../notebooks/FullStack_Callables_Guide.html">
+    Composable Callables & Full‑Stack GrowthModel — Practical Guide
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../catalog.html">
+    Model catalog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../model_index.html">
+    Model index
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/wikberg_2004.html">
+    Wikberg 2004 ingrowth demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/elfving_2010.html">
+    Elfving 2010 growth demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/elfving_2010_preset.html">
+    Elfving 2010 composite preset demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/soderberg_1986_preset.html">
+    Soderberg 1986 composite preset demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/young_stand.html">
+    Young stand demo (NYSKOG + Näslund 1986)
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/competition_indices.html">
+    Competition indices on a simulated stand
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../notebooks/FullStack_Callables_Guide.html">
+    Composable Callables & Full‑Stack GrowthModel — Practical Guide
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="pyforestry.html">pyforestry package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="pyforestry.base.html">pyforestry.base package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.competition.html">pyforestry.base.competition package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.base.helpers.html">pyforestry.base.helpers package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.base.helpers.primitives.html">pyforestry.base.helpers.primitives package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.imputation.html">pyforestry.base.imputation package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.pricelist.html">pyforestry.base.pricelist package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.simulation.html">pyforestry.base.simulation package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.taper.html">pyforestry.base.taper package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.base.timber.html">pyforestry.base.timber package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.base.timber.timber_base.html">pyforestry.base.timber.timber_base package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.base.timber_bucking.html">pyforestry.base.timber_bucking package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="pyforestry.norway.html">pyforestry.norway package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.norway.adapters.html">pyforestry.norway.adapters package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.norway.bark.html">pyforestry.norway.bark package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.norway.growth.html">pyforestry.norway.growth package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.norway.helpers.html">pyforestry.norway.helpers package</a></li>
+<li class="toctree-l3 current active has-children"><a class="reference internal" href="pyforestry.norway.simulation.html">pyforestry.norway.simulation package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l4 current active"><a class="current reference internal" href="#">pyforestry.norway.simulation.orchestration package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.norway.simulation.policy.html">pyforestry.norway.simulation.policy package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.norway.simulation.presets.html">pyforestry.norway.simulation.presets package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.norway.siteindex.html">pyforestry.norway.siteindex package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.norway.taper.html">pyforestry.norway.taper package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.norway.volume.html">pyforestry.norway.volume package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="pyforestry.simulation.html">pyforestry.simulation package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.simulation.services.html">pyforestry.simulation.services package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.simulation.valuation.html">pyforestry.simulation.valuation package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="pyforestry.sweden.html">pyforestry.sweden package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.adapters.html">pyforestry.sweden.adapters package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.bark.html">pyforestry.sweden.bark package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.biomass.html">pyforestry.sweden.biomass package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.geo.html">pyforestry.sweden.geo package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.climate.html">pyforestry.sweden.geo.climate package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.coastline.html">pyforestry.sweden.geo.coastline package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.counties.html">pyforestry.sweden.geo.counties package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.humidity.html">pyforestry.sweden.geo.humidity package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.geo.temperature.html">pyforestry.sweden.geo.temperature package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.growth.html">pyforestry.sweden.growth package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.growth.elfving_2010.html">pyforestry.sweden.growth.elfving_2010 package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.growth.soderberg_1986.html">pyforestry.sweden.growth.soderberg_1986 package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.height.html">pyforestry.sweden.height package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.helpers.html">pyforestry.sweden.helpers package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.ingrowth.html">pyforestry.sweden.ingrowth package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.misc.html">pyforestry.sweden.misc package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.mortality.html">pyforestry.sweden.mortality package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.pricelist.html">pyforestry.sweden.pricelist package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.pricelist.data.html">pyforestry.sweden.pricelist.data package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.regeneration.html">pyforestry.sweden.regeneration package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.simulation.html">pyforestry.sweden.simulation package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.simulation.mortality.html">pyforestry.sweden.simulation.mortality package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.simulation.orchestration.html">pyforestry.sweden.simulation.orchestration package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.simulation.policy.html">pyforestry.sweden.simulation.policy package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.simulation.presets.html">pyforestry.sweden.simulation.presets package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.site.html">pyforestry.sweden.site package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.siteindex.html">pyforestry.sweden.siteindex package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.sis.html">pyforestry.sweden.siteindex.sis package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.siteindex.translate.html">pyforestry.sweden.siteindex.translate package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyforestry.sweden.systems.html">pyforestry.sweden.systems package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyforestry.sweden.systems.eko1985.html">pyforestry.sweden.systems.eko1985 package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.taper.html">pyforestry.sweden.taper package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.timber.html">pyforestry.sweden.timber package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyforestry.sweden.volume.html">pyforestry.sweden.volume package</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="modules.html" class="nav-link">pyforestry</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="pyforestry.html" class="nav-link">pyforestry package</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="pyforestry.norway.html" class="nav-link">pyforestry.norway package</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="pyforestry.norway.simulation.html" class="nav-link">pyforestry.norway.simulation package</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pyforestry.norway.simulation.orchestration package</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="pyforestry-norway-simulation-orchestration-package">
+<h1>pyforestry.norway.simulation.orchestration package<a class="headerlink" href="#pyforestry-norway-simulation-orchestration-package" title="Link to this heading">#</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
+</section>
+<section id="module-pyforestry.norway.simulation.orchestration.runbook">
+<span id="pyforestry-norway-simulation-orchestration-runbook-module"></span><h2>pyforestry.norway.simulation.orchestration.runbook module<a class="headerlink" href="#module-pyforestry.norway.simulation.orchestration.runbook" title="Link to this heading">#</a></h2>
+<p>Running Norway’s scenario configurations over real stands.</p>
+<p>Norway had a scenario configuration, rulesets and a preset, and nothing that
+executed any of them – the whole tier was a mirror of Sweden’s scaffolding,
+added in the same initial commit, before either region had a runtime. Norway’s
+four published models were reachable through <code class="xref py py-func docutils literal notranslate"><span class="pre">pyforestry.project()</span></code> all
+along; what was missing was the scenario runtime around them.</p>
+<p><a class="reference internal" href="#pyforestry.norway.simulation.orchestration.runbook.run_norway_scenario" title="pyforestry.norway.simulation.orchestration.runbook.run_norway_scenario"><code class="xref py py-func docutils literal notranslate"><span class="pre">run_norway_scenario()</span></code></a> is that. It is a thin regional entry point over
+<a class="reference internal" href="pyforestry.simulation.html#pyforestry.simulation.scenario.run_scenario" title="pyforestry.simulation.scenario.run_scenario"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyforestry.simulation.scenario.run_scenario()</span></code></a>: it supplies the Kuehne
+(2022) Scots-pine model, builds the stands, and hands everything else to the
+shared runner, so the manifest Norway emits has the same shape and the same
+guarantees as Sweden’s.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.norway.simulation.orchestration.runbook.build_kuehne_stands">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.norway.simulation.orchestration.runbook.</span></span><span class="sig-name descname"><span class="pre">build_kuehne_stands</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_stands</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">basal_area_m2_ha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stems_per_ha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1400.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyforestry.simulation.html#pyforestry.simulation.scenario.StandUnit" title="pyforestry.simulation.scenario.StandUnit"><span class="pre">StandUnit</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pyforestry/norway/simulation/orchestration/runbook.html#build_kuehne_stands"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.norway.simulation.orchestration.runbook.build_kuehne_stands" title="Link to this definition">#</a></dt>
+<dd><p>Build <code class="docutils literal notranslate"><span class="pre">n_stands</span></code> identical aggregate pine stands for a scenario run.</p>
+<p>Identical on purpose: the Kuehne model is deterministic, so identical stands
+give identical rows, and any difference between rows in a run is the
+scenario’s doing rather than the inventory’s. Supply your own
+<a class="reference internal" href="pyforestry.simulation.html#pyforestry.simulation.scenario.StandUnit" title="pyforestry.simulation.scenario.StandUnit"><code class="xref py py-class docutils literal notranslate"><span class="pre">StandUnit</span></code></a> list for real inventory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_stands</strong> – How many stands to build.</p></li>
+<li><p><strong>basal_area_m2_ha</strong> – Starting basal area.</p></li>
+<li><p><strong>stems_per_ha</strong> – Starting stem density.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>One <code class="xref py py-class docutils literal notranslate"><span class="pre">StandUnit</span></code> per stand, ids counting from 1.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If <code class="docutils literal notranslate"><span class="pre">n_stands</span></code> is not positive.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.norway.simulation.orchestration.runbook.kuehne_mean_tree">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.norway.simulation.orchestration.runbook.</span></span><span class="sig-name descname"><span class="pre">kuehne_mean_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.simulation.html#pyforestry.base.simulation.core.SimulationContext" title="pyforestry.base.simulation.core.SimulationContext"><span class="pre">SimulationContext</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">removed_fraction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pyforestry.simulation.html#pyforestry.simulation.stages.MeanTree" title="pyforestry.simulation.stages.MeanTree"><span class="pre">MeanTree</span></a></span></span><a class="reference internal" href="../_modules/pyforestry/norway/simulation/orchestration/runbook.html#kuehne_mean_tree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.norway.simulation.orchestration.runbook.kuehne_mean_tree" title="Link to this definition">#</a></dt>
+<dd><p>Return the stand’s representative stem, so a thinning can be bucked.</p>
+<p>The Kuehne model steps a basal area and a stem count, so a thinning from it
+has no individual stems. It does have a quadratic mean diameter, which the
+stand derives from those two, and the stem that diameter describes is a real
+one: bucking it gives the assortment split a stand of that mean size yields.</p>
+<p>The height is the harder half, because Kuehne (2022) predicts only <em>dominant</em>
+height – its height function is a dominant-height trajectory – and a mean
+stem is shorter than a dominant one. Substituting the dominant height, which
+this did, makes the representative stem too big: on the shipped baseline it
+bucks to about 12% more wood than the model says the thinning removed, which
+is impossible for a real stem and was previously absorbed unseen into a scale
+factor.</p>
+<p>So the height is <em>implied from the model instead</em>. The model states how much
+volume came out and in how many stems, so the mean stem’s volume is their
+quotient; <code class="xref py py-func docutils literal notranslate"><span class="pre">brantseg_1967_volume_scots_pine_norway()</span></code> gives the volume of a
+Scots pine of a given diameter and height, and this inverts it for the height
+consistent with the model’s own figures at the stand’s QMD. That is not a new
+height relation: Brantseg (1967) is one of the three single-tree functions
+Kuehne’s own volume equation is built on, so the stem this returns is the one
+the model is already implicitly describing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ctx</strong> – The run’s context, read before the removal is applied.</p></li>
+<li><p><strong>removed_fraction</strong> – The share of the stand being taken out.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The representative stem and how many of it come out.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.norway.simulation.orchestration.runbook.kuehne_stand_volume">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.norway.simulation.orchestration.runbook.</span></span><span class="sig-name descname"><span class="pre">kuehne_stand_volume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.simulation.html#pyforestry.base.simulation.core.SimulationContext" title="pyforestry.base.simulation.core.SimulationContext"><span class="pre">SimulationContext</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/pyforestry/norway/simulation/orchestration/runbook.html#kuehne_stand_volume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.norway.simulation.orchestration.runbook.kuehne_stand_volume" title="Link to this definition">#</a></dt>
+<dd><p>Return the stand’s volume now, from Kuehne (2022) Eq. 8.</p>
+<p>Evaluated on the context’s <em>current</em> basal area, dominant height and age, so
+a thinning or a disturbance between two growth steps is visible immediately.
+Reading the <code class="docutils literal notranslate"><span class="pre">stand_volume_m3_per_ha</span></code> the model published at its last step
+would not be: it goes stale the moment anything removes a stem, and the run’s
+summary would then report the removal as zero and quietly fold the volume
+back into growth.</p>
+<p>Kuehne (2022) is fitted for thinned as well as unthinned stands, so
+re-evaluating it on a post-thinning basal area is within what the model was
+published to do.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyforestry.norway.simulation.orchestration.runbook.run_norway_scenario">
+<span class="sig-prename descclassname"><span class="pre">pyforestry.norway.simulation.orchestration.runbook.</span></span><span class="sig-name descname"><span class="pre">run_norway_scenario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">global_seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ScenarioConfig</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stands</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyforestry.simulation.html#pyforestry.simulation.scenario.StandUnit" title="pyforestry.simulation.scenario.StandUnit"><span class="pre">StandUnit</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_stands</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_years</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valuation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.simulation.valuation.html#pyforestry.simulation.valuation.volume.ValuationSettings" title="pyforestry.simulation.valuation.volume.ValuationSettings"><span class="pre">ValuationSettings</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discount_rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disturbance_rate_per_year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thin_at_age</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.age.AgeMeasurement" title="pyforestry.base.helpers.primitives.age.AgeMeasurement"><span class="pre">AgeMeasurement</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thin_at_year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_age</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.base.helpers.primitives.html#pyforestry.base.helpers.primitives.age.AgeMeasurement" title="pyforestry.base.helpers.primitives.age.AgeMeasurement"><span class="pre">AgeMeasurement</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_to_breast_height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forcings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyforestry.simulation.html#pyforestry.simulation.forcing.ForcingSet" title="pyforestry.simulation.forcing.ForcingSet"><span class="pre">ForcingSet</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pyforestry.simulation.html#pyforestry.simulation.scenario.ScenarioRunResult" title="pyforestry.simulation.scenario.ScenarioRunResult"><span class="pre">ScenarioRunResult</span></a></span></span><a class="reference internal" href="../_modules/pyforestry/norway/simulation/orchestration/runbook.html#run_norway_scenario"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyforestry.norway.simulation.orchestration.runbook.run_norway_scenario" title="Link to this definition">#</a></dt>
+<dd><p>Run a Norway scenario with the Kuehne (2022) pine model and write its artifacts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>global_seed</strong> – The run’s seed; each stand’s derives from it.</p></li>
+<li><p><strong>output_dir</strong> – Where the three artifacts go.</p></li>
+<li><p><strong>config</strong> – The scenario configuration. Defaults to the Kuehne baseline.</p></li>
+<li><p><strong>stands</strong> – The stands to project. Defaults to <code class="docutils literal notranslate"><span class="pre">n_stands</span></code> built by
+<a class="reference internal" href="#pyforestry.norway.simulation.orchestration.runbook.build_kuehne_stands" title="pyforestry.norway.simulation.orchestration.runbook.build_kuehne_stands"><code class="xref py py-func docutils literal notranslate"><span class="pre">build_kuehne_stands()</span></code></a>.</p></li>
+<li><p><strong>n_stands</strong> – How many default stands to build, if <code class="docutils literal notranslate"><span class="pre">stands</span></code> is not given.</p></li>
+<li><p><strong>n_steps</strong> – Number of periods.</p></li>
+<li><p><strong>step_years</strong> – Period length in years.</p></li>
+<li><p><strong>valuation</strong> – Price list and bucking settings. <strong>Required</strong>, because
+Norway’s scenario declares a valuation stage. This package ships
+no Norwegian price list – a price list is regional market data,
+not science, and inventing one would put numbers under Norway’s
+name with nothing behind them. Supply your own
+<a class="reference internal" href="pyforestry.simulation.valuation.html#pyforestry.simulation.valuation.volume.ValuationSettings" title="pyforestry.simulation.valuation.volume.ValuationSettings"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValuationSettings</span></code></a>,
+and give its price list a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">PricelistIdentity</span></code>: since the list
+is yours, it is the only thing that can tell the manifest what
+currency the summary’s money is in.
+The Kuehne model is a stand-level one, so a thinning from it has no
+individual stems – it is bucked at the stand’s mean tree instead,
+once, and scaled to the volume the model says came out. See
+<a class="reference internal" href="#pyforestry.norway.simulation.orchestration.runbook.kuehne_mean_tree" title="pyforestry.norway.simulation.orchestration.runbook.kuehne_mean_tree"><code class="xref py py-func docutils literal notranslate"><span class="pre">kuehne_mean_tree()</span></code></a> for what that assumes.</p></li>
+<li><p><strong>discount_rate</strong> – The annual rate the summary’s net present value is
+discounted at. <strong>Required</strong>, like <code class="docutils literal notranslate"><span class="pre">valuation</span></code>, because Norway’s
+scenario declares a valuation stage and a net present value in an
+artifact has to say what it was discounted at. <code class="docutils literal notranslate"><span class="pre">0.0</span></code> states no time
+preference.</p></li>
+<li><p><strong>disturbance_rate_per_year</strong> – Annual share of the stand a scenario
+disturbance removes, before the scenario’s <code class="docutils literal notranslate"><span class="pre">disturbance_factor</span></code>.
+Supplied by the caller; this package ships no rate, because a
+disturbance rate is a finding and there is no source for one here.
+Zero, the default, makes the stage an exact no-op.</p></li>
+<li><p><strong>thin_at_age</strong> – Stand ages at which the management stage thins, as
+<code class="docutils literal notranslate"><span class="pre">Age.TOTAL(60)</span></code>. The one to reach for, and especially here: the
+Kuehne adapter starts its clock at the stand’s total age, so the raw
+clock times this replaces meant something different in Norway than in
+Sweden under the same argument name. Defaults to the age
+<a class="reference internal" href="#pyforestry.norway.simulation.orchestration.runbook.build_kuehne_stands" title="pyforestry.norway.simulation.orchestration.runbook.build_kuehne_stands"><code class="xref py py-func docutils literal notranslate"><span class="pre">build_kuehne_stands()</span></code></a> starts its stands at.</p></li>
+<li><p><strong>thin_at_year</strong> – Calendar years at which it thins instead, read against
+<code class="docutils literal notranslate"><span class="pre">start_year</span></code>. Mutually exclusive with <code class="docutils literal notranslate"><span class="pre">thin_at_age</span></code>.</p></li>
+<li><p><strong>start_age</strong> – How old the stands are at the start. Defaults to
+<code class="xref py py-data docutils literal notranslate"><span class="pre">_BASELINE_AGE_YEARS</span></code> as a <em>total</em> age, which is what the
+adapter is configured with; supply it when passing your own stands.</p></li>
+<li><p><strong>time_to_breast_height</strong> – Years to 1.3 m, needed only to schedule in one age
+measure stands described in the other.</p></li>
+<li><p><strong>start_year</strong> – Calendar year the projection begins in, which is the year
+a forcing series is read at.</p></li>
+<li><p><strong>forcings</strong> – Named values the run reads per period – a weather
+correction, a price index. This package ships none.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The run result, including the written artifacts.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-pyforestry.norway.simulation.orchestration">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pyforestry.norway.simulation.orchestration" title="Link to this heading">#</a></h2>
+<p>Running Norway’s scenario configurations over real stands.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="pyforestry.norway.simulation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">pyforestry.norway.simulation package</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="pyforestry.norway.simulation.policy.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">pyforestry.norway.simulation.policy package</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.norway.simulation.orchestration.runbook">pyforestry.norway.simulation.orchestration.runbook module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.norway.simulation.orchestration.runbook.build_kuehne_stands"><code class="docutils literal notranslate"><span class="pre">build_kuehne_stands()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.norway.simulation.orchestration.runbook.kuehne_mean_tree"><code class="docutils literal notranslate"><span class="pre">kuehne_mean_tree()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.norway.simulation.orchestration.runbook.kuehne_stand_volume"><code class="docutils literal notranslate"><span class="pre">kuehne_stand_volume()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyforestry.norway.simulation.orchestration.runbook.run_norway_scenario"><code class="docutils literal notranslate"><span class="pre">run_norway_scenario()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyforestry.norway.simulation.orchestration">Module contents</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/api/pyforestry.norway.simulation.orchestration.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

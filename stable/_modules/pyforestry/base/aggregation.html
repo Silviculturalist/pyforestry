@@ -1,0 +1,1075 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pyforestry.base.aggregation &#8212; pyforestry  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyforestry/base/aggregation';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.20.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'stable';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pyforestry  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../catalog.html">
+    Model catalog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../model_index.html">
+    Model index
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/wikberg_2004.html">
+    Wikberg 2004 ingrowth demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/elfving_2010.html">
+    Elfving 2010 growth demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/elfving_2010_preset.html">
+    Elfving 2010 composite preset demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/soderberg_1986_preset.html">
+    Soderberg 1986 composite preset demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/young_stand.html">
+    Young stand demo (NYSKOG + Näslund 1986)
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/competition_indices.html">
+    Competition indices on a simulated stand
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/FullStack_Callables_Guide.html">
+    Composable Callables & Full‑Stack GrowthModel — Practical Guide
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../catalog.html">
+    Model catalog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../model_index.html">
+    Model index
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/wikberg_2004.html">
+    Wikberg 2004 ingrowth demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/elfving_2010.html">
+    Elfving 2010 growth demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/elfving_2010_preset.html">
+    Elfving 2010 composite preset demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/soderberg_1986_preset.html">
+    Soderberg 1986 composite preset demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/young_stand.html">
+    Young stand demo (NYSKOG + Näslund 1986)
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/competition_indices.html">
+    Competition indices on a simulated stand
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/FullStack_Callables_Guide.html">
+    Composable Callables & Full‑Stack GrowthModel — Practical Guide
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pyforestry.base.aggregation</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for pyforestry.base.aggregation</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;The single plot-to-stand estimator.</span>
+
+<span class="sd">Every per-hectare stand figure in this package comes from here: :class:`Stand`</span>
+<span class="sd">reports its metrics from :func:`aggregate_plots`, and so does the working copy a</span>
+<span class="sd">:class:`~pyforestry.base.simulation.core.SimulationContext` holds. They used to</span>
+<span class="sd">carry an implementation each, and the two disagreed -- the context averaged a</span>
+<span class="sd">species over only the plots where it occurred, so a two-plot stand with one</span>
+<span class="sd">spruce plot and one pine plot read 1.0 stems/ha through ``Stand`` and 2.0 through</span>
+<span class="sd">the context. One estimator makes that class of divergence unrepresentable.</span>
+
+<span class="sd">The estimator&#39;s conventions, in one place:</span>
+
+<span class="sd">* A plot&#39;s trees are expanded over its *effective* area, ``area_ha * (1 -</span>
+<span class="sd">  occlusion)``, so a partly occluded plot represents the area actually searched.</span>
+<span class="sd">* ``Tree.weight_n`` is honoured everywhere: a record standing for ten stems</span>
+<span class="sd">  counts as ten.</span>
+<span class="sd">* A species absent from a plot contributes an explicit zero for that plot, so the</span>
+<span class="sd">  cross-plot mean divides by the number of plots -- not by the number of plots</span>
+<span class="sd">  where the species happens to occur.</span>
+<span class="sd">* A record with no diameter is still a stem, but carries no basal area and is</span>
+<span class="sd">  excluded from the diameter-derived metrics (QMD, BAWAD) so their numerator and</span>
+<span class="sd">  denominator describe the same trees.</span>
+<span class="sd">* Every ``precision`` is the standard error of the stand mean over plots. It is a</span>
+<span class="sd">  *between-plot* error only and includes no measurement or model error, so a</span>
+<span class="sd">  metric built on curve-imputed heights still reports a measured-quality error.</span>
+<span class="sd">* Ratio metrics (Lorey&#39;s mean height, the basal-area weighted diameter, QMD) are</span>
+<span class="sd">  reduced from the per-plot series through :func:`ratio_and_se`, which carries the</span>
+<span class="sd">  correlation between numerator and denominator rather than assuming it away.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">statistics</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover - annotation only</span>
+    <span class="c1"># Importing this at runtime executes ``base.helpers.__init__``, which imports</span>
+    <span class="c1"># ``.stand``, which imports back into this module -- so ``import</span>
+    <span class="c1"># pyforestry.base.aggregation`` as a program&#39;s first import failed with a</span>
+    <span class="c1"># partially-initialised-module error. It is only ever an annotation here.</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">CircularPlot</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.primitives</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BasalAreaWeightedDiameter</span><span class="p">,</span>
+    <span class="n">LoreysMeanHeight</span><span class="p">,</span>
+    <span class="n">QuadraticMeanDiameter</span><span class="p">,</span>
+    <span class="n">StandBasalArea</span><span class="p">,</span>
+    <span class="n">Stems</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.tree_species</span><span class="w"> </span><span class="kn">import</span> <span class="n">TreeName</span><span class="p">,</span> <span class="n">parse_tree_species</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;COMPONENT_KEYS&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PlotAggregation&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;aggregate_plots&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mean_and_se&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;metrics_from_series&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;qmd_from_components&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;qmd_from_series&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ratio_and_se&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;sum_series&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">MetricKey</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">TreeName</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+
+<span class="c1">#: Basal area (m^2/ha) -&gt; sum of squared diameters (cm^2/ha).</span>
+<span class="n">_D2_PER_BA</span> <span class="o">=</span> <span class="mf">40000.0</span> <span class="o">/</span> <span class="n">pi</span>
+
+<span class="c1">#: Per-plot, per-species quantities accumulated in one pass and reused to derive</span>
+<span class="c1">#: every metric: stem count, stem count of trees carrying a diameter, basal area,</span>
+<span class="c1">#: sum of cubed diameters (the BAWAD numerator), and the basal-area weighted</span>
+<span class="c1">#: height sum with its matching basal area (Lorey&#39;s).</span>
+<span class="n">COMPONENT_KEYS</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;stems&quot;</span><span class="p">,</span> <span class="s2">&quot;stems_d&quot;</span><span class="p">,</span> <span class="s2">&quot;ba&quot;</span><span class="p">,</span> <span class="s2">&quot;d3&quot;</span><span class="p">,</span> <span class="s2">&quot;gh&quot;</span><span class="p">,</span> <span class="s2">&quot;ba_h&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="mean_and_se">
+<a class="viewcode-back" href="../../../api/pyforestry.base.html#pyforestry.base.aggregation.mean_and_se">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">mean_and_se</span><span class="p">(</span><span class="n">values</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the sample mean and standard error of the mean of ``values``.</span>
+
+<span class="sd">    The standard error is the sample standard deviation divided by ``sqrt(n)``;</span>
+<span class="sd">    it is ``0.0`` when fewer than two values are supplied.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span>
+    <span class="n">mean</span> <span class="o">=</span> <span class="n">statistics</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+    <span class="n">se</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">statistics</span><span class="o">.</span><span class="n">variance</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span> <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="mf">0.0</span>
+    <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">se</span></div>
+
+
+
+<div class="viewcode-block" id="ratio_and_se">
+<a class="viewcode-back" href="../../../api/pyforestry.base.html#pyforestry.base.aggregation.ratio_and_se">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">ratio_and_se</span><span class="p">(</span>
+    <span class="n">numerator</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+    <span class="n">denominator</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Ratio of two per-plot means with a covariance-aware standard error.</span>
+
+<span class="sd">    Both arguments are the *per-plot series* of the numerator and denominator</span>
+<span class="sd">    (not their means), because a ratio metric such as Lorey&#39;s mean height or the</span>
+<span class="sd">    basal-area weighted diameter draws both parts from the same trees: they are</span>
+<span class="sd">    strongly correlated, and treating them as independent invents variance that</span>
+<span class="sd">    is not there.</span>
+
+<span class="sd">    The standard error is the classical ratio-estimator form, which carries that</span>
+<span class="sd">    correlation exactly::</span>
+
+<span class="sd">        SE(R) = sqrt(Var(N_i - R * D_i) / n) / mean(D)</span>
+
+<span class="sd">    A stand whose plots all share the same ratio therefore reports a standard</span>
+<span class="sd">    error of zero, however much the plots differ in density.</span>
+
+<span class="sd">    Returns ``(0.0, 0.0)`` when the denominator mean is non-positive (e.g. no</span>
+<span class="sd">    basal area, or no measured heights for Lorey&#39;s mean).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">numerator</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span>
+    <span class="n">denominator_mean</span> <span class="o">=</span> <span class="n">statistics</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">denominator</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">denominator_mean</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span>
+    <span class="n">ratio</span> <span class="o">=</span> <span class="n">statistics</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">numerator</span><span class="p">)</span> <span class="o">/</span> <span class="n">denominator_mean</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ratio</span><span class="p">,</span> <span class="mf">0.0</span>
+    <span class="n">residuals</span> <span class="o">=</span> <span class="p">[</span><span class="n">num</span> <span class="o">-</span> <span class="n">ratio</span> <span class="o">*</span> <span class="n">den</span> <span class="k">for</span> <span class="n">num</span><span class="p">,</span> <span class="n">den</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">numerator</span><span class="p">,</span> <span class="n">denominator</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)]</span>
+    <span class="n">se</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">statistics</span><span class="o">.</span><span class="n">variance</span><span class="p">(</span><span class="n">residuals</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span> <span class="o">/</span> <span class="n">denominator_mean</span>
+    <span class="k">return</span> <span class="n">ratio</span><span class="p">,</span> <span class="n">se</span></div>
+
+
+
+<div class="viewcode-block" id="sum_series">
+<a class="viewcode-back" href="../../../api/pyforestry.base.html#pyforestry.base.aggregation.sum_series">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">sum_series</span><span class="p">(</span>
+    <span class="n">components</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]],</span>
+    <span class="n">species</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Elementwise per-plot sum of the component series over ``species``.</span>
+
+<span class="sd">    Summing the series *before* reducing keeps a species group covariance-aware</span>
+<span class="sd">    in the same way the stand total is: species that trade off against each other</span>
+<span class="sd">    across plots do not each contribute independent variance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">species</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">species</span><span class="p">)</span>
+    <span class="n">n_plots</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="n">species</span><span class="p">:</span>
+        <span class="n">record</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sp</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">record</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">n_plots</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="n">COMPONENT_KEYS</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+            <span class="k">break</span>
+    <span class="n">summed</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_plots</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">COMPONENT_KEYS</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="n">species</span><span class="p">:</span>
+        <span class="n">record</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sp</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">record</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">COMPONENT_KEYS</span><span class="p">:</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">summed</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="n">key</span><span class="p">]):</span>
+                <span class="n">target</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">+=</span> <span class="n">value</span>
+    <span class="k">return</span> <span class="n">summed</span></div>
+
+
+
+<div class="viewcode-block" id="metrics_from_series">
+<a class="viewcode-back" href="../../../api/pyforestry.base.html#pyforestry.base.aggregation.metrics_from_series">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">metrics_from_series</span><span class="p">(</span>
+    <span class="n">series</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Derive the stand metrics and their standard errors from component series.</span>
+
+<span class="sd">    ``series`` maps each per-plot component accumulated by :func:`aggregate_plots`</span>
+<span class="sd">    (``stems``, ``ba``, ``d3``, ``gh``, ``ba_h``) to its per-plot values. Additive</span>
+<span class="sd">    metrics come from the plot-to-plot mean; the ratio metrics (basal-area</span>
+<span class="sd">    weighted diameter, Lorey&#39;s mean height) go through :func:`ratio_and_se`.</span>
+
+<span class="sd">    Returns a ``(value, precision)`` pair of dicts keyed by metric name.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">stems_mean</span><span class="p">,</span> <span class="n">stems_se</span> <span class="o">=</span> <span class="n">mean_and_se</span><span class="p">(</span><span class="n">series</span><span class="p">[</span><span class="s2">&quot;stems&quot;</span><span class="p">])</span>
+    <span class="n">ba_mean</span><span class="p">,</span> <span class="n">ba_se</span> <span class="o">=</span> <span class="n">mean_and_se</span><span class="p">(</span><span class="n">series</span><span class="p">[</span><span class="s2">&quot;ba&quot;</span><span class="p">])</span>
+    <span class="n">bawad</span><span class="p">,</span> <span class="n">bawad_se</span> <span class="o">=</span> <span class="n">ratio_and_se</span><span class="p">(</span><span class="n">series</span><span class="p">[</span><span class="s2">&quot;d3&quot;</span><span class="p">],</span> <span class="p">[</span><span class="n">ba</span> <span class="o">*</span> <span class="n">_D2_PER_BA</span> <span class="k">for</span> <span class="n">ba</span> <span class="ow">in</span> <span class="n">series</span><span class="p">[</span><span class="s2">&quot;ba&quot;</span><span class="p">]])</span>
+    <span class="n">hl</span><span class="p">,</span> <span class="n">hl_se</span> <span class="o">=</span> <span class="n">ratio_and_se</span><span class="p">(</span><span class="n">series</span><span class="p">[</span><span class="s2">&quot;gh&quot;</span><span class="p">],</span> <span class="n">series</span><span class="p">[</span><span class="s2">&quot;ba_h&quot;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;stems&quot;</span><span class="p">:</span> <span class="n">stems_mean</span><span class="p">,</span> <span class="s2">&quot;ba&quot;</span><span class="p">:</span> <span class="n">ba_mean</span><span class="p">,</span> <span class="s2">&quot;bawad&quot;</span><span class="p">:</span> <span class="n">bawad</span><span class="p">,</span> <span class="s2">&quot;hl&quot;</span><span class="p">:</span> <span class="n">hl</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;stems&quot;</span><span class="p">:</span> <span class="n">stems_se</span><span class="p">,</span> <span class="s2">&quot;ba&quot;</span><span class="p">:</span> <span class="n">ba_se</span><span class="p">,</span> <span class="s2">&quot;bawad&quot;</span><span class="p">:</span> <span class="n">bawad_se</span><span class="p">,</span> <span class="s2">&quot;hl&quot;</span><span class="p">:</span> <span class="n">hl_se</span><span class="p">},</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="qmd_from_series">
+<a class="viewcode-back" href="../../../api/pyforestry.base.html#pyforestry.base.aggregation.qmd_from_series">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">qmd_from_series</span><span class="p">(</span><span class="n">series</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">QuadraticMeanDiameter</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Quadratic mean diameter from per-plot basal-area and stem series.</span>
+
+<span class="sd">    Uses ``stems_d`` -- the stems that actually carry a diameter -- so that the</span>
+<span class="sd">    numerator and denominator describe the same trees; a record with no diameter</span>
+<span class="sd">    contributes no basal area and must not enter the count either.</span>
+
+<span class="sd">    ``QMD = sqrt(40000/pi * R)`` for the mean basal area per stem ``R``, so the</span>
+<span class="sd">    standard error is obtained by propagating through that square root from</span>
+<span class="sd">    :func:`ratio_and_se`. Going via the ratio rather than combining the two</span>
+<span class="sd">    standard errors and their covariance term by term avoids the cancellation</span>
+<span class="sd">    those three near-equal terms suffer: a stand whose plots share one QMD</span>
+<span class="sd">    reports exactly zero here instead of a small numerical residue.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">stems_key</span> <span class="o">=</span> <span class="s2">&quot;stems_d&quot;</span> <span class="k">if</span> <span class="s2">&quot;stems_d&quot;</span> <span class="ow">in</span> <span class="n">series</span> <span class="k">else</span> <span class="s2">&quot;stems&quot;</span>
+    <span class="n">ratio</span><span class="p">,</span> <span class="n">ratio_se</span> <span class="o">=</span> <span class="n">ratio_and_se</span><span class="p">(</span><span class="n">series</span><span class="p">[</span><span class="s2">&quot;ba&quot;</span><span class="p">],</span> <span class="n">series</span><span class="p">[</span><span class="n">stems_key</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">ratio</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">QuadraticMeanDiameter</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">qmd_value</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">_D2_PER_BA</span> <span class="o">*</span> <span class="n">ratio</span><span class="p">)</span>
+    <span class="n">qmd_se</span> <span class="o">=</span> <span class="n">qmd_value</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">ratio</span><span class="p">)</span> <span class="o">*</span> <span class="n">ratio_se</span>
+    <span class="k">return</span> <span class="n">QuadraticMeanDiameter</span><span class="p">(</span><span class="n">qmd_value</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="n">qmd_se</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="qmd_from_components">
+<a class="viewcode-back" href="../../../api/pyforestry.base.html#pyforestry.base.aggregation.qmd_from_components">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">qmd_from_components</span><span class="p">(</span>
+    <span class="n">ba_mean</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">ba_se</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">stems_mean</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">stems_se</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QuadraticMeanDiameter</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Quadratic mean diameter (cm) from basal-area and stem means, with its SE.</span>
+
+<span class="sd">    ``QMD = sqrt(40000 * BA / (pi * N))``; the standard error is propagated from</span>
+<span class="sd">    the basal-area and stem standard errors by the delta method.</span>
+
+<span class="sd">    This form treats the two as independent, which overstates the error because</span>
+<span class="sd">    basal area and stem count rise and fall together across plots. It is only for</span>
+<span class="sd">    callers that have nothing but the reduced means -- angle-count stands, where</span>
+<span class="sd">    basal area comes from the tally and stems from the recorded diameters. Where</span>
+<span class="sd">    the per-plot series survive, :func:`qmd_from_series` is both covariance-aware</span>
+<span class="sd">    and numerically better behaved.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">stems_mean</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">ba_mean</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">qmd_value</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">((</span><span class="mf">40000.0</span> <span class="o">*</span> <span class="n">ba_mean</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">pi</span> <span class="o">*</span> <span class="n">stems_mean</span><span class="p">))</span>
+        <span class="n">d_qmd_d_ba</span> <span class="o">=</span> <span class="mf">20000.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">pi</span> <span class="o">*</span> <span class="n">stems_mean</span> <span class="o">*</span> <span class="n">qmd_value</span><span class="p">)</span>
+        <span class="n">d_qmd_d_stems</span> <span class="o">=</span> <span class="n">qmd_value</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">stems_mean</span><span class="p">)</span>
+        <span class="n">qmd_se</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">((</span><span class="n">d_qmd_d_ba</span> <span class="o">*</span> <span class="n">ba_se</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">d_qmd_d_stems</span> <span class="o">*</span> <span class="n">stems_se</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">qmd_value</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">qmd_se</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">return</span> <span class="n">QuadraticMeanDiameter</span><span class="p">(</span><span class="n">qmd_value</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="n">qmd_se</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="PlotAggregation">
+<a class="viewcode-back" href="../../../api/pyforestry.base.html#pyforestry.base.aggregation.PlotAggregation">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PlotAggregation</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Per-hectare stand metrics estimated as the mean over a set of plots.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        stems: Stem density by species, plus a ``&quot;TOTAL&quot;`` entry.</span>
+<span class="sd">        basal_area: Basal area by species, plus a ``&quot;TOTAL&quot;`` entry.</span>
+<span class="sd">        bawad: Basal-area weighted diameter by species, plus ``&quot;TOTAL&quot;``.</span>
+<span class="sd">        loreys_height: Lorey&#39;s mean height by species, plus ``&quot;TOTAL&quot;``.</span>
+<span class="sd">        species_components: Per-species per-plot component series, kept so that</span>
+<span class="sd">            species-group and QMD queries can be rebuilt from the raw plot values</span>
+<span class="sd">            rather than from already-reduced means.</span>
+<span class="sd">        total_components: The same series summed over every species.</span>
+<span class="sd">        species_order: The species encountered, in first-seen order.</span>
+<span class="sd">        missing_diameter: How many tree records carried no diameter.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">stems</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">MetricKey</span><span class="p">,</span> <span class="n">Stems</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">basal_area</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">MetricKey</span><span class="p">,</span> <span class="n">StandBasalArea</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">bawad</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">MetricKey</span><span class="p">,</span> <span class="n">BasalAreaWeightedDiameter</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">loreys_height</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">MetricKey</span><span class="p">,</span> <span class="n">LoreysMeanHeight</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">species_components</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">total_components</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">species_order</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">TreeName</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">missing_diameter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">qmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QuadraticMeanDiameter</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Stand quadratic mean diameter, reduced from the total component series.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_components</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">QuadraticMeanDiameter</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">qmd_from_series</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">total_components</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="aggregate_plots">
+<a class="viewcode-back" href="../../../api/pyforestry.base.html#pyforestry.base.aggregation.aggregate_plots">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">aggregate_plots</span><span class="p">(</span>
+    <span class="n">plots</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="s2">&quot;CircularPlot&quot;</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">warn_missing_diameter</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PlotAggregation</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Estimate per-hectare stand metrics as the mean over ``plots``.</span>
+
+<span class="sd">    One pass over every plot&#39;s trees accumulates, per species, the per-hectare</span>
+<span class="sd">    stem count, basal area, sum of cubed diameters and basal-area weighted height</span>
+<span class="sd">    sum. See the module docstring for the conventions this applies.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        plots: The plots to aggregate. They form one population; a caller with</span>
+<span class="sd">            several independent populations aggregates each separately.</span>
+<span class="sd">        warn_missing_diameter: Whether to warn about tree records carrying no</span>
+<span class="sd">            diameter. A simulation refreshing its metrics every step passes</span>
+<span class="sd">            ``False``: the stand it was built from already reported this once, and</span>
+<span class="sd">            repeating it per step is noise rather than information. The count is</span>
+<span class="sd">            reported on the result either way.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A :class:`PlotAggregation` holding the metrics and the per-plot series</span>
+<span class="sd">        they were reduced from.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">plots</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">plots</span><span class="p">)</span>
+    <span class="n">missing_diameter</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># 1. Single pass over each plot: per-species per-hectare component sums.</span>
+    <span class="n">species_order</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">TreeName</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">seen</span><span class="p">:</span> <span class="nb">set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">per_plot_species</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">TreeName</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">per_plot_total</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">plot</span> <span class="ow">in</span> <span class="n">plots</span><span class="p">:</span>
+        <span class="n">area_ha</span> <span class="o">=</span> <span class="n">plot</span><span class="o">.</span><span class="n">area_ha</span> <span class="ow">or</span> <span class="mf">1.0</span>
+        <span class="c1"># The effective area is the visible portion of the plot.</span>
+        <span class="n">visible</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">plot</span><span class="p">,</span> <span class="s2">&quot;occlusion&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="ow">or</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">effective_area_ha</span> <span class="o">=</span> <span class="n">area_ha</span> <span class="o">*</span> <span class="n">visible</span> <span class="k">if</span> <span class="n">visible</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">area_ha</span>
+
+        <span class="n">plot_acc</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">TreeName</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">tr</span> <span class="ow">in</span> <span class="n">plot</span><span class="o">.</span><span class="n">trees</span><span class="p">:</span>
+            <span class="n">sp</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">tr</span><span class="p">,</span> <span class="s2">&quot;species&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">sp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sp</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">sp</span> <span class="o">=</span> <span class="n">parse_tree_species</span><span class="p">(</span><span class="n">sp</span><span class="p">)</span>
+
+            <span class="n">weight</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">weight_n</span><span class="p">)</span> <span class="k">if</span> <span class="n">tr</span><span class="o">.</span><span class="n">weight_n</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mf">1.0</span>
+            <span class="n">has_diameter</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">diameter_cm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">d_cm</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">diameter_cm</span><span class="p">)</span> <span class="k">if</span> <span class="n">has_diameter</span> <span class="k">else</span> <span class="mf">0.0</span>
+            <span class="n">g_m2</span> <span class="o">=</span> <span class="n">pi</span> <span class="o">*</span> <span class="p">((</span><span class="n">d_cm</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>  <span class="c1"># basal area of one stem</span>
+
+            <span class="n">acc</span> <span class="o">=</span> <span class="n">plot_acc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sp</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">acc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">acc</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="mf">0.0</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">COMPONENT_KEYS</span><span class="p">}</span>
+                <span class="n">plot_acc</span><span class="p">[</span><span class="n">sp</span><span class="p">]</span> <span class="o">=</span> <span class="n">acc</span>
+            <span class="c1"># A record with no diameter is still a stem, but it can carry no</span>
+            <span class="c1"># basal area. Counting it in the QMD/BAWAD denominators as if it were</span>
+            <span class="c1"># a zero-diameter tree would drag both downwards, so the</span>
+            <span class="c1"># diameter-derived metrics use their own stem count.</span>
+            <span class="n">acc</span><span class="p">[</span><span class="s2">&quot;stems&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">weight</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">has_diameter</span><span class="p">:</span>
+                <span class="n">missing_diameter</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">continue</span>
+            <span class="n">acc</span><span class="p">[</span><span class="s2">&quot;stems_d&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">weight</span>
+            <span class="n">acc</span><span class="p">[</span><span class="s2">&quot;ba&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">g_m2</span> <span class="o">*</span> <span class="n">weight</span>
+            <span class="n">acc</span><span class="p">[</span><span class="s2">&quot;d3&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="n">d_cm</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">weight</span>
+            <span class="c1"># Lorey&#39;s mean height weights only trees carrying a height.</span>
+            <span class="n">height_m</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">tr</span><span class="p">,</span> <span class="s2">&quot;height_m&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">height_m</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">acc</span><span class="p">[</span><span class="s2">&quot;gh&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">g_m2</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">height_m</span><span class="p">)</span> <span class="o">*</span> <span class="n">weight</span>
+                <span class="n">acc</span><span class="p">[</span><span class="s2">&quot;ba_h&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">g_m2</span> <span class="o">*</span> <span class="n">weight</span>
+
+        <span class="c1"># Convert this plot&#39;s accumulators to per-hectare and record.</span>
+        <span class="n">plot_species</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">TreeName</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">plot_total</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="mf">0.0</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">COMPONENT_KEYS</span><span class="p">}</span>
+        <span class="k">for</span> <span class="n">sp</span><span class="p">,</span> <span class="n">acc</span> <span class="ow">in</span> <span class="n">plot_acc</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">per_ha</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">acc</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">/</span> <span class="n">effective_area_ha</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">COMPONENT_KEYS</span><span class="p">}</span>
+            <span class="n">plot_species</span><span class="p">[</span><span class="n">sp</span><span class="p">]</span> <span class="o">=</span> <span class="n">per_ha</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">COMPONENT_KEYS</span><span class="p">:</span>
+                <span class="n">plot_total</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+=</span> <span class="n">per_ha</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">sp</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+                <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">sp</span><span class="p">)</span>
+                <span class="n">species_order</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sp</span><span class="p">)</span>
+        <span class="n">per_plot_species</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plot_species</span><span class="p">)</span>
+        <span class="n">per_plot_total</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plot_total</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">missing_diameter</span> <span class="ow">and</span> <span class="n">warn_missing_diameter</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">missing_diameter</span><span class="si">}</span><span class="s2"> tree record(s) have no diameter_cm; they are counted &quot;</span>
+            <span class="s2">&quot;in Stems but contribute no basal area, and are excluded from QMD and &quot;</span>
+            <span class="s2">&quot;BAWAD so those stay consistent with the trees they describe.&quot;</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="c1"># 2. Per-species cross-plot component series (absent plot contributes 0).</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">component_series</span><span class="p">(</span><span class="n">sp</span><span class="p">:</span> <span class="n">TreeName</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Per-plot values of ``key`` for ``sp`` (0.0 where the species is absent).&quot;&quot;&quot;</span>
+        <span class="n">series</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">plot_species</span> <span class="ow">in</span> <span class="n">per_plot_species</span><span class="p">:</span>
+            <span class="n">record</span> <span class="o">=</span> <span class="n">plot_species</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sp</span><span class="p">)</span>
+            <span class="n">series</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">if</span> <span class="n">record</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">series</span>
+
+    <span class="n">stems_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">MetricKey</span><span class="p">,</span> <span class="n">Stems</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">ba_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">MetricKey</span><span class="p">,</span> <span class="n">StandBasalArea</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">bawad_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">MetricKey</span><span class="p">,</span> <span class="n">BasalAreaWeightedDiameter</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">hl_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">MetricKey</span><span class="p">,</span> <span class="n">LoreysMeanHeight</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">components</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">sp</span><span class="p">:</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">component_series</span><span class="p">(</span><span class="n">sp</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">COMPONENT_KEYS</span><span class="p">}</span> <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="n">species_order</span>
+    <span class="p">}</span>
+
+    <span class="c1"># The stand total is the per-plot sum over species, which is exactly the</span>
+    <span class="c1"># elementwise sum of the per-species series, so both are built the same way</span>
+    <span class="c1"># and both stay covariance-aware.</span>
+    <span class="n">total_series</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">key</span><span class="p">:</span> <span class="p">[</span><span class="n">plot_total</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">plot_total</span> <span class="ow">in</span> <span class="n">per_plot_total</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">COMPONENT_KEYS</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="n">species_order</span><span class="p">:</span>
+        <span class="n">value</span><span class="p">,</span> <span class="n">precision</span> <span class="o">=</span> <span class="n">metrics_from_series</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="n">sp</span><span class="p">])</span>
+        <span class="n">stems_dict</span><span class="p">[</span><span class="n">sp</span><span class="p">]</span> <span class="o">=</span> <span class="n">Stems</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;stems&quot;</span><span class="p">],</span> <span class="n">species</span><span class="o">=</span><span class="n">sp</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="n">precision</span><span class="p">[</span><span class="s2">&quot;stems&quot;</span><span class="p">])</span>
+        <span class="n">ba_dict</span><span class="p">[</span><span class="n">sp</span><span class="p">]</span> <span class="o">=</span> <span class="n">StandBasalArea</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;ba&quot;</span><span class="p">],</span> <span class="n">species</span><span class="o">=</span><span class="n">sp</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="n">precision</span><span class="p">[</span><span class="s2">&quot;ba&quot;</span><span class="p">])</span>
+        <span class="n">bawad_dict</span><span class="p">[</span><span class="n">sp</span><span class="p">]</span> <span class="o">=</span> <span class="n">BasalAreaWeightedDiameter</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;bawad&quot;</span><span class="p">],</span> <span class="n">precision</span><span class="o">=</span><span class="n">precision</span><span class="p">[</span><span class="s2">&quot;bawad&quot;</span><span class="p">])</span>
+        <span class="n">hl_dict</span><span class="p">[</span><span class="n">sp</span><span class="p">]</span> <span class="o">=</span> <span class="n">LoreysMeanHeight</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;hl&quot;</span><span class="p">],</span> <span class="n">precision</span><span class="o">=</span><span class="n">precision</span><span class="p">[</span><span class="s2">&quot;hl&quot;</span><span class="p">])</span>
+
+    <span class="n">total_value</span><span class="p">,</span> <span class="n">total_precision</span> <span class="o">=</span> <span class="n">metrics_from_series</span><span class="p">(</span><span class="n">total_series</span><span class="p">)</span>
+    <span class="n">stems_dict</span><span class="p">[</span><span class="s2">&quot;TOTAL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Stems</span><span class="p">(</span>
+        <span class="n">value</span><span class="o">=</span><span class="n">total_value</span><span class="p">[</span><span class="s2">&quot;stems&quot;</span><span class="p">],</span> <span class="n">species</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="n">total_precision</span><span class="p">[</span><span class="s2">&quot;stems&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">ba_dict</span><span class="p">[</span><span class="s2">&quot;TOTAL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">StandBasalArea</span><span class="p">(</span>
+        <span class="n">value</span><span class="o">=</span><span class="n">total_value</span><span class="p">[</span><span class="s2">&quot;ba&quot;</span><span class="p">],</span> <span class="n">species</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="n">total_precision</span><span class="p">[</span><span class="s2">&quot;ba&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">bawad_dict</span><span class="p">[</span><span class="s2">&quot;TOTAL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">BasalAreaWeightedDiameter</span><span class="p">(</span>
+        <span class="n">total_value</span><span class="p">[</span><span class="s2">&quot;bawad&quot;</span><span class="p">],</span> <span class="n">precision</span><span class="o">=</span><span class="n">total_precision</span><span class="p">[</span><span class="s2">&quot;bawad&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">hl_dict</span><span class="p">[</span><span class="s2">&quot;TOTAL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LoreysMeanHeight</span><span class="p">(</span><span class="n">total_value</span><span class="p">[</span><span class="s2">&quot;hl&quot;</span><span class="p">],</span> <span class="n">precision</span><span class="o">=</span><span class="n">total_precision</span><span class="p">[</span><span class="s2">&quot;hl&quot;</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">PlotAggregation</span><span class="p">(</span>
+        <span class="n">stems</span><span class="o">=</span><span class="n">stems_dict</span><span class="p">,</span>
+        <span class="n">basal_area</span><span class="o">=</span><span class="n">ba_dict</span><span class="p">,</span>
+        <span class="n">bawad</span><span class="o">=</span><span class="n">bawad_dict</span><span class="p">,</span>
+        <span class="n">loreys_height</span><span class="o">=</span><span class="n">hl_dict</span><span class="p">,</span>
+        <span class="n">species_components</span><span class="o">=</span><span class="n">components</span><span class="p">,</span>
+        <span class="n">total_components</span><span class="o">=</span><span class="n">total_series</span><span class="p">,</span>
+        <span class="n">species_order</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">species_order</span><span class="p">),</span>
+        <span class="n">missing_diameter</span><span class="o">=</span><span class="n">missing_diameter</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

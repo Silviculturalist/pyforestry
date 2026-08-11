@@ -1,0 +1,1230 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pyforestry.base.competition.selection &#8212; pyforestry  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyforestry/base/competition/selection';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.20.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'stable';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../../../_static/searchtools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
+    <script src="../../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pyforestry  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../catalog.html">
+    Model catalog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../model_index.html">
+    Model index
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../api/modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/wikberg_2004.html">
+    Wikberg 2004 ingrowth demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/elfving_2010.html">
+    Elfving 2010 growth demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/elfving_2010_preset.html">
+    Elfving 2010 composite preset demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/soderberg_1986_preset.html">
+    Soderberg 1986 composite preset demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/young_stand.html">
+    Young stand demo (NYSKOG + Näslund 1986)
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/competition_indices.html">
+    Competition indices on a simulated stand
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../notebooks/FullStack_Callables_Guide.html">
+    Composable Callables & Full‑Stack GrowthModel — Practical Guide
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../catalog.html">
+    Model catalog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../model_index.html">
+    Model index
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../api/modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/wikberg_2004.html">
+    Wikberg 2004 ingrowth demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/elfving_2010.html">
+    Elfving 2010 growth demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/elfving_2010_preset.html">
+    Elfving 2010 composite preset demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/soderberg_1986_preset.html">
+    Soderberg 1986 composite preset demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/young_stand.html">
+    Young stand demo (NYSKOG + Näslund 1986)
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/competition_indices.html">
+    Competition indices on a simulated stand
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../notebooks/FullStack_Callables_Guide.html">
+    Composable Callables & Full‑Stack GrowthModel — Practical Guide
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pyforestry.base.competition.selection</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for pyforestry.base.competition.selection</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Rules for deciding which neighbours count as competitors.</span>
+
+<span class="sd">A competition index value is only meaningful alongside the rule that chose its</span>
+<span class="sd">competitors: the same formula on the same stand ranks trees differently under</span>
+<span class="sd">different rules. The formula and the rule are therefore separate, composable</span>
+<span class="sd">objects here. That framing, and this particular set of four approaches, is from</span>
+<span class="sd">Maleki, Kiviste &amp; Korjus (2015); the rules themselves are their own authors&#39;.</span>
+
+<span class="sd">Every number in these rules is a parameter with a literature default, not a</span>
+<span class="sd">fixed value -- the defaults are one study&#39;s choices, and are meant to be varied::</span>
+
+<span class="sd">    MeanHeightRadius(fraction=0.25)          # not stuck at 0.4</span>
+<span class="sd">    LeeGadowRadius(k=3.0)                    # the paper tests k = 2 and 3</span>
+<span class="sd">    BitterlichBAF(basal_area_factor=4.0)     # 1, 2 and 4 in the paper</span>
+<span class="sd">    SearchCone(opening_angle_deg=80.0)       # 100, 80 and 60 in the paper</span>
+<span class="sd">    FixedRadius(8.0, min_size_ratio=0.3, elimination_angle_deg=30.0)</span>
+
+<span class="sd">1. :class:`FixedRadius` -- plain geometry, no citation.</span>
+<span class="sd">   :class:`MeanHeightRadius` -- a fraction of stand mean height,</span>
+<span class="sd">   ``CZR = 0.4 * h`` after Sims et al. (2009). The influence-zone concept it</span>
+<span class="sd">   rests on is Staebler (1951).</span>
+<span class="sd">2. :class:`LeeGadowRadius` -- a dynamic radius ``k * sqrt(10000 / N)``, i.e. a</span>
+<span class="sd">   multiple of mean spacing, after Lee &amp; von Gadow (1997).</span>
+<span class="sd">3. :class:`BitterlichBAF` -- variable-radius selection after Bitterlich (1952):</span>
+<span class="sd">   a tree competes when it falls inside *its own* angle-count limiting distance</span>
+<span class="sd">   ``50 * d_j / sqrt(BAF)``, ``d_j`` in metres.</span>
+<span class="sd">4. :class:`SearchCone` -- the reversed search-cone / angular-height method after</span>
+<span class="sd">   Pretzsch (2009), with the apex at the subject&#39;s stem base or crown base.</span>
+<span class="sd">5. :class:`NearestNeighbours` -- the ``n`` closest stems; plain geometry.</span>
+
+<span class="sd">The radius-based rules also take a **competition elimination angle**: a</span>
+<span class="sd">neighbour standing in the shadow of a nearer competitor, within a cone of</span>
+<span class="sd">``elimination_angle_deg``, is dropped. The 2015 comparison applies this at 30</span>
+<span class="sd">degrees alongside the ``d_j &gt;= 0.3 * d_i`` size screen for its approaches 1</span>
+<span class="sd">and 2, so reproducing those needs both.</span>
+
+<span class="sd">Each rule that implements somebody&#39;s published proposal exposes it as</span>
+<span class="sd">``.source``; :func:`selector_source` reads it, returning ``None`` for the two</span>
+<span class="sd">that are plain geometry.</span>
+
+<span class="sd">Only the radius rules (1 and 2) define a competition *zone* -- a circle fixed</span>
+<span class="sd">before the data are seen. The variable-reach rules (3, 4, 5) report</span>
+<span class="sd">``Selection.zone_radius_m = None``, which means Lorimer&#39;s ``Sdrl1`` and the</span>
+<span class="sd">proportional-area edge correction do not apply to them; see :class:`Selection`.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">asin</span><span class="p">,</span> <span class="n">degrees</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">radians</span><span class="p">,</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">tan</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">mean_spacing_m</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.sources</span><span class="w"> </span><span class="kn">import</span> <span class="n">SELECTOR_SOURCES</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;BitterlichBAF&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Candidates&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CompetitorSelector&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;FixedRadius&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;LeeGadowRadius&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;MeanHeightRadius&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;NearestNeighbours&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SearchCone&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Selection&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SelectionContext&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;selector_source&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="Candidates">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.selection.Candidates">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Candidates</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The per-tree data a selector may look at, for one subject&#39;s neighbourhood.</span>
+
+<span class="sd">    Bundled rather than passed as loose arrays because different rules need</span>
+<span class="sd">    different columns: the size screen needs diameters, the elimination angle</span>
+<span class="sd">    needs bearings, and the search cone needs heights.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        diameters_cm: Diameter of every candidate tree (cm).</span>
+<span class="sd">        distances_m: Distance from the subject to every candidate (m); the</span>
+<span class="sd">            subject&#39;s own entry is 0.</span>
+<span class="sd">        bearings_rad: Compass bearing from the subject to every candidate</span>
+<span class="sd">            (radians). Required by ``elimination_angle_deg``.</span>
+<span class="sd">        heights_m: Height of every candidate (m), where known. Required by</span>
+<span class="sd">            :class:`SearchCone`.</span>
+<span class="sd">        crown_base_heights_m: Crown base height of every candidate (m), where</span>
+<span class="sd">            known. Required by :class:`SearchCone` with ``apex=&quot;crown_base&quot;``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">diameters_cm</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+    <span class="n">distances_m</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+    <span class="n">bearings_rad</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">heights_m</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="o">...</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">crown_base_heights_m</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="o">...</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check every supplied column has one entry per candidate.&quot;&quot;&quot;</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diameters_cm</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;distances_m&quot;</span><span class="p">,</span> <span class="s2">&quot;bearings_rad&quot;</span><span class="p">,</span> <span class="s2">&quot;heights_m&quot;</span><span class="p">,</span> <span class="s2">&quot;crown_base_heights_m&quot;</span><span class="p">):</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">values</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">!=</span> <span class="n">n</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="si">}</span><span class="s2"> entries but there are </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> candidates.&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Number of candidate trees.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diameters_cm</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="SelectionContext">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.selection.SelectionContext">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SelectionContext</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stand-level quantities a selector may need to size its search radius.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        stems_per_ha: Stem density (trees/ha), for :class:`LeeGadowRadius`.</span>
+<span class="sd">        mean_height_m: Arithmetic mean height (m), for :class:`MeanHeightRadius`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">stems_per_ha</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">mean_height_m</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="Selection">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.selection.Selection">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Selection</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The competitors a selector picked for one subject tree.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        indices: Positions of the selected competitors in the caller&#39;s tree list.</span>
+<span class="sd">        distances_m: Distance from the subject to each selected competitor (m).</span>
+<span class="sd">        zone_radius_m: The competition-zone radius that was applied (m), or</span>
+<span class="sd">            ``None`` for a selector whose zone is not a circle fixed ahead of the</span>
+<span class="sd">            data. Lorimer&#39;s ``Sdrl1`` and the proportional-area edge correction</span>
+<span class="sd">            both need such a radius, so both are unavailable when it is ``None``</span>
+<span class="sd">            -- substituting the reach below would make them circular, since a</span>
+<span class="sd">            neighbourhood truncated by the plot boundary reaches less far and</span>
+<span class="sd">            would report itself as needing less correction.</span>
+<span class="sd">        reach_m: Distance to the farthest retained competitor (m), or ``None``</span>
+<span class="sd">            when nothing was retained. Descriptive only: it says how far this</span>
+<span class="sd">            subject&#39;s selection actually went.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">indices</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+    <span class="n">distances_m</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+    <span class="n">zone_radius_m</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">reach_m</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="CompetitorSelector">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.selection.CompetitorSelector">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CompetitorSelector</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Chooses competitors for a subject tree from a set of candidates.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="CompetitorSelector.select">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.selection.CompetitorSelector.select">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">subject_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">candidates</span><span class="p">:</span> <span class="n">Candidates</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">SelectionContext</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Selection</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the competitors for ``subject_index``.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            subject_index: Index of the subject tree within ``candidates``.</span>
+<span class="sd">            candidates: Per-tree data for the neighbourhood.</span>
+<span class="sd">            context: Stand-level quantities for radius-sizing selectors.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The chosen competitors.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="o">...</span></div>
+</div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_angular_gap</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Smallest absolute angle between two bearings (radians).&quot;&quot;&quot;</span>
+    <span class="n">gap</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">pi</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">gap</span><span class="p">,</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">-</span> <span class="n">gap</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_screen</span><span class="p">(</span>
+    <span class="n">subject_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">candidates</span><span class="p">:</span> <span class="n">Candidates</span><span class="p">,</span>
+    <span class="n">within</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">bool</span><span class="p">],</span>
+    <span class="n">min_size_ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">elimination_angle_deg</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Drop the subject, undersized neighbours, and shadowed neighbours.</span>
+
+<span class="sd">    The elimination angle is applied nearest-first: a candidate is dropped when</span>
+<span class="sd">    an already-accepted, nearer competitor lies within half the elimination</span>
+<span class="sd">    angle of the same bearing, i.e. when it stands in that competitor&#39;s shadow.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">d_i</span> <span class="o">=</span> <span class="n">candidates</span><span class="o">.</span><span class="n">diameters_cm</span><span class="p">[</span><span class="n">subject_index</span><span class="p">]</span>
+    <span class="n">order</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">j</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">))</span> <span class="k">if</span> <span class="n">j</span> <span class="o">!=</span> <span class="n">subject_index</span><span class="p">),</span>
+        <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">j</span><span class="p">:</span> <span class="n">candidates</span><span class="o">.</span><span class="n">distances_m</span><span class="p">[</span><span class="n">j</span><span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">elimination_angle_deg</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">candidates</span><span class="o">.</span><span class="n">bearings_rad</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;elimination_angle_deg needs bearings; Candidates.bearings_rad is not set.&quot;</span>
+        <span class="p">)</span>
+    <span class="n">half_angle</span> <span class="o">=</span> <span class="n">radians</span><span class="p">(</span><span class="n">elimination_angle_deg</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+
+    <span class="n">keep_indices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">keep_distances</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">order</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">within</span><span class="p">[</span><span class="n">j</span><span class="p">]:</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">candidates</span><span class="o">.</span><span class="n">diameters_cm</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">min_size_ratio</span> <span class="o">*</span> <span class="n">d_i</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">half_angle</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">bearings</span> <span class="o">=</span> <span class="n">candidates</span><span class="o">.</span><span class="n">bearings_rad</span>
+            <span class="k">assert</span> <span class="n">bearings</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># guarded above</span>
+            <span class="n">shadowed</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span>
+                <span class="n">_angular_gap</span><span class="p">(</span><span class="n">bearings</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">bearings</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">half_angle</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keep_indices</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">shadowed</span><span class="p">:</span>
+                <span class="k">continue</span>
+        <span class="n">keep_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+        <span class="n">keep_distances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">candidates</span><span class="o">.</span><span class="n">distances_m</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
+
+    <span class="c1"># Report in input order, so results line up with the caller&#39;s tree list.</span>
+    <span class="n">paired</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">keep_indices</span><span class="p">,</span> <span class="n">keep_distances</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">paired</span><span class="p">],</span> <span class="p">[</span><span class="n">d</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">paired</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="FixedRadius">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.selection.FixedRadius">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FixedRadius</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Competitors are the trees within a fixed radius of the subject.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        radius_m: The competition-zone radius (m).</span>
+<span class="sd">        min_size_ratio: Keep a neighbour only when ``d_j &gt;= ratio * d_i``.</span>
+<span class="sd">            ``0.0`` keeps everything; the 2015 comparison uses ``0.3``.</span>
+<span class="sd">        elimination_angle_deg: Drop a neighbour standing within this angle of a</span>
+<span class="sd">            nearer competitor&#39;s bearing. ``0.0`` disables; the 2015 comparison</span>
+<span class="sd">            uses ``30.0``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">radius_m</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">min_size_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">elimination_angle_deg</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+<div class="viewcode-block" id="FixedRadius.select">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.selection.FixedRadius.select">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">subject_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">candidates</span><span class="p">:</span> <span class="n">Candidates</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">SelectionContext</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Selection</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Select every tree inside ``radius_m``.&quot;&quot;&quot;</span>
+        <span class="n">within</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius_m</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">candidates</span><span class="o">.</span><span class="n">distances_m</span><span class="p">]</span>
+        <span class="n">idx</span><span class="p">,</span> <span class="n">dist</span> <span class="o">=</span> <span class="n">_screen</span><span class="p">(</span>
+            <span class="n">subject_index</span><span class="p">,</span> <span class="n">candidates</span><span class="p">,</span> <span class="n">within</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_size_ratio</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">elimination_angle_deg</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">Selection</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">dist</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius_m</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span> <span class="k">if</span> <span class="n">dist</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="MeanHeightRadius">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.selection.MeanHeightRadius">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MeanHeightRadius</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Influence-zone radius set as a fraction of stand mean height.</span>
+
+<span class="sd">    ``CZR = fraction * mean_height``; ``fraction=0.4`` is the value tested by</span>
+<span class="sd">    Sims et al. (2009), not a fixed constant.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        fraction: Multiple of mean height to use as the radius.</span>
+<span class="sd">        min_size_ratio: Minimum ``d_j / d_i`` for a neighbour to compete.</span>
+<span class="sd">        elimination_angle_deg: Shadow angle; see :class:`FixedRadius`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">fraction</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.4</span>
+    <span class="n">min_size_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">elimination_angle_deg</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">source</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The publication this radius rule comes from: Sims et al. (2009).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">SELECTOR_SOURCES</span><span class="p">[</span><span class="s2">&quot;MeanHeightRadius&quot;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="MeanHeightRadius.select">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.selection.MeanHeightRadius.select">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">subject_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">candidates</span><span class="p">:</span> <span class="n">Candidates</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">SelectionContext</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Selection</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Select every tree inside ``fraction * mean_height_m``.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">context</span><span class="o">.</span><span class="n">mean_height_m</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;MeanHeightRadius needs SelectionContext.mean_height_m.&quot;</span><span class="p">)</span>
+        <span class="n">radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fraction</span> <span class="o">*</span> <span class="n">context</span><span class="o">.</span><span class="n">mean_height_m</span>
+        <span class="k">return</span> <span class="n">FixedRadius</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_size_ratio</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">elimination_angle_deg</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
+            <span class="n">subject_index</span><span class="p">,</span> <span class="n">candidates</span><span class="p">,</span> <span class="n">context</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="LeeGadowRadius">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.selection.LeeGadowRadius">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LeeGadowRadius</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Dynamic influence-zone radius scaled to mean spacing. Lee &amp; von Gadow (1997).</span>
+
+<span class="sd">    ``CZR = k * sqrt(10000 / N)``, where the square root is the mean distance</span>
+<span class="sd">    between neighbours at ``N`` stems/ha. The 2015 comparison tests ``k = 2``</span>
+<span class="sd">    and ``k = 3``.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        k: Multiple of mean spacing.</span>
+<span class="sd">        min_size_ratio: Minimum ``d_j / d_i`` for a neighbour to compete.</span>
+<span class="sd">        elimination_angle_deg: Shadow angle; see :class:`FixedRadius`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">k</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span>
+    <span class="n">min_size_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">elimination_angle_deg</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">source</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The publication this radius rule comes from: Lee &amp; von Gadow (1997).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">SELECTOR_SOURCES</span><span class="p">[</span><span class="s2">&quot;LeeGadowRadius&quot;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="LeeGadowRadius.select">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.selection.LeeGadowRadius.select">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">subject_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">candidates</span><span class="p">:</span> <span class="n">Candidates</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">SelectionContext</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Selection</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Select every tree inside ``k * mean spacing``.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">context</span><span class="o">.</span><span class="n">stems_per_ha</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;LeeGadowRadius needs SelectionContext.stems_per_ha.&quot;</span><span class="p">)</span>
+        <span class="n">radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">*</span> <span class="n">mean_spacing_m</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">stems_per_ha</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">FixedRadius</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_size_ratio</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">elimination_angle_deg</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
+            <span class="n">subject_index</span><span class="p">,</span> <span class="n">candidates</span><span class="p">,</span> <span class="n">context</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="BitterlichBAF">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.selection.BitterlichBAF">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BitterlichBAF</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Variable-radius competitor selection. Bitterlich (1952).</span>
+
+<span class="sd">    An angle-count sweep is taken from the subject tree, and a **neighbour**</span>
+<span class="sd">    competes when its own stem subtends at least the gauge angle, i.e. when</span>
+
+<span class="sd">        ``l_ij &lt;= 50 * d_j / sqrt(BAF)`` with ``d_j`` in **metres**</span>
+
+<span class="sd">    equivalently ``l_ij &lt;= d_j / (2 * sqrt(BAF))`` for ``d_j`` in cm. A tree sits</span>
+<span class="sd">    exactly on the limit when ``BAF = 10000 * (d_j / (2 * l_ij))^2``. The</span>
+<span class="sd">    limiting distance therefore belongs to the competitor, not to the subject:</span>
+<span class="sd">    at BAF 2 a 60 cm neighbour competes out to 21.2 m while a 10 cm one stops at</span>
+<span class="sd">    3.5 m, which is the whole point of a variable-radius sample -- large trees</span>
+<span class="sd">    are counted from further away.</span>
+
+<span class="sd">    Two departures from the 2015 comparison&#39;s Table 1, both to follow Bitterlich:</span>
+
+<span class="sd">    * It prints the *subject&#39;s* diameter in the limiting distance. That gives</span>
+<span class="sd">      every neighbour one radius set by the subject&#39;s size, which inverts the</span>
+<span class="sd">      method: the 60 cm neighbour above would be excluded and the 10 cm one kept.</span>
+<span class="sd">    * It writes the diameter in cm against a footnote defining ``d`` in cm, which</span>
+<span class="sd">      only balances once the diameter is converted -- at BAF 2 a 20 cm stem</span>
+<span class="sd">      reaches 7.07 m, not 1.0 m. The paper&#39;s own BAF-to-angle table corroborates</span>
+<span class="sd">      the conversion: BAF 1, 2 and 4 correspond to gauge angles of 1.15, 1.62 and</span>
+<span class="sd">      2.30 degrees, which is ``2 * arcsin(sqrt(BAF / 10000))``.</span>
+
+<span class="sd">    Because each neighbour carries its own limiting distance, the selected zone</span>
+<span class="sd">    is not a circle and :attr:`Selection.zone_radius_m` is ``None``; see</span>
+<span class="sd">    :class:`Selection` for what that costs.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        basal_area_factor: The BAF in m^2/ha; the 2015 comparison tests 1, 2, 4.</span>
+<span class="sd">        min_size_ratio: Minimum ``d_j / d_i`` for a neighbour to compete.</span>
+<span class="sd">        elimination_angle_deg: Shadow angle; see :class:`FixedRadius`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">basal_area_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span>
+    <span class="n">min_size_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">elimination_angle_deg</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reject a non-positive basal area factor.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">basal_area_factor</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;basal_area_factor must be positive.&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">source</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The publication this selection rule comes from: Bitterlich (1952).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">SELECTOR_SOURCES</span><span class="p">[</span><span class="s2">&quot;BitterlichBAF&quot;</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">gauge_angle_deg</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The angle-count gauge angle this BAF corresponds to (degrees).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">degrees</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">asin</span><span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">basal_area_factor</span> <span class="o">/</span> <span class="mf">10000.0</span><span class="p">)))</span>
+
+<div class="viewcode-block" id="BitterlichBAF.limiting_distance_m">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.selection.BitterlichBAF.limiting_distance_m">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">limiting_distance_m</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diameter_cm</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Farthest distance at which a stem of ``diameter_cm`` is still tallied (m).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">50.0</span> <span class="o">*</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">)</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">basal_area_factor</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BitterlichBAF.select">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.selection.BitterlichBAF.select">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">subject_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">candidates</span><span class="p">:</span> <span class="n">Candidates</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">SelectionContext</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Selection</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Select every tree inside its own angle-count limiting distance.&quot;&quot;&quot;</span>
+        <span class="n">within</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">distance</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">limiting_distance_m</span><span class="p">(</span><span class="n">diameter</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">diameter</span><span class="p">,</span> <span class="n">distance</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+                <span class="n">candidates</span><span class="o">.</span><span class="n">diameters_cm</span><span class="p">,</span> <span class="n">candidates</span><span class="o">.</span><span class="n">distances_m</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+        <span class="p">]</span>
+        <span class="n">idx</span><span class="p">,</span> <span class="n">dist</span> <span class="o">=</span> <span class="n">_screen</span><span class="p">(</span>
+            <span class="n">subject_index</span><span class="p">,</span> <span class="n">candidates</span><span class="p">,</span> <span class="n">within</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_size_ratio</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">elimination_angle_deg</span>
+        <span class="p">)</span>
+        <span class="c1"># Each neighbour has its own limiting distance, so the selected zone is</span>
+        <span class="c1"># not a circle and has no radius to correct against.</span>
+        <span class="k">return</span> <span class="n">Selection</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">dist</span><span class="p">),</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span> <span class="k">if</span> <span class="n">dist</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="SearchCone">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.selection.SearchCone">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SearchCone</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reversed search-cone / angular-height selection. Pretzsch (2009).</span>
+
+<span class="sd">    A cone opens upward from the subject tree with opening angle ``beta``; a</span>
+<span class="sd">    neighbour competes when its top penetrates that cone::</span>
+
+<span class="sd">        l_ij &lt; h_j / tan(90 - beta/2)                    apex at the stem base</span>
+<span class="sd">        l_ij &lt; (h_j - cbh_i) / tan(90 - beta/2)          apex at the crown base</span>
+
+<span class="sd">    so a tall neighbour competes from further away than a short one, and a</span>
+<span class="sd">    suppressed neighbour close by may not compete at all.</span>
+
+<span class="sd">    The 2015 comparison prints ``h_i`` (the *subject&#39;s* height) in both</span>
+<span class="sd">    equations. That cannot be the intent: the accompanying text defines</span>
+<span class="sd">    competitors as &quot;neighbouring trees whose heights are greater than&quot; the</span>
+<span class="sd">    critical value, and with ``h_i`` the neighbour&#39;s own size plays no part at</span>
+<span class="sd">    all, collapsing the cone into a plain fixed radius. The competitor&#39;s height</span>
+<span class="sd">    is used here, which is also the method as Pretzsch defines it.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        opening_angle_deg: The cone&#39;s opening angle ``beta``; the 2015</span>
+<span class="sd">            comparison tests 100, 80 and 60 degrees.</span>
+<span class="sd">        apex: ``&quot;stem_base&quot;`` (equation 4) or ``&quot;crown_base&quot;`` (equation 5),</span>
+<span class="sd">            the latter needing the subject&#39;s crown base height.</span>
+<span class="sd">        min_size_ratio: Minimum ``d_j / d_i`` for a neighbour to compete.</span>
+<span class="sd">        elimination_angle_deg: Shadow angle; see :class:`FixedRadius`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">opening_angle_deg</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">80.0</span>
+    <span class="n">apex</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;stem_base&quot;</span>
+    <span class="n">min_size_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">elimination_angle_deg</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reject an angle outside (0, 180) or an unknown apex.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="mf">0.0</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">opening_angle_deg</span> <span class="o">&lt;</span> <span class="mf">180.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;opening_angle_deg must be strictly between 0 and 180 degrees.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">apex</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;stem_base&quot;</span><span class="p">,</span> <span class="s2">&quot;crown_base&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown apex </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">apex</span><span class="si">!r}</span><span class="s2">; use &#39;stem_base&#39; or &#39;crown_base&#39;.&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">source</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The publication this selection rule comes from: Pretzsch (2009).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">SELECTOR_SOURCES</span><span class="p">[</span><span class="s2">&quot;SearchCone&quot;</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_slope</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;``tan(90 - beta/2)``: the cone&#39;s rise per unit horizontal distance.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">tan</span><span class="p">(</span><span class="n">radians</span><span class="p">(</span><span class="mf">90.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">opening_angle_deg</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">))</span>
+
+<div class="viewcode-block" id="SearchCone.select">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.selection.SearchCone.select">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">subject_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">candidates</span><span class="p">:</span> <span class="n">Candidates</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">SelectionContext</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Selection</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Select the neighbours whose tops fall inside the cone.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If heights are missing, or ``apex=&quot;crown_base&quot;`` without</span>
+<span class="sd">                a crown base height for the subject.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">candidates</span><span class="o">.</span><span class="n">heights_m</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;SearchCone needs heights; Candidates.heights_m is not set. Impute &quot;</span>
+                <span class="s1">&#39;them first with stand.impute(&quot;height_m&quot;).&#39;</span>
+            <span class="p">)</span>
+        <span class="n">apex_height</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">apex</span> <span class="o">==</span> <span class="s2">&quot;crown_base&quot;</span><span class="p">:</span>
+            <span class="n">crown_bases</span> <span class="o">=</span> <span class="n">candidates</span><span class="o">.</span><span class="n">crown_base_heights_m</span>
+            <span class="n">base</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">crown_bases</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">crown_bases</span><span class="p">[</span><span class="n">subject_index</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">base</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;SearchCone(apex=&#39;crown_base&#39;) needs the subject&#39;s crown base &quot;</span>
+                    <span class="s2">&quot;height; Candidates.crown_base_heights_m is not set for it.&quot;</span>
+                <span class="p">)</span>
+            <span class="n">apex_height</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
+
+        <span class="n">slope</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_slope</span>
+        <span class="n">within</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">height</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">candidates</span><span class="o">.</span><span class="n">heights_m</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">height</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">within</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="n">rise</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">height</span><span class="p">)</span> <span class="o">-</span> <span class="n">apex_height</span>
+            <span class="n">within</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rise</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">candidates</span><span class="o">.</span><span class="n">distances_m</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">rise</span> <span class="o">/</span> <span class="n">slope</span><span class="p">)</span>
+
+        <span class="n">idx</span><span class="p">,</span> <span class="n">dist</span> <span class="o">=</span> <span class="n">_screen</span><span class="p">(</span>
+            <span class="n">subject_index</span><span class="p">,</span> <span class="n">candidates</span><span class="p">,</span> <span class="n">within</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_size_ratio</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">elimination_angle_deg</span>
+        <span class="p">)</span>
+        <span class="c1"># The cone&#39;s reach depends on each neighbour&#39;s own height, so there is no</span>
+        <span class="c1"># zone radius -- only how far this subject&#39;s selection happened to go.</span>
+        <span class="k">return</span> <span class="n">Selection</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">dist</span><span class="p">),</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span> <span class="k">if</span> <span class="n">dist</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="NearestNeighbours">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.selection.NearestNeighbours">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">NearestNeighbours</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The ``n`` closest trees, irrespective of distance.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        n: How many neighbours to take.</span>
+<span class="sd">        min_size_ratio: Minimum ``d_j / d_i``, applied *before* taking the</span>
+<span class="sd">            closest ``n`` so the screen cannot be swamped by suppressed stems.</span>
+<span class="sd">        elimination_angle_deg: Shadow angle; see :class:`FixedRadius`. Applied</span>
+<span class="sd">            before the count, so ``n`` counts unshadowed neighbours.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">min_size_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">elimination_angle_deg</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reject a non-positive neighbour count.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;n must be positive.&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="NearestNeighbours.select">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.selection.NearestNeighbours.select">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">subject_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">candidates</span><span class="p">:</span> <span class="n">Candidates</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">SelectionContext</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Selection</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Select the ``n`` nearest qualifying trees.&quot;&quot;&quot;</span>
+        <span class="n">within</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span>
+        <span class="n">idx</span><span class="p">,</span> <span class="n">dist</span> <span class="o">=</span> <span class="n">_screen</span><span class="p">(</span>
+            <span class="n">subject_index</span><span class="p">,</span> <span class="n">candidates</span><span class="p">,</span> <span class="n">within</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_size_ratio</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">elimination_angle_deg</span>
+        <span class="p">)</span>
+        <span class="n">order</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">idx</span><span class="p">)),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">dist</span><span class="p">[</span><span class="n">k</span><span class="p">])[:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">]</span>
+        <span class="n">order</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">idx</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+        <span class="n">chosen_idx</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">idx</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">order</span><span class="p">)</span>
+        <span class="n">chosen_dist</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">dist</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">order</span><span class="p">)</span>
+        <span class="c1"># A count is not a zone: how far the n-th neighbour sits is an outcome of</span>
+        <span class="c1"># the data, not a radius fixed in advance.</span>
+        <span class="k">return</span> <span class="n">Selection</span><span class="p">(</span><span class="n">chosen_idx</span><span class="p">,</span> <span class="n">chosen_dist</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">chosen_dist</span><span class="p">)</span> <span class="k">if</span> <span class="n">chosen_dist</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="selector_source">
+<a class="viewcode-back" href="../../../../api/pyforestry.base.competition.html#pyforestry.base.competition.selection.selector_source">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">selector_source</span><span class="p">(</span><span class="n">selector</span><span class="p">:</span> <span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the publication a selector implements, if it has one.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        selector: Any competitor selector.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Its :class:`~pyforestry.base.contracts.SourceReference`, or ``None`` for</span>
+<span class="sd">        the rules that are plain geometry rather than somebody&#39;s proposal</span>
+<span class="sd">        (:class:`FixedRadius`, :class:`NearestNeighbours`).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">selector</span><span class="p">,</span> <span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

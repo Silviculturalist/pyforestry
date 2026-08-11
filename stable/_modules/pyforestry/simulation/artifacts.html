@@ -1,0 +1,1133 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pyforestry.simulation.artifacts &#8212; pyforestry  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyforestry/simulation/artifacts';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.20.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'stable';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pyforestry  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../catalog.html">
+    Model catalog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../model_index.html">
+    Model index
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/wikberg_2004.html">
+    Wikberg 2004 ingrowth demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/elfving_2010.html">
+    Elfving 2010 growth demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/elfving_2010_preset.html">
+    Elfving 2010 composite preset demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/soderberg_1986_preset.html">
+    Soderberg 1986 composite preset demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/young_stand.html">
+    Young stand demo (NYSKOG + Näslund 1986)
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/competition_indices.html">
+    Competition indices on a simulated stand
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../notebooks/FullStack_Callables_Guide.html">
+    Composable Callables & Full‑Stack GrowthModel — Practical Guide
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../catalog.html">
+    Model catalog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../model_index.html">
+    Model index
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/wikberg_2004.html">
+    Wikberg 2004 ingrowth demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/elfving_2010.html">
+    Elfving 2010 growth demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/elfving_2010_preset.html">
+    Elfving 2010 composite preset demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/soderberg_1986_preset.html">
+    Soderberg 1986 composite preset demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/young_stand.html">
+    Young stand demo (NYSKOG + Näslund 1986)
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/competition_indices.html">
+    Competition indices on a simulated stand
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../notebooks/FullStack_Callables_Guide.html">
+    Composable Callables & Full‑Stack GrowthModel — Practical Guide
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pyforestry.simulation.artifacts</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for pyforestry.simulation.artifacts</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;The artifacts a scenario run emits, and what has to be in them.</span>
+
+<span class="sd">These three files are how a run is read back without rerunning it:</span>
+
+<span class="sd">* ``run_manifest.json`` -- **how the run was constructed**: which configuration</span>
+<span class="sd">  and scenario, which models with which citations, the ordered stages, the</span>
+<span class="sd">  rulesets that were applied and their values, the guard policy, the seeds, and</span>
+<span class="sd">  the git revision. This is the artifact&#39;s reason to exist. A number in the</span>
+<span class="sd">  summary is only interpretable against the manifest that says what produced it.</span>
+<span class="sd">* ``scenario_summary.parquet`` -- one row per stand: the volume balance, and what</span>
+<span class="sd">  it was worth.</span>
+<span class="sd">* ``quality_report.json`` -- what was checked, and the determinism hash that lets</span>
+<span class="sd">  two runs of the same configuration be compared without diffing floats.</span>
+
+<span class="sd">The schema was Sweden&#39;s (``sweden/simulation/data/schema.py``) and is region-</span>
+<span class="sd">agnostic; Norway had none, which is one reason it had no runbook of its own.</span>
+
+<span class="sd">Every field in the summary closes an identity::</span>
+
+<span class="sd">    net_volume_m3 == initial_volume_m3 + gross_growth_m3</span>
+<span class="sd">                     - disturbance_loss_m3 - harvested_m3</span>
+
+<span class="sd">    valued is False  =&gt;  nominal_revenue == 0 and net_present_value == 0</span>
+<span class="sd">    harvested_m3 == 0  =&gt;  nominal_revenue == 0</span>
+
+<span class="sd">:func:`validate_artifact_contract` checks both per row, so a run whose bookkeeping</span>
+<span class="sd">does not add up fails at the point of writing rather than in whatever reads it.</span>
+
+<span class="sd">**Why ``valued`` is a column and not a null.** Not every run prices what it cuts:</span>
+<span class="sd">a configuration without a ``&quot;valuation&quot;`` stage removes wood and never asks what</span>
+<span class="sd">it fetched. Writing ``0`` for such a run beside a non-zero ``harvested_m3`` reads</span>
+<span class="sd">as *sold forty cubic metres for nothing*, and writing null leaves a reader unable</span>
+<span class="sd">to tell &quot;earned nothing&quot; from &quot;never asked&quot; without going to the manifest -- which</span>
+<span class="sd">defeats the summary&#39;s purpose. The flag makes the three states distinguishable</span>
+<span class="sd">from the row alone: ``(False, 0)`` was not priced, ``(True, 0)`` was priced and</span>
+<span class="sd">earned nothing, ``(True, x)`` earned ``x``.</span>
+
+<span class="sd">**What the money is in** is recorded rather than assumed.</span>
+<span class="sd">``valuation.price_list`` names the list a run priced against, states the currency</span>
+<span class="sd">its prices are quoted in and carries its publisher&#39;s citation -- read off the</span>
+<span class="sd">:class:`~pyforestry.base.pricelist.PricelistIdentity` that price list declares --</span>
+<span class="sd">while ``valuation.discount_rate`` and ``valuation.base_year`` say how that money</span>
+<span class="sd">was moved in time. Two runs&#39; figures are comparable when those blocks agree, which</span>
+<span class="sd">a reader can now check: until a price list had an identity to record, the summary</span>
+<span class="sd">carried sums in an unnamed currency against prices from nowhere. A run priced</span>
+<span class="sd">against the analyst&#39;s own table says that here too, in the ``(none)``/year-0 form</span>
+<span class="sd">the rest of the package uses for anything authored rather than published.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">hashlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">sha256</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">isfinite</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Sequence</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;MANIFEST_REQUIRED_KEYS&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;QUALITY_REPORT_FILENAME&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;QUALITY_REPORT_REQUIRED_KEYS&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;QUALITY_REPORT_SCHEMA_VERSION&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;REQUIRED_ARTIFACTS&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;RUN_MANIFEST_FILENAME&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;RUN_MANIFEST_SCHEMA_VERSION&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SCENARIO_SUMMARY_COLUMNS&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SCENARIO_SUMMARY_FILENAME&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ScenarioArtifacts&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;check_value_consistency&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;check_volume_balance&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;determinism_hash&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;git_revision&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;load_scenario_summary&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;validate_artifact_contract&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;write_artifacts&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c1">#: Both bumped from ``&quot;2.0&quot;`` when the summary grew the three money columns and</span>
+<span class="c1">#: the manifest grew the ``valuation`` block that makes them readable. Adding a</span>
+<span class="c1">#: column is a break here by construction: :func:`load_scenario_summary` validates</span>
+<span class="c1">#: the column tuple exactly, so a 2.0 artifact does not load under 3.x and is not</span>
+<span class="c1">#: made to. These files are the output of a run, not a store -- regenerating one</span>
+<span class="c1">#: costs a rerun, and a migration path would be a promise about numbers whose</span>
+<span class="c1">#: construction has changed. What 3.x does owe a reader is a diagnosis rather than</span>
+<span class="c1">#: two tuples to diff, which is what the loader gives.</span>
+<span class="c1">#:</span>
+<span class="c1">#: ``&quot;3.1&quot;`` added ``valuation.price_list``: the manifest now records which list</span>
+<span class="c1">#: produced the money columns and what currency they are in. A minor bump because</span>
+<span class="c1">#: the summary is untouched -- 3.0&#39;s columns are 3.1&#39;s, and a 3.0 file still loads</span>
+<span class="c1">#: -- while a 3.0 *manifest* is missing a block rather than unreadable, and the</span>
+<span class="c1">#: version is how a reader tells the two apart instead of guessing from an absent</span>
+<span class="c1">#: key.</span>
+<span class="c1">#: ``&quot;3.2&quot;`` replaced ``thin_at_years`` with ``management_schedule``, which says</span>
+<span class="c1">#: what measure the thinning times are in. The old key was a bare list of numbers</span>
+<span class="c1">#: compared against each model&#39;s own clock, so the same manifest field meant</span>
+<span class="c1">#: elapsed years for Sweden&#39;s adapter and total stand age for Norway&#39;s. A minor</span>
+<span class="c1">#: bump again: the summary columns are untouched, and a reader tells a 3.1</span>
+<span class="c1">#: manifest from a 3.2 one by the version rather than by which key is missing.</span>
+<span class="n">RUN_MANIFEST_SCHEMA_VERSION</span> <span class="o">=</span> <span class="s2">&quot;3.2&quot;</span>
+<span class="n">QUALITY_REPORT_SCHEMA_VERSION</span> <span class="o">=</span> <span class="s2">&quot;3.2&quot;</span>
+
+<span class="n">RUN_MANIFEST_FILENAME</span> <span class="o">=</span> <span class="s2">&quot;run_manifest.json&quot;</span>
+<span class="n">SCENARIO_SUMMARY_FILENAME</span> <span class="o">=</span> <span class="s2">&quot;scenario_summary.parquet&quot;</span>
+<span class="n">QUALITY_REPORT_FILENAME</span> <span class="o">=</span> <span class="s2">&quot;quality_report.json&quot;</span>
+
+<span class="n">REQUIRED_ARTIFACTS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">RUN_MANIFEST_FILENAME</span><span class="p">,</span>
+    <span class="n">SCENARIO_SUMMARY_FILENAME</span><span class="p">,</span>
+    <span class="n">QUALITY_REPORT_FILENAME</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">SCENARIO_SUMMARY_COLUMNS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;stand_id&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;scenario_id&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;stand_seed&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;initial_volume_m3&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gross_growth_m3&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;disturbance_loss_m3&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;harvested_m3&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;net_volume_m3&quot;</span><span class="p">,</span>
+    <span class="c1"># Whether a valuation stage priced this run&#39;s removals at all. See the module</span>
+    <span class="c1"># docstring: it is what keeps &quot;earned nothing&quot; apart from &quot;never asked&quot;.</span>
+    <span class="s2">&quot;valued&quot;</span><span class="p">,</span>
+    <span class="c1"># The revenue as earned, each period in the money of its own year -- a PRICE</span>
+    <span class="c1"># forcing, if the run declared one, is already in it. The currency is the one</span>
+    <span class="c1"># the manifest&#39;s ``valuation.price_list`` names.</span>
+    <span class="s2">&quot;nominal_revenue&quot;</span><span class="p">,</span>
+    <span class="c1"># The same revenue discounted to the manifest&#39;s ``valuation.base_year``, which</span>
+    <span class="c1"># is the run&#39;s first year.</span>
+    <span class="s2">&quot;net_present_value&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1">#: The 2.0 columns, kept so that a reader holding a summary written before the</span>
+<span class="c1">#: money columns is told what it is holding.</span>
+<span class="n">_SCHEMA_2_0_COLUMNS</span> <span class="o">=</span> <span class="n">SCENARIO_SUMMARY_COLUMNS</span><span class="p">[:</span><span class="mi">8</span><span class="p">]</span>
+
+<span class="c1">#: Version 1.0 carried ``synthetic``, because the only writer produced a random</span>
+<span class="c1">#: walk. It is gone: a run emits these artifacts or it does not run.</span>
+<span class="c1">#: ``models_run``, ``rulesets_applied``, ``forcings_applied`` and ``guard_policy``</span>
+<span class="c1">#: are required because they are what makes the summary interpretable. A forcing</span>
+<span class="c1">#: record carries its own citation, so a reader can see not just that growth was</span>
+<span class="c1">#: scaled but by whom it was said to be. ``valuation`` is required for the same</span>
+<span class="c1">#: reason the others are: a net present value without the price list it was earned</span>
+<span class="c1">#: against, the rate it was discounted at and the year it is expressed in is not a</span>
+<span class="c1">#: number anyone can use.</span>
+<span class="n">MANIFEST_REQUIRED_KEYS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;schema_version&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;preset_id&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;scenario_id&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;region&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;global_seed&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;scenario_seed&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;processes&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;n_steps&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;step_years&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;n_stands&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;scenario_summary_encoding&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;required_artifacts&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;stages&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;rulesets_applied&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;forcings_applied&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;guard_policy&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;valuation&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;models_run&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;provenance&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">QUALITY_REPORT_REQUIRED_KEYS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;schema_version&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;required_artifacts&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;artifacts_present&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;row_count&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;columns&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;determinism_hash&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;volume_balance_checked&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;value_consistency_checked&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1">#: Absolute m³/ha tolerance when checking the summary&#39;s volume identity.</span>
+<span class="n">VOLUME_BALANCE_TOLERANCE_M3</span> <span class="o">=</span> <span class="mf">1e-6</span>
+
+
+<div class="viewcode-block" id="ScenarioArtifacts">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.artifacts.ScenarioArtifacts">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ScenarioArtifacts</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Resolved paths for the artifacts a scenario run produced.&quot;&quot;&quot;</span>
+
+    <span class="n">run_manifest_path</span><span class="p">:</span> <span class="n">Path</span>
+    <span class="n">scenario_summary_path</span><span class="p">:</span> <span class="n">Path</span>
+    <span class="n">quality_report_path</span><span class="p">:</span> <span class="n">Path</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">output_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The directory the three artifacts were written into.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_manifest_path</span><span class="o">.</span><span class="n">parent</span></div>
+
+
+
+<div class="viewcode-block" id="git_revision">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.artifacts.git_revision">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">git_revision</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the short git revision of *this package*, or ``&quot;unknown&quot;``.</span>
+
+<span class="sd">    Resolved against the directory pyforestry is installed in, not the working</span>
+<span class="sd">    directory. Asking git where it happened to be invoked answers a different</span>
+<span class="sd">    question: run a projection from inside your own repository and the manifest</span>
+<span class="sd">    recorded *your* HEAD under ``provenance.git_revision``, which claims the run</span>
+<span class="sd">    was produced by code it was not. A wrong revision is worse than none, so an</span>
+<span class="sd">    installed copy outside a repository reports ``&quot;unknown&quot;`` and says nothing.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="p">[</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;-C&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span><span class="p">),</span> <span class="s2">&quot;rev-parse&quot;</span><span class="p">,</span> <span class="s2">&quot;--short&quot;</span><span class="p">,</span> <span class="s2">&quot;HEAD&quot;</span><span class="p">],</span>
+            <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;unknown&quot;</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># pragma: no cover - git absent or not a repo</span>
+        <span class="k">return</span> <span class="s2">&quot;unknown&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="determinism_hash">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.artifacts.determinism_hash">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">determinism_hash</span><span class="p">(</span><span class="n">rows</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a stable hash of the summary rows, for replay comparison.&quot;&quot;&quot;</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">([</span><span class="nb">dict</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">],</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">sha256</span><span class="p">(</span><span class="n">payload</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parquet_engine_available</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return whether a parquet backend is importable in this runtime.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span>  <span class="c1"># noqa: F401</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">fastparquet</span>  <span class="c1"># noqa: F401</span>
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="kc">True</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_write_json</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write a JSON payload with stable formatting.&quot;&quot;&quot;</span>
+    <span class="n">path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_write_summary</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">rows</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write summary rows as parquet where a backend exists, else as JSON.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The encoding used, which the manifest records so a reader knows which of</span>
+<span class="sd">        the two it is holding.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">_parquet_engine_available</span><span class="p">():</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+        <span class="n">frame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">rows</span><span class="p">),</span> <span class="n">columns</span><span class="o">=</span><span class="n">SCENARIO_SUMMARY_COLUMNS</span><span class="p">)</span>
+        <span class="n">frame</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;parquet&quot;</span>
+
+    <span class="n">_write_json</span><span class="p">(</span>
+        <span class="n">path</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;pseudo_parquet_json_v1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;columns&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">SCENARIO_SUMMARY_COLUMNS</span><span class="p">),</span>
+            <span class="s2">&quot;rows&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">],</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="s2">&quot;pseudo_parquet_json_v1&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_columns_error</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">found</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="ne">ValueError</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Explain a column mismatch, naming the older schema where that is what it is.</span>
+
+<span class="sd">    An artifact written before the money columns fails this check, and &quot;expected</span>
+<span class="sd">    these eleven, got these eight&quot; leaves the reader to work out which eight.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">found</span> <span class="o">==</span> <span class="n">_SCHEMA_2_0_COLUMNS</span><span class="p">:</span>
+        <span class="k">return</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> is a schema 2.0 summary: it was written before the run recorded &quot;</span>
+            <span class="s2">&quot;what it earned, so it carries the volume balance and nothing else. &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Schema </span><span class="si">{</span><span class="n">RUN_MANIFEST_SCHEMA_VERSION</span><span class="si">}</span><span class="s2"> adds </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">SCENARIO_SUMMARY_COLUMNS</span><span class="p">[</span><span class="mi">8</span><span class="p">:])</span><span class="si">}</span><span class="s2">. &quot;</span>
+            <span class="s2">&quot;There is no migration -- the missing columns are not derivable from the &quot;</span>
+            <span class="s2">&quot;row, only from the run. Rerun the scenario, or read this file with the &quot;</span>
+            <span class="s2">&quot;version of pyforestry that wrote it.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> columns mismatch: expected </span><span class="si">{</span><span class="n">SCENARIO_SUMMARY_COLUMNS</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">found</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="load_scenario_summary">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.artifacts.load_scenario_summary">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_scenario_summary</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load summary rows from a parquet artifact or its JSON fallback.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If the columns are not the schema&#39;s, or the fallback payload</span>
+<span class="sd">            is malformed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">_parquet_engine_available</span><span class="p">():</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+        <span class="n">frame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">!=</span> <span class="n">SCENARIO_SUMMARY_COLUMNS</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">_columns_error</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">frame</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">)</span>
+
+    <span class="n">payload</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;columns&quot;</span><span class="p">,</span> <span class="p">()))</span> <span class="o">!=</span> <span class="n">SCENARIO_SUMMARY_COLUMNS</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">_columns_error</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;columns&quot;</span><span class="p">,</span> <span class="p">())))</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rows&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> fallback rows must be a list&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">rows</span></div>
+
+
+
+<div class="viewcode-block" id="check_volume_balance">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.artifacts.check_volume_balance">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_volume_balance</span><span class="p">(</span><span class="n">rows</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check that every summary row&#39;s volume components add up.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If a row&#39;s ``net_volume_m3`` does not equal</span>
+<span class="sd">            ``initial + gross_growth - disturbance_loss - harvested``. Its purpose</span>
+<span class="sd">            is to catch a run whose bookkeeping lost volume somewhere between the</span>
+<span class="sd">            steps that removed it and the row that reports it.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+        <span class="n">expected</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;initial_volume_m3&quot;</span><span class="p">])</span>
+            <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;gross_growth_m3&quot;</span><span class="p">])</span>
+            <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;disturbance_loss_m3&quot;</span><span class="p">])</span>
+            <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;harvested_m3&quot;</span><span class="p">])</span>
+        <span class="p">)</span>
+        <span class="n">actual</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;net_volume_m3&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">expected</span> <span class="o">-</span> <span class="n">actual</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">VOLUME_BALANCE_TOLERANCE_M3</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Volume balance does not close for stand </span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;stand_id&#39;</span><span class="p">)</span><span class="si">!r}</span><span class="s2">: &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;initial + growth - disturbance - harvested = </span><span class="si">{</span><span class="n">expected</span><span class="si">:</span><span class="s2">.9f</span><span class="si">}</span><span class="s2"> m3/ha but &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;net_volume_m3 = </span><span class="si">{</span><span class="n">actual</span><span class="si">:</span><span class="s2">.9f</span><span class="si">}</span><span class="s2"> m3/ha.&quot;</span>
+            <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="check_value_consistency">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.artifacts.check_value_consistency">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_value_consistency</span><span class="p">(</span><span class="n">rows</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check that every summary row&#39;s money says the same thing as the rest of it.</span>
+
+<span class="sd">    Two things are definitionally true of the schema, and both are checked:</span>
+
+<span class="sd">    * A row that was never valued reports no revenue. ``valued`` is False exactly</span>
+<span class="sd">      when the configuration declared no ``&quot;valuation&quot;`` stage, and then nothing</span>
+<span class="sd">      priced anything, so a non-zero figure beside it could only have come from</span>
+<span class="sd">      somewhere it should not have.</span>
+<span class="sd">    * A row that harvested nothing earned nothing. Revenue reaches a run through</span>
+<span class="sd">      the removal ledger, which only a merchantable removal writes to -- a storm</span>
+<span class="sd">      is a loss, not a sale. The converse is deliberately *not* required: a</span>
+<span class="sd">      thinning of stems too small to buck harvests volume and earns nothing.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If either fails, or a money figure is not a finite number.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+        <span class="n">stand</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;stand_id&quot;</span><span class="p">)</span>
+        <span class="n">valued</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;valued&quot;</span><span class="p">])</span>
+        <span class="n">nominal</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;nominal_revenue&quot;</span><span class="p">])</span>
+        <span class="n">npv</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;net_present_value&quot;</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">isfinite</span><span class="p">(</span><span class="n">nominal</span><span class="p">)</span> <span class="ow">and</span> <span class="n">isfinite</span><span class="p">(</span><span class="n">npv</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Stand </span><span class="si">{</span><span class="n">stand</span><span class="si">!r}</span><span class="s2"> reports a revenue of </span><span class="si">{</span><span class="n">nominal</span><span class="si">!r}</span><span class="s2"> and a net present &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;value of </span><span class="si">{</span><span class="n">npv</span><span class="si">!r}</span><span class="s2">; both must be finite numbers.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">valued</span> <span class="ow">and</span> <span class="p">(</span><span class="n">nominal</span> <span class="o">!=</span> <span class="mf">0.0</span> <span class="ow">or</span> <span class="n">npv</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Stand </span><span class="si">{</span><span class="n">stand</span><span class="si">!r}</span><span class="s2"> is marked as not valued -- its scenario declares no &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;&#39;valuation&#39; stage -- but reports a revenue of </span><span class="si">{</span><span class="n">nominal</span><span class="si">:</span><span class="s2">.9g</span><span class="si">}</span><span class="s2"> and a net &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;present value of </span><span class="si">{</span><span class="n">npv</span><span class="si">:</span><span class="s2">.9g</span><span class="si">}</span><span class="s2">. Nothing priced its removals, so there is &quot;</span>
+                <span class="s2">&quot;nowhere for either figure to have come from.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;harvested_m3&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="mf">0.0</span> <span class="ow">and</span> <span class="n">nominal</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Stand </span><span class="si">{</span><span class="n">stand</span><span class="si">!r}</span><span class="s2"> harvested nothing but reports a revenue of &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">nominal</span><span class="si">:</span><span class="s2">.9g</span><span class="si">}</span><span class="s2">. Only a merchantable removal reaches the valuation &quot;</span>
+                <span class="s2">&quot;ledger, so revenue without harvest means something else wrote to it.&quot;</span>
+            <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="validate_artifact_contract">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.artifacts.validate_artifact_contract">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_artifact_contract</span><span class="p">(</span><span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check that a run&#39;s output directory satisfies the artifact contract.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If an artifact is missing, a required key is absent, the</span>
+<span class="sd">            summary columns are wrong, or a row&#39;s volume balance or money does</span>
+<span class="sd">            not add up.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">REQUIRED_ARTIFACTS</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing required artifact: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">manifest</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">((</span><span class="n">output_dir</span> <span class="o">/</span> <span class="n">RUN_MANIFEST_FILENAME</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">MANIFEST_REQUIRED_KEYS</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">manifest</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">RUN_MANIFEST_FILENAME</span><span class="si">}</span><span class="s2"> missing keys: </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">quality</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">((</span><span class="n">output_dir</span> <span class="o">/</span> <span class="n">QUALITY_REPORT_FILENAME</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">QUALITY_REPORT_REQUIRED_KEYS</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">quality</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">QUALITY_REPORT_FILENAME</span><span class="si">}</span><span class="s2"> missing keys: </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">rows</span> <span class="o">=</span> <span class="n">load_scenario_summary</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="n">SCENARIO_SUMMARY_FILENAME</span><span class="p">)</span>
+    <span class="n">check_volume_balance</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
+    <span class="n">check_value_consistency</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="write_artifacts">
+<a class="viewcode-back" href="../../../api/pyforestry.simulation.html#pyforestry.simulation.artifacts.write_artifacts">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">write_artifacts</span><span class="p">(</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">manifest</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="n">rows</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ScenarioArtifacts</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write the three artifacts and validate them before returning.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        output_dir: Directory to write into; created if absent.</span>
+<span class="sd">        manifest: Everything about how the run was constructed. The encoding and</span>
+<span class="sd">            schema version are filled in here.</span>
+<span class="sd">        rows: One summary row per stand.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The resolved artifact paths.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If the artifacts do not satisfy the contract -- which is</span>
+<span class="sd">            checked here rather than left to the reader.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">output_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">summary_path</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="n">SCENARIO_SUMMARY_FILENAME</span>
+    <span class="n">encoding</span> <span class="o">=</span> <span class="n">_write_summary</span><span class="p">(</span><span class="n">summary_path</span><span class="p">,</span> <span class="n">rows</span><span class="p">)</span>
+
+    <span class="n">manifest_path</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="n">RUN_MANIFEST_FILENAME</span>
+    <span class="n">_write_json</span><span class="p">(</span>
+        <span class="n">manifest_path</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">manifest</span><span class="p">),</span>
+            <span class="s2">&quot;schema_version&quot;</span><span class="p">:</span> <span class="n">RUN_MANIFEST_SCHEMA_VERSION</span><span class="p">,</span>
+            <span class="s2">&quot;scenario_summary_encoding&quot;</span><span class="p">:</span> <span class="n">encoding</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Run the row checks *before* writing the report that says they passed. Writing</span>
+    <span class="c1"># first left a quality report on disk asserting ``volume_balance_checked`` for a</span>
+    <span class="c1"># run whose balance had just failed, which is the one claim the file exists to</span>
+    <span class="c1"># make. The artifact-level checks still run afterwards, once all three files are</span>
+    <span class="c1"># there for them to look at.</span>
+    <span class="n">check_volume_balance</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
+    <span class="n">check_value_consistency</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
+
+    <span class="n">quality_path</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="n">QUALITY_REPORT_FILENAME</span>
+    <span class="n">present</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">REQUIRED_ARTIFACTS</span><span class="p">}</span>
+    <span class="n">present</span><span class="p">[</span><span class="n">QUALITY_REPORT_FILENAME</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">_write_json</span><span class="p">(</span>
+        <span class="n">quality_path</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;schema_version&quot;</span><span class="p">:</span> <span class="n">QUALITY_REPORT_SCHEMA_VERSION</span><span class="p">,</span>
+            <span class="s2">&quot;required_artifacts&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">REQUIRED_ARTIFACTS</span><span class="p">),</span>
+            <span class="s2">&quot;artifacts_present&quot;</span><span class="p">:</span> <span class="n">present</span><span class="p">,</span>
+            <span class="s2">&quot;row_count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">),</span>
+            <span class="s2">&quot;columns&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">SCENARIO_SUMMARY_COLUMNS</span><span class="p">),</span>
+            <span class="s2">&quot;determinism_hash&quot;</span><span class="p">:</span> <span class="n">determinism_hash</span><span class="p">(</span><span class="n">rows</span><span class="p">),</span>
+            <span class="s2">&quot;volume_balance_checked&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;value_consistency_checked&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+
+    <span class="n">validate_artifact_contract</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ScenarioArtifacts</span><span class="p">(</span>
+        <span class="n">run_manifest_path</span><span class="o">=</span><span class="n">manifest_path</span><span class="p">,</span>
+        <span class="n">scenario_summary_path</span><span class="o">=</span><span class="n">summary_path</span><span class="p">,</span>
+        <span class="n">quality_report_path</span><span class="o">=</span><span class="n">quality_path</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

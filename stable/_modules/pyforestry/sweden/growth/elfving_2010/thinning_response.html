@@ -1,0 +1,828 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pyforestry.sweden.growth.elfving_2010.thinning_response &#8212; pyforestry  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../../../../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyforestry/sweden/growth/elfving_2010/thinning_response';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.20.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'stable';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../../../../_static/searchtools.js"></script>
+    <script src="../../../../../_static/language_data.js"></script>
+    <script src="../../../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pyforestry  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../catalog.html">
+    Model catalog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../model_index.html">
+    Model index
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../api/modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../notebooks/wikberg_2004.html">
+    Wikberg 2004 ingrowth demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../notebooks/elfving_2010.html">
+    Elfving 2010 growth demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../notebooks/elfving_2010_preset.html">
+    Elfving 2010 composite preset demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../notebooks/soderberg_1986_preset.html">
+    Soderberg 1986 composite preset demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../notebooks/young_stand.html">
+    Young stand demo (NYSKOG + Näslund 1986)
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../notebooks/competition_indices.html">
+    Competition indices on a simulated stand
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../notebooks/FullStack_Callables_Guide.html">
+    Composable Callables & Full‑Stack GrowthModel — Practical Guide
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../catalog.html">
+    Model catalog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../model_index.html">
+    Model index
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../api/modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../notebooks/wikberg_2004.html">
+    Wikberg 2004 ingrowth demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../notebooks/elfving_2010.html">
+    Elfving 2010 growth demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../notebooks/elfving_2010_preset.html">
+    Elfving 2010 composite preset demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../notebooks/soderberg_1986_preset.html">
+    Soderberg 1986 composite preset demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../notebooks/young_stand.html">
+    Young stand demo (NYSKOG + Näslund 1986)
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../notebooks/competition_indices.html">
+    Competition indices on a simulated stand
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../notebooks/FullStack_Callables_Guide.html">
+    Composable Callables & Full‑Stack GrowthModel — Practical Guide
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pyforestry.sweden.growth.elfving_2010.thinning_response</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for pyforestry.sweden.growth.elfving_2010.thinning_response</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Elfving (2009) continuous thinning-response function for Sweden.</span>
+
+<span class="sd">The thinning response is a multiplier applied to the stand basal-area growth that</span>
+<span class="sd">would be expected under unmanaged conditions. It replaces the discrete</span>
+<span class="sd">``thinned_0_10`` / ``thinned_10_30`` indicator variables of the stand growth</span>
+<span class="sd">function when a thinning has actually been simulated.</span>
+
+<span class="sd">Reference:</span>
+<span class="sd">    Elfving, B. (2009). Thinning response function, based on the Swedish</span>
+<span class="sd">    thinning-fertilisation (&quot;GG&quot;) trials; documented as an appendix of Elfving,</span>
+<span class="sd">    B. (2010) &quot;Growth modelling in the Heureka system&quot;, SLU, Faculty of Forestry.</span>
+
+<span class="sd">    The response ``THRESP = ln(iG_thinned) - ln(iG_unthinned)`` is modelled from</span>
+<span class="sd">    the proportion of basal area removed at the last thinning (``THPROP``), the</span>
+<span class="sd">    time from that thinning to the mid-point of the growth period (``TATH``), the</span>
+<span class="sd">    residual release effect of earlier thinnings (``RRE``), a newly-thinned</span>
+<span class="sd">    indicator (``NEWTH``, TATH &lt; 4 yr) and a thinning-from-above indicator</span>
+<span class="sd">    (``THFA``). Separate coefficients apply to pine- and spruce-dominated stands.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.contracts</span><span class="w"> </span><span class="kn">import</span> <span class="n">FormulaDescriptor</span><span class="p">,</span> <span class="n">SourceReference</span>
+
+<span class="c1"># Residual release effect decays linearly to zero over this many years.</span>
+<span class="n">_RRE_DECAY_PER_YEAR</span> <span class="o">=</span> <span class="mf">0.0333</span>
+<span class="n">_RRE_MAX_YEARS</span> <span class="o">=</span> <span class="mf">30.0</span>
+
+<span class="c1"># The growth period mid-point offset added to &quot;years since thinning&quot; to get TATH.</span>
+<span class="n">_MID_PERIOD_YEARS</span> <span class="o">=</span> <span class="mf">2.5</span>
+
+<span class="c1"># Newly-thinned threshold (years) for the pine NEWTH indicator.</span>
+<span class="n">_NEWLY_THINNED_YEARS</span> <span class="o">=</span> <span class="mf">4.0</span>
+
+
+<div class="viewcode-block" id="ThinningEvent">
+<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.growth.elfving_2010.html#pyforestry.sweden.growth.elfving_2010.thinning_response.ThinningEvent">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ThinningEvent</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A single past thinning used by the Elfving (2009) thinning-response model.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        years_since_thinning: Whole years from the thinning to the start of the</span>
+<span class="sd">            current 5-year growth period. ``TATH`` is this value plus the</span>
+<span class="sd">            2.5-year mid-period offset.</span>
+<span class="sd">        proportion_basal_area_removed: ``THPROP`` -- the proportion (0-1) of stand</span>
+<span class="sd">            basal area removed at this thinning.</span>
+<span class="sd">        thinned_from_above: ``THFA`` indicator in [0, 1]; 0 = thinning from below,</span>
+<span class="sd">            1 = thinning from above. Only used for pine-dominated stands and only</span>
+<span class="sd">            when ``ignore_thinning_form`` is ``False``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">years_since_thinning</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">proportion_basal_area_removed</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">thinned_from_above</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">years_to_mid_period</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return ``TATH`` -- years from the thinning to the growth-period mid-point.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">years_since_thinning</span><span class="p">)</span> <span class="o">+</span> <span class="n">_MID_PERIOD_YEARS</span></div>
+
+
+
+<div class="viewcode-block" id="residual_release_effect">
+<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.growth.elfving_2010.html#pyforestry.sweden.growth.elfving_2010.thinning_response.residual_release_effect">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">residual_release_effect</span><span class="p">(</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">last_thinning</span><span class="p">:</span> <span class="n">ThinningEvent</span><span class="p">,</span>
+    <span class="n">earlier_thinnings</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">ThinningEvent</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return ``RRE`` -- the residual release effect of thinnings before the last.</span>
+
+<span class="sd">    Each earlier thinning contributes ``THPROP * (1 - 0.0333 * TATH)``. Following</span>
+<span class="sd">    Elfving (2009), the walk back through history stops once a reference</span>
+<span class="sd">    thinning is older than 30 years (its own contribution having been counted).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        last_thinning: The most recent thinning (its ``THPROP`` is applied</span>
+<span class="sd">            directly by the response function, not here).</span>
+<span class="sd">        earlier_thinnings: Thinnings performed *before* ``last_thinning``, ordered</span>
+<span class="sd">            most-recent first.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The residual release effect (dimensionless).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">release</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">reference_tath</span> <span class="o">=</span> <span class="n">last_thinning</span><span class="o">.</span><span class="n">years_to_mid_period</span>
+    <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">earlier_thinnings</span><span class="p">:</span>
+        <span class="c1"># Once a reference thinning falls outside the 30-year window, no older</span>
+        <span class="c1"># thinning still contributes.</span>
+        <span class="k">if</span> <span class="n">reference_tath</span> <span class="o">&gt;</span> <span class="n">_RRE_MAX_YEARS</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">tath</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">years_to_mid_period</span>
+        <span class="n">release</span> <span class="o">+=</span> <span class="n">event</span><span class="o">.</span><span class="n">proportion_basal_area_removed</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">_RRE_DECAY_PER_YEAR</span> <span class="o">*</span> <span class="n">tath</span><span class="p">)</span>
+        <span class="n">reference_tath</span> <span class="o">=</span> <span class="n">tath</span>
+    <span class="k">return</span> <span class="n">release</span></div>
+
+
+
+<div class="viewcode-block" id="elfving_2009_thinning_response_factor">
+<a class="viewcode-back" href="../../../../../api/pyforestry.sweden.growth.elfving_2010.html#pyforestry.sweden.growth.elfving_2010.thinning_response.elfving_2009_thinning_response_factor">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">elfving_2009_thinning_response_factor</span><span class="p">(</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">last_thinning</span><span class="p">:</span> <span class="n">ThinningEvent</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">earlier_thinnings</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">ThinningEvent</span><span class="p">]</span> <span class="o">=</span> <span class="p">(),</span>
+    <span class="n">spruce_basal_area_share</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">ignore_thinning_form</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the multiplicative thinning-response factor on stand basal-area growth.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        last_thinning: The most recent thinning, or ``None`` if the stand has never</span>
+<span class="sd">            been thinned (in which case the factor is 1.0).</span>
+<span class="sd">        earlier_thinnings: Thinnings before ``last_thinning`` (most-recent first),</span>
+<span class="sd">            used for the residual release effect.</span>
+<span class="sd">        spruce_basal_area_share: Spruce proportion of stand basal area; the</span>
+<span class="sd">            spruce-dominated function is used when this is &gt;= 0.5.</span>
+<span class="sd">        ignore_thinning_form: When ``True`` (the default), the thinning-from-above</span>
+<span class="sd">            term is disabled. It is off by default because the high-thinning</span>
+<span class="sd">            indicator can be misleading in stands with abundant understorey.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ``exp(max(0, effect))`` -- a factor &gt;= 1.0 applied to unmanaged stand</span>
+<span class="sd">        basal-area growth. Returns 1.0 when ``last_thinning`` is ``None``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">last_thinning</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">1.0</span>
+
+    <span class="n">thinning_proportion</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">last_thinning</span><span class="o">.</span><span class="n">proportion_basal_area_removed</span><span class="p">)</span>  <span class="c1"># THPROP</span>
+    <span class="n">time_after_thinning</span> <span class="o">=</span> <span class="n">last_thinning</span><span class="o">.</span><span class="n">years_to_mid_period</span>  <span class="c1"># TATH</span>
+    <span class="n">residual_release</span> <span class="o">=</span> <span class="n">residual_release_effect</span><span class="p">(</span>  <span class="c1"># RRE</span>
+        <span class="n">last_thinning</span><span class="o">=</span><span class="n">last_thinning</span><span class="p">,</span> <span class="n">earlier_thinnings</span><span class="o">=</span><span class="n">earlier_thinnings</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Elfving (2009), Table 1 -- equations written out term-by-term (each coefficient</span>
+    <span class="c1"># inline next to its variable) to keep them checkable against the published table.</span>
+    <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">spruce_basal_area_share</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">0.5</span><span class="p">:</span>
+        <span class="n">effect</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="mf">0.0589</span>
+            <span class="o">+</span> <span class="mf">0.8478</span> <span class="o">*</span> <span class="n">thinning_proportion</span>
+            <span class="o">+</span> <span class="mf">0.4821</span> <span class="o">*</span> <span class="n">residual_release</span>
+            <span class="o">-</span> <span class="mf">0.0333</span> <span class="o">*</span> <span class="n">thinning_proportion</span> <span class="o">*</span> <span class="n">time_after_thinning</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">newly_thinned</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="k">if</span> <span class="n">time_after_thinning</span> <span class="o">&lt;</span> <span class="n">_NEWLY_THINNED_YEARS</span> <span class="k">else</span> <span class="mf">0.0</span>  <span class="c1"># NEWTH</span>
+        <span class="n">thinned_from_above</span> <span class="o">=</span> <span class="p">(</span>  <span class="c1"># THFA * THPROP (0 unless thinning form is used)</span>
+            <span class="mf">0.0</span>
+            <span class="k">if</span> <span class="n">ignore_thinning_form</span>
+            <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">last_thinning</span><span class="o">.</span><span class="n">thinned_from_above</span><span class="p">)</span> <span class="o">*</span> <span class="n">thinning_proportion</span>
+        <span class="p">)</span>
+        <span class="n">effect</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="mf">0.0585</span>
+            <span class="o">+</span> <span class="mf">0.4617</span> <span class="o">*</span> <span class="n">thinning_proportion</span>
+            <span class="o">+</span> <span class="mf">0.2843</span> <span class="o">*</span> <span class="n">residual_release</span>
+            <span class="o">-</span> <span class="mf">0.01832</span> <span class="o">*</span> <span class="n">thinning_proportion</span> <span class="o">*</span> <span class="n">time_after_thinning</span>
+            <span class="o">-</span> <span class="mf">0.0943</span> <span class="o">*</span> <span class="n">newly_thinned</span>
+            <span class="o">+</span> <span class="mf">0.1172</span> <span class="o">*</span> <span class="n">thinned_from_above</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">exp</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">effect</span><span class="p">))</span></div>
+
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;ThinningEvent&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;residual_release_effect&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;elfving_2009_thinning_response_factor&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<span class="n">DESCRIPTOR</span> <span class="o">=</span> <span class="n">FormulaDescriptor</span><span class="p">(</span>
+    <span class="n">component_id</span><span class="o">=</span><span class="s2">&quot;elfving_2009_thinning_response&quot;</span><span class="p">,</span>
+    <span class="n">source</span><span class="o">=</span><span class="n">SourceReference</span><span class="p">(</span>
+        <span class="n">author</span><span class="o">=</span><span class="s2">&quot;Elfving, B.&quot;</span><span class="p">,</span>
+        <span class="n">year</span><span class="o">=</span><span class="mi">2009</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Thinning response function based on the Swedish thinning-fertilisation (GG) trials&quot;</span><span class="p">,</span>
+        <span class="n">note</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Documented as an appendix of Elfving, B. (2010) &#39;Growth modelling in the &quot;</span>
+            <span class="s2">&quot;Heureka system&#39;, Sveriges lantbruksuniversitet, Faculty of Forestry. The &quot;</span>
+            <span class="s2">&quot;work is dated 2009; the containing report is 2010.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">),</span>
+    <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;formula&quot;</span><span class="p">,</span>
+    <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;growth&quot;</span><span class="p">,</span>
+    <span class="n">composes</span><span class="o">=</span><span class="p">(),</span>
+    <span class="n">kernel_names</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;elfving_2009_thinning_response_factor&quot;</span><span class="p">,),</span>
+<span class="p">)</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

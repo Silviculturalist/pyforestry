@@ -1,0 +1,1031 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pyforestry.norway.simulation.orchestration.runbook &#8212; pyforestry  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../../../../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyforestry/norway/simulation/orchestration/runbook';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.20.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'stable';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../../../../_static/searchtools.js"></script>
+    <script src="../../../../../_static/language_data.js"></script>
+    <script src="../../../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pyforestry  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../catalog.html">
+    Model catalog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../model_index.html">
+    Model index
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../api/modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../notebooks/wikberg_2004.html">
+    Wikberg 2004 ingrowth demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../notebooks/elfving_2010.html">
+    Elfving 2010 growth demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../notebooks/elfving_2010_preset.html">
+    Elfving 2010 composite preset demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../notebooks/soderberg_1986_preset.html">
+    Soderberg 1986 composite preset demo
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../notebooks/young_stand.html">
+    Young stand demo (NYSKOG + Näslund 1986)
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../notebooks/competition_indices.html">
+    Competition indices on a simulated stand
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../notebooks/FullStack_Callables_Guide.html">
+    Composable Callables & Full‑Stack GrowthModel — Practical Guide
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../architecture.html">
+    Architecture Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../catalog.html">
+    Model catalog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../model_index.html">
+    Model index
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../api/modules.html">
+    pyforestry
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../helpers_overview.html">
+    Helpers Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../notebooks/tree_species_intro.html">
+    Tree species basics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../notebooks/timber_bucking_demo.html">
+    Timber bucking demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../notebooks/stand_site_enum_demo.html">
+    Stand metrics and site enums
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../notebooks/marklund_swetimber_demo.html">
+    Marklund biomass with SweTimber
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../notebooks/wikberg_2004.html">
+    Wikberg 2004 ingrowth demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../notebooks/elfving_2010.html">
+    Elfving 2010 growth demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../notebooks/elfving_2010_preset.html">
+    Elfving 2010 composite preset demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../notebooks/soderberg_1986_preset.html">
+    Soderberg 1986 composite preset demo
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../notebooks/young_stand.html">
+    Young stand demo (NYSKOG + Näslund 1986)
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../notebooks/competition_indices.html">
+    Competition indices on a simulated stand
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../notebooks/FullStack_Callables_Guide.html">
+    Composable Callables & Full‑Stack GrowthModel — Practical Guide
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pyforestry.norway.simulation.orchestration.runbook</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for pyforestry.norway.simulation.orchestration.runbook</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Running Norway&#39;s scenario configurations over real stands.</span>
+
+<span class="sd">Norway had a scenario configuration, rulesets and a preset, and nothing that</span>
+<span class="sd">executed any of them -- the whole tier was a mirror of Sweden&#39;s scaffolding,</span>
+<span class="sd">added in the same initial commit, before either region had a runtime. Norway&#39;s</span>
+<span class="sd">four published models were reachable through :func:`pyforestry.project` all</span>
+<span class="sd">along; what was missing was the scenario runtime around them.</span>
+
+<span class="sd">:func:`run_norway_scenario` is that. It is a thin regional entry point over</span>
+<span class="sd">:func:`pyforestry.simulation.scenario.run_scenario`: it supplies the Kuehne</span>
+<span class="sd">(2022) Scots-pine model, builds the stands, and hands everything else to the</span>
+<span class="sd">shared runner, so the manifest Norway emits has the same shape and the same</span>
+<span class="sd">guarantees as Sweden&#39;s.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.primitives</span><span class="w"> </span><span class="kn">import</span> <span class="n">Age</span><span class="p">,</span> <span class="n">AgeMeasurement</span><span class="p">,</span> <span class="n">StandBasalArea</span><span class="p">,</span> <span class="n">Stems</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.stand</span><span class="w"> </span><span class="kn">import</span> <span class="n">Stand</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.helpers.tree_species</span><span class="w"> </span><span class="kn">import</span> <span class="n">TreeSpecies</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.base.simulation.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimulationContext</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.norway.adapters.kuehne_2022</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">KuehnePineAdapterConfig</span><span class="p">,</span>
+    <span class="n">KuehnePineGrowthModel</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.norway.growth.kuehne_2022</span><span class="w"> </span><span class="kn">import</span> <span class="n">kuehne_2022_stand_volume</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.norway.simulation.presets</span><span class="w"> </span><span class="kn">import</span> <span class="n">ScenarioConfig</span><span class="p">,</span> <span class="n">build_baseline_scenario_config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.norway.volume.brantseg_1967</span><span class="w"> </span><span class="kn">import</span> <span class="n">brantseg_1967_volume_scots_pine_norway</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.simulation.forcing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ForcingSet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.simulation.scenario</span><span class="w"> </span><span class="kn">import</span> <span class="n">ScenarioRunResult</span><span class="p">,</span> <span class="n">StandUnit</span><span class="p">,</span> <span class="n">run_scenario</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.simulation.stages</span><span class="w"> </span><span class="kn">import</span> <span class="n">STAND_SPECIES_KEY</span><span class="p">,</span> <span class="n">MeanTree</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyforestry.simulation.valuation.volume</span><span class="w"> </span><span class="kn">import</span> <span class="n">ValuationSettings</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;build_kuehne_stands&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;kuehne_mean_tree&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;kuehne_stand_volume&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;run_norway_scenario&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="kuehne_stand_volume">
+<a class="viewcode-back" href="../../../../../api/pyforestry.norway.simulation.orchestration.html#pyforestry.norway.simulation.orchestration.runbook.kuehne_stand_volume">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">kuehne_stand_volume</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">SimulationContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the stand&#39;s volume now, from Kuehne (2022) Eq. 8.</span>
+
+<span class="sd">    Evaluated on the context&#39;s *current* basal area, dominant height and age, so</span>
+<span class="sd">    a thinning or a disturbance between two growth steps is visible immediately.</span>
+<span class="sd">    Reading the ``stand_volume_m3_per_ha`` the model published at its last step</span>
+<span class="sd">    would not be: it goes stale the moment anything removes a stem, and the run&#39;s</span>
+<span class="sd">    summary would then report the removal as zero and quietly fold the volume</span>
+<span class="sd">    back into growth.</span>
+
+<span class="sd">    Kuehne (2022) is fitted for thinned as well as unthinned stands, so</span>
+<span class="sd">    re-evaluating it on a post-thinning basal area is within what the model was</span>
+<span class="sd">    published to do.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span>
+        <span class="n">kuehne_2022_stand_volume</span><span class="p">(</span>
+            <span class="nb">float</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;BasalArea&quot;</span><span class="p">][</span><span class="s2">&quot;TOTAL&quot;</span><span class="p">]),</span>
+            <span class="nb">float</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;kuehne_dominant_height_m&quot;</span><span class="p">]),</span>
+            <span class="n">Age</span><span class="o">.</span><span class="n">TOTAL</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))),</span>
+        <span class="p">)</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="kuehne_mean_tree">
+<a class="viewcode-back" href="../../../../../api/pyforestry.norway.simulation.orchestration.html#pyforestry.norway.simulation.orchestration.runbook.kuehne_mean_tree">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">kuehne_mean_tree</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">SimulationContext</span><span class="p">,</span> <span class="n">removed_fraction</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MeanTree</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the stand&#39;s representative stem, so a thinning can be bucked.</span>
+
+<span class="sd">    The Kuehne model steps a basal area and a stem count, so a thinning from it</span>
+<span class="sd">    has no individual stems. It does have a quadratic mean diameter, which the</span>
+<span class="sd">    stand derives from those two, and the stem that diameter describes is a real</span>
+<span class="sd">    one: bucking it gives the assortment split a stand of that mean size yields.</span>
+
+<span class="sd">    The height is the harder half, because Kuehne (2022) predicts only *dominant*</span>
+<span class="sd">    height -- its height function is a dominant-height trajectory -- and a mean</span>
+<span class="sd">    stem is shorter than a dominant one. Substituting the dominant height, which</span>
+<span class="sd">    this did, makes the representative stem too big: on the shipped baseline it</span>
+<span class="sd">    bucks to about 12% more wood than the model says the thinning removed, which</span>
+<span class="sd">    is impossible for a real stem and was previously absorbed unseen into a scale</span>
+<span class="sd">    factor.</span>
+
+<span class="sd">    So the height is *implied from the model instead*. The model states how much</span>
+<span class="sd">    volume came out and in how many stems, so the mean stem&#39;s volume is their</span>
+<span class="sd">    quotient; :func:`brantseg_1967_volume_scots_pine_norway` gives the volume of a</span>
+<span class="sd">    Scots pine of a given diameter and height, and this inverts it for the height</span>
+<span class="sd">    consistent with the model&#39;s own figures at the stand&#39;s QMD. That is not a new</span>
+<span class="sd">    height relation: Brantseg (1967) is one of the three single-tree functions</span>
+<span class="sd">    Kuehne&#39;s own volume equation is built on, so the stem this returns is the one</span>
+<span class="sd">    the model is already implicitly describing.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ctx: The run&#39;s context, read before the removal is applied.</span>
+<span class="sd">        removed_fraction: The share of the stand being taken out.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The representative stem and how many of it come out.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">stems_removed</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;Stems&quot;</span><span class="p">][</span><span class="s2">&quot;TOTAL&quot;</span><span class="p">])</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">removed_fraction</span><span class="p">)</span>
+    <span class="n">diameter_cm</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">stand</span><span class="o">.</span><span class="n">QMD</span><span class="p">)</span>
+    <span class="n">dominant_height_m</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;kuehne_dominant_height_m&quot;</span><span class="p">])</span>
+
+    <span class="n">height_m</span> <span class="o">=</span> <span class="n">dominant_height_m</span>
+    <span class="k">if</span> <span class="n">stems_removed</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="c1"># What the removal actually costs the stand, evaluated the way the run&#39;s</span>
+        <span class="c1"># own reporter will: Kuehne&#39;s volume goes as BA^0.969, so taking a fifth</span>
+        <span class="c1"># of the basal area does not take a fifth of the volume, and estimating it</span>
+        <span class="c1"># as one left the implied stem a little too tall.</span>
+        <span class="n">basal_area</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;BasalArea&quot;</span><span class="p">][</span><span class="s2">&quot;TOTAL&quot;</span><span class="p">])</span>
+        <span class="n">age</span> <span class="o">=</span> <span class="n">Age</span><span class="o">.</span><span class="n">TOTAL</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)))</span>
+        <span class="n">before</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">kuehne_2022_stand_volume</span><span class="p">(</span><span class="n">basal_area</span><span class="p">,</span> <span class="n">dominant_height_m</span><span class="p">,</span> <span class="n">age</span><span class="p">))</span>
+        <span class="n">after</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+            <span class="n">kuehne_2022_stand_volume</span><span class="p">(</span>
+                <span class="n">basal_area</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="n">removed_fraction</span><span class="p">)),</span> <span class="n">dominant_height_m</span><span class="p">,</span> <span class="n">age</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">implied</span> <span class="o">=</span> <span class="n">_height_for_stem_volume</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">,</span> <span class="p">(</span><span class="n">before</span> <span class="o">-</span> <span class="n">after</span><span class="p">)</span> <span class="o">/</span> <span class="n">stems_removed</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">implied</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Never taller than the dominant height: the inversion is a mean, and a</span>
+            <span class="c1"># mean stem does not out-top the dominant one.</span>
+            <span class="n">height_m</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">implied</span><span class="p">,</span> <span class="n">dominant_height_m</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">MeanTree</span><span class="p">(</span>
+        <span class="n">species</span><span class="o">=</span><span class="n">ctx</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">STAND_SPECIES_KEY</span><span class="p">,</span> <span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">pinus_sylvestris</span><span class="p">),</span>
+        <span class="n">diameter_cm</span><span class="o">=</span><span class="n">diameter_cm</span><span class="p">,</span>
+        <span class="n">height_m</span><span class="o">=</span><span class="n">height_m</span><span class="p">,</span>
+        <span class="n">stems_removed</span><span class="o">=</span><span class="n">stems_removed</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_height_for_stem_volume</span><span class="p">(</span><span class="n">diameter_cm</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">volume_m3</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the height at which a Scots pine of ``diameter_cm`` holds ``volume_m3``.</span>
+
+<span class="sd">    Brantseg (1967) is monotonic in height at a fixed diameter, so a bisection on</span>
+<span class="sd">    ``[1.4, 50]`` m finds it. ``None`` when the target volume lies outside what a</span>
+<span class="sd">    stem of that diameter can hold at any height in that range, which leaves the</span>
+<span class="sd">    caller&#39;s own height in place rather than substituting a fabricated one.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">volume_m3</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">target</span> <span class="o">&lt;=</span> <span class="mf">0.0</span> <span class="ow">or</span> <span class="n">diameter_cm</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">stem_volume</span><span class="p">(</span><span class="n">height_m</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Volume of a stem of this diameter at ``height_m``.&quot;&quot;&quot;</span>
+        <span class="c1"># AtomicVolume, in m3 -- the function reports dm3 internally and wraps it.</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">brantseg_1967_volume_scots_pine_norway</span><span class="p">(</span><span class="n">height_m</span><span class="p">,</span> <span class="n">diameter_cm</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="mf">1.4</span><span class="p">,</span> <span class="mf">50.0</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">stem_volume</span><span class="p">(</span><span class="n">low</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">target</span> <span class="o">&lt;=</span> <span class="n">stem_volume</span><span class="p">(</span><span class="n">high</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">60</span><span class="p">):</span>
+        <span class="n">mid</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">low</span> <span class="o">+</span> <span class="n">high</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">stem_volume</span><span class="p">(</span><span class="n">mid</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">target</span><span class="p">:</span>
+            <span class="n">low</span> <span class="o">=</span> <span class="n">mid</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">high</span> <span class="o">=</span> <span class="n">mid</span>
+    <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">low</span> <span class="o">+</span> <span class="n">high</span><span class="p">)</span>
+
+
+<span class="c1">#: The starting stand the Kuehne (2022) baseline projects from. Even-aged Scots</span>
+<span class="c1">#: pine, at the age and density the paper&#39;s own worked example uses as its</span>
+<span class="c1">#: starting point; a run that wants another supplies its own stands.</span>
+<span class="n">_BASELINE_AGE_YEARS</span> <span class="o">=</span> <span class="mf">40.0</span>
+<span class="n">_BASELINE_DOMINANT_HEIGHT_M</span> <span class="o">=</span> <span class="mf">12.0</span>
+<span class="n">_BASELINE_BASAL_AREA_M2_HA</span> <span class="o">=</span> <span class="mf">20.0</span>
+<span class="n">_BASELINE_STEMS_PER_HA</span> <span class="o">=</span> <span class="mf">1400.0</span>
+
+
+<div class="viewcode-block" id="build_kuehne_stands">
+<a class="viewcode-back" href="../../../../../api/pyforestry.norway.simulation.orchestration.html#pyforestry.norway.simulation.orchestration.runbook.build_kuehne_stands">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_kuehne_stands</span><span class="p">(</span>
+    <span class="n">n_stands</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">basal_area_m2_ha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">_BASELINE_BASAL_AREA_M2_HA</span><span class="p">,</span>
+    <span class="n">stems_per_ha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">_BASELINE_STEMS_PER_HA</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">StandUnit</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build ``n_stands`` identical aggregate pine stands for a scenario run.</span>
+
+<span class="sd">    Identical on purpose: the Kuehne model is deterministic, so identical stands</span>
+<span class="sd">    give identical rows, and any difference between rows in a run is the</span>
+<span class="sd">    scenario&#39;s doing rather than the inventory&#39;s. Supply your own</span>
+<span class="sd">    :class:`~pyforestry.simulation.scenario.StandUnit` list for real inventory.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        n_stands: How many stands to build.</span>
+<span class="sd">        basal_area_m2_ha: Starting basal area.</span>
+<span class="sd">        stems_per_ha: Starting stem density.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        One :class:`StandUnit` per stand, ids counting from 1.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If ``n_stands`` is not positive.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">n_stands</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;n_stands must be &gt; 0, got </span><span class="si">{</span><span class="n">n_stands</span><span class="si">!r}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+    <span class="n">species</span> <span class="o">=</span> <span class="n">TreeSpecies</span><span class="o">.</span><span class="n">Sweden</span><span class="o">.</span><span class="n">pinus_sylvestris</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="n">StandUnit</span><span class="p">(</span>
+            <span class="n">stand_id</span><span class="o">=</span><span class="n">stand_id</span><span class="p">,</span>
+            <span class="c1"># Declared here because a whole-stand model&#39;s metrics cannot carry it:</span>
+            <span class="c1"># set_aggregate_metrics drops species detail, by design, on the first</span>
+            <span class="c1"># step. Pricing a bulk removal needs to know what it was.</span>
+            <span class="n">species</span><span class="o">=</span><span class="n">species</span><span class="p">,</span>
+            <span class="n">stand</span><span class="o">=</span><span class="n">Stand</span><span class="o">.</span><span class="n">from_aggregate_metrics</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;BasalArea&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;TOTAL&quot;</span><span class="p">:</span> <span class="n">StandBasalArea</span><span class="p">(</span><span class="n">basal_area_m2_ha</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="n">species</span><span class="p">)},</span>
+                    <span class="s2">&quot;Stems&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;TOTAL&quot;</span><span class="p">:</span> <span class="n">Stems</span><span class="p">(</span><span class="n">stems_per_ha</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="n">species</span><span class="p">)},</span>
+                <span class="p">},</span>
+                <span class="n">area_ha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">stand_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_stands</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">]</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_kuehne_start_total_age</span><span class="p">(</span>
+    <span class="n">start_age</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AgeMeasurement</span><span class="p">],</span>
+    <span class="n">stands</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">StandUnit</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the total age the Kuehne adapter should start its clock at.</span>
+
+<span class="sd">    The adapter seeds ``ctx.state[&quot;t&quot;]`` from ``start_total_age_years``, and the</span>
+<span class="sd">    volume reporter reads that clock, so this number decides what age the stands</span>
+<span class="sd">    are grown and valued at. It used to be :data:`_BASELINE_AGE_YEARS` whatever the</span>
+<span class="sd">    caller asked for: a run given ``start_age=Age.TOTAL(70)`` was *scheduled* at 70</span>
+<span class="sd">    and *grown* at 40.</span>
+
+<span class="sd">    ``build_model`` produces one model for every stand, so one age has to serve all</span>
+<span class="sd">    of them. Where the stands disagree, that is refused rather than resolved --</span>
+<span class="sd">    picking a mean, or the first, would grow the rest at an age nobody chose.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        start_age: The run-level start age, or ``None`` for the baseline.</span>
+<span class="sd">        stands: The stands being projected, whose per-stand ``age`` must agree with</span>
+<span class="sd">            it where they carry one.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The total age in years for :class:`KuehnePineAdapterConfig`.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If ``start_age`` is given in an age measure other than total,</span>
+<span class="sd">            since the Kuehne adapter&#39;s clock is a total age and converting one to</span>
+<span class="sd">            the other needs a time to breast height this function is not given; or</span>
+<span class="sd">            if the stands carry per-stand ages that disagree with each other or</span>
+<span class="sd">            with ``start_age``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">start_age</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">resolved</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">_BASELINE_AGE_YEARS</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">start_age</span><span class="o">.</span><span class="n">code</span> <span class="o">!=</span> <span class="n">Age</span><span class="o">.</span><span class="n">TOTAL</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Norway&#39;s Kuehne adapter starts its clock at a *total* age, so &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;start_age must be Age.TOTAL(...); got </span><span class="si">{</span><span class="n">start_age</span><span class="si">!r}</span><span class="s2">. Convert it &quot;</span>
+            <span class="s2">&quot;yourself, with the time to breast height the stand was measured on.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">resolved</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">start_age</span><span class="p">)</span>
+
+    <span class="n">stand_ages</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">unit</span><span class="o">.</span><span class="n">age</span><span class="p">),</span> <span class="mi">9</span><span class="p">)</span> <span class="k">for</span> <span class="n">unit</span> <span class="ow">in</span> <span class="n">stands</span> <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">unit</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">stand_ages</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">resolved</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">stand_ages</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Norway&#39;s Kuehne model is built once for the whole run, so it cannot &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;start at </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">stand_ages</span><span class="p">)</span><span class="si">}</span><span class="s2"> different ages: </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">stand_ages</span><span class="p">)</span><span class="si">}</span><span class="s2">. Run &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;the differing stands separately, or give them one age.&quot;</span>
+        <span class="p">)</span>
+    <span class="p">(</span><span class="n">only_age</span><span class="p">,)</span> <span class="o">=</span> <span class="n">stand_ages</span>
+    <span class="k">if</span> <span class="n">start_age</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">only_age</span> <span class="o">-</span> <span class="n">resolved</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-9</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;start_age is </span><span class="si">{</span><span class="n">resolved</span><span class="si">}</span><span class="s2"> but the stands carry age </span><span class="si">{</span><span class="n">only_age</span><span class="si">}</span><span class="s2">. One of &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;them would be ignored; say which by passing only that one.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">only_age</span>
+
+
+<div class="viewcode-block" id="run_norway_scenario">
+<a class="viewcode-back" href="../../../../../api/pyforestry.norway.simulation.orchestration.html#pyforestry.norway.simulation.orchestration.runbook.run_norway_scenario">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">run_norway_scenario</span><span class="p">(</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">global_seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ScenarioConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">stands</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">StandUnit</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">n_stands</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="n">n_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="n">step_years</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">,</span>
+    <span class="n">valuation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ValuationSettings</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">discount_rate</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">disturbance_rate_per_year</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">thin_at_age</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">AgeMeasurement</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">thin_at_year</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">start_age</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AgeMeasurement</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">time_to_breast_height</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">start_year</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">forcings</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ForcingSet</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ScenarioRunResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run a Norway scenario with the Kuehne (2022) pine model and write its artifacts.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        global_seed: The run&#39;s seed; each stand&#39;s derives from it.</span>
+<span class="sd">        output_dir: Where the three artifacts go.</span>
+<span class="sd">        config: The scenario configuration. Defaults to the Kuehne baseline.</span>
+<span class="sd">        stands: The stands to project. Defaults to ``n_stands`` built by</span>
+<span class="sd">            :func:`build_kuehne_stands`.</span>
+<span class="sd">        n_stands: How many default stands to build, if ``stands`` is not given.</span>
+<span class="sd">        n_steps: Number of periods.</span>
+<span class="sd">        step_years: Period length in years.</span>
+<span class="sd">        valuation: Price list and bucking settings. **Required**, because</span>
+<span class="sd">            Norway&#39;s scenario declares a valuation stage. This package ships</span>
+<span class="sd">            no Norwegian price list -- a price list is regional market data,</span>
+<span class="sd">            not science, and inventing one would put numbers under Norway&#39;s</span>
+<span class="sd">            name with nothing behind them. Supply your own</span>
+<span class="sd">            :class:`~pyforestry.simulation.valuation.volume.ValuationSettings`,</span>
+<span class="sd">            and give its price list a</span>
+<span class="sd">            :class:`~pyforestry.base.pricelist.PricelistIdentity`: since the list</span>
+<span class="sd">            is yours, it is the only thing that can tell the manifest what</span>
+<span class="sd">            currency the summary&#39;s money is in.</span>
+<span class="sd">            The Kuehne model is a stand-level one, so a thinning from it has no</span>
+<span class="sd">            individual stems -- it is bucked at the stand&#39;s mean tree instead,</span>
+<span class="sd">            once, and scaled to the volume the model says came out. See</span>
+<span class="sd">            :func:`kuehne_mean_tree` for what that assumes.</span>
+<span class="sd">        discount_rate: The annual rate the summary&#39;s net present value is</span>
+<span class="sd">            discounted at. **Required**, like ``valuation``, because Norway&#39;s</span>
+<span class="sd">            scenario declares a valuation stage and a net present value in an</span>
+<span class="sd">            artifact has to say what it was discounted at. ``0.0`` states no time</span>
+<span class="sd">            preference.</span>
+<span class="sd">        disturbance_rate_per_year: Annual share of the stand a scenario</span>
+<span class="sd">            disturbance removes, before the scenario&#39;s ``disturbance_factor``.</span>
+<span class="sd">            Supplied by the caller; this package ships no rate, because a</span>
+<span class="sd">            disturbance rate is a finding and there is no source for one here.</span>
+<span class="sd">            Zero, the default, makes the stage an exact no-op.</span>
+<span class="sd">        thin_at_age: Stand ages at which the management stage thins, as</span>
+<span class="sd">            ``Age.TOTAL(60)``. The one to reach for, and especially here: the</span>
+<span class="sd">            Kuehne adapter starts its clock at the stand&#39;s total age, so the raw</span>
+<span class="sd">            clock times this replaces meant something different in Norway than in</span>
+<span class="sd">            Sweden under the same argument name. Defaults to the age</span>
+<span class="sd">            :func:`build_kuehne_stands` starts its stands at.</span>
+<span class="sd">        thin_at_year: Calendar years at which it thins instead, read against</span>
+<span class="sd">            ``start_year``. Mutually exclusive with ``thin_at_age``.</span>
+<span class="sd">        start_age: How old the stands are at the start. Defaults to</span>
+<span class="sd">            :data:`_BASELINE_AGE_YEARS` as a *total* age, which is what the</span>
+<span class="sd">            adapter is configured with; supply it when passing your own stands.</span>
+<span class="sd">        time_to_breast_height: Years to 1.3 m, needed only to schedule in one age</span>
+<span class="sd">            measure stands described in the other.</span>
+<span class="sd">        start_year: Calendar year the projection begins in, which is the year</span>
+<span class="sd">            a forcing series is read at.</span>
+<span class="sd">        forcings: Named values the run reads per period -- a weather</span>
+<span class="sd">            correction, a price index. This package ships none.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The run result, including the written artifacts.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">resolved_config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="n">build_baseline_scenario_config</span><span class="p">()</span>
+    <span class="n">resolved_stands</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">stands</span><span class="p">)</span> <span class="k">if</span> <span class="n">stands</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">build_kuehne_stands</span><span class="p">(</span><span class="n">n_stands</span><span class="p">)</span>
+    <span class="n">model_start_age</span> <span class="o">=</span> <span class="n">_kuehne_start_total_age</span><span class="p">(</span><span class="n">start_age</span><span class="p">,</span> <span class="n">resolved_stands</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">run_scenario</span><span class="p">(</span>
+        <span class="n">resolved_config</span><span class="p">,</span>
+        <span class="n">build_model</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">KuehnePineGrowthModel</span><span class="p">(</span>
+            <span class="n">KuehnePineAdapterConfig</span><span class="p">(</span>
+                <span class="n">dominant_height_m</span><span class="o">=</span><span class="n">_BASELINE_DOMINANT_HEIGHT_M</span><span class="p">,</span>
+                <span class="n">start_total_age_years</span><span class="o">=</span><span class="n">model_start_age</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">),</span>
+        <span class="n">stands</span><span class="o">=</span><span class="n">resolved_stands</span><span class="p">,</span>
+        <span class="n">volume</span><span class="o">=</span><span class="n">kuehne_stand_volume</span><span class="p">,</span>
+        <span class="n">global_seed</span><span class="o">=</span><span class="n">global_seed</span><span class="p">,</span>
+        <span class="n">n_steps</span><span class="o">=</span><span class="n">n_steps</span><span class="p">,</span>
+        <span class="n">step_years</span><span class="o">=</span><span class="n">step_years</span><span class="p">,</span>
+        <span class="n">output_dir</span><span class="o">=</span><span class="n">output_dir</span><span class="p">,</span>
+        <span class="n">valuation</span><span class="o">=</span><span class="n">valuation</span><span class="p">,</span>
+        <span class="n">discount_rate</span><span class="o">=</span><span class="n">discount_rate</span><span class="p">,</span>
+        <span class="n">disturbance_rate_per_year</span><span class="o">=</span><span class="n">disturbance_rate_per_year</span><span class="p">,</span>
+        <span class="n">thin_at_age</span><span class="o">=</span><span class="n">thin_at_age</span><span class="p">,</span>
+        <span class="n">thin_at_year</span><span class="o">=</span><span class="n">thin_at_year</span><span class="p">,</span>
+        <span class="n">start_age</span><span class="o">=</span><span class="n">start_age</span> <span class="k">if</span> <span class="n">start_age</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">Age</span><span class="o">.</span><span class="n">TOTAL</span><span class="p">(</span><span class="n">_BASELINE_AGE_YEARS</span><span class="p">),</span>
+        <span class="n">time_to_breast_height</span><span class="o">=</span><span class="n">time_to_breast_height</span><span class="p">,</span>
+        <span class="n">start_year</span><span class="o">=</span><span class="n">start_year</span><span class="p">,</span>
+        <span class="n">forcings</span><span class="o">=</span><span class="n">forcings</span><span class="p">,</span>
+        <span class="n">mean_tree</span><span class="o">=</span><span class="n">kuehne_mean_tree</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
