@@ -106,11 +106,20 @@ jobs:
 
       # So a docs change can be inspected as rendered HTML -- figures included --
       # from the pull request that makes it, rather than after it is published.
+      # Pull requests only: a publishing run puts the same build on the site,
+      # where it can be looked at directly, so keeping a second copy as an
+      # artifact would cost ~30 MB per push to buy nothing.
       - name: Upload built docs artifact
+        if: github.event_name == 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: docs-html
-          path: docs/build/html/
+          # Theme source maps are a tenth of the build and are no use to a
+          # human checking that a figure rendered. Exclusions are negated
+          # entries in `path`; upload-artifact has no separate exclude input.
+          path: |
+            docs/build/html/
+            !docs/build/html/**/*.map
           retention-days: 7
 
       - name: Deploy docs to GitHub Pages
