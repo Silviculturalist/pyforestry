@@ -1,17 +1,13 @@
 # .github/workflows/ci.yml
 name: CI
 
-# Grant write access for Pages deploy
 permissions:
-  contents: write      # allow pushing commits
-  pages: write         # allow updating GitHub Pages
+  contents: write      # allow pushing the coverage and docstring baselines
 
 on:
   push:
-    # main included so a release merge publishes the stable docs. The
-    # build-and-deploy-docs job already branches on refs/heads/main to pick the
-    # "stable" destination, but no main event ever reached it, so gh-pages/stable
-    # sat at its 2025-07-31 build while dev/ kept updating.
+    # main included so a release merge re-runs the gates on the merged result
+    # and the badge/baseline commits land there too.
     branches: [ dev, main ]
     paths-ignore:
       - '**/*.md'
@@ -47,10 +43,10 @@ on:
       - '**/*.jpeg'
       - '**/*.gif'
       - '**/*.svg'
-  # Manual trigger. The paths-ignore lists above skip the whole workflow for a
-  # docs-only change, which also skips build-and-deploy-docs -- so a notebook or
-  # docs/requirements.txt fix cannot otherwise be validated, and the site is not
-  # rebuilt when its own content changes. This makes such a run requestable.
+  # The paths-ignore lists above skip this workflow for a docs-only change,
+  # which is correct for the test and lint gates -- the docs build that such a
+  # change does need lives in docs.yml, on its own triggers. This is here so a
+  # run can still be requested by hand.
   workflow_dispatch:
 
 jobs:
@@ -198,107 +194,3 @@ jobs:
           commit_user_name: "GitHub Actions"
           commit_user_email: "actions@github.com"
           commit_author: "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
-
-
-  build-and-deploy-docs:
-    runs-on: ubuntu-latest
-    needs: test-and-coverage
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev'
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.12 # Or your desired version
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          # Install project dependencies and documentation-specific dependencies
-          pip install .[dev]
-          pip install -r docs/requirements.txt
-
-      # NEW STEP: Generate API documentation .rst files
-      - name: Generate API docs
-        run: |
-          sphinx-apidoc -f -o docs/source/api src/pyforestry
-
-      - name: Generate model index
-        run: python scripts/generate_model_index.py
-
-      # MODIFIED STEP: Change to docs directory before building
-      - name: Set docs destination
-        id: dest
-        run: |
-          if [ "$GITHUB_REF" = "refs/heads/main" ]; then
-            echo "dir=stable" >> $GITHUB_OUTPUT
-          else
-            echo "dir=dev" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Set DOCS_VERSION env
-        run: |
-          if [ "$GITHUB_REF" = "refs/heads/main" ]; then
-            echo "DOCS_VERSION=stable" >> $GITHUB_ENV
-          else
-            echo "DOCS_VERSION=dev" >> $GITHUB_ENV
-          fi
-
-      - name: Build Sphinx docs
-        run: make html
-        working-directory: ./docs
-
-      - name: Copy versions.json
-        run: cp docs/versions.json docs/build/html/
-
-      - name: Deploy docs to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: docs/build/html
-          destination_dir: ${{ steps.dest.outputs.dir }}
-
-      # The deploy above only ever writes inside destination_dir (dev/ or
-      # stable/), so when the versioned layout was introduced the old
-      # pre-versioning build at the branch root stopped belonging to any job:
-      # the root index.html kept serving a frozen four-notebook toctree. This
-      # step owns the root instead: prune anything that is not a versioned
-      # build, keep a redirect to stable/ there, and publish versions.json at
-      # the root -- which the theme's version switcher requests from top-level
-      # pages ("../versions.json" from dev/index.html) and got a 404 for.
-      - name: Maintain gh-pages root
-        run: |
-          git fetch origin gh-pages
-          git worktree add ../ghp origin/gh-pages
-          cd ../ghp
-          find . -mindepth 1 -maxdepth 1 \
-            ! -name dev ! -name stable ! -name .git \
-            ! -name index.html ! -name versions.json ! -name .nojekyll \
-            -exec rm -rf {} +
-          cp "$GITHUB_WORKSPACE/docs/versions.json" versions.json
-          touch .nojekyll
-          cat > index.html <<'EOF'
-          <!DOCTYPE html>
-          <html lang="en">
-          <head>
-          <meta charset="utf-8">
-          <meta http-equiv="refresh" content="0; url=stable/">
-          <link rel="canonical" href="https://silviculturalist.github.io/pyforestry/stable/">
-          <title>pyforestry documentation</title>
-          </head>
-          <body>
-          <p>Redirecting to the <a href="stable/">stable documentation</a>.
-          Development version: <a href="dev/">dev</a>.</p>
-          </body>
-          </html>
-          EOF
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add -A
-          if git commit -m "docs: maintain root redirect, prune stale pre-versioning build"; then
-            git push origin HEAD:gh-pages
-          fi

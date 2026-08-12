@@ -1,0 +1,164 @@
+# .github/workflows/docs.yml
+name: Docs
+
+# Split out of ci.yml, where the docs build was a job and therefore inherited
+# that workflow's triggers -- which list 'docs/**' under paths-ignore. A
+# docs-only change (a notebook, a figure, docs/requirements.txt) skipped the
+# whole workflow, so it also skipped the docs build: the published site kept
+# whatever the last src/ commit happened to produce, and notebook output could
+# sit stale indefinitely with nothing to show that it had. Owning its own
+# triggers here means a change to the docs rebuilds the docs.
+
+permissions:
+  contents: write # peaceiris/actions-gh-pages pushes commits to gh-pages
+  pages: write # allow updating GitHub Pages
+
+on:
+  push:
+    branches: [dev, main]
+    # GitHub Actions does not support YAML anchors, so this list is repeated
+    # under pull_request below -- keep the two in step.
+    paths:
+      - 'docs/**'
+      # autodoc imports the package and nbsphinx executes every notebook
+      # against it, so a library change changes the rendered docs.
+      - 'src/**'
+      - 'scripts/generate_model_index.py'
+      - 'pyproject.toml'
+      - '.github/workflows/docs.yml'
+  pull_request:
+    branches: [dev]
+    paths:
+      - 'docs/**'
+      - 'src/**'
+      - 'scripts/generate_model_index.py'
+      - 'pyproject.toml'
+      - '.github/workflows/docs.yml'
+  # Rebuild and republish on request, for the cases the paths above miss.
+  workflow_dispatch:
+
+concurrency:
+  # Every publishing run pushes commits to the single gh-pages branch -- its
+  # own dev/ or stable/ subtree, plus the root the last step maintains -- so two
+  # racing runs mean a non-fast-forward push. Serialise them under one group,
+  # and do not cancel: a superseded run has already been asked to publish, and
+  # its root maintenance is not redundant with the run that displaced it.
+  # Pull-request runs only build, so they group per-ref and supersede freely.
+  group: docs-${{ github.event_name != 'pull_request' && 'publish' || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build-and-deploy-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # Install project dependencies and documentation-specific dependencies
+          pip install .[dev]
+          pip install -r docs/requirements.txt
+
+      - name: Generate API documentation .rst files
+        run: |
+          sphinx-apidoc -f -o docs/source/api src/pyforestry
+
+      - name: Generate model index
+        run: python scripts/generate_model_index.py
+
+      # A pull request builds but does not publish: it is there to prove a
+      # notebook still executes and still emits its figures before the change
+      # lands, which previously needed a manual workflow_dispatch. A
+      # workflow_dispatch on a feature branch does not publish either -- only
+      # dev and main own a destination on the site.
+      - name: Set docs destination
+        id: dest
+        run: |
+          if [ "$GITHUB_REF" = "refs/heads/main" ]; then
+            echo "dir=stable" >> $GITHUB_OUTPUT
+            echo "DOCS_VERSION=stable" >> $GITHUB_ENV
+          else
+            echo "dir=dev" >> $GITHUB_OUTPUT
+            echo "DOCS_VERSION=dev" >> $GITHUB_ENV
+          fi
+          if [ "${{ github.event_name }}" != "pull_request" ] &&
+             { [ "$GITHUB_REF" = "refs/heads/dev" ] || [ "$GITHUB_REF" = "refs/heads/main" ]; }; then
+            echo "publish=true" >> $GITHUB_OUTPUT
+          else
+            echo "publish=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build Sphinx docs
+        run: make html
+        working-directory: ./docs
+
+      - name: Copy versions.json
+        run: cp docs/versions.json docs/build/html/
+
+      # So a docs change can be inspected as rendered HTML -- figures included --
+      # from the pull request that makes it, rather than after it is published.
+      - name: Upload built docs artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-html
+          path: docs/build/html/
+          retention-days: 7
+
+      - name: Deploy docs to GitHub Pages
+        if: steps.dest.outputs.publish == 'true'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/build/html
+          destination_dir: ${{ steps.dest.outputs.dir }}
+
+      # The deploy above only ever writes inside destination_dir (dev/ or
+      # stable/), so when the versioned layout was introduced the old
+      # pre-versioning build at the branch root stopped belonging to any job:
+      # the root index.html kept serving a frozen four-notebook toctree. This
+      # step owns the root instead: prune anything that is not a versioned
+      # build, keep a redirect to stable/ there, and publish versions.json at
+      # the root -- which the theme's version switcher requests from top-level
+      # pages ("../versions.json" from dev/index.html) and got a 404 for.
+      - name: Maintain gh-pages root
+        if: steps.dest.outputs.publish == 'true'
+        run: |
+          git fetch origin gh-pages
+          git worktree add ../ghp origin/gh-pages
+          cd ../ghp
+          find . -mindepth 1 -maxdepth 1 \
+            ! -name dev ! -name stable ! -name .git \
+            ! -name index.html ! -name versions.json ! -name .nojekyll \
+            -exec rm -rf {} +
+          cp "$GITHUB_WORKSPACE/docs/versions.json" versions.json
+          touch .nojekyll
+          cat > index.html <<'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+          <meta charset="utf-8">
+          <meta http-equiv="refresh" content="0; url=stable/">
+          <link rel="canonical" href="https://silviculturalist.github.io/pyforestry/stable/">
+          <title>pyforestry documentation</title>
+          </head>
+          <body>
+          <p>Redirecting to the <a href="stable/">stable documentation</a>.
+          Development version: <a href="dev/">dev</a>.</p>
+          </body>
+          </html>
+          EOF
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          if git commit -m "docs: maintain root redirect, prune stale pre-versioning build"; then
+            git push origin HEAD:gh-pages
+          fi
