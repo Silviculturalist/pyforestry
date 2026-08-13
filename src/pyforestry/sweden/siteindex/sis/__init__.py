@@ -5,6 +5,7 @@ Source: Swedish forestry domain models and helper implementations curated in pyf
 
 # ruff: noqa: F401
 from .eko_2008 import eko_pm_2008_estimate_si_birch
+from .generated_site_category_trees import predict_site_categories_county_tree
 from .hagglund_lundmark_1977 import Hagglund_Lundmark_1977_SIS
 
 # isort: off
